@@ -24,7 +24,7 @@ public final class CreditCard extends Account {
    * @param balanceUrl
    *   TODO
    */
-  public CreditCard(@NonNull String alias, @NonNull String currency, @NonNull String bank,
+  public CreditCard(@NonNull String alias, @NonNull String currency, @NonNull Bank bank,
     double queryFee, @NonNull String queryFeeDescription, @NonNull String balanceUrl) {
     super(AccountType.CREDIT_CARD, alias, currency, bank, queryFee, queryFeeDescription,
       balanceUrl);

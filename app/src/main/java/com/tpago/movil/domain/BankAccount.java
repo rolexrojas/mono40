@@ -24,7 +24,7 @@ public final class BankAccount extends Account {
    * @param balanceUrl
    *   TODO
    */
-  public BankAccount(@NonNull String alias, @NonNull String currency, @NonNull String bank,
+  public BankAccount(@NonNull String alias, @NonNull String currency, @NonNull Bank bank,
     double queryFee, @NonNull String queryFeeDescription, @NonNull String balanceUrl) {
     super(AccountType.BANK_ACCOUNT, alias, currency, bank, queryFee, queryFeeDescription, balanceUrl);
   }
