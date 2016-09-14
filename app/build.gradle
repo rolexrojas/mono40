@@ -12,7 +12,7 @@ android {
   buildToolsVersion "24.0.1"
 
   defaultConfig {
-    applicationId "com.gbh.tpago"
+    applicationId "com.tpago.movil"
     minSdkVersion 18
     targetSdkVersion 24
     versionCode 1
@@ -38,7 +38,7 @@ dependencies {
   def retrofitVersion = "2.1.0"
   def rxAndroidVersion = "1.2.1"
   def rxJavaVersion = "1.1.10"
-  def supportLibraryVersion = "24.2.0"
+  def supportLibraryVersion = "24.2.1"
 
   apt "com.google.dagger:dagger-compiler:${daggerVersion}"
   apt "com.jakewharton:butterknife-compiler:${butterKnifeVersion}"
