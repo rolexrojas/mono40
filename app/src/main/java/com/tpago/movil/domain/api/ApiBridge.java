@@ -1,10 +1,10 @@
-package com.gbh.tpago.domain.api;
+package com.tpago.movil.domain.api;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.tpago.domain.Account;
-import com.gbh.tpago.domain.Balance;
-import com.gbh.tpago.domain.Bank;
+import com.tpago.movil.domain.Account;
+import com.tpago.movil.domain.Balance;
+import com.tpago.movil.domain.Bank;
 
 import java.util.List;
 

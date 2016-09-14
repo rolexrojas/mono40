@@ -1,4 +1,4 @@
-package com.gbh.tpago.domain;
+package com.tpago.movil.domain;
 
 import android.support.annotation.NonNull;
 
@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
  *
  * @author hecvasro
  */
-public final class BankAccount extends Account {
+public final class CreditCard extends Account {
   /**
    * TODO
    *
@@ -24,8 +24,9 @@ public final class BankAccount extends Account {
    * @param balanceUrl
    *   TODO
    */
-  public BankAccount(@NonNull String alias, @NonNull String currency, @NonNull String bank,
+  public CreditCard(@NonNull String alias, @NonNull String currency, @NonNull String bank,
     double queryFee, @NonNull String queryFeeDescription, @NonNull String balanceUrl) {
-    super(AccountType.BANK_ACCOUNT, alias, currency, bank, queryFee, queryFeeDescription, balanceUrl);
+    super(AccountType.CREDIT_CARD, alias, currency, bank, queryFee, queryFeeDescription,
+      balanceUrl);
   }
 }

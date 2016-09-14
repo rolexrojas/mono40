@@ -1,4 +1,4 @@
-package com.gbh.tpago;
+package com.tpago.movil;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

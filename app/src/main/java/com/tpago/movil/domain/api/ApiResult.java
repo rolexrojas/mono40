@@ -1,4 +1,4 @@
-package com.gbh.tpago.domain.api;
+package com.tpago.movil.domain.api;
 
 import android.support.annotation.Nullable;
 

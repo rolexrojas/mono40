@@ -1,4 +1,4 @@
-package com.gbh.tpago.domain;
+package com.tpago.movil.domain;
 
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;

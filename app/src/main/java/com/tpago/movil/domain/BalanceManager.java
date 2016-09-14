@@ -1,10 +1,10 @@
-package com.gbh.tpago.domain;
+package com.tpago.movil.domain;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.gbh.tpago.domain.api.ApiBridge;
-import com.gbh.tpago.domain.api.ApiResult;
+import com.tpago.movil.domain.api.ApiBridge;
+import com.tpago.movil.domain.api.ApiResult;
 
 import rx.Observable;
 
