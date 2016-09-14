@@ -1,4 +1,4 @@
-package com.gbh.tpago.net;
+package com.gbh.tpago.data.net;
 
 import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
@@ -31,5 +31,15 @@ public final class NetworkManager {
   public final Observable<Boolean> status() {
     // TODO
     return Observable.error(new UnsupportedOperationException());
+  }
+
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
+  public final boolean isAvailable() {
+    // TODO
+    return false;
   }
 }

@@ -1,4 +1,4 @@
-package com.gbh.tpago;
+package com.gbh.tpago.domain;
 
 import android.support.annotation.NonNull;
 
@@ -23,8 +23,10 @@ public final class InitialData {
   /**
    * TODO
    *
-   * @param bankAccounts TODO
-   * @param creditCards TODO
+   * @param bankAccounts
+   *   TODO
+   * @param creditCards
+   *   TODO
    */
   public InitialData(@NonNull List<BankAccount> bankAccounts,
     @NonNull List<CreditCard> creditCards) {

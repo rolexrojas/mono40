@@ -1,4 +1,4 @@
-package com.gbh.tpago;
+package com.gbh.tpago.domain;
 
 import android.support.annotation.NonNull;
 

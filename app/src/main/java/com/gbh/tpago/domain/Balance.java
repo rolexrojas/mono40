@@ -1,4 +1,4 @@
-package com.gbh.tpago;
+package com.gbh.tpago.domain;
 
 import android.support.annotation.NonNull;
 
@@ -26,8 +26,10 @@ public final class Balance {
   /**
    * TODO
    *
-   * @param value TODO
-   * @param description TODO
+   * @param value
+   *   TODO
+   * @param description
+   *   TODO
    */
   public Balance(double value, @NonNull String description) {
     this.creationDate = System.currentTimeMillis();

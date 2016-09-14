@@ -1,4 +1,4 @@
-package com.gbh.tpago.net;
+package com.gbh.tpago.data.net;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

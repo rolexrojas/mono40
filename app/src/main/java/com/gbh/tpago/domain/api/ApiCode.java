@@ -1,4 +1,4 @@
-package com.gbh.tpago.api;
+package com.gbh.tpago.domain.api;
 
 import android.support.annotation.IntDef;
 
@@ -11,7 +11,7 @@ import java.lang.annotation.RetentionPolicy;
  * @author hecvasro
  */
 @IntDef({ ApiCode.SUCCESS, ApiCode.BAD_REQUEST, ApiCode.UNAUTHORIZED, ApiCode.FORBIDDEN,
-  ApiCode.NOT_FOUND, ApiCode.SERVER_ERROR })
+  ApiCode.NOT_FOUND })
 @Retention(RetentionPolicy.SOURCE)
 public @interface ApiCode {
   /**
@@ -38,9 +38,4 @@ public @interface ApiCode {
    * TODO
    */
   int NOT_FOUND = 404;
-
-  /**
-   * TODO
-   */
-  int SERVER_ERROR = 500;
 }

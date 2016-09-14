@@ -1,4 +1,4 @@
-package com.gbh.tpago.api;
+package com.gbh.tpago.domain.api;
 
 import android.support.annotation.Nullable;
 
@@ -48,5 +48,15 @@ public final class ApiResult<T> {
   @Nullable
   public final T getData() {
     return data;
+  }
+
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
+  public final boolean isSuccessful() {
+    // TODO
+    return false;
   }
 }

@@ -1,4 +1,4 @@
-package com.gbh.tpago;
+package com.gbh.tpago.domain;
 
 import android.support.annotation.NonNull;
 
@@ -25,7 +25,7 @@ public abstract class Account {
   /**
    * TODO
    */
-  private final String bank;
+  private final Bank bank;
 
   /**
    * TODO
@@ -45,16 +45,23 @@ public abstract class Account {
   /**
    * TODO
    *
-   * @param type TODO
-   * @param alias TODO
-   * @param currency TODO
-   * @param bank TODO
-   * @param queryFee TODO
-   * @param queryFeeDescription TODO
-   * @param balanceUrl TODO
+   * @param type
+   *   TODO
+   * @param alias
+   *   TODO
+   * @param currency
+   *   TODO
+   * @param bank
+   *   TODO
+   * @param queryFee
+   *   TODO
+   * @param queryFeeDescription
+   *   TODO
+   * @param balanceUrl
+   *   TODO
    */
   public Account(@AccountType int type, @NonNull String alias, @NonNull String currency,
-    @NonNull String bank, double queryFee, @NonNull String queryFeeDescription,
+    @NonNull Bank bank, double queryFee, @NonNull String queryFeeDescription,
     @NonNull String balanceUrl) {
     this.type = type;
     this.alias = alias;
@@ -101,7 +108,7 @@ public abstract class Account {
    * @return TODO
    */
   @NonNull
-  public final String getBank() {
+  public final Bank getBank() {
     return bank;
   }
 
@@ -117,7 +124,8 @@ public abstract class Account {
   /**
    * TODO
    *
-   * @param queryFee TODO
+   * @param queryFee
+   *   TODO
    */
   public void setQueryFee(double queryFee) {
     this.queryFee = queryFee;
@@ -136,7 +144,8 @@ public abstract class Account {
   /**
    * TODO
    *
-   * @param queryFeeDescription TODO
+   * @param queryFeeDescription
+   *   TODO
    */
   public void setQueryFeeDescription(@NonNull String queryFeeDescription) {
     this.queryFeeDescription = queryFeeDescription;
@@ -155,7 +164,8 @@ public abstract class Account {
   /**
    * TODO
    *
-   * @param balanceUrl TODO
+   * @param balanceUrl
+   *   TODO
    */
   public void setBalanceUrl(@NonNull String balanceUrl) {
     this.balanceUrl = balanceUrl;
