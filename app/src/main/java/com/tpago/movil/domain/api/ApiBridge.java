@@ -5,13 +5,14 @@ import android.support.annotation.NonNull;
 import com.tpago.movil.domain.Account;
 import com.tpago.movil.domain.Balance;
 import com.tpago.movil.domain.Bank;
+import com.tpago.movil.domain.InitialData;
 
 import java.util.List;
 
 import rx.Observable;
 
 /**
- * Contract that defines all the required methods from the API.
+ * Contract that defines all the required methods to communicate with the API.
  *
  * @author hecvasro
  */
@@ -30,7 +31,7 @@ public interface ApiBridge {
    * @return All the registered {@link Account accounts} from the API.
    */
   @NonNull
-  Observable<ApiResult<List<Account>>> getInitialData();
+  Observable<ApiResult<InitialData>> getInitialData();
 
   /**
    * Query the {@link Balance balance} of an {@link Account account} from the API.
@@ -43,5 +44,5 @@ public interface ApiBridge {
    * @return {@link Balance balance} of an {@link Account account} from the API.
    */
   @NonNull
-  Observable<ApiResult<Balance>> queryAccountBalance(@NonNull Account account, @NonNull String pin);
+  Observable<ApiResult<Balance>> queryBalance(@NonNull Account account, @NonNull String pin);
 }
