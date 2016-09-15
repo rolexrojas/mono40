@@ -38,9 +38,9 @@ public interface AccountRepository {
     @NonNull String queryBalanceUrl);
 
   /**
-   * Gets all the registered {@link Account accounts} stored locally.
+   * Gets all the locally stored {@link Account accounts}.
    *
-   * @return All the registered {@link Account accounts} stored locally.
+   * @return All the locally stored {@link Account accounts}.
    */
   @NonNull
   Observable<List<Account>> getAll();

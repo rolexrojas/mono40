@@ -19,7 +19,7 @@ public final class Bank {
   private final String name;
 
   /**
-   * Indicates whether is active or not.
+   * Bank's state. True if it is active, false otherwise.
    */
   private boolean state;
 
