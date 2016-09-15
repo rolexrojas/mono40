@@ -45,6 +45,7 @@ dependencies {
   apt "com.jakewharton:butterknife-compiler:${butterKnifeVersion}"
   compile "ch.halarious:halarious-core:${halariousVersion}"
   compile "com.android.support:appcompat-v7:${supportLibraryVersion}"
+  compile "com.android.support:design:${supportLibraryVersion}"
   compile "com.android.support:recyclerview-v7:${supportLibraryVersion}"
   compile "com.google.dagger:dagger:${daggerVersion}"
   compile "com.jakewharton.picasso:picasso2-okhttp3-downloader:${picassoOkHttpDownloaderVersion}"
