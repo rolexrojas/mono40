@@ -12,9 +12,6 @@ import javax.inject.Inject;
  * @author hecvasro
  */
 public final class NetworkStatusBroadcastReceiver extends BroadcastReceiver {
-  /**
-   * TODO
-   */
   @Inject
   NetworkManager networkManager;
 

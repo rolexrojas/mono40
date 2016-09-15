@@ -13,35 +13,26 @@ import rx.Observable;
  */
 public interface AccountRepository {
   /**
-   * Creates an {@link Account} and stores it locally.
-   *
-   * @param type
-   *   {@link Account}'s type.
-   * @param alias
-   *   {@link Account}'s identifier.
-   * @param currency
-   *   {@link Account}'s currency.
-   * @param bank
-   *   {@link Account}'s {@link Balance holder}.
-   * @param queryFee
-   *   Cost of querying the balance.
-   * @param queryFeeDescription
-   *   Description of the cost of querying the balance.
-   * @param queryBalanceUrl
-   *   Url for querying the balance.
-   *
-   * @return {@link Account} created and stored locally.
-   */
-  @NonNull
-  Observable<Account> create(@AccountType int type, @NonNull String alias, @NonNull String currency,
-    @NonNull String bank, double queryFee, @NonNull String queryFeeDescription,
-    @NonNull String queryBalanceUrl);
-
-  /**
    * Gets all the locally stored {@link Account accounts}.
    *
    * @return All the locally stored {@link Account accounts}.
    */
   @NonNull
   Observable<List<Account>> getAll();
+
+  /**
+   * Saves the given {@link Account account} locally. It will be created if it doesn't exists.
+   *
+   * @param account
+   *   {@link Account} that will be saved.
+   */
+  void save(@NonNull Account account);
+
+  /**
+   * Deletes the given {@link Account account} from the local storage.
+   *
+   * @param account
+   *   {@link Account} that will be deleted.
+   */
+  void delete(@NonNull Account account);
 }

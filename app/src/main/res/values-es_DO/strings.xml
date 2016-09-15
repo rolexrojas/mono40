@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="done_with_exclamation_mark">¡Listo!</string>
+  <string name="go_to_accounts">Ver cuentas</string>
+  <string name="no_internet_connection">Sin conexión a Internet.</string>
+  <string name="ok">Ok</string>
+  <string name="your_account_have_been_added">Tu cuenta se agregó exitosamente al mundo %1$s. Ya puedes usarla como cuenta de fondos.</string>
+  <string name="your_account_have_been_removed">Tu cuenta se removió exitosamente del mundo %1$s. Ya  nopuedes usarla como cuenta de fondos.</string>
+</resources>

@@ -16,7 +16,8 @@ public final class NetworkManager {
   /**
    * TODO
    *
-   * @param connectivityManager TODO
+   * @param connectivityManager
+   *   TODO
    */
   public NetworkManager(@NonNull ConnectivityManager connectivityManager) {
     this.connectivityManager = connectivityManager;
@@ -31,15 +32,5 @@ public final class NetworkManager {
   public final Observable<Boolean> status() {
     // TODO
     return Observable.error(new UnsupportedOperationException());
-  }
-
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
-  public final boolean isAvailable() {
-    // TODO
-    return false;
   }
 }
