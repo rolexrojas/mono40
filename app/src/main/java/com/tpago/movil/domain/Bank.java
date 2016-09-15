@@ -27,9 +27,9 @@ public final class Bank {
    * Constructs a new bank.
    *
    * @param id
-   *  Bank's identifier.
+   *   Bank's identifier.
    * @param name
-   *  Bank's name.
+   *   Bank's name.
    */
   public Bank(@NonNull String id, @NonNull String name) {
     this.id = id;
@@ -39,8 +39,7 @@ public final class Bank {
   /**
    * Gets the identifier of the bank.
    *
-   * @return
-   *  Bank's identifier.
+   * @return Bank's identifier.
    */
   @NonNull
   public final String getId() {
@@ -50,8 +49,7 @@ public final class Bank {
   /**
    * Gets the name of the bank.
    *
-   * @return
-   *  Bank's name.
+   * @return Bank's name.
    */
   @NonNull
   public final String getName() {
@@ -61,8 +59,7 @@ public final class Bank {
   /**
    * Gets the state of the bank.
    *
-   * @return
-   *  True if it is active, false otherwise.
+   * @return True if it is active, false otherwise.
    */
   public boolean getState() {
     return state;
@@ -72,7 +69,7 @@ public final class Bank {
    * Sets the state of the bank.
    *
    * @param state
-   *  True if it is active, false otherwise.
+   *   True if it is active, false otherwise.
    */
   public void setState(boolean state) {
     this.state = state;

@@ -18,7 +18,8 @@ public final class SessionManager {
   /**
    * TODO
    *
-   * @param sharedPreferences TODO
+   * @param sharedPreferences
+   *   TODO
    */
   public SessionManager(@NonNull SharedPreferences sharedPreferences) {
     this.sharedPreferences = sharedPreferences;
@@ -48,7 +49,8 @@ public final class SessionManager {
   /**
    * TODO
    *
-   * @param authToken TODO
+   * @param authToken
+   *   TODO
    */
   public final void setAuthToken(@Nullable String authToken) {
     // TODO
@@ -68,7 +70,8 @@ public final class SessionManager {
   /**
    * TODO
    *
-   * @param encryptionKey TODO
+   * @param encryptionKey
+   *   TODO
    */
   public final void setEncryptionKey(@Nullable String encryptionKey) {
     // TODO
