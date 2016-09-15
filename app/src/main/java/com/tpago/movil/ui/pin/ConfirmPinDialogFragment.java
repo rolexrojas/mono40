@@ -1,4 +1,4 @@
-package com.tpago.movil.ui;
+package com.tpago.movil.ui.pin;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
