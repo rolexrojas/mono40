@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import com.tpago.movil.domain.Account;
 import com.tpago.movil.domain.Balance;
 import com.tpago.movil.domain.Bank;
-import com.tpago.movil.domain.InitialData;
 
 import java.util.List;
 
@@ -31,7 +30,7 @@ public interface ApiBridge {
    * @return All the registered {@link Account accounts} from the API.
    */
   @NonNull
-  Observable<ApiResult<InitialData>> getInitialData();
+  Observable<ApiResult<List<Account>>> getAllAccounts();
 
   /**
    * Query the {@link Balance balance} of an {@link Account account} from the API.

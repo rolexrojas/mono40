@@ -2,8 +2,6 @@ package com.tpago.movil.ui;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.domain.InitialDataLoader;
-
 /**
  * TODO
  *
