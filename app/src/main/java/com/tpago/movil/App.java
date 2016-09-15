@@ -1,4 +1,4 @@
-package com.tpago.movil.ui;
+package com.tpago.movil;
 
 import android.app.Application;
 import android.content.res.Configuration;
