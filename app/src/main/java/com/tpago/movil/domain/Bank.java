@@ -3,31 +3,31 @@ package com.tpago.movil.domain;
 import android.support.annotation.NonNull;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 public final class Bank {
   /**
-   * TODO
+   * Bank's identifier.
    */
   private final String id;
 
   /**
-   * TODO
+   * Bank's name.
    */
   private final String name;
 
   /**
-   * TODO
+   * Flag that indicates whether the bank is active or not.
    */
   private boolean active;
 
   /**
-   * TODO
+   * Creates a bank with the given identifier and name.
    *
-   * @param id TODO
-   * @param name TODO
+   * @param id
+   *   Bank's identifier.
+   * @param name
+   *   Bank's name.
    */
   public Bank(@NonNull String id, @NonNull String name) {
     this.id = id;
@@ -35,9 +35,10 @@ public final class Bank {
   }
 
   /**
-   * TODO
+   * Gets the identifier of the bank.
    *
-   * @return TODO
+   * @return
+   *  Bank's identifier.
    */
   @NonNull
   public final String getId() {
@@ -45,9 +46,10 @@ public final class Bank {
   }
 
   /**
-   * TODO
+   * Gets the name of the bank.
    *
-   * @return TODO
+   * @return
+   *  Bank's name.
    */
   @NonNull
   public final String getName() {
@@ -55,18 +57,17 @@ public final class Bank {
   }
 
   /**
-   * TODO
+   * Indicates whether the bank is active or not.
    *
-   * @return TODO
+   * @return
+   *  True if it is active, false otherwise.
    */
   public boolean isActive() {
     return active;
   }
 
   /**
-   * TODO
-   *
-   * @param active TODO
+   * Sets the flag that indicates whether the bank is active or not.
    */
   public void setActive(boolean active) {
     this.active = active;
@@ -74,19 +75,17 @@ public final class Bank {
 
   @Override
   public boolean equals(Object object) {
-    // TODO
-    return super.equals(object);
+    return super.equals(object) || (object != null && object instanceof Bank &&
+      ((Bank) object).id.equals(id));
   }
 
   @Override
   public int hashCode() {
-    // TODO
-    return super.hashCode();
+    return id.hashCode();
   }
 
   @Override
   public String toString() {
-    // TODO
-    return super.toString();
+    return "Bank{id='" + id + "',name='" + name + "',active=" + active + "}";
   }
 }
