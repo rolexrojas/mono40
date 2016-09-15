@@ -12,7 +12,7 @@ import java.util.Locale;
  * @author hecvasro
  */
 public class App extends Application {
-  private static final String LANGUAGE_ES_DO = "es_DO";
+  private static final String LANGUAGE_ES = "es";
 
   @Override
   public void onCreate() {
@@ -22,7 +22,7 @@ public class App extends Application {
     if (resources != null) {
       final Configuration configuration = resources.getConfiguration();
       if (configuration != null) {
-        final Locale locale = new Locale(LANGUAGE_ES_DO);
+        final Locale locale = new Locale(LANGUAGE_ES);
         Locale.setDefault(locale);
         configuration.setLocale(locale);
         resources.updateConfiguration(configuration, resources.getDisplayMetrics());
