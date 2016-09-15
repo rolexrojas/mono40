@@ -3,79 +3,72 @@ package com.tpago.movil.domain;
 import android.support.annotation.NonNull;
 
 /**
+ * Abstract account representation.
+ *
  * @author hecvasro
  */
 public abstract class Account {
   /**
-   * TODO
+   * Account's {@link AccountType type}.
    */
   @AccountType
   private final int type;
 
   /**
-   * TODO
+   * Account's identifier.
    */
   private final String alias;
 
   /**
-   * TODO
+   * Account's currency.
    */
   private final String currency;
 
   /**
-   * TODO
+   * Account's {@link Bank holder}.
    */
   private final Bank bank;
 
   /**
-   * TODO
+   * Cost of querying the balance.
    */
   private double queryFee;
 
   /**
-   * TODO
+   * Description of the cost of querying the balance.
    */
   private String queryFeeDescription;
 
   /**
-   * TODO
-   */
-  private String balanceUrl;
-
-  /**
-   * TODO
+   * Constructs a new account.
    *
    * @param type
-   *   TODO
+   *   Account's {@link AccountType type}.
    * @param alias
-   *   TODO
+   *   Account's identifier.
    * @param currency
-   *   TODO
+   *   Account's currency.
    * @param bank
-   *   TODO
+   *   Account's {@link Bank holder}.
    * @param queryFee
-   *   TODO
+   *   Cost of querying the balance.
    * @param queryFeeDescription
-   *   TODO
-   * @param balanceUrl
-   *   TODO
+   *   Description of the cost of querying the balance.
    */
   public Account(@AccountType int type, @NonNull String alias, @NonNull String currency,
-    @NonNull Bank bank, double queryFee, @NonNull String queryFeeDescription,
-    @NonNull String balanceUrl) {
+    @NonNull Bank bank, double queryFee, @NonNull String queryFeeDescription) {
     this.type = type;
     this.alias = alias;
     this.currency = currency;
     this.bank = bank;
     this.queryFee = queryFee;
     this.queryFeeDescription = queryFeeDescription;
-    this.balanceUrl = balanceUrl;
   }
 
   /**
-   * TODO
+   * Gets the {@link AccountType type} of the account.
    *
-   * @return TODO
+   * @return Account's {@link AccountType type}.
    */
   @AccountType
   public final int getType() {
@@ -83,9 +76,9 @@ public abstract class Account {
   }
 
   /**
-   * TODO
+   * Gets the identifier of the account.
    *
-   * @return TODO
+   * @return Account's identifier.
    */
   @NonNull
   public final String getAlias() {
@@ -93,9 +86,9 @@ public abstract class Account {
   }
 
   /**
-   * TODO
+   * Gets the currency of the account.
    *
-   * @return TODO
+   * @return Account's currency.
    */
   @NonNull
   public final String getCurrency() {
@@ -103,9 +96,9 @@ public abstract class Account {
   }
 
   /**
-   * TODO
+   * Gets the {@link Bank holder} of the account.
    *
-   * @return TODO
+   * @return Account's {@link Bank holder}.
    */
   @NonNull
   public final Bank getBank() {
@@ -113,28 +106,31 @@ public abstract class Account {
   }
 
   /**
-   * TODO
+   * Gets the cost of querying the balance of the account.
    *
-   * @return TODO
+   * @return Cost of querying the balance.
    */
   public double getQueryFee() {
     return queryFee;
   }
 
   /**
-   * TODO
+   * Sets the cost of querying the balance of the account.
    *
    * @param queryFee
-   *   TODO
+   *   Cost of querying the balance.
    */
   public void setQueryFee(double queryFee) {
+    if (queryFee < 0) {
+      queryFee = 0;
+    }
     this.queryFee = queryFee;
   }
 
   /**
-   * TODO
+   * Gets the description of the cost of querying the balance of the account.
    *
-   * @return TODO
+   * @return Description of the cost of querying the balance.
    */
   @NonNull
   public String getQueryFeeDescription() {
@@ -142,50 +138,30 @@ public abstract class Account {
   }
 
   /**
-   * TODO
+   * Sets the description of the cost of querying the balance of the account.
    *
    * @param queryFeeDescription
-   *   TODO
+   *   Description of the cost of querying the balance.
    */
   public void setQueryFeeDescription(@NonNull String queryFeeDescription) {
     this.queryFeeDescription = queryFeeDescription;
   }
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
-  @NonNull
-  public String getBalanceUrl() {
-    return balanceUrl;
-  }
-
-  /**
-   * TODO
-   *
-   * @param balanceUrl
-   *   TODO
-   */
-  public void setBalanceUrl(@NonNull String balanceUrl) {
-    this.balanceUrl = balanceUrl;
-  }
-
   @Override
   public boolean equals(Object object) {
-    // TODO
-    return super.equals(object);
+    return super.equals(object) || (object != null && object instanceof Account &&
+      ((Account) object).type == type && ((Account) object).alias.equals(alias));
   }
 
   @Override
   public int hashCode() {
-    // TODO
-    return super.hashCode();
+    return alias.hashCode();
   }
 
   @Override
   public String toString() {
-    // TODO
-    return super.toString();
+    return "Account:{type=" + type + ",alias='" + alias + "',currency='" + currency + "',bank="
+      + bank.toString() + ",queryFee=" + queryFee + ",queryFeeDescription='" + queryFeeDescription
+      + "'}";
   }
 }

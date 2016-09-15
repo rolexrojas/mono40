@@ -3,6 +3,8 @@ package com.tpago.movil.domain;
 import android.support.annotation.NonNull;
 
 /**
+ * Bank representation.
+ *
  * @author hecvasro
  */
 public final class Bank {
@@ -17,17 +19,17 @@ public final class Bank {
   private final String name;
 
   /**
-   * Flag that indicates whether the bank is active or not.
+   * Indicates whether is active or not.
    */
-  private boolean active;
+  private boolean state;
 
   /**
-   * Creates a bank with the given identifier and name.
+   * Constructs a new bank.
    *
    * @param id
-   *   Bank's identifier.
+   *  Bank's identifier.
    * @param name
-   *   Bank's name.
+   *  Bank's name.
    */
   public Bank(@NonNull String id, @NonNull String name) {
     this.id = id;
@@ -57,20 +59,23 @@ public final class Bank {
   }
 
   /**
-   * Indicates whether the bank is active or not.
+   * Gets the state of the bank.
    *
    * @return
    *  True if it is active, false otherwise.
    */
-  public boolean isActive() {
-    return active;
+  public boolean getState() {
+    return state;
   }
 
   /**
-   * Sets the flag that indicates whether the bank is active or not.
+   * Sets the state of the bank.
+   *
+   * @param state
+   *  True if it is active, false otherwise.
    */
-  public void setActive(boolean active) {
-    this.active = active;
+  public void setState(boolean state) {
+    this.state = state;
   }
 
   @Override
@@ -86,6 +91,6 @@ public final class Bank {
 
   @Override
   public String toString() {
-    return "Bank{id='" + id + "',name='" + name + "',active=" + active + "}";
+    return "Bank{id='" + id + "',name='" + name + "',state=" + state + "}";
   }
 }
