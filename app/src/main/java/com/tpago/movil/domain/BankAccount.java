@@ -12,7 +12,8 @@ public final class BankAccount extends Account {
    * {@inheritDoc}
    */
   public BankAccount(@NonNull String alias, @NonNull String currency, @NonNull Bank bank,
-    double queryFee, @NonNull String queryFeeDescription) {
-    super(AccountType.BANK_ACCOUNT, alias, currency, bank, queryFee, queryFeeDescription);
+    double queryFee, @NonNull String queryFeeDescription, @NonNull String queryBalanceUrl) {
+    super(AccountType.BANK_ACCOUNT, alias, currency, bank, queryFee, queryFeeDescription,
+      queryBalanceUrl);
   }
 }

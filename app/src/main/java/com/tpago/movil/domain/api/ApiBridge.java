@@ -11,7 +11,7 @@ import java.util.List;
 import rx.Observable;
 
 /**
- * TODO
+ * Contract that defines all the required methods from the API.
  *
  * @author hecvasro
  */

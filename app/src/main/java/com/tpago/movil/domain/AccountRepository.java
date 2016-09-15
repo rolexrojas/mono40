@@ -7,40 +7,40 @@ import java.util.List;
 import rx.Observable;
 
 /**
- * TODO
+ * Contract that defines all the methods required for managing {@link Account accounts} locally.
  *
  * @author hecvasro
  */
 public interface AccountRepository {
   /**
-   * TODO
+   * Creates an {@link Account} and stores it locally.
    *
    * @param type
-   *   TODO
+   *   {@link Account}'s type.
    * @param alias
-   *   TODO
+   *   {@link Account}'s identifier.
    * @param currency
-   *   TODO
+   *   {@link Account}'s currency.
    * @param bank
-   *   TODO
+   *   {@link Account}'s {@link Balance holder}.
    * @param queryFee
-   *   TODO
+   *   Cost of querying the balance.
    * @param queryFeeDescription
-   *   TODO
-   * @param balanceUrl
-   *   TODO
+   *   Description of the cost of querying the balance.
+   * @param queryBalanceUrl
+   *   Url for querying the balance.
    *
-   * @return TODO
+   * @return {@link Account} created and stored locally.
    */
   @NonNull
   Observable<Account> create(@AccountType int type, @NonNull String alias, @NonNull String currency,
     @NonNull String bank, double queryFee, @NonNull String queryFeeDescription,
-    @NonNull String balanceUrl);
+    @NonNull String queryBalanceUrl);
 
   /**
-   * TODO
+   * Gets all the registered {@link Account accounts} stored locally.
    *
-   * @return TODO
+   * @return All the registered {@link Account accounts} stored locally.
    */
   @NonNull
   Observable<List<Account>> getAll();
