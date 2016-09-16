@@ -3,6 +3,7 @@ package com.tpago.movil.domain;
 import android.support.annotation.NonNull;
 
 import java.util.List;
+import java.util.Set;
 
 import rx.Observable;
 
@@ -18,7 +19,7 @@ public interface AccountRepository {
    * @return All the locally stored {@link Account accounts}.
    */
   @NonNull
-  Observable<List<Account>> getAll();
+  Observable<Set<Account>> getAll();
 
   /**
    * Saves the given {@link Account account} locally. It will be created if it doesn't exists.

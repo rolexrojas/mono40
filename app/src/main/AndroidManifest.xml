@@ -1,6 +1,10 @@
 <manifest
   package="com.tpago.movil"
   xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <uses-permission android:name="android.permission.INTERNET"/>
+
   <application
     android:name=".App"
     android:allowBackup="true"
@@ -9,7 +13,7 @@
     android:supportsRtl="true"
     android:theme="@style/AppTheme">
     <activity
-      android:name=".ui.MainActivity"
+      android:name=".ui.main.MainActivity"
       android:screenOrientation="portrait">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>

@@ -2,6 +2,8 @@ package com.tpago.movil.domain;
 
 import android.support.annotation.NonNull;
 
+import java.util.Set;
+
 import rx.Observable;
 
 /**
@@ -31,7 +33,7 @@ public interface BankRepository {
    * @return All the locally stored {@link Bank banks}.
    */
   @NonNull
-  Observable<Bank> getAll();
+  Observable<Set<Bank>> getAll();
 
   /**
    * Gets the {@link Bank bank} identified by the given id.

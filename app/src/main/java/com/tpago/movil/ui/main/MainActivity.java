@@ -1,4 +1,4 @@
-package com.tpago.movil.ui;
+package com.tpago.movil.ui.main;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,10 +8,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.tpago.movil.App;
 import com.tpago.movil.R;
+import com.tpago.movil.ui.SplashFragment;
 
 import javax.inject.Inject;
 
@@ -32,18 +33,25 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
 
   private Unbinder unbinder;
 
+  private MainComponent component;
+
   @Inject
   MainPresenter presenter;
 
   @BindView(R.id.toolbar)
   Toolbar toolbar;
 
-  @BindView(R.id.frame_layout_container)
-  FrameLayout containerFrameLayout;
-
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    // Injects all the dependencies.
+    if (component == null) {
+      component = DaggerMainComponent.builder()
+        .appComponent(((App) getApplication()).getComponent())
+        .mainModule(new MainModule(this))
+        .build();
+    }
+    component.inject(this);
     // Sets the content layout identifier.
     setContentView(R.layout.activity_main);
     // Binds all the annotated views and methods.
@@ -59,14 +67,13 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
   @Override
   protected void onStart() {
     super.onStart();
-//    presenter.start();
-    showSplashScreen();
+    presenter.start();
   }
 
   @Override
   protected void onStop() {
     super.onStop();
-//    presenter.stop();
+    presenter.stop();
   }
 
   @Override
@@ -98,7 +105,8 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
     final FragmentManager fragmentManager = getSupportFragmentManager();
     if (fragmentManager.findFragmentByTag(FRAGMENT_TAG_SPLASH) == null) {
       fragmentManager.beginTransaction()
-        .replace(R.id.frame_layout_full_screen_container, new SplashFragment())
+        .replace(R.id.frame_layout_full_screen_container, new SplashFragment(),
+          FRAGMENT_TAG_SPLASH)
         .commit();
     }
   }

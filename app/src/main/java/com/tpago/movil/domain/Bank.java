@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
  *
  * @author hecvasro
  */
-public final class Bank {
+public class Bank {
   /**
    * Bank's identifier.
    */

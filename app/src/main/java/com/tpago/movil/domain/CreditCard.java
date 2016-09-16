@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
  *
  * @author hecvasro
  */
-public final class CreditCard extends Account {
+public class CreditCard extends Account {
   /**
    * {@inheritDoc}
    */

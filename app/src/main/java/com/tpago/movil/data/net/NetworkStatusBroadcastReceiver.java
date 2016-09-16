@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.tpago.movil.App;
+
 import javax.inject.Inject;
 
 /**
@@ -13,10 +15,13 @@ import javax.inject.Inject;
  */
 public final class NetworkStatusBroadcastReceiver extends BroadcastReceiver {
   @Inject
-  NetworkManager networkManager;
+  NetworkHelper networkHelper;
 
   @Override
   public void onReceive(Context context, Intent intent) {
-    // TODO
+    ((App) context).getComponent().inject(this);
+    if (networkHelper != null) {
+      networkHelper.checkStatus();
+    }
   }
 }

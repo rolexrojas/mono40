@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
  *
  * @author hecvasro
  */
-public final class Balance {
+public class Balance {
   /**
    * Balance's value.
    */

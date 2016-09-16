@@ -1,10 +1,10 @@
-package com.tpago.movil.ui;
+package com.tpago.movil.ui.main;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.tpago.movil.data.MessageHelper;
-import com.tpago.movil.data.net.NetworkManager;
+import com.tpago.movil.data.net.NetworkHelper;
 import com.tpago.movil.domain.BalanceManager;
 import com.tpago.movil.domain.DataLoader;
 
@@ -24,13 +24,13 @@ public final class MainPresenter {
 
   private final MainScreen screen;
 
-  private final BalanceManager balanceManager;
+  private final MessageHelper messageHelper;
 
-  private final NetworkManager networkManager;
+  private final NetworkHelper networkHelper;
 
   private final DataLoader dataLoader;
 
-  private final MessageHelper messageHelper;
+  private final BalanceManager balanceManager;
 
   /**
    * TODO
@@ -69,14 +69,14 @@ public final class MainPresenter {
    * @param screen
    *   TODO
    */
-  public MainPresenter(@NonNull MainScreen screen, @NonNull BalanceManager balanceManager,
-    @NonNull NetworkManager networkManager, @NonNull DataLoader dataLoader,
-    @NonNull MessageHelper messageHelper) {
+  public MainPresenter(@NonNull MainScreen screen, @NonNull MessageHelper messageHelper,
+    @NonNull NetworkHelper networkHelper, @NonNull DataLoader dataLoader,
+    @NonNull BalanceManager balanceManager) {
     this.screen = screen;
-    this.balanceManager = balanceManager;
-    this.networkManager = networkManager;
-    this.dataLoader = dataLoader;
     this.messageHelper = messageHelper;
+    this.networkHelper = networkHelper;
+    this.dataLoader = dataLoader;
+    this.balanceManager = balanceManager;
   }
 
   /**
@@ -84,7 +84,7 @@ public final class MainPresenter {
    */
   public final void start() {
     balanceManager.start();
-    networkStatusSubscription = networkManager.status()
+    networkStatusSubscription = networkHelper.status()
       .observeOn(AndroidSchedulers.mainThread())
       .subscribe(new Action1<Boolean>() {
         @Override

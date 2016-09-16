@@ -14,7 +14,7 @@ import com.tpago.movil.R;
  *
  * @author hecvasro
  */
-public final class SplashFragment extends Fragment {
+public class SplashFragment extends Fragment {
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,

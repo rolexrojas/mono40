@@ -5,8 +5,8 @@ import android.support.annotation.NonNull;
 import com.tpago.movil.domain.api.ApiBridge;
 import com.tpago.movil.domain.api.ApiResult;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import rx.Observable;
 import rx.functions.Func2;
@@ -26,7 +26,7 @@ public final class DataLoader {
   /**
    * TODO
    */
-  private final BehaviorSubject<List<Account>> accountsSubject = BehaviorSubject.create();
+  private final BehaviorSubject<Set<Account>> accountsSubject = BehaviorSubject.create();
 
   public DataLoader(@NonNull ApiBridge apiBridge, @NonNull AccountRepository accountRepository) {
     this.apiBridge = apiBridge;
@@ -40,23 +40,23 @@ public final class DataLoader {
    */
   public final Observable<Result> load() {
     return Observable.zip(accountRepository.getAll(), apiBridge.getAllAccounts(),
-      new Func2<List<Account>, ApiResult<List<Account>>, Result>() {
+      new Func2<Set<Account>, ApiResult<Set<Account>>, Result>() {
         @Override
-        public Result call(List<Account> localData, ApiResult<List<Account>> result) {
+        public Result call(Set<Account> localData, ApiResult<Set<Account>> result) {
           if (!localData.isEmpty()) {
             accountsSubject.onNext(localData);
           }
           if (result.isSuccessful() && result.getData() != null) {
-            final List<Account> remoteData = result.getData();
+            final Set<Account> remoteData = result.getData();
             accountsSubject.onNext(remoteData);
-            final List<Account> addedAccounts = new ArrayList<>();
+            final Set<Account> addedAccounts = new HashSet<>();
             for (Account account : remoteData) {
               if (!localData.contains(account)) {
                 addedAccounts.add(account);
                 accountRepository.save(account);
               }
             }
-            final List<Account> deletedAccounts = new ArrayList<>();
+            final Set<Account> deletedAccounts = new HashSet<>();
             for (Account account : localData) {
               if (!remoteData.contains(account)) {
                 deletedAccounts.add(account);
@@ -85,7 +85,7 @@ public final class DataLoader {
    *
    * @return TODO
    */
-  public final Observable<List<Account>> accounts() {
+  public final Observable<Set<Account>> accounts() {
     return accountsSubject.asObservable();
   }
 
