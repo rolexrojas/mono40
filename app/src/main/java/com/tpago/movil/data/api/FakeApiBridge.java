@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 
@@ -64,13 +65,15 @@ public class FakeApiBridge implements ApiBridge {
   @NonNull
   @Override
   public Observable<ApiResult<Set<Bank>>> getAllBanks() {
-    return Observable.just(new ApiResult<>(ApiCode.SUCCESS, banks));
+    return Observable.just(new ApiResult<>(ApiCode.SUCCESS, banks))
+      .delay(1L, TimeUnit.SECONDS);
   }
 
   @NonNull
   @Override
   public Observable<ApiResult<Set<Account>>> getAllAccounts() {
-    return Observable.just(new ApiResult<>(ApiCode.SUCCESS, accounts));
+    return Observable.just(new ApiResult<>(ApiCode.SUCCESS, accounts))
+      .delay(1L, TimeUnit.SECONDS);
   }
 
   @NonNull
@@ -78,9 +81,11 @@ public class FakeApiBridge implements ApiBridge {
   public Observable<ApiResult<Balance>> queryBalance(@NonNull Account account,
     @NonNull String pin) {
     if (balances.containsKey(account)) {
-      return Observable.just(new ApiResult<>(ApiCode.SUCCESS, balances.get(account)));
+      return Observable.just(new ApiResult<>(ApiCode.SUCCESS, balances.get(account)))
+        .delay(1L, TimeUnit.SECONDS);
     } else {
-      return Observable.just(new ApiResult<Balance>(ApiCode.NOT_FOUND, null));
+      return Observable.just(new ApiResult<Balance>(ApiCode.NOT_FOUND, null))
+        .delay(1L, TimeUnit.SECONDS);
     }
   }
 }
