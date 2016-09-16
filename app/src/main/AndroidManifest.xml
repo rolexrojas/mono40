@@ -12,6 +12,11 @@
     android:label="@string/app_name"
     android:supportsRtl="true"
     android:theme="@style/AppTheme">
+    <receiver android:name=".data.net.NetworkStatusBroadcastReceiver">
+      <intent-filter>
+        <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+      </intent-filter>
+    </receiver>
     <activity
       android:name=".ui.main.MainActivity"
       android:screenOrientation="portrait">

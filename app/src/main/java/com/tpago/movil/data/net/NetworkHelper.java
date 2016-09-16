@@ -36,12 +36,7 @@ public final class NetworkHelper {
    */
   final void checkStatus() {
     final NetworkInfo info = connectivityManager.getActiveNetworkInfo();
-    if (info != null) {
-      final NetworkInfo.State state = info.getState();
-      subject.onNext(state == NetworkInfo.State.CONNECTING || state == NetworkInfo.State.CONNECTED);
-    } else {
-      subject.onNext(false);
-    }
+    subject.onNext(info != null && info.isConnected());
   }
 
   /**
