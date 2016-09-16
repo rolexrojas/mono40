@@ -1,11 +1,13 @@
 package com.tpago.movil.ui.main;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
@@ -95,9 +97,33 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
 
   @Override
   public void showDialog(@NonNull String title, @NonNull String description,
-    @NonNull String positiveOptionText, @Nullable OnOptionClickedListener positiveOptionListener,
-    @Nullable String neutralOptionText, @Nullable OnOptionClickedListener neutralOptionListener) {
-    // TODO
+    @NonNull String positiveOptionText,
+    @Nullable final OnOptionClickedListener positiveOptionListener,
+    @Nullable String neutralOptionText,
+    @Nullable final OnOptionClickedListener neutralOptionListener) {
+    final AlertDialog.Builder builder = new AlertDialog.Builder(this)
+      .setCancelable(false)
+      .setTitle(title)
+      .setMessage(description)
+      .setPositiveButton(positiveOptionText, new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+          if (positiveOptionListener != null) {
+            positiveOptionListener.onClick();
+          }
+        }
+      });
+    if (neutralOptionText != null) {
+      builder.setNegativeButton(neutralOptionText, new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+          if (neutralOptionListener != null) {
+            neutralOptionListener.onClick();
+          }
+        }
+      });
+    }
+    builder.show();
   }
 
   @Override
