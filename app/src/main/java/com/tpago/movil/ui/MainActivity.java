@@ -3,6 +3,8 @@ package com.tpago.movil.ui;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +25,11 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 public class MainActivity extends AppCompatActivity implements MainScreen {
+  /**
+   * TODO
+   */
+  private static final String FRAGMENT_TAG_SPLASH = "splash";
+
   private Unbinder unbinder;
 
   @Inject
@@ -53,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
   protected void onStart() {
     super.onStart();
 //    presenter.start();
+    showSplashScreen();
   }
 
   @Override
@@ -87,11 +95,22 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
 
   @Override
   public void showSplashScreen() {
-    // TODO
+    final FragmentManager fragmentManager = getSupportFragmentManager();
+    if (fragmentManager.findFragmentByTag(FRAGMENT_TAG_SPLASH) == null) {
+      fragmentManager.beginTransaction()
+        .replace(R.id.frame_layout_full_screen_container, SplashDialogFragment.newInstance())
+        .commit();
+    }
   }
 
   @Override
   public void hideSplashScreen() {
-    // TODO
+    final FragmentManager fragmentManager = getSupportFragmentManager();
+    final Fragment fragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_SPLASH);
+    if (fragment != null) {
+      fragmentManager.beginTransaction()
+        .remove(fragment)
+        .commit();
+    }
   }
 }
