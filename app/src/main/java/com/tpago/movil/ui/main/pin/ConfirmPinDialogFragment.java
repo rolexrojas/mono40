@@ -1,4 +1,4 @@
-package com.tpago.movil.ui;
+package com.tpago.movil.ui.main.pin;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -8,7 +8,7 @@ import android.support.v4.app.DialogFragment;
  *
  * @author hecvasro
  */
-public final class ConfirmPinDialogFragment extends DialogFragment {
+public class ConfirmPinDialogFragment extends DialogFragment {
   /**
    * TODO
    *

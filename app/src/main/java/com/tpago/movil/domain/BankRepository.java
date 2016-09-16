@@ -2,44 +2,46 @@ package com.tpago.movil.domain;
 
 import android.support.annotation.NonNull;
 
+import java.util.Set;
+
 import rx.Observable;
 
 /**
- * TODO
+ * Contract that defines all the required methods for managing {@link Bank banks} locally.
  *
  * @author hecvasro
  */
 public interface BankRepository {
   /**
-   * TODO
+   * Creates a {@link Bank bank} and stores it locally.
    *
    * @param id
-   *   TODO
+   *   {@link Bank}'s identifier.
    * @param name
-   *   TODO
-   * @param active
-   *   TODO
+   *   {@link Bank}'s name.
+   * @param state
+   *   {@link Bank}'s state. True if it is active, false otherwise.
    *
    * @return TODO
    */
   @NonNull
-  Observable<Bank> create(@NonNull String id, @NonNull String name, boolean active);
+  Observable<Bank> create(@NonNull String id, @NonNull String name, boolean state);
 
   /**
-   * TODO
+   * Gets all the locally stored {@link Bank banks}.
    *
-   * @return TODO
+   * @return All the locally stored {@link Bank banks}.
    */
   @NonNull
-  Observable<Bank> getAll();
+  Observable<Set<Bank>> getAll();
 
   /**
-   * TODO
+   * Gets the {@link Bank bank} identified by the given id.
    *
    * @param id
-   *   TODO
+   *   {@link Bank}'s identifier.
    *
-   * @return TODO
+   * @return {@link Bank} identified by the given id.
    */
   @NonNull
   Observable<Bank> getById(@NonNull String id);

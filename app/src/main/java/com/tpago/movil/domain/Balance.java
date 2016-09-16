@@ -3,63 +3,47 @@ package com.tpago.movil.domain;
 import android.support.annotation.NonNull;
 
 /**
- * TODO
+ * Account balance representation.
  *
  * @author hecvasro
  */
-public final class Balance {
+public class Balance {
   /**
-   * TODO
-   */
-  private final long creationDate;
-
-  /**
-   * TODO
+   * Balance's value.
    */
   private final double value;
 
   /**
-   * TODO
+   * Balance's description.
    */
   private final String description;
 
   /**
-   * TODO
+   * Constructs a new balance.
    *
    * @param value
-   *   TODO
+   *   Balance's value.
    * @param description
-   *   TODO
+   *   Balance's description
    */
   public Balance(double value, @NonNull String description) {
-    this.creationDate = System.currentTimeMillis();
     this.value = value;
     this.description = description;
   }
 
   /**
-   * TODO
+   * Gets the value of the balance.
    *
-   * @return TODO
-   */
-  public final boolean isExpired() {
-    // TODO
-    return true;
-  }
-
-  /**
-   * TODO
-   *
-   * @return TODO
+   * @return Balance's value.
    */
   public final double getValue() {
     return value;
   }
 
   /**
-   * TODO
+   * Gets the description of the balance.
    *
-   * @return TODO
+   * @return Balance's description.
    */
   @NonNull
   public final String getDescription() {

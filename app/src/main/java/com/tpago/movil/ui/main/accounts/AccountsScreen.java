@@ -1,4 +1,4 @@
-package com.tpago.movil.ui.accounts;
+package com.tpago.movil.ui.main.accounts;
 
 /**
  * TODO

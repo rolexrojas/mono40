@@ -3,30 +3,17 @@ package com.tpago.movil.domain;
 import android.support.annotation.NonNull;
 
 /**
- * TODO
+ * Credit card representation.
  *
  * @author hecvasro
  */
-public final class CreditCard extends Account {
+public class CreditCard extends Account {
   /**
-   * TODO
-   *
-   * @param alias
-   *   TODO
-   * @param currency
-   *   TODO
-   * @param bank
-   *   TODO
-   * @param queryFee
-   *   TODO
-   * @param queryFeeDescription
-   *   TODO
-   * @param balanceUrl
-   *   TODO
+   * {@inheritDoc}
    */
   public CreditCard(@NonNull String alias, @NonNull String currency, @NonNull Bank bank,
-    double queryFee, @NonNull String queryFeeDescription, @NonNull String balanceUrl) {
+    double queryFee, @NonNull String queryFeeDescription, @NonNull String queryBalanceUrl) {
     super(AccountType.CREDIT_CARD, alias, currency, bank, queryFee, queryFeeDescription,
-      balanceUrl);
+      queryBalanceUrl);
   }
 }

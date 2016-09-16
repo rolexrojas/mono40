@@ -3,29 +3,17 @@ package com.tpago.movil.domain;
 import android.support.annotation.NonNull;
 
 /**
- * TODO
+ * Bank account representation.
  *
  * @author hecvasro
  */
-public final class BankAccount extends Account {
+public class BankAccount extends Account {
   /**
-   * TODO
-   *
-   * @param alias
-   *   TODO
-   * @param currency
-   *   TODO
-   * @param bank
-   *   TODO
-   * @param queryFee
-   *   TODO
-   * @param queryFeeDescription
-   *   TODO
-   * @param balanceUrl
-   *   TODO
+   * {@inheritDoc}
    */
   public BankAccount(@NonNull String alias, @NonNull String currency, @NonNull Bank bank,
-    double queryFee, @NonNull String queryFeeDescription, @NonNull String balanceUrl) {
-    super(AccountType.BANK_ACCOUNT, alias, currency, bank, queryFee, queryFeeDescription, balanceUrl);
+    double queryFee, @NonNull String queryFeeDescription, @NonNull String queryBalanceUrl) {
+    super(AccountType.BANK_ACCOUNT, alias, currency, bank, queryFee, queryFeeDescription,
+      queryBalanceUrl);
   }
 }

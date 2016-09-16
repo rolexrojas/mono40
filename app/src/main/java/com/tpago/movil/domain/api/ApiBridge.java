@@ -7,41 +7,42 @@ import com.tpago.movil.domain.Balance;
 import com.tpago.movil.domain.Bank;
 
 import java.util.List;
+import java.util.Set;
 
 import rx.Observable;
 
 /**
- * TODO
+ * Contract that defines all the required methods to communicate with the API.
  *
  * @author hecvasro
  */
 public interface ApiBridge {
   /**
-   * TODO
+   * Gets all the available {@link Bank banks} from the API.
    *
-   * @return TODO
+   * @return All the available {@link Bank banks} from the API.
    */
   @NonNull
-  Observable<ApiResult<List<Bank>>> getAllBanks();
+  Observable<ApiResult<Set<Bank>>> getAllBanks();
 
   /**
-   * TODO
+   * Gets all the registered {@link Account accounts} from the API.
    *
-   * @return TODO
+   * @return All the registered {@link Account accounts} from the API.
    */
   @NonNull
-  Observable<ApiResult<List<Account>>> getInitialData();
+  Observable<ApiResult<Set<Account>>> getAllAccounts();
 
   /**
-   * TODO
+   * Query the {@link Balance balance} of an {@link Account account} from the API.
    *
    * @param account
-   *   TODO
+   *   {@link Account} that will be queried.
    * @param pin
-   *   TODO
+   *   User's PIN.
    *
-   * @return TODO
+   * @return {@link Balance balance} of an {@link Account account} from the API.
    */
   @NonNull
-  Observable<ApiResult<Balance>> getAccountBalance(@NonNull Account account, @NonNull String pin);
+  Observable<ApiResult<Balance>> queryBalance(@NonNull Account account, @NonNull String pin);
 }

@@ -3,27 +3,29 @@ package com.tpago.movil.domain.api;
 import android.support.annotation.Nullable;
 
 /**
- * TODO
+ * API result representation.
  *
  * @author hecvasro
  */
 public final class ApiResult<T> {
   /**
-   * TODO
+   * Result's {@link ApiCode code}.
    */
   @ApiCode
   private final int code;
 
   /**
-   * TODO
+   * Result's data.
    */
   private final T data;
 
   /**
-   * TODO
+   * Constructs a new API result.
    *
-   * @param code TODO
-   * @param data TODO
+   * @param code
+   *   Result's {@link ApiCode code}.
+   * @param data
+   *   Result's data.
    */
   public ApiResult(@ApiCode int code, @Nullable T data) {
     this.code = code;
@@ -31,9 +33,9 @@ public final class ApiResult<T> {
   }
 
   /**
-   * TODO
+   * Gets the {@link ApiCode code} of the result.
    *
-   * @return TODO
+   * @return Result's {@link ApiCode code}.
    */
   @ApiCode
   public final int getCode() {
@@ -41,9 +43,9 @@ public final class ApiResult<T> {
   }
 
   /**
-   * TODO
+   * Gets the data of the result.
    *
-   * @return TODO
+   * @return Result's data.
    */
   @Nullable
   public final T getData() {
@@ -51,12 +53,11 @@ public final class ApiResult<T> {
   }
 
   /**
-   * TODO
+   * Indicates whether the result is successful or not.
    *
-   * @return TODO
+   * @return True if it is successful, false otherwise.
    */
   public final boolean isSuccessful() {
-    // TODO
-    return false;
+    return code == ApiCode.SUCCESS;
   }
 }
