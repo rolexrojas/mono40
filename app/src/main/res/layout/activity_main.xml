@@ -1,38 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
+<FrameLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
-  <android.support.design.widget.CoordinatorLayout
+  <com.tpago.movil.ui.widget.SliderLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
+    <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:fitsSystemWindows="true"
-      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+      android:layout_height="match_parent"
+      android:background="@color/background_menu"
+      android:orientation="vertical">
+
+      <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="?android:actionBarSize">
+
+        <ImageView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:src="@drawable/logo_menu"/>
+      </FrameLayout>
+
+      <TextView
+        android:id="@+id/menu_item_payments"
+        style="@style/MenuItem.Compound"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:drawableStart="@drawable/icon_payments"
+        android:text="@string/payments"/>
+
+      <TextView
+        style="@style/MenuItem.Compound"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:drawableStart="@drawable/icon_commerce"
+        android:gravity="center_vertical"
+        android:text="@string/commerce"/>
+
+      <TextView
+        android:id="@+id/menu_item_accounts"
+        style="@style/MenuItem.Compound"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:drawableStart="@drawable/icon_accounts"
+        android:text="@string/accounts"/>
+
+      <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+          android:id="@+id/menu_item_add_another_account"
+          style="@style/MenuItem.Simple"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_alignParentBottom="true"
+          android:layout_marginBottom="25dp"
+          android:text="@string/add_another_account"/>
+
+        <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_above="@+id/menu_item_add_another_account"
+          android:layout_alignParentTop="true"
+          android:gravity="center"
+          android:orientation="vertical">
+
+          <TextView
+            android:id="@+id/menu_item_profile"
+            style="@style/MenuItem.Simple"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/my_profile"/>
+
+          <TextView
+            android:id="@+id/menu_item_preferences"
+            style="@style/MenuItem.Simple"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/preferences"/>
+
+          <TextView
+            android:id="@+id/menu_item_about"
+            style="@style/MenuItem.Simple"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/about"/>
+
+          <TextView
+            android:id="@+id/menu_item_help"
+            style="@style/MenuItem.Simple"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/help"/>
+        </LinearLayout>
+      </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical">
 
       <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"/>
-    </android.support.design.widget.AppBarLayout>
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <FrameLayout
-      android:id="@+id/frame_layout_container"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-  </android.support.design.widget.CoordinatorLayout>
+      <FrameLayout
+        android:id="@+id/frame_layout_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    </LinearLayout>
+  </com.tpago.movil.ui.widget.SliderLayout>
 
   <FrameLayout
     android:id="@+id/frame_layout_full_screen_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"/>
-</android.support.v4.widget.DrawerLayout>
+</FrameLayout>

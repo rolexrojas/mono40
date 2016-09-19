@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
       actionBar.setDisplayShowTitleEnabled(true);
     }
     // Prepares the toolbar.
-    toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
+    toolbar.setNavigationIcon(R.drawable.icon_menu_white_24dp);
   }
 
   @Override
