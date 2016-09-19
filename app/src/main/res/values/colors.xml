@@ -3,7 +3,7 @@
   <color name="accent">@color/primary</color>
   <color name="background_menu">#821477</color>
   <color name="primary">#9C188F</color>
-  <color name="primary_dark">#26000000</color>
+  <color name="primary_dark">#6D1764</color>
   <color name="transparent">@android:color/transparent</color>
   <color name="white">@android:color/white</color>
 </resources>

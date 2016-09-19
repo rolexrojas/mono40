@@ -31,6 +31,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.os.ParcelableCompat;
 import android.support.v4.os.ParcelableCompatCreatorCallbacks;
 import android.support.v4.view.AbsSavedState;
@@ -48,6 +49,8 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.accessibility.AccessibilityEvent;
+
+import com.tpago.movil.R;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -279,6 +282,11 @@ public class SlidingPaneLayout extends ViewGroup {
 
     mDragHelper = ViewDragHelper.create(this, 0.5f, new DragHelperCallback());
     mDragHelper.setMinVelocity(MIN_FLING_VELOCITY * density);
+
+    // Disables all the fade effects.
+    final int transparentColor = ContextCompat.getColor(context, R.color.transparent);
+    setSliderFadeColor(transparentColor);
+    setCoveredFadeColor(transparentColor);
   }
 
   /**
