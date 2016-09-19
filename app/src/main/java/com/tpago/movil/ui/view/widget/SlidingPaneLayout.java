@@ -99,11 +99,11 @@ public class SlidingPaneLayout extends ViewGroup {
   private static final String TAG = "SlidingPaneLayout";
 
   /**
-   * Default size of the overhang for a pane in the open state. At least this much of a sliding pane
-   * will remain visible. This indicates that there is more content available and provides a
-   * "physical" edge to grab to pull it closed.
+   * Default size of the overhang in percentage for a pane in the open state. At least this much of
+   * a sliding pane will remain visible. This indicates that there is more content available and
+   * provides a "physical" edge to grab to pull it closed.
    */
-  private static final int DEFAULT_OVERHANG_SIZE = 32; // dp;
+  private static final double DEFAULT_OVERHANG_SIZE_PERCENTAGE = 0.76;
 
   /**
    * If no fade color is given by default it will fade to 80% gray.
@@ -136,10 +136,10 @@ public class SlidingPaneLayout extends ViewGroup {
   private Drawable mShadowDrawableRight;
 
   /**
-   * The size of the overhang in pixels. This is the minimum section of the sliding panel that will
-   * be visible in the open state to allow for a closing drag.
+   * The size of the overhang in percentage. This is the minimum section of the sliding panel that
+   * will be visible in the open state to allow for a closing drag.
    */
-  private final int mOverhangSize;
+  private double mOverhangSizePercentage;
 
   /**
    * True if a panel can slide with the current measurements
@@ -192,8 +192,7 @@ public class SlidingPaneLayout extends ViewGroup {
 
   private final Rect mTmpRect = new Rect();
 
-  final ArrayList<DisableLayerRunnable> mPostedRunnables =
-    new ArrayList<DisableLayerRunnable>();
+  final ArrayList<DisableLayerRunnable> mPostedRunnables = new ArrayList<DisableLayerRunnable>();
 
   static final SlidingPanelLayoutImpl IMPL;
 
@@ -271,7 +270,7 @@ public class SlidingPaneLayout extends ViewGroup {
     super(context, attrs, defStyle);
 
     final float density = context.getResources().getDisplayMetrics().density;
-    mOverhangSize = (int) (DEFAULT_OVERHANG_SIZE * density + 0.5f);
+    mOverhangSizePercentage = DEFAULT_OVERHANG_SIZE_PERCENTAGE;
 
     final ViewConfiguration viewConfig = ViewConfiguration.get(context);
 
@@ -582,7 +581,7 @@ public class SlidingPaneLayout extends ViewGroup {
 
     // Resolve weight and make sure non-sliding panels are smaller than the full screen.
     if (canSlide || weightSum > 0) {
-      final int fixedPanelWidthLimit = widthAvailable - mOverhangSize;
+      final int fixedPanelWidthLimit = (int) (widthAvailable * mOverhangSizePercentage);
 
       for (int i = 0; i < childCount; i++) {
         final View child = getChildAt(i);
@@ -713,7 +712,7 @@ public class SlidingPaneLayout extends ViewGroup {
       if (lp.slideable) {
         final int margin = lp.leftMargin + lp.rightMargin;
         final int range = Math.min(nextXStart,
-          width - paddingEnd - mOverhangSize) - xStart - margin;
+          (int) (width * mOverhangSizePercentage) - paddingEnd) - xStart - margin;
         mSlideRange = range;
         final int lpMargin = isLayoutRtl ? lp.rightMargin : lp.leftMargin;
         lp.dimWhenOffset = xStart + lpMargin + range + childWidth / 2 > width - paddingEnd;
