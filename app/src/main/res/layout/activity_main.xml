@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.design.widget.CoordinatorLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
-  android:layout_height="match_parent">
+  android:layout_height="match_parent"
+  android:fitsSystemWindows="true">
 
-  <com.tpago.movil.ui.widget.SliderLayout
-    android:id="@+id/slider_layout"
+  <com.tpago.movil.ui.view.widget.SlidingPaneLayout
+    android:id="@+id/sliding_pane_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:background="@color/background_menu"
+      android:fitsSystemWindows="true"
       android:orientation="vertical">
 
       <FrameLayout
@@ -122,10 +125,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
     </LinearLayout>
-  </com.tpago.movil.ui.widget.SliderLayout>
+  </com.tpago.movil.ui.view.widget.SlidingPaneLayout>
 
   <FrameLayout
     android:id="@+id/frame_layout_full_screen_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"/>
-</FrameLayout>
+</android.support.design.widget.CoordinatorLayout>

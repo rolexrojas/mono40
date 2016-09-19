@@ -16,11 +16,10 @@ import android.widget.Toast;
 import com.tpago.movil.App;
 import com.tpago.movil.R;
 import com.tpago.movil.ui.SplashFragment;
-import com.tpago.movil.ui.widget.SliderLayout;
+import com.tpago.movil.ui.view.widget.SlidingPaneLayout;
 
 import javax.inject.Inject;
 
-import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -43,8 +42,8 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
   @Inject
   MainPresenter presenter;
 
-  @BindView(R.id.slider_layout)
-  SliderLayout sliderLayout;
+  @BindView(R.id.sliding_pane_layout)
+  SlidingPaneLayout slidingPaneLayout;
 
   @BindView(R.id.toolbar)
   Toolbar toolbar;
@@ -75,7 +74,11 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
     toolbar.setNavigationOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        sliderLayout.toggle();
+        if (slidingPaneLayout.isOpen()) {
+          slidingPaneLayout.closePane();
+        } else {
+          slidingPaneLayout.openPane();
+        }
       }
     });
   }
