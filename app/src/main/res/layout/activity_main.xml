@@ -5,6 +5,7 @@
   android:layout_height="match_parent">
 
   <com.tpago.movil.ui.widget.SliderLayout
+    android:id="@+id/slider_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -31,7 +32,7 @@
         style="@style/MenuItem.Compound"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="17dp"
         android:drawableStart="@drawable/icon_payments"
         android:text="@string/payments"/>
 
@@ -39,7 +40,6 @@
         style="@style/MenuItem.Compound"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
         android:drawableStart="@drawable/icon_commerce"
         android:gravity="center_vertical"
         android:text="@string/commerce"/>
@@ -49,7 +49,6 @@
         style="@style/MenuItem.Compound"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
         android:drawableStart="@drawable/icon_accounts"
         android:text="@string/accounts"/>
 
@@ -63,7 +62,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_alignParentBottom="true"
-          android:layout_marginBottom="25dp"
+          android:layout_marginBottom="17dp"
           android:text="@string/add_another_account"/>
 
         <LinearLayout
@@ -86,7 +85,6 @@
             style="@style/MenuItem.Simple"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:text="@string/preferences"/>
 
           <TextView
@@ -94,7 +92,6 @@
             style="@style/MenuItem.Simple"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:text="@string/about"/>
 
           <TextView
@@ -102,7 +99,6 @@
             style="@style/MenuItem.Simple"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:text="@string/help"/>
         </LinearLayout>
       </RelativeLayout>
@@ -117,6 +113,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/primary"
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
