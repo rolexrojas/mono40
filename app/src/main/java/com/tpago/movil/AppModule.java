@@ -19,10 +19,10 @@ import dagger.Provides;
  * @author hecvasro
  */
 @Module
-public final class AppModule {
+final class AppModule {
   private final App app;
 
-  public AppModule(@NonNull App app) {
+  AppModule(@NonNull App app) {
     this.app = app;
   }
 

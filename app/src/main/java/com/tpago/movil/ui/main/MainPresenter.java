@@ -19,7 +19,7 @@ import rx.subscriptions.Subscriptions;
  *
  * @author hecvasro
  */
-public final class MainPresenter {
+final class MainPresenter {
   private static final String TAG = MainPresenter.class.getSimpleName();
 
   private final MainScreen screen;
@@ -69,7 +69,7 @@ public final class MainPresenter {
    * @param screen
    *   TODO
    */
-  public MainPresenter(@NonNull MainScreen screen, @NonNull MessageHelper messageHelper,
+  MainPresenter(@NonNull MainScreen screen, @NonNull MessageHelper messageHelper,
     @NonNull NetworkHelper networkHelper, @NonNull DataLoader dataLoader,
     @NonNull BalanceManager balanceManager) {
     this.screen = screen;
@@ -82,7 +82,7 @@ public final class MainPresenter {
   /**
    * TODO
    */
-  public final void start() {
+  final void start() {
     balanceManager.start();
     networkStatusSubscription = networkHelper.status()
       .observeOn(AndroidSchedulers.mainThread())
@@ -146,7 +146,7 @@ public final class MainPresenter {
   /**
    * TODO
    */
-  public final void stop() {
+  final void stop() {
     dataLoaded = false;
     splashScreenShowed = false;
     if (!dataLoadSubscription.isUnsubscribed()) {

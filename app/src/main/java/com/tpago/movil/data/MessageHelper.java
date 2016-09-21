@@ -14,7 +14,7 @@ import com.tpago.movil.R;
 public final class MessageHelper {
   private final Resources resources;
 
-  public MessageHelper(@NonNull Resources resources) {
+  MessageHelper(@NonNull Resources resources) {
     this.resources = resources;
   }
 
@@ -46,6 +46,11 @@ public final class MessageHelper {
   @NonNull
   public final String ok() {
     return getString(R.string.ok);
+  }
+
+  @NonNull
+  public final String payments() {
+    return getString(R.string.payments);
   }
 
   @NonNull

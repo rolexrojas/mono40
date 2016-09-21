@@ -11,6 +11,14 @@ import android.support.annotation.Nullable;
 public interface MainScreen {
   /**
    * TODO
+   *
+   * @param title
+   *   TODO
+   */
+  void setTitle(@Nullable String title);
+
+  /**
+   * TODO
    */
   void showAccountsScreen();
 
