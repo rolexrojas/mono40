@@ -28,14 +28,14 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
       <FrameLayout
-        android:id="@+id/frame_layout_container"
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
     </LinearLayout>
   </com.tpago.movil.ui.view.widget.SlidingPaneLayout>
 
   <FrameLayout
-    android:id="@+id/frame_layout_full_screen_container"
+    android:id="@+id/fragment_container_full_screen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"/>
 </android.support.design.widget.CoordinatorLayout>

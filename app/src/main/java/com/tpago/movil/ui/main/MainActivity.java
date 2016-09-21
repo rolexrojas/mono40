@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
     final FragmentManager fragmentManager = getSupportFragmentManager();
     if (fragmentManager.findFragmentByTag(FRAGMENT_TAG_SPLASH) == null) {
       fragmentManager.beginTransaction()
-        .replace(R.id.frame_layout_full_screen_container, new SplashFragment(),
+        .replace(R.id.fragment_container_full_screen, new SplashFragment(),
           FRAGMENT_TAG_SPLASH)
         .commit();
     }
