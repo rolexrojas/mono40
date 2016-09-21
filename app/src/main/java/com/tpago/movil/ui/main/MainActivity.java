@@ -10,11 +10,13 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Toast;
 
 import com.tpago.movil.App;
 import com.tpago.movil.R;
 import com.tpago.movil.ui.SplashFragment;
+import com.tpago.movil.ui.view.widget.SlidingPaneLayout;
 
 import javax.inject.Inject;
 
@@ -39,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
 
   @Inject
   MainPresenter presenter;
+
+  @BindView(R.id.sliding_pane_layout)
+  SlidingPaneLayout slidingPaneLayout;
 
   @BindView(R.id.toolbar)
   Toolbar toolbar;
@@ -65,7 +70,17 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
       actionBar.setDisplayShowTitleEnabled(true);
     }
     // Prepares the toolbar.
-    toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
+    toolbar.setNavigationIcon(R.drawable.icon_menu_white_24dp);
+    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        if (slidingPaneLayout.isOpen()) {
+          slidingPaneLayout.closePane();
+        } else {
+          slidingPaneLayout.openPane();
+        }
+      }
+    });
   }
 
   @Override
@@ -133,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
     final FragmentManager fragmentManager = getSupportFragmentManager();
     if (fragmentManager.findFragmentByTag(FRAGMENT_TAG_SPLASH) == null) {
       fragmentManager.beginTransaction()
-        .replace(R.id.frame_layout_full_screen_container, new SplashFragment(),
+        .replace(R.id.fragment_container_full_screen, new SplashFragment(),
           FRAGMENT_TAG_SPLASH)
         .commit();
     }
