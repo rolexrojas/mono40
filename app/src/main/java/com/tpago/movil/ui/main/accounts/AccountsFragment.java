@@ -26,14 +26,32 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 public class AccountsFragment extends SubFragment implements AccountsScreen {
+  /**
+   * TODO
+   */
   private Unbinder unbinder;
 
+  /**
+   * TODO
+   */
   @Inject
   MessageHelper messageHelper;
 
+  /**
+   * TODO
+   */
+  @Inject
+  AccountsPresenter presenter;
+
+  /**
+   * TODO
+   */
   @BindView(R.id.recycler_view)
   RecyclerView recyclerView;
 
+  /**
+   * TODO
+   */
   @BindView(R.id.text_view_add_another_account)
   TextView addAnotherAccountTextView;
 
@@ -77,6 +95,15 @@ public class AccountsFragment extends SubFragment implements AccountsScreen {
     super.onStart();
     // Sets the title.
     parentScreen.setTitle(messageHelper.accounts());
+    // Starts the presenter.
+    presenter.start();
+  }
+
+  @Override
+  public void onStop() {
+    super.onStop();
+    // Stops the presenter.
+    presenter.stop();
   }
 
   @Override

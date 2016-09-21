@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
@@ -28,6 +29,9 @@ public final class DataLoader {
    */
   private final BehaviorSubject<Set<Account>> accountsSubject = BehaviorSubject.create();
 
+  /**
+   * TODO
+   */
   public DataLoader(@NonNull ApiBridge apiBridge, @NonNull AccountRepository accountRepository) {
     this.apiBridge = apiBridge;
     this.accountRepository = accountRepository;
@@ -86,17 +90,37 @@ public final class DataLoader {
    * @return TODO
    */
   public final Observable<Set<Account>> accounts() {
-    return accountsSubject.asObservable();
+    return accountsSubject.asObservable()
+      .observeOn(AndroidSchedulers.mainThread());
   }
 
   /**
    * TODO
    */
   public enum Result {
+    /**
+     * TODO
+     */
     FAILED,
+
+    /**
+     * TODO
+     */
     SUCCESS_WITH_NO_CHANGES,
+
+    /**
+     * TODO
+     */
     SUCCESS_WITH_ACCOUNT_ADDITIONS,
+
+    /**
+     * TODO
+     */
     SUCCESS_WITH_ACCOUNT_REMOVALS,
+
+    /**
+     * TODO
+     */
     SUCCESS_WITH_ACCOUNT_ADDITIONS_AND_REMOVALS
   }
 }

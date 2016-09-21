@@ -2,6 +2,7 @@ package com.tpago.movil.ui.main;
 
 import com.tpago.movil.AppComponent;
 import com.tpago.movil.data.MessageHelper;
+import com.tpago.movil.domain.DataLoader;
 import com.tpago.movil.ui.ActivityScope;
 
 import dagger.Component;
@@ -28,4 +29,11 @@ public interface MainComponent {
    * @return TODO
    */
   MessageHelper provideMessageHelper();
+
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
+  DataLoader provideDataLoader();
 }
