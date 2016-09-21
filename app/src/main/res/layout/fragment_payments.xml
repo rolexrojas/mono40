@@ -14,10 +14,13 @@
     android:background="#FAF4F9"
     android:drawableEnd="@drawable/ic_add_gray_18dp"
     android:hint="Nombre, número o facturador"
+    android:imeOptions="actionDone"
+    android:maxLines="1"
     android:paddingBottom="16dp"
     android:paddingEnd="20dp"
     android:paddingStart="20dp"
     android:paddingTop="16dp"
+    android:singleLine="true"
     android:textColor="#989898"
     android:textColorHint="#989898"
     android:textSize="14sp"/>
