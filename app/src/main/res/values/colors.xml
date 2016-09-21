@@ -3,6 +3,8 @@
   <color name="accent">#9C188F</color>
   <color name="accent_alpha_20">#339C188F</color>
   <color name="background_menu">#821477</color>
+  <color name="currency_negative">#A5464E</color>
+  <color name="currency_positive">#347A57</color>
   <color name="primary">#9C188F</color>
   <color name="primary_dark">#6D1764</color>
   <color name="transparent">@android:color/transparent</color>

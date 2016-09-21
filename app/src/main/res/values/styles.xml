@@ -39,6 +39,15 @@
     <item name="android:textSize">15sp</item>
   </style>
 
+  <style name="Text">
+    <item name="android:textColor">#333</item>
+  </style>
+
+  <style name="Text.Currency">
+    <!-- TODO: Set typeface to 'GothamRounded-Medium'. -->
+    <item name="android:textSize">16sp</item>
+  </style>
+
   <style name="Label">
     <!-- TODO: Set typeface to 'GothamRounded-Bold'. -->
     <item name="android:textAllCaps">true</item>
