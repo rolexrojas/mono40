@@ -49,6 +49,11 @@ public final class MessageHelper {
   }
 
   @NonNull
+  public final String payments() {
+    return getString(R.string.payments);
+  }
+
+  @NonNull
   public final String yourAccountHaveBeenAdded() {
     return String.format(getString(R.string.your_account_have_been_added), appName());
   }
