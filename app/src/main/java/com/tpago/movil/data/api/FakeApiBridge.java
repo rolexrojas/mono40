@@ -22,12 +22,12 @@ import rx.Observable;
 /**
  * @author hecvasro
  */
-public class FakeApiBridge implements ApiBridge {
+class FakeApiBridge implements ApiBridge {
   private final Set<Bank> banks = new HashSet<>();
   private final Set<Account> accounts = new HashSet<>();
   private final Map<Account, Balance> balances = new HashMap<>();
 
-  public FakeApiBridge() {
+  FakeApiBridge() {
     Bank bank;
     Account account;
     Balance balance;

@@ -12,7 +12,7 @@ import dagger.Component;
  */
 @ActivityScope
 @Component(modules = MainModule.class, dependencies = AppComponent.class)
-public interface MainComponent {
+interface MainComponent {
   /**
    * TODO
    *

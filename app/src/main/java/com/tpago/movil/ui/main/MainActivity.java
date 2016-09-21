@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.tpago.movil.App;
 import com.tpago.movil.R;
 import com.tpago.movil.ui.SplashFragment;
+import com.tpago.movil.ui.main.payments.PaymentsFragment;
 import com.tpago.movil.ui.view.widget.SlidingPaneLayout;
 
 import javax.inject.Inject;
@@ -81,6 +82,10 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
         }
       }
     });
+    // TODO
+    getSupportFragmentManager().beginTransaction()
+      .replace(R.id.fragment_container, PaymentsFragment.newInstance())
+      .commit();
   }
 
   @Override
@@ -100,6 +105,14 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
     super.onDestroy();
     // Unbinds all the annotated views and methods.
     unbinder.unbind();
+  }
+
+  @Override
+  public void setTitle(@Nullable String title) {
+    final ActionBar actionBar = getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.setTitle(title);
+    }
   }
 
   @Override
@@ -148,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
     final FragmentManager fragmentManager = getSupportFragmentManager();
     if (fragmentManager.findFragmentByTag(FRAGMENT_TAG_SPLASH) == null) {
       fragmentManager.beginTransaction()
-        .replace(R.id.fragment_container_full_screen, new SplashFragment(),
+        .replace(R.id.fragment_container_full_screen, SplashFragment.newInstance(),
           FRAGMENT_TAG_SPLASH)
         .commit();
     }

@@ -17,10 +17,10 @@ import dagger.Provides;
  * @author hecvasro
  */
 @Module
-public class MainModule {
+class MainModule {
   private final MainScreen screen;
 
-  public MainModule(@NonNull MainScreen screen) {
+  MainModule(@NonNull MainScreen screen) {
     this.screen = screen;
   }
 
