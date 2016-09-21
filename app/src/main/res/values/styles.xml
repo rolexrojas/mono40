@@ -1,31 +1,60 @@
 <resources>
 
-  <style
-    name="AppTheme"
-    parent="Theme.AppCompat.Light.NoActionBar">
+  <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
     <item name="colorPrimary">@color/primary</item>
     <item name="colorPrimaryDark">@color/primary_dark</item>
     <item name="colorAccent">@color/accent</item>
   </style>
 
   <style name="MenuItem">
-    <item name="android:background">?android:selectableItemBackground</item>
+    <item name="android:background">?android:attr/selectableItemBackground</item>
     <item name="android:clickable">true</item>
     <item name="android:gravity">center_vertical</item>
     <item name="android:textColor">@color/white</item>
-    <item name="android:textSize">15sp</item>
   </style>
 
-  <style name="MenuItem.Simple">
+  <style name="MenuItem.Small">
+    <!-- TODO: Set typeface to 'GothamRounded-Book'. -->
+    <item name="android:paddingBottom">6dp</item>
+    <item name="android:paddingStart">27dp</item>
+    <item name="android:paddingTop">6dp</item>
+    <item name="android:textSize">12sp</item>
+  </style>
+
+  <style name="MenuItem.Normal">
+    <!-- TODO: Set typeface to 'GothamRounded-Book'. -->
     <item name="android:paddingBottom">8dp</item>
     <item name="android:paddingStart">27dp</item>
     <item name="android:paddingTop">8dp</item>
+    <item name="android:textSize">15sp</item>
   </style>
 
-  <style name="MenuItem.Compound">
+  <style name="MenuItem.Large">
+    <!-- TODO: Set typeface to 'GothamRounded-Medium'. -->
     <item name="android:drawablePadding">10dp</item>
     <item name="android:paddingBottom">16dp</item>
     <item name="android:paddingStart">19dp</item>
     <item name="android:paddingTop">16dp</item>
+    <item name="android:textAllCaps">true</item>
+    <item name="android:textSize">15sp</item>
+  </style>
+
+  <style name="Label">
+    <!-- TODO: Set typeface to 'GothamRounded-Bold'. -->
+    <item name="android:textAllCaps">true</item>
+    <item name="android:textColor">@color/primary</item>
+    <item name="android:textSize">14sp</item>
+  </style>
+
+  <style name="Button" parent="Widget.AppCompat.Button">
+    <item name="android:textAppearance">@style/Label</item>
+  </style>
+
+  <style name="Button.Transparent">
+    <item name="android:background">?android:attr/selectableItemBackground</item>
+  </style>
+
+  <style name="Button.Colored">
+    <item name="android:background">@drawable/bg_button_colored</item>
   </style>
 </resources>

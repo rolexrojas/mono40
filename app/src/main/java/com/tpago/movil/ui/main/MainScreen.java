@@ -8,15 +8,7 @@ import android.support.annotation.Nullable;
  *
  * @author hecvasro
  */
-public interface MainScreen {
-  /**
-   * TODO
-   *
-   * @param title
-   *   TODO
-   */
-  void setTitle(@Nullable String title);
-
+interface MainScreen {
   /**
    * TODO
    */

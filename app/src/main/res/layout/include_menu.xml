@@ -20,29 +20,29 @@
   </FrameLayout>
 
   <TextView
-    android:id="@+id/menu_item_payments"
-    style="@style/MenuItem.Compound"
+    android:id="@+id/text_view_payments"
+    style="@style/MenuItem.Large"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="17dp"
-    android:drawableStart="@drawable/icon_payments"
+    android:drawableStart="@drawable/ic_payments"
     android:text="@string/payments"/>
 
   <TextView
-    android:id="@+id/menu_item_commerce"
-    style="@style/MenuItem.Compound"
+    android:id="@+id/text_view_commerce"
+    style="@style/MenuItem.Large"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:drawableStart="@drawable/icon_commerce"
+    android:drawableStart="@drawable/ic_commerce"
     android:gravity="center_vertical"
     android:text="@string/commerce"/>
 
   <TextView
-    android:id="@+id/menu_item_accounts"
-    style="@style/MenuItem.Compound"
+    android:id="@+id/text_view_accounts"
+    style="@style/MenuItem.Large"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:drawableStart="@drawable/icon_accounts"
+    android:drawableStart="@drawable/ic_accounts"
     android:text="@string/accounts"/>
 
   <RelativeLayout
@@ -50,8 +50,8 @@
     android:layout_height="match_parent">
 
     <TextView
-      android:id="@+id/menu_item_add_another_account"
-      style="@style/MenuItem.Simple"
+      android:id="@+id/text_view_add_another_account"
+      style="@style/MenuItem.Small"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
@@ -61,35 +61,35 @@
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_above="@+id/menu_item_add_another_account"
+      android:layout_above="@+id/text_view_add_another_account"
       android:layout_alignParentTop="true"
       android:gravity="center"
       android:orientation="vertical">
 
       <TextView
-        android:id="@+id/menu_item_profile"
-        style="@style/MenuItem.Simple"
+        android:id="@+id/text_view_profile"
+        style="@style/MenuItem.Normal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/my_profile"/>
 
       <TextView
-        android:id="@+id/menu_item_preferences"
-        style="@style/MenuItem.Simple"
+        android:id="@+id/text_view_preferences"
+        style="@style/MenuItem.Normal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/preferences"/>
 
       <TextView
-        android:id="@+id/menu_item_about"
-        style="@style/MenuItem.Simple"
+        android:id="@+id/text_view_about"
+        style="@style/MenuItem.Normal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/about"/>
 
       <TextView
-        android:id="@+id/menu_item_help"
-        style="@style/MenuItem.Simple"
+        android:id="@+id/text_view_help"
+        style="@style/MenuItem.Normal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/help"/>
