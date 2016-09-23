@@ -2,14 +2,8 @@ apply plugin: "com.android.application"
 apply plugin: "com.neenbedankt.android-apt"
 
 android {
-//  signingConfigs {
-//    debug {
-//      storeFile rootProject.file("keystore/debug.keystore")
-//    }
-//  }
-
   compileSdkVersion 24
-  buildToolsVersion "24.0.1"
+  buildToolsVersion "24.0.2"
 
   defaultConfig {
     applicationId "com.tpago.movil"
@@ -17,6 +11,12 @@ android {
     targetSdkVersion 24
     versionCode 1
     versionName "0.0.1"
+  }
+
+  signingConfigs {
+    debug {
+      storeFile rootProject.file("keystore/debug.keystore")
+    }
   }
 
   buildTypes {
@@ -29,6 +29,7 @@ android {
 
 dependencies {
   def butterKnifeVersion = "8.4.0"
+  def calligraphyVersion = "2.2.0"
   def daggerVersion = "2.7"
   def halariousVersion = "0.14"
   def jUnitVersion = "4.12"
@@ -57,6 +58,7 @@ dependencies {
   compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"
   compile "io.reactivex:rxandroid:${rxAndroidVersion}"
   compile "io.reactivex:rxjava:${rxJavaVersion}"
+  compile "uk.co.chrisjenx:calligraphy:${calligraphyVersion}"
   compile fileTree(dir: "libs", include: ["*.jar"])
   provided "javax.annotation:jsr250-api:${jsr250Version}"
   testCompile "junit:junit:${jUnitVersion}"
