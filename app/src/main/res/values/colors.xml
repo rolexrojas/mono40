@@ -2,11 +2,13 @@
 <resources>
   <color name="accent">#9C188F</color>
   <color name="accent_alpha_20">#339C188F</color>
-  <color name="menu_background">#821477</color>
   <color name="black">#000</color>
   <color name="black_alpha_12">#1F000000</color>
   <color name="currency_negative">#A5464E</color>
   <color name="currency_positive">#347A57</color>
+  <color name="list_item_divider_light">#EFEFEF</color>
+  <color name="list_item_divider_normal">#33333333</color>
+  <color name="menu_background">#821477</color>
   <color name="primary">#9C188F</color>
   <color name="primary_dark">#6D1764</color>
   <color name="transparent">@android:color/transparent</color>

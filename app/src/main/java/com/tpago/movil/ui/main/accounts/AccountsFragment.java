@@ -16,6 +16,7 @@ import com.tpago.movil.domain.Account;
 import com.tpago.movil.domain.Balance;
 import com.tpago.movil.ui.main.SubFragment;
 import com.tpago.movil.ui.main.item.Item;
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,6 +108,11 @@ public class AccountsFragment extends SubFragment implements AccountsScreen {
     recyclerView.setAdapter(adapter);
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
       LinearLayoutManager.VERTICAL, false));
+    final RecyclerView.ItemDecoration decoration = new HorizontalDividerItemDecoration
+      .Builder(getContext())
+      .drawable(R.drawable.list_item_divider)
+      .build();
+    recyclerView.addItemDecoration(decoration);
   }
 
   @Override
