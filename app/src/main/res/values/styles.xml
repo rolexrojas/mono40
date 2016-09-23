@@ -1,47 +1,5 @@
 <resources>
-
-  <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-    <item name="colorPrimary">@color/primary</item>
-    <item name="colorPrimaryDark">@color/primary_dark</item>
-    <item name="colorAccent">@color/accent</item>
-  </style>
-
-  <style name="MenuItem">
-    <item name="android:background">?android:attr/selectableItemBackground</item>
-    <item name="android:clickable">true</item>
-    <item name="android:gravity">center_vertical</item>
-    <item name="android:textColor">@color/white</item>
-  </style>
-
-  <style name="MenuItem.Small">
-    <!-- TODO: Set typeface to 'GothamRounded-Book'. -->
-    <item name="android:paddingBottom">6dp</item>
-    <item name="android:paddingStart">27dp</item>
-    <item name="android:paddingTop">6dp</item>
-    <item name="android:textSize">12sp</item>
-  </style>
-
-  <style name="MenuItem.Normal">
-    <!-- TODO: Set typeface to 'GothamRounded-Book'. -->
-    <item name="android:paddingBottom">8dp</item>
-    <item name="android:paddingStart">27dp</item>
-    <item name="android:paddingTop">8dp</item>
-    <item name="android:textSize">15sp</item>
-  </style>
-
-  <style name="MenuItem.Large">
-    <!-- TODO: Set typeface to 'GothamRounded-Medium'. -->
-    <item name="android:drawablePadding">10dp</item>
-    <item name="android:paddingBottom">16dp</item>
-    <item name="android:paddingStart">19dp</item>
-    <item name="android:paddingTop">16dp</item>
-    <item name="android:textAllCaps">true</item>
-    <item name="android:textSize">15sp</item>
-  </style>
-
-  <style name="Text">
-    <item name="android:textColor">#333</item>
-  </style>
+  <style name="Text"/>
 
   <style name="Text.Currency">
     <!-- TODO: Set typeface to 'GothamRounded-Medium'. -->
@@ -58,12 +16,56 @@
   <style name="Button" parent="Widget.AppCompat.Button">
     <item name="android:textAppearance">@style/Label</item>
   </style>
-
   <style name="Button.Transparent">
     <item name="android:background">?android:attr/selectableItemBackground</item>
   </style>
-
   <style name="Button.Colored">
     <item name="android:background">@drawable/bg_button_colored</item>
   </style>
+
+  <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="colorPrimary">@color/primary</item>
+    <item name="colorPrimaryDark">@color/primary_dark</item>
+    <item name="colorAccent">@color/accent</item>
+  </style>
+
+  <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <item name="android:background">@color/primary</item>
+    <item name="fontPath">fonts/GothamRounded-Book.otf</item>
+  </style>
+
+  <style name="BaseMenuItem">
+    <item name="android:background">?android:attr/selectableItemBackground</item>
+    <item name="android:clickable">true</item>
+    <item name="android:gravity">center_vertical</item>
+    <item name="android:textColor">@color/white</item>
+  </style>
+  <style name="BaseMenuItem.Small">
+    <item name="android:paddingBottom">6dp</item>
+    <item name="android:paddingStart">27dp</item>
+    <item name="android:paddingTop">6dp</item>
+    <item name="android:textSize">12sp</item>
+    <item name="fontPath">fonts/GothamRounded-Book.otf</item>
+  </style>
+  <style name="BaseMenuItem.Normal">
+    <item name="android:paddingBottom">8dp</item>
+    <item name="android:paddingStart">27dp</item>
+    <item name="android:paddingTop">8dp</item>
+    <item name="android:textSize">15sp</item>
+    <item name="fontPath">fonts/GothamRounded-Book.otf</item>
+  </style>
+  <style name="BaseMenuItem.Large">
+    <item name="android:drawablePadding">10dp</item>
+    <item name="android:paddingBottom">16dp</item>
+    <item name="android:paddingStart">19dp</item>
+    <item name="android:paddingTop">16dp</item>
+    <item name="android:textAllCaps">true</item>
+    <item name="android:textSize">15sp</item>
+    <item name="fontPath">fonts/GothamRounded-Medium.otf</item>
+  </style>
+
+  <style name="MenuItem" parent="BaseMenuItem"/>
+  <style name="MenuItem.Small" parent="BaseMenuItem.Small"/>
+  <style name="MenuItem.Normal" parent="BaseMenuItem.Normal"/>
+  <style name="MenuItem.Large" parent="BaseMenuItem.Large"/>
 </resources>

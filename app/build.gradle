@@ -2,6 +2,12 @@ apply plugin: "com.android.application"
 apply plugin: "com.neenbedankt.android-apt"
 
 android {
+  signingConfigs {
+    debug {
+      storeFile rootProject.file("keystores/debug.keystore")
+    }
+  }
+
   compileSdkVersion 24
   buildToolsVersion "24.0.2"
 
@@ -11,12 +17,6 @@ android {
     targetSdkVersion 24
     versionCode 1
     versionName "0.0.1"
-  }
-
-  signingConfigs {
-    debug {
-      storeFile rootProject.file("keystore/debug.keystore")
-    }
   }
 
   buildTypes {
