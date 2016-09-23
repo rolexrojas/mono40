@@ -6,10 +6,9 @@
 
   <android.support.v7.widget.RecyclerView
     android:id="@+id/recycler_view"
+    style="@style/List.Vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clipToPadding="false"
-    android:paddingTop="8dp"/>
+    android:layout_height="match_parent"/>
 
   <Button
     android:id="@+id/text_view_add_another_account"
@@ -17,5 +16,6 @@
     android:layout_width="match_parent"
     android:layout_gravity="bottom"
     android:layout_marginBottom="10dp"
-    android:text="@string/add_another_account"/>
+    android:text="@string/add_another_account"
+    android:visibility="gone"/>
 </FrameLayout>

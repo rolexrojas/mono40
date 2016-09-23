@@ -1,4 +1,4 @@
-package com.tpago.movil.ui.main;
+package com.tpago.movil.ui.main.item;
 
 /**
  * TODO

@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.tpago.movil.domain.Account;
+import com.tpago.movil.domain.BalanceManager;
 import com.tpago.movil.domain.DataLoader;
 
 import java.util.Set;
@@ -24,14 +25,18 @@ class AccountsPresenter {
 
   private final DataLoader dataLoader;
 
+  private final BalanceManager balanceManager;
+
   /**
    * TODO
    */
   private Subscription subscription = Subscriptions.unsubscribed();
 
-  AccountsPresenter(@NonNull AccountsScreen screen, @NonNull DataLoader dataLoader) {
+  AccountsPresenter(@NonNull AccountsScreen screen, @NonNull DataLoader dataLoader,
+    @NonNull BalanceManager balanceManager) {
     this.screen = screen;
     this.dataLoader = dataLoader;
+    this.balanceManager = balanceManager;
   }
 
   /**
@@ -45,7 +50,11 @@ class AccountsPresenter {
           screen.clear();
           for (Account account : accounts) {
             screen.add(account);
+            if (balanceManager.hasValidBalance(account)) {
+              screen.setBalance(account, balanceManager.getBalance(account));
+            }
           }
+          screen.showLastTransactionsButton();
         }
       }, new Action1<Throwable>() {
         @Override

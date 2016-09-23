@@ -88,7 +88,7 @@
   </style>
 
   <style name="Menu">
-    <item name="android:background">@color/primary</item>
+    <item name="android:background">@color/menu_background</item>
     <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark</item>
   </style>
 
@@ -110,10 +110,7 @@
 
   <!-- List styles -->
   <style name="List"/>
-  <style name="List.Vertical">
-    <item name="android:clipToPadding">false</item>
-    <item name="android:paddingTop">8dp</item>
-  </style>
+  <style name="List.Vertical"/>
 
   <style name="ListItem">
     <item name="android:background">@color/white</item>

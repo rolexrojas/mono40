@@ -2,6 +2,7 @@ package com.tpago.movil.ui.main.accounts;
 
 import android.support.annotation.NonNull;
 
+import com.tpago.movil.domain.BalanceManager;
 import com.tpago.movil.domain.DataLoader;
 import com.tpago.movil.ui.FragmentScope;
 
@@ -34,7 +35,7 @@ class AccountsModule {
    */
   @Provides
   @FragmentScope
-  AccountsPresenter providePresenter(DataLoader dataLoader) {
-    return new AccountsPresenter(screen, dataLoader);
+  AccountsPresenter providePresenter(DataLoader dataLoader, BalanceManager balanceManager) {
+    return new AccountsPresenter(screen, dataLoader, balanceManager);
   }
 }

@@ -35,7 +35,7 @@
     android:layout_alignParentEnd="true">
 
     <Button
-      android:id="@+id/button_query_balance"
+      android:id="@+id/button_query_account_balance"
       style="@style/ListItemButton"
       android:layout_gravity="center"
       android:text="@string/balance"/>

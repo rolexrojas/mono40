@@ -2,6 +2,7 @@ package com.tpago.movil.ui.main;
 
 import com.tpago.movil.AppComponent;
 import com.tpago.movil.data.MessageHelper;
+import com.tpago.movil.domain.BalanceManager;
 import com.tpago.movil.domain.DataLoader;
 import com.tpago.movil.ui.ActivityScope;
 
@@ -36,4 +37,11 @@ public interface MainComponent {
    * @return TODO
    */
   DataLoader provideDataLoader();
+
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
+  BalanceManager provideBalanceManager();
 }
