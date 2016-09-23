@@ -141,4 +141,6 @@
     android:background="#CCC"/>
 
   <include layout="@layout/item_account"/>
+
+  <include layout="@layout/item_last_transactions"/>
 </LinearLayout>

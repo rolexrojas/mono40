@@ -42,23 +42,21 @@
     parent="BaseText.Body.Normal"/>
 
   <!-- Button styles -->
-  <style name="BaseButton">
+  <style name="Button">
+    <item name="android:background">?attr/selectableItemBackground</item>
     <item name="android:clickable">true</item>
     <item name="android:gravity">center</item>
+    <item name="android:layout_height">@dimen/button_height</item>
     <item name="android:textAppearance">@style/Text.Label.Bold</item>
   </style>
-  <style name="BaseButton.Transparent">
-    <item name="android:background">?attr/selectableItemBackground</item>
-  </style>
-  <style name="BaseButton.Colored">
+  <style name="ListItemButton"
+    parent="Button">
     <item name="android:background">@drawable/bg_button_colored</item>
+    <item name="android:layout_height">@dimen/list_item_button_height</item>
+    <item name="android:layout_width">@dimen/list_item_button_width</item>
   </style>
 
-  <style name="Button" parent="BaseButton"/>
-  <style name="Button.Transparent" parent="BaseButton.Transparent"/>
-  <style name="Button.Colored" parent="BaseButton.Colored"/>
-
-  <!-- Sliding styles -->
+  <!-- Menu styles -->
   <style name="BaseMenuItem">
     <item name="android:background">?attr/selectableItemBackground</item>
     <item name="android:clickable">true</item>
@@ -89,6 +87,15 @@
     <item name="fontPath">fonts/GothamRounded-Medium.otf</item>
   </style>
 
+  <style name="Menu">
+    <item name="android:background">@color/primary</item>
+    <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark</item>
+  </style>
+
+  <style name="MenuHeader">
+    <item name="android:layout_height">?attr/actionBarSize</item>
+  </style>
+
   <style
     name="MenuItem"
     parent="BaseMenuItem"/>
@@ -100,6 +107,25 @@
     parent="BaseMenuItem.Normal"/>
   <style name="MenuItem.Large"
     parent="BaseMenuItem.Large"/>
+
+  <!-- List styles -->
+  <style name="List"/>
+  <style name="List.Vertical">
+    <item name="android:clipToPadding">false</item>
+    <item name="android:paddingTop">8dp</item>
+  </style>
+
+  <style name="ListItem">
+    <item name="android:background">@color/white</item>
+    <item name="android:paddingEnd">@dimen/list_item_padding_horizontal</item>
+    <item name="android:paddingStart">@dimen/list_item_padding_horizontal</item>
+  </style>
+  <style name="ListItem.Medium">
+    <item name="android:layout_height">@dimen/list_item_height_medium</item>
+  </style>
+  <style name="ListItem.Large">
+    <item name="android:layout_height">@dimen/list_item_height_large</item>
+  </style>
 
   <!-- Themes -->
   <style

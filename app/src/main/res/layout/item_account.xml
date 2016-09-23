@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+  style="@style/ListItem.Large"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="120dp"
-  android:background="@color/white"
-  android:orientation="vertical"
-  android:paddingEnd="20dp"
-  android:paddingStart="20dp">
+  android:layout_width="match_parent">
 
   <LinearLayout
     android:id="@+id/linear_layout_anchor"
@@ -21,12 +17,14 @@
       android:layout_width="40dp"
       android:layout_height="40dp"
       android:layout_marginBottom="5dp"
+      android:background="@drawable/ic_bank_logo"
       android:contentDescription="@string/logo"/>
 
     <TextView
       android:id="@+id/text_view_account_alias"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:text="7709"
       android:textAppearance="@style/Text.Label.Light"/>
   </LinearLayout>
 
@@ -36,11 +34,9 @@
     android:layout_height="match_parent"
     android:layout_alignParentEnd="true">
 
-    <TextView
+    <Button
       android:id="@+id/button_query_balance"
-      style="@style/Button.Colored"
-      android:layout_width="80dp"
-      android:layout_height="@dimen/button_height_small"
+      style="@style/ListItemButton"
       android:layout_gravity="center"
       android:text="@string/balance"/>
 
@@ -62,5 +58,6 @@
     android:layout_toStartOf="@+id/frame_layout_anchor"
     android:ellipsize="end"
     android:singleLine="true"
+    android:text="Banco Popular"
     android:textAppearance="@style/Text.Body.Normal"/>
 </RelativeLayout>
