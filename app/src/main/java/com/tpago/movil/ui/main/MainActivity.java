@@ -9,13 +9,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
 import com.tpago.movil.App;
 import com.tpago.movil.R;
+import com.tpago.movil.ui.BaseActivity;
 import com.tpago.movil.ui.SplashFragment;
 import com.tpago.movil.ui.main.accounts.AccountsFragment;
 import com.tpago.movil.ui.main.payments.PaymentsFragment;
@@ -33,7 +33,7 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class MainActivity extends AppCompatActivity implements ParentScreen, MainScreen {
+public class MainActivity extends BaseActivity implements ParentScreen, MainScreen {
   /**
    * TODO
    */
