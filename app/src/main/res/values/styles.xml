@@ -1,41 +1,66 @@
 <resources>
-  <style name="Text"/>
-
-  <style name="Text.Currency">
-    <!-- TODO: Set typeface to 'GothamRounded-Medium'. -->
-    <item name="android:textSize">16sp</item>
+  <!-- Text appearances -->
+  <style
+    name="BaseText"
+    parent="TextAppearance.AppCompat"/>
+  <style name="BaseText.Label">
+    <item name="android:textColor">#333</item>
   </style>
-
-  <style name="Label">
-    <!-- TODO: Set typeface to 'GothamRounded-Bold'. -->
+  <style name="BaseText.Label.Light">
+    <item name="android:textSize">12sp</item>
+    <item name="fontPath">fonts/GothamRounded-Light.otf</item>
+  </style>
+  <style name="BaseText.Label.Medium">
+    <item name="android:textSize">16sp</item>
+    <item name="fontPath">fonts/GothamRounded-Medium.otf</item>
+  </style>
+  <style name="BaseText.Label.Bold">
     <item name="android:textAllCaps">true</item>
     <item name="android:textColor">@color/primary</item>
     <item name="android:textSize">14sp</item>
+    <item name="fontPath">fonts/GothamRounded-Bold.otf</item>
+  </style>
+  <style name="BaseText.Body">
+    <item name="android:textColor">#333</item>
+    <item name="fontPath">fonts/GothamRounded-Book.otf</item>
+  </style>
+  <style name="BaseText.Body.Normal">
+    <item name="android:textSize">16sp</item>
   </style>
 
-  <style name="Button" parent="Widget.AppCompat.Button">
-    <item name="android:textAppearance">@style/Label</item>
+  <style
+    name="Text.Label.Light"
+    parent="BaseText.Label.Light"/>
+  <style
+    name="Text.Label.Medium"
+    parent="BaseText.Label.Medium"/>
+  <style
+    name="Text.Label.Bold"
+    parent="BaseText.Label.Bold"/>
+  <style
+    name="Text.Body.Normal"
+    parent="BaseText.Body.Normal"/>
+
+  <!-- Button styles -->
+  <style name="BaseButton">
+    <item name="android:clickable">true</item>
+    <item name="android:gravity">center</item>
+    <item name="android:textAppearance">@style/Text.Label.Bold</item>
   </style>
-  <style name="Button.Transparent">
-    <item name="android:background">?android:attr/selectableItemBackground</item>
+  <style name="BaseButton.Transparent">
+    <item name="android:background">?attr/selectableItemBackground</item>
   </style>
-  <style name="Button.Colored">
+  <style name="BaseButton.Colored">
     <item name="android:background">@drawable/bg_button_colored</item>
   </style>
 
-  <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-    <item name="colorPrimary">@color/primary</item>
-    <item name="colorPrimaryDark">@color/primary_dark</item>
-    <item name="colorAccent">@color/accent</item>
-  </style>
+  <style name="Button" parent="BaseButton"/>
+  <style name="Button.Transparent" parent="BaseButton.Transparent"/>
+  <style name="Button.Colored" parent="BaseButton.Colored"/>
 
-  <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-    <item name="android:background">@color/primary</item>
-    <item name="fontPath">fonts/GothamRounded-Book.otf</item>
-  </style>
-
+  <!-- Sliding styles -->
   <style name="BaseMenuItem">
-    <item name="android:background">?android:attr/selectableItemBackground</item>
+    <item name="android:background">?attr/selectableItemBackground</item>
     <item name="android:clickable">true</item>
     <item name="android:gravity">center_vertical</item>
     <item name="android:textColor">@color/white</item>
@@ -64,8 +89,31 @@
     <item name="fontPath">fonts/GothamRounded-Medium.otf</item>
   </style>
 
-  <style name="MenuItem" parent="BaseMenuItem"/>
-  <style name="MenuItem.Small" parent="BaseMenuItem.Small"/>
-  <style name="MenuItem.Normal" parent="BaseMenuItem.Normal"/>
-  <style name="MenuItem.Large" parent="BaseMenuItem.Large"/>
+  <style
+    name="MenuItem"
+    parent="BaseMenuItem"/>
+  <style
+    name="MenuItem.Small"
+    parent="BaseMenuItem.Small"/>
+  <style
+    name="MenuItem.Normal"
+    parent="BaseMenuItem.Normal"/>
+  <style name="MenuItem.Large"
+    parent="BaseMenuItem.Large"/>
+
+  <!-- Themes -->
+  <style
+    name="AppTheme"
+    parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="colorPrimary">@color/primary</item>
+    <item name="colorPrimaryDark">@color/primary_dark</item>
+    <item name="colorAccent">@color/accent</item>
+  </style>
+
+  <style
+    name="ToolbarTheme"
+    parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <item name="android:background">@color/primary</item>
+    <item name="fontPath">fonts/GothamRounded-Book.otf</item>
+  </style>
 </resources>

@@ -11,11 +11,11 @@
     android:clipToPadding="false"
     android:paddingTop="8dp"/>
 
-  <Button
+  <TextView
     android:id="@+id/text_view_add_another_account"
     style="@style/Button.Transparent"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/button_height_medium"
     android:layout_gravity="bottom"
     android:layout_marginBottom="10dp"
     android:text="@string/add_another_account"/>

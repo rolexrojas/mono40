@@ -21,16 +21,13 @@
       android:layout_width="40dp"
       android:layout_height="40dp"
       android:layout_marginBottom="5dp"
-      android:contentDescription="@string/logo"
-      android:src="@drawable/ic_bank_logo"/>
+      android:contentDescription="@string/logo"/>
 
     <TextView
       android:id="@+id/text_view_account_alias"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="2345"
-      android:textColor="#333"
-      android:textSize="12sp"/>
+      android:textAppearance="@style/Text.Label.Light"/>
   </LinearLayout>
 
   <FrameLayout
@@ -39,23 +36,21 @@
     android:layout_height="match_parent"
     android:layout_alignParentEnd="true">
 
-    <Button
+    <TextView
+      android:id="@+id/button_query_balance"
       style="@style/Button.Colored"
       android:layout_width="80dp"
-      android:layout_height="wrap_content"
+      android:layout_height="@dimen/button_height_small"
       android:layout_gravity="center"
-      android:text="@string/balance"
-      android:visibility="gone"/>
+      android:text="@string/balance"/>
 
     <TextView
       android:id="@+id/text_view_account_balance"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
-      android:text="$3,283.65"
-      android:textColor="#333"
-      android:textSize="16sp"
-      android:textStyle="bold"/>
+      android:textAppearance="@style/Text.Label.Medium"
+      android:visibility="gone"/>
   </FrameLayout>
 
   <TextView
@@ -67,7 +62,5 @@
     android:layout_toStartOf="@+id/frame_layout_anchor"
     android:ellipsize="end"
     android:singleLine="true"
-    android:text="Banco Popular"
-    android:textColor="#333"
-    android:textSize="16sp"/>
+    android:textAppearance="@style/Text.Body.Normal"/>
 </RelativeLayout>

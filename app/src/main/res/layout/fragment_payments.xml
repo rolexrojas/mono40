@@ -139,4 +139,6 @@
     android:layout_marginEnd="20dp"
     android:layout_marginStart="20dp"
     android:background="#CCC"/>
+
+  <include layout="@layout/item_account"/>
 </LinearLayout>

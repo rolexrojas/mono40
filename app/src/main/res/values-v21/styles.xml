@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <!-- Sliding menu styles -->
   <style name="MenuItem" parent="BaseMenuItem"/>
   <style name="MenuItem.Small" parent="BaseMenuItem.Small">
     <!--<item name="android:letterSpacing">0.01</item>-->
