@@ -42,12 +42,12 @@ class FakeApiBridge implements ApiBridge {
     accounts.add(account);
     balance = new Balance(2645, "2645");
     balances.put(account, balance);
-//    bank = new Bank("BDI", "Banco BDI");
-//    banks.add(bank);
-//    account = new BankAccount("3124", "USD", bank, 4.0, "4.0", "balance");
-//    accounts.add(account);
-//    balance = new Balance(99, "99");
-//    balances.put(account, balance);
+    bank = new Bank("BDI", "Banco BDI");
+    banks.add(bank);
+    account = new BankAccount("3124", "USD", bank, 4.0, "4.0", "balance");
+    accounts.add(account);
+    balance = new Balance(99, "99");
+    balances.put(account, balance);
 //    bank = new Bank("ADEMI", "Banco ADEMI");
 //    banks.add(bank);
 //    account = new CreditCard("4123", "DOP", bank, 12.0, "12.0", "balance");
