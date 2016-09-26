@@ -88,7 +88,7 @@
   </style>
 
   <style name="Menu">
-    <item name="android:background">@color/menu_background</item>
+    <item name="android:background">@color/background_menu</item>
     <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark</item>
   </style>
 
@@ -128,9 +128,10 @@
   <style
     name="AppTheme"
     parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="android:windowBackground">@color/background</item>
+    <item name="colorAccent">@color/accent</item>
     <item name="colorPrimary">@color/primary</item>
     <item name="colorPrimaryDark">@color/primary_dark</item>
-    <item name="colorAccent">@color/accent</item>
   </style>
 
   <style
