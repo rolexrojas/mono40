@@ -2,15 +2,13 @@
 <android.support.design.widget.CoordinatorLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:fitsSystemWindows="true">
+  android:layout_height="match_parent">
 
   <com.tpago.movil.ui.view.widget.SlidingPaneLayout
     android:id="@+id/sliding_pane_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
     <include layout="@layout/include_menu"/>
 
@@ -23,9 +21,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary"
-        android:fitsSystemWindows="true"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+        android:theme="@style/ToolbarTheme"/>
 
       <FrameLayout
         android:id="@+id/fragment_container"

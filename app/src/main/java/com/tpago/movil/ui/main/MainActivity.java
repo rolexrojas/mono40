@@ -6,16 +6,18 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
 import com.tpago.movil.App;
 import com.tpago.movil.R;
+import com.tpago.movil.ui.BaseActivity;
 import com.tpago.movil.ui.SplashFragment;
+import com.tpago.movil.ui.main.accounts.AccountsFragment;
 import com.tpago.movil.ui.main.payments.PaymentsFragment;
 import com.tpago.movil.ui.view.widget.SlidingPaneLayout;
 
@@ -23,6 +25,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -30,14 +33,20 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class MainActivity extends AppCompatActivity implements MainScreen {
+public class MainActivity extends BaseActivity implements ParentScreen, MainScreen {
   /**
    * TODO
    */
   private static final String FRAGMENT_TAG_SPLASH = "splash";
 
+  /**
+   * TODO
+   */
   private Unbinder unbinder;
 
+  /**
+   * TODO
+   */
   private MainComponent component;
 
   @Inject
@@ -49,10 +58,27 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
   @BindView(R.id.toolbar)
   Toolbar toolbar;
 
+  /**
+   * TODO
+   *
+   * @param fragment
+   *   TODO
+   * @param addToBackStack
+   *   TODO
+   */
+  private void replaceFragment(@NonNull Fragment fragment, boolean addToBackStack) {
+    final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
+      .replace(R.id.fragment_container, fragment);
+    if (addToBackStack) {
+      transaction.addToBackStack(null);
+    }
+    transaction.commit();
+  }
+
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    // Injects all the dependencies.
+    // Injects all the annotated dependencies.
     if (component == null) {
       component = DaggerMainComponent.builder()
         .appComponent(((App) getApplication()).getComponent())
@@ -71,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
       actionBar.setDisplayShowTitleEnabled(true);
     }
     // Prepares the toolbar.
-    toolbar.setNavigationIcon(R.drawable.icon_menu_white_24dp);
+    toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
     toolbar.setNavigationOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -82,10 +108,8 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
         }
       }
     });
-    // TODO
-    getSupportFragmentManager().beginTransaction()
-      .replace(R.id.fragment_container, PaymentsFragment.newInstance())
-      .commit();
+    // Sets the startup screen.
+    replaceFragment(PaymentsFragment.newInstance(), false);
   }
 
   @Override
@@ -107,6 +131,72 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
     unbinder.unbind();
   }
 
+  /**
+   * TODO
+   *
+   * @param view
+   *   TODO
+   */
+  @OnClick({ R.id.text_view_payments, R.id.text_view_commerce, R.id.text_view_accounts,
+    R.id.text_view_profile, R.id.text_view_preferences, R.id.text_view_about, R.id.text_view_help,
+    R.id.button_add_another_account })
+  void onMenuItemButtonClicked(@NonNull View view) {
+    if (slidingPaneLayout.isOpen()) {
+      slidingPaneLayout.closePane();
+    }
+    final SubFragment subFragment;
+    switch (view.getId()) {
+      case R.id.text_view_payments:
+        subFragment = PaymentsFragment.newInstance();
+        break;
+      case R.id.text_view_accounts:
+        subFragment = AccountsFragment.newInstance();
+        break;
+      default:
+        subFragment = null;
+        break;
+    }
+    if (subFragment != null) {
+      setSubScreen(subFragment);
+    }
+  }
+
+  @Override
+  public void onBackPressed() {
+    if (slidingPaneLayout.isOpen()) {
+      slidingPaneLayout.closePane();
+    } else {
+      super.onBackPressed();
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Nullable
+  @Override
+  public MainComponent getComponent() {
+    return component;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setSubScreen(@NonNull SubFragment subFragment) {
+    final FragmentManager manager = getSupportFragmentManager();
+    final Fragment currentSubFragment = manager.findFragmentById(R.id.fragment_container);
+    if (currentSubFragment == null || currentSubFragment.getClass() != subFragment.getClass()) {
+      manager.beginTransaction()
+        .replace(R.id.fragment_container, subFragment)
+        .addToBackStack(null)
+        .commit();
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void setTitle(@Nullable String title) {
     final ActionBar actionBar = getSupportActionBar();
@@ -115,16 +205,25 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void showAccountsScreen() {
-    // TODO
+    setSubScreen(AccountsFragment.newInstance());
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void showMessage(@NonNull String message) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void showDialog(@NonNull String title, @NonNull String description,
     @NonNull String positiveOptionText,
@@ -156,6 +255,9 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
     builder.show();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void showSplashScreen() {
     final FragmentManager fragmentManager = getSupportFragmentManager();
@@ -167,6 +269,9 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void hideSplashScreen() {
     final FragmentManager fragmentManager = getSupportFragmentManager();

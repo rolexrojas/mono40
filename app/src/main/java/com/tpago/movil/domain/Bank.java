@@ -1,6 +1,7 @@
 package com.tpago.movil.domain;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 /**
  * Bank representation.
@@ -22,6 +23,11 @@ public class Bank {
    * Bank's state. True if it is active, false otherwise.
    */
   private boolean state;
+
+  /**
+   * Bank's uri.
+   */
+  private String logoUri;
 
   /**
    * Constructs a new bank.
@@ -75,6 +81,26 @@ public class Bank {
     this.state = state;
   }
 
+  /**
+   * Gets the uri of the logo of the bank.
+   *
+   * @return Bank's logo uri.
+   */
+  @Nullable
+  public String getLogoUri() {
+    return logoUri;
+  }
+
+  /**
+   * Sets the uri of the logo of the bank.
+   *
+   * @param logoUri
+   *   Bank's logo uri.
+   */
+  public void setLogoUri(@Nullable String logoUri) {
+    this.logoUri = logoUri;
+  }
+
   @Override
   public boolean equals(Object object) {
     return super.equals(object) || (object != null && object instanceof Bank &&
@@ -88,6 +114,7 @@ public class Bank {
 
   @Override
   public String toString() {
-    return "Bank{id='" + id + "',name='" + name + "',state=" + state + "}";
+    return "Bank{id='" + id + "',name='" + name + "',state=" + state + ",logoUri='" + logoUri
+      + "'}";
   }
 }

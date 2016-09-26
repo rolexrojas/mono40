@@ -2,14 +2,14 @@ apply plugin: "com.android.application"
 apply plugin: "com.neenbedankt.android-apt"
 
 android {
-//  signingConfigs {
-//    debug {
-//      storeFile rootProject.file("keystore/debug.keystore")
-//    }
-//  }
+  signingConfigs {
+    debug {
+      storeFile rootProject.file("keystores/debug.keystore")
+    }
+  }
 
   compileSdkVersion 24
-  buildToolsVersion "24.0.1"
+  buildToolsVersion "24.0.2"
 
   defaultConfig {
     applicationId "com.tpago.movil"
@@ -29,6 +29,7 @@ android {
 
 dependencies {
   def butterKnifeVersion = "8.4.0"
+  def calligraphyVersion = "2.2.0"
   def daggerVersion = "2.7"
   def halariousVersion = "0.14"
   def jUnitVersion = "4.12"
@@ -36,10 +37,12 @@ dependencies {
   def okHttpVersion = "3.4.1"
   def picassoOkHttpDownloaderVersion = "1.0.2"
   def picassoVersion = "2.5.2"
+  def recyclerViewFlexibleDivider = "1.4.0"
   def retrofitVersion = "2.1.0"
   def rxAndroidVersion = "1.2.1"
   def rxJavaVersion = "1.1.10"
   def supportLibraryVersion = "24.2.1"
+  def timberVersion = "4.3.1"
 
   apt "com.google.dagger:dagger-compiler:${daggerVersion}"
   apt "com.jakewharton:butterknife-compiler:${butterKnifeVersion}"
@@ -50,13 +53,16 @@ dependencies {
   compile "com.android.support:recyclerview-v7:${supportLibraryVersion}"
   compile "com.google.dagger:dagger:${daggerVersion}"
   compile "com.jakewharton.picasso:picasso2-okhttp3-downloader:${picassoOkHttpDownloaderVersion}"
+  compile "com.jakewharton.timber:timber:${timberVersion}"
   compile "com.jakewharton:butterknife:${butterKnifeVersion}"
   compile "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}"
   compile "com.squareup.okhttp3:okhttp:${okHttpVersion}"
   compile "com.squareup.picasso:picasso:${picassoVersion}"
   compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"
+  compile "com.yqritc:recyclerview-flexibledivider:${recyclerViewFlexibleDivider}"
   compile "io.reactivex:rxandroid:${rxAndroidVersion}"
   compile "io.reactivex:rxjava:${rxJavaVersion}"
+  compile "uk.co.chrisjenx:calligraphy:${calligraphyVersion}"
   compile fileTree(dir: "libs", include: ["*.jar"])
   provided "javax.annotation:jsr250-api:${jsr250Version}"
   testCompile "junit:junit:${jUnitVersion}"

@@ -3,6 +3,8 @@ package com.tpago.movil;
 import android.app.Application;
 import android.support.annotation.NonNull;
 
+import timber.log.Timber;
+
 /**
  * TODO
  *
@@ -27,5 +29,14 @@ public final class App extends Application {
         .build();
     }
     return component;
+  }
+
+  @Override
+  public void onCreate() {
+    super.onCreate();
+    // Initializes Timber.
+    if (BuildConfig.DEBUG) {
+      Timber.plant(new Timber.DebugTree());
+    }
   }
 }

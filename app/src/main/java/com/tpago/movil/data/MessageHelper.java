@@ -24,6 +24,11 @@ public final class MessageHelper {
   }
 
   @NonNull
+  public final String accounts() {
+    return getString(R.string.accounts);
+  }
+
+  @NonNull
   public final String appName() {
     return getString(R.string.app_name);
   }
