@@ -47,19 +47,23 @@
 
     <ImageView
       android:id="@+id/pin_dot_first"
-      style="@style/PinDot"/>
+      style="@style/PinDot"
+      android:visibility="gone"/>
 
     <ImageView
       android:id="@+id/pin_dot_second"
-      style="@style/PinDot"/>
+      style="@style/PinDot"
+      android:visibility="gone"/>
 
     <ImageView
       android:id="@+id/pin_dot_third"
-      style="@style/PinDot"/>
+      style="@style/PinDot"
+      android:visibility="gone"/>
 
     <ImageView
       android:id="@+id/pin_dot_fourth"
-      style="@style/PinDot"/>
+      style="@style/PinDot"
+      android:visibility="gone"/>
   </LinearLayout>
 
   <View
