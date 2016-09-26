@@ -4,7 +4,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
-  <com.tpago.movil.ui.view.widget.SlidingPaneLayout
+  <com.gbh.movil.ui.view.widget.SlidingPaneLayout
     android:id="@+id/sliding_pane_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
     </LinearLayout>
-  </com.tpago.movil.ui.view.widget.SlidingPaneLayout>
+  </com.gbh.movil.ui.view.widget.SlidingPaneLayout>
 
   <FrameLayout
     android:id="@+id/fragment_container_full_screen"
