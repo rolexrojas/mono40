@@ -26,6 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import timber.log.Timber;
 
 /**
  * TODO
@@ -182,8 +183,11 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
   public void onLayoutChange(View view, int left, int top, int right, int bottom,
     int oldLeft, int oldTop, int oldRight, int oldBottom) {
     if (view == recyclerView && addAnotherAccountButton != null) {
-      addAnotherAccountButton.setVisibility(bottom < addAnotherAccountButton.getTop() ? View.VISIBLE
-        : View.GONE);
+      final int buttonTop = addAnotherAccountButton.getTop();
+      final boolean flag = bottom < buttonTop;
+      addAnotherAccountButton.setEnabled(flag);
+      addAnotherAccountButton.setVisibility(flag ? View.VISIBLE : View.INVISIBLE);
+      Timber.d("RecyclerView.Bottom (%1$d) < Button.Top (%2$d) = %3$s", bottom, buttonTop, flag);
     }
   }
 
