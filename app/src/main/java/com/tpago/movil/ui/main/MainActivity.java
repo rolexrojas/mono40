@@ -153,10 +153,12 @@ public class MainActivity extends BaseActivity implements ParentScreen, MainScre
         subFragment = AccountsFragment.newInstance();
         break;
       default:
-        subFragment = PaymentsFragment.newInstance();
+        subFragment = null;
         break;
     }
-    setSubScreen(subFragment);
+    if (subFragment != null) {
+      setSubScreen(subFragment);
+    }
   }
 
   @Override
