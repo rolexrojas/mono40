@@ -1,5 +1,6 @@
 package com.tpago.movil.ui.main.accounts;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,10 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.squareup.picasso.Picasso;
 import com.tpago.movil.R;
 import com.tpago.movil.data.MessageHelper;
 import com.tpago.movil.domain.Account;
 import com.tpago.movil.domain.Balance;
+import com.tpago.movil.domain.Bank;
 import com.tpago.movil.ui.main.SubFragment;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
@@ -306,9 +309,14 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
         final AccountItemViewHolder accountHolder = (AccountItemViewHolder) holder;
         final AccountItem item = (AccountItem) items.get(position);
         final Account account = item.getAccount();
-        // TODO: Load the logo of the bank.
+        final Bank bank = account.getBank();
+        Picasso.with(holder.itemView.getContext())
+          .load(bank.getLogoUri() != null ? Uri.parse(bank.getLogoUri()) : Uri.EMPTY)
+          // TODO: Add a placeholder for empty cases.
+          // TODO: Add a placeholder for error cases.
+          .into(accountHolder.bankLogoImageView);
         accountHolder.accountAliasTextView.setText(account.getAlias());
-        accountHolder.bankNameTextView.setText(account.getBank().getName());
+        accountHolder.bankNameTextView.setText(bank.getName());
         final Balance balance = item.getBalance();
         if (balance != null) {
           accountHolder.accountBalanceTextView.setVisibility(View.VISIBLE);
