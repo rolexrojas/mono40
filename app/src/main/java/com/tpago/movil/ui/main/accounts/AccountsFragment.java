@@ -8,14 +8,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
 
 import com.tpago.movil.R;
 import com.tpago.movil.data.MessageHelper;
 import com.tpago.movil.domain.Account;
 import com.tpago.movil.domain.Balance;
 import com.tpago.movil.ui.main.SubFragment;
-import com.tpago.movil.ui.main.item.Item;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.ArrayList;
@@ -25,6 +24,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -32,7 +32,8 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class AccountsFragment extends SubFragment implements AccountsScreen {
+public class AccountsFragment extends SubFragment implements AccountsScreen,
+  View.OnLayoutChangeListener {
   /**
    * TODO
    */
@@ -64,8 +65,8 @@ public class AccountsFragment extends SubFragment implements AccountsScreen {
   /**
    * TODO
    */
-  @BindView(R.id.text_view_add_another_account)
-  TextView addAnotherAccountTextView;
+  @BindView(R.id.button_add_another_account)
+  Button addAnotherAccountButton;
 
   /**
    * TODO
@@ -75,6 +76,14 @@ public class AccountsFragment extends SubFragment implements AccountsScreen {
   @NonNull
   public static AccountsFragment newInstance() {
     return new AccountsFragment();
+  }
+
+  /**
+   * TODO
+   */
+  @OnClick(R.id.button_add_another_account)
+  void onAddAnotherAccountButtonClicked() {
+    // TODO: Open the add another account button.
   }
 
   @Override
@@ -101,7 +110,6 @@ public class AccountsFragment extends SubFragment implements AccountsScreen {
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
     // Prepares the recycler view.
-    recyclerView.setHasFixedSize(true);
     if (adapter == null) {
       adapter = new Adapter();
     }
@@ -113,6 +121,8 @@ public class AccountsFragment extends SubFragment implements AccountsScreen {
       .drawable(R.drawable.list_item_divider)
       .build();
     recyclerView.addItemDecoration(decoration);
+    // Adds a listener that gets notified every time the layout of the recycler view changes.
+    recyclerView.addOnLayoutChangeListener(this);
   }
 
   @Override
@@ -134,6 +144,8 @@ public class AccountsFragment extends SubFragment implements AccountsScreen {
   @Override
   public void onDestroyView() {
     super.onDestroyView();
+    // Adds a listener that gets notified every time the layout of the recycler view changes.
+    recyclerView.removeOnLayoutChangeListener(this);
     // Unbinds all the annotated views and methods.
     unbinder.unbind();
   }
@@ -166,6 +178,15 @@ public class AccountsFragment extends SubFragment implements AccountsScreen {
     }
   }
 
+  @Override
+  public void onLayoutChange(View view, int left, int top, int right, int bottom,
+    int oldLeft, int oldTop, int oldRight, int oldBottom) {
+    if (view == recyclerView && addAnotherAccountButton != null) {
+      addAnotherAccountButton.setVisibility(bottom < addAnotherAccountButton.getTop() ? View.VISIBLE
+        : View.GONE);
+    }
+  }
+
   /**
    * TODO
    */
@@ -188,7 +209,7 @@ public class AccountsFragment extends SubFragment implements AccountsScreen {
     /**
      * TODO
      */
-    private final List<Item> items = new ArrayList<>();
+    private final List<Object> items = new ArrayList<>();
 
     /**
      * TODO
@@ -200,7 +221,7 @@ public class AccountsFragment extends SubFragment implements AccountsScreen {
      */
     @Nullable
     private AccountItem findByAccount(@NonNull Account account) {
-      for (Item item : items) {
+      for (Object item : items) {
         if (item instanceof AccountItem && ((AccountItem) item).account.equals(account)) {
           return (AccountItem) item;
         }

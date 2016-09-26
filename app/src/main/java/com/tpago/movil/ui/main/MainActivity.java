@@ -139,7 +139,7 @@ public class MainActivity extends BaseActivity implements ParentScreen, MainScre
    */
   @OnClick({ R.id.text_view_payments, R.id.text_view_commerce, R.id.text_view_accounts,
     R.id.text_view_profile, R.id.text_view_preferences, R.id.text_view_about, R.id.text_view_help,
-    R.id.text_view_add_another_account })
+    R.id.button_add_another_account })
   void onMenuItemButtonClicked(@NonNull View view) {
     if (slidingPaneLayout.isOpen()) {
       slidingPaneLayout.closePane();

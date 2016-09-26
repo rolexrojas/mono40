@@ -5,14 +5,13 @@ import android.support.annotation.Nullable;
 
 import com.tpago.movil.domain.Account;
 import com.tpago.movil.domain.Balance;
-import com.tpago.movil.ui.main.item.Item;
 
 /**
  * TODO
  *
  * @author hecvasro
  */
-class AccountItem implements Item {
+class AccountItem {
   /**
    * TODO
    */
@@ -29,7 +28,7 @@ class AccountItem implements Item {
    * @param account
    *   TODO
    */
-  public AccountItem(@NonNull Account account) {
+  AccountItem(@NonNull Account account) {
     this.account = account;
   }
 
