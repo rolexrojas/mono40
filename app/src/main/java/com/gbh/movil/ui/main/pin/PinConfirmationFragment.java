@@ -4,18 +4,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.gbh.movil.R;
 import com.gbh.movil.ui.view.widget.NumPad;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.gbh.movil.ui.view.widget.PinView;
 
 import butterknife.BindView;
-import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -28,103 +26,19 @@ public class PinConfirmationFragment extends Fragment implements NumPad.OnButton
   /**
    * TODO
    */
-  private static final long PIN_DOT_ANIMATION_DURATION = 75L;
-
-  /**
-   * TODO
-   */
-  private static final int SELECTED_DIGITS_LIMIT = 4;
-
-  /**
-   * TODO
-   */
-  private final List<Integer> selectedDigits = new ArrayList<>();
-
-  /**
-   * TODO
-   */
   private Unbinder unbinder;
 
   /**
    * TODO
    */
-  @BindViews({ R.id.pin_dot_first, R.id.pin_dot_second, R.id.pin_dot_third, R.id.pin_dot_fourth })
-  List<View> pinDots;
+  @BindView(R.id.pin_view)
+  PinView pinView;
 
   /**
    * TODO
    */
   @BindView(R.id.num_pad)
   NumPad numPad;
-
-  /**
-   * TODO
-   */
-//  @BindViews({ R.id.num_pad_button_zero, R.id.num_pad_button_one, R.id.num_pad_button_two,
-//    R.id.num_pad_button_three, R.id.num_pad_button_four, R.id.num_pad_button_five,
-//    R.id.num_pad_button_six, R.id.num_pad_button_seven, R.id.num_pad_button_eight,
-//    R.id.num_pad_button_nine })
-//  List<View> digitPinPadButtons;
-
-  /**
-   * TODO
-   */
-//  @BindView(R.id.num_pad_button_delete)
-//  View deletePinPadButton;
-
-  /**
-   * TODO
-   *
-   * @param index
-   *   TODO
-   * @param show
-   *   TODO
-   */
-  private void updatePinDot(final int index, final boolean show) {
-    if (index >= 0 && index < pinDots.size()) {
-      final View dot = pinDots.get(index);
-      dot.postDelayed(new Runnable() {
-        @Override
-        public void run() {
-          dot.setVisibility(show ? View.VISIBLE : View.GONE);
-          if (index == (SELECTED_DIGITS_LIMIT - 1)) {
-          }
-        }
-      }, PIN_DOT_ANIMATION_DURATION);
-    }
-  }
-
-  /**
-   * TODO
-   *
-   * @param digitPinPadButton
-   *   TODO
-   */
-//  @OnClick({ R.id.num_pad_button_zero, R.id.num_pad_button_one, R.id.num_pad_button_two,
-//    R.id.num_pad_button_three, R.id.num_pad_button_four, R.id.num_pad_button_five,
-//    R.id.num_pad_button_six, R.id.num_pad_button_seven, R.id.num_pad_button_eight,
-//    R.id.num_pad_button_nine })
-//  void onDigitPinPadButtonClicked(@NonNull TextView digitPinPadButton) {
-//    final int digit = Integer.parseInt(digitPinPadButton.getText().toString());
-//    Timber.d("Pin pad digit (%1$d) button clicked", digit);
-//    if (selectedDigits.size() < SELECTED_DIGITS_LIMIT) {
-//      selectedDigits.add(digit);
-//      updatePinDot(selectedDigits.size() - 1, true);
-//    }
-//  }
-
-  /**
-   * TODO
-   */
-//  @OnClick(R.id.num_pad_button_delete)
-//  void onDeletePinPadButtonClicked() {
-//    Timber.d("Pin pad delete button clicked");
-//    final int index = selectedDigits.size() - 1;
-//    if (index >= 0) {
-//      selectedDigits.remove(index);
-//      updatePinDot(index, false);
-//    }
-//  }
 
   @Nullable
   @Override
@@ -163,12 +77,14 @@ public class PinConfirmationFragment extends Fragment implements NumPad.OnButton
 
   @Override
   public void onTextButtonClicked(@NonNull String content) {
-    // TODO
+    if (TextUtils.isDigitsOnly(content)) {
+      pinView.push(Integer.parseInt(content));
+    }
   }
 
   @Override
   public void onDeleteButtonClicked() {
-    // TODO
+    pinView.pop();
   }
 
   /**

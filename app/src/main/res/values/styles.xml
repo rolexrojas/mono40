@@ -124,23 +124,6 @@
     <item name="android:layout_height">@dimen/list_item_height_large</item>
   </style>
 
-  <!-- Pin styles -->
-  <style name="PinDotContainer">
-    <item name="android:gravity">center</item>
-    <item name="android:layout_height">50dp</item>
-    <item name="android:layout_width">match_parent</item>
-    <item name="android:orientation">horizontal</item>
-  </style>
-
-  <style name="PinDot">
-    <item name="android:contentDescription">@string/dot</item>
-    <item name="android:layout_height">@dimen/pin_dot_size</item>
-    <item name="android:layout_marginEnd">@dimen/pin_dot_margin_horizontal</item>
-    <item name="android:layout_marginStart">@dimen/pin_dot_margin_horizontal</item>
-    <item name="android:layout_width">@dimen/pin_dot_size</item>
-    <item name="android:src">@drawable/bg_pin_dot</item>
-  </style>
-
   <!-- Num pad styles -->
   <style name="NumPad">
     <item name="android:paddingBottom">@dimen/num_pad_padding_vertical</item>

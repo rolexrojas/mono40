@@ -40,38 +40,13 @@
     android:textColor="#CCC"
     android:textSize="15sp"/>
 
-  <LinearLayout
-    style="@style/PinDotContainer"
-    android:layout_marginBottom="16dp"
-    android:layout_marginTop="32dp">
-
-    <ImageView
-      android:id="@+id/pin_dot_first"
-      style="@style/PinDot"
-      android:visibility="gone"/>
-
-    <ImageView
-      android:id="@+id/pin_dot_second"
-      style="@style/PinDot"
-      android:visibility="gone"/>
-
-    <ImageView
-      android:id="@+id/pin_dot_third"
-      style="@style/PinDot"
-      android:visibility="gone"/>
-
-    <ImageView
-      android:id="@+id/pin_dot_fourth"
-      style="@style/PinDot"
-      android:visibility="gone"/>
-  </LinearLayout>
-
-  <View
+  <com.gbh.movil.ui.view.widget.PinView
+    android:id="@+id/pin_view"
     android:layout_width="match_parent"
-    android:layout_height="1dp"
+    android:layout_height="wrap_content"
     android:layout_marginEnd="60dp"
     android:layout_marginStart="60dp"
-    android:background="#CCC"/>
+    android:layout_marginTop="16dp"/>
 
   <com.gbh.movil.ui.view.widget.NumPad
     android:id="@+id/num_pad"
