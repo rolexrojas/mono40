@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+  xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <LinearLayout style="@style/NumPadRow">
+
+    <Button
+      android:id="@+id/num_pad_button_one"
+      style="@style/NumPadButton.Text"
+      android:text="1"/>
+
+    <Button
+      android:id="@+id/num_pad_button_two"
+      style="@style/NumPadButton.Text"
+      android:text="2"/>
+
+    <Button
+      android:id="@+id/num_pad_button_three"
+      style="@style/NumPadButton.Text"
+      android:text="3"/>
+  </LinearLayout>
+
+  <LinearLayout style="@style/NumPadRow">
+
+    <Button
+      android:id="@+id/num_pad_button_four"
+      style="@style/NumPadButton.Text"
+      android:text="4"/>
+
+    <Button
+      android:id="@+id/num_pad_button_five"
+      style="@style/NumPadButton.Text"
+      android:text="5"/>
+
+    <Button
+      android:id="@+id/num_pad_button_six"
+      style="@style/NumPadButton.Text"
+      android:text="6"/>
+  </LinearLayout>
+
+  <LinearLayout style="@style/NumPadRow">
+
+    <Button
+      android:id="@+id/num_pad_button_seven"
+      style="@style/NumPadButton.Text"
+      android:text="7"/>
+
+    <Button
+      android:id="@+id/num_pad_button_eight"
+      style="@style/NumPadButton.Text"
+      android:text="8"/>
+
+    <Button
+      android:id="@+id/num_pad_button_nine"
+      style="@style/NumPadButton.Text"
+      android:text="9"/>
+  </LinearLayout>
+
+  <LinearLayout style="@style/NumPadRow">
+
+    <Button
+      android:id="@+id/num_pad_button_dot"
+      style="@style/NumPadButton.Text"
+      android:clickable="false"
+      android:text="."
+      android:visibility="invisible"/>
+
+    <Button
+      android:id="@+id/num_pad_button_zero"
+      style="@style/NumPadButton.Text"
+      android:text="0"/>
+
+    <ImageButton
+      android:id="@+id/num_pad_button_delete"
+      style="@style/NumPadButton"
+      android:contentDescription="@string/delete"/>
+  </LinearLayout>
+</merge>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Num pad attributes -->
+  <declare-styleable name="NumPad">
+    <attr name="buttonColor" format="color"/>
+    <attr name="deleteButtonDrawable" format="reference"/>
+  </declare-styleable>
+</resources>

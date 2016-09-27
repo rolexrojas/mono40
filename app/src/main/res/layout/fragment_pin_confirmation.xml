@@ -73,84 +73,9 @@
     android:layout_marginStart="60dp"
     android:background="#CCC"/>
 
-  <LinearLayout style="@style/PinPad">
-
-    <LinearLayout style="@style/PinPadRow">
-
-      <TextView
-        android:id="@+id/pin_pad_button_one"
-        style="@style/PinPadButton.Digit"
-        android:text="1"/>
-
-      <TextView
-        android:id="@+id/pin_pad_button_two"
-        style="@style/PinPadButton.Digit"
-        android:text="2"/>
-
-      <TextView
-        android:id="@+id/pin_pad_button_three"
-        style="@style/PinPadButton.Digit"
-        android:text="3"/>
-    </LinearLayout>
-
-    <LinearLayout style="@style/PinPadRow">
-
-      <TextView
-        android:id="@+id/pin_pad_button_four"
-        style="@style/PinPadButton.Digit"
-        android:text="4"/>
-
-      <TextView
-        android:id="@+id/pin_pad_button_five"
-        style="@style/PinPadButton.Digit"
-        android:text="5"/>
-
-      <TextView
-        android:id="@+id/pin_pad_button_six"
-        style="@style/PinPadButton.Digit"
-        android:text="6"/>
-    </LinearLayout>
-
-    <LinearLayout style="@style/PinPadRow">
-
-      <TextView
-        android:id="@+id/pin_pad_button_seven"
-        style="@style/PinPadButton.Digit"
-        android:text="7"/>
-
-      <TextView
-        android:id="@+id/pin_pad_button_eight"
-        style="@style/PinPadButton.Digit"
-        android:text="8"/>
-
-      <TextView
-        android:id="@+id/pin_pad_button_nine"
-        style="@style/PinPadButton.Digit"
-        android:text="9"/>
-    </LinearLayout>
-
-    <LinearLayout style="@style/PinPadRow">
-
-      <View
-        android:id="@+id/view"
-        style="@style/PinPadCell"/>
-
-      <TextView
-        android:id="@+id/pin_pad_button_zero"
-        style="@style/PinPadButton.Digit"
-        android:text="0"/>
-
-      <FrameLayout
-        android:id="@+id/pin_pad_button_delete"
-        style="@style/PinPadButton">
-
-        <ImageView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center"
-          android:contentDescription="@string/delete"
-          android:src="@drawable/ic_backspace_white_24dp"/>
-      </FrameLayout>
-    </LinearLayout>
-  </LinearLayout>
+  <com.gbh.movil.ui.view.widget.NumPad
+    android:id="@+id/num_pad"
+    style="@style/NumPad.Light"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
 </LinearLayout>

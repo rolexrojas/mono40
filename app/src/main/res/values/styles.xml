@@ -8,21 +8,21 @@
   </style>
   <style name="BaseText.Label.Light">
     <item name="android:textSize">12sp</item>
-    <item name="fontPath">fonts/GothamRounded-Light.otf</item>
+    <item name="fontPath">@string/gotham_rounded_light</item>
   </style>
   <style name="BaseText.Label.Medium">
     <item name="android:textSize">16sp</item>
-    <item name="fontPath">fonts/GothamRounded-Medium.otf</item>
+    <item name="fontPath">@string/gotham_rounded_medium</item>
   </style>
   <style name="BaseText.Label.Bold">
     <item name="android:textAllCaps">true</item>
     <item name="android:textColor">@color/primary</item>
     <item name="android:textSize">14sp</item>
-    <item name="fontPath">fonts/GothamRounded-Bold.otf</item>
+    <item name="fontPath">@string/gotham_rounded_bold</item>
   </style>
   <style name="BaseText.Body">
     <item name="android:textColor">#333</item>
-    <item name="fontPath">fonts/GothamRounded-Book.otf</item>
+    <item name="fontPath">@string/gotham_rounded_book</item>
   </style>
   <style name="BaseText.Body.Normal">
     <item name="android:textSize">16sp</item>
@@ -68,14 +68,14 @@
     <item name="android:paddingStart">27dp</item>
     <item name="android:paddingTop">6dp</item>
     <item name="android:textSize">12sp</item>
-    <item name="fontPath">fonts/GothamRounded-Book.otf</item>
+    <item name="fontPath">@string/gotham_rounded_book</item>
   </style>
   <style name="BaseMenuItem.Normal">
     <item name="android:paddingBottom">8dp</item>
     <item name="android:paddingStart">27dp</item>
     <item name="android:paddingTop">8dp</item>
     <item name="android:textSize">15sp</item>
-    <item name="fontPath">fonts/GothamRounded-Book.otf</item>
+    <item name="fontPath">@string/gotham_rounded_book</item>
   </style>
   <style name="BaseMenuItem.Large">
     <item name="android:drawablePadding">10dp</item>
@@ -84,7 +84,7 @@
     <item name="android:paddingTop">16dp</item>
     <item name="android:textAllCaps">true</item>
     <item name="android:textSize">15sp</item>
-    <item name="fontPath">fonts/GothamRounded-Medium.otf</item>
+    <item name="fontPath">@string/gotham_rounded_medium</item>
   </style>
 
   <style name="Menu">
@@ -141,42 +141,50 @@
     <item name="android:src">@drawable/bg_pin_dot</item>
   </style>
 
-  <style name="PinPad">
-    <item name="android:layout_height">match_parent</item>
-    <item name="android:layout_width">match_parent</item>
-    <item name="android:orientation">vertical</item>
-    <item name="android:paddingBottom">@dimen/pin_pad_padding_vertical</item>
-    <item name="android:paddingEnd">@dimen/pin_pad_padding_horizontal</item>
-    <item name="android:paddingStart">@dimen/pin_pad_padding_horizontal</item>
-    <item name="android:paddingTop">@dimen/pin_pad_padding_vertical</item>
-    <item name="android:weightSum">4</item>
+  <!-- Num pad styles -->
+  <style name="NumPad">
+    <item name="android:paddingBottom">@dimen/num_pad_padding_vertical</item>
+    <item name="android:paddingEnd">@dimen/num_pad_padding_horizontal</item>
+    <item name="android:paddingStart">@dimen/num_pad_padding_horizontal</item>
+    <item name="android:paddingTop">@dimen/num_pad_padding_vertical</item>
   </style>
 
-  <style name="PinPadRow">
+  <style name="NumPad.Light">
+    <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark</item>
+    <item name="buttonColor">@color/white</item>
+    <item name="deleteButtonDrawable">@drawable/ic_backspace_white_24dp</item>
+  </style>
+
+  <style name="NumPad.Dark">
+    <item name="android:theme">@style/ThemeOverlay.AppCompat.Light</item>
+    <item name="buttonColor">@color/black</item>
+    <item name="deleteButtonDrawable">@drawable/ic_backspace_black_24dp</item>
+  </style>
+
+  <style name="NumPadRow">
     <item name="android:layout_height">0dp</item>
     <item name="android:layout_weight">1</item>
     <item name="android:layout_width">match_parent</item>
     <item name="android:orientation">horizontal</item>
   </style>
 
-  <style name="PinPadCell">
+  <style name="NumPadCell">
     <item name="android:layout_height">match_parent</item>
     <item name="android:layout_weight">1</item>
     <item name="android:layout_width">0dp</item>
   </style>
 
   <style
-    name="PinPadButton"
-    parent="PinPadCell">
+    name="NumPadButton"
+    parent="NumPadCell">
     <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     <item name="android:clickable">true</item>
   </style>
 
-  <style name="PinPadButton.Digit">
+  <style name="NumPadButton.Text">
     <item name="android:gravity">center</item>
-    <item name="android:textAppearance">@style/Text.Label.Medium</item>
-    <item name="android:textColor">@color/white</item>
     <item name="android:textSize">24sp</item>
+    <item name="fontPath">@string/gotham_rounded_medium</item>
   </style>
 
   <!-- Themes -->
@@ -193,6 +201,6 @@
     name="ToolbarTheme"
     parent="ThemeOverlay.AppCompat.Dark.ActionBar">
     <item name="android:background">@color/primary</item>
-    <item name="fontPath">fonts/GothamRounded-Book.otf</item>
+    <item name="fontPath">@string/gotham_rounded_book</item>
   </style>
 </resources>
