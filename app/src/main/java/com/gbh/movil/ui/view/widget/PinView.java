@@ -74,6 +74,11 @@ public class PinView extends LinearLayout {
   /**
    * TODO
    */
+  private ObjectAnimator cursorAnimator;
+
+  /**
+   * TODO
+   */
   private AnimatorSet loadAnimator;
 
   /**
@@ -220,6 +225,11 @@ public class PinView extends LinearLayout {
     cursor = inflater.inflate(R.layout.pin_cursor, containerLinearLayout, false);
     cursor.setId(View.generateViewId());
     containerLinearLayout.addView(cursor);
+    cursorAnimator = ObjectAnimator.ofFloat(cursor, ANIMATION_PROPERTY_ALPHA, 1F, 0F);
+    cursorAnimator.setDuration(500L);
+    cursorAnimator.setRepeatMode(ValueAnimator.REVERSE);
+    cursorAnimator.setRepeatCount(ValueAnimator.INFINITE);
+    cursorAnimator.start();
     // Initializes the load animator.
     initializeLoadAnimator();
   }
@@ -247,6 +257,7 @@ public class PinView extends LinearLayout {
         final int size = digits.size();
         setDotVisibility(dots[size - 1], true);
         if (size == DEFAULT_MAX_LENGTH) {
+          cursorAnimator.cancel();
           cursor.setVisibility(View.INVISIBLE);
           if (!loadAnimator.isRunning()) {
             loadAnimator.start();
@@ -268,6 +279,7 @@ public class PinView extends LinearLayout {
         if (last < (DEFAULT_MAX_LENGTH - 1)) {
           if (cursor.getVisibility() == View.INVISIBLE) {
             cursor.setVisibility(View.VISIBLE);
+            cursorAnimator.start();
           }
         }
       }
@@ -364,6 +376,7 @@ public class PinView extends LinearLayout {
           Timber.d("Loading animation finished");
           digits.clear();
           cursor.setVisibility(View.VISIBLE);
+          cursorAnimator.start();
           if (listener != null) {
             listener.onLoadingFinished();
           }
