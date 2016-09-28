@@ -907,7 +907,7 @@ public class SlidingPaneLayout extends ViewGroup {
 
   /**
    * Open the sliding pane if it is currently slideable. If first layout has already completed this
-   * will animate.
+   * will startAnimation.
    *
    * @return true if the pane was slideable and is now open/in the process of opening
    */
@@ -925,7 +925,7 @@ public class SlidingPaneLayout extends ViewGroup {
 
   /**
    * Close the sliding pane if it is currently slideable. If first layout has already completed this
-   * will animate.
+   * will startAnimation.
    *
    * @return true if the pane was slideable and is now closed/in the process of closing
    */
@@ -1066,10 +1066,10 @@ public class SlidingPaneLayout extends ViewGroup {
   }
 
   /**
-   * Smoothly animate mDraggingPane to the target X position within its range.
+   * Smoothly startAnimation mDraggingPane to the target X position within its range.
    *
    * @param slideOffset
-   *   position to animate to
+   *   position to startAnimation to
    * @param velocity
    *   initial velocity in case of fling, or 0.
    */

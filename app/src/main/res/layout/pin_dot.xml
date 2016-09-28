@@ -6,4 +6,5 @@
   android:layout_marginEnd="@dimen/pin_dot_margin_horizontal"
   android:layout_marginStart="@dimen/pin_dot_margin_horizontal"
   android:contentDescription="@string/dot"
-  android:src="@drawable/pin_dot"/>
+  android:src="@drawable/pin_dot"
+  android:visibility="gone"/>
