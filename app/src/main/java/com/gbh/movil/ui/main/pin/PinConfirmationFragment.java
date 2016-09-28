@@ -3,7 +3,7 @@ package com.gbh.movil.ui.main.pin;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +28,7 @@ import timber.log.Timber;
  *
  * @author hecvasro
  */
-public class PinConfirmationFragment extends Fragment implements PinView.Listener,
+public class PinConfirmationFragment extends DialogFragment implements PinView.Listener,
   NumPad.OnButtonClickedListener {
   /**
    * TODO

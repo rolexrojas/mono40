@@ -181,6 +181,12 @@
   </style>
 
   <style
+    name="FullScreenDialogTheme"
+    parent="AppTheme">
+    <item name="android:windowBackground">@color/transparent</item>
+  </style>
+
+  <style
     name="ToolbarTheme"
     parent="ThemeOverlay.AppCompat.Dark.ActionBar">
     <item name="android:background">@color/primary</item>
