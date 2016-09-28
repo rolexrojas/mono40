@@ -13,16 +13,23 @@ import com.gbh.movil.R;
 import com.gbh.movil.ui.view.widget.NumPad;
 import com.gbh.movil.ui.view.widget.PinView;
 
+import java.util.concurrent.TimeUnit;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import timber.log.Timber;
 
 /**
  * TODO
  *
  * @author hecvasro
  */
-public class PinConfirmationFragment extends Fragment implements NumPad.OnButtonClickedListener {
+public class PinConfirmationFragment extends Fragment implements PinView.Listener,
+  NumPad.OnButtonClickedListener {
   /**
    * TODO
    */
@@ -52,6 +59,8 @@ public class PinConfirmationFragment extends Fragment implements NumPad.OnButton
     super.onViewCreated(view, savedInstanceState);
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
+    // Adds a listener that gets notified every time the pin view starts or finishes loading.
+    pinView.setListener(this);
     // Adds a listener that gets notified every time a button of the num pad is clicked.
     numPad.setOnButtonClickedListener(this);
   }
@@ -61,6 +70,8 @@ public class PinConfirmationFragment extends Fragment implements NumPad.OnButton
     super.onDestroyView();
     // Removes the listener that gets notified every time a button of the num pad is clicked.
     numPad.setOnButtonClickedListener(null);
+    // Removes the listener that gets notified every time the pin view starts or finishes loading.
+    pinView.setListener(this);
     // Unbinds all the annotated views and methods.
     unbinder.unbind();
   }
@@ -85,6 +96,30 @@ public class PinConfirmationFragment extends Fragment implements NumPad.OnButton
   @Override
   public void onDeleteButtonClicked() {
     pinView.pop();
+  }
+
+  @Override
+  public void onLoadingStarted(@NonNull String pin) {
+    Observable.just(pin)
+      .doOnNext(new Action1<String>() {
+        @Override
+        public void call(String s) {
+          Timber.d("PIN = %1$s", s);
+        }
+      })
+      .delay(2L, TimeUnit.SECONDS)
+      .observeOn(AndroidSchedulers.mainThread())
+      .subscribe(new Action1<String>() {
+        @Override
+        public void call(String s) {
+          pinView.reset(true);
+        }
+      });
+  }
+
+  @Override
+  public void onLoadingFinished() {
+    // TODO
   }
 
   /**
