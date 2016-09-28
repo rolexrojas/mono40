@@ -38,6 +38,11 @@ public class PinConfirmationFragment extends Fragment implements PinView.Listene
   /**
    * TODO
    */
+  private Callback callback;
+
+  /**
+   * TODO
+   */
   @BindView(R.id.pin_view)
   PinView pinView;
 
@@ -79,11 +84,11 @@ public class PinConfirmationFragment extends Fragment implements PinView.Listene
   /**
    * TODO
    *
-   * @param correctly
+   * @param succeeded
    *   TODO
    */
-  public final void dismiss(boolean correctly) {
-    // TODO
+  public final void resolve(boolean succeeded) {
+    pinView.resolve(succeeded);
   }
 
   @Override
@@ -100,19 +105,15 @@ public class PinConfirmationFragment extends Fragment implements PinView.Listene
 
   @Override
   public void onLoadingStarted(@NonNull String pin) {
+//    callback.confirm(pin);
     Observable.just(pin)
-      .doOnNext(new Action1<String>() {
-        @Override
-        public void call(String s) {
-          Timber.d("PIN = %1$s", s);
-        }
-      })
       .delay(2L, TimeUnit.SECONDS)
       .observeOn(AndroidSchedulers.mainThread())
       .subscribe(new Action1<String>() {
         @Override
         public void call(String s) {
-          pinView.reset(true);
+          Timber.d(s);
+          pinView.resolve(Integer.parseInt(s) % 2 == 0);
         }
       });
   }
@@ -125,13 +126,13 @@ public class PinConfirmationFragment extends Fragment implements PinView.Listene
   /**
    * TODO
    */
-  public interface Listener {
+  public interface Callback {
     /**
      * TODO
      *
      * @param pin
      *   TODO
      */
-    void onConfirm(@NonNull String pin);
+    void confirm(@NonNull String pin);
   }
 }

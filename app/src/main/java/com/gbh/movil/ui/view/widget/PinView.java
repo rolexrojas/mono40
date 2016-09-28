@@ -8,6 +8,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +19,6 @@ import com.gbh.movil.R;
 import com.gbh.movil.ui.view.BaseAnimatorListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -54,7 +54,7 @@ public class PinView extends LinearLayout {
   /**
    * TODO
    */
-  private static final long ANIMATION_DURATION_DOT = 300L;
+  private static final String ANIMATION_PROPERTY_TRANSLATION_X = "translationX";
 
   /**
    * TODO
@@ -124,10 +124,8 @@ public class PinView extends LinearLayout {
     final List<Pair<ValueAnimator, ValueAnimator>> animators = new ArrayList<>();
     for (int i = 0; i < DEFAULT_MAX_LENGTH; i++) {
       dot = dots[i];
-      fadeIn = ObjectAnimator.ofFloat(dot, ANIMATION_PROPERTY_ALPHA, 0F, 1F)
-        .setDuration(ANIMATION_DURATION_DOT);
-      fadeOut = ObjectAnimator.ofFloat(dot, ANIMATION_PROPERTY_ALPHA, 1F, 0F)
-        .setDuration(ANIMATION_DURATION_DOT);
+      fadeIn = ObjectAnimator.ofFloat(dot, ANIMATION_PROPERTY_ALPHA, 0F, 1F);
+      fadeOut = ObjectAnimator.ofFloat(dot, ANIMATION_PROPERTY_ALPHA, 1F, 0F);
       animators.add(Pair.create(fadeIn, fadeOut));
     }
     final AnimatorSet fadeOutAnimator = new AnimatorSet();
@@ -181,7 +179,7 @@ public class PinView extends LinearLayout {
       public void onAnimationStart(Animator animator) {
         Timber.d("Loading animation started");
         if (listener != null) {
-          listener.onLoadingStarted(Arrays.toString(digits.toArray()));
+          listener.onLoadingStarted(TextUtils.join("", digits));
         }
       }
     });
@@ -279,13 +277,13 @@ public class PinView extends LinearLayout {
   /**
    * TODO
    */
-  public void reset(boolean success) {
+  public void resolve(boolean succeeded) {
     if (resetAnimator == null || !resetAnimator.isRunning()) {
       if (loadAnimator.isRunning()) {
         loadAnimator.cancel();
       }
       resetAnimator = new AnimatorSet();
-      if (success) {
+      if (succeeded) {
         View dot;
         final AnimatorSet dotsAnimator = new AnimatorSet();
         final float[] dotYs = new float[DEFAULT_MAX_LENGTH];
@@ -331,6 +329,34 @@ public class PinView extends LinearLayout {
         });
         resetAnimator.play(dotsAnimator);
         resetAnimator.play(doneIconAnimator).after(dotsAnimator);
+      } else {
+        View dot;
+        int translation;
+        ObjectAnimator animator;
+        final AnimatorSet dotsAnimator = new AnimatorSet();
+        for (int i = 0; i < DEFAULT_MAX_LENGTH; i++) {
+          dot = dots[i];
+          translation = (dot.getTop() + dot.getHeight()) / 4;
+          animator = ObjectAnimator
+            .ofFloat(dot, ANIMATION_PROPERTY_TRANSLATION_X, -translation, 0F, translation, 0F);
+          animator.setRepeatMode(ValueAnimator.REVERSE);
+          animator.setRepeatCount(2);
+          dotsAnimator.play(ObjectAnimator.ofFloat(dot, ANIMATION_PROPERTY_ALPHA, 1F))
+            .with(animator)
+            .before(ObjectAnimator.ofFloat(dot, ANIMATION_PROPERTY_ALPHA, 0F));
+        }
+        dotsAnimator.addListener(new BaseAnimatorListener() {
+          @Override
+          public void onAnimationEnd(Animator animator) {
+            View dot;
+            for (int i = 0; i < DEFAULT_MAX_LENGTH; i++) {
+              dot = dots[i];
+              dot.setVisibility(View.GONE);
+              dot.setAlpha(1F);
+            }
+          }
+        });
+        resetAnimator.play(dotsAnimator);
       }
       resetAnimator.addListener(new BaseAnimatorListener() {
         @Override
