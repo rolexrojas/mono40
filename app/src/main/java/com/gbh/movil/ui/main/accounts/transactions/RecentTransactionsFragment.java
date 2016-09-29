@@ -3,17 +3,21 @@ package com.gbh.movil.ui.main.accounts.transactions;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.gbh.movil.R;
+import com.gbh.movil.data.Formatter;
 import com.gbh.movil.data.MessageHelper;
 import com.gbh.movil.domain.Transaction;
 import com.gbh.movil.ui.main.SubFragment;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -28,6 +32,8 @@ import butterknife.Unbinder;
  */
 public class RecentTransactionsFragment extends SubFragment implements RecentTransactionsScreen {
   private Unbinder unbinder;
+
+  private Adapter adapter;
 
   @Inject
   MessageHelper messageHelper;
@@ -71,6 +77,13 @@ public class RecentTransactionsFragment extends SubFragment implements RecentTra
     super.onViewCreated(view, savedInstanceState);
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
+    // Prepares the recycler view.
+    if (adapter == null) {
+      adapter = new Adapter();
+    }
+    recyclerView.setAdapter(adapter);
+    recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
+      LinearLayoutManager.VERTICAL, false));
   }
 
   @Override
@@ -98,16 +111,98 @@ public class RecentTransactionsFragment extends SubFragment implements RecentTra
 
   @Override
   public void clear() {
-    // TODO
+    if (adapter != null) {
+      adapter.clear();
+    }
   }
 
   @Override
   public void add(@NonNull Date date) {
-    // TODO
+    if (adapter != null) {
+      adapter.add(date);
+    }
   }
 
   @Override
   public void add(@NonNull Transaction transaction) {
     // TODO
+  }
+
+  private class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final int TYPE_GROUP_TITLE = 0;
+
+    private static final int TYPE_TRANSACTION = 1;
+
+    private final List<Object> items = new ArrayList<>();
+
+    /**
+     * TODO
+     */
+    void clear() {
+      final int count = getItemCount();
+      if (count > 0) {
+        items.clear();
+        notifyItemRangeRemoved(0, count);
+      }
+    }
+
+    /**
+     * TODO
+     *
+     * @param date
+     *   TODO
+     */
+    void add(@NonNull Date date) {
+      if (!items.contains(date)) {
+        items.add(date);
+        notifyItemInserted(getItemCount());
+      }
+    }
+
+    /**
+     * TODO
+     *
+     * @param transaction
+     *   TODO
+     */
+    void add(@NonNull Transaction transaction) {
+      if (!items.contains(transaction)) {
+        items.add(transaction);
+        notifyItemInserted(getItemCount());
+      }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+      return items.get(position) instanceof Date ? TYPE_GROUP_TITLE : TYPE_TRANSACTION;
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+      final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+      if (viewType == TYPE_GROUP_TITLE) {
+        return new GroupItemViewHolder(inflater.inflate(R.layout.list_item_group_title, parent,
+          false));
+      } else {
+        // TODO
+        return null;
+      }
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+      final Object item = items.get(position);
+      final int type = getItemViewType(position);
+      if (type == TYPE_GROUP_TITLE) {
+        ((GroupItemViewHolder) holder).getTextView().setText(Formatter.date((Date) item));
+      } else {
+        // TODO
+      }
+    }
+
+    @Override
+    public int getItemCount() {
+      return items.size();
+    }
   }
 }

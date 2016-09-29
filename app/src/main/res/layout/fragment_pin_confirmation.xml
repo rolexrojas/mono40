@@ -26,6 +26,7 @@
     android:text="@string/pin_confirmation"/>
 
   <TextView
+    android:id="@+id/text_view_query_fee_description"
     style="@style/PinConfirmationDescription"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

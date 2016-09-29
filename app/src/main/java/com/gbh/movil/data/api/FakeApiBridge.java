@@ -68,7 +68,7 @@ class FakeApiBridge implements ApiBridge {
 //    balances.put(account, balance);
     final Calendar calendar = Calendar.getInstance();
     calendar.set(Calendar.YEAR, 2016);
-    calendar.set(Calendar.MONTH, 8);
+    calendar.set(Calendar.MONTH, Calendar.AUGUST);
     calendar.set(Calendar.DAY_OF_MONTH, 3);
     calendar.set(Calendar.HOUR, 0);
     calendar.set(Calendar.MINUTE, 0);
@@ -80,7 +80,7 @@ class FakeApiBridge implements ApiBridge {
     calendar.set(Calendar.DAY_OF_MONTH, 1);
     transactions.add(new Transaction("Pago de factura", "Orange", calendar.getTimeInMillis(),
       -4700));
-    calendar.set(Calendar.MONTH, 7);
+    calendar.set(Calendar.MONTH, Calendar.JULY);
     calendar.set(Calendar.DAY_OF_MONTH, 29);
     transactions.add(new Transaction("Pago en tienda", "Farmacia Plus", calendar.getTimeInMillis(),
       -1230.77));

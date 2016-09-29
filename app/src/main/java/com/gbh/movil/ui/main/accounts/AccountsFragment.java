@@ -83,12 +83,15 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
     if (fragment != null && fragment instanceof PinConfirmationDialogFragment) {
       ((PinConfirmationDialogFragment) fragment).dismiss();
     }
-    PinConfirmationDialogFragment.newInstance(new PinConfirmationDialogFragment.Callback() {
-      @Override
-      public void confirm(@NonNull String pin) {
-        presenter.queryBalance(account, pin);
-      }
-    }).show(manager, TAG_PIN_CONFIRMATION);
+    PinConfirmationDialogFragment.newInstance(
+      messageHelper.feeForTransaction(account.getCurrency(), account.getQueryFee()),
+      new PinConfirmationDialogFragment.Callback() {
+        @Override
+        public void confirm(@NonNull String pin) {
+          presenter.queryBalance(account, pin);
+        }
+      })
+      .show(manager, TAG_PIN_CONFIRMATION);
   }
 
   /**
@@ -232,9 +235,6 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
     private final ShowRecentTransactionsItem showRecentTransactionsItem
       = new ShowRecentTransactionsItem();
 
-    /**
-     * TODO
-     */
     private final List<Object> items = new ArrayList<>();
 
     private Adapter(@NonNull ShowRecentTransactionsViewHolder.Listener listener) {
@@ -319,11 +319,11 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
       final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
       if (viewType == TYPE_ACCOUNT) {
-        return new AccountItemViewHolder(inflater.inflate(R.layout.item_account, parent, false),
-          this);
+        return new AccountItemViewHolder(inflater.inflate(R.layout.list_item_account, parent,
+          false), this);
       } else {
         return new ShowRecentTransactionsViewHolder(inflater
-          .inflate(R.layout.item_show_recent_transactions, parent, false), listener);
+          .inflate(R.layout.list_item_show_recent_transactions, parent, false), listener);
       }
     }
 
@@ -359,9 +359,6 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
       return items.size();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onQueryBalanceButtonClicked(int position) {
       queryBalance(((AccountItem) items.get(position)).getAccount());

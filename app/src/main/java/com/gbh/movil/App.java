@@ -1,7 +1,11 @@
 package com.gbh.movil;
 
 import android.app.Application;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
+
+import java.util.Locale;
 
 import timber.log.Timber;
 
@@ -37,6 +41,17 @@ public final class App extends Application {
     // Initializes Timber.
     if (BuildConfig.DEBUG) {
       Timber.plant(new Timber.DebugTree());
+    }
+    // Sets spanish as the default locale.
+    final Resources resources = getResources();
+    if (resources != null) {
+      final Configuration configuration = resources.getConfiguration();
+      if (configuration != null) {
+        final Locale locale = new Locale("es");
+        Locale.setDefault(locale);
+        configuration.setLocale(locale);
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+      }
     }
   }
 }

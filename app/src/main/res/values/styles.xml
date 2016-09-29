@@ -198,14 +198,13 @@
   <!-- Transaction styles -->
   <style name="BaseListItemGroupTitle">
     <item name="android:gravity">center_vertical</item>
-    <item name="android:paddingBottom">10dp</item>
+    <item name="android:layout_height">35dp</item>
     <item name="android:paddingEnd">@dimen/list_item_padding_horizontal</item>
     <item name="android:paddingStart">@dimen/list_item_padding_horizontal</item>
-    <item name="android:paddingTop">10dp</item>
     <item name="android:textAllCaps">true</item>
     <item name="android:textColor">#666</item>
     <item name="android:textSize">10sp</item>
-    <item name="fontPath">@string/gotham_rounded_light</item>
+    <item name="fontPath">@string/gotham_rounded_medium</item>
   </style>
 
   <style
