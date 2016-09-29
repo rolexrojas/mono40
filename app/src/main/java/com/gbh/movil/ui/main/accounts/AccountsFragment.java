@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.gbh.movil.data.Formatter;
-import com.gbh.movil.ui.main.pin.PinConfirmationFragment;
+import com.gbh.movil.ui.main.PinConfirmationDialogFragment;
 import com.squareup.picasso.Picasso;
 import com.gbh.movil.R;
 import com.gbh.movil.data.MessageHelper;
@@ -24,7 +24,6 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -59,7 +58,7 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
   /**
    * TODO
    */
-  private PinConfirmationFragment fragment;
+  private PinConfirmationDialogFragment fragment;
 
   /**
    * TODO
@@ -106,7 +105,7 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
       fragment.dismiss();
       fragment = null;
     }
-    fragment = PinConfirmationFragment.newInstance(new PinConfirmationFragment.Callback() {
+    fragment = PinConfirmationDialogFragment.newInstance(new PinConfirmationDialogFragment.Callback() {
       @Override
       public void confirm(@NonNull String pin) {
         presenter.queryBalance(account, pin);

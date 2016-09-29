@@ -47,6 +47,11 @@ class AccountsPresenter {
    */
   private Subscription queryBalanceSubscription = Subscriptions.unsubscribed();
 
+  /**
+   * TODO
+   */
+  private Subscription balanceExpirationSubscription = Subscriptions.unsubscribed();
+
   AccountsPresenter(@NonNull AccountsScreen screen, @NonNull DataLoader dataLoader,
     @NonNull BalanceManager balanceManager) {
     this.screen = screen;
@@ -75,7 +80,20 @@ class AccountsPresenter {
       }, new Action1<Throwable>() {
         @Override
         public void call(Throwable throwable) {
-          Timber.e(throwable, "Loading all the accounts");
+          Timber.e(throwable, "Listener to accounts changes events");
+        }
+      });
+    balanceExpirationSubscription = balanceManager.expiration()
+      .observeOn(AndroidSchedulers.mainThread())
+      .subscribe(new Action1<Account>() {
+        @Override
+        public void call(Account account) {
+          screen.setBalance(account, null);
+        }
+      }, new Action1<Throwable>() {
+        @Override
+        public void call(Throwable throwable) {
+          Timber.e(throwable, "Listening to balance expiration events");
         }
       });
   }
@@ -86,6 +104,9 @@ class AccountsPresenter {
   void stop() {
     if (!queryBalanceSubscription.isUnsubscribed()) {
       queryBalanceSubscription.unsubscribe();
+    }
+    if (!balanceExpirationSubscription.isUnsubscribed()) {
+      balanceExpirationSubscription.unsubscribe();
     }
     if (!loadAccountsSubscription.isUnsubscribed()) {
       loadAccountsSubscription.unsubscribe();

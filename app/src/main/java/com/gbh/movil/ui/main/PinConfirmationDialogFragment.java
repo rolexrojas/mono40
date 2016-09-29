@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.main.pin;
+package com.gbh.movil.ui.main;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,7 +24,7 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class PinConfirmationFragment extends FullScreenDialogFragment implements PinView.Listener,
+public class PinConfirmationDialogFragment extends FullScreenDialogFragment implements PinView.Listener,
   NumPad.OnButtonClickedListener {
   /**
    * TODO
@@ -61,10 +61,10 @@ public class PinConfirmationFragment extends FullScreenDialogFragment implements
    *
    * @return TODO
    */
-  public static PinConfirmationFragment newInstance(@NonNull Callback callback) {
+  public static PinConfirmationDialogFragment newInstance(@NonNull Callback callback) {
     final Bundle bundle = new Bundle();
     bundle.putSerializable(KEY_CALLBACK, callback);
-    final PinConfirmationFragment fragment = new PinConfirmationFragment();
+    final PinConfirmationDialogFragment fragment = new PinConfirmationDialogFragment();
     fragment.setArguments(bundle);
     return fragment;
   }

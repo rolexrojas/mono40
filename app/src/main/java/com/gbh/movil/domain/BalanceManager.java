@@ -30,7 +30,8 @@ public final class BalanceManager {
   /**
    * Amount of time (milliseconds) that every balance will be kept alive.
    */
-  private static final long EXPIRATION_TIME = 300000L; // Five (5) minutes.
+//  private static final long EXPIRATION_TIME = 300000L; // Five (5) minutes.
+  private static final long EXPIRATION_TIME = 30000L; // Thirty (30) seconds.
 
   private final ApiBridge apiBridge;
 
@@ -53,28 +54,20 @@ public final class BalanceManager {
   public BalanceManager(@NonNull ApiBridge apiBridge) {
     this.apiBridge = apiBridge;
     this.balances = new HashMap<>();
-    // Adds an action that logs every time a balance expires.
-    this.subject.doOnNext(new Action1<Account>() {
-      @Override
-      public void call(Account account) {
-        Timber.d("%1$s balance expired", account);
-      }
-    });
   }
 
   /**
    * Starts notifying observers.
    */
   public final void start() {
-    subscription = Observable.interval(0L, 1L, TimeUnit.MINUTES) // One (1) minute intervals.
+//    subscription = Observable.interval(0L, 1L, TimeUnit.MINUTES) // One (1) minute intervals.
+    subscription = Observable.interval(0L, 1L, TimeUnit.SECONDS) // One (1) second intervals.
       .observeOn(AndroidSchedulers.mainThread())
       .subscribe(new Action1<Long>() {
         @Override
         public void call(Long interval) {
-          long creationDate;
           for (Account account : balances.keySet()) {
-            creationDate = balances.get(account).first;
-            if ((System.currentTimeMillis() - creationDate) >= EXPIRATION_TIME) {
+            if ((System.currentTimeMillis() - balances.get(account).first) >= EXPIRATION_TIME) {
               subject.onNext(account);
               balances.remove(account);
             }
