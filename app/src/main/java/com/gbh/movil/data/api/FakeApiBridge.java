@@ -34,19 +34,19 @@ class FakeApiBridge implements ApiBridge {
     bank = new Bank("BPD", "Banco Popular Dominicano");
     account = new BankAccount("1234", "DOP", bank, 5.0, "5.0", "balance");
     accounts.add(account);
-    balance = new Balance(87645, "87645");
+    balance = new Balance(87645, "87645.23");
     balances.put(account, balance);
     bank = new Bank("BANRESERVAS", "Banreservas");
     banks.add(bank);
-    account = new CreditCard("2134", "DOP", bank, 3.0, "3.0", "balance");
+    account = new CreditCard("2134", "USD", bank, 3.0, "3.0", "balance");
     accounts.add(account);
-    balance = new Balance(2645, "2645");
+    balance = new Balance(2645, "2645.49");
     balances.put(account, balance);
     bank = new Bank("BDI", "Banco BDI");
     banks.add(bank);
-    account = new BankAccount("3124", "USD", bank, 4.0, "4.0", "balance");
+    account = new BankAccount("3124", "DOP", bank, 4.0, "4.0", "balance");
     accounts.add(account);
-    balance = new Balance(99, "99");
+    balance = new Balance(99, "99.12");
     balances.put(account, balance);
 //    bank = new Bank("ADEMI", "Banco ADEMI");
 //    banks.add(bank);
@@ -80,11 +80,16 @@ class FakeApiBridge implements ApiBridge {
   @Override
   public Observable<ApiResult<Balance>> queryBalance(@NonNull Account account,
     @NonNull String pin) {
-    if (balances.containsKey(account)) {
-      return Observable.just(new ApiResult<>(ApiCode.SUCCESS, balances.get(account)))
-        .delay(1L, TimeUnit.SECONDS);
+    if (Integer.parseInt(pin) % 2 == 0) {
+      if (balances.containsKey(account)) {
+        return Observable.just(new ApiResult<>(ApiCode.SUCCESS, balances.get(account)))
+          .delay(1L, TimeUnit.SECONDS);
+      } else {
+        return Observable.just(new ApiResult<Balance>(ApiCode.NOT_FOUND, null))
+          .delay(1L, TimeUnit.SECONDS);
+      }
     } else {
-      return Observable.just(new ApiResult<Balance>(ApiCode.NOT_FOUND, null))
+      return Observable.just(new ApiResult<Balance>(ApiCode.UNAUTHORIZED, null))
         .delay(1L, TimeUnit.SECONDS);
     }
   }

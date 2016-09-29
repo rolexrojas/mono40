@@ -17,6 +17,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
 /**
  * Manager responsible of storing all queried {@link Balance balances} and notifying observers when
@@ -44,11 +45,21 @@ public final class BalanceManager {
    */
   private final PublishSubject<Account> subject = PublishSubject.create();
 
+  /**
+   * TODO
+   */
   private Subscription subscription = Subscriptions.unsubscribed();
 
   public BalanceManager(@NonNull ApiBridge apiBridge) {
     this.apiBridge = apiBridge;
     this.balances = new HashMap<>();
+    // Adds an action that logs every time a balance expires.
+    this.subject.doOnNext(new Action1<Account>() {
+      @Override
+      public void call(Account account) {
+        Timber.d("%1$s balance expired", account);
+      }
+    });
   }
 
   /**
@@ -68,6 +79,11 @@ public final class BalanceManager {
               balances.remove(account);
             }
           }
+        }
+      }, new Action1<Throwable>() {
+        @Override
+        public void call(Throwable throwable) {
+          Timber.d(throwable, "Removing expired balances");
         }
       });
   }

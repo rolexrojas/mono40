@@ -289,7 +289,7 @@ public class PinView extends LinearLayout {
   /**
    * TODO
    */
-  public void resolve(boolean succeeded) {
+  public void resolve(final boolean succeeded) {
     if (resetAnimator == null || !resetAnimator.isRunning()) {
       if (loadAnimator.isRunning()) {
         loadAnimator.cancel();
@@ -378,7 +378,7 @@ public class PinView extends LinearLayout {
           cursor.setVisibility(View.VISIBLE);
           cursorAnimator.start();
           if (listener != null) {
-            listener.onLoadingFinished();
+            listener.onLoadingFinished(succeeded);
           }
         }
       });
@@ -398,6 +398,6 @@ public class PinView extends LinearLayout {
     /**
      * TODO
      */
-    void onLoadingFinished();
+    void onLoadingFinished(boolean succeeded);
   }
 }

@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
@@ -90,8 +89,7 @@ public final class DataLoader {
    * @return TODO
    */
   public final Observable<Set<Account>> accounts() {
-    return accountsSubject.asObservable()
-      .observeOn(AndroidSchedulers.mainThread());
+    return accountsSubject.asObservable();
   }
 
   /**

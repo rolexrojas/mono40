@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.gbh.movil.data.Formatter;
+import com.gbh.movil.ui.main.pin.PinConfirmationFragment;
 import com.squareup.picasso.Picasso;
 import com.gbh.movil.R;
 import com.gbh.movil.data.MessageHelper;
@@ -22,6 +24,7 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -41,12 +44,22 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
   /**
    * TODO
    */
+  private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
+
+  /**
+   * TODO
+   */
   private Unbinder unbinder;
 
   /**
    * TODO
    */
   private Adapter adapter;
+
+  /**
+   * TODO
+   */
+  private PinConfirmationFragment fragment;
 
   /**
    * TODO
@@ -80,6 +93,26 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
   @NonNull
   public static AccountsFragment newInstance() {
     return new AccountsFragment();
+  }
+
+  /**
+   * TODO
+   *
+   * @param account
+   *   {@link Account} that will be queried.
+   */
+  private void queryBalance(@NonNull final Account account) {
+    if (fragment != null) {
+      fragment.dismiss();
+      fragment = null;
+    }
+    fragment = PinConfirmationFragment.newInstance(new PinConfirmationFragment.Callback() {
+      @Override
+      public void confirm(@NonNull String pin) {
+        presenter.queryBalance(account, pin);
+      }
+    });
+    fragment.show(getChildFragmentManager(), TAG_PIN_CONFIRMATION);
   }
 
   /**
@@ -166,6 +199,15 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
     if (adapter != null) {
       adapter.add(account);
     }
+  }
+
+  @Override
+  public void onBalanceQueried(boolean succeeded, @NonNull Account account,
+    @Nullable Balance balance) {
+    if (fragment != null) {
+      fragment.resolve(succeeded);
+    }
+    setBalance(account, balance);
   }
 
   @Override
@@ -322,7 +364,8 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
         final Balance balance = item.getBalance();
         if (balance != null) {
           accountHolder.accountBalanceTextView.setVisibility(View.VISIBLE);
-          // TODO: Format the balance as currency.
+          accountHolder.accountBalanceTextView.setText(Formatter.currency(account.getCurrency(),
+            balance.getValue()));
           accountHolder.queryAccountBalanceButton.setVisibility(View.GONE);
         } else {
           accountHolder.accountBalanceTextView.setVisibility(View.GONE);
@@ -341,7 +384,7 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
      */
     @Override
     public void onQueryBalanceButtonClicked(int position) {
-      // TODO
+      queryBalance(((AccountItem) items.get(position)).getAccount());
     }
   }
 }

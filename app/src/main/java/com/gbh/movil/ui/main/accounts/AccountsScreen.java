@@ -28,6 +28,18 @@ interface AccountsScreen {
   /**
    * TODO
    *
+   * @param succeeded
+   *   TODO
+   * @param account
+   *   TODO
+   * @param balance
+   *   TODO
+   */
+  void onBalanceQueried(boolean succeeded, @NonNull Account account, @Nullable Balance balance);
+
+  /**
+   * TODO
+   *
    * @param account
    *   TODO
    * @param balance

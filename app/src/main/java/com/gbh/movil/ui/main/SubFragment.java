@@ -23,8 +23,7 @@ public abstract class SubFragment extends Fragment {
     if (activity instanceof ParentScreen) {
       parentScreen = (ParentScreen) activity;
     } else {
-      // TODO: Find a suitable runtime exception for this case.
-      throw new RuntimeException("Activity must implement the 'ParentScreen' interface");
+      throw new ClassCastException("Activity must implement the 'ParentScreen' interface");
     }
   }
 

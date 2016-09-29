@@ -9,10 +9,10 @@
   <string name="done_with_exclamation_mark">¡Listo!</string>
   <string name="dot">Punto</string>
   <string name="go_to_accounts">Ver cuentas</string>
-  <string name="gotham_rounded_bold">GothamRounded-Bold.otf</string>
-  <string name="gotham_rounded_book">GothamRounded-Book.otf</string>
-  <string name="gotham_rounded_light">GothamRounded-Light.otf</string>
-  <string name="gotham_rounded_medium">GothamRounded-Medium.otf</string>
+  <string name="gotham_rounded_bold">fonts/GothamRounded-Bold.otf</string>
+  <string name="gotham_rounded_book">fonts/GothamRounded-Book.otf</string>
+  <string name="gotham_rounded_light">fonts/GothamRounded-Light.otf</string>
+  <string name="gotham_rounded_medium">fonts/GothamRounded-Medium.otf</string>
   <string name="help">Ayuda</string>
   <string name="last_transactions">Últimas transacciones</string>
   <string name="logo">Logo</string>

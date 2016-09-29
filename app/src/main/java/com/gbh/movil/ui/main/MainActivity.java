@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -20,7 +19,6 @@ import com.gbh.movil.ui.BaseActivity;
 import com.gbh.movil.ui.SplashFragment;
 import com.gbh.movil.ui.main.accounts.AccountsFragment;
 import com.gbh.movil.ui.main.payments.PaymentsFragment;
-import com.gbh.movil.ui.main.pin.PinConfirmationFragment;
 import com.gbh.movil.ui.view.widget.SlidingPaneLayout;
 
 import javax.inject.Inject;
@@ -51,12 +49,21 @@ public class MainActivity extends BaseActivity implements ParentScreen, MainScre
    */
   private MainComponent component;
 
+  /**
+   * TODO
+   */
   @Inject
   MainPresenter presenter;
 
+  /**
+   * TODO
+   */
   @BindView(R.id.sliding_pane_layout)
   SlidingPaneLayout slidingPaneLayout;
 
+  /**
+   * TODO
+   */
   @BindView(R.id.toolbar)
   Toolbar toolbar;
 
@@ -283,8 +290,5 @@ public class MainActivity extends BaseActivity implements ParentScreen, MainScre
         .remove(fragment)
         .commit();
     }
-    final DialogFragment dialogFragment = new PinConfirmationFragment();
-    dialogFragment.setStyle(DialogFragment.STYLE_NO_FRAME, R.style.FullScreenDialogTheme);
-    dialogFragment.show(fragmentManager, null);
   }
 }

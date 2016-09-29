@@ -3,33 +3,34 @@ package com.gbh.movil.ui.main.pin;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.gbh.movil.R;
+import com.gbh.movil.ui.FullScreenDialogFragment;
 import com.gbh.movil.ui.view.widget.NumPad;
 import com.gbh.movil.ui.view.widget.PinView;
 
-import java.util.concurrent.TimeUnit;
+import java.io.Serializable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import timber.log.Timber;
 
 /**
  * TODO
  *
  * @author hecvasro
  */
-public class PinConfirmationFragment extends DialogFragment implements PinView.Listener,
+public class PinConfirmationFragment extends FullScreenDialogFragment implements PinView.Listener,
   NumPad.OnButtonClickedListener {
+  /**
+   * TODO
+   */
+  private static final String KEY_CALLBACK = "callback";
+
   /**
    * TODO
    */
@@ -51,6 +52,39 @@ public class PinConfirmationFragment extends DialogFragment implements PinView.L
    */
   @BindView(R.id.num_pad)
   NumPad numPad;
+
+  /**
+   * TODO
+   *
+   * @param callback
+   *   TODO
+   *
+   * @return TODO
+   */
+  public static PinConfirmationFragment newInstance(@NonNull Callback callback) {
+    final Bundle bundle = new Bundle();
+    bundle.putSerializable(KEY_CALLBACK, callback);
+    final PinConfirmationFragment fragment = new PinConfirmationFragment();
+    fragment.setArguments(bundle);
+    return fragment;
+  }
+
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    // Attaches the callback to the fragment.
+    final Bundle bundle = savedInstanceState != null ? savedInstanceState : getArguments();
+    if (bundle != null && bundle.containsKey(KEY_CALLBACK)) {
+      final Serializable serializable = bundle.getSerializable(KEY_CALLBACK);
+      if (serializable instanceof Callback) {
+        callback = (Callback) serializable;
+      } else {
+        throw new ClassCastException("Argument must implement the 'Callback' interface");
+      }
+    } else {
+      throw new NullPointerException("Callback must be set");
+    }
+  }
 
   @Nullable
   @Override
@@ -81,6 +115,13 @@ public class PinConfirmationFragment extends DialogFragment implements PinView.L
     unbinder.unbind();
   }
 
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    // Detaches the callback from the fragment.
+    callback = null;
+  }
+
   /**
    * TODO
    *
@@ -105,28 +146,20 @@ public class PinConfirmationFragment extends DialogFragment implements PinView.L
 
   @Override
   public void onLoadingStarted(@NonNull String pin) {
-//    callback.confirm(pin);
-    Observable.just(pin)
-      .delay(2L, TimeUnit.SECONDS)
-      .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(new Action1<String>() {
-        @Override
-        public void call(String s) {
-          Timber.d(s);
-          pinView.resolve(Integer.parseInt(s) % 2 == 0);
-        }
-      });
+    callback.confirm(pin);
   }
 
   @Override
-  public void onLoadingFinished() {
-    // TODO
+  public void onLoadingFinished(boolean succeeded) {
+    if (succeeded) {
+      dismiss();
+    }
   }
 
   /**
    * TODO
    */
-  public interface Callback {
+  public interface Callback extends Serializable {
     /**
      * TODO
      *
