@@ -30,7 +30,8 @@
     android:id="@+id/frame_layout_anchor"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:layout_alignParentEnd="true">
+    android:layout_alignParentEnd="true"
+    android:layout_marginStart="25dp">
 
     <Button
       android:id="@+id/button_query_account_balance"

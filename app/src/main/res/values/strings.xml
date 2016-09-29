@@ -5,8 +5,14 @@
   <string name="app_name">tPago</string>
   <string name="balance">Saldo</string>
   <string name="commerce">En comercio</string>
+  <string name="delete">Eliminar</string>
   <string name="done_with_exclamation_mark">¡Listo!</string>
+  <string name="dot">Punto</string>
   <string name="go_to_accounts">Ver cuentas</string>
+  <string name="gotham_rounded_bold">fonts/GothamRounded-Bold.otf</string>
+  <string name="gotham_rounded_book">fonts/GothamRounded-Book.otf</string>
+  <string name="gotham_rounded_light">fonts/GothamRounded-Light.otf</string>
+  <string name="gotham_rounded_medium">fonts/GothamRounded-Medium.otf</string>
   <string name="help">Ayuda</string>
   <string name="last_transactions">Últimas transacciones</string>
   <string name="logo">Logo</string>
@@ -14,6 +20,7 @@
   <string name="no_internet_connection">Sin conexión a Internet.</string>
   <string name="ok">Ok</string>
   <string name="payments">Pagos</string>
+  <string name="pin_confirmation">Confirma con tu PIN</string>
   <string name="preferences">Preferencias</string>
   <string name="see">Ver</string>
   <string name="your_account_have_been_added">Tu cuenta se agregó exitosamente al mundo %1$s.Ya puedes usarla como cuenta de fondos.</string>

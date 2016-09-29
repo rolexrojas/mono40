@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@drawable/bg_pin_confirmation_screen"
+  android:orientation="vertical"
+  android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+  <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize">
+
+    <ImageView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:contentDescription="@string/logo"
+      android:src="@drawable/logo_pin_confirmation"/>
+  </FrameLayout>
+
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="32dp"
+    android:gravity="center"
+    android:text="@string/pin_confirmation"
+    android:textAppearance="@style/Text.Label.Medium"
+    android:textColor="@color/white"
+    android:textSize="20sp"/>
+
+  <TextView
+    android:id="@+id/textView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="15dp"
+    android:gravity="center"
+    android:text="Cargo por transacción RD$5.00"
+    android:textAppearance="@style/Text.Body.Normal"
+    android:textColor="#CCC"
+    android:textSize="15sp"/>
+
+  <com.gbh.movil.ui.view.widget.PinView
+    android:id="@+id/pin_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="60dp"
+    android:layout_marginStart="60dp"
+    android:layout_marginTop="16dp"/>
+
+  <com.gbh.movil.ui.view.widget.NumPad
+    android:id="@+id/num_pad"
+    style="@style/NumPad.Light"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
+</LinearLayout>
