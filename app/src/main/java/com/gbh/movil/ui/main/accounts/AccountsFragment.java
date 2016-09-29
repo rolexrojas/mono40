@@ -4,6 +4,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -58,11 +60,6 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
   /**
    * TODO
    */
-  private PinConfirmationDialogFragment fragment;
-
-  /**
-   * TODO
-   */
   @Inject
   MessageHelper messageHelper;
 
@@ -101,17 +98,17 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
    *   {@link Account} that will be queried.
    */
   private void queryBalance(@NonNull final Account account) {
-    if (fragment != null) {
-      fragment.dismiss();
-      fragment = null;
+    final FragmentManager manager = getChildFragmentManager();
+    final Fragment fragment = manager.findFragmentByTag(TAG_PIN_CONFIRMATION);
+    if (fragment != null && fragment instanceof PinConfirmationDialogFragment) {
+      ((PinConfirmationDialogFragment) fragment).dismiss();
     }
-    fragment = PinConfirmationDialogFragment.newInstance(new PinConfirmationDialogFragment.Callback() {
+    PinConfirmationDialogFragment.newInstance(new PinConfirmationDialogFragment.Callback() {
       @Override
       public void confirm(@NonNull String pin) {
         presenter.queryBalance(account, pin);
       }
-    });
-    fragment.show(getChildFragmentManager(), TAG_PIN_CONFIRMATION);
+    }).show(manager, TAG_PIN_CONFIRMATION);
   }
 
   /**
@@ -203,8 +200,9 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
   @Override
   public void onBalanceQueried(boolean succeeded, @NonNull Account account,
     @Nullable Balance balance) {
-    if (fragment != null) {
-      fragment.resolve(succeeded);
+    final Fragment fragment = getChildFragmentManager().findFragmentByTag(TAG_PIN_CONFIRMATION);
+    if (fragment != null && fragment instanceof PinConfirmationDialogFragment) {
+      ((PinConfirmationDialogFragment) fragment).resolve(succeeded);
     }
     setBalance(account, balance);
   }

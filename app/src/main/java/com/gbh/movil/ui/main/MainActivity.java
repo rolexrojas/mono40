@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.gbh.movil.App;
 import com.gbh.movil.R;
 import com.gbh.movil.ui.BaseActivity;
-import com.gbh.movil.ui.SplashFragment;
+import com.gbh.movil.ui.SplashDialogFragment;
 import com.gbh.movil.ui.main.accounts.AccountsFragment;
 import com.gbh.movil.ui.main.payments.PaymentsFragment;
 import com.gbh.movil.ui.view.widget.SlidingPaneLayout;
@@ -37,7 +37,7 @@ public class MainActivity extends BaseActivity implements ParentScreen, MainScre
   /**
    * TODO
    */
-  private static final String FRAGMENT_TAG_SPLASH = "splash";
+  private static final String TAG_SPLASH = "splash";
 
   /**
    * TODO
@@ -270,11 +270,8 @@ public class MainActivity extends BaseActivity implements ParentScreen, MainScre
   @Override
   public void showSplashScreen() {
     final FragmentManager fragmentManager = getSupportFragmentManager();
-    if (fragmentManager.findFragmentByTag(FRAGMENT_TAG_SPLASH) == null) {
-      fragmentManager.beginTransaction()
-        .replace(R.id.fragment_container_full_screen, SplashFragment.newInstance(),
-          FRAGMENT_TAG_SPLASH)
-        .commit();
+    if (fragmentManager.findFragmentByTag(TAG_SPLASH) == null) {
+      SplashDialogFragment.newInstance().show(fragmentManager, TAG_SPLASH);
     }
   }
 
@@ -284,8 +281,8 @@ public class MainActivity extends BaseActivity implements ParentScreen, MainScre
   @Override
   public void hideSplashScreen() {
     final FragmentManager fragmentManager = getSupportFragmentManager();
-    final Fragment fragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_SPLASH);
-    if (fragment != null) {
+    final Fragment fragment = fragmentManager.findFragmentByTag(TAG_SPLASH);
+    if (fragment != null && fragment instanceof SplashDialogFragment) {
       fragmentManager.beginTransaction()
         .remove(fragment)
         .commit();

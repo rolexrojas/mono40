@@ -3,7 +3,6 @@ package com.gbh.movil.ui;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +14,15 @@ import com.gbh.movil.R;
  *
  * @author hecvasro
  */
-public class SplashFragment extends Fragment {
+public class SplashDialogFragment extends FullScreenDialogFragment {
   /**
    * TODO
    *
    * @return TODO
    */
   @NonNull
-  public static SplashFragment newInstance() {
-    return new SplashFragment();
+  public static SplashDialogFragment newInstance() {
+    return new SplashDialogFragment();
   }
 
   @Nullable
