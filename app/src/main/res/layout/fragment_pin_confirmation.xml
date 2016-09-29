@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+  style="@style/PinConfirmationContainer"
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@drawable/bg_pin_confirmation_screen"
-  android:orientation="vertical"
-  android:theme="@style/ThemeOverlay.AppCompat.Dark">
+  android:orientation="vertical">
 
   <FrameLayout
     android:layout_width="match_parent"
@@ -20,25 +19,18 @@
   </FrameLayout>
 
   <TextView
+    style="@style/PinConfirmationTitle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="32dp"
-    android:gravity="center"
-    android:text="@string/pin_confirmation"
-    android:textAppearance="@style/Text.Label.Medium"
-    android:textColor="@color/white"
-    android:textSize="20sp"/>
+    android:text="@string/pin_confirmation"/>
 
   <TextView
-    android:id="@+id/textView"
+    style="@style/PinConfirmationDescription"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="15dp"
-    android:gravity="center"
-    android:text="Cargo por transacción RD$5.00"
-    android:textAppearance="@style/Text.Body.Normal"
-    android:textColor="#CCC"
-    android:textSize="15sp"/>
+    android:text="@string/fee_for_transaction"/>
 
   <com.gbh.movil.ui.view.widget.PinView
     android:id="@+id/pin_view"

@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-  style="@style/ListItem.Medium"
+  style="@style/ListItem.Normal"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent">
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  tools:ignore="MissingPrefix">
 
   <TextView
+    fontPath="@string/gotham_rounded_book"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_alignParentStart="true"
@@ -12,12 +15,13 @@
     android:ellipsize="end"
     android:gravity="center_vertical"
     android:text="@string/recent_transactions"
-    android:textAppearance="@style/Text.Body.Normal"/>
+    android:textColor="#333"
+    android:textSize="16sp"/>
 
   <Button
     android:id="@+id/button"
     style="@style/ListItemButton"
-    android:text="@string/see"
+    android:layout_alignParentEnd="true"
     android:layout_centerVertical="true"
-    android:layout_alignParentEnd="true"/>
+    android:text="@string/see"/>
 </RelativeLayout>

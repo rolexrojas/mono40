@@ -8,6 +8,7 @@
   <string name="delete">Eliminar</string>
   <string name="done_with_exclamation_mark">¡Listo!</string>
   <string name="dot">Punto</string>
+  <string name="fee_for_transaction">Cargo por transacción %1$s</string>
   <string name="go_to_accounts">Ver cuentas</string>
   <string name="gotham_rounded_bold">fonts/GothamRounded-Bold.otf</string>
   <string name="gotham_rounded_book">fonts/GothamRounded-Book.otf</string>

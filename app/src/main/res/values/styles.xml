@@ -1,45 +1,15 @@
 <resources>
-  <!-- Text appearances -->
-  <style
-    name="BaseText"
-    parent="TextAppearance.AppCompat"/>
-  <style name="BaseText.Label">
+  <!-- Text styles -->
+  <style name="BaseCurrency">
+    <item name="android:gravity">end|center_vertical</item>
     <item name="android:textColor">#333</item>
-  </style>
-  <style name="BaseText.Label.Light">
-    <item name="android:textSize">12sp</item>
-    <item name="fontPath">@string/gotham_rounded_light</item>
-  </style>
-  <style name="BaseText.Label.Medium">
     <item name="android:textSize">16sp</item>
     <item name="fontPath">@string/gotham_rounded_medium</item>
   </style>
-  <style name="BaseText.Label.Bold">
-    <item name="android:textAllCaps">true</item>
-    <item name="android:textColor">@color/primary</item>
-    <item name="android:textSize">14sp</item>
-    <item name="fontPath">@string/gotham_rounded_bold</item>
-  </style>
-  <style name="BaseText.Body">
-    <item name="android:textColor">#333</item>
-    <item name="fontPath">@string/gotham_rounded_book</item>
-  </style>
-  <style name="BaseText.Body.Normal">
-    <item name="android:textSize">16sp</item>
-  </style>
 
   <style
-    name="Text.Label.Light"
-    parent="BaseText.Label.Light"/>
-  <style
-    name="Text.Label.Medium"
-    parent="BaseText.Label.Medium"/>
-  <style
-    name="Text.Label.Bold"
-    parent="BaseText.Label.Bold"/>
-  <style
-    name="Text.Body.Normal"
-    parent="BaseText.Body.Normal"/>
+    name="Currency"
+    parent="BaseCurrency"/>
 
   <!-- Button styles -->
   <style name="Button">
@@ -47,13 +17,10 @@
     <item name="android:clickable">true</item>
     <item name="android:gravity">center</item>
     <item name="android:layout_height">@dimen/button_height</item>
-    <item name="android:textAppearance">@style/Text.Label.Bold</item>
-  </style>
-  <style name="ListItemButton"
-    parent="Button">
-    <item name="android:background">@drawable/bg_button_colored</item>
-    <item name="android:layout_height">@dimen/list_item_button_height</item>
-    <item name="android:layout_width">@dimen/list_item_button_width</item>
+    <item name="android:textAllCaps">true</item>
+    <item name="android:textColor">@color/primary</item>
+    <item name="android:textSize">14sp</item>
+    <item name="fontPath">@string/gotham_rounded_bold</item>
   </style>
 
   <!-- Menu styles -->
@@ -105,24 +72,9 @@
   <style
     name="MenuItem.Normal"
     parent="BaseMenuItem.Normal"/>
-  <style name="MenuItem.Large"
+  <style
+    name="MenuItem.Large"
     parent="BaseMenuItem.Large"/>
-
-  <!-- List styles -->
-  <style name="List"/>
-  <style name="List.Vertical"/>
-
-  <style name="ListItem">
-    <item name="android:background">@color/white</item>
-    <item name="android:paddingEnd">@dimen/list_item_padding_horizontal</item>
-    <item name="android:paddingStart">@dimen/list_item_padding_horizontal</item>
-  </style>
-  <style name="ListItem.Medium">
-    <item name="android:layout_height">@dimen/list_item_height_medium</item>
-  </style>
-  <style name="ListItem.Large">
-    <item name="android:layout_height">@dimen/list_item_height_large</item>
-  </style>
 
   <!-- Num pad styles -->
   <style name="NumPad">
@@ -169,6 +121,124 @@
     <item name="android:textSize">24sp</item>
     <item name="fontPath">@string/gotham_rounded_medium</item>
   </style>
+
+  <!-- Pin confirmation styles -->
+  <style name="PinConfirmationContainer">
+    <item name="android:background">@drawable/pin_confirmation</item>
+    <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark</item>
+  </style>
+
+  <style name="PinConfirmationTitle">
+    <item name="android:gravity">center</item>
+    <item name="android:textColor">@color/white</item>
+    <item name="android:textSize">20sp</item>
+    <item name="fontPath">@string/gotham_rounded_medium</item>
+  </style>
+
+  <style name="PinConfirmationDescription">
+    <item name="android:gravity">center</item>
+    <item name="android:textColor">#CCC</item>
+    <item name="android:textSize">15sp</item>
+    <item name="fontPath">@string/gotham_rounded_book</item>
+  </style>
+
+  <!-- List styles -->
+  <style name="List"/>
+  <style name="List.Vertical"/>
+
+  <style name="ListItem">
+    <item name="android:paddingEnd">@dimen/list_item_padding_horizontal</item>
+    <item name="android:paddingStart">@dimen/list_item_padding_horizontal</item>
+  </style>
+  <style name="ListItem.Normal">
+    <item name="android:layout_height">@dimen/list_item_height_normal</item>
+  </style>
+  <style name="ListItem.Large">
+    <item name="android:layout_height">@dimen/list_item_height_large</item>
+  </style>
+
+  <style
+    name="ListItemButton"
+    parent="Button">
+    <item name="android:background">@drawable/list_item_button</item>
+    <item name="android:layout_height">@dimen/list_item_button_height</item>
+    <item name="android:layout_width">@dimen/list_item_button_width</item>
+  </style>
+
+  <!-- Account styles -->
+  <style
+    name="ListItemAccount"
+    parent="ListItem.Large">
+    <item name="android:background">@color/white</item>
+  </style>
+
+  <style name="ListItemAccountText">
+    <item name="android:textColor">#333</item>
+  </style>
+
+  <style
+    name="BaseListItemAccountAlias"
+    parent="ListItemAccountText">
+    <item name="android:textSize">12sp</item>
+    <item name="fontPath">@string/gotham_rounded_light</item>
+  </style>
+  <style
+    name="ListItemAccountAlias"
+    parent="BaseListItemAccountAlias"/>
+
+  <style
+    name="ListItemAccountBankName"
+    parent="ListItemAccountText">
+    <item name="android:ellipsize">end</item>
+    <item name="android:singleLine">true</item>
+    <item name="android:textSize">16sp</item>
+    <item name="fontPath">@string/gotham_rounded_book</item>
+  </style>
+
+  <!-- Transaction styles -->
+  <style name="BaseListItemGroupTitle">
+    <item name="android:gravity">center_vertical</item>
+    <item name="android:paddingBottom">10dp</item>
+    <item name="android:paddingEnd">@dimen/list_item_padding_horizontal</item>
+    <item name="android:paddingStart">@dimen/list_item_padding_horizontal</item>
+    <item name="android:paddingTop">10dp</item>
+    <item name="android:textAllCaps">true</item>
+    <item name="android:textColor">#666</item>
+    <item name="android:textSize">10sp</item>
+    <item name="fontPath">@string/gotham_rounded_light</item>
+  </style>
+
+  <style
+    name="ListItemGroupTitle"
+    parent="BaseListItemGroupTitle"/>
+
+  <style name="ListItemTransaction"
+    parent="ListItem.Normal">
+    <item name="android:background">@color/white</item>
+  </style>
+
+  <style name="ListItemTransactionText">
+    <item name="android:ellipsize">end</item>
+    <item name="android:textColor">@color/black</item>
+    <item name="fontPath">@string/gotham_rounded_book</item>
+  </style>
+
+  <style
+    name="ListItemTransactionName"
+    parent="ListItemTransactionText">
+    <item name="android:gravity">bottom</item>
+    <item name="android:textSize">16sp</item>
+  </style>
+
+  <style
+    name="BaseListItemTransactionType"
+    parent="ListItemTransactionText">
+    <item name="android:gravity">top</item>
+    <item name="android:textSize">10sp</item>
+  </style>
+  <style
+    name="ListItemTransactionType"
+    parent="BaseListItemTransactionType"/>
 
   <!-- Themes -->
   <style
