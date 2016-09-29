@@ -1,8 +1,10 @@
 package com.gbh.movil.ui.main.accounts.transactions;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -125,7 +127,9 @@ public class RecentTransactionsFragment extends SubFragment implements RecentTra
 
   @Override
   public void add(@NonNull Transaction transaction) {
-    // TODO
+    if (adapter != null) {
+      adapter.add(transaction);
+    }
   }
 
   private class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -184,8 +188,8 @@ public class RecentTransactionsFragment extends SubFragment implements RecentTra
         return new GroupItemViewHolder(inflater.inflate(R.layout.list_item_group_title, parent,
           false));
       } else {
-        // TODO
-        return null;
+        return new TransactionItemViewHolder(inflater.inflate(R.layout.list_item_transaction,
+          parent, false));
       }
     }
 
@@ -196,7 +200,16 @@ public class RecentTransactionsFragment extends SubFragment implements RecentTra
       if (type == TYPE_GROUP_TITLE) {
         ((GroupItemViewHolder) holder).getTextView().setText(Formatter.date((Date) item));
       } else {
-        // TODO
+        final Transaction transaction = (Transaction) item;
+        final TransactionItemViewHolder transactionHolder = (TransactionItemViewHolder) holder;
+        transactionHolder.nameTextView.setText(transaction.getName());
+        transactionHolder.typeTextView.setText(transaction.getType());
+        final double value = transaction.getValue();
+        final String currencyCode = transaction.getCurrencyCode();
+        transactionHolder.valueTextView.setText(Formatter.currency(currencyCode, value));
+        final Context context = holder.itemView.getContext();
+        final int colorId = value > 0 ? R.color.currency_positive : R.color.currency_negative;
+        transactionHolder.valueTextView.setTextColor(ContextCompat.getColor(context, colorId));
       }
     }
 

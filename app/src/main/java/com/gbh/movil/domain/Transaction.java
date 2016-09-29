@@ -6,12 +6,15 @@ public class Transaction {
   private final String type;
   private final String name;
   private final long date;
+  private final String currencyCode;
   private final double value;
 
-  public Transaction(@NonNull String type, @NonNull String name, long date, double value) {
+  public Transaction(@NonNull String type, @NonNull String name, long date,
+    @NonNull String currencyCode, double value) {
     this.type = type;
     this.name = name;
     this.date = date;
+    this.currencyCode = currencyCode;
     this.value = value;
   }
 
@@ -27,6 +30,11 @@ public class Transaction {
 
   public final long getDate() {
     return date;
+  }
+
+  @NonNull
+  public final String getCurrencyCode() {
+    return currencyCode;
   }
 
   public final double getValue() {
@@ -46,7 +54,7 @@ public class Transaction {
 
   @Override
   public String toString() {
-    return "Transaction:{type='" + type + "',name='" + name + "',date='" + date + "',value="
-      + value + "}";
+    return "Transaction:{type='" + type + "',name='" + name + "',date='" + date + "',currencyCode='"
+      + currencyCode + "',value=" + value + "}";
   }
 }

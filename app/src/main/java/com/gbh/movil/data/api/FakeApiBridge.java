@@ -54,18 +54,6 @@ class FakeApiBridge implements ApiBridge {
     accounts.add(account);
     balance = new Balance(99, "99.12");
     balances.put(account, balance);
-//    bank = new Bank("ADEMI", "Banco ADEMI");
-//    banks.add(bank);
-//    account = new CreditCard("4123", "DOP", bank, 12.0, "12.0", "balance");
-//    accounts.add(account);
-//    balance = new Balance(937461238, "937461238");
-//    balances.put(account, balance);
-//    bank = new Bank("SCOTIABANK", "Scotiabank");
-//    banks.add(bank);
-//    account = new BankAccount("4321", "USD", bank, 1.0, "1.0", "balance");
-//    accounts.add(account);
-//    balance = new Balance(736144, "736144");
-//    balances.put(account, balance);
     final Calendar calendar = Calendar.getInstance();
     calendar.set(Calendar.YEAR, 2016);
     calendar.set(Calendar.MONTH, Calendar.AUGUST);
@@ -75,15 +63,16 @@ class FakeApiBridge implements ApiBridge {
     calendar.set(Calendar.SECOND, 0);
     calendar.set(Calendar.MILLISECOND, 0);
     transactions.add(new Transaction("Transferencia", "Arturo Gaitan", calendar.getTimeInMillis(),
-      100));
-    transactions.add(new Transaction("Recarga", "809-586-5832", calendar.getTimeInMillis(), -340));
+      "USD", 100));
+    transactions.add(new Transaction("Recarga", "809-586-5832", calendar.getTimeInMillis(),
+      "DOP", -340));
     calendar.set(Calendar.DAY_OF_MONTH, 1);
     transactions.add(new Transaction("Pago de factura", "Orange", calendar.getTimeInMillis(),
-      -4700));
+      "DOP", -4700));
     calendar.set(Calendar.MONTH, Calendar.JULY);
     calendar.set(Calendar.DAY_OF_MONTH, 29);
     transactions.add(new Transaction("Pago en tienda", "Farmacia Plus", calendar.getTimeInMillis(),
-      -1230.77));
+      "DOP", -1230.77));
   }
 
   @NonNull

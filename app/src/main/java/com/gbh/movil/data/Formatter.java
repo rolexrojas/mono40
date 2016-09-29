@@ -17,11 +17,12 @@ import timber.log.Timber;
  * @author hecvasro
  */
 public final class Formatter {
-  /**
-   * TODO
-   */
+  private static final Locale LOCALE_EN = new Locale("en");
+
+  private static final Locale LOCALE_ES = new Locale("es");
+
   private static final DateFormat FORMAT_DATE
-    = new SimpleDateFormat("YYYY MMMM dd", Locale.getDefault());
+    = new SimpleDateFormat("YYYY MMMM dd", LOCALE_ES);
 
   private Formatter() {
   }
@@ -41,7 +42,7 @@ public final class Formatter {
     final Currency currency = Currency.getInstance(currencyCode);
     Timber.d("Currency code = %1$s", currency.getCurrencyCode());
     Timber.d("Currency symbol = %1$s", currency.getSymbol());
-    final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.getDefault());
+    final NumberFormat format = NumberFormat.getCurrencyInstance(LOCALE_EN);
     format.setCurrency(currency);
     format.setMinimumFractionDigits(2);
     format.setMaximumFractionDigits(2);
