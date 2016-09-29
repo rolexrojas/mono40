@@ -5,5 +5,5 @@ package com.gbh.movil.ui.main.accounts;
  *
  * @author hecvasro
  */
-class LastTransactionsItem {
+class ShowRecentTransactionsItem {
 }

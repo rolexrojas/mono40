@@ -7,12 +7,17 @@ import com.gbh.movil.domain.Balance;
 import com.gbh.movil.domain.Bank;
 import com.gbh.movil.domain.BankAccount;
 import com.gbh.movil.domain.CreditCard;
+import com.gbh.movil.domain.InitialData;
+import com.gbh.movil.domain.Transaction;
 import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.domain.api.ApiCode;
 import com.gbh.movil.domain.api.ApiResult;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +31,7 @@ class FakeApiBridge implements ApiBridge {
   private final Set<Bank> banks = new HashSet<>();
   private final Set<Account> accounts = new HashSet<>();
   private final Map<Account, Balance> balances = new HashMap<>();
+  private final List<Transaction> transactions = new ArrayList<>();
 
   FakeApiBridge() {
     Bank bank;
@@ -60,6 +66,24 @@ class FakeApiBridge implements ApiBridge {
 //    accounts.add(account);
 //    balance = new Balance(736144, "736144");
 //    balances.put(account, balance);
+    final Calendar calendar = Calendar.getInstance();
+    calendar.set(Calendar.YEAR, 2016);
+    calendar.set(Calendar.MONTH, 8);
+    calendar.set(Calendar.DAY_OF_MONTH, 3);
+    calendar.set(Calendar.HOUR, 0);
+    calendar.set(Calendar.MINUTE, 0);
+    calendar.set(Calendar.SECOND, 0);
+    calendar.set(Calendar.MILLISECOND, 0);
+    transactions.add(new Transaction("Transferencia", "Arturo Gaitan", calendar.getTimeInMillis(),
+      100));
+    transactions.add(new Transaction("Recarga", "809-586-5832", calendar.getTimeInMillis(), -340));
+    calendar.set(Calendar.DAY_OF_MONTH, 1);
+    transactions.add(new Transaction("Pago de factura", "Orange", calendar.getTimeInMillis(),
+      -4700));
+    calendar.set(Calendar.MONTH, 7);
+    calendar.set(Calendar.DAY_OF_MONTH, 29);
+    transactions.add(new Transaction("Pago en tienda", "Farmacia Plus", calendar.getTimeInMillis(),
+      -1230.77));
   }
 
   @NonNull
@@ -71,8 +95,9 @@ class FakeApiBridge implements ApiBridge {
 
   @NonNull
   @Override
-  public Observable<ApiResult<Set<Account>>> getAllAccounts() {
-    return Observable.just(new ApiResult<>(ApiCode.SUCCESS, accounts))
+  public Observable<ApiResult<InitialData>> initialLoad() {
+    return Observable
+      .just(new ApiResult<>(ApiCode.SUCCESS, new InitialData(accounts, transactions)))
       .delay(1L, TimeUnit.SECONDS);
   }
 

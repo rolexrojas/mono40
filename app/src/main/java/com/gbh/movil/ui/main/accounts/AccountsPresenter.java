@@ -80,7 +80,7 @@ class AccountsPresenter {
       }, new Action1<Throwable>() {
         @Override
         public void call(Throwable throwable) {
-          Timber.e(throwable, "Listener to accounts changes events");
+          Timber.e(throwable, "Listener to account change events");
         }
       });
     balanceExpirationSubscription = balanceManager.expiration()

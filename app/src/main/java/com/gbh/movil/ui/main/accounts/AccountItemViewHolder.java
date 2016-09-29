@@ -21,7 +21,7 @@ class AccountItemViewHolder extends RecyclerView.ViewHolder implements View.OnCl
   /**
    * TODO
    */
-  private final OnQueryBalanceButtonClickedListener listener;
+  private final Listener listener;
 
   /**
    * TODO
@@ -58,9 +58,10 @@ class AccountItemViewHolder extends RecyclerView.ViewHolder implements View.OnCl
    *
    * @param itemView
    *   TODO
+   * @param listener
+   *   TODO
    */
-  AccountItemViewHolder(@NonNull View itemView,
-    @NonNull OnQueryBalanceButtonClickedListener listener) {
+  AccountItemViewHolder(@NonNull View itemView, @NonNull Listener listener) {
     super(itemView);
     // Binds all the annotated views and methods.
     ButterKnife.bind(this, itemView);
@@ -79,7 +80,7 @@ class AccountItemViewHolder extends RecyclerView.ViewHolder implements View.OnCl
   /**
    * TODO
    */
-  interface OnQueryBalanceButtonClickedListener {
+  interface Listener {
     /**
      * TODO
      *

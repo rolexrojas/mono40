@@ -1,5 +1,6 @@
 package com.gbh.movil.ui.main.accounts;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -12,8 +13,10 @@ import butterknife.ButterKnife;
 /**
  * @author hecvasro
  */
-class LastTransactionsViewHolder extends RecyclerView.ViewHolder implements
-  View.OnClickListener {
+class ShowRecentTransactionsViewHolder extends RecyclerView.ViewHolder
+  implements View.OnClickListener {
+  private final Listener listener;
+
   /**
    * TODO
    */
@@ -26,18 +29,29 @@ class LastTransactionsViewHolder extends RecyclerView.ViewHolder implements
    * @param view
    *   TODO
    */
-  LastTransactionsViewHolder(View view) {
+  ShowRecentTransactionsViewHolder(@NonNull View view, @NonNull Listener listener) {
     super(view);
     // Binds all the annotated views and methods.
     ButterKnife.bind(this, view);
     // Adds a listener that gets notified every time the button is clicked.
-    button.setOnClickListener(this);
+    this.listener = listener;
+    this.button.setOnClickListener(this);
   }
 
   @Override
   public void onClick(View view) {
     if (view == button) {
-      // TODO: Open the last transactions screen.
+      listener.onShowRecentTransactionsButtonClicked();
     }
+  }
+
+  /**
+   * TODO
+   */
+  interface Listener {
+    /**
+     * TODO
+     */
+    void onShowRecentTransactionsButtonClicked();
   }
 }

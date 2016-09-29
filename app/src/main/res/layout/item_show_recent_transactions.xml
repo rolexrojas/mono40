@@ -11,7 +11,7 @@
     android:layout_toStartOf="@+id/button"
     android:ellipsize="end"
     android:gravity="center_vertical"
-    android:text="@string/last_transactions"
+    android:text="@string/recent_transactions"
     android:textAppearance="@style/Text.Body.Normal"/>
 
   <Button
