@@ -132,11 +132,11 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
     recyclerView.setAdapter(adapter);
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
       LinearLayoutManager.VERTICAL, false));
-    final RecyclerView.ItemDecoration decoration = new HorizontalDividerItemDecoration
+    final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration
       .Builder(getContext())
       .drawable(R.drawable.list_item_divider)
       .build();
-    recyclerView.addItemDecoration(decoration);
+    recyclerView.addItemDecoration(divider);
     // Adds a listener that gets notified every time the layout of the recycler view changes.
     recyclerView.addOnLayoutChangeListener(this);
   }

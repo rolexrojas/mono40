@@ -16,6 +16,8 @@ import com.gbh.movil.data.Formatter;
 import com.gbh.movil.data.MessageHelper;
 import com.gbh.movil.domain.Transaction;
 import com.gbh.movil.ui.main.SubFragment;
+import com.yqritc.recyclerviewflexibledivider.FlexibleDividerDecoration;
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -86,6 +88,17 @@ public class RecentTransactionsFragment extends SubFragment implements RecentTra
     recyclerView.setAdapter(adapter);
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
       LinearLayoutManager.VERTICAL, false));
+    final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration
+      .Builder(getContext())
+      .drawable(R.drawable.list_item_divider)
+      .visibilityProvider(new FlexibleDividerDecoration.VisibilityProvider() {
+        @Override
+        public boolean shouldHideDivider(int position, RecyclerView parent) {
+          return adapter.shouldHideDivider(position);
+        }
+      })
+      .build();
+    recyclerView.addItemDecoration(divider);
   }
 
   @Override
@@ -138,6 +151,12 @@ public class RecentTransactionsFragment extends SubFragment implements RecentTra
     private static final int TYPE_TRANSACTION = 1;
 
     private final List<Object> items = new ArrayList<>();
+
+    boolean shouldHideDivider(int position) {
+      final int type = getItemViewType(position);
+      return type == TYPE_GROUP_TITLE || (type == TYPE_TRANSACTION &&
+        (!((position + 1) < items.size())) || getItemViewType(position + 1) != TYPE_TRANSACTION);
+    }
 
     /**
      * TODO
