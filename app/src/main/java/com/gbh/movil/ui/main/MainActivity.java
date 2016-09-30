@@ -34,36 +34,18 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 public class MainActivity extends BaseActivity implements ParentScreen, MainScreen {
-  /**
-   * TODO
-   */
   private static final String TAG_SPLASH = "splash";
 
-  /**
-   * TODO
-   */
   private Unbinder unbinder;
 
-  /**
-   * TODO
-   */
   private MainComponent component;
 
-  /**
-   * TODO
-   */
   @Inject
   MainPresenter presenter;
 
-  /**
-   * TODO
-   */
   @BindView(R.id.sliding_pane_layout)
   SlidingPaneLayout slidingPaneLayout;
 
-  /**
-   * TODO
-   */
   @BindView(R.id.toolbar)
   Toolbar toolbar;
 
@@ -148,7 +130,7 @@ public class MainActivity extends BaseActivity implements ParentScreen, MainScre
    */
   @OnClick({ R.id.text_view_payments, R.id.text_view_commerce, R.id.text_view_accounts,
     R.id.text_view_profile, R.id.text_view_preferences, R.id.text_view_about, R.id.text_view_help,
-    R.id.button_add_another_account })
+    R.id.text_view_add_another_account })
   void onMenuItemButtonClicked(@NonNull View view) {
     if (slidingPaneLayout.isOpen()) {
       slidingPaneLayout.closePane();
@@ -160,6 +142,9 @@ public class MainActivity extends BaseActivity implements ParentScreen, MainScre
         break;
       case R.id.text_view_accounts:
         subFragment = AccountsFragment.newInstance();
+        break;
+      case R.id.text_view_add_another_account:
+        subFragment = AddAnotherAccountFragment.newInstance();
         break;
       default:
         subFragment = null;

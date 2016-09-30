@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.gbh.movil.data.Formatter;
+import com.gbh.movil.ui.main.AddAnotherAccountFragment;
 import com.gbh.movil.ui.main.PinConfirmationDialogFragment;
 import com.gbh.movil.ui.main.accounts.transactions.RecentTransactionsFragment;
 import com.squareup.picasso.Picasso;
@@ -99,7 +100,7 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
    */
   @OnClick(R.id.button_add_another_account)
   void onAddAnotherAccountButtonClicked() {
-    // TODO: Open the add another account button.
+    parentScreen.setSubScreen(AddAnotherAccountFragment.newInstance());
   }
 
   @Override

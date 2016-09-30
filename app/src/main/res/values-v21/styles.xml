@@ -20,14 +20,14 @@
     <item name="android:letterSpacing">0.062</item> <!-- 1sp -->
   </style>
 
-  <!-- Account styles -->
+  <!-- Accounts screen styles -->
   <style
     name="ListItemAccountAlias"
     parent="BaseListItemAccountAlias">
     <item name="android:letterSpacing">0.062</item> <!-- 1sp -->
   </style>
 
-  <!-- Transaction styles -->
+  <!-- Recent transactions screen styles -->
   <style
     name="ListItemGroupTitle"
     parent="BaseListItemGroupTitle">
@@ -38,5 +38,12 @@
     name="ListItemTransactionType"
     parent="BaseListItemTransactionType">
     <item name="android:letterSpacing">0.05</item> <!-- 0.8sp -->
+  </style>
+
+  <!-- Add another account screen styles -->
+  <style
+    name="ListItemInstructionIndex"
+    parent="BaseListItemInstructionIndex">
+    <item name="android:letterSpacing">0.062</item> <!-- 1sp -->
   </style>
 </resources>

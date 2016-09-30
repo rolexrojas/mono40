@@ -15,6 +15,13 @@
   <string name="gotham_rounded_light">fonts/GothamRounded-Light.otf</string>
   <string name="gotham_rounded_medium">fonts/GothamRounded-Medium.otf</string>
   <string name="help">Ayuda</string>
+  <string name="instruction_content_first">¡Listo! Visita la sucursal del banco donde tienes la cuenta o tarjeta de crédito que deseas agregar.</string>
+  <string name="instruction_content_second">Con tu cédula y celular en mano, solicita a un representante de servicio, que active tu cuenta o tarjeta a tPago.</string>
+  <string name="instruction_content_third">¡Listo! Ya podrás pagar fácil y rápido usando tPago.</string>
+  <string name="instruction_index_first">1.</string>
+  <string name="instruction_index_second">2.</string>
+  <string name="instruction_index_third">3.</string>
+  <string name="list_item_divider">Separador</string>
   <string name="logo">Logo</string>
   <string name="my_profile">Mi perfil</string>
   <string name="no_internet_connection">Sin conexión a Internet.</string>
@@ -24,6 +31,7 @@
   <string name="preferences">Preferencias</string>
   <string name="recent_transactions">Últimas transacciones</string>
   <string name="see">Ver</string>
+  <string name="see_bank_branches">Ver sucursales bancarias</string>
   <string name="your_account_have_been_added">Tu cuenta se agregó exitosamente al mundo %1$s.Ya puedes usarla como cuenta de fondos.</string>
   <string name="your_account_have_been_removed">Tu cuenta se removió exitosamente del mundo %1$s. Ya no puedes usarla como cuenta de fondos.</string>
 </resources>

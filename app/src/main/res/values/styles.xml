@@ -1,5 +1,12 @@
 <resources>
   <!-- Text styles -->
+  <style name="Label">
+    <item name="android:textAllCaps">true</item>
+    <item name="android:textColor">@color/primary</item>
+    <item name="android:textSize">14sp</item>
+    <item name="fontPath">@string/gotham_rounded_bold</item>
+  </style>
+
   <style name="BaseCurrency">
     <item name="android:gravity">end|center_vertical</item>
     <item name="android:textColor">#333</item>
@@ -17,10 +24,30 @@
     <item name="android:clickable">true</item>
     <item name="android:gravity">center</item>
     <item name="android:layout_height">@dimen/button_height</item>
-    <item name="android:textAllCaps">true</item>
-    <item name="android:textColor">@color/primary</item>
-    <item name="android:textSize">14sp</item>
-    <item name="fontPath">@string/gotham_rounded_bold</item>
+    <item name="android:textAppearance">@style/Label</item>
+  </style>
+
+  <!-- List styles -->
+  <style name="List"/>
+  <style name="List.Vertical"/>
+
+  <style name="ListItem">
+    <item name="android:paddingEnd">@dimen/list_item_padding_horizontal</item>
+    <item name="android:paddingStart">@dimen/list_item_padding_horizontal</item>
+  </style>
+  <style name="ListItem.Normal">
+    <item name="android:layout_height">@dimen/list_item_height_normal</item>
+  </style>
+  <style name="ListItem.Large">
+    <item name="android:layout_height">@dimen/list_item_height_large</item>
+  </style>
+
+  <style
+    name="ListItemButton"
+    parent="Button">
+    <item name="android:background">@drawable/list_item_button</item>
+    <item name="android:layout_height">@dimen/list_item_button_height</item>
+    <item name="android:layout_width">@dimen/list_item_button_width</item>
   </style>
 
   <!-- Menu styles -->
@@ -118,6 +145,7 @@
 
   <style name="NumPadButton.Text">
     <item name="android:gravity">center</item>
+    <item name="android:lineSpacingExtra">2sp</item>
     <item name="android:textSize">24sp</item>
     <item name="fontPath">@string/gotham_rounded_medium</item>
   </style>
@@ -142,30 +170,7 @@
     <item name="fontPath">@string/gotham_rounded_book</item>
   </style>
 
-  <!-- List styles -->
-  <style name="List"/>
-  <style name="List.Vertical"/>
-
-  <style name="ListItem">
-    <item name="android:paddingEnd">@dimen/list_item_padding_horizontal</item>
-    <item name="android:paddingStart">@dimen/list_item_padding_horizontal</item>
-  </style>
-  <style name="ListItem.Normal">
-    <item name="android:layout_height">@dimen/list_item_height_normal</item>
-  </style>
-  <style name="ListItem.Large">
-    <item name="android:layout_height">@dimen/list_item_height_large</item>
-  </style>
-
-  <style
-    name="ListItemButton"
-    parent="Button">
-    <item name="android:background">@drawable/list_item_button</item>
-    <item name="android:layout_height">@dimen/list_item_button_height</item>
-    <item name="android:layout_width">@dimen/list_item_button_width</item>
-  </style>
-
-  <!-- Account styles -->
+  <!-- Accounts screen styles -->
   <style
     name="ListItemAccount"
     parent="ListItem.Large">
@@ -195,7 +200,7 @@
     <item name="fontPath">@string/gotham_rounded_book</item>
   </style>
 
-  <!-- Transaction styles -->
+  <!-- Recent transactions screen styles -->
   <style name="BaseListItemGroupTitle">
     <item name="android:gravity">center_vertical</item>
     <item name="android:layout_height">35dp</item>
@@ -238,6 +243,36 @@
   <style
     name="ListItemTransactionType"
     parent="BaseListItemTransactionType"/>
+
+  <!-- Add another account styles -->
+  <style
+    name="ListItemInstruction"
+    parent="ListItem.Large">
+    <item name="android:background">@color/white</item>
+  </style>
+
+  <style name="ListItemInstructionText">
+    <item name="android:textColor">#333</item>
+  </style>
+
+  <style
+    name="BaseListItemInstructionIndex"
+    parent="ListItemInstructionText">
+    <item name="android:textSize">12sp</item>
+    <item name="fontPath">@string/gotham_rounded_light</item>
+  </style>
+
+  <style
+    name="ListItemInstructionIndex"
+    parent="BaseListItemInstructionIndex"/>
+
+  <style
+    name="ListItemInstructionContent"
+    parent="ListItemInstructionText">
+    <item name="android:lineSpacingExtra">2sp</item>
+    <item name="android:textSize">16sp</item>
+    <item name="fontPath">@string/gotham_rounded_book</item>
+  </style>
 
   <!-- Themes -->
   <style
