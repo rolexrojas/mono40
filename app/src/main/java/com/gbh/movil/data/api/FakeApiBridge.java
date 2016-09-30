@@ -79,7 +79,7 @@ class FakeApiBridge implements ApiBridge {
   @Override
   public Observable<ApiResult<Set<Bank>>> getAllBanks() {
     return Observable.just(new ApiResult<>(ApiCode.SUCCESS, banks))
-      .delay(1L, TimeUnit.SECONDS);
+      .delay(2L, TimeUnit.SECONDS);
   }
 
   @NonNull
@@ -87,7 +87,7 @@ class FakeApiBridge implements ApiBridge {
   public Observable<ApiResult<InitialData>> initialLoad() {
     return Observable
       .just(new ApiResult<>(ApiCode.SUCCESS, new InitialData(accounts, transactions)))
-      .delay(1L, TimeUnit.SECONDS);
+      .delay(2L, TimeUnit.SECONDS);
   }
 
   @NonNull
@@ -97,14 +97,14 @@ class FakeApiBridge implements ApiBridge {
     if (Integer.parseInt(pin) % 2 == 0) {
       if (balances.containsKey(account)) {
         return Observable.just(new ApiResult<>(ApiCode.SUCCESS, balances.get(account)))
-          .delay(1L, TimeUnit.SECONDS);
+          .delay(2L, TimeUnit.SECONDS);
       } else {
         return Observable.just(new ApiResult<Balance>(ApiCode.NOT_FOUND, null))
-          .delay(1L, TimeUnit.SECONDS);
+          .delay(2L, TimeUnit.SECONDS);
       }
     } else {
       return Observable.just(new ApiResult<Balance>(ApiCode.UNAUTHORIZED, null))
-        .delay(1L, TimeUnit.SECONDS);
+        .delay(2L, TimeUnit.SECONDS);
     }
   }
 }

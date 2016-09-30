@@ -144,12 +144,12 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment impl
   }
 
   @Override
-  public void onLoadingStarted(@NonNull String pin) {
+  public void onConfirmationStarted(@NonNull String pin) {
     callback.confirm(pin);
   }
 
   @Override
-  public void onLoadingFinished(boolean succeeded) {
+  public void onConfirmationFinished(boolean succeeded) {
     if (succeeded) {
       dismiss();
     }
