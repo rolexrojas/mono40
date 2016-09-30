@@ -1,21 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <!-- Text appearances -->
+  <!-- Menu styles -->
   <style
-    name="Text.Label.Light"
-    parent="BaseText.Label.Light">
-    <item name="android:letterSpacing">0.062</item>
+    name="MenuItem"
+    parent="BaseMenuItem"/>
+  <style
+    name="MenuItem.Small"
+    parent="BaseMenuItem.Small">
+    <item name="android:letterSpacing">0.081</item> <!-- 1.3sp -->
+  </style>
+  <style
+    name="MenuItem.Normal"
+    parent="BaseMenuItem.Normal">
+    <item name="android:letterSpacing">0.081</item> <!-- 1.3sp -->
+  </style>
+  <style
+    name="MenuItem.Large"
+    parent="BaseMenuItem.Large">
+    <item name="android:letterSpacing">0.062</item> <!-- 1sp -->
   </style>
 
-  <!-- Menu styles -->
-  <style name="MenuItem" parent="BaseMenuItem"/>
-  <style name="MenuItem.Small" parent="BaseMenuItem.Small">
-    <item name="android:letterSpacing">0.081</item>
+  <!-- Account styles -->
+  <style
+    name="ListItemAccountAlias"
+    parent="BaseListItemAccountAlias">
+    <item name="android:letterSpacing">0.062</item> <!-- 1sp -->
   </style>
-  <style name="MenuItem.Normal" parent="BaseMenuItem.Normal">
-    <item name="android:letterSpacing">0.081</item>
+
+  <!-- Transaction styles -->
+  <style
+    name="ListItemGroupTitle"
+    parent="BaseListItemGroupTitle">
+    <item name="android:letterSpacing">0.062</item> <!-- 1sp -->
   </style>
-  <style name="MenuItem.Large" parent="BaseMenuItem.Large">
-    <item name="android:letterSpacing">0.062</item>
+
+  <style
+    name="ListItemTransactionType"
+    parent="BaseListItemTransactionType">
+    <item name="android:letterSpacing">0.05</item> <!-- 0.8sp -->
   </style>
 </resources>

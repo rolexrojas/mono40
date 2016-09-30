@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-  style="@style/ListItem.Large"
+  style="@style/ListItemAccount"
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent">
 
@@ -21,9 +21,9 @@
 
     <TextView
       android:id="@+id/text_view_account_alias"
+      style="@style/ListItemAccountAlias"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:textAppearance="@style/Text.Label.Light"/>
+      android:layout_height="wrap_content"/>
   </LinearLayout>
 
   <FrameLayout
@@ -41,21 +41,19 @@
 
     <TextView
       android:id="@+id/text_view_account_balance"
+      style="@style/Currency"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
-      android:textAppearance="@style/Text.Label.Medium"
       android:visibility="gone"/>
   </FrameLayout>
 
   <TextView
     android:id="@+id/text_view_bank_name"
+    style="@style/ListItemAccountBankName"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_centerVertical="true"
     android:layout_toEndOf="@+id/linear_layout_anchor"
-    android:layout_toStartOf="@+id/frame_layout_anchor"
-    android:ellipsize="end"
-    android:singleLine="true"
-    android:textAppearance="@style/Text.Body.Normal"/>
+    android:layout_toStartOf="@+id/frame_layout_anchor"/>
 </RelativeLayout>

@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.Subscriptions;
@@ -30,8 +31,7 @@ public final class BalanceManager {
   /**
    * Amount of time (milliseconds) that every balance will be kept alive.
    */
-//  private static final long EXPIRATION_TIME = 300000L; // Five (5) minutes.
-  private static final long EXPIRATION_TIME = 30000L; // Thirty (30) seconds.
+  private static final long EXPIRATION_TIME = 300000L; // Five (5) minutes.
 
   private final ApiBridge apiBridge;
 
@@ -60,9 +60,17 @@ public final class BalanceManager {
    * Starts notifying observers.
    */
   public final void start() {
-//    subscription = Observable.interval(0L, 1L, TimeUnit.MINUTES) // One (1) minute intervals.
-    subscription = Observable.interval(0L, 1L, TimeUnit.SECONDS) // One (1) second intervals.
+    subscription = Observable.interval(0L, 1L, TimeUnit.MINUTES) // One (1) minute intervals.
       .observeOn(AndroidSchedulers.mainThread())
+      .doOnUnsubscribe(new Action0() {
+        @Override
+        public void call() {
+          for (Account account : balances.keySet()) {
+            subject.onNext(account);
+          }
+          balances.clear();
+        }
+      })
       .subscribe(new Action1<Long>() {
         @Override
         public void call(Long interval) {
@@ -87,10 +95,6 @@ public final class BalanceManager {
   public final void stop() {
     if (!subscription.isUnsubscribed()) {
       subscription.unsubscribe();
-    }
-    for (Account account : balances.keySet()) {
-      subject.onNext(account);
-      balances.remove(account);
     }
   }
 

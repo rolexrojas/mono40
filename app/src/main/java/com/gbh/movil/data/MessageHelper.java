@@ -39,6 +39,12 @@ public final class MessageHelper {
   }
 
   @NonNull
+  public final String feeForTransaction(@NonNull String currencyCode, double fee) {
+    return String.format(getString(R.string.fee_for_transaction), Formatter.currency(currencyCode,
+      fee));
+  }
+
+  @NonNull
   public final String goToAccounts() {
     return getString(R.string.go_to_accounts);
   }
@@ -56,6 +62,11 @@ public final class MessageHelper {
   @NonNull
   public final String payments() {
     return getString(R.string.payments);
+  }
+
+  @NonNull
+  public final String recentTransactions() {
+    return getString(R.string.recent_transactions);
   }
 
   @NonNull

@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.gbh.movil.R;
 import com.gbh.movil.ui.FullScreenDialogFragment;
@@ -26,30 +27,22 @@ import butterknife.Unbinder;
  */
 public class PinConfirmationDialogFragment extends FullScreenDialogFragment implements PinView.Listener,
   NumPad.OnButtonClickedListener {
-  /**
-   * TODO
-   */
+  private static final String KEY_QUERY_FEE_DESCRIPTION = "queryFee";
+
   private static final String KEY_CALLBACK = "callback";
 
-  /**
-   * TODO
-   */
   private Unbinder unbinder;
 
-  /**
-   * TODO
-   */
+  private String queryFeeDescription;
+
   private Callback callback;
 
-  /**
-   * TODO
-   */
+  @BindView(R.id.text_view_query_fee_description)
+  TextView queryFeeDescriptionTextView;
+
   @BindView(R.id.pin_view)
   PinView pinView;
 
-  /**
-   * TODO
-   */
   @BindView(R.id.num_pad)
   NumPad numPad;
 
@@ -61,8 +54,10 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment impl
    *
    * @return TODO
    */
-  public static PinConfirmationDialogFragment newInstance(@NonNull Callback callback) {
+  public static PinConfirmationDialogFragment newInstance(@NonNull String fee,
+    @NonNull Callback callback) {
     final Bundle bundle = new Bundle();
+    bundle.putString(KEY_QUERY_FEE_DESCRIPTION, fee);
     bundle.putSerializable(KEY_CALLBACK, callback);
     final PinConfirmationDialogFragment fragment = new PinConfirmationDialogFragment();
     fragment.setArguments(bundle);
@@ -74,7 +69,9 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment impl
     super.onCreate(savedInstanceState);
     // Attaches the callback to the fragment.
     final Bundle bundle = savedInstanceState != null ? savedInstanceState : getArguments();
-    if (bundle != null && bundle.containsKey(KEY_CALLBACK)) {
+    if (bundle != null && bundle.containsKey(KEY_QUERY_FEE_DESCRIPTION)
+      && bundle.containsKey(KEY_CALLBACK)) {
+      queryFeeDescription = bundle.getString(KEY_QUERY_FEE_DESCRIPTION);
       final Serializable serializable = bundle.getSerializable(KEY_CALLBACK);
       if (serializable instanceof Callback) {
         callback = (Callback) serializable;
@@ -82,7 +79,7 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment impl
         throw new ClassCastException("Argument must implement the 'Callback' interface");
       }
     } else {
-      throw new NullPointerException("Callback must be set");
+      throw new NullPointerException("Fee and callback arguments must be set");
     }
   }
 
@@ -98,6 +95,8 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment impl
     super.onViewCreated(view, savedInstanceState);
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
+    // Sets the query queryFee description.
+    queryFeeDescriptionTextView.setText(queryFeeDescription);
     // Adds a listener that gets notified every time the pin view starts or finishes loading.
     pinView.setListener(this);
     // Adds a listener that gets notified every time a button of the num pad is clicked.

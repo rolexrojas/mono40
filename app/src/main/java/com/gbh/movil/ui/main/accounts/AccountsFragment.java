@@ -4,6 +4,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.widget.Button;
 
 import com.gbh.movil.data.Formatter;
 import com.gbh.movil.ui.main.PinConfirmationDialogFragment;
+import com.gbh.movil.ui.main.accounts.transactions.RecentTransactionsFragment;
 import com.squareup.picasso.Picasso;
 import com.gbh.movil.R;
 import com.gbh.movil.data.MessageHelper;
@@ -39,48 +42,22 @@ import timber.log.Timber;
  * @author hecvasro
  */
 public class AccountsFragment extends SubFragment implements AccountsScreen,
-  View.OnLayoutChangeListener {
-  /**
-   * TODO
-   */
+  View.OnLayoutChangeListener, ShowRecentTransactionsViewHolder.Listener {
   private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
 
-  /**
-   * TODO
-   */
   private Unbinder unbinder;
 
-  /**
-   * TODO
-   */
   private Adapter adapter;
 
-  /**
-   * TODO
-   */
-  private PinConfirmationDialogFragment fragment;
-
-  /**
-   * TODO
-   */
   @Inject
   MessageHelper messageHelper;
 
-  /**
-   * TODO
-   */
   @Inject
   AccountsPresenter presenter;
 
-  /**
-   * TODO
-   */
   @BindView(R.id.recycler_view)
   RecyclerView recyclerView;
 
-  /**
-   * TODO
-   */
   @BindView(R.id.button_add_another_account)
   Button addAnotherAccountButton;
 
@@ -101,17 +78,20 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
    *   {@link Account} that will be queried.
    */
   private void queryBalance(@NonNull final Account account) {
-    if (fragment != null) {
-      fragment.dismiss();
-      fragment = null;
+    final FragmentManager manager = getChildFragmentManager();
+    final Fragment fragment = manager.findFragmentByTag(TAG_PIN_CONFIRMATION);
+    if (fragment != null && fragment instanceof PinConfirmationDialogFragment) {
+      ((PinConfirmationDialogFragment) fragment).dismiss();
     }
-    fragment = PinConfirmationDialogFragment.newInstance(new PinConfirmationDialogFragment.Callback() {
-      @Override
-      public void confirm(@NonNull String pin) {
-        presenter.queryBalance(account, pin);
-      }
-    });
-    fragment.show(getChildFragmentManager(), TAG_PIN_CONFIRMATION);
+    PinConfirmationDialogFragment.newInstance(
+      messageHelper.feeForTransaction(account.getCurrency(), account.getQueryFee()),
+      new PinConfirmationDialogFragment.Callback() {
+        @Override
+        public void confirm(@NonNull String pin) {
+          presenter.queryBalance(account, pin);
+        }
+      })
+      .show(manager, TAG_PIN_CONFIRMATION);
   }
 
   /**
@@ -147,16 +127,16 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
     unbinder = ButterKnife.bind(this, view);
     // Prepares the recycler view.
     if (adapter == null) {
-      adapter = new Adapter();
+      adapter = new Adapter(this);
     }
     recyclerView.setAdapter(adapter);
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
       LinearLayoutManager.VERTICAL, false));
-    final RecyclerView.ItemDecoration decoration = new HorizontalDividerItemDecoration
+    final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration
       .Builder(getContext())
       .drawable(R.drawable.list_item_divider)
       .build();
-    recyclerView.addItemDecoration(decoration);
+    recyclerView.addItemDecoration(divider);
     // Adds a listener that gets notified every time the layout of the recycler view changes.
     recyclerView.addOnLayoutChangeListener(this);
   }
@@ -203,8 +183,9 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
   @Override
   public void onBalanceQueried(boolean succeeded, @NonNull Account account,
     @Nullable Balance balance) {
-    if (fragment != null) {
-      fragment.resolve(succeeded);
+    final Fragment fragment = getChildFragmentManager().findFragmentByTag(TAG_PIN_CONFIRMATION);
+    if (fragment != null && fragment instanceof PinConfirmationDialogFragment) {
+      ((PinConfirmationDialogFragment) fragment).resolve(succeeded);
     }
     setBalance(account, balance);
   }
@@ -235,30 +216,30 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
     }
   }
 
+  @Override
+  public void onShowRecentTransactionsButtonClicked() {
+    parentScreen.setSubScreen(RecentTransactionsFragment.newInstance());
+  }
+
   /**
    * TODO
    */
   private class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
-    implements AccountItemViewHolder.OnQueryBalanceButtonClickedListener {
-    /**
-     * TODO
-     */
+    implements AccountItemViewHolder.Listener {
     private static final int TYPE_ACCOUNT = 0;
 
-    /**
-     * TODO
-     */
     private static final int TYPE_LAST_TRANSACTIONS = 1;
 
-    /**
-     * TODO
-     */
-    private final LastTransactionsItem lastTransactionsItem = new LastTransactionsItem();
+    private final ShowRecentTransactionsViewHolder.Listener listener;
 
-    /**
-     * TODO
-     */
+    private final ShowRecentTransactionsItem showRecentTransactionsItem
+      = new ShowRecentTransactionsItem();
+
     private final List<Object> items = new ArrayList<>();
+
+    private Adapter(@NonNull ShowRecentTransactionsViewHolder.Listener listener) {
+      this.listener = listener;
+    }
 
     /**
      * TODO
@@ -323,8 +304,8 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
      * TODO
      */
     final void showLastTransactionsItem() {
-      if (!items.contains(lastTransactionsItem)) {
-        items.add(lastTransactionsItem);
+      if (!items.contains(showRecentTransactionsItem)) {
+        items.add(showRecentTransactionsItem);
         notifyItemInserted(getItemCount());
       }
     }
@@ -338,11 +319,11 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
       final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
       if (viewType == TYPE_ACCOUNT) {
-        return new AccountItemViewHolder(inflater.inflate(R.layout.item_account, parent, false),
-          this);
+        return new AccountItemViewHolder(inflater.inflate(R.layout.list_item_account, parent,
+          false), this);
       } else {
-        return new LastTransactionsViewHolder(inflater.inflate(R.layout.item_last_transactions,
-          parent, false));
+        return new ShowRecentTransactionsViewHolder(inflater
+          .inflate(R.layout.list_item_show_recent_transactions, parent, false), listener);
       }
     }
 
@@ -378,9 +359,6 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
       return items.size();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onQueryBalanceButtonClicked(int position) {
       queryBalance(((AccountItem) items.get(position)).getAccount());
