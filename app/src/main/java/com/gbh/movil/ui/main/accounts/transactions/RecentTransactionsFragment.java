@@ -94,7 +94,7 @@ public class RecentTransactionsFragment extends SubFragment implements RecentTra
       .visibilityProvider(new FlexibleDividerDecoration.VisibilityProvider() {
         @Override
         public boolean shouldHideDivider(int position, RecyclerView parent) {
-          return adapter.shouldHideDivider(position);
+          return position < 0 || adapter.shouldHideDivider(position);
         }
       })
       .build();
