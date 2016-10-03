@@ -3,13 +3,9 @@ package com.gbh.movil.data;
 import android.support.annotation.NonNull;
 
 import java.text.DateFormat;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Currency;
 import java.util.Date;
 import java.util.Locale;
-
-import timber.log.Timber;
 
 /**
  * TODO
@@ -17,12 +13,20 @@ import timber.log.Timber;
  * @author hecvasro
  */
 public final class Formatter {
+  /**
+   * TODO
+   */
   private static final Locale LOCALE_EN = new Locale("en");
 
+  /**
+   * TODO
+   */
   private static final Locale LOCALE_ES = new Locale("es");
 
-  private static final DateFormat FORMAT_DATE
-    = new SimpleDateFormat("YYYY MMMM dd", LOCALE_ES);
+  /**
+   * TODO
+   */
+  private static final DateFormat FORMAT_DATE = new SimpleDateFormat("yyyy MMMM dd", LOCALE_ES);
 
   private Formatter() {
   }
@@ -39,18 +43,8 @@ public final class Formatter {
    */
   @NonNull
   public static String currency(@NonNull String currencyCode, double value) {
-    final Currency currency = Currency.getInstance(currencyCode);
-    Timber.d("Currency code = %1$s", currency.getCurrencyCode());
-    Timber.d("Currency symbol = %1$s", currency.getSymbol());
-    final NumberFormat format = NumberFormat.getCurrencyInstance(LOCALE_EN);
-    format.setCurrency(currency);
-    format.setMinimumFractionDigits(2);
-    format.setMaximumFractionDigits(2);
-    Timber.d("Format currency = %1$s", format.getCurrency());
-    Timber.d("Format minimum fraction digits = %1$s", format.getMinimumFractionDigits());
-    Timber.d("Format maximum fraction digits = %1$s", format.getMaximumFractionDigits());
-    Timber.d("Format rounding mode = %1$s", format.getRoundingMode());
-    return format.format(value);
+    return String.format(LOCALE_EN, "%1$s%2$s$%3$,.2f", value < 0 ? "-" : "", currencyCode,
+      Math.abs(value));
   }
 
   /**
