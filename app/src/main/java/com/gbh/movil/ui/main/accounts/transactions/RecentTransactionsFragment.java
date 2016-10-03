@@ -86,6 +86,7 @@ public class RecentTransactionsFragment extends SubFragment implements RecentTra
       adapter = new Adapter();
     }
     recyclerView.setAdapter(adapter);
+    recyclerView.setItemAnimator(null);
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
       LinearLayoutManager.VERTICAL, false));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration

@@ -131,6 +131,7 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
       adapter = new Adapter(this);
     }
     recyclerView.setAdapter(adapter);
+    recyclerView.setItemAnimator(null);
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
       LinearLayoutManager.VERTICAL, false));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration
