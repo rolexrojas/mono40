@@ -43,11 +43,10 @@
     </LinearLayout>
   </LinearLayout>
 
-  <ImageView
+  <View
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:contentDescription="@string/list_item_divider"
-    android:src="@drawable/list_item_divider"/>
+    android:layout_height="@dimen/list_item_divider_size"
+    android:background="@drawable/list_item_divider"/>
 
   <LinearLayout
     style="@style/ListItemInstruction"
@@ -71,11 +70,10 @@
       android:text="@string/instruction_content_second"/>
   </LinearLayout>
 
-  <ImageView
+  <View
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:contentDescription="@string/list_item_divider"
-    android:src="@drawable/list_item_divider"/>
+    android:layout_height="@dimen/list_item_divider_size"
+    android:background="@drawable/list_item_divider"/>
 
   <LinearLayout
     style="@style/ListItemInstruction"
@@ -98,9 +96,8 @@
       android:text="@string/instruction_content_third"/>
   </LinearLayout>
 
-  <ImageView
+  <View
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:contentDescription="@string/list_item_divider"
-    android:src="@drawable/list_item_divider"/>
+    android:layout_height="@dimen/list_item_divider_size"
+    android:background="@drawable/list_item_divider"/>
 </LinearLayout>
