@@ -73,7 +73,10 @@ class AccountItemViewHolder extends RecyclerView.ViewHolder implements View.OnCl
   @Override
   public void onClick(View view) {
     if (view == queryAccountBalanceButton) {
-      listener.onQueryBalanceButtonClicked(getAdapterPosition());
+      final int[] location = new int[2];
+      view.getLocationOnScreen(location);
+      listener.onQueryBalanceButtonClicked(getAdapterPosition(),
+        location[0] + (view.getWidth() / 2), location[1]);
     }
   }
 
@@ -87,6 +90,6 @@ class AccountItemViewHolder extends RecyclerView.ViewHolder implements View.OnCl
      * @param position
      *   TODO
      */
-    void onQueryBalanceButtonClicked(int position);
+    void onQueryBalanceButtonClicked(int position, int x, int y);
   }
 }

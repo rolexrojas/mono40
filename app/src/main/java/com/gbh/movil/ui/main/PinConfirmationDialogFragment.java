@@ -1,5 +1,8 @@
 package com.gbh.movil.ui.main;
 
+import android.animation.Animator;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,6 +11,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gbh.movil.R;
@@ -19,21 +23,30 @@ import java.io.Serializable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.codetail.animation.ViewAnimationUtils;
 
 /**
  * TODO
  *
  * @author hecvasro
  */
-public class PinConfirmationDialogFragment extends DialogFragment implements PinView.Listener,
-  NumPad.OnButtonClickedListener {
+public class PinConfirmationDialogFragment extends DialogFragment
+  implements DialogInterface.OnShowListener, PinView.Listener, NumPad.OnButtonClickedListener {
+  private static final String KEY_CENTER_X = "centerX";
+  private static final String KEY_CENTER_Y = "centerY";
   private static final String KEY_QUERY_FEE_DESCRIPTION = "queryFee";
 
   private Unbinder unbinder;
 
+  private int centerX;
+  private int centerY;
+
   private String queryFeeDescription;
 
   private Callback callback;
+
+  @BindView(R.id.linear_layout_container)
+  LinearLayout containerLinearLayout;
 
   @BindView(R.id.text_view_query_fee_description)
   TextView queryFeeDescriptionTextView;
@@ -52,9 +65,11 @@ public class PinConfirmationDialogFragment extends DialogFragment implements Pin
    *
    * @return TODO
    */
-  public static PinConfirmationDialogFragment newInstance(@NonNull String fee,
-    @NonNull Callback callback) {
+  public static PinConfirmationDialogFragment newInstance(int centerX, int centerY,
+    @NonNull String fee, @NonNull Callback callback) {
     final Bundle bundle = new Bundle();
+    bundle.putInt(KEY_CENTER_X, centerX);
+    bundle.putInt(KEY_CENTER_Y, centerY);
     bundle.putString(KEY_QUERY_FEE_DESCRIPTION, fee);
     final PinConfirmationDialogFragment fragment = new PinConfirmationDialogFragment();
     fragment.callback = callback;
@@ -65,14 +80,31 @@ public class PinConfirmationDialogFragment extends DialogFragment implements Pin
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setStyle(DialogFragment.STYLE_NO_FRAME, R.style.PinConfirmationDialogTheme);
-    // Attaches the callback to the fragment.
+    setStyle(DialogFragment.STYLE_NO_FRAME, R.style.FullScreenDialogTheme);
     final Bundle bundle = savedInstanceState != null ? savedInstanceState : getArguments();
-    if (bundle != null && bundle.containsKey(KEY_QUERY_FEE_DESCRIPTION)) {
-      queryFeeDescription = bundle.getString(KEY_QUERY_FEE_DESCRIPTION);
+    if (bundle != null) {
+      if (!bundle.containsKey(KEY_CENTER_X)) {
+        throw new NullPointerException("Center X must be specified as an argument");
+      } else if (!bundle.containsKey(KEY_CENTER_Y)) {
+        throw new NullPointerException("Center Y must be specified as an argument");
+      } else if (!bundle.containsKey(KEY_QUERY_FEE_DESCRIPTION)) {
+        throw new NullPointerException("Query fee description must be specified as an argument");
+      } else {
+        centerX = bundle.getInt(KEY_CENTER_X);
+        centerY = bundle.getInt(KEY_CENTER_Y);
+        queryFeeDescription = bundle.getString(KEY_QUERY_FEE_DESCRIPTION);
+      }
     } else {
-      throw new NullPointerException("Fee and callback arguments must be set");
+      throw new NullPointerException("All required arguments must be specified");
     }
+  }
+
+  @NonNull
+  @Override
+  public Dialog onCreateDialog(Bundle savedInstanceState) {
+    final Dialog dialog = super.onCreateDialog(savedInstanceState);
+    dialog.setOnShowListener(this);
+    return dialog;
   }
 
   @Nullable
@@ -121,6 +153,20 @@ public class PinConfirmationDialogFragment extends DialogFragment implements Pin
    */
   public final void resolve(boolean succeeded) {
     pinView.resolve(succeeded);
+  }
+
+  @Override
+  public void onShow(DialogInterface dialog) {
+    final View rootView = getView();
+    if (rootView != null) {
+      final int width = rootView.getWidth();
+      final int height = rootView.getHeight();
+      final int radius = (int) Math.hypot(width, height);
+      final Animator revealAnimator = ViewAnimationUtils.createCircularReveal(containerLinearLayout,
+        centerX, centerY, 0, radius);
+      revealAnimator.setDuration(500L);
+      revealAnimator.start();
+    }
   }
 
   @Override

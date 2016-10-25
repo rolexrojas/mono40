@@ -27,9 +27,16 @@ android {
   }
 }
 
+repositories {
+  maven {
+    url "https://jitpack.io"
+  }
+}
+
 dependencies {
   def butterKnifeVersion = "8.4.0"
   def calligraphyVersion = "2.2.0"
+  def circularRevealVersion = "2.0.1"
   def daggerVersion = "2.7"
   def halariousVersion = "0.14"
   def jUnitVersion = "4.12"
@@ -51,6 +58,7 @@ dependencies {
   compile "com.android.support:design:${supportLibraryVersion}"
   compile "com.android.support:percent:${supportLibraryVersion}"
   compile "com.android.support:recyclerview-v7:${supportLibraryVersion}"
+  compile "com.github.ozodrukh:CircularReveal:${circularRevealVersion}"
   compile "com.google.dagger:dagger:${daggerVersion}"
   compile "com.jakewharton.picasso:picasso2-okhttp3-downloader:${picassoOkHttpDownloaderVersion}"
   compile "com.jakewharton.timber:timber:${timberVersion}"

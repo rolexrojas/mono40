@@ -291,19 +291,6 @@
   </style>
 
   <style
-    name="PinConfirmationDialogAnimation"
-    parent="Animation.AppCompat.Dialog">
-    <item name="android:windowEnterAnimation">@anim/dialog_fragment_full_screen_enter</item>
-    <item name="android:windowExitAnimation">@anim/dialog_fragment_full_screen_exit</item>
-  </style>
-
-  <style
-    name="PinConfirmationDialogTheme"
-    parent="FullScreenDialogTheme">
-    <item name="android:windowAnimationStyle">@style/PinConfirmationDialogAnimation</item>
-  </style>
-
-  <style
     name="ToolbarTheme"
     parent="ThemeOverlay.AppCompat.Dark.ActionBar">
     <item name="android:background">@color/primary</item>

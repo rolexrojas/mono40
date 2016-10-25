@@ -78,14 +78,16 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
    * @param account
    *   {@link Account} that will be queried.
    */
-  private void queryBalance(@NonNull final Account account) {
+  private void queryBalance(@NonNull final Account account, final int x, final int y) {
     final FragmentManager manager = getChildFragmentManager();
     final Fragment fragment = manager.findFragmentByTag(TAG_PIN_CONFIRMATION);
     if (fragment != null && fragment instanceof PinConfirmationDialogFragment) {
       ((PinConfirmationDialogFragment) fragment).dismiss();
     }
-    PinConfirmationDialogFragment.newInstance(messageHelper.feeForTransaction(account.getCurrency(),
-      account.getQueryFee()), new PinConfirmationDialogFragment.Callback() {
+    Timber.d("X = %1$d, Y = %2$d", x, y);
+    PinConfirmationDialogFragment.newInstance(x, y,
+      messageHelper.feeForTransaction(account.getCurrency(), account.getQueryFee()),
+      new PinConfirmationDialogFragment.Callback() {
         @Override
         public void confirm(@NonNull String pin) {
           presenter.queryBalance(account, pin);
@@ -360,8 +362,8 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
     }
 
     @Override
-    public void onQueryBalanceButtonClicked(int position) {
-      queryBalance(((AccountItem) items.get(position)).getAccount());
+    public void onQueryBalanceButtonClicked(int position, int x, int y) {
+      queryBalance(((AccountItem) items.get(position)).getAccount(), x, y);
     }
   }
 }
