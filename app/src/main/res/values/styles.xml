@@ -285,9 +285,17 @@
   </style>
 
   <style
+    name="FullScreenDialogAnimation"
+    parent="Animation.AppCompat.Dialog">
+    <item name="android:windowEnterAnimation">@anim/dialog_fragment_full_screen_enter</item>
+    <item name="android:windowExitAnimation">@anim/dialog_fragment_full_screen_exit</item>
+  </style>
+
+  <style
     name="FullScreenDialogTheme"
     parent="AppTheme">
     <item name="android:windowBackground">@color/transparent</item>
+    <item name="android:windowAnimationStyle">@style/FullScreenDialogAnimation</item>
   </style>
 
   <style

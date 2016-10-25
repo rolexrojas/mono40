@@ -25,8 +25,8 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class PinConfirmationDialogFragment extends FullScreenDialogFragment implements PinView.Listener,
-  NumPad.OnButtonClickedListener {
+public class PinConfirmationDialogFragment extends FullScreenDialogFragment
+  implements PinView.Listener, NumPad.OnButtonClickedListener {
   private static final String KEY_QUERY_FEE_DESCRIPTION = "queryFee";
 
   private static final String KEY_CALLBACK = "callback";
