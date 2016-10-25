@@ -3,6 +3,7 @@ package com.gbh.movil.ui.main;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.gbh.movil.R;
-import com.gbh.movil.ui.FullScreenDialogFragment;
 import com.gbh.movil.ui.view.widget.NumPad;
 import com.gbh.movil.ui.view.widget.PinView;
 
@@ -25,8 +25,8 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class PinConfirmationDialogFragment extends FullScreenDialogFragment
-  implements PinView.Listener, NumPad.OnButtonClickedListener {
+public class PinConfirmationDialogFragment extends DialogFragment implements PinView.Listener,
+  NumPad.OnButtonClickedListener {
   private static final String KEY_QUERY_FEE_DESCRIPTION = "queryFee";
 
   private static final String KEY_CALLBACK = "callback";
@@ -67,6 +67,7 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    setStyle(DialogFragment.STYLE_NO_FRAME, R.style.PinConfirmationDialogTheme);
     // Attaches the callback to the fragment.
     final Bundle bundle = savedInstanceState != null ? savedInstanceState : getArguments();
     if (bundle != null && bundle.containsKey(KEY_QUERY_FEE_DESCRIPTION)
