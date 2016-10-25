@@ -29,8 +29,6 @@ public class PinConfirmationDialogFragment extends DialogFragment implements Pin
   NumPad.OnButtonClickedListener {
   private static final String KEY_QUERY_FEE_DESCRIPTION = "queryFee";
 
-  private static final String KEY_CALLBACK = "callback";
-
   private Unbinder unbinder;
 
   private String queryFeeDescription;
@@ -58,8 +56,8 @@ public class PinConfirmationDialogFragment extends DialogFragment implements Pin
     @NonNull Callback callback) {
     final Bundle bundle = new Bundle();
     bundle.putString(KEY_QUERY_FEE_DESCRIPTION, fee);
-    bundle.putSerializable(KEY_CALLBACK, callback);
     final PinConfirmationDialogFragment fragment = new PinConfirmationDialogFragment();
+    fragment.callback = callback;
     fragment.setArguments(bundle);
     return fragment;
   }
@@ -70,15 +68,8 @@ public class PinConfirmationDialogFragment extends DialogFragment implements Pin
     setStyle(DialogFragment.STYLE_NO_FRAME, R.style.PinConfirmationDialogTheme);
     // Attaches the callback to the fragment.
     final Bundle bundle = savedInstanceState != null ? savedInstanceState : getArguments();
-    if (bundle != null && bundle.containsKey(KEY_QUERY_FEE_DESCRIPTION)
-      && bundle.containsKey(KEY_CALLBACK)) {
+    if (bundle != null && bundle.containsKey(KEY_QUERY_FEE_DESCRIPTION)) {
       queryFeeDescription = bundle.getString(KEY_QUERY_FEE_DESCRIPTION);
-      final Serializable serializable = bundle.getSerializable(KEY_CALLBACK);
-      if (serializable instanceof Callback) {
-        callback = (Callback) serializable;
-      } else {
-        throw new ClassCastException("Argument must implement the 'Callback' interface");
-      }
     } else {
       throw new NullPointerException("Fee and callback arguments must be set");
     }
