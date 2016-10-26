@@ -13,6 +13,10 @@
     android:supportsRtl="true"
     android:theme="@style/AppTheme">
 
+    <meta-data
+      android:name="io.fabric.ApiKey"
+      android:value="fa97cc2f5c3339e67fe12a40ce7ae391909b4e9d"/>
+
     <receiver android:name="com.gbh.movil.data.net.NetworkStatusBroadcastReceiver">
       <intent-filter>
         <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>

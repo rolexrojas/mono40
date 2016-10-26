@@ -3,6 +3,9 @@ package com.gbh.movil;
 import android.app.Application;
 import android.support.annotation.NonNull;
 
+import com.crashlytics.android.Crashlytics;
+
+import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
 /**
@@ -38,5 +41,7 @@ public final class App extends Application {
     if (BuildConfig.DEBUG) {
       Timber.plant(new Timber.DebugTree());
     }
+    // Initializes Fabric.
+    Fabric.with(this, new Crashlytics());
   }
 }
