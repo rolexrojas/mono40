@@ -95,6 +95,26 @@ public class PinConfirmationDialogFragment extends DialogFragment
 
   /**
    * TODO
+   */
+  private void finish() {
+    // Prepares the background animator.
+    final int radius = (int) Math.hypot(containerFrameLayout.getWidth(),
+      containerLinearLayout.getHeight());
+    final Animator animator = ViewAnimationUtils
+      .createCircularReveal(containerFrameLayout, centerX, centerY, radius, 0)
+      .setDuration(exitDuration);
+    animator.addListener(new BaseAnimatorListener() {
+      @Override
+      public void onAnimationEnd(Animator animator) {
+        dismiss();
+      }
+    });
+    // Starts the background animator.
+    animator.start();
+  }
+
+  /**
+   * TODO
    *
    * @param succeeded
    *   TODO
@@ -128,7 +148,12 @@ public class PinConfirmationDialogFragment extends DialogFragment
   @NonNull
   @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
-    final Dialog dialog = super.onCreateDialog(savedInstanceState);
+    final Dialog dialog = new Dialog(getActivity(), getTheme()) {
+      @Override
+      public void onBackPressed() {
+        finish();
+      }
+    };
     dialog.setOnShowListener(this);
     return dialog;
   }
@@ -218,20 +243,7 @@ public class PinConfirmationDialogFragment extends DialogFragment
   @Override
   public void onConfirmationFinished(boolean succeeded) {
     if (succeeded) {
-      // Prepares the background animator.
-      final int radius = (int) Math.hypot(containerFrameLayout.getWidth(),
-        containerLinearLayout.getHeight());
-      final Animator animator = ViewAnimationUtils
-        .createCircularReveal(containerFrameLayout, centerX, centerY, radius, 0)
-        .setDuration(exitDuration);
-      animator.addListener(new BaseAnimatorListener() {
-        @Override
-        public void onAnimationEnd(Animator animator) {
-          dismiss();
-        }
-      });
-      // Starts the background animator.
-      animator.start();
+      finish();
     }
   }
 
