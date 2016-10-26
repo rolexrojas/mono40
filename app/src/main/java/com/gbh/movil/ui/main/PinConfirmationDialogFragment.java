@@ -51,9 +51,9 @@ public class PinConfirmationDialogFragment extends DialogFragment
 
   private Callback callback;
 
-  @BindInt(R.integer.pin_confirmation_enter_duration)
+  @BindInt(android.R.integer.config_mediumAnimTime)
   int enterDuration;
-  @BindInt(R.integer.pin_confirmation_exit_duration)
+  @BindInt(android.R.integer.config_mediumAnimTime)
   int exitDuration;
 
   @BindView(R.id.frame_layout_container)
