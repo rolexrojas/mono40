@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <integer name="dialog_fragment_full_screen_animation_duration_enter">200</integer>
-  <integer name="dialog_fragment_full_screen_animation_duration_exit">300</integer>
+  <integer name="pin_confirmation_enter_duration">500</integer>
+  <integer name="pin_confirmation_exit_duration">500</integer>
 </resources>

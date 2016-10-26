@@ -152,7 +152,7 @@
 
   <!-- Pin confirmation styles -->
   <style name="PinConfirmationContainer">
-    <item name="android:background">@drawable/pin_confirmation</item>
+    <item name="android:background">@drawable/background_pin_confirmation</item>
     <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark</item>
   </style>
 
