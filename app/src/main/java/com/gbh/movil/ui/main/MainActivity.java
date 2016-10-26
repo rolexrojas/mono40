@@ -182,6 +182,9 @@ public class MainActivity extends BaseActivity implements ParentScreen, MainScre
     final Fragment currentSubFragment = manager.findFragmentById(R.id.fragment_container);
     if (currentSubFragment == null || currentSubFragment.getClass() != subFragment.getClass()) {
       manager.beginTransaction()
+        .setCustomAnimations(R.anim.fragment_transition_enter_sibling,
+          R.anim.fragment_transition_exit_sibling, R.anim.fragment_transition_enter_sibling,
+          R.anim.fragment_transition_exit_sibling)
         .replace(R.id.fragment_container, subFragment)
         .addToBackStack(null)
         .commit();
