@@ -463,9 +463,11 @@ public class PinView extends LinearLayout {
         public void onAnimationEnd(Animator animator) {
           Timber.d("PIN confirmation finished");
           digits.clear();
-          showCursor();
           if (listener != null) {
             listener.onConfirmationFinished(succeeded);
+          }
+          if (!succeeded) {
+            showCursor();
           }
         }
       });

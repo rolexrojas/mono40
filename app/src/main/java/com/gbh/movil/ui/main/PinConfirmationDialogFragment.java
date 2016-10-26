@@ -1,6 +1,8 @@
 package com.gbh.movil.ui.main;
 
 import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -11,6 +13,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -36,7 +40,7 @@ public class PinConfirmationDialogFragment extends DialogFragment
   implements DialogInterface.OnShowListener, PinView.Listener, NumPad.OnButtonClickedListener {
   private static final String KEY_CENTER_X = "centerX";
   private static final String KEY_CENTER_Y = "centerY";
-  private static final String KEY_ACTION_DESCRIPTION = "actionFee";
+  private static final String KEY_ACTION_DESCRIPTION = "actionDescription";
 
   private Unbinder unbinder;
 
@@ -52,6 +56,8 @@ public class PinConfirmationDialogFragment extends DialogFragment
   @BindInt(R.integer.pin_confirmation_exit_duration)
   int exitDuration;
 
+  @BindView(R.id.frame_layout_container)
+  FrameLayout containerFrameLayout;
   @BindView(R.id.linear_layout_container)
   LinearLayout containerLinearLayout;
   @BindView(R.id.text_view_action_description)
@@ -64,17 +70,23 @@ public class PinConfirmationDialogFragment extends DialogFragment
   /**
    * TODO
    *
+   * @param centerX
+   *   TODO
+   * @param centerY
+   *   TODO
+   * @param actionDescription
+   *   TODO
    * @param callback
    *   TODO
    *
    * @return TODO
    */
   public static PinConfirmationDialogFragment newInstance(int centerX, int centerY,
-    @NonNull String fee, @NonNull Callback callback) {
+    @NonNull String actionDescription, @NonNull Callback callback) {
     final Bundle bundle = new Bundle();
     bundle.putInt(KEY_CENTER_X, centerX);
     bundle.putInt(KEY_CENTER_Y, centerY);
-    bundle.putString(KEY_ACTION_DESCRIPTION, fee);
+    bundle.putString(KEY_ACTION_DESCRIPTION, actionDescription);
     final PinConfirmationDialogFragment fragment = new PinConfirmationDialogFragment();
     fragment.callback = callback;
     fragment.setArguments(bundle);
@@ -161,14 +173,29 @@ public class PinConfirmationDialogFragment extends DialogFragment
 
   @Override
   public void onShow(DialogInterface dialog) {
-    final View rootView = getView();
-    if (rootView != null) {
-      final int radius = (int) Math.hypot(rootView.getWidth(), rootView.getHeight());
-      final Animator animator = ViewAnimationUtils.createCircularReveal(containerLinearLayout,
-        centerX, centerY, 0, radius);
-      animator.setDuration(enterDuration);
-      animator.start();
-    }
+    // Prepares the foreground for the animation.
+    containerLinearLayout.setAlpha(0.0F);
+    containerLinearLayout.setScaleX(0.9F);
+    containerLinearLayout.setScaleY(0.9F);
+    // Prepares the foreground animator.
+    final AnimatorSet foregroundAnimator = new AnimatorSet();
+    foregroundAnimator.setDuration(enterDuration / 2);
+    foregroundAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+    foregroundAnimator.play(ObjectAnimator.ofFloat(containerLinearLayout, "alpha", 1.0F))
+      .with(ObjectAnimator.ofFloat(containerLinearLayout, "scaleX", 1.0F))
+      .with(ObjectAnimator.ofFloat(containerLinearLayout, "scaleY", 1.0F))
+      .after(enterDuration / 2);
+    // Prepares the background animator.
+    final int radius = (int) Math.hypot(containerFrameLayout.getWidth(),
+      containerLinearLayout.getHeight());
+    final Animator backgroundAnimator = ViewAnimationUtils
+      .createCircularReveal(containerFrameLayout, centerX, centerY, 0, radius)
+      .setDuration(enterDuration);
+    // Prepares the combined animator.
+    final AnimatorSet animator = new AnimatorSet();
+    animator.play(foregroundAnimator).with(backgroundAnimator);
+    // Starts the combined animator.
+    animator.start();
   }
 
   @Override
@@ -191,21 +218,20 @@ public class PinConfirmationDialogFragment extends DialogFragment
   @Override
   public void onConfirmationFinished(boolean succeeded) {
     if (succeeded) {
-      final View rootView = getView();
-      if (rootView != null) {
-        final int radius = (int) Math.hypot(rootView.getWidth(), rootView.getHeight());
-        final Animator animator = ViewAnimationUtils.createCircularReveal(containerLinearLayout,
-          centerX, centerY, radius, 0);
-        animator.setDuration(exitDuration);
-        animator.addListener(new BaseAnimatorListener() {
-          @Override
-          public void onAnimationEnd(Animator animator) {
-            super.onAnimationEnd(animator);
-            dismiss();
-          }
-        });
-        animator.start();
-      }
+      // Prepares the background animator.
+      final int radius = (int) Math.hypot(containerFrameLayout.getWidth(),
+        containerLinearLayout.getHeight());
+      final Animator animator = ViewAnimationUtils
+        .createCircularReveal(containerFrameLayout, centerX, centerY, radius, 0)
+        .setDuration(exitDuration);
+      animator.addListener(new BaseAnimatorListener() {
+        @Override
+        public void onAnimationEnd(Animator animator) {
+          dismiss();
+        }
+      });
+      // Starts the background animator.
+      animator.start();
     }
   }
 
