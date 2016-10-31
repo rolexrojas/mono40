@@ -43,7 +43,7 @@ public class AmountView extends LinearLayout {
     super(context, attrs, defStyleAttr);
     setOrientation(LinearLayout.HORIZONTAL);
     final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.AmountView,
-      defStyleAttr, R.style.Widget_Amount);
+      defStyleAttr, R.style.Widget_AmountView);
     try {
       currency = array.getString(R.styleable.AmountView_currency);
       value = array.getFloat(R.styleable.AmountView_value, 0F);

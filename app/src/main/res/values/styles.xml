@@ -89,24 +89,24 @@
     name="MenuItem.Large"
     parent="BaseMenuItem.Large"/>
   <!-- Amount view styles -->
-  <style name="Text.Widget.Amount">
+  <style name="Text.Widget.AmountView">
     <item name="android:textColor">#333</item>
   </style>
-  <style name="Text.Widget.Amount.Currency">
+  <style name="Text.Widget.AmountView.Currency">
     <item name="android:textSize">10sp</item>
     <item name="fontPath">@string/gotham_rounded_book</item>
   </style>
-  <style name="Text.Widget.Amount.Value">
+  <style name="Text.Widget.AmountView.Value">
     <item name="android:textSize">16sp</item>
     <item name="fontPath">@string/gotham_rounded_medium</item>
   </style>
-  <style name="Widget.Amount"/>
-  <style name="Widget.AmountCurrency">
+  <style name="Widget.AmountView"/>
+  <style name="Widget.AmountViewCurrency">
     <item name="android:alpha">0.5</item>
-    <item name="android:textAppearance">@style/Text.Widget.Amount.Currency</item>
+    <item name="android:textAppearance">@style/Text.Widget.AmountView.Currency</item>
   </style>
-  <style name="Widget.AmountValue">
-    <item name="android:textAppearance">@style/Text.Widget.Amount.Value</item>
+  <style name="Widget.AmountViewValue">
+    <item name="android:textAppearance">@style/Text.Widget.AmountView.Value</item>
   </style>
   <!-- Num pad styles -->
   <style name="NumPad">
@@ -263,7 +263,7 @@
     <item name="colorPrimary">@color/primary</item>
     <item name="colorPrimaryDark">@color/primary_dark</item>
     <!-- Custom attributes -->
-    <item name="amountStyle">@style/Widget.Amount</item>
+    <item name="amountStyle">@style/Widget.AmountView</item>
   </style>
   <style
     name="FullScreenDialogTheme"
