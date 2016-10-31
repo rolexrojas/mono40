@@ -12,12 +12,30 @@
   <style name="Text.Widget"/>
   <!-- Widget styles -->
   <style name="Widget"/>
+  <style
+    name="Text.Widget.Button"
+    parent="Text.Label"/>
   <style name="Widget.Button">
     <item name="android:background">?attr/selectableItemBackground</item>
     <item name="android:clickable">true</item>
     <item name="android:gravity">center</item>
     <item name="android:layout_height">@dimen/button_height</item>
-    <item name="android:textAppearance">@style/Text.Label</item>
+    <item name="android:textAppearance">@style/Text.Widget.Button</item>
+  </style>
+  <!-- Search view styles -->
+  <style name="Text.Widget.SearchView"/>
+  <style name="Text.Widget.SearchView.Query">
+    <item name="android:textColor">@color/search_view_text</item>
+    <item name="android:textColorHint">@color/search_view_hint</item>
+    <item name="android:textSize">16sp</item>
+    <item name="fontPath">@string/gotham_rounded_medium</item>
+  </style>
+  <style name="Widget.SearchView"/>
+  <style name="Widget.SearchViewQuery">
+    <item name="android:background">@null</item>
+    <item name="android:paddingBottom">16dp</item>
+    <item name="android:paddingTop">16dp</item>
+    <item name="android:textAppearance">@style/Text.Widget.SearchView.Query</item>
   </style>
   <!-- List styles -->
   <style name="List"/>
@@ -262,8 +280,10 @@
     <item name="colorAccent">@color/accent</item>
     <item name="colorPrimary">@color/primary</item>
     <item name="colorPrimaryDark">@color/primary_dark</item>
+    <item name="android:buttonStyle">@style/Widget.Button</item>
     <!-- Custom attributes -->
-    <item name="amountStyle">@style/Widget.AmountView</item>
+    <item name="searchViewStyle">@style/Widget.SearchView</item>
+    <item name="amountViewStyle">@style/Widget.AmountView</item>
   </style>
   <style
     name="FullScreenDialogTheme"

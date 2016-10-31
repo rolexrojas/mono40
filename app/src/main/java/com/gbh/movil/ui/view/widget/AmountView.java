@@ -36,7 +36,7 @@ public class AmountView extends LinearLayout {
   }
 
   public AmountView(Context context, AttributeSet attrs) {
-    this(context, attrs, R.attr.amountStyle);
+    this(context, attrs, R.attr.amountViewStyle);
   }
 
   public AmountView(Context context, AttributeSet attrs, int defStyleAttr) {

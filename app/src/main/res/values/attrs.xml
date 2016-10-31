@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <!-- Amount attributes -->
+  <!-- Search view attributes -->
+  <declare-styleable name="SearchView">
+    <attr name="hint" format="reference|string"/>
+  </declare-styleable>
+  <!-- Amount view attributes -->
   <declare-styleable name="AmountView">
     <attr name="currency" format="string"/>
     <attr name="value" format="float"/>
@@ -12,6 +16,7 @@
   </declare-styleable>
   <!-- App theme attributes -->
   <declare-styleable name="AppTheme">
-    <attr name="amountStyle" format="reference"/>
+    <attr name="searchViewStyle" format="reference"/>
+    <attr name="amountViewStyle" format="reference"/>
   </declare-styleable>
 </resources>
