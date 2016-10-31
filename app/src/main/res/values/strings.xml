@@ -26,6 +26,7 @@
   <string name="my_profile">Mi perfil</string>
   <string name="no_internet_connection">Sin conexión a Internet.</string>
   <string name="ok">Ok</string>
+  <string name="payment_options_search_hint">Nombre, número o facturador</string>
   <string name="payments">Pagos</string>
   <string name="pin_confirmation">Confirma con tu PIN</string>
   <string name="preferences">Preferencias</string>

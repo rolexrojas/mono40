@@ -2,9 +2,7 @@
 <resources>
   <!-- Amount attributes -->
   <declare-styleable name="AmountView">
-    <attr name="currencyTextAppearance" format="reference"/>
     <attr name="currency" format="string"/>
-    <attr name="valueTextAppearance" format="reference"/>
     <attr name="value" format="float"/>
   </declare-styleable>
   <!-- Num pad attributes -->

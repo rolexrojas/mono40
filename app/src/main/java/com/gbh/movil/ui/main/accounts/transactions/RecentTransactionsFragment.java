@@ -223,10 +223,12 @@ public class RecentTransactionsFragment extends SubFragment implements RecentTra
         transactionHolder.typeTextView.setText(transaction.getType());
         final double value = transaction.getValue();
         final String currencyCode = transaction.getCurrencyCode();
+        final int colorId = value >= 0 ? R.color.transaction_type_credit
+          : R.color.transaction_type_debit;
         transactionHolder.amountView.setCurrency(currencyCode);
-        transactionHolder.amountView.setValue(value);
-        transactionHolder.amountView.setValueColor(value > 0 ? R.color.currency_positive :
-          R.color.currency_negative);
+        transactionHolder.amountView.setCurrencyColor(colorId);
+        transactionHolder.amountView.setValue(Math.abs(value));
+        transactionHolder.amountView.setValueColor(colorId);
       }
     }
 

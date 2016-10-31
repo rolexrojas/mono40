@@ -30,76 +30,26 @@ import timber.log.Timber;
  * @author hecvasro
  */
 public class PinView extends LinearLayout {
-  /**
-   * TODO
-   */
   private static final int DEFAULT_MAX_LENGTH = 4;
 
   private static final String ANIMATION_PROPERTY_ALPHA = "alpha";
-
   private static final String ANIMATION_PROPERTY_Y = "y";
-
   private static final String ANIMATION_PROPERTY_TRANSLATION_X = "translationX";
 
-  /**
-   * TODO
-   */
   private final List<Integer> digits = new ArrayList<>();
 
-  /**
-   * TODO
-   */
-  private View[] dots = new View[DEFAULT_MAX_LENGTH];
-
-  /**
-   * TODO
-   */
-  private View cursor;
-
-  /**
-   * TODO
-   */
-  private ObjectAnimator cursorAnimator;
-
-  /**
-   * TODO
-   */
+  private AnimatorSet failureResolveAnimator;
   private AnimatorSet loadAnimator;
-
-  /**
-   * TODO
-   */
+  private AnimatorSet resolveAnimator;
+  private AnimatorSet successResolveAnimator;
+  private Listener listener;
+  private ObjectAnimator cursorAnimator;
+  private View cursor;
+  private View[] dots = new View[DEFAULT_MAX_LENGTH];
   private boolean mustRestartLoading = true;
 
-  /**
-   * TODO
-   */
-  private AnimatorSet successResolveAnimator;
-
-  /**
-   * TODO
-   */
-  private AnimatorSet failureResolveAnimator;
-
-  /**
-   * TODO
-   */
-  private AnimatorSet resolveAnimator;
-
-  /**
-   * TODO
-   */
-  private Listener listener;
-
-  /**
-   * TODO
-   */
   @BindView(R.id.linear_layout_container)
   LinearLayout containerLinearLayout;
-
-  /**
-   * TODO
-   */
   @BindView(R.id.image_view_done_icon)
   ImageView doneIconImageView;
 
@@ -113,9 +63,7 @@ public class PinView extends LinearLayout {
 
   public PinView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    // Sets the orientation of the layout.
     setOrientation(VERTICAL);
-    // Inflates the content layout.
     LayoutInflater.from(context).inflate(R.layout.pin_view, this);
   }
 

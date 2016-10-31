@@ -45,7 +45,6 @@ public class MainActivity extends BaseActivity implements ParentScreen, MainScre
 
   @BindView(R.id.sliding_pane_layout)
   SlidingPaneLayout slidingPaneLayout;
-
   @BindView(R.id.toolbar)
   Toolbar toolbar;
 

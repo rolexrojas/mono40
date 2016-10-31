@@ -35,7 +35,7 @@
         android:text="@string/instruction_content_first"/>
 
       <TextView
-        style="@style/Label"
+        style="@style/Text.Label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/see_bank_branches"/>

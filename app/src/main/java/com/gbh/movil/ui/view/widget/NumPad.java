@@ -29,34 +29,17 @@ import timber.log.Timber;
  * @author hecvasro
  */
 public class NumPad extends LinearLayout {
-  /**
-   * TODO
-   */
   @ColorInt
   private int buttonColor;
 
-  /**
-   * TODO
-   */
   private Drawable deleteButtonDrawable;
-
-  /**
-   * TODO
-   */
   private OnButtonClickedListener listener;
 
-  /**
-   * TODO
-   */
   @BindViews({ R.id.num_pad_button_dot, R.id.num_pad_button_zero, R.id.num_pad_button_one,
     R.id.num_pad_button_two, R.id.num_pad_button_three, R.id.num_pad_button_four,
     R.id.num_pad_button_five, R.id.num_pad_button_six, R.id.num_pad_button_seven,
     R.id.num_pad_button_eight, R.id.num_pad_button_nine })
   List<Button> textButtons;
-
-  /**
-   * TODO
-   */
   @BindView(R.id.num_pad_button_delete)
   ImageButton deleteButton;
 
@@ -70,9 +53,7 @@ public class NumPad extends LinearLayout {
 
   public NumPad(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    // Sets the orientation of the layout.
     setOrientation(VERTICAL);
-    // Obtains the color that will be used for all the text buttons.
     final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.NumPad, defStyleAttr,
       0);
     try {
@@ -82,20 +63,16 @@ public class NumPad extends LinearLayout {
     } finally {
       array.recycle();
     }
-    // Inflates the layout.
     LayoutInflater.from(context).inflate(R.layout.num_pad, this);
   }
 
   @Override
   protected void onFinishInflate() {
     super.onFinishInflate();
-    // Injects all the annotated views and methods.
     ButterKnife.bind(this);
-    // Sets the color of all the text buttons.
     for (Button button : textButtons) {
       button.setTextColor(buttonColor);
     }
-    // Sets the color of the delete button.
     deleteButton.setImageDrawable(deleteButtonDrawable);
   }
 
