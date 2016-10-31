@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.gbh.movil.data.Formatter;
 import com.gbh.movil.ui.main.AddAnotherAccountFragment;
 import com.gbh.movil.ui.main.PinConfirmationDialogFragment;
 import com.gbh.movil.ui.main.accounts.transactions.RecentTransactionsFragment;
@@ -345,12 +344,12 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
         accountHolder.bankNameTextView.setText(bank.getName());
         final Balance balance = item.getBalance();
         if (balance != null) {
-          accountHolder.accountBalanceTextView.setVisibility(View.VISIBLE);
-          accountHolder.accountBalanceTextView.setText(Formatter.currency(account.getCurrency(),
-            balance.getValue()));
+          accountHolder.amountView.setVisibility(View.VISIBLE);
+          accountHolder.amountView.setCurrency(account.getCurrency());
+          accountHolder.amountView.setValue(balance.getValue());
           accountHolder.queryAccountBalanceButton.setVisibility(View.GONE);
         } else {
-          accountHolder.accountBalanceTextView.setVisibility(View.GONE);
+          accountHolder.amountView.setVisibility(View.GONE);
           accountHolder.queryAccountBalanceButton.setVisibility(View.VISIBLE);
         }
       }

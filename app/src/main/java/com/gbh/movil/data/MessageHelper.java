@@ -40,7 +40,7 @@ public final class MessageHelper {
 
   @NonNull
   public final String feeForTransaction(@NonNull String currencyCode, double fee) {
-    return String.format(getString(R.string.fee_for_transaction), Formatter.currency(currencyCode,
+    return String.format(getString(R.string.fee_for_transaction), Formatter.amount(currencyCode,
       fee));
   }
 

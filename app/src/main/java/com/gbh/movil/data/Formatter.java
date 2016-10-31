@@ -34,6 +34,19 @@ public final class Formatter {
   /**
    * TODO
    *
+   * @param value
+   *   TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  public static String amount(double value) {
+    return String.format(LOCALE_EN, "%1$,.2f", value);
+  }
+
+  /**
+   * TODO
+   *
    * @param currencyCode
    *   TODO
    * @param value
@@ -42,9 +55,8 @@ public final class Formatter {
    * @return TODO
    */
   @NonNull
-  public static String currency(@NonNull String currencyCode, double value) {
-    return String.format(LOCALE_EN, "%1$s%2$s$%3$,.2f", value < 0 ? "-" : "", currencyCode,
-      Math.abs(value));
+  public static String amount(@NonNull String currencyCode, double value) {
+    return String.format(LOCALE_EN, "%1$s$%2$s", currencyCode, amount(value));
   }
 
   /**

@@ -20,7 +20,7 @@ public abstract class Account {
   private final String alias;
 
   /**
-   * Account's currency.
+   * Account's amount.
    */
   private final String currency;
 
@@ -52,7 +52,7 @@ public abstract class Account {
    * @param alias
    *   Account's identifier.
    * @param currency
-   *   Account's currency.
+   *   Account's amount.
    * @param bank
    *   Account's {@link Bank holder}.
    * @param queryFee
@@ -95,9 +95,9 @@ public abstract class Account {
   }
 
   /**
-   * Gets the currency of the account.
+   * Gets the amount of the account.
    *
-   * @return Account's currency.
+   * @return Account's amount.
    */
   @NonNull
   public final String getCurrency() {
@@ -189,7 +189,7 @@ public abstract class Account {
 
   @Override
   public String toString() {
-    return "Account:{type=" + type + ",alias='" + alias + "',currency='" + currency + "',bank="
+    return "Account:{type=" + type + ",alias='" + alias + "',amount='" + currency + "',bank="
       + bank.toString() + ",queryFee=" + queryFee + ",queryFeeDescription='" + queryFeeDescription
       + "',queryBalanceUrl='" + queryBalanceUrl + "'}";
   }

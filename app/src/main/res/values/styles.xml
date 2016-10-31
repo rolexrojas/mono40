@@ -1,4 +1,26 @@
 <resources>
+  <style name="Text" parent="TextAppearance.AppCompat"/>
+  <style name="Text.Amount">
+    <item name="android:textColor">#333</item>
+    <item name="fontPath">@string/gotham_rounded_book</item>
+  </style>
+  <style name="Text.Amount.Currency">
+    <item name="android:alpha">0.5</item>
+  </style>
+  <style name="Text.Amount.Currency.Normal">
+    <item name="android:textSize">10sp</item>
+  </style>
+  <style name="Text.Amount.Currency.Large">
+    <item name="android:textSize">30sp</item>
+  </style>
+  <style name="Text.Amount.Value"/>
+  <style name="Text.Amount.Value.Normal">
+    <item name="android:textSize">16sp</item>
+  </style>
+  <style name="Text.Amount.Value.Large">
+    <item name="android:textSize">75sp</item>
+  </style>
+
   <!-- Text styles -->
   <style name="Label">
     <item name="android:textAllCaps">true</item>
@@ -6,17 +28,6 @@
     <item name="android:textSize">14sp</item>
     <item name="fontPath">@string/gotham_rounded_bold</item>
   </style>
-
-  <style name="BaseCurrency">
-    <item name="android:gravity">end|center_vertical</item>
-    <item name="android:textColor">#333</item>
-    <item name="android:textSize">16sp</item>
-    <item name="fontPath">@string/gotham_rounded_medium</item>
-  </style>
-
-  <style
-    name="Currency"
-    parent="BaseCurrency"/>
 
   <!-- Button styles -->
   <style name="Button">
@@ -274,9 +285,15 @@
   </style>
 
   <!-- Themes -->
+  <style name="Amount">
+    <item name="currencyTextAppearance">@style/Text.Amount.Currency.Normal</item>
+    <item name="valueTextAppearance">@style/Text.Amount.Value.Normal</item>
+  </style>
+
   <style
     name="AppTheme"
     parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="amountStyle">@style/Amount</item>
     <item name="android:windowBackground">@color/background</item>
     <item name="colorAccent">@color/accent</item>
     <item name="colorPrimary">@color/primary</item>

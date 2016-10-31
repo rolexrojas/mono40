@@ -39,9 +39,8 @@
       android:layout_gravity="center"
       android:text="@string/balance"/>
 
-    <TextView
-      android:id="@+id/text_view_account_balance"
-      style="@style/Currency"
+    <com.gbh.movil.ui.view.widget.AmountView
+      android:id="@+id/amount_view"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center"

@@ -1,10 +1,8 @@
 package com.gbh.movil.ui.main.accounts.transactions;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -41,7 +39,6 @@ public class RecentTransactionsFragment extends SubFragment implements RecentTra
 
   @Inject
   MessageHelper messageHelper;
-
   @Inject
   RecentTransactionsPresenter presenter;
 
@@ -226,10 +223,10 @@ public class RecentTransactionsFragment extends SubFragment implements RecentTra
         transactionHolder.typeTextView.setText(transaction.getType());
         final double value = transaction.getValue();
         final String currencyCode = transaction.getCurrencyCode();
-        transactionHolder.valueTextView.setText(Formatter.currency(currencyCode, value));
-        final Context context = holder.itemView.getContext();
-        final int colorId = value > 0 ? R.color.currency_positive : R.color.currency_negative;
-        transactionHolder.valueTextView.setTextColor(ContextCompat.getColor(context, colorId));
+        transactionHolder.amountView.setCurrency(currencyCode);
+        transactionHolder.amountView.setValue(value);
+        transactionHolder.amountView.setValueColor(value > 0 ? R.color.currency_positive :
+          R.color.currency_negative);
       }
     }
 

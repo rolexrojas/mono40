@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <!-- Amount attributes -->
+  <declare-styleable name="AmountView">
+    <attr name="currencyTextAppearance" format="reference"/>
+    <attr name="currency" format="string"/>
+    <attr name="valueTextAppearance" format="reference"/>
+    <attr name="value" format="float"/>
+  </declare-styleable>
   <!-- Num pad attributes -->
   <declare-styleable name="NumPad">
     <attr name="buttonColor" format="color"/>
     <attr name="deleteButtonDrawable" format="reference"/>
+  </declare-styleable>
+  <!-- App theme attributes -->
+  <declare-styleable name="AppTheme">
+    <attr name="amountStyle" format="reference"/>
   </declare-styleable>
 </resources>

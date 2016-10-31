@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gbh.movil.R;
+import com.gbh.movil.ui.view.widget.AmountView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,35 +24,16 @@ class AccountItemViewHolder extends RecyclerView.ViewHolder implements View.OnCl
    */
   private final Listener listener;
 
-  /**
-   * TODO
-   */
   @BindView(R.id.image_view_bank_logo)
   ImageView bankLogoImageView;
-
-  /**
-   * TODO
-   */
   @BindView(R.id.text_view_account_alias)
   TextView accountAliasTextView;
-
-  /**
-   * TODO
-   */
   @BindView(R.id.text_view_bank_name)
   TextView bankNameTextView;
-
-  /**
-   * TODO
-   */
   @BindView(R.id.button_query_account_balance)
   Button queryAccountBalanceButton;
-
-  /**
-   * TODO
-   */
-  @BindView(R.id.text_view_account_balance)
-  TextView accountBalanceTextView;
+  @BindView(R.id.amount_view)
+  AmountView amountView;
 
   /**
    * TODO
