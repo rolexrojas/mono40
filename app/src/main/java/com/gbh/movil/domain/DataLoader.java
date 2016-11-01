@@ -25,7 +25,6 @@ public final class DataLoader {
    * TODO
    */
   private final ApiBridge apiBridge;
-
   /**
    * TODO
    */
@@ -35,7 +34,6 @@ public final class DataLoader {
    * TODO
    */
   private final BehaviorSubject<Set<Account>> accountsSubject = BehaviorSubject.create();
-
   /**
    * TODO
    */

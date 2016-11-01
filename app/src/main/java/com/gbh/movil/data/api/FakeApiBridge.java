@@ -107,4 +107,11 @@ class FakeApiBridge implements ApiBridge {
         .delay(2L, TimeUnit.SECONDS);
     }
   }
+
+  @NonNull
+  @Override
+  public Observable<ApiResult<List<Transaction>>> recentTransactions() {
+    return Observable.just(new ApiResult<>(ApiCode.SUCCESS, transactions))
+      .delay(2L, TimeUnit.SECONDS);
+  }
 }
