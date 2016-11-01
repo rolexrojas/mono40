@@ -13,32 +13,26 @@ public abstract class Account {
    */
   @AccountType
   private final int type;
-
   /**
    * Account's identifier.
    */
   private final String alias;
-
   /**
    * Account's amount.
    */
   private final String currency;
-
   /**
    * Account's {@link Bank holder}.
    */
   private final Bank bank;
-
   /**
    * Cost of querying the balance.
    */
   private double queryFee;
-
   /**
    * Description of the cost of querying the balance.
    */
   private String queryFeeDescription;
-
   /**
    * Url for querying the balance.
    */

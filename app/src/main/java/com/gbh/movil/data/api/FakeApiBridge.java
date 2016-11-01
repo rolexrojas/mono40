@@ -63,16 +63,16 @@ class FakeApiBridge implements ApiBridge {
     calendar.set(Calendar.SECOND, 0);
     calendar.set(Calendar.MILLISECOND, 0);
     transactions.add(new Transaction("Transferencia", "Arturo Gaitan", calendar.getTimeInMillis(),
-      "USD", 100));
+      Transaction.RequestType.CREDIT, "USD", 100));
     transactions.add(new Transaction("Recarga", "809-586-5832", calendar.getTimeInMillis(),
-      "DOP", -340));
+      Transaction.RequestType.DEBIT, "DOP", 340));
     calendar.set(Calendar.DAY_OF_MONTH, 1);
     transactions.add(new Transaction("Pago de factura", "Orange", calendar.getTimeInMillis(),
-      "DOP", -4700));
+      Transaction.RequestType.DEBIT, "DOP", 4700));
     calendar.set(Calendar.MONTH, Calendar.JULY);
     calendar.set(Calendar.DAY_OF_MONTH, 29);
     transactions.add(new Transaction("Pago en tienda", "Farmacia Plus", calendar.getTimeInMillis(),
-      "DOP", -1230.77));
+      Transaction.RequestType.DEBIT, "DOP", 1230.77));
   }
 
   @NonNull

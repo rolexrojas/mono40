@@ -13,17 +13,14 @@ public class Bank {
    * Bank's identifier.
    */
   private final String id;
-
   /**
    * Bank's name.
    */
   private final String name;
-
   /**
    * Bank's state. True if it is active, false otherwise.
    */
   private boolean state;
-
   /**
    * Bank's uri.
    */
