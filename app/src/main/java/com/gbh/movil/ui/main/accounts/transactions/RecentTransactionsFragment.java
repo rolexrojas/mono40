@@ -45,11 +45,6 @@ public class RecentTransactionsFragment extends SubFragment implements RecentTra
   @BindView(R.id.recycler_view)
   RecyclerView recyclerView;
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
   @NonNull
   public static RecentTransactionsFragment newInstance() {
     return new RecentTransactionsFragment();

@@ -133,8 +133,8 @@ public class Transaction {
 
   @Override
   public String toString() {
-    return "Transaction:{type='" + type + "',name='" + name + "',date='" + date + "',currency='"
-      + currency + "',value=" + value + "}";
+    return "Transaction:{type='" + type + "',name='" + name + "',date='" + date + "'requestType="
+      + requestType + ",currency='" + currency + "',value=" + value + "}";
   }
 
   /**

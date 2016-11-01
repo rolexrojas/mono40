@@ -130,7 +130,7 @@ public final class DataLoader {
    * @return TODO
    */
   @NonNull
-  public final Observable<List<Transaction>> transactions() {
+  public final Observable<List<Transaction>> recentTransactions() {
     return transactionsSubject.asObservable();
   }
 

@@ -14,6 +14,7 @@
   <color name="transparent">@android:color/transparent</color>
   <color name="white">#FFF</color>
   <color name="white_alpha_20">#33FFFFFF</color>
+  <color name="white_alpha_50">#7FFFFFFF</color>
   <!-- Search view colors -->
   <color name="search_view_drawable">#999</color>
   <color name="search_view_hint">#999</color>
