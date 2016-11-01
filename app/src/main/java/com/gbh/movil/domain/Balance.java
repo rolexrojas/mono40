@@ -12,7 +12,6 @@ public class Balance {
    * Balance's value.
    */
   private final double value;
-
   /**
    * Balance's description.
    */
