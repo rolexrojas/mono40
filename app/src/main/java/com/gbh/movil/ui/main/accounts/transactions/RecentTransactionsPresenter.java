@@ -2,7 +2,7 @@ package com.gbh.movil.ui.main.accounts.transactions;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.data.Functions;
+import com.gbh.movil.data.RxUtils;
 import com.gbh.movil.domain.DataLoader;
 import com.gbh.movil.domain.Transaction;
 
@@ -50,7 +50,7 @@ class RecentTransactionsPresenter {
           screen.clear();
         }
       })
-      .flatMap(Functions.<Transaction>fromList())
+      .flatMap(RxUtils.<Transaction>fromList())
       .groupBy(new Func1<Transaction, Date>() {
         @Override
         public Date call(Transaction transaction) {

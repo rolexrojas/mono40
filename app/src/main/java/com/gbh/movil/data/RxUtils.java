@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import java.util.List;
 
 import rx.Observable;
+import rx.Subscription;
 import rx.functions.Func1;
 
 /**
@@ -12,8 +13,20 @@ import rx.functions.Func1;
  *
  * @author hecvasro
  */
-public final class Functions {
-  private Functions() {
+public final class RxUtils {
+  private RxUtils() {
+  }
+
+  /**
+   * TODO
+   *
+   * @param subscription
+   *   TODO
+   */
+  public static void unsubscribe(@NonNull Subscription subscription) {
+    if (!subscription.isUnsubscribed()) {
+      subscription.unsubscribe();
+    }
   }
 
   /**

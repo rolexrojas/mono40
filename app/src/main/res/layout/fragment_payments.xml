@@ -12,8 +12,13 @@
     android:id="@+id/search_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/list_item_divider_inset"
-    android:layout_marginStart="@dimen/list_item_divider_inset"
+    android:layout_marginEnd="@dimen/list_item_inset"
+    android:layout_marginStart="@dimen/list_item_inset"
     app:hint="@string/payment_options_search_hint"/>
   <include layout="@layout/divider"/>
+  <android.support.v7.widget.RecyclerView
+    android:id="@+id/recycler_view"
+    style="@style/List.Vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
 </LinearLayout>
