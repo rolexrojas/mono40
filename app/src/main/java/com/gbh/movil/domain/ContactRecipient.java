@@ -39,6 +39,7 @@ public class ContactRecipient extends Recipient {
 
   @Override
   public String toString() {
-    return "ContactRecipient:{recipient=" + super.toString() + ",contact=" + contact + "}";
+    return ContactRecipient.class.getSimpleName() + ":{super=" + super.toString() + ",contact="
+      + contact + "}";
   }
 }

@@ -15,4 +15,9 @@ public class BankAccount extends Account {
     double queryFee, @NonNull String queryFeeDescription) {
     super(AccountType.BANK_ACCOUNT, alias, currency, bank, queryFee, queryFeeDescription);
   }
+
+  @Override
+  public String toString() {
+    return BankAccount.class.getSimpleName() + ":{super=" + super.toString() + "}";
+  }
 }

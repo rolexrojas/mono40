@@ -50,7 +50,7 @@ public abstract class Account {
    * @param queryFeeDescription
    *   Description of the cost of querying the balance.
    */
-  public Account(@AccountType int type, @NonNull String alias, @NonNull String currency,
+  protected Account(@AccountType int type, @NonNull String alias, @NonNull String currency,
     @NonNull Bank bank, double queryFee, @NonNull String queryFeeDescription) {
     this.type = type;
     this.alias = alias;
@@ -155,8 +155,8 @@ public abstract class Account {
 
   @Override
   public String toString() {
-    return "Account:{type=" + type + ",alias='" + alias + "',amount='" + currency + "',bank="
-      + bank.toString() + ",queryFee=" + queryFee + ",queryFeeDescription='" + queryFeeDescription
-      + "'}";
+    return Account.class.getSimpleName() + ":{type=" + type + ",alias='" + alias + "',amount='"
+      + currency + "',bank=" + bank + ",queryFee=" + queryFee + ",queryFeeDescription='"
+      + queryFeeDescription + "'}";
   }
 }

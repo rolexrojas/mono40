@@ -18,7 +18,7 @@ public abstract class Recipient {
    * @param type
    *   Recipient's type.
    */
-  public Recipient(@RecipientType int type) {
+  protected Recipient(@RecipientType int type) {
     this.type = type;
   }
 
