@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Account type enumeration.
+ * Account's type enumeration.
  *
  * @author hecvasro
  */
