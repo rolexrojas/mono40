@@ -15,4 +15,9 @@ public class CreditCard extends Account {
     double queryFee, @NonNull String queryFeeDescription) {
     super(AccountType.CREDIT_CARD, alias, currency, bank, queryFee, queryFeeDescription );
   }
+
+  @Override
+  public String toString() {
+    return CreditCard.class.getSimpleName() + ":{super=" + super.toString() + "}";
+  }
 }

@@ -81,7 +81,7 @@ public class Contact {
 
   @Override
   public String toString() {
-    return "Contact:{name='" + name + "',phoneNumber='" + phoneNumber + "',pictureUri='"
-      + pictureUri + "'}";
+    return Contact.class.getSimpleName() + ":{name='" + name + "',phoneNumber='" + phoneNumber
+      + "',pictureUri='" + pictureUri + "'}";
   }
 }

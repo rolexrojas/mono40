@@ -86,6 +86,7 @@ public class Bank {
 
   @Override
   public String toString() {
-    return "Bank{id='" + id + "',name='" + name + "',state=" + state + "'}";
+    return Bank.class.getSimpleName() + ":{id='" + id + "',name='" + name + "',state=" + state
+      + "'}";
   }
 }
