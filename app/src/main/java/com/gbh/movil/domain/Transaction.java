@@ -3,9 +3,10 @@ package com.gbh.movil.domain;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 
+import com.gbh.movil.Utils;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.Arrays;
 
 /**
  * Transaction representation.
@@ -129,7 +130,7 @@ public class Transaction {
 
   @Override
   public int hashCode() {
-    return Arrays.hashCode(new Object[]{ type, name });
+    return Utils.hashCode(type, name);
   }
 
   @Override

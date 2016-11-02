@@ -2,6 +2,8 @@ package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
 
+import com.gbh.movil.Utils;
+
 /**
  * {@link Contact} recipient representation.
  *
@@ -12,9 +14,6 @@ public class ContactRecipient extends Recipient {
 
   /**
    * Constructs a new {@link Contact} recipient.
-   *
-   * @param contact
-   *   TODO
    */
   public ContactRecipient(@NonNull Contact contact) {
     super(RecipientType.CONTACT);
@@ -34,7 +33,7 @@ public class ContactRecipient extends Recipient {
 
   @Override
   public int hashCode() {
-    return contact.hashCode();
+    return Utils.hashCode(type, contact);
   }
 
   @Override

@@ -2,7 +2,7 @@ package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
 
-import java.util.Arrays;
+import com.gbh.movil.Utils;
 
 /**
  * Invoice recipient representation.
@@ -51,7 +51,7 @@ public class InvoiceRecipient extends Recipient {
    * @param minimumAmount
    *   Minimum amount that can be paid.
    */
-  protected InvoiceRecipient(@NonNull Biller biller, @NonNull String contract, long dueDate,
+  public InvoiceRecipient(@NonNull Biller biller, @NonNull String contract, long dueDate,
     @NonNull String currency, double totalAmount, double minimumAmount) {
     super(RecipientType.INVOICE);
     this.biller = biller;
@@ -128,7 +128,7 @@ public class InvoiceRecipient extends Recipient {
 
   @Override
   public int hashCode() {
-    return Arrays.hashCode(new Object[]{ biller, contract });
+    return Utils.hashCode(type, biller, contract);
   }
 
   @Override
