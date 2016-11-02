@@ -138,7 +138,7 @@ public class Transaction {
   }
 
   /**
-   * Transaction's request type enumeration.
+   * Transaction request type enumeration.
    */
   @Retention(RetentionPolicy.SOURCE)
   @IntDef({ RequestType.CREDIT, RequestType.DEBIT })

@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Recipient's type enumeration.
+ * Recipient type enumeration.
  *
  * @author hecvasro
  */
