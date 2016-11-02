@@ -31,4 +31,9 @@ public abstract class Recipient {
   public final int getType() {
     return type;
   }
+
+  @Override
+  public String toString() {
+    return "Recipient:{type=" + type + "}";
+  }
 }
