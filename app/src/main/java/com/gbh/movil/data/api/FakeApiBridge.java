@@ -38,19 +38,19 @@ class FakeApiBridge implements ApiBridge {
     Account account;
     Balance balance;
     bank = new Bank("BPD", "Banco Popular Dominicano");
-    account = new BankAccount("1234", "DOP", bank, 5.0, "5.0", "balance");
+    account = new BankAccount("1234", "DOP", bank, 5.0, "5.0");
     accounts.add(account);
     balance = new Balance(87645, "87645.23");
     balances.put(account, balance);
     bank = new Bank("BANRESERVAS", "Banreservas");
     banks.add(bank);
-    account = new CreditCard("2134", "USD", bank, 3.0, "3.0", "balance");
+    account = new CreditCard("2134", "USD", bank, 3.0, "3.0");
     accounts.add(account);
     balance = new Balance(2645, "2645.49");
     balances.put(account, balance);
     bank = new Bank("BDI", "Banco BDI");
     banks.add(bank);
-    account = new BankAccount("3124", "DOP", bank, 4.0, "4.0", "balance");
+    account = new BankAccount("3124", "DOP", bank, 4.0, "4.0");
     accounts.add(account);
     balance = new Balance(99, "99.12");
     balances.put(account, balance);
@@ -63,16 +63,16 @@ class FakeApiBridge implements ApiBridge {
     calendar.set(Calendar.SECOND, 0);
     calendar.set(Calendar.MILLISECOND, 0);
     transactions.add(new Transaction("Transferencia", "Arturo Gaitan", calendar.getTimeInMillis(),
-      "USD", 100));
+      Transaction.RequestType.CREDIT, "USD", 100));
     transactions.add(new Transaction("Recarga", "809-586-5832", calendar.getTimeInMillis(),
-      "DOP", -340));
+      Transaction.RequestType.DEBIT, "DOP", 340));
     calendar.set(Calendar.DAY_OF_MONTH, 1);
     transactions.add(new Transaction("Pago de factura", "Orange", calendar.getTimeInMillis(),
-      "DOP", -4700));
+      Transaction.RequestType.DEBIT, "DOP", 4700));
     calendar.set(Calendar.MONTH, Calendar.JULY);
     calendar.set(Calendar.DAY_OF_MONTH, 29);
     transactions.add(new Transaction("Pago en tienda", "Farmacia Plus", calendar.getTimeInMillis(),
-      "DOP", -1230.77));
+      Transaction.RequestType.DEBIT, "DOP", 1230.77));
   }
 
   @NonNull
@@ -106,5 +106,12 @@ class FakeApiBridge implements ApiBridge {
       return Observable.just(new ApiResult<Balance>(ApiCode.UNAUTHORIZED, null))
         .delay(2L, TimeUnit.SECONDS);
     }
+  }
+
+  @NonNull
+  @Override
+  public Observable<ApiResult<List<Transaction>>> recentTransactions() {
+    return Observable.just(new ApiResult<>(ApiCode.SUCCESS, transactions))
+      .delay(2L, TimeUnit.SECONDS);
   }
 }

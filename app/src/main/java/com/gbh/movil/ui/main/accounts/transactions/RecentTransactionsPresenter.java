@@ -8,13 +8,14 @@ import com.gbh.movil.domain.Transaction;
 
 import java.util.Date;
 
+import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.observables.GroupedObservable;
-import rx.subscriptions.CompositeSubscription;
+import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 /**
@@ -23,26 +24,18 @@ import timber.log.Timber;
  */
 class RecentTransactionsPresenter {
   private final RecentTransactionsScreen screen;
-
   private final DataLoader dataLoader;
 
-  /**
-   * TODO
-   */
-  private CompositeSubscription compositeSubscription;
+  private Subscription subscription = Subscriptions.unsubscribed();
 
-  RecentTransactionsPresenter(@NonNull RecentTransactionsScreen screen, @NonNull DataLoader dataLoader) {
+  RecentTransactionsPresenter(@NonNull RecentTransactionsScreen screen,
+    @NonNull DataLoader dataLoader) {
     this.screen = screen;
     this.dataLoader = dataLoader;
   }
 
-  /**
-   * TODO
-   */
   void start() {
-    compositeSubscription = new CompositeSubscription();
-    // Listens for transaction change events.
-    final Subscription subscription = dataLoader.transactions()
+    subscription = dataLoader.recentTransactions()
       .observeOn(AndroidSchedulers.mainThread())
       .doOnSubscribe(new Action0() {
         @Override
@@ -57,45 +50,35 @@ class RecentTransactionsPresenter {
           return new Date(transaction.getDate());
         }
       })
-      .subscribe(new Action1<GroupedObservable<Date, Transaction>>() {
+      .doOnNext(new Action1<GroupedObservable<Date, Transaction>>() {
         @Override
         public void call(GroupedObservable<Date, Transaction> group) {
           final Date key = group.getKey();
           Timber.d("Group '%1$s'", key);
           screen.add(key);
-          final Subscription subscription = group
-            .subscribe(new Action1<Transaction>() {
-              @Override
-              public void call(Transaction transaction) {
-                Timber.d(transaction.toString());
-                screen.add(transaction);
-              }
-            }, new Action1<Throwable>() {
-              @Override
-              public void call(Throwable throwable) {
-                Timber.e(throwable, "Listening grouped transaction change events");
-              }
-            });
-          compositeSubscription.add(subscription);
+        }
+      })
+      .flatMap(new Func1<GroupedObservable<Date, Transaction>, Observable<Transaction>>() {
+        @Override
+        public Observable<Transaction> call(GroupedObservable<Date, Transaction> group) {
+          return group.asObservable();
+        }
+      })
+      .subscribe(new Action1<Transaction>() {
+        @Override
+        public void call(Transaction transaction) {
+          Timber.d(transaction.toString());
+          screen.add(transaction);
         }
       }, new Action1<Throwable>() {
         @Override
         public void call(Throwable throwable) {
-          Timber.e(throwable, "Listening transaction change events");
+          Timber.e(throwable, "Loading recent transactions");
         }
       });
-    compositeSubscription.add(subscription);
   }
 
-  /**
-   * TODO
-   */
   void stop() {
-    if (compositeSubscription != null) {
-      if (!compositeSubscription.isUnsubscribed()) {
-        compositeSubscription.unsubscribe();
-      }
-      compositeSubscription = null;
-    }
+    RxUtils.unsubscribe(subscription);
   }
 }

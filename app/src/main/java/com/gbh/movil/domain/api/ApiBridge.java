@@ -6,7 +6,9 @@ import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.Balance;
 import com.gbh.movil.domain.Bank;
 import com.gbh.movil.domain.InitialData;
+import com.gbh.movil.domain.Transaction;
 
+import java.util.List;
 import java.util.Set;
 
 import rx.Observable;
@@ -45,4 +47,12 @@ public interface ApiBridge {
    */
   @NonNull
   Observable<ApiResult<Balance>> queryBalance(@NonNull Account account, @NonNull String pin);
+
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  Observable<ApiResult<List<Transaction>>> recentTransactions();
 }

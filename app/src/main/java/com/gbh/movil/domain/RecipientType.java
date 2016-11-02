@@ -6,13 +6,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Account's type enumeration.
+ * Recipient type enumeration.
  *
  * @author hecvasro
  */
 @Retention(RetentionPolicy.SOURCE)
-@IntDef({ AccountType.BANK_ACCOUNT, AccountType.CREDIT_CARD })
-public @interface AccountType {
-  int BANK_ACCOUNT = 0;
-  int CREDIT_CARD = 1;
+@IntDef({ RecipientType.CONTACT, RecipientType.INVOICE, RecipientType.CREDIT_CARD})
+public @interface RecipientType {
+  int CONTACT = 0;
+  int INVOICE = 1;
+  int CREDIT_CARD = 2;
 }

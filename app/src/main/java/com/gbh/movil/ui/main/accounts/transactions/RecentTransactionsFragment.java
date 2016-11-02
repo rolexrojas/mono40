@@ -45,11 +45,6 @@ public class RecentTransactionsFragment extends SubFragment implements RecentTra
   @BindView(R.id.recycler_view)
   RecyclerView recyclerView;
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
   @NonNull
   public static RecentTransactionsFragment newInstance() {
     return new RecentTransactionsFragment();
@@ -222,9 +217,9 @@ public class RecentTransactionsFragment extends SubFragment implements RecentTra
         transactionHolder.nameTextView.setText(transaction.getName());
         transactionHolder.typeTextView.setText(transaction.getType());
         final double value = transaction.getValue();
-        final String currencyCode = transaction.getCurrencyCode();
-        final int colorId = value >= 0 ? R.color.transaction_type_credit
-          : R.color.transaction_type_debit;
+        final String currencyCode = transaction.getCurrency();
+        final int colorId = transaction.getRequestType() == Transaction.RequestType.CREDIT ?
+          R.color.transaction_type_credit : R.color.transaction_type_debit;
         transactionHolder.amountView.setCurrency(currencyCode);
         transactionHolder.amountView.setCurrencyColor(colorId);
         transactionHolder.amountView.setValue(Math.abs(value));

@@ -10,9 +10,9 @@ import java.lang.annotation.RetentionPolicy;
  *
  * @author hecvasro
  */
+@Retention(RetentionPolicy.SOURCE)
 @IntDef({ ApiCode.SUCCESS, ApiCode.BAD_REQUEST, ApiCode.UNAUTHORIZED, ApiCode.FORBIDDEN,
   ApiCode.NOT_FOUND })
-@Retention(RetentionPolicy.SOURCE)
 public @interface ApiCode {
   int SUCCESS = 200;
   int BAD_REQUEST = 400;

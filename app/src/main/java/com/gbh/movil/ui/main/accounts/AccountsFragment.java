@@ -1,6 +1,5 @@
 package com.gbh.movil.ui.main.accounts;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,7 +15,6 @@ import android.widget.Button;
 import com.gbh.movil.ui.main.AddAnotherAccountFragment;
 import com.gbh.movil.ui.main.PinConfirmationDialogFragment;
 import com.gbh.movil.ui.main.accounts.transactions.RecentTransactionsFragment;
-import com.squareup.picasso.Picasso;
 import com.gbh.movil.R;
 import com.gbh.movil.data.MessageHelper;
 import com.gbh.movil.domain.Account;
@@ -335,11 +333,7 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
         final AccountItem item = (AccountItem) items.get(position);
         final Account account = item.getAccount();
         final Bank bank = account.getBank();
-        Picasso.with(holder.itemView.getContext())
-          .load(bank.getLogoUri() != null ? Uri.parse(bank.getLogoUri()) : Uri.EMPTY)
-          // TODO: Add a placeholder for empty cases.
-          // TODO: Add a placeholder for error cases.
-          .into(accountHolder.bankLogoImageView);
+        // TODO: Load bank's logo.
         accountHolder.accountAliasTextView.setText(account.getAlias());
         accountHolder.bankNameTextView.setText(bank.getName());
         final Balance balance = item.getBalance();

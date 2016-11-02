@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gbh.movil.R;
+import com.gbh.movil.ui.FullScreenDialogFragment;
 import com.gbh.movil.ui.view.BaseAnimatorListener;
 import com.gbh.movil.ui.view.widget.NumPad;
 import com.gbh.movil.ui.view.widget.PinView;
@@ -36,7 +36,7 @@ import io.codetail.animation.ViewAnimationUtils;
  *
  * @author hecvasro
  */
-public class PinConfirmationDialogFragment extends DialogFragment
+public class PinConfirmationDialogFragment extends FullScreenDialogFragment
   implements DialogInterface.OnShowListener, PinView.Listener, NumPad.OnButtonClickedListener {
   private static final String KEY_CENTER_X = "centerX";
   private static final String KEY_CENTER_Y = "centerY";
@@ -126,7 +126,6 @@ public class PinConfirmationDialogFragment extends DialogFragment
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setStyle(DialogFragment.STYLE_NO_FRAME, R.style.FullScreenDialogTheme);
     final Bundle bundle = savedInstanceState != null ? savedInstanceState : getArguments();
     if (bundle != null) {
       if (!bundle.containsKey(KEY_CENTER_X)) {
