@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.Arrays;
 
 /**
  * Transaction representation.
@@ -128,7 +129,7 @@ public class Transaction {
 
   @Override
   public int hashCode() {
-    return (type + name).hashCode();
+    return Arrays.hashCode(new Object[]{ type, name });
   }
 
   @Override
