@@ -33,10 +33,6 @@ public abstract class Account {
    * Description of the cost of querying the balance.
    */
   private String queryFeeDescription;
-  /**
-   * Url for querying the balance.
-   */
-  private String queryBalanceUrl;
 
   /**
    * Constructs a new account.
@@ -53,19 +49,15 @@ public abstract class Account {
    *   Cost of querying the balance.
    * @param queryFeeDescription
    *   Description of the cost of querying the balance.
-   * @param queryBalanceUrl
-   *   Url for querying the balance.
    */
   public Account(@AccountType int type, @NonNull String alias, @NonNull String currency,
-    @NonNull Bank bank, double queryFee, @NonNull String queryFeeDescription,
-    @NonNull String queryBalanceUrl) {
+    @NonNull Bank bank, double queryFee, @NonNull String queryFeeDescription) {
     this.type = type;
     this.alias = alias;
     this.currency = currency;
     this.bank = bank;
     this.queryFee = queryFee;
     this.queryFeeDescription = queryFeeDescription;
-    this.queryBalanceUrl = queryBalanceUrl;
   }
 
   /**
@@ -150,26 +142,6 @@ public abstract class Account {
     this.queryFeeDescription = queryFeeDescription;
   }
 
-  /**
-   * Gets the url for querying the balance of the account.
-   *
-   * @return Url for querying the balance.
-   */
-  @NonNull
-  public String getQueryBalanceUrl() {
-    return queryBalanceUrl;
-  }
-
-  /**
-   * Sets the url for querying the balance of the account.
-   *
-   * @param queryBalanceUrl
-   *   Url for querying the balance.
-   */
-  public void setQueryBalanceUrl(@NonNull String queryBalanceUrl) {
-    this.queryBalanceUrl = queryBalanceUrl;
-  }
-
   @Override
   public boolean equals(Object object) {
     return super.equals(object) || (object != null && object instanceof Account &&
@@ -185,6 +157,6 @@ public abstract class Account {
   public String toString() {
     return "Account:{type=" + type + ",alias='" + alias + "',amount='" + currency + "',bank="
       + bank.toString() + ",queryFee=" + queryFee + ",queryFeeDescription='" + queryFeeDescription
-      + "',queryBalanceUrl='" + queryBalanceUrl + "'}";
+      + "'}";
   }
 }
