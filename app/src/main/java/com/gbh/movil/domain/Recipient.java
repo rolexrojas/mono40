@@ -1,7 +1,7 @@
 package com.gbh.movil.domain;
 
 /**
- * Recipient representation.
+ * Abstract recipient representation.
  *
  * @author hecvasro
  */
