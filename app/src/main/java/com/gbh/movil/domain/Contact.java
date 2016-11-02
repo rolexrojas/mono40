@@ -67,4 +67,21 @@ public class Contact {
   public final Uri getPictureUri() {
     return pictureUri;
   }
+
+  @Override
+  public boolean equals(Object object) {
+    return super.equals(object) || (object != null && object instanceof Contact
+      && ((Contact) object).phoneNumber.equals(phoneNumber));
+  }
+
+  @Override
+  public int hashCode() {
+    return phoneNumber.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return "Contact:{name='" + name + "',phoneNumber='" + phoneNumber + "',pictureUri='"
+      + pictureUri + "'}";
+  }
 }
