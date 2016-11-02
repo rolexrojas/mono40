@@ -1,7 +1,7 @@
 package com.gbh.movil.ui.main.accounts.transactions;
 
+import com.gbh.movil.AppComponent;
 import com.gbh.movil.ui.FragmentScope;
-import com.gbh.movil.ui.main.MainComponent;
 
 import dagger.Component;
 
@@ -10,7 +10,7 @@ import dagger.Component;
  */
 
 @FragmentScope
-@Component(modules = RecentTransactionsModule.class, dependencies = MainComponent.class)
+@Component(modules = RecentTransactionsModule.class, dependencies = AppComponent.class)
 interface RecentTransactionsComponent {
   /**
    * TODO
@@ -18,5 +18,5 @@ interface RecentTransactionsComponent {
    * @param fragment
    *   TODO
    */
-  void inject(RecentTransactionsFragment fragment);
+  void inject(RecentTransactionsActivity fragment);
 }

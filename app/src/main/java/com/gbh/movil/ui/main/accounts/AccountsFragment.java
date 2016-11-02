@@ -14,13 +14,13 @@ import android.widget.Button;
 
 import com.gbh.movil.ui.main.AddAnotherAccountFragment;
 import com.gbh.movil.ui.main.PinConfirmationDialogFragment;
-import com.gbh.movil.ui.main.accounts.transactions.RecentTransactionsFragment;
 import com.gbh.movil.R;
 import com.gbh.movil.data.MessageHelper;
 import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.Balance;
 import com.gbh.movil.domain.Bank;
 import com.gbh.movil.ui.main.SubFragment;
+import com.gbh.movil.ui.main.accounts.transactions.RecentTransactionsActivity;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.ArrayList;
@@ -217,7 +217,7 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
 
   @Override
   public void onShowRecentTransactionsButtonClicked() {
-    parentScreen.setSubScreen(RecentTransactionsFragment.newInstance());
+    startActivity(RecentTransactionsActivity.getLaunchIntent(getContext()));
   }
 
   /**
