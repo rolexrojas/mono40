@@ -25,4 +25,20 @@ public class ContactRecipient extends Recipient {
   public final Contact getContact() {
     return contact;
   }
+
+  @Override
+  public boolean equals(Object object) {
+    return super.equals(object) || (object != null && object instanceof ContactRecipient
+      && ((ContactRecipient) object).contact.equals(contact));
+  }
+
+  @Override
+  public int hashCode() {
+    return contact.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return "ContactRecipient:{recipient=" + super.toString() + ",contact=" + contact + "}";
+  }
 }
