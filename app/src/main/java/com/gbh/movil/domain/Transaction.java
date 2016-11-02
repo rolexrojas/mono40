@@ -138,18 +138,12 @@ public class Transaction {
   }
 
   /**
-   * TODO
+   * Transaction's request type enumeration.
    */
-  @IntDef({ RequestType.CREDIT, RequestType.DEBIT })
   @Retention(RetentionPolicy.SOURCE)
+  @IntDef({ RequestType.CREDIT, RequestType.DEBIT })
   public @interface RequestType {
-    /**
-     * TODO
-     */
     int CREDIT = 0;
-    /**
-     * TODO
-     */
     int DEBIT = 1;
   }
 }
