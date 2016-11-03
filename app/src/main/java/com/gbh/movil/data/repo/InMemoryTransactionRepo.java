@@ -11,6 +11,7 @@ import java.util.List;
 
 import rx.Observable;
 import rx.functions.Func1;
+import rx.functions.Func2;
 
 /**
  * @author hecvasro
@@ -26,7 +27,12 @@ class InMemoryTransactionRepo implements TransactionRepo {
   public Observable<List<Transaction>> saveAll(@NonNull List<Transaction> transactionsToSave) {
     return Observable.just(transactionsToSave)
       .compose(RxUtils.<Transaction>fromList())
-      .toSortedList()
+      .toSortedList(new Func2<Transaction, Transaction, Integer>() {
+        @Override
+        public Integer call(Transaction a, Transaction b) {
+          return a.getDate() > b.getDate() ? -1 : (a.getDate() == b.getDate() ? 0 : 1);
+        }
+      })
       .map(new Func1<List<Transaction>, List<Transaction>>() {
         @Override
         public List<Transaction> call(List<Transaction> transactionsToSave) {
