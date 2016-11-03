@@ -11,7 +11,7 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * Transaction representation.
  */
-public class Transaction {
+public class Transaction implements Comparable<Transaction> {
   /**
    * Transaction's type.
    */
@@ -137,6 +137,11 @@ public class Transaction {
   public String toString() {
     return Transaction.class.getSimpleName() + ":{type='" + type + "',name='" + name + "',date='"
       + date + "'requestType=" + requestType + ",currency='" + currency + "',value=" + value + "}";
+  }
+
+  @Override
+  public int compareTo(@NonNull Transaction transaction) {
+    return date < transaction.getDate() ? -1 : (date == transaction.getDate() ? 0 : 1);
   }
 
   /**

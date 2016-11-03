@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 
@@ -79,31 +80,52 @@ class FakeApiBridge implements ApiBridge {
   @NonNull
   @Override
   public Observable<Result<ApiCode, Set<Bank>>> banks() {
-    return null;
+    return Observable.just(Result.create(ApiCode.OK, banks))
+      .delay(2L, TimeUnit.SECONDS);
   }
 
   @NonNull
   @Override
   public Observable<Result<ApiCode, InitialData>> initialLoad() {
-    return null;
+    return Observable.just(Result.create(ApiCode.OK, new InitialData(accounts, recipients)))
+      .delay(2L, TimeUnit.SECONDS);
   }
 
   @NonNull
   @Override
   public Observable<Result<ApiCode, Set<Account>>> accounts() {
-    return null;
+    return Observable.just(Result.create(ApiCode.OK, accounts))
+      .delay(2L, TimeUnit.SECONDS);
   }
 
   @NonNull
   @Override
   public Observable<Result<ApiCode, Balance>> queryBalance(@NonNull Account account,
     @NonNull String pin) {
-    return null;
+    final Observable<Result<ApiCode, Balance>> observable;
+    if (Integer.parseInt(pin) % 2 == 0) {
+      if (balances.containsKey(account)) {
+        observable = Observable.just(Result.create(ApiCode.OK, balances.get(account)));
+      } else {
+        observable = Observable.just(Result.<ApiCode, Balance>create(ApiCode.NOT_FOUND));
+      }
+    } else {
+      observable = Observable.just(Result.<ApiCode, Balance>create(ApiCode.UNAUTHORIZED));
+    }
+    return observable.delay(2L, TimeUnit.SECONDS);
+  }
+
+  @NonNull
+  @Override
+  public Observable<Result<ApiCode, Set<Recipient>>> recipients() {
+    return Observable.just(Result.create(ApiCode.OK, recipients))
+      .delay(2L, TimeUnit.SECONDS);
   }
 
   @NonNull
   @Override
   public Observable<Result<ApiCode, List<Transaction>>> recentTransactions() {
-    return null;
+    return Observable.just(Result.create(ApiCode.OK, transactions))
+      .delay(2L, TimeUnit.SECONDS);
   }
 }

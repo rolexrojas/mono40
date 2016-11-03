@@ -185,7 +185,7 @@ public class SlidingPaneLayout extends ViewGroup {
 
   /**
    * Stores whether or not the pane was open the last time it was slideable. If open/close
-   * operations are invoked this state is modified. Used by instance state save/restore.
+   * operations are invoked this state is modified. Used by instance state saveAll/restore.
    */
   boolean mPreservedOpenState;
   private boolean mFirstLayout = true;

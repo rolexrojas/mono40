@@ -1,10 +1,13 @@
 package com.gbh.movil.ui;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 
 import com.gbh.movil.RxUtils;
+import com.gbh.movil.Utils;
 import com.gbh.movil.domain.DataLoader;
 import com.gbh.movil.domain.DomainCode;
+import com.gbh.movil.domain.DomainUtils;
 import com.gbh.movil.domain.Result;
 
 import rx.Subscription;
@@ -32,10 +35,21 @@ final class SplashPresenter {
   final void start() {
     subscription = dataLoader.load()
       .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(new Action1<Result<DomainCode, Void>>() {
+      .subscribe(new Action1<Result<DomainCode, Pair<Boolean, Boolean>>>() {
         @Override
-        public void call(Result<DomainCode, Void> result) {
-          screen.finish();
+        public void call(Result<DomainCode, Pair<Boolean, Boolean>> result) {
+          boolean additions = false;
+          boolean removals = false;
+          if (DomainUtils.isSuccessful(result)) {
+            final Pair<Boolean, Boolean> pair = result.getData();
+            if (Utils.isNotNull(pair)) {
+              additions = pair.first;
+              removals = pair.second;
+            }
+          } else {
+            // TODO: Let the user know that the initial load failed.
+          }
+          screen.finish(additions, removals);
         }
       }, new Action1<Throwable>() {
         @Override

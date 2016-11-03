@@ -20,6 +20,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
@@ -100,11 +101,14 @@ public final class BalanceManager {
   }
 
   /**
-   * Returns an {@link Observable observable} that emits every {@link Account account} that its last
-   * queried {@link Balance balance} has expired.
+   * Creates an {@link Observable observable} that emits every {@link Account account} of which its
+   * last queried {@link Balance balance} has expired.
+   * <p>
+   * <em>Note:</em> By default {@link #expiration()} does not operates on a particular {@link
+   * rx.Scheduler}.
    *
-   * @return An {@link Observable observable} that emits every {@link Account account} that its last
-   * queried {@link Balance balance} has expired.
+   * @return An {@link Observable observable} that emits every {@link Account account} of which its
+   * last queried {@link Balance balance} has expired.
    */
   public final Observable<Account> expiration() {
     return subject.asObservable();
@@ -142,15 +146,19 @@ public final class BalanceManager {
   }
 
   /**
-   * Queries the {@link Balance balance} of the given {@link Account account} and stores it until
-   * expiration.
+   * Creates an {@link Observable observable} that queries the {@link Balance balance} of the given
+   * {@link Account account}, saves and emit it.
+   * <p>
+   * <em>Note:</em> By default {@link #queryBalance(Account, String)} operates on {@link
+   * Schedulers#io()}.
    *
    * @param account
    *   {@link Account} that will be queried.
    * @param pin
    *   User's PIN.
    *
-   * @return {@link Account}'s queried balance.
+   * @return An {@link Observable observable} that queries the {@link Balance balance} of the given
+   * {@link Account account}, saves and emit it.
    */
   @NonNull
   public final Observable<Result<DomainCode, Balance>> queryBalance(@NonNull final Account account,
@@ -170,6 +178,7 @@ public final class BalanceManager {
           }
         }
       })
-      .compose(DomainUtils.<Balance>assertNetwork(networkHelper));
+      .compose(DomainUtils.<Balance>assertNetwork(networkHelper))
+      .subscribeOn(Schedulers.io());
   }
 }

@@ -45,7 +45,8 @@ public class MainActivity extends BaseActivity implements ParentScreen {
   Toolbar toolbar;
 
   @NonNull
-  public static Intent getLaunchIntent(@NonNull Context context) {
+  public static Intent getLaunchIntent(@NonNull Context context, boolean additions,
+    boolean removals) {
     return new Intent(context, MainActivity.class);
   }
 
