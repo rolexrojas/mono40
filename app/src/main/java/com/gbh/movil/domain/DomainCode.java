@@ -8,5 +8,6 @@ package com.gbh.movil.domain;
 public enum DomainCode {
   SUCCESSFUL,
   FAILURE_NETWORK,
-  FAILURE_UNKNOWN
+  FAILURE_UNKNOWN,
+  FAILURE_UNAUTHORIZED
 }

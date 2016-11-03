@@ -173,6 +173,8 @@ public final class BalanceManager {
               balances.put(account, Pair.create(System.currentTimeMillis(), balance));
             }
             return Result.create(DomainCode.SUCCESSFUL, balance);
+          } else if (apiResult.getCode() == ApiCode.UNAUTHORIZED) {
+            return Result.create(DomainCode.FAILURE_UNAUTHORIZED);
           } else {
             return Result.create(DomainCode.FAILURE_UNKNOWN);
           }
