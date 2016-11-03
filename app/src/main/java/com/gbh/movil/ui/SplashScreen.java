@@ -6,13 +6,5 @@ package com.gbh.movil.ui;
  * @author hecvasro
  */
 interface SplashScreen {
-  /**
-   * TODO
-   *
-   * @param additions
-   *   TODO
-   * @param removals
-   *   TODO
-   */
-  void finish(int additions, int removals);
+  void finish();
 }

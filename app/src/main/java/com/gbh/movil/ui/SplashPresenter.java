@@ -1,17 +1,15 @@
 package com.gbh.movil.ui;
 
 import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
 
-import com.gbh.movil.data.RxUtils;
-import com.gbh.movil.data.net.NetworkHelper;
+import com.gbh.movil.RxUtils;
 import com.gbh.movil.domain.DataLoader;
+import com.gbh.movil.domain.DomainCode;
+import com.gbh.movil.domain.Result;
 
-import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
@@ -22,35 +20,22 @@ import timber.log.Timber;
  */
 final class SplashPresenter {
   private final SplashScreen screen;
-  private final NetworkHelper networkHelper;
   private final DataLoader dataLoader;
 
   private Subscription subscription = Subscriptions.unsubscribed();
 
-  SplashPresenter(@NonNull SplashScreen screen, @NonNull NetworkHelper networkHelper,
-    @NonNull DataLoader dataLoader) {
+  SplashPresenter(@NonNull SplashScreen screen, @NonNull DataLoader dataLoader) {
     this.screen = screen;
-    this.networkHelper = networkHelper;
     this.dataLoader = dataLoader;
   }
 
   final void start() {
-    subscription = networkHelper.status()
-      .flatMap(new Func1<Boolean, Observable<Pair<Integer, Integer>>>() {
-        @Override
-        public Observable<Pair<Integer, Integer>> call(Boolean available) {
-          if (available) {
-            return dataLoader.load();
-          } else {
-            return Observable.just(Pair.create(0, 0));
-          }
-        }
-      })
+    subscription = dataLoader.load()
       .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(new Action1<Pair<Integer, Integer>>() {
+      .subscribe(new Action1<Result<DomainCode, Void>>() {
         @Override
-        public void call(Pair<Integer, Integer> pair) {
-          screen.finish(pair.first, pair.second);
+        public void call(Result<DomainCode, Void> result) {
+          screen.finish();
         }
       }, new Action1<Throwable>() {
         @Override

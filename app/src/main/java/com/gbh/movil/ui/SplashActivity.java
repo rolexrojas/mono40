@@ -20,7 +20,6 @@ public class SplashActivity extends BaseActivity implements SplashScreen {
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    // Injects all the dependencies.
     final SplashComponent component = DaggerSplashComponent.builder()
       .appComponent(((App) getApplication()).getComponent())
       .splashModule(new SplashModule(this))
@@ -41,8 +40,8 @@ public class SplashActivity extends BaseActivity implements SplashScreen {
   }
 
   @Override
-  public void finish(int additions, int removals) {
-    startActivity(MainActivity.getLaunchIntent(this, additions, removals));
-    finish();
+  public void finish() {
+    super.finish();
+    startActivity(MainActivity.getLaunchIntent(this));
   }
 }

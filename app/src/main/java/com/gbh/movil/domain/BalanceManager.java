@@ -4,8 +4,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
+import com.gbh.movil.RxUtils;
+import com.gbh.movil.Utils;
 import com.gbh.movil.domain.api.ApiBridge;
-import com.gbh.movil.domain.api.ApiResult;
+import com.gbh.movil.domain.api.ApiCode;
+import com.gbh.movil.domain.api.ApiUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +19,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
@@ -33,6 +37,7 @@ public final class BalanceManager {
    */
   private static final long EXPIRATION_TIME = 300000L; // Five (5) minutes.
 
+  private final NetworkHelper networkHelper;
   private final ApiBridge apiBridge;
 
   /**
@@ -46,12 +51,10 @@ public final class BalanceManager {
    */
   private final PublishSubject<Account> subject = PublishSubject.create();
 
-  /**
-   * TODO
-   */
   private Subscription subscription = Subscriptions.unsubscribed();
 
-  public BalanceManager(@NonNull ApiBridge apiBridge) {
+  public BalanceManager(@NonNull NetworkHelper networkHelper, @NonNull ApiBridge apiBridge) {
+    this.networkHelper = networkHelper;
     this.apiBridge = apiBridge;
     this.balances = new HashMap<>();
   }
@@ -93,9 +96,7 @@ public final class BalanceManager {
    * Expires all queried {@link Balance balances} and stop notifying observers.
    */
   public final void stop() {
-    if (!subscription.isUnsubscribed()) {
-      subscription.unsubscribe();
-    }
+    RxUtils.unsubscribe(subscription);
   }
 
   /**
@@ -152,19 +153,23 @@ public final class BalanceManager {
    * @return {@link Account}'s queried balance.
    */
   @NonNull
-  public final Observable<ApiResult<Balance>> queryBalance(@NonNull final Account account,
+  public final Observable<Result<DomainCode, Balance>> queryBalance(@NonNull final Account account,
     @NonNull String pin) {
     return apiBridge.queryBalance(account, pin)
-      .doOnNext(new Action1<ApiResult<Balance>>() {
+      .map(new Func1<Result<ApiCode, Balance>, Result<DomainCode, Balance>>() {
         @Override
-        public void call(ApiResult<Balance> result) {
-          if (result.isSuccessful()) {
-            final Balance balance = result.getData();
-            if (balance != null) {
+        public Result<DomainCode, Balance> call(Result<ApiCode, Balance> apiResult) {
+          if (ApiUtils.isSuccessful(apiResult)) {
+            final Balance balance = apiResult.getData();
+            if (Utils.isNotNull(balance)) {
               balances.put(account, Pair.create(System.currentTimeMillis(), balance));
             }
+            return Result.create(DomainCode.SUCCESSFUL, balance);
+          } else {
+            return Result.create(DomainCode.FAILURE_UNKNOWN);
           }
         }
-      });
+      })
+      .compose(DomainUtils.<Balance>assertNetwork(networkHelper));
   }
 }

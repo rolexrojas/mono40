@@ -2,18 +2,22 @@ package com.gbh.movil.ui.main.accounts;
 
 import android.support.annotation.NonNull;
 
+import com.gbh.movil.Utils;
+import com.gbh.movil.RxUtils;
 import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.Balance;
 import com.gbh.movil.domain.BalanceManager;
 import com.gbh.movil.domain.DataLoader;
-import com.gbh.movil.domain.api.ApiResult;
+import com.gbh.movil.domain.DomainCode;
+import com.gbh.movil.domain.DomainUtils;
+import com.gbh.movil.domain.Result;
 
 import java.util.Set;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.subscriptions.Subscriptions;
+import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 /**
@@ -22,35 +26,11 @@ import timber.log.Timber;
  * @author hecvasro
  */
 class AccountsPresenter {
-  /**
-   * TODO
-   */
   private final AccountsScreen screen;
-
-  /**
-   * TODO
-   */
   private final DataLoader dataLoader;
-
-  /**
-   * TODO
-   */
   private final BalanceManager balanceManager;
 
-  /**
-   * TODO
-   */
-  private Subscription loadAccountsSubscription = Subscriptions.unsubscribed();
-
-  /**
-   * TODO
-   */
-  private Subscription queryBalanceSubscription = Subscriptions.unsubscribed();
-
-  /**
-   * TODO
-   */
-  private Subscription balanceExpirationSubscription = Subscriptions.unsubscribed();
+  private CompositeSubscription compositeSubscription;
 
   AccountsPresenter(@NonNull AccountsScreen screen, @NonNull DataLoader dataLoader,
     @NonNull BalanceManager balanceManager) {
@@ -59,23 +39,29 @@ class AccountsPresenter {
     this.balanceManager = balanceManager;
   }
 
-  /**
-   * TODO
-   */
   void start() {
-    loadAccountsSubscription = dataLoader.accounts()
+    compositeSubscription = new CompositeSubscription();
+    Subscription subscription;
+    subscription = dataLoader.accounts()
       .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(new Action1<Set<Account>>() {
+      .subscribe(new Action1<Result<DomainCode, Set<Account>>>() {
         @Override
-        public void call(Set<Account> accounts) {
+        public void call(Result<DomainCode, Set<Account>> result) {
           screen.clear();
-          for (Account account : accounts) {
-            screen.add(account);
-            if (balanceManager.hasValidBalance(account)) {
-              screen.setBalance(account, balanceManager.getBalance(account));
+          if (DomainUtils.isSuccessful(result)) {
+            final Set<Account> accounts = result.getData();
+            if (Utils.isNotNull(accounts)) {
+              for (Account account : result.getData()) {
+                screen.add(account);
+                if (balanceManager.hasValidBalance(account)) {
+                  screen.setBalance(account, balanceManager.getBalance(account));
+                }
+              }
             }
+            screen.showLastTransactionsButton();
+          } else {
+            // TODO: Let the user know that we weren't able to load the accounts.
           }
-          screen.showLastTransactionsButton();
         }
       }, new Action1<Throwable>() {
         @Override
@@ -83,7 +69,8 @@ class AccountsPresenter {
           Timber.e(throwable, "Listener to account change events");
         }
       });
-    balanceExpirationSubscription = balanceManager.expiration()
+    compositeSubscription.add(subscription);
+    subscription = balanceManager.expiration()
       .observeOn(AndroidSchedulers.mainThread())
       .subscribe(new Action1<Account>() {
         @Override
@@ -96,42 +83,26 @@ class AccountsPresenter {
           Timber.e(throwable, "Listening to balance expiration events");
         }
       });
+    compositeSubscription.add(subscription);
   }
 
-  /**
-   * TODO
-   */
   void stop() {
-    if (!queryBalanceSubscription.isUnsubscribed()) {
-      queryBalanceSubscription.unsubscribe();
-    }
-    if (!balanceExpirationSubscription.isUnsubscribed()) {
-      balanceExpirationSubscription.unsubscribe();
-    }
-    if (!loadAccountsSubscription.isUnsubscribed()) {
-      loadAccountsSubscription.unsubscribe();
+    if (Utils.isNotNull(compositeSubscription)) {
+      RxUtils.unsubscribe(compositeSubscription);
+      compositeSubscription = null;
     }
   }
 
-  /**
-   * TODO
-   *
-   * @param account
-   *   TODO
-   */
   void queryBalance(@NonNull final Account account, @NonNull final String pin) {
     if (balanceManager.hasValidBalance(account)) {
       screen.setBalance(account, balanceManager.getBalance(account));
-    } else {
-      if (!queryBalanceSubscription.isUnsubscribed()) {
-        queryBalanceSubscription.unsubscribe();
-      }
-      queryBalanceSubscription = balanceManager.queryBalance(account, pin)
+    } else if (Utils.isNotNull(compositeSubscription)) {
+      final Subscription subscription = balanceManager.queryBalance(account, pin)
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Action1<ApiResult<Balance>>() {
+        .subscribe(new Action1<Result<DomainCode, Balance>>() {
           @Override
-          public void call(ApiResult<Balance> result) {
-            screen.onBalanceQueried(result.isSuccessful(), account, result.getData());
+          public void call(Result<DomainCode, Balance> result) {
+            screen.onBalanceQueried(DomainUtils.isSuccessful(result), account, result.getData());
           }
         }, new Action1<Throwable>() {
           @Override
@@ -139,6 +110,7 @@ class AccountsPresenter {
             Timber.e(throwable, "Querying the balance of an account");
           }
         });
+      compositeSubscription.add(subscription);
     }
   }
 }

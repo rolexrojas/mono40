@@ -6,6 +6,7 @@ import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.Balance;
 import com.gbh.movil.domain.Bank;
 import com.gbh.movil.domain.InitialData;
+import com.gbh.movil.domain.Result;
 import com.gbh.movil.domain.Transaction;
 
 import java.util.List;
@@ -14,18 +15,18 @@ import java.util.Set;
 import rx.Observable;
 
 /**
- * Contract that defines all the required methods to communicate with the API.
+ * TODO
  *
  * @author hecvasro
  */
 public interface ApiBridge {
   /**
-   * Gets all the available {@link Bank banks} from the API.
+   * Creates an {@link Observable observable} that emits all the associated {@link Bank banks}.
    *
-   * @return All the available {@link Bank banks} from the API.
+   * @return An {@link Observable observable} that emits all the associated {@link Bank banks}.
    */
   @NonNull
-  Observable<ApiResult<Set<Bank>>> getAllBanks();
+  Observable<Result<ApiCode, Set<Bank>>> banks();
 
   /**
    * TODO
@@ -33,7 +34,17 @@ public interface ApiBridge {
    * @return TODO
    */
   @NonNull
-  Observable<ApiResult<InitialData>> initialLoad();
+  Observable<Result<ApiCode, InitialData>> initialLoad();
+
+  /**
+   * Creates an {@link Observable observable} that emits all the registered {@link Account
+   * accounts}.
+   *
+   * @return An {@link Observable observable} that emits all the registered {@link Account
+   * accounts}.
+   */
+  @NonNull
+  Observable<Result<ApiCode, Set<Account>>> accounts();
 
   /**
    * Query the {@link Balance balance} of an {@link Account account} from the API.
@@ -41,18 +52,18 @@ public interface ApiBridge {
    * @param account
    *   {@link Account} that will be queried.
    * @param pin
-   *   User's PIN.
+   *   User's PIN code.
    *
    * @return {@link Balance balance} of an {@link Account account} from the API.
    */
   @NonNull
-  Observable<ApiResult<Balance>> queryBalance(@NonNull Account account, @NonNull String pin);
+  Observable<Result<ApiCode, Balance>> queryBalance(@NonNull Account account, @NonNull String pin);
 
   /**
-   * TODO
+   * Creates an {@link Observable observable} that emits the last transactions made.
    *
-   * @return TODO
+   * @return An {@link Observable observable} that emits the last transactions made.
    */
   @NonNull
-  Observable<ApiResult<List<Transaction>>> recentTransactions();
+  Observable<Result<ApiCode, List<Transaction>>> recentTransactions();
 }

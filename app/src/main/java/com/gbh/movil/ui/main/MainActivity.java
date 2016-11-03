@@ -45,7 +45,7 @@ public class MainActivity extends BaseActivity implements ParentScreen {
   Toolbar toolbar;
 
   @NonNull
-  public static Intent getLaunchIntent(@NonNull Context context, int additions, int removals) {
+  public static Intent getLaunchIntent(@NonNull Context context) {
     return new Intent(context, MainActivity.class);
   }
 
@@ -192,35 +192,4 @@ public class MainActivity extends BaseActivity implements ParentScreen {
       actionBar.setTitle(title);
     }
   }
-
-//  @Override
-//  public void showDialog(@NonNull String title, @NonNull String description,
-//    @NonNull String positiveOptionText,
-//    @Nullable final OnOptionClickedListener positiveOptionListener,
-//    @Nullable String neutralOptionText,
-//    @Nullable final OnOptionClickedListener neutralOptionListener) {
-//    final AlertDialog.Builder builder = new AlertDialog.Builder(this)
-//      .setCancelable(false)
-//      .setTitle(title)
-//      .setMessage(description)
-//      .setPositiveButton(positiveOptionText, new DialogInterface.OnClickListener() {
-//        @Override
-//        public void onClick(DialogInterface dialogInterface, int i) {
-//          if (positiveOptionListener != null) {
-//            positiveOptionListener.onClick();
-//          }
-//        }
-//      });
-//    if (neutralOptionText != null) {
-//      builder.setNegativeButton(neutralOptionText, new DialogInterface.OnClickListener() {
-//        @Override
-//        public void onClick(DialogInterface dialogInterface, int i) {
-//          if (neutralOptionListener != null) {
-//            neutralOptionListener.onClick();
-//          }
-//        }
-//      });
-//    }
-//    builder.show();
-//  }
 }

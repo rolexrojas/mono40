@@ -2,7 +2,6 @@ package com.gbh.movil.ui;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.data.net.NetworkHelper;
 import com.gbh.movil.domain.DataLoader;
 
 import dagger.Module;
@@ -23,7 +22,7 @@ class SplashModule {
 
   @Provides
   @ActivityScope
-  SplashPresenter providePresenter(NetworkHelper networkHelper, DataLoader dataLoader) {
-    return new SplashPresenter(screen, networkHelper, dataLoader);
+  SplashPresenter providePresenter(DataLoader dataLoader) {
+    return new SplashPresenter(screen, dataLoader);
   }
 }
