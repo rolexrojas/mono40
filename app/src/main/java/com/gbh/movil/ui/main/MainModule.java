@@ -1,11 +1,6 @@
 package com.gbh.movil.ui.main;
 
-import android.support.annotation.NonNull;
-
-import com.gbh.movil.data.MessageHelper;
-import com.gbh.movil.data.net.NetworkHelper;
 import com.gbh.movil.domain.BalanceManager;
-import com.gbh.movil.domain.DataLoader;
 import com.gbh.movil.ui.ActivityScope;
 
 import dagger.Module;
@@ -18,30 +13,9 @@ import dagger.Provides;
  */
 @Module
 class MainModule {
-  private final MainScreen screen;
-
-  MainModule(@NonNull MainScreen screen) {
-    this.screen = screen;
-  }
-
-  /**
-   * TODO
-   *
-   * @param messageHelper
-   *   TODO
-   * @param networkHelper
-   *   TODO
-   * @param dataLoader
-   *   TODO
-   * @param balanceManager
-   *   TODO
-   *
-   * @return TODO
-   */
   @Provides
   @ActivityScope
-  MainPresenter provideMainPresenter(MessageHelper messageHelper, NetworkHelper networkHelper,
-    DataLoader dataLoader, BalanceManager balanceManager) {
-    return new MainPresenter(screen, messageHelper, networkHelper, dataLoader, balanceManager);
+  MainPresenter provideMainPresenter(BalanceManager balanceManager) {
+    return new MainPresenter(balanceManager);
   }
 }

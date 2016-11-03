@@ -7,13 +7,16 @@ import java.util.Set;
 import rx.Observable;
 
 /**
- * Contract that defines all the required methods for managing {@link Bank banks} locally.
+ * TODO
  *
  * @author hecvasro
  */
 public interface BankRepository {
   /**
    * Creates a {@link Bank bank} and stores it locally.
+   * <p>
+   * <em>Note:</em> By default {@link #create(String, String, boolean)} does not operates on a
+   * particular {@link rx.Scheduler}.
    *
    * @param id
    *   {@link Bank}'s identifier.
@@ -29,6 +32,9 @@ public interface BankRepository {
 
   /**
    * Gets all the locally stored {@link Bank banks}.
+   * <p>
+   * <em>Note:</em> By default {@link #getAll()} does not operates on a particular {@link
+   * rx.Scheduler}.
    *
    * @return All the locally stored {@link Bank banks}.
    */
@@ -37,6 +43,9 @@ public interface BankRepository {
 
   /**
    * Gets the {@link Bank bank} identified by the given id.
+   * <p>
+   * <em>Note:</em> By default {@link #getById(String)} does not operates on a particular {@link
+   * rx.Scheduler}.
    *
    * @param id
    *   {@link Bank}'s identifier.

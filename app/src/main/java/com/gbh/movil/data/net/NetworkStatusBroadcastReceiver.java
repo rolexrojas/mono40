@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.gbh.movil.App;
+import com.gbh.movil.domain.NetworkHelper;
 
 import javax.inject.Inject;
 
 /**
- * TODO
+ * {@link BroadcastReceiver} implementation that gets notified every time the network status
+ * changes.
  *
  * @author hecvasro
  */
@@ -21,7 +23,7 @@ public final class NetworkStatusBroadcastReceiver extends BroadcastReceiver {
   public void onReceive(Context context, Intent intent) {
     ((App) context).getComponent().inject(this);
     if (networkHelper != null) {
-      networkHelper.checkStatus();
+      ((ConnectivityManagerNetworkHelper) networkHelper).checkStatus(); // TODO: Find a way to get rid of this cast.
     }
   }
 }

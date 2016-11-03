@@ -1,19 +1,23 @@
 package com.gbh.movil.ui.main.accounts.transactions;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.gbh.movil.App;
 import com.gbh.movil.R;
 import com.gbh.movil.data.Formatter;
 import com.gbh.movil.data.MessageHelper;
 import com.gbh.movil.domain.Transaction;
-import com.gbh.movil.ui.main.SubFragment;
+import com.gbh.movil.ui.BaseActivity;
 import com.yqritc.recyclerviewflexibledivider.FlexibleDividerDecoration;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
@@ -32,7 +36,7 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class RecentTransactionsFragment extends SubFragment implements RecentTransactionsScreen {
+public class RecentTransactionsActivity extends BaseActivity implements RecentTransactionsScreen {
   private Unbinder unbinder;
 
   private Adapter adapter;
@@ -42,12 +46,14 @@ public class RecentTransactionsFragment extends SubFragment implements RecentTra
   @Inject
   RecentTransactionsPresenter presenter;
 
+  @BindView(R.id.toolbar)
+  Toolbar toolbar;
   @BindView(R.id.recycler_view)
   RecyclerView recyclerView;
 
   @NonNull
-  public static RecentTransactionsFragment newInstance() {
-    return new RecentTransactionsFragment();
+  public static Intent getLaunchIntent(@NonNull Context context) {
+    return new Intent(context, RecentTransactionsActivity.class);
   }
 
   @Override
@@ -55,34 +61,32 @@ public class RecentTransactionsFragment extends SubFragment implements RecentTra
     super.onCreate(savedInstanceState);
     // Injects all the dependencies.
     final RecentTransactionsComponent component = DaggerRecentTransactionsComponent.builder()
-      .mainComponent(parentScreen.getComponent())
+      .appComponent(((App) getApplication()).getComponent())
       .recentTransactionsModule(new RecentTransactionsModule(this))
       .build();
     component.inject(this);
-  }
-
-  @Nullable
-  @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_recent_transactions, container, false);
-  }
-
-  @Override
-  public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
+    // Sets the content layout identifier.
+    setContentView(R.layout.activity_recent_transactions);
     // Binds all the annotated views and methods.
-    unbinder = ButterKnife.bind(this, view);
+    unbinder = ButterKnife.bind(this);
+    // Prepares the toolbar.
+    toolbar.setTitle(R.string.recent_transactions);
+    toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        onBackPressed();
+      }
+    });
     // Prepares the recycler view.
     if (adapter == null) {
       adapter = new Adapter();
     }
     recyclerView.setAdapter(adapter);
     recyclerView.setItemAnimator(null);
-    recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
-      LinearLayoutManager.VERTICAL, false));
-    final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration
-      .Builder(getContext())
+    recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,
+      false));
+    final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(this)
       .drawable(R.drawable.list_item_divider)
       .visibilityProvider(new FlexibleDividerDecoration.VisibilityProvider() {
         @Override
@@ -97,8 +101,6 @@ public class RecentTransactionsFragment extends SubFragment implements RecentTra
   @Override
   public void onStart() {
     super.onStart();
-    // Sets the title.
-    parentScreen.setTitle(messageHelper.recentTransactions());
     // Starts the presenter.
     presenter.start();
   }
@@ -111,8 +113,8 @@ public class RecentTransactionsFragment extends SubFragment implements RecentTra
   }
 
   @Override
-  public void onDestroyView() {
-    super.onDestroyView();
+  public void onDestroy() {
+    super.onDestroy();
     // Unbinds all the annotated views and methods.
     unbinder.unbind();
   }

@@ -8,10 +8,11 @@ import com.gbh.movil.domain.Bank;
 import com.gbh.movil.domain.BankAccount;
 import com.gbh.movil.domain.CreditCard;
 import com.gbh.movil.domain.InitialData;
+import com.gbh.movil.domain.Recipient;
+import com.gbh.movil.domain.Result;
 import com.gbh.movil.domain.Transaction;
 import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.domain.api.ApiCode;
-import com.gbh.movil.domain.api.ApiResult;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,10 +29,11 @@ import rx.Observable;
  * @author hecvasro
  */
 class FakeApiBridge implements ApiBridge {
-  private final Set<Bank> banks = new HashSet<>();
-  private final Set<Account> accounts = new HashSet<>();
-  private final Map<Account, Balance> balances = new HashMap<>();
   private final List<Transaction> transactions = new ArrayList<>();
+  private final Map<Account, Balance> balances = new HashMap<>();
+  private final Set<Account> accounts = new HashSet<>();
+  private final Set<Bank> banks = new HashSet<>();
+  private final Set<Recipient> recipients = new HashSet<>();
 
   FakeApiBridge() {
     Bank bank;
@@ -77,41 +79,53 @@ class FakeApiBridge implements ApiBridge {
 
   @NonNull
   @Override
-  public Observable<ApiResult<Set<Bank>>> getAllBanks() {
-    return Observable.just(new ApiResult<>(ApiCode.SUCCESS, banks))
+  public Observable<Result<ApiCode, Set<Bank>>> banks() {
+    return Observable.just(Result.create(ApiCode.OK, banks))
       .delay(2L, TimeUnit.SECONDS);
   }
 
   @NonNull
   @Override
-  public Observable<ApiResult<InitialData>> initialLoad() {
-    return Observable
-      .just(new ApiResult<>(ApiCode.SUCCESS, new InitialData(accounts, transactions)))
+  public Observable<Result<ApiCode, InitialData>> initialLoad() {
+    return Observable.just(Result.create(ApiCode.OK, new InitialData(accounts, recipients)))
       .delay(2L, TimeUnit.SECONDS);
   }
 
   @NonNull
   @Override
-  public Observable<ApiResult<Balance>> queryBalance(@NonNull Account account,
+  public Observable<Result<ApiCode, Set<Account>>> accounts() {
+    return Observable.just(Result.create(ApiCode.OK, accounts))
+      .delay(2L, TimeUnit.SECONDS);
+  }
+
+  @NonNull
+  @Override
+  public Observable<Result<ApiCode, Balance>> queryBalance(@NonNull Account account,
     @NonNull String pin) {
+    final Observable<Result<ApiCode, Balance>> observable;
     if (Integer.parseInt(pin) % 2 == 0) {
       if (balances.containsKey(account)) {
-        return Observable.just(new ApiResult<>(ApiCode.SUCCESS, balances.get(account)))
-          .delay(2L, TimeUnit.SECONDS);
+        observable = Observable.just(Result.create(ApiCode.OK, balances.get(account)));
       } else {
-        return Observable.just(new ApiResult<Balance>(ApiCode.NOT_FOUND, null))
-          .delay(2L, TimeUnit.SECONDS);
+        observable = Observable.just(Result.<ApiCode, Balance>create(ApiCode.NOT_FOUND));
       }
     } else {
-      return Observable.just(new ApiResult<Balance>(ApiCode.UNAUTHORIZED, null))
-        .delay(2L, TimeUnit.SECONDS);
+      observable = Observable.just(Result.<ApiCode, Balance>create(ApiCode.UNAUTHORIZED));
     }
+    return observable.delay(2L, TimeUnit.SECONDS);
   }
 
   @NonNull
   @Override
-  public Observable<ApiResult<List<Transaction>>> recentTransactions() {
-    return Observable.just(new ApiResult<>(ApiCode.SUCCESS, transactions))
+  public Observable<Result<ApiCode, Set<Recipient>>> recipients() {
+    return Observable.just(Result.create(ApiCode.OK, recipients))
+      .delay(2L, TimeUnit.SECONDS);
+  }
+
+  @NonNull
+  @Override
+  public Observable<Result<ApiCode, List<Transaction>>> recentTransactions() {
+    return Observable.just(Result.create(ApiCode.OK, transactions))
       .delay(2L, TimeUnit.SECONDS);
   }
 }

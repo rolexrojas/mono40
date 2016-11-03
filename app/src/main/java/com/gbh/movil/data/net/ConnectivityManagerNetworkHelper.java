@@ -4,6 +4,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 
+import com.gbh.movil.Utils;
+import com.gbh.movil.domain.NetworkHelper;
+
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
 
@@ -12,39 +15,25 @@ import rx.subjects.BehaviorSubject;
  *
  * @author hecvasro
  */
-public final class NetworkHelper {
+public final class ConnectivityManagerNetworkHelper implements NetworkHelper {
   private final ConnectivityManager connectivityManager;
 
-  /**
-   * TODO
-   */
   private final BehaviorSubject<Boolean> subject = BehaviorSubject.create();
 
-  /**
-   * TODO
-   *
-   * @param connectivityManager
-   *   TODO
-   */
-  public NetworkHelper(@NonNull ConnectivityManager connectivityManager) {
+  public ConnectivityManagerNetworkHelper(@NonNull ConnectivityManager connectivityManager) {
     this.connectivityManager = connectivityManager;
     this.checkStatus();
   }
 
-  /**
-   * TODO
-   */
   final void checkStatus() {
     final NetworkInfo info = connectivityManager.getActiveNetworkInfo();
-    subject.onNext(info != null && info.isConnected());
+    subject.onNext(Utils.isNotNull(info) && info.isConnected());
   }
 
   /**
-   * TODO
-   *
-   * @return TODO
+   * {@inheritDoc}
    */
-  @NonNull
+  @Override
   public final Observable<Boolean> status() {
     return subject.asObservable();
   }

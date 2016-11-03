@@ -1,6 +1,7 @@
 package com.gbh.movil.ui.main;
 
-import android.content.DialogInterface;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,15 +9,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Toast;
 
 import com.gbh.movil.App;
 import com.gbh.movil.R;
 import com.gbh.movil.ui.BaseActivity;
-import com.gbh.movil.ui.SplashDialogFragment;
 import com.gbh.movil.ui.main.accounts.AccountsFragment;
 import com.gbh.movil.ui.main.payments.PaymentsFragment;
 import com.gbh.movil.ui.view.widget.SlidingPaneLayout;
@@ -33,9 +31,7 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class MainActivity extends BaseActivity implements ParentScreen, MainScreen {
-  private static final String TAG_SPLASH = "splash";
-
+public class MainActivity extends BaseActivity implements ParentScreen {
   private Unbinder unbinder;
 
   private MainComponent component;
@@ -48,14 +44,12 @@ public class MainActivity extends BaseActivity implements ParentScreen, MainScre
   @BindView(R.id.toolbar)
   Toolbar toolbar;
 
-  /**
-   * TODO
-   *
-   * @param fragment
-   *   TODO
-   * @param addToBackStack
-   *   TODO
-   */
+  @NonNull
+  public static Intent getLaunchIntent(@NonNull Context context, boolean additions,
+    boolean removals) {
+    return new Intent(context, MainActivity.class);
+  }
+
   private void replaceFragment(@NonNull Fragment fragment, boolean addToBackStack) {
     final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
       .replace(R.id.fragment_container, fragment);
@@ -72,7 +66,6 @@ public class MainActivity extends BaseActivity implements ParentScreen, MainScre
     if (component == null) {
       component = DaggerMainComponent.builder()
         .appComponent(((App) getApplication()).getComponent())
-        .mainModule(new MainModule(this))
         .build();
     }
     component.inject(this);
@@ -198,81 +191,6 @@ public class MainActivity extends BaseActivity implements ParentScreen, MainScre
     final ActionBar actionBar = getSupportActionBar();
     if (actionBar != null) {
       actionBar.setTitle(title);
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void showAccountsScreen() {
-    setSubScreen(AccountsFragment.newInstance());
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void showMessage(@NonNull String message) {
-    Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void showDialog(@NonNull String title, @NonNull String description,
-    @NonNull String positiveOptionText,
-    @Nullable final OnOptionClickedListener positiveOptionListener,
-    @Nullable String neutralOptionText,
-    @Nullable final OnOptionClickedListener neutralOptionListener) {
-    final AlertDialog.Builder builder = new AlertDialog.Builder(this)
-      .setCancelable(false)
-      .setTitle(title)
-      .setMessage(description)
-      .setPositiveButton(positiveOptionText, new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialogInterface, int i) {
-          if (positiveOptionListener != null) {
-            positiveOptionListener.onClick();
-          }
-        }
-      });
-    if (neutralOptionText != null) {
-      builder.setNegativeButton(neutralOptionText, new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialogInterface, int i) {
-          if (neutralOptionListener != null) {
-            neutralOptionListener.onClick();
-          }
-        }
-      });
-    }
-    builder.show();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void showSplashScreen() {
-    final FragmentManager fragmentManager = getSupportFragmentManager();
-    if (fragmentManager.findFragmentByTag(TAG_SPLASH) == null) {
-      SplashDialogFragment.newInstance().show(fragmentManager, TAG_SPLASH);
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void hideSplashScreen() {
-    final FragmentManager fragmentManager = getSupportFragmentManager();
-    final Fragment fragment = fragmentManager.findFragmentByTag(TAG_SPLASH);
-    if (fragment != null && fragment instanceof SplashDialogFragment) {
-      fragmentManager.beginTransaction()
-        .remove(fragment)
-        .commit();
     }
   }
 }

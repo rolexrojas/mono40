@@ -1,6 +1,8 @@
 package com.gbh.movil.data.repo;
 
-import com.gbh.movil.domain.AccountRepository;
+import com.gbh.movil.domain.AccountRepo;
+import com.gbh.movil.domain.RecipientRepo;
+import com.gbh.movil.domain.TransactionRepo;
 
 import javax.inject.Singleton;
 
@@ -14,14 +16,21 @@ import dagger.Provides;
  */
 @Module
 public class RepoModule {
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
   @Provides
   @Singleton
-  AccountRepository provideAccountRepository() {
-    return new InMemoryAccountRepository();
+  AccountRepo provideAccountRepository() {
+    return new InMemoryAccountRepo();
+  }
+
+  @Provides
+  @Singleton
+  RecipientRepo provideRecipientRepository() {
+    return new InMemoryRecipientRepo();
+  }
+
+  @Provides
+  @Singleton
+  TransactionRepo provideTransactionRepository() {
+    return new InMemoryTransactionRepo();
   }
 }
