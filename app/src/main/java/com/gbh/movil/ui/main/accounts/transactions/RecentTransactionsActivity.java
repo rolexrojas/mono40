@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -14,10 +15,13 @@ import android.view.ViewGroup;
 
 import com.gbh.movil.App;
 import com.gbh.movil.R;
+import com.gbh.movil.Utils;
 import com.gbh.movil.data.Formatter;
 import com.gbh.movil.data.MessageHelper;
 import com.gbh.movil.domain.Transaction;
 import com.gbh.movil.ui.BaseActivity;
+import com.gbh.movil.ui.RefreshIndicator;
+import com.gbh.movil.ui.SwipeRefreshLayoutRefreshIndicator;
 import com.yqritc.recyclerviewflexibledivider.FlexibleDividerDecoration;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
@@ -36,10 +40,12 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class RecentTransactionsActivity extends BaseActivity implements RecentTransactionsScreen {
+public class RecentTransactionsActivity extends BaseActivity implements RecentTransactionsScreen,
+  SwipeRefreshLayout.OnRefreshListener {
   private Unbinder unbinder;
 
   private Adapter adapter;
+  private RefreshIndicator refreshIndicator;
 
   @Inject
   MessageHelper messageHelper;
@@ -48,6 +54,8 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
 
   @BindView(R.id.toolbar)
   Toolbar toolbar;
+  @BindView(R.id.swipe_refresh_layout)
+  SwipeRefreshLayout swipeRefreshLayout;
   @BindView(R.id.recycler_view)
   RecyclerView recyclerView;
 
@@ -59,12 +67,6 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    // Injects all the dependencies.
-    final RecentTransactionsComponent component = DaggerRecentTransactionsComponent.builder()
-      .appComponent(((App) getApplication()).getComponent())
-      .recentTransactionsModule(new RecentTransactionsModule(this))
-      .build();
-    component.inject(this);
     // Sets the content layout identifier.
     setContentView(R.layout.activity_recent_transactions);
     // Binds all the annotated views and methods.
@@ -78,6 +80,8 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
         onBackPressed();
       }
     });
+    // Adds a listener that gets notified every time the content must be refreshed.
+    swipeRefreshLayout.setOnRefreshListener(this);
     // Prepares the recycler view.
     if (adapter == null) {
       adapter = new Adapter();
@@ -96,6 +100,12 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
       })
       .build();
     recyclerView.addItemDecoration(divider);
+    // Injects all the dependencies.
+    final RecentTransactionsComponent component = DaggerRecentTransactionsComponent.builder()
+      .appComponent(((App) getApplication()).getComponent())
+      .recentTransactionsModule(new RecentTransactionsModule(this))
+      .build();
+    component.inject(this);
   }
 
   @Override
@@ -115,8 +125,19 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
   @Override
   public void onDestroy() {
     super.onDestroy();
+    // Removes the listener that gets notified every time the content must be refreshed.
+    swipeRefreshLayout.setOnRefreshListener(null);
     // Unbinds all the annotated views and methods.
     unbinder.unbind();
+  }
+
+  @Nullable
+  @Override
+  public RefreshIndicator getRefreshIndicator() {
+    if (Utils.isNull(refreshIndicator) && Utils.isNotNull(swipeRefreshLayout)) {
+      refreshIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
+    }
+    return refreshIndicator;
   }
 
   @Override
@@ -140,9 +161,16 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
     }
   }
 
+  @Override
+  public void onRefresh() {
+    presenter.refresh();
+  }
+
+  /**
+   * TODO
+   */
   private class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_GROUP_TITLE = 0;
-
     private static final int TYPE_TRANSACTION = 1;
 
     private final List<Object> items = new ArrayList<>();
@@ -153,9 +181,6 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
         (!((position + 1) < items.size())) || getItemViewType(position + 1) != TYPE_TRANSACTION);
     }
 
-    /**
-     * TODO
-     */
     void clear() {
       final int count = getItemCount();
       if (count > 0) {
@@ -164,12 +189,6 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
       }
     }
 
-    /**
-     * TODO
-     *
-     * @param date
-     *   TODO
-     */
     void add(@NonNull Date date) {
       if (!items.contains(date)) {
         items.add(date);
@@ -177,12 +196,6 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
       }
     }
 
-    /**
-     * TODO
-     *
-     * @param transaction
-     *   TODO
-     */
     void add(@NonNull Transaction transaction) {
       if (!items.contains(transaction)) {
         items.add(transaction);

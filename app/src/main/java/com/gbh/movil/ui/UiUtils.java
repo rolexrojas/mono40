@@ -10,7 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 
 /**
- * TODO
+ * UI utility methods.
  *
  * @author hecvasro
  */
