@@ -15,7 +15,7 @@ import android.widget.Button;
 
 import com.gbh.movil.Utils;
 import com.gbh.movil.ui.RefreshIndicator;
-import com.gbh.movil.ui.UiUtils;
+import com.gbh.movil.ui.SwipeRefreshLayoutRefreshIndicator;
 import com.gbh.movil.ui.main.AddAnotherAccountFragment;
 import com.gbh.movil.ui.main.PinConfirmationDialogFragment;
 import com.gbh.movil.R;
@@ -227,7 +227,10 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
   @Nullable
   @Override
   public RefreshIndicator getRefreshIndicator() {
-    return refreshIndicator = UiUtils.resolveRefreshIndicator(refreshIndicator, swipeRefreshLayout);
+    if (Utils.isNull(refreshIndicator) && Utils.isNotNull(swipeRefreshLayout)) {
+      refreshIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
+    }
+    return refreshIndicator;
   }
 
   /**

@@ -8,6 +8,11 @@ import android.support.annotation.Nullable;
  * @author hecvasro
  */
 public interface Refreshable {
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
   @Nullable
   RefreshIndicator getRefreshIndicator();
 }

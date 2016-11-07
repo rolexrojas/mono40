@@ -5,8 +5,6 @@ import com.gbh.movil.AppComponent;
 import dagger.Component;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 @ActivityScope

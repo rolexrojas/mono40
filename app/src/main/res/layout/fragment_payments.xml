@@ -16,9 +16,15 @@
     android:layout_marginStart="@dimen/list_item_inset"
     app:hint="@string/payment_options_search_hint"/>
   <include layout="@layout/divider"/>
-  <android.support.v7.widget.RecyclerView
-    android:id="@+id/recycler_view"
-    style="@style/List.Vertical"
+  <android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"/>
+    android:layout_height="match_parent"
+    android:enabled="false">
+    <android.support.v7.widget.RecyclerView
+      android:id="@+id/recycler_view"
+      style="@style/List.Vertical"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"/>
+  </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

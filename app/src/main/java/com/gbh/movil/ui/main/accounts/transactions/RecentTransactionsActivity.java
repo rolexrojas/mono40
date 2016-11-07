@@ -21,7 +21,7 @@ import com.gbh.movil.data.MessageHelper;
 import com.gbh.movil.domain.Transaction;
 import com.gbh.movil.ui.BaseActivity;
 import com.gbh.movil.ui.RefreshIndicator;
-import com.gbh.movil.ui.UiUtils;
+import com.gbh.movil.ui.SwipeRefreshLayoutRefreshIndicator;
 import com.yqritc.recyclerviewflexibledivider.FlexibleDividerDecoration;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
@@ -43,7 +43,6 @@ import butterknife.Unbinder;
 public class RecentTransactionsActivity extends BaseActivity implements RecentTransactionsScreen,
   SwipeRefreshLayout.OnRefreshListener {
   private Unbinder unbinder;
-
   private Adapter adapter;
   private RefreshIndicator refreshIndicator;
 
@@ -133,7 +132,10 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
   @Nullable
   @Override
   public RefreshIndicator getRefreshIndicator() {
-    return refreshIndicator = UiUtils.resolveRefreshIndicator(refreshIndicator, swipeRefreshLayout);
+    if (Utils.isNull(refreshIndicator) && Utils.isNotNull(swipeRefreshLayout)) {
+      refreshIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
+    }
+    return refreshIndicator;
   }
 
   @Override

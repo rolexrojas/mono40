@@ -9,7 +9,8 @@ import com.gbh.movil.ui.main.MainActivity;
 import javax.inject.Inject;
 
 /**
- * TODO
+ * {@link SplashScreen Screen} implementation that uses an {@link BaseActivity activity} as
+ * container.
  *
  * @author hecvasro
  */
