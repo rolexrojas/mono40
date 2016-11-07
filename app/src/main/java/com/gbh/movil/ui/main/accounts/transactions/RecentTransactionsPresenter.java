@@ -13,17 +13,15 @@ import com.gbh.movil.ui.RefreshIndicator;
 
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.observables.GroupedObservable;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
@@ -65,37 +63,6 @@ class RecentTransactionsPresenter {
             }
           }
         })
-        .map(new Func1<Result<DomainCode,List<Transaction>>, List<Transaction>>() {
-          @Override
-          public List<Transaction> call(Result<DomainCode, List<Transaction>> result) {
-            final List<Transaction> transactions = new ArrayList<>();
-            if (DomainUtils.isSuccessful(result)) {
-              screen.clear();
-              final List<Transaction> data = result.getData();
-              if (Utils.isNotNull(data)) {
-                transactions.addAll(data);
-              } else {
-                // TODO: Let the user know that have never made a transaction.
-              }
-            } else {
-              // TODO: Let the user know that loading the latest transactions failed.
-            }
-            return transactions;
-          }
-        })
-        .compose(RxUtils.<Transaction>fromList())
-        .groupBy(new Func1<Transaction, Date>() {
-          @Override
-          public Date call(Transaction transaction) {
-            final Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(transaction.getDate());
-            calendar.set(Calendar.HOUR, 0);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-            return calendar.getTime();
-          }
-        })
         .doOnUnsubscribe(new Action0() {
           @Override
           public void call() {
@@ -105,30 +72,49 @@ class RecentTransactionsPresenter {
             }
           }
         })
-        .doOnNext(new Action1<GroupedObservable<Date, Transaction>>() {
+        .subscribe(new Action1<Result<DomainCode, List<Transaction>>>() {
           @Override
-          public void call(GroupedObservable<Date, Transaction> group) {
-            final Date key = group.getKey();
-            Timber.d("Group '%1$s", key);
-            screen.add(key);
-          }
-        })
-        .flatMap(new Func1<GroupedObservable<Date, Transaction>, Observable<Transaction>>() {
-          @Override
-          public Observable<Transaction> call(GroupedObservable<Date, Transaction> group) {
-            return group.asObservable();
-          }
-        })
-        .subscribe(new Action1<Transaction>() {
-          @Override
-          public void call(Transaction transaction) {
-            Timber.d(transaction.toString());
-            screen.add(transaction);
+          public void call(Result<DomainCode, List<Transaction>> result) {
+            if (DomainUtils.isSuccessful(result)) {
+              screen.clear();
+              final List<Transaction> transactions = result.getData();
+              if (Utils.isNotNull(transactions)) {
+                Date key;
+                List<Transaction> items;
+                final List<Date> keys = new ArrayList<>();
+                final Map<Date, List<Transaction>> groups = new HashMap<>();
+                for (Transaction transaction : transactions) {
+                  key = Utils.getTime(transaction.getDate(), true);
+                  if (keys.contains(key)) {
+                    items = groups.get(key);
+                  } else {
+                    keys.add(key);
+                    items = new ArrayList<>();
+                  }
+                  items.add(transaction);
+                  groups.put(key, items);
+                }
+                for (int i = 0; i < keys.size(); i++) {
+                  key = keys.get(i);
+                  Timber.d("Group '%1$s", key);
+                  screen.add(key);
+                  for (Transaction transaction : groups.get(key)) {
+                    Timber.d(transaction.toString());
+                    screen.add(transaction);
+                  }
+                }
+              } else {
+                // TODO: Let the user know that have never made a transaction.
+              }
+            } else {
+              // TODO: Let the user know that loading the latest transactions failed.
+            }
           }
         }, new Action1<Throwable>() {
           @Override
           public void call(Throwable throwable) {
             Timber.e(throwable, "Loading the latest transactions");
+            // TODO: Let the user know that an error occurred while loading the latest transactions.
           }
         });
     }
