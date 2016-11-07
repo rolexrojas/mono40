@@ -80,6 +80,7 @@ public final class BalanceManager {
         public void call(Long interval) {
           for (Account account : balances.keySet()) {
             if ((System.currentTimeMillis() - balances.get(account).first) >= EXPIRATION_TIME) {
+              Timber.d("%1$s balance expired", account.toString());
               subject.onNext(account);
               balances.remove(account);
             }
