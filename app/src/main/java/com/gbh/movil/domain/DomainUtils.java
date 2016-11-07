@@ -29,6 +29,7 @@ public final class DomainUtils {
       public Observable<Result<DomainCode, D>> call(final Observable<Result<DomainCode, D>>
         observable) {
         return networkHelper.status()
+          .first() // TODO: Explain why this operator is used.
           .flatMap(new Func1<Boolean, Observable<Result<DomainCode, D>>>() {
             @Override
             public Observable<Result<DomainCode, D>> call(Boolean available) {

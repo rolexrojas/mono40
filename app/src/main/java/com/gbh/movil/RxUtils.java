@@ -9,7 +9,7 @@ import rx.Subscription;
 import rx.functions.Func1;
 
 /**
- * TODO
+ * ReactiveX utility methods.
  *
  * @author hecvasro
  */

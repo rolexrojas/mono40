@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * TODO
@@ -24,5 +26,23 @@ public final class Utils {
 
   public static int hashCode(@NonNull Object... objects) {
     return Arrays.hashCode(objects);
+  }
+
+  @NonNull
+  public static Date getTime(long milliseconds, boolean clearTime) {
+    final Calendar calendar = Calendar.getInstance();
+    calendar.setTimeInMillis(milliseconds);
+    if (clearTime) {
+      calendar.set(Calendar.HOUR, 0);
+      calendar.set(Calendar.MINUTE, 0);
+      calendar.set(Calendar.SECOND, 0);
+      calendar.set(Calendar.MILLISECOND, 0);
+    }
+    return calendar.getTime();
+  }
+
+  @NonNull
+  public static Date getTime(long milliseconds) {
+    return getTime(milliseconds, false);
   }
 }

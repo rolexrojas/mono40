@@ -11,7 +11,7 @@ import rx.Observable;
  *
  * @author hecvasro
  */
-public interface BankRepository {
+public interface BankRepo {
   /**
    * Creates a {@link Bank bank} and stores it locally.
    * <p>

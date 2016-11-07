@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import com.gbh.movil.domain.Result;
 
 /**
- * Api utilities methods.
+ * Api utility methods.
  *
  * @author hecvasro
  */
