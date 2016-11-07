@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.gbh.movil.Utils;
+import com.gbh.movil.ui.RefreshIndicator;
+import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.main.AddAnotherAccountFragment;
 import com.gbh.movil.ui.main.PinConfirmationDialogFragment;
 import com.gbh.movil.R;
@@ -41,22 +44,22 @@ import timber.log.Timber;
  * @author hecvasro
  */
 public class AccountsFragment extends SubFragment implements AccountsScreen,
-  View.OnLayoutChangeListener, ShowRecentTransactionsViewHolder.Listener {
+  ShowRecentTransactionsViewHolder.Listener {
   private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
 
   private Unbinder unbinder;
-
   private Adapter adapter;
+  private RefreshIndicator refreshIndicator;
 
   @Inject
   MessageHelper messageHelper;
-
   @Inject
   AccountsPresenter presenter;
 
+  @BindView(R.id.swipe_refresh_layout)
+  SwipeRefreshLayout swipeRefreshLayout;
   @BindView(R.id.recycler_view)
   RecyclerView recyclerView;
-
   @BindView(R.id.button_add_another_account)
   Button addAnotherAccountButton;
 
@@ -101,17 +104,6 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
     parentScreen.setSubScreen(AddAnotherAccountFragment.newInstance());
   }
 
-  @Override
-  public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    // Injects all the annotated dependencies.
-    final AccountsComponent component = DaggerAccountsComponent.builder()
-      .mainComponent(parentScreen.getComponent())
-      .accountsModule(new AccountsModule(this))
-      .build();
-    component.inject(this);
-  }
-
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -125,20 +117,42 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
     // Prepares the recycler view.
-    if (Utils.isNull(adapter)) {
-      adapter = new Adapter(this);
-    }
+    adapter = new Adapter(this);
     recyclerView.setAdapter(adapter);
+    recyclerView.setHasFixedSize(true);
     recyclerView.setItemAnimator(null);
-    recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
-      LinearLayoutManager.VERTICAL, false));
+    final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),
+      LinearLayoutManager.VERTICAL, false) {
+      @Override
+      public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+        super.onLayoutChildren(recycler, state);
+        final int lastChildPosition = findLastVisibleItemPosition();
+        if (lastChildPosition >= 0) {
+          final View lastChild = recycler.getViewForPosition(lastChildPosition);
+          if (Utils.isNotNull(lastChild) && Utils.isNotNull(addAnotherAccountButton)) {
+            final int lastChildBottom = lastChild.getBottom();
+            final int buttonTop = addAnotherAccountButton.getTop();
+            final boolean flag = lastChildBottom < buttonTop;
+            addAnotherAccountButton.setEnabled(flag);
+            addAnotherAccountButton.setVisibility(flag ? View.VISIBLE : View.INVISIBLE);
+            Timber.d("RecyclerView.LastChild.Bottom (%1$d) < Button.Top (%2$d) = %3$s",
+              lastChildBottom, buttonTop, flag);
+          }
+        }
+      }
+    };
+    recyclerView.setLayoutManager(layoutManager);
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration
       .Builder(getContext())
       .drawable(R.drawable.list_item_divider)
       .build();
     recyclerView.addItemDecoration(divider);
-    // Adds a listener that gets notified every time the layout of the recycler view changes.
-    recyclerView.addOnLayoutChangeListener(this);
+    // Injects all the annotated dependencies.
+    final AccountsComponent component = DaggerAccountsComponent.builder()
+      .mainComponent(parentScreen.getComponent())
+      .accountsModule(new AccountsModule(this))
+      .build();
+    component.inject(this);
   }
 
   @Override
@@ -160,8 +174,6 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
   @Override
   public void onDestroyView() {
     super.onDestroyView();
-    // Adds a listener that gets notified every time the layout of the recycler view changes.
-    recyclerView.removeOnLayoutChangeListener(this);
     // Unbinds all the annotated views and methods.
     unbinder.unbind();
   }
@@ -205,20 +217,14 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
   }
 
   @Override
-  public void onLayoutChange(View view, int left, int top, int right, int bottom,
-    int oldLeft, int oldTop, int oldRight, int oldBottom) {
-    if (view == recyclerView && addAnotherAccountButton != null) {
-      final int buttonTop = addAnotherAccountButton.getTop();
-      final boolean flag = bottom < buttonTop;
-      addAnotherAccountButton.setEnabled(flag);
-      addAnotherAccountButton.setVisibility(flag ? View.VISIBLE : View.INVISIBLE);
-      Timber.d("RecyclerView.Bottom (%1$d) < Button.Top (%2$d) = %3$s", bottom, buttonTop, flag);
-    }
-  }
-
-  @Override
   public void onShowRecentTransactionsButtonClicked() {
     startActivity(RecentTransactionsActivity.getLaunchIntent(getContext()));
+  }
+
+  @Nullable
+  @Override
+  public RefreshIndicator getRefreshIndicator() {
+    return refreshIndicator = UiUtils.resolveRefreshIndicator(refreshIndicator, swipeRefreshLayout);
   }
 
   /**
@@ -227,7 +233,6 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
   private class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     implements AccountItemViewHolder.Listener {
     private static final int TYPE_ACCOUNT = 0;
-
     private static final int TYPE_LAST_TRANSACTIONS = 1;
 
     private final ShowRecentTransactionsViewHolder.Listener listener;
