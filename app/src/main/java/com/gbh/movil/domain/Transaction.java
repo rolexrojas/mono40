@@ -124,8 +124,8 @@ public class Transaction {
 
   @Override
   public boolean equals(Object object) {
-    return object != null && (super.equals(object) || (object instanceof Transaction &&
-      ((Transaction) object).type.equals(type) && ((Transaction) object).name.equals(name)));
+    return super.equals(object) || (Utils.isNotNull(object) && object instanceof Transaction
+      && ((Transaction) object).type.equals(type) && ((Transaction) object).name.equals(name));
   }
 
   @Override

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.gbh.movil.Utils;
 import com.gbh.movil.ui.main.AddAnotherAccountFragment;
 import com.gbh.movil.ui.main.PinConfirmationDialogFragment;
 import com.gbh.movil.R;
@@ -78,7 +79,7 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
   private void queryBalance(@NonNull final Account account, final int x, final int y) {
     final FragmentManager manager = getChildFragmentManager();
     final Fragment fragment = manager.findFragmentByTag(TAG_PIN_CONFIRMATION);
-    if (fragment != null && fragment instanceof PinConfirmationDialogFragment) {
+    if (Utils.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
       ((PinConfirmationDialogFragment) fragment).dismiss();
     }
     Timber.d("X = %1$d, Y = %2$d", x, y);
@@ -124,7 +125,7 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
     // Prepares the recycler view.
-    if (adapter == null) {
+    if (Utils.isNull(adapter)) {
       adapter = new Adapter(this);
     }
     recyclerView.setAdapter(adapter);
@@ -167,14 +168,14 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
 
   @Override
   public void clear() {
-    if (adapter != null) {
+    if (Utils.isNotNull(adapter)) {
       adapter.clear();
     }
   }
 
   @Override
   public void add(@NonNull Account account) {
-    if (adapter != null) {
+    if (Utils.isNotNull(adapter)) {
       adapter.add(account);
     }
   }
@@ -183,7 +184,7 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
   public void onBalanceQueried(boolean succeeded, @NonNull Account account,
     @Nullable Balance balance) {
     final Fragment fragment = getChildFragmentManager().findFragmentByTag(TAG_PIN_CONFIRMATION);
-    if (fragment != null && fragment instanceof PinConfirmationDialogFragment) {
+    if (Utils.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
       ((PinConfirmationDialogFragment) fragment).resolve(succeeded);
     }
     setBalance(account, balance);
@@ -191,14 +192,14 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
 
   @Override
   public void setBalance(@NonNull Account account, @Nullable Balance balance) {
-    if (adapter != null) {
+    if (Utils.isNotNull(adapter)) {
       adapter.setBalance(account, balance);
     }
   }
 
   @Override
   public void showLastTransactionsButton() {
-    if (adapter != null) {
+    if (Utils.isNotNull(adapter)) {
       adapter.showLastTransactionsItem();
     }
   }
@@ -277,7 +278,7 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
      */
     final void add(@NonNull Account account) {
       final AccountItem item = findByAccount(account);
-      if (item == null) {
+      if (Utils.isNull(item)) {
         items.add(new AccountItem(account));
         notifyItemInserted(getItemCount());
       }
@@ -293,7 +294,7 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
      */
     final void setBalance(@NonNull Account account, @Nullable Balance balance) {
       final AccountItem item = findByAccount(account);
-      if (item != null) {
+      if (Utils.isNotNull(item)) {
         item.setBalance(balance);
         notifyItemChanged(items.indexOf(item));
       }

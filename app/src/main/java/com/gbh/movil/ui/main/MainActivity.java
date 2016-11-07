@@ -14,6 +14,7 @@ import android.view.View;
 
 import com.gbh.movil.App;
 import com.gbh.movil.R;
+import com.gbh.movil.Utils;
 import com.gbh.movil.ui.BaseActivity;
 import com.gbh.movil.ui.main.accounts.AccountsFragment;
 import com.gbh.movil.ui.main.payments.PaymentsFragment;
@@ -63,7 +64,7 @@ public class MainActivity extends BaseActivity implements ParentScreen {
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // Injects all the annotated dependencies.
-    if (component == null) {
+    if (Utils.isNull(component)) {
       component = DaggerMainComponent.builder()
         .appComponent(((App) getApplication()).getComponent())
         .build();
@@ -76,7 +77,7 @@ public class MainActivity extends BaseActivity implements ParentScreen {
     // Prepares the action bar.
     setSupportActionBar(toolbar);
     final ActionBar actionBar = getSupportActionBar();
-    if (actionBar != null) {
+    if (Utils.isNotNull(actionBar)) {
       actionBar.setDisplayShowTitleEnabled(true);
     }
     // Prepares the toolbar.
@@ -142,7 +143,7 @@ public class MainActivity extends BaseActivity implements ParentScreen {
         subFragment = null;
         break;
     }
-    if (subFragment != null) {
+    if (Utils.isNotNull(subFragment)) {
       setSubScreen(subFragment);
     }
   }
@@ -171,8 +172,8 @@ public class MainActivity extends BaseActivity implements ParentScreen {
   @Override
   public void setSubScreen(@NonNull SubFragment subFragment) {
     final FragmentManager manager = getSupportFragmentManager();
-    final Fragment currentSubFragment = manager.findFragmentById(R.id.fragment_container);
-    if (currentSubFragment == null || currentSubFragment.getClass() != subFragment.getClass()) {
+    final Fragment currentFragment = manager.findFragmentById(R.id.fragment_container);
+    if (Utils.isNull(currentFragment) || currentFragment.getClass() != subFragment.getClass()) {
       manager.beginTransaction()
         .setCustomAnimations(R.anim.fragment_transition_enter_sibling,
           R.anim.fragment_transition_exit_sibling, R.anim.fragment_transition_enter_sibling,
@@ -189,7 +190,7 @@ public class MainActivity extends BaseActivity implements ParentScreen {
   @Override
   public void setTitle(@Nullable String title) {
     final ActionBar actionBar = getSupportActionBar();
-    if (actionBar != null) {
+    if (Utils.isNotNull(actionBar)) {
       actionBar.setTitle(title);
     }
   }

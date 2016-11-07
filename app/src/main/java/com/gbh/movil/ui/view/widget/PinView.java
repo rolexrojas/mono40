@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.gbh.movil.R;
+import com.gbh.movil.Utils;
 import com.gbh.movil.ui.view.BaseAnimatorListener;
 
 import java.util.ArrayList;
@@ -81,7 +82,7 @@ public class PinView extends LinearLayout {
    */
   private void showCursor() {
     if (!isCursorVisible()) {
-      if (cursorAnimator == null) {
+      if (Utils.isNull(cursorAnimator)) {
         cursorAnimator = ObjectAnimator.ofFloat(cursor, ANIMATION_PROPERTY_ALPHA, 1F, 0F);
         cursorAnimator.setDuration(500L);
         cursorAnimator.setRepeatMode(ValueAnimator.REVERSE);
@@ -98,7 +99,7 @@ public class PinView extends LinearLayout {
   private void hideCursor() {
     if (isCursorVisible()) {
       cursor.setVisibility(View.GONE);
-      if (cursorAnimator != null) {
+      if (Utils.isNotNull(cursorAnimator)) {
         cursorAnimator.cancel();
       }
     }
@@ -110,7 +111,7 @@ public class PinView extends LinearLayout {
    * @return TODO
    */
   private boolean isLoading() {
-    return loadAnimator != null && loadAnimator.isRunning();
+    return Utils.isNotNull(loadAnimator) && loadAnimator.isRunning();
   }
 
   /**
@@ -119,7 +120,7 @@ public class PinView extends LinearLayout {
   private void startLoading() {
     if (!isLoading() && !isResolving()) {
       mustRestartLoading = true;
-      if (loadAnimator == null) {
+      if (Utils.isNull(loadAnimator)) {
         View dot;
         Animator currentFadeInAnimator;
         Animator currentFadeOutAnimator;
@@ -131,7 +132,7 @@ public class PinView extends LinearLayout {
           dot = dots[i];
           currentFadeInAnimator = ObjectAnimator.ofFloat(dot, ANIMATION_PROPERTY_ALPHA, 1F);
           currentFadeOutAnimator = ObjectAnimator.ofFloat(dot, ANIMATION_PROPERTY_ALPHA, 0F);
-          if (previousFadeInAnimator == null && previousFadeOutAnimator == null) {
+          if (Utils.isNull(previousFadeInAnimator) && Utils.isNull(previousFadeOutAnimator)) {
             blinkAnimator.play(currentFadeInAnimator);
           } else {
             blinkAnimator.play(currentFadeInAnimator).after(previousFadeInAnimator);
@@ -140,7 +141,7 @@ public class PinView extends LinearLayout {
               blinkAnimator.play(currentFadeOutAnimator).after(previousFadeOutAnimator);
             }
           }
-          if (previousFadeOutAnimator == null) {
+          if (Utils.isNull(previousFadeOutAnimator)) {
             fadeOutAnimator.play(currentFadeOutAnimator);
           } else {
             fadeOutAnimator.play(currentFadeOutAnimator).after(previousFadeOutAnimator);
@@ -163,7 +164,7 @@ public class PinView extends LinearLayout {
           @Override
           public void onAnimationStart(Animator animator) {
             Timber.d("PIN confirmation started");
-            if (listener != null) {
+            if (Utils.isNotNull(listener)) {
               listener.onConfirmationStarted(TextUtils.join("", digits));
             }
           }
@@ -245,7 +246,7 @@ public class PinView extends LinearLayout {
    * TODO
    */
   private void initializeFailureResolveAnimator() {
-    if (failureResolveAnimator == null) {
+    if (Utils.isNull(failureResolveAnimator)) {
       int i;
       View dot;
       Animator currentFadeInAnimator;
@@ -254,7 +255,7 @@ public class PinView extends LinearLayout {
       for (i = 0; i < DEFAULT_MAX_LENGTH; i++) {
         dot = dots[i];
         currentFadeInAnimator = ObjectAnimator.ofFloat(dot, ANIMATION_PROPERTY_ALPHA, 1F);
-        if (previousFadeInAnimator == null) {
+        if (Utils.isNull(previousFadeInAnimator)) {
           fadeInAnimator.play(currentFadeInAnimator);
         } else {
           fadeInAnimator.play(currentFadeInAnimator).after(previousFadeInAnimator);
@@ -298,7 +299,7 @@ public class PinView extends LinearLayout {
    * @return TODO
    */
   private boolean isResolving() {
-    return resolveAnimator != null && resolveAnimator.isRunning();
+    return Utils.isNotNull(resolveAnimator) && resolveAnimator.isRunning();
   }
 
   /**
@@ -393,7 +394,7 @@ public class PinView extends LinearLayout {
    */
   public void resolve(final boolean succeeded) {
     if (isLoading() && !isResolving()) {
-      if (resolveAnimator != null) {
+      if (Utils.isNotNull(resolveAnimator)) {
         if (resolveAnimator.isRunning()) {
           resolveAnimator.cancel();
         }
@@ -411,7 +412,7 @@ public class PinView extends LinearLayout {
         public void onAnimationEnd(Animator animator) {
           Timber.d("PIN confirmation finished");
           digits.clear();
-          if (listener != null) {
+          if (Utils.isNotNull(listener)) {
             listener.onConfirmationFinished(succeeded);
           }
           if (!succeeded) {

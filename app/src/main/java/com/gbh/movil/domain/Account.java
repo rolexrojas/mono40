@@ -2,6 +2,8 @@ package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
 
+import com.gbh.movil.Utils;
+
 /**
  * Abstract account representation.
  *
@@ -144,7 +146,7 @@ public abstract class Account {
 
   @Override
   public boolean equals(Object object) {
-    return super.equals(object) || (object != null && object instanceof Account &&
+    return super.equals(object) || (Utils.isNotNull(object) && object instanceof Account &&
       ((Account) object).type == type && ((Account) object).alias.equals(alias));
   }
 

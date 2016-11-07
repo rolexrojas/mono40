@@ -2,6 +2,8 @@ package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
 
+import com.gbh.movil.Utils;
+
 /**
  * Biller representation.
  *
@@ -52,7 +54,7 @@ public class Biller {
 
   @Override
   public boolean equals(Object object) {
-    return super.equals(object) || (object != null && object instanceof Biller
+    return super.equals(object) || (Utils.isNotNull(object) && object instanceof Biller
       && ((Biller) object).id.equals(id));
   }
 

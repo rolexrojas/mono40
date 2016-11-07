@@ -121,7 +121,7 @@ public class InvoiceRecipient extends Recipient {
 
   @Override
   public boolean equals(Object object) {
-    return super.equals(object) || (object != null && object instanceof InvoiceRecipient
+    return super.equals(object) || (Utils.isNotNull(object) && object instanceof InvoiceRecipient
       && ((InvoiceRecipient) object).biller.equals(biller)
       && ((InvoiceRecipient) object).contract.equals(contract));
   }

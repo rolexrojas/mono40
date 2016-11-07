@@ -83,7 +83,7 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
     // Adds a listener that gets notified every time the content must be refreshed.
     swipeRefreshLayout.setOnRefreshListener(this);
     // Prepares the recycler view.
-    if (adapter == null) {
+    if (Utils.isNull(adapter)) {
       adapter = new Adapter();
     }
     recyclerView.setAdapter(adapter);
@@ -142,21 +142,21 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
 
   @Override
   public void clear() {
-    if (adapter != null) {
+    if (Utils.isNotNull(adapter)) {
       adapter.clear();
     }
   }
 
   @Override
   public void add(@NonNull Date date) {
-    if (adapter != null) {
+    if (Utils.isNotNull(adapter)) {
       adapter.add(date);
     }
   }
 
   @Override
   public void add(@NonNull Transaction transaction) {
-    if (adapter != null) {
+    if (Utils.isNotNull(adapter)) {
       adapter.add(transaction);
     }
   }

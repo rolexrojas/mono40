@@ -14,19 +14,11 @@ import timber.log.Timber;
  * @author hecvasro
  */
 public final class App extends Application {
-  /**
-   * TODO
-   */
   private AppComponent component;
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
   @NonNull
   public final AppComponent getComponent() {
-    if (component == null) {
+    if (Utils.isNull(component)) {
       component = DaggerAppComponent.builder()
         .appModule(new AppModule(this))
         .build();

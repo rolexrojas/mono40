@@ -27,7 +27,7 @@ public class ContactRecipient extends Recipient {
 
   @Override
   public boolean equals(Object object) {
-    return super.equals(object) || (object != null && object instanceof ContactRecipient
+    return super.equals(object) || (Utils.isNotNull(object) && object instanceof ContactRecipient
       && ((ContactRecipient) object).contact.equals(contact));
   }
 

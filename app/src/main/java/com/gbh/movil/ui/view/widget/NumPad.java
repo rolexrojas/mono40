@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.gbh.movil.R;
+import com.gbh.movil.Utils;
 
 import java.util.List;
 
@@ -89,7 +90,7 @@ public class NumPad extends LinearLayout {
   void onTextButtonClicked(@NonNull Button button) {
     final String content = button.getText().toString();
     Timber.d("Text (%1$s) button clicked", content);
-    if (listener != null) {
+    if (Utils.isNotNull(listener)) {
       listener.onTextButtonClicked(content);
     }
   }
@@ -100,7 +101,7 @@ public class NumPad extends LinearLayout {
   @OnClick(R.id.num_pad_button_delete)
   void onDeleteButtonClicked() {
     Timber.d("Delete button clicked");
-    if (listener != null) {
+    if (Utils.isNotNull(listener)) {
       listener.onDeleteButtonClicked();
     }
   }

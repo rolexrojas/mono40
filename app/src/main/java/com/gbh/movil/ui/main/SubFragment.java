@@ -10,9 +10,6 @@ import android.support.v4.app.Fragment;
  * @author hecvasro
  */
 public abstract class SubFragment extends Fragment {
-  /**
-   * TODO
-   */
   protected ParentScreen parentScreen;
 
   @Override

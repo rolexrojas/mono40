@@ -3,6 +3,8 @@ package com.gbh.movil.domain;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import com.gbh.movil.Utils;
+
 /**
  * Contact representation.
  *
@@ -70,7 +72,7 @@ public class Contact {
 
   @Override
   public boolean equals(Object object) {
-    return super.equals(object) || (object != null && object instanceof Contact
+    return super.equals(object) || (Utils.isNotNull(object) && object instanceof Contact
       && ((Contact) object).phoneNumber.equals(phoneNumber));
   }
 
