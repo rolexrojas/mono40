@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.gbh.movil.Utils;
+import com.gbh.movil.ui.RefreshIndicator;
+import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.main.AddAnotherAccountFragment;
 import com.gbh.movil.ui.main.PinConfirmationDialogFragment;
 import com.gbh.movil.R;
@@ -40,22 +44,22 @@ import timber.log.Timber;
  * @author hecvasro
  */
 public class AccountsFragment extends SubFragment implements AccountsScreen,
-  View.OnLayoutChangeListener, ShowRecentTransactionsViewHolder.Listener {
+  ShowRecentTransactionsViewHolder.Listener {
   private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
 
   private Unbinder unbinder;
-
   private Adapter adapter;
+  private RefreshIndicator refreshIndicator;
 
   @Inject
   MessageHelper messageHelper;
-
   @Inject
   AccountsPresenter presenter;
 
+  @BindView(R.id.swipe_refresh_layout)
+  SwipeRefreshLayout swipeRefreshLayout;
   @BindView(R.id.recycler_view)
   RecyclerView recyclerView;
-
   @BindView(R.id.button_add_another_account)
   Button addAnotherAccountButton;
 
@@ -78,7 +82,7 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
   private void queryBalance(@NonNull final Account account, final int x, final int y) {
     final FragmentManager manager = getChildFragmentManager();
     final Fragment fragment = manager.findFragmentByTag(TAG_PIN_CONFIRMATION);
-    if (fragment != null && fragment instanceof PinConfirmationDialogFragment) {
+    if (Utils.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
       ((PinConfirmationDialogFragment) fragment).dismiss();
     }
     Timber.d("X = %1$d, Y = %2$d", x, y);
@@ -100,17 +104,6 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
     parentScreen.setSubScreen(AddAnotherAccountFragment.newInstance());
   }
 
-  @Override
-  public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    // Injects all the annotated dependencies.
-    final AccountsComponent component = DaggerAccountsComponent.builder()
-      .mainComponent(parentScreen.getComponent())
-      .accountsModule(new AccountsModule(this))
-      .build();
-    component.inject(this);
-  }
-
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -124,20 +117,45 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
     // Prepares the recycler view.
-    if (adapter == null) {
-      adapter = new Adapter(this);
-    }
+    adapter = new Adapter(this);
     recyclerView.setAdapter(adapter);
+    recyclerView.setHasFixedSize(true);
     recyclerView.setItemAnimator(null);
-    recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
-      LinearLayoutManager.VERTICAL, false));
+    final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),
+      LinearLayoutManager.VERTICAL, false) {
+      @Override
+      public void onLayoutCompleted(RecyclerView.State state) {
+        super.onLayoutCompleted(state);
+        // Determines whether the add another account button must be visible or not. It will only be
+        // visible if the bottom of the last child of the recycler view does not collide with the
+        // top of the add another account button.
+        final int lastChildPosition = findLastVisibleItemPosition();
+        if (lastChildPosition >= 0) {
+          final View lastChild = recyclerView.getChildAt(lastChildPosition);
+          if (Utils.isNotNull(lastChild) && Utils.isNotNull(addAnotherAccountButton)) {
+            final int lastChildBottom = lastChild.getBottom();
+            final int buttonTop = addAnotherAccountButton.getTop();
+            final boolean flag = lastChildBottom < buttonTop;
+            addAnotherAccountButton.setEnabled(flag);
+            addAnotherAccountButton.setVisibility(flag ? View.VISIBLE : View.INVISIBLE);
+            Timber.d("RecyclerView.LastChild.Bottom (%1$d) < Button.Top (%2$d) = %3$s",
+              lastChildBottom, buttonTop, flag);
+          }
+        }
+      }
+    };
+    recyclerView.setLayoutManager(layoutManager);
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration
       .Builder(getContext())
       .drawable(R.drawable.list_item_divider)
       .build();
     recyclerView.addItemDecoration(divider);
-    // Adds a listener that gets notified every time the layout of the recycler view changes.
-    recyclerView.addOnLayoutChangeListener(this);
+    // Injects all the annotated dependencies.
+    final AccountsComponent component = DaggerAccountsComponent.builder()
+      .mainComponent(parentScreen.getComponent())
+      .accountsModule(new AccountsModule(this))
+      .build();
+    component.inject(this);
   }
 
   @Override
@@ -159,22 +177,20 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
   @Override
   public void onDestroyView() {
     super.onDestroyView();
-    // Adds a listener that gets notified every time the layout of the recycler view changes.
-    recyclerView.removeOnLayoutChangeListener(this);
     // Unbinds all the annotated views and methods.
     unbinder.unbind();
   }
 
   @Override
   public void clear() {
-    if (adapter != null) {
+    if (Utils.isNotNull(adapter)) {
       adapter.clear();
     }
   }
 
   @Override
   public void add(@NonNull Account account) {
-    if (adapter != null) {
+    if (Utils.isNotNull(adapter)) {
       adapter.add(account);
     }
   }
@@ -183,7 +199,7 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
   public void onBalanceQueried(boolean succeeded, @NonNull Account account,
     @Nullable Balance balance) {
     final Fragment fragment = getChildFragmentManager().findFragmentByTag(TAG_PIN_CONFIRMATION);
-    if (fragment != null && fragment instanceof PinConfirmationDialogFragment) {
+    if (Utils.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
       ((PinConfirmationDialogFragment) fragment).resolve(succeeded);
     }
     setBalance(account, balance);
@@ -191,27 +207,15 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
 
   @Override
   public void setBalance(@NonNull Account account, @Nullable Balance balance) {
-    if (adapter != null) {
+    if (Utils.isNotNull(adapter)) {
       adapter.setBalance(account, balance);
     }
   }
 
   @Override
   public void showLastTransactionsButton() {
-    if (adapter != null) {
+    if (Utils.isNotNull(adapter)) {
       adapter.showLastTransactionsItem();
-    }
-  }
-
-  @Override
-  public void onLayoutChange(View view, int left, int top, int right, int bottom,
-    int oldLeft, int oldTop, int oldRight, int oldBottom) {
-    if (view == recyclerView && addAnotherAccountButton != null) {
-      final int buttonTop = addAnotherAccountButton.getTop();
-      final boolean flag = bottom < buttonTop;
-      addAnotherAccountButton.setEnabled(flag);
-      addAnotherAccountButton.setVisibility(flag ? View.VISIBLE : View.INVISIBLE);
-      Timber.d("RecyclerView.Bottom (%1$d) < Button.Top (%2$d) = %3$s", bottom, buttonTop, flag);
     }
   }
 
@@ -220,13 +224,18 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
     startActivity(RecentTransactionsActivity.getLaunchIntent(getContext()));
   }
 
+  @Nullable
+  @Override
+  public RefreshIndicator getRefreshIndicator() {
+    return refreshIndicator = UiUtils.resolveRefreshIndicator(refreshIndicator, swipeRefreshLayout);
+  }
+
   /**
    * TODO
    */
   private class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     implements AccountItemViewHolder.Listener {
     private static final int TYPE_ACCOUNT = 0;
-
     private static final int TYPE_LAST_TRANSACTIONS = 1;
 
     private final ShowRecentTransactionsViewHolder.Listener listener;
@@ -277,7 +286,7 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
      */
     final void add(@NonNull Account account) {
       final AccountItem item = findByAccount(account);
-      if (item == null) {
+      if (Utils.isNull(item)) {
         items.add(new AccountItem(account));
         notifyItemInserted(getItemCount());
       }
@@ -293,7 +302,7 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
      */
     final void setBalance(@NonNull Account account, @Nullable Balance balance) {
       final AccountItem item = findByAccount(account);
-      if (item != null) {
+      if (Utils.isNotNull(item)) {
         item.setBalance(balance);
         notifyItemChanged(items.indexOf(item));
       }

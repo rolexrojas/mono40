@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gbh.movil.R;
+import com.gbh.movil.Utils;
 import com.gbh.movil.ui.FullScreenDialogFragment;
 import com.gbh.movil.ui.view.BaseAnimatorListener;
 import com.gbh.movil.ui.view.widget.NumPad;
@@ -126,8 +127,8 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    final Bundle bundle = savedInstanceState != null ? savedInstanceState : getArguments();
-    if (bundle != null) {
+    final Bundle bundle = Utils.isNotNull(savedInstanceState) ? savedInstanceState : getArguments();
+    if (Utils.isNotNull(bundle)) {
       if (!bundle.containsKey(KEY_CENTER_X)) {
         throw new NullPointerException("Center X must be specified as an argument");
       } else if (!bundle.containsKey(KEY_CENTER_Y)) {

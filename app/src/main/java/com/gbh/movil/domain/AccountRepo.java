@@ -15,8 +15,8 @@ import rx.Observable;
 public interface AccountRepo {
   /**
    * Creates an {@link Observable observable} that saves all the given {@link Account accounts}
-   * locally, emits them and if there're any additions and/or any removals compared to what was
-   * already saved locally.
+   * locally, emits them and a {@link Pair pair} of {@link Boolean booleans} that indicates if
+   * there're any additions and/or removals compared to what was already saved locally.
    * <p>
    * If any of the given {@link Account accounts} already exists, it will be updated.
    * <p>
@@ -27,8 +27,8 @@ public interface AccountRepo {
    *   {@link Account Accounts} that will be saved.
    *
    * @return An {@link Observable observable} that saves all the given {@link Account accounts}
-   * locally, emits them and if there're any additions and/or any removals compared to what was
-   * already saved locally.
+   * locally, emits them and a {@link Pair pair} of {@link Boolean booleans} that indicates if
+   * there're any additions and/or removals compared to what was already saved locally.
    */
   @NonNull
   Observable<Pair<Set<Account>, Pair<Boolean, Boolean>>> saveAll(@NonNull Set<Account> accounts);

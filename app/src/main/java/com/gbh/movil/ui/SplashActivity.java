@@ -40,8 +40,8 @@ public class SplashActivity extends BaseActivity implements SplashScreen {
   }
 
   @Override
-  public void finish(boolean additions, boolean removals) {
-    startActivity(MainActivity.getLaunchIntent(this, additions, removals));
+  public void finish(boolean wereAccountAdditions, boolean wereAccountRemovals) {
+    startActivity(MainActivity.getLaunchIntent(this, wereAccountAdditions, wereAccountRemovals));
     finish();
   }
 }

@@ -11,11 +11,13 @@ import com.gbh.movil.domain.DataLoader;
 import com.gbh.movil.domain.DomainCode;
 import com.gbh.movil.domain.DomainUtils;
 import com.gbh.movil.domain.Result;
+import com.gbh.movil.ui.UiUtils;
 
 import java.util.Set;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
@@ -44,6 +46,18 @@ class AccountsPresenter {
     Subscription subscription;
     subscription = dataLoader.accounts()
       .observeOn(AndroidSchedulers.mainThread())
+      .doOnSubscribe(new Action0() {
+        @Override
+        public void call() {
+          UiUtils.showRefreshIndicator(screen);
+        }
+      })
+      .doOnUnsubscribe(new Action0() {
+        @Override
+        public void call() {
+          UiUtils.hideRefreshIndicator(screen);
+        }
+      })
       .subscribe(new Action1<Result<DomainCode, Set<Account>>>() {
         @Override
         public void call(Result<DomainCode, Set<Account>> result) {
@@ -60,7 +74,7 @@ class AccountsPresenter {
             }
             screen.showLastTransactionsButton();
           } else {
-            // TODO: Let the user know that we weren't able to load the accounts.
+            // TODO: Let the user know that the loading all his account failed.
           }
         }
       }, new Action1<Throwable>() {

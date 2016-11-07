@@ -21,7 +21,7 @@ import com.gbh.movil.data.MessageHelper;
 import com.gbh.movil.domain.Transaction;
 import com.gbh.movil.ui.BaseActivity;
 import com.gbh.movil.ui.RefreshIndicator;
-import com.gbh.movil.ui.SwipeRefreshLayoutRefreshIndicator;
+import com.gbh.movil.ui.UiUtils;
 import com.yqritc.recyclerviewflexibledivider.FlexibleDividerDecoration;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
@@ -83,10 +83,9 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
     // Adds a listener that gets notified every time the content must be refreshed.
     swipeRefreshLayout.setOnRefreshListener(this);
     // Prepares the recycler view.
-    if (adapter == null) {
-      adapter = new Adapter();
-    }
+    adapter = new Adapter();
     recyclerView.setAdapter(adapter);
+    recyclerView.setHasFixedSize(true);
     recyclerView.setItemAnimator(null);
     recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,
       false));
@@ -134,29 +133,26 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
   @Nullable
   @Override
   public RefreshIndicator getRefreshIndicator() {
-    if (Utils.isNull(refreshIndicator) && Utils.isNotNull(swipeRefreshLayout)) {
-      refreshIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
-    }
-    return refreshIndicator;
+    return refreshIndicator = UiUtils.resolveRefreshIndicator(refreshIndicator, swipeRefreshLayout);
   }
 
   @Override
   public void clear() {
-    if (adapter != null) {
+    if (Utils.isNotNull(adapter)) {
       adapter.clear();
     }
   }
 
   @Override
   public void add(@NonNull Date date) {
-    if (adapter != null) {
+    if (Utils.isNotNull(adapter)) {
       adapter.add(date);
     }
   }
 
   @Override
   public void add(@NonNull Transaction transaction) {
-    if (adapter != null) {
+    if (Utils.isNotNull(adapter)) {
       adapter.add(transaction);
     }
   }

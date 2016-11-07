@@ -9,7 +9,7 @@ import com.gbh.movil.domain.DomainCode;
 import com.gbh.movil.domain.DomainUtils;
 import com.gbh.movil.domain.Result;
 import com.gbh.movil.domain.Transaction;
-import com.gbh.movil.ui.RefreshIndicator;
+import com.gbh.movil.ui.UiUtils;
 
 
 import java.util.ArrayList;
@@ -57,19 +57,13 @@ class RecentTransactionsPresenter {
         .doOnSubscribe(new Action0() {
           @Override
           public void call() {
-            final RefreshIndicator refreshIndicator = screen.getRefreshIndicator();
-            if (Utils.isNotNull(refreshIndicator)) {
-              refreshIndicator.show();
-            }
+            UiUtils.showRefreshIndicator(screen);
           }
         })
         .doOnUnsubscribe(new Action0() {
           @Override
           public void call() {
-            final RefreshIndicator refreshIndicator = screen.getRefreshIndicator();
-            if (Utils.isNotNull(refreshIndicator)) {
-              refreshIndicator.hide();
-            }
+            UiUtils.hideRefreshIndicator(screen);
           }
         })
         .subscribe(new Action1<Result<DomainCode, List<Transaction>>>() {

@@ -27,7 +27,7 @@ public class CreditCardRecipient extends Recipient {
 
   @Override
   public boolean equals(Object object) {
-    return super.equals(object) || (object != null && object instanceof CreditCardRecipient
+    return super.equals(object) || (Utils.isNotNull(object) && object instanceof CreditCardRecipient
       && ((CreditCardRecipient) object).creditCard.equals(creditCard));
   }
 

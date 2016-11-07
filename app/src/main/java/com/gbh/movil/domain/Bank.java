@@ -2,6 +2,8 @@ package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
 
+import com.gbh.movil.Utils;
+
 /**
  * Bank representation.
  *
@@ -75,7 +77,7 @@ public class Bank {
 
   @Override
   public boolean equals(Object object) {
-    return super.equals(object) || (object != null && object instanceof Bank &&
+    return super.equals(object) || (Utils.isNotNull(object) && object instanceof Bank &&
       ((Bank) object).id.equals(id));
   }
 

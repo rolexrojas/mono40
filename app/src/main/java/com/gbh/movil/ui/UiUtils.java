@@ -6,8 +6,12 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.widget.ImageView;
+
+import com.gbh.movil.Utils;
 
 /**
  * UI utility methods.
@@ -46,6 +50,41 @@ public final class UiUtils {
     final Drawable drawable = imageView.getDrawable();
     if (drawable != null) {
       drawable.mutate().setColorFilter(color, mode);
+    }
+  }
+
+  @Nullable
+  public static RefreshIndicator resolveRefreshIndicator(
+    @Nullable RefreshIndicator refreshIndicator, @Nullable SwipeRefreshLayout swipeRefreshLayout) {
+    if (Utils.isNull(refreshIndicator) && Utils.isNotNull(swipeRefreshLayout)) {
+      refreshIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
+    }
+    return refreshIndicator;
+  }
+
+  /**
+   * TODO
+   *
+   * @param refreshable
+   *   TODO
+   */
+  public static void showRefreshIndicator(@NonNull Refreshable refreshable) {
+    final RefreshIndicator refreshIndicator = refreshable.getRefreshIndicator();
+    if (Utils.isNotNull(refreshIndicator)) {
+      refreshIndicator.show();
+    }
+  }
+
+  /**
+   * TODO
+   *
+   * @param refreshable
+   *   TODO
+   */
+  public static void hideRefreshIndicator(@NonNull Refreshable refreshable) {
+    final RefreshIndicator refreshIndicator = refreshable.getRefreshIndicator();
+    if (Utils.isNotNull(refreshIndicator)) {
+      refreshIndicator.hide();
     }
   }
 }

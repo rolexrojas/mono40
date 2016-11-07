@@ -44,14 +44,14 @@ public final class DataLoader {
 
   /**
    * Creates an {@link Observable observable} that loads all the data required for initialization
-   * and emits a {@link Pair pair} of {@link Boolean booleans} that indicates if there're additions
-   * and/or removals respectively.
+   * and emits a {@link Pair pair} of {@link Boolean booleans} that indicates if there're any
+   * additions and/or removals compared to what was already saved locally.
    * <p>
    * <em>Note:</em> By default {@link #load()} operates on {@link Schedulers#io()}.
    *
    * @return An {@link Observable observable} that loads all the data required for initialization
-   * and emits a {@link Pair pair} of {@link Boolean booleans} that indicates if there're additions
-   * and/or removals respectively.
+   * and emits a {@link Pair pair} of {@link Boolean booleans} that indicates if there're any
+   * additions and/or removals compared to what was already saved locally.
    */
   @NonNull
   public final Observable<Result<DomainCode, Pair<Boolean, Boolean>>> load() {
