@@ -137,4 +137,12 @@ public class InvoiceRecipient extends Recipient {
       + biller + ",contract='" + contract + "',dueDate=" + dueDate + ",currency='" + currency
       + "',totalAmount=" + totalAmount + ",minimumAmount=" + minimumAmount + "}";
   }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean matches(@NonNull String query) {
+    return true;
+  }
 }

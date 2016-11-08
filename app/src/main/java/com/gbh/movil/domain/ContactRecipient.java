@@ -41,4 +41,12 @@ public class ContactRecipient extends Recipient {
     return ContactRecipient.class.getSimpleName() + ":{super=" + super.toString() + ",contact="
       + contact + "}";
   }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean matches(@NonNull String query) {
+    return true;
+  }
 }

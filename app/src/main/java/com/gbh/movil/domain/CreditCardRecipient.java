@@ -41,4 +41,12 @@ public class CreditCardRecipient extends Recipient {
     return CreditCardRecipient.class.getSimpleName() + ":{super=" + super.toString()
       + ",creditCard=" + creditCard + "}";
   }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean matches(@NonNull String query) {
+    return true;
+  }
 }

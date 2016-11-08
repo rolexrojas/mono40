@@ -1,13 +1,11 @@
 package com.gbh.movil.domain;
 
-import android.support.annotation.NonNull;
-
 /**
  * Abstract recipient representation.
  *
  * @author hecvasro
  */
-public abstract class Recipient {
+public abstract class Recipient implements Matchable {
   /**
    * Recipient's type.
    */
@@ -38,11 +36,4 @@ public abstract class Recipient {
   public String toString() {
     return "Recipient:{type=" + type + "}";
   }
-
-  /**
-   * Checks if any matcheable property matches the given {@code query}.
-   *
-   * @return True if any matcheable property matches the given {@code query}, false otherwise.
-   */
-  abstract boolean matches(@NonNull String query);
 }
