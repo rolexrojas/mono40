@@ -25,6 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.subscriptions.Subscriptions;
@@ -129,11 +130,14 @@ public class SearchView extends LinearLayout {
 
   /**
    * Creates an {@link Observable} that emits all query change events.
-   *
+   * <p>
    * <em>Warning:</em> The created observable keeps a strong reference to {@code queryEditText}.
    * Unsubscribe to free this reference.
-   *
+   * <p>
    * <em>Note:</em> A value will be emitted immediately on subscribe.
+   * <p>
+   * <em>Note:</em> By default {@link #onQueryChanged()} operates on {@link
+   * AndroidSchedulers#mainThread()}.
    *
    * @return An {@link Observable} that emits all query change events.
    */

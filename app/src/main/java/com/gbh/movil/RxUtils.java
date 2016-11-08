@@ -2,7 +2,7 @@ package com.gbh.movil;
 
 import android.support.annotation.NonNull;
 
-import java.util.List;
+import java.util.Collection;
 
 import rx.Observable;
 import rx.Subscription;
@@ -17,20 +17,31 @@ public final class RxUtils {
   private RxUtils() {
   }
 
+  /**
+   * TODO
+   *
+   * @param subscription
+   *   TODO
+   */
   public static void unsubscribe(@NonNull Subscription subscription) {
     if (!subscription.isUnsubscribed()) {
       subscription.unsubscribe();
     }
   }
 
+  /**
+   * TODO
+   *
+   * @return TODo
+   */
   @NonNull
-  public static <T> Observable.Transformer<List<T>, T> fromList() {
-    return new Observable.Transformer<List<T>, T>() {
+  public static <T> Observable.Transformer<Collection<T>, T> fromCollection() {
+    return new Observable.Transformer<Collection<T>, T>() {
       @Override
-      public Observable<T> call(Observable<List<T>> observable) {
-        return observable.flatMap(new Func1<List<T>, Observable<T>>() {
+      public Observable<T> call(Observable<Collection<T>> observable) {
+        return observable.flatMap(new Func1<Collection<T>, Observable<T>>() {
           @Override
-          public Observable<T> call(List<T> list) {
+          public Observable<T> call(Collection<T> list) {
             return Observable.from(list);
           }
         });

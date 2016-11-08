@@ -26,7 +26,7 @@ class InMemoryTransactionRepo implements TransactionRepo {
   @Override
   public Observable<List<Transaction>> saveAll(@NonNull List<Transaction> transactionsToSave) {
     return Observable.just(transactionsToSave)
-      .compose(RxUtils.<Transaction>fromList())
+      .compose(RxUtils.<Transaction>fromCollection())
       .toSortedList(new Func2<Transaction, Transaction, Integer>() {
         @Override
         public Integer call(Transaction a, Transaction b) {

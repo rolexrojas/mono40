@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import rx.Observable;
 
 /**
  * {@link PaymentsScreen Screen} implementation that uses a {@link SubFragment fragment} as
@@ -43,6 +44,8 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen {
 
   @Inject
   MessageHelper messageHelper;
+  @Inject
+  PaymentsPresenter presenter;
 
   /**
    * Creates a new instance of the {@link PaymentsFragment screen}.
@@ -79,6 +82,15 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen {
     super.onStart();
     // Sets the title.
     parentScreen.setTitle(messageHelper.payments());
+    // Starts the presenter.
+    presenter.start();
+  }
+
+  @Override
+  public void onStop() {
+    super.onStop();
+    // Stops the presenter.
+    presenter.stop();
   }
 
   @Override
@@ -101,6 +113,12 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen {
   @Override
   public void add(@NonNull Action action) {
     // TODO
+  }
+
+  @NonNull
+  @Override
+  public Observable<String> onQueryChanged() {
+    return searchView.onQueryChanged();
   }
 
   @Nullable
