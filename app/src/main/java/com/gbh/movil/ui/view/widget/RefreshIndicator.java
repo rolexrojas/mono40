@@ -1,4 +1,4 @@
-package com.gbh.movil.ui;
+package com.gbh.movil.ui.view.widget;
 
 /**
  * Refresh indicator definition.

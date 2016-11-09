@@ -20,8 +20,8 @@ import com.gbh.movil.data.Formatter;
 import com.gbh.movil.data.MessageHelper;
 import com.gbh.movil.domain.Transaction;
 import com.gbh.movil.ui.BaseActivity;
-import com.gbh.movil.ui.RefreshIndicator;
-import com.gbh.movil.ui.SwipeRefreshLayoutRefreshIndicator;
+import com.gbh.movil.ui.view.widget.RefreshIndicator;
+import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.yqritc.recyclerviewflexibledivider.FlexibleDividerDecoration;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 

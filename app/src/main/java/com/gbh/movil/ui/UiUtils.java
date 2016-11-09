@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 
 import com.gbh.movil.Utils;
+import com.gbh.movil.ui.view.widget.RefreshIndicator;
 
 /**
  * UI utility methods.

@@ -1,9 +1,5 @@
 package com.gbh.movil.domain;
 
-import android.support.annotation.NonNull;
-
-import rx.Observable;
-
 /**
  * TODO
  *
@@ -11,11 +7,9 @@ import rx.Observable;
  */
 public interface NetworkHelper {
   /**
-   * Creates an {@link Observable observable} that emits the current network status.
+   * Indicates whether there is network available or not.
    *
-   * @return An {@link Observable observable} that emits the current network status. True if it is
-   * available, false otherwise.
+   * @return True if it is network available, false otherwise.
    */
-  @NonNull
-  Observable<Boolean> status();
+  boolean isNetworkAvailable();
 }

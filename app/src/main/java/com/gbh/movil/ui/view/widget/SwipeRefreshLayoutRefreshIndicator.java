@@ -1,4 +1,4 @@
-package com.gbh.movil.ui;
+package com.gbh.movil.ui.view.widget;
 
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;

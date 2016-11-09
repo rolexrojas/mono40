@@ -1,6 +1,7 @@
-package com.gbh.movil.ui;
+package com.gbh.movil.ui.splash;
 
 import com.gbh.movil.AppComponent;
+import com.gbh.movil.ui.ActivityScope;
 
 import dagger.Component;
 

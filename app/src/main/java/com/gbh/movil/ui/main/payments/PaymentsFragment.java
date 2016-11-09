@@ -13,8 +13,8 @@ import com.gbh.movil.R;
 import com.gbh.movil.Utils;
 import com.gbh.movil.data.MessageHelper;
 import com.gbh.movil.domain.Recipient;
-import com.gbh.movil.ui.RefreshIndicator;
-import com.gbh.movil.ui.SwipeRefreshLayoutRefreshIndicator;
+import com.gbh.movil.ui.view.widget.RefreshIndicator;
+import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.gbh.movil.ui.main.SubFragment;
 import com.gbh.movil.ui.view.widget.SearchView;
 

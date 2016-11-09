@@ -1,9 +1,10 @@
-package com.gbh.movil.ui;
+package com.gbh.movil.ui.splash;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.gbh.movil.App;
+import com.gbh.movil.ui.BaseActivity;
 import com.gbh.movil.ui.main.MainActivity;
 
 import javax.inject.Inject;
@@ -21,11 +22,13 @@ public class SplashActivity extends BaseActivity implements SplashScreen {
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    // Injects all the annotated dependencies.
     final SplashComponent component = DaggerSplashComponent.builder()
       .appComponent(((App) getApplication()).getComponent())
-      .splashModule(new SplashModule(this))
       .build();
     component.inject(this);
+    // Attaches the screen to the presenter.
+    presenter.attachScreen(this);
   }
 
   @Override
@@ -41,8 +44,15 @@ public class SplashActivity extends BaseActivity implements SplashScreen {
   }
 
   @Override
-  public void finish(boolean wereAccountAdditions, boolean wereAccountRemovals) {
-    startActivity(MainActivity.getLaunchIntent(this, wereAccountAdditions, wereAccountRemovals));
+  protected void onDestroy() {
+    super.onDestroy();
+    // Detaches the screen from the presenter.
+    presenter.detachScreen();
+  }
+
+  @Override
+  public void terminate() {
+    startActivity(MainActivity.getLaunchIntent(this));
     finish();
   }
 }
