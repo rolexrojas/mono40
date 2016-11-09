@@ -19,7 +19,7 @@ public enum ApiCode {
     this.value = value;
   }
 
-  public final int value() {
+  public final int getValue() {
     return value;
   }
 }

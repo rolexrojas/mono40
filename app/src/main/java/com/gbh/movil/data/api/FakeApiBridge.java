@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.Balance;
 import com.gbh.movil.domain.Bank;
-import com.gbh.movil.domain.BankAccount;
+import com.gbh.movil.domain.SavingsAccount;
 import com.gbh.movil.domain.CreditCard;
 import com.gbh.movil.domain.InitialData;
 import com.gbh.movil.domain.Recipient;
@@ -40,7 +40,7 @@ class FakeApiBridge implements ApiBridge {
     Account account;
     Balance balance;
     bank = new Bank("BPD", "Banco Popular Dominicano");
-    account = new BankAccount("1234", "DOP", bank, 5.0, "5.0");
+    account = new SavingsAccount("1234", "DOP", bank, 5.0, "5.0");
     accounts.add(account);
     balance = new Balance(87645, "87645.23");
     balances.put(account, balance);
@@ -52,7 +52,7 @@ class FakeApiBridge implements ApiBridge {
     balances.put(account, balance);
     bank = new Bank("BDI", "Banco BDI");
     banks.add(bank);
-    account = new BankAccount("3124", "DOP", bank, 4.0, "4.0");
+    account = new SavingsAccount("3124", "DOP", bank, 4.0, "4.0");
     accounts.add(account);
     balance = new Balance(99, "99.12");
     balances.put(account, balance);

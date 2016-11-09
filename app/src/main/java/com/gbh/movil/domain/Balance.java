@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
  */
 public class Balance {
   /**
-   * Balance's value.
+   * Balance's getValue.
    */
   private final double value;
   /**
@@ -21,7 +21,7 @@ public class Balance {
    * Constructs a new balance.
    *
    * @param value
-   *   Balance's value.
+   *   Balance's getValue.
    * @param description
    *   Balance's description
    */
@@ -31,9 +31,9 @@ public class Balance {
   }
 
   /**
-   * Gets the value of the balance.
+   * Gets the getValue of the balance.
    *
-   * @return Balance's value.
+   * @return Balance's getValue.
    */
   public final double getValue() {
     return value;

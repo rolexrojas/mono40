@@ -43,7 +43,7 @@ public final class BalanceManager {
 
   /**
    * Hash that uses an {@link Account account} as key and a {@link Pair pair} with the creation date
-   * and the last queried {@link Balance balance} as value.
+   * and the last queried {@link Balance balance} as getValue.
    */
   private final Map<Account, Pair<Long, Balance>> balances;
 

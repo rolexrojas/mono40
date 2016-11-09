@@ -13,8 +13,7 @@ public abstract class Account {
   /**
    * Account's {@link AccountType type}.
    */
-  @AccountType
-  private final int type;
+  private final AccountType type;
   /**
    * Account's identifier.
    */
@@ -52,7 +51,7 @@ public abstract class Account {
    * @param queryFeeDescription
    *   Description of the cost of querying the balance.
    */
-  protected Account(@AccountType int type, @NonNull String alias, @NonNull String currency,
+  protected Account(@NonNull AccountType type, @NonNull String alias, @NonNull String currency,
     @NonNull Bank bank, double queryFee, @NonNull String queryFeeDescription) {
     this.type = type;
     this.alias = alias;
@@ -67,8 +66,8 @@ public abstract class Account {
    *
    * @return Account's {@link AccountType type}.
    */
-  @AccountType
-  public final int getType() {
+  @NonNull
+  public final AccountType getType() {
     return type;
   }
 

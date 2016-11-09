@@ -34,7 +34,7 @@ public class Transaction {
    */
   private final String currency;
   /**
-   * Transaction's value.
+   * Transaction's getValue.
    */
   private final double value;
 
@@ -52,7 +52,7 @@ public class Transaction {
    * @param currency
    *   Transaction's currency code.
    * @param value
-   *   Transaction's value.
+   *   Transaction's getValue.
    */
   public Transaction(@NonNull String type, @NonNull String name, long date,
     @RequestType int requestType, @NonNull String currency, double value) {
@@ -114,9 +114,9 @@ public class Transaction {
   }
 
   /**
-   * Gets the value of the transaction.
+   * Gets the getValue of the transaction.
    *
-   * @return Transaction's value.
+   * @return Transaction's getValue.
    */
   public final double getValue() {
     return value;
@@ -136,7 +136,7 @@ public class Transaction {
   @Override
   public String toString() {
     return Transaction.class.getSimpleName() + ":{type='" + type + "',name='" + name + "',date='"
-      + date + "'requestType=" + requestType + ",currency='" + currency + "',value=" + value + "}";
+      + date + "'requestType=" + requestType + ",currency='" + currency + "',getValue=" + value + "}";
   }
 
   /**

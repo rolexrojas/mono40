@@ -1,18 +1,24 @@
 package com.gbh.movil.domain;
 
-import android.support.annotation.IntDef;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import android.support.annotation.NonNull;
 
 /**
- * Account's type enumeration.
+ * {@link Account} type enumeration.
  *
  * @author hecvasro
  */
-@Retention(RetentionPolicy.SOURCE)
-@IntDef({ AccountType.BANK_ACCOUNT, AccountType.CREDIT_CARD })
-public @interface AccountType {
-  int BANK_ACCOUNT = 0;
-  int CREDIT_CARD = 1;
+public enum AccountType {
+  SAVINGS ("SAV"),
+  CREDIT_CARD ("CC");
+
+  private final String value;
+
+  AccountType(@NonNull String value) {
+    this.value = value;
+  }
+
+  @NonNull
+  public final String getValue() {
+    return value;
+  }
 }
