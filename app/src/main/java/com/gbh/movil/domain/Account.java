@@ -30,10 +30,6 @@ public abstract class Account {
    * Cost of querying the balance.
    */
   private double queryFee;
-  /**
-   * Description of the cost of querying the balance.
-   */
-  private String queryFeeDescription;
 
   /**
    * Constructs a new account.
@@ -48,17 +44,14 @@ public abstract class Account {
    *   Account's {@link Bank holder}.
    * @param queryFee
    *   Cost of querying the balance.
-   * @param queryFeeDescription
-   *   Description of the cost of querying the balance.
    */
   protected Account(@NonNull AccountType type, @NonNull String alias, @NonNull String currency,
-    @NonNull Bank bank, double queryFee, @NonNull String queryFeeDescription) {
+    @NonNull Bank bank, double queryFee) {
     this.type = type;
     this.alias = alias;
     this.currency = currency;
     this.bank = bank;
     this.queryFee = queryFee;
-    this.queryFeeDescription = queryFeeDescription;
   }
 
   /**
@@ -123,26 +116,6 @@ public abstract class Account {
     this.queryFee = queryFee;
   }
 
-  /**
-   * Gets the description of the cost of querying the balance of the account.
-   *
-   * @return Description of the cost of querying the balance.
-   */
-  @NonNull
-  public String getQueryFeeDescription() {
-    return queryFeeDescription;
-  }
-
-  /**
-   * Sets the description of the cost of querying the balance of the account.
-   *
-   * @param queryFeeDescription
-   *   Description of the cost of querying the balance.
-   */
-  public void setQueryFeeDescription(@NonNull String queryFeeDescription) {
-    this.queryFeeDescription = queryFeeDescription;
-  }
-
   @Override
   public boolean equals(Object object) {
     return super.equals(object) || (Utils.isNotNull(object) && object instanceof Account &&
@@ -157,7 +130,6 @@ public abstract class Account {
   @Override
   public String toString() {
     return Account.class.getSimpleName() + ":{type=" + type + ",alias='" + alias + "',amount='"
-      + currency + "',bank=" + bank + ",queryFee=" + queryFee + ",queryFeeDescription='"
-      + queryFeeDescription + "'}";
+      + currency + "',bank=" + bank + ",queryFee=" + queryFee + "'}";
   }
 }
