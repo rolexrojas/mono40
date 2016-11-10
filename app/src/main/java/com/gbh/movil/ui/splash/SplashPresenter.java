@@ -9,7 +9,6 @@ import com.gbh.movil.data.net.NetworkHelper;
 import com.gbh.movil.ui.Presenter;
 
 import rx.Subscription;
-import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
