@@ -23,10 +23,6 @@ import timber.log.Timber;
 public final class AccountManager {
   private final AccountRepo accountRepo;
 
-  private static final int ACTION_ADD = 0;
-  private static final int ACTION_UPDATE = 1;
-  private static final int ACTION_REMOVE = 2;
-
   public AccountManager(@NonNull AccountRepo accountRepo) {
     this.accountRepo = accountRepo;
   }
@@ -43,52 +39,47 @@ public final class AccountManager {
   final Observable<Object> syncAccounts(@NonNull Set<Account> accounts) {
     return accountRepo.getAll()
       .zipWith(Observable.just(accounts), new Func2<Set<Account>, Set<Account>,
-        List<Pair<Integer, Account>>>() {
+        List<Pair<Action, Account>>>() {
         @Override
-        public List<Pair<Integer, Account>> call(Set<Account> localAccounts,
+        public List<Pair<Action, Account>> call(Set<Account> localAccounts,
           Set<Account> remoteAccounts) {
-          final List<Pair<Integer, Account>> actions = new ArrayList<>();
+          final List<Pair<Action, Account>> actions = new ArrayList<>();
           for (Account account : remoteAccounts) {
             if (!localAccounts.contains(account)) {
-              actions.add(Pair.create(ACTION_ADD, account));
+              actions.add(Pair.create(Action.ADD, account));
             } else {
-              actions.add(Pair.create(ACTION_UPDATE, account));
+              actions.add(Pair.create(Action.UPDATE, account));
             }
           }
           for (Account account : localAccounts) {
             if (!remoteAccounts.contains(account)) {
-              actions.add(Pair.create(ACTION_REMOVE, account));
+              actions.add(Pair.create(Action.REMOVE, account));
             }
           }
           return actions;
         }
       })
-      .compose(RxUtils.<Pair<Integer, Account>>fromCollection())
-      .doOnNext(new Action1<Pair<Integer, Account>>() {
+      .compose(RxUtils.<Pair<Action, Account>>fromCollection())
+      .doOnNext(new Action1<Pair<Action, Account>>() {
         @Override
-        public void call(Pair<Integer, Account> pair) {
-          final int action = pair.first;
+        public void call(Pair<Action, Account> pair) {
+          final Action action = pair.first;
           final Account account = pair.second;
-          final String actionName;
-          if (action == ACTION_ADD) {
-            actionName = "added";
+          if (action == Action.ADD) {
             // TODO: Generate an account addition notification.
-          } else if (action == ACTION_UPDATE) {
-            actionName = "updated";
-          } else {
-            actionName = "removed";
+          } else if (action == Action.REMOVE) {
             // TODO: Generate an account removal notification.
           }
-          Timber.d("%1$s %2$s", account, actionName);
+          Timber.d("%1$s %2$s", account, action);
         }
       })
-      .flatMap(new Func1<Pair<Integer, Account>, Observable<Object>>() {
+      .flatMap(new Func1<Pair<Action, Account>, Observable<Object>>() {
         @Override
-        public Observable<Object> call(Pair<Integer, Account> pair) {
-          final int action = pair.first;
-          final Account account = pair.second;
+        public Observable<Object> call(Pair<Action, Account> pair) {
           final Observable<?> observable;
-          if (action == ACTION_ADD || action == ACTION_UPDATE) {
+          final Action action = pair.first;
+          final Account account = pair.second;
+          if (action == Action.ADD || action == Action.UPDATE) {
             observable = accountRepo.save(account);
           } else {
             observable = accountRepo.remove(account);
@@ -97,5 +88,14 @@ public final class AccountManager {
         }
       })
       .last();
+  }
+
+  /**
+   * TODO
+   */
+  private enum Action {
+    ADD,
+    UPDATE,
+    REMOVE
   }
 }
