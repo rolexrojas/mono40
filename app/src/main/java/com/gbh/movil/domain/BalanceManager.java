@@ -63,7 +63,7 @@ public final class BalanceManager {
         @Override
         public void call() {
           for (Account account : balances.keySet()) {
-            eventBus.dispatch(new AccountBalanceExpirationEvent(account));
+            eventBus.dispatch(new BalanceExpirationEvent(account));
           }
           balances.clear();
         }
@@ -76,7 +76,7 @@ public final class BalanceManager {
             pair = balances.get(account);
             if ((System.currentTimeMillis() - pair.first) >= EXPIRATION_TIME) {
               Timber.d("Account's balance expired (%1$s, %2$s)", account, pair.second);
-              eventBus.dispatch(new AccountBalanceExpirationEvent(account));
+              eventBus.dispatch(new BalanceExpirationEvent(account));
               balances.remove(account);
             }
           }

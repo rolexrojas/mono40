@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
  *
  * @author hecvasro
  */
-public interface MainScreen extends ParentScreen {
+interface MainScreen extends ParentScreen {
   /**
    * TODO
    *

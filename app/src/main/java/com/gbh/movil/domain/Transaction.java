@@ -136,7 +136,8 @@ public class Transaction {
   @Override
   public String toString() {
     return Transaction.class.getSimpleName() + ":{type='" + type + "',name='" + name + "',date='"
-      + date + "'requestType=" + requestType + ",currency='" + currency + "',getValue=" + value + "}";
+      + date + "'requestType=" + requestType + ",currency='" + currency + "',getValue=" + value
+      + "}";
   }
 
   /**

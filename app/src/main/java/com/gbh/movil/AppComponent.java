@@ -8,6 +8,7 @@ import com.gbh.movil.domain.BalanceManager;
 import com.gbh.movil.data.net.NetworkHelper;
 import com.gbh.movil.domain.EventBus;
 import com.gbh.movil.domain.RecipientRepo;
+import com.gbh.movil.domain.TransactionRepo;
 import com.gbh.movil.domain.api.ApiBridge;
 
 import javax.inject.Singleton;
@@ -29,6 +30,8 @@ public interface AppComponent {
   ApiBridge provideApiBridge();
 
   RecipientRepo provideRecipientRepo();
+
+  TransactionRepo provideTransactionRepo();
 
   EventBus provideNotificationHolder();
 

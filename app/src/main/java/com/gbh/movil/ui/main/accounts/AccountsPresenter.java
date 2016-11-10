@@ -7,6 +7,7 @@ import com.gbh.movil.Utils;
 import com.gbh.movil.RxUtils;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.Account;
+import com.gbh.movil.domain.BalanceExpirationEvent;
 import com.gbh.movil.domain.AccountManager;
 import com.gbh.movil.domain.Balance;
 import com.gbh.movil.domain.BalanceManager;
@@ -51,7 +52,24 @@ class AccountsPresenter extends Presenter<AccountsScreen> {
   void start() {
     assertScreen();
     compositeSubscription = new CompositeSubscription();
-    Subscription subscription = accountManager.getAll()
+    Subscription subscription = eventBus.onEventDispatched(
+      EventType.ACCOUNT_BALANCE_EXPIRATION)
+      .observeOn(schedulerProvider.ui())
+      .subscribe(new Action1<Event>() {
+        @Override
+        public void call(Event event) {
+          if (event.getType().equals(EventType.ACCOUNT_BALANCE_EXPIRATION)) {
+            screen.setBalance(((BalanceExpirationEvent) event).getAccount(), null);
+          }
+        }
+      }, new Action1<Throwable>() {
+        @Override
+        public void call(Throwable throwable) {
+          Timber.e(throwable, "Listening to balance expiration events");
+        }
+      });
+    compositeSubscription.add(subscription);
+    subscription = accountManager.getAll()
       .subscribeOn(schedulerProvider.io())
       .observeOn(schedulerProvider.ui())
       .doOnSubscribe(new Action0() {
@@ -84,20 +102,6 @@ class AccountsPresenter extends Presenter<AccountsScreen> {
         @Override
         public void call(Throwable throwable) {
           Timber.e(throwable, "Loading all registered accounts");
-        }
-      });
-    compositeSubscription.add(subscription);
-    subscription = eventBus.onEventDispatched(
-      EventType.ACCOUNT_BALANCE_EXPIRATION)
-      .observeOn(schedulerProvider.ui())
-      .subscribe(new Action1<Event>() {
-        @Override
-        public void call(Event event) {
-        }
-      }, new Action1<Throwable>() {
-        @Override
-        public void call(Throwable throwable) {
-          Timber.e(throwable, "Listening to balance expiration events");
         }
       });
     compositeSubscription.add(subscription);

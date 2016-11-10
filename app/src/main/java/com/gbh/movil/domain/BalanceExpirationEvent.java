@@ -10,7 +10,7 @@ import com.gbh.movil.Utils;
  *
  * @author hecvasro
  */
-public class AccountBalanceExpirationEvent extends Event {
+public class BalanceExpirationEvent extends Event {
   /**
    * TODO
    */
@@ -22,7 +22,7 @@ public class AccountBalanceExpirationEvent extends Event {
    * @param account
    *   TODO
    */
-  public AccountBalanceExpirationEvent(@NonNull Account account) {
+  public BalanceExpirationEvent(@NonNull Account account) {
     super(EventType.ACCOUNT_BALANCE_EXPIRATION, false);
     this.account = account;
   }
@@ -40,8 +40,8 @@ public class AccountBalanceExpirationEvent extends Event {
   @Override
   public boolean equals(Object object) {
     return super.equals(object) || (Utils.isNotNull(object)
-      && object instanceof AccountBalanceExpirationEvent
-      && ((AccountBalanceExpirationEvent) object).account.equals(account));
+      && object instanceof BalanceExpirationEvent
+      && ((BalanceExpirationEvent) object).account.equals(account));
   }
 
   @Override
@@ -51,7 +51,7 @@ public class AccountBalanceExpirationEvent extends Event {
 
   @Override
   public String toString() {
-    return AccountBalanceExpirationEvent.class.getSimpleName() + ":{super=" + super.toString()
+    return BalanceExpirationEvent.class.getSimpleName() + ":{super=" + super.toString()
       + ",account=" + account + "}";
   }
 }

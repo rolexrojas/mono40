@@ -101,9 +101,10 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
     // Injects all the dependencies.
     final RecentTransactionsComponent component = DaggerRecentTransactionsComponent.builder()
       .appComponent(((App) getApplication()).getComponent())
-      .recentTransactionsModule(new RecentTransactionsModule(this))
       .build();
     component.inject(this);
+    // Attaches the screen to the presenter.
+    presenter.attachScreen(this);
   }
 
   @Override
@@ -123,6 +124,8 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
   @Override
   public void onDestroy() {
     super.onDestroy();
+    // Detaches the screen from the presenter.
+    presenter.detachScreen();
     // Removes the listener that gets notified every time the content must be refreshed.
     swipeRefreshLayout.setOnRefreshListener(null);
     // Unbinds all the annotated views and methods.

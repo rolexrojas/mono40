@@ -8,15 +8,8 @@ import dagger.Component;
 /**
  * @author hecvasro
  */
-
 @FragmentScope
 @Component(modules = RecentTransactionsModule.class, dependencies = AppComponent.class)
 interface RecentTransactionsComponent {
-  /**
-   * TODO
-   *
-   * @param fragment
-   *   TODO
-   */
   void inject(RecentTransactionsActivity fragment);
 }
