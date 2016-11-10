@@ -119,12 +119,12 @@ public abstract class Account {
   @Override
   public boolean equals(Object object) {
     return super.equals(object) || (Utils.isNotNull(object) && object instanceof Account &&
-      ((Account) object).type == type && ((Account) object).alias.equals(alias));
+      ((Account) object).type.equals(type) && ((Account) object).alias.equals(alias));
   }
 
   @Override
   public int hashCode() {
-    return alias.hashCode();
+    return Utils.hashCode(type, alias);
   }
 
   @Override
