@@ -153,9 +153,10 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
     // Injects all the annotated dependencies.
     final AccountsComponent component = DaggerAccountsComponent.builder()
       .mainComponent(parentScreen.getComponent())
-      .accountsModule(new AccountsModule(this))
       .build();
     component.inject(this);
+    // Attaches the screen to the presenter.
+    presenter.attachScreen(this);
   }
 
   @Override
@@ -177,6 +178,8 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
   @Override
   public void onDestroyView() {
     super.onDestroyView();
+    // Detaches the screen from the presenter.
+    presenter.detachScreen();
     // Unbinds all the annotated views and methods.
     unbinder.unbind();
   }

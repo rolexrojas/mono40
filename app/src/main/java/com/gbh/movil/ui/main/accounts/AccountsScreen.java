@@ -6,13 +6,14 @@ import android.support.annotation.Nullable;
 import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.Balance;
 import com.gbh.movil.ui.Refreshable;
+import com.gbh.movil.ui.Screen;
 
 /**
  * TODO
  *
  * @author hecvasro
  */
-interface AccountsScreen extends Refreshable {
+interface AccountsScreen extends Screen, Refreshable {
   /**
    * TODO
    */

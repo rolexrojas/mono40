@@ -42,28 +42,15 @@ final class SplashPresenter extends Presenter<SplashScreen> {
       subscription = initialDataLoader.load()
         .subscribeOn(schedulerProvider.io())
         .observeOn(schedulerProvider.ui())
-        .doOnSubscribe(new Action0() {
-          @Override
-          public void call() {
-            Timber.d("Initial load started");
-          }
-        })
-        .doOnUnsubscribe(new Action0() {
-          @Override
-          public void call() {
-            Timber.d("Initial load finished");
-          }
-        })
         .subscribe(new Action1<Object>() {
           @Override
           public void call(Object notification) {
-            Timber.d("Initial load succeeded");
             screen.terminate();
           }
         }, new Action1<Throwable>() {
           @Override
           public void call(Throwable throwable) {
-            Timber.e(throwable, "Initial load failed");
+            Timber.e(throwable, "Loading initial data");
           }
         });
     } else {

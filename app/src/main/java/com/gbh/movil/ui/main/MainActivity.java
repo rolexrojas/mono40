@@ -97,8 +97,9 @@ public class MainActivity extends BaseActivity implements MainScreen {
         .build();
     }
     component.inject(this);
-    // Initializes the presenter.
+    // Attaches the screen to the presenter.
     presenter.attachScreen(this);
+    // Creates the presenter.
     presenter.create();
   }
 
@@ -119,8 +120,9 @@ public class MainActivity extends BaseActivity implements MainScreen {
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    // Deinitializes the presenter.
+    // Destroys the presenter.
     presenter.destroy();
+    // Detaches the screen from the presenter.
     presenter.detachScreen();
     // Unbinds all the annotated views and methods.
     unbinder.unbind();

@@ -110,7 +110,7 @@ class FakeApiBridge implements ApiBridge {
         observable = Observable.just(Result.<ApiCode, Balance>create(ApiCode.NOT_FOUND));
       }
     } else {
-      observable = Observable.just(Result.<ApiCode, Balance>create(ApiCode.UNAUTHORIZED));
+      observable = Observable.just(Result.<ApiCode, Balance>create(ApiCode.FORBIDDEN));
     }
     return observable.delay(2L, TimeUnit.SECONDS);
   }
