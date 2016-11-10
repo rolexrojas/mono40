@@ -43,14 +43,15 @@ public final class InitialDataLoader {
             final InitialData data = result.getData();
             if (Utils.isNotNull(data)) {
               return accountManager.syncAccounts(data.getAccounts())
+                .cast(Object.class)
                 .concatWith(recipientRepo.save(data.getRecipients()))
                 .last();
-            } else {
-              Timber.d("Initial load was empty");
+            } else { // This is an edge case.
+              Timber.d("Initial load result is empty");
               return Observable.just(null);
             }
           } else {
-            Timber.d("Initial load failed");
+            Timber.d("Initial load failed (%1$s)", result);
             return Observable.just(null);
           }
         }

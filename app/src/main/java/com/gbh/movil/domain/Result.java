@@ -66,4 +66,9 @@ public final class Result<C, D> {
   public final D getData() {
     return data;
   }
+
+  @Override
+  public String toString() {
+    return "Result:{code='" + code + "',data='" + data + "'}";
+  }
 }

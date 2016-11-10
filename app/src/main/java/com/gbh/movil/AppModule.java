@@ -7,6 +7,7 @@ import com.gbh.movil.domain.AccountManager;
 import com.gbh.movil.domain.AccountRepo;
 import com.gbh.movil.domain.BalanceManager;
 import com.gbh.movil.data.net.NetworkHelper;
+import com.gbh.movil.domain.NotificationHolder;
 import com.gbh.movil.domain.api.ApiBridge;
 
 import javax.inject.Singleton;
@@ -33,8 +34,15 @@ final class AppModule {
 
   @Provides
   @Singleton
-  AccountManager provideAccountManager(AccountRepo accountRepo) {
-    return new AccountManager(accountRepo);
+  NotificationHolder provideNotificationHolder() {
+    return new NotificationHolder();
+  }
+
+  @Provides
+  @Singleton
+  AccountManager provideAccountManager(AccountRepo accountRepo,
+    NotificationHolder notificationHolder) {
+    return new AccountManager(accountRepo, notificationHolder);
   }
 
   @Provides

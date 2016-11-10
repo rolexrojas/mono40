@@ -6,6 +6,7 @@ import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.AccountManager;
 import com.gbh.movil.domain.BalanceManager;
 import com.gbh.movil.data.net.NetworkHelper;
+import com.gbh.movil.domain.NotificationHolder;
 import com.gbh.movil.domain.RecipientRepo;
 import com.gbh.movil.domain.api.ApiBridge;
 
@@ -28,6 +29,8 @@ public interface AppComponent {
   ApiBridge provideApiBridge();
 
   RecipientRepo provideRecipientRepo();
+
+  NotificationHolder provideNotificationHolder();
 
   AccountManager provideAccountManager();
 

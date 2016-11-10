@@ -10,7 +10,7 @@ import java.util.Set;
 
 import rx.Observable;
 import rx.functions.Action1;
-import rx.functions.Func2;
+import rx.functions.Func1;
 
 /**
  * {@link AccountRepo Account repository} implementation that uses memory as storage.
@@ -36,10 +36,10 @@ class InMemoryAccountRepo implements AccountRepo {
   @Override
   public Observable<Account> save(@NonNull Account account) {
     return Observable.just(account)
-      .zipWith(remove(account), new Func2<Account, Boolean, Account>() {
+      .flatMap(new Func1<Account, Observable<Account>>() {
         @Override
-        public Account call(Account account, Boolean wasRemoved) {
-          return account;
+        public Observable<Account> call(Account account) {
+          return remove(account);
         }
       })
       .doOnNext(new Action1<Account>() {
@@ -55,11 +55,15 @@ class InMemoryAccountRepo implements AccountRepo {
    */
   @NonNull
   @Override
-  public Observable<Boolean> remove(@NonNull Account account) {
-    if (accounts.contains(account)) {
-      return Observable.just(accounts.remove(account));
-    } else {
-      return Observable.just(false);
-    }
+  public Observable<Account> remove(@NonNull Account account) {
+    return Observable.just(account)
+      .doOnNext(new Action1<Account>() {
+        @Override
+        public void call(Account account) {
+          if (accounts.contains(account)) {
+            accounts.remove(account);
+          }
+        }
+      });
   }
 }

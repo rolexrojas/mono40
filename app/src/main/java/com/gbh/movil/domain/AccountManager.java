@@ -4,6 +4,10 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
 import com.gbh.movil.RxUtils;
+import com.gbh.movil.Utils;
+import com.gbh.movil.domain.api.ApiBridge;
+import com.gbh.movil.domain.api.ApiCode;
+import com.gbh.movil.domain.api.ApiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +26,14 @@ import timber.log.Timber;
  */
 public final class AccountManager {
   private final AccountRepo accountRepo;
+  private final NotificationHolder notificationHolder;
+  private final ApiBridge apiBridge;
 
-  public AccountManager(@NonNull AccountRepo accountRepo) {
+  public AccountManager(@NonNull AccountRepo accountRepo,
+    @NonNull NotificationHolder notificationHolder, @NonNull ApiBridge apiBridge) {
     this.accountRepo = accountRepo;
+    this.notificationHolder = notificationHolder;
+    this.apiBridge = apiBridge;
   }
 
   /**
@@ -32,11 +41,13 @@ public final class AccountManager {
    *
    * @param accounts
    *   TODO
+   * @param mustEmitAdditionAndRemovalNotifications
+   *   TODO
    *
    * @return TODO
    */
-  @NonNull
-  final Observable<Object> syncAccounts(@NonNull Set<Account> accounts) {
+  private Observable<Set<Account>> syncAccounts(@NonNull Set<Account> accounts,
+    final boolean mustEmitAdditionAndRemovalNotifications) {
     return accountRepo.getAll()
       .zipWith(Observable.just(accounts), new Func2<Set<Account>, Set<Account>,
         List<Pair<Action, Account>>>() {
@@ -63,31 +74,73 @@ public final class AccountManager {
       .doOnNext(new Action1<Pair<Action, Account>>() {
         @Override
         public void call(Pair<Action, Account> pair) {
-          final Action action = pair.first;
-          final Account account = pair.second;
-          if (action == Action.ADD) {
-            // TODO: Generate an account addition notification.
-          } else if (action == Action.REMOVE) {
-            // TODO: Generate an account removal notification.
+          if (mustEmitAdditionAndRemovalNotifications) {
+            final Action action = pair.first;
+            final Account account = pair.second;
+            if (action == Action.ADD) {
+              notificationHolder.add(new AccountAdditionNotification());
+            } else if (action == Action.REMOVE) {
+              notificationHolder.add(new AccountRemovalNotification());
+            }
+            Timber.d("%1$s %2$s", account, action);
           }
-          Timber.d("%1$s %2$s", account, action);
         }
       })
-      .flatMap(new Func1<Pair<Action, Account>, Observable<Object>>() {
+      .flatMap(new Func1<Pair<Action, Account>, Observable<Account>>() {
         @Override
-        public Observable<Object> call(Pair<Action, Account> pair) {
-          final Observable<?> observable;
+        public Observable<Account> call(Pair<Action, Account> pair) {
           final Action action = pair.first;
           final Account account = pair.second;
+          final Observable<Account> observable;
           if (action == Action.ADD || action == Action.UPDATE) {
             observable = accountRepo.save(account);
           } else {
             observable = accountRepo.remove(account);
           }
-          return observable.cast(Object.class);
+          return observable;
         }
       })
-      .last();
+      .compose(RxUtils.<Account>toSet());
+  }
+
+  /**
+   * TODO
+   *
+   * @param accounts
+   *   TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  final Observable<Set<Account>> syncAccounts(@NonNull Set<Account> accounts) {
+    return syncAccounts(accounts, true);
+  }
+
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  public final Observable<Set<Account>> getAll() {
+    return accountRepo.getAll()
+      .concatWith(apiBridge.accounts()
+        .flatMap(new Func1<Result<ApiCode, Set<Account>>, Observable<Set<Account>>>() {
+          @Override
+          public Observable<Set<Account>> call(Result<ApiCode, Set<Account>> result) {
+            if (ApiUtils.isSuccessful(result)) {
+              final Set<Account> accounts = result.getData();
+              if (Utils.isNotNull(accounts)) {
+                return syncAccounts(accounts, false);
+              } else { // This is not supposed to happen.
+                return Observable.just(null);
+              }
+            } else {
+              Timber.d("Loading all registered accounts failed (%1$s)", result);
+              return Observable.just(null);
+            }
+          }
+        }));
   }
 
   /**

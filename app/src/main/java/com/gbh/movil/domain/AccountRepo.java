@@ -45,5 +45,5 @@ public interface AccountRepo {
    * @return TODO
    */
   @NonNull
-  Observable<Boolean> remove(@NonNull Account account);
+  Observable<Account> remove(@NonNull Account account);
 }
