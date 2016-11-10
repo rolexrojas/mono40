@@ -2,6 +2,8 @@ package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
 
+import com.gbh.movil.data.net.NetworkHelper;
+
 import rx.Observable;
 
 /**

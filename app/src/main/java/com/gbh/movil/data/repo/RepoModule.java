@@ -10,8 +10,6 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 @Module

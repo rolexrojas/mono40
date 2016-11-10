@@ -2,17 +2,18 @@ package com.gbh.movil;
 
 import com.gbh.movil.data.DataModule;
 import com.gbh.movil.data.MessageHelper;
+import com.gbh.movil.data.SchedulerProvider;
+import com.gbh.movil.domain.AccountManager;
 import com.gbh.movil.domain.BalanceManager;
-import com.gbh.movil.domain.DataLoader;
-import com.gbh.movil.domain.NetworkHelper;
+import com.gbh.movil.data.net.NetworkHelper;
+import com.gbh.movil.domain.RecipientRepo;
+import com.gbh.movil.domain.api.ApiBridge;
 
 import javax.inject.Singleton;
 
 import dagger.Component;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 @Singleton
@@ -20,9 +21,15 @@ import dagger.Component;
 public interface AppComponent {
   MessageHelper provideMessageHelper();
 
-  NetworkHelper provideNetworkhelper();
+  NetworkHelper provideNetworkHelper();
 
-  DataLoader provideDataLoader();
+  SchedulerProvider provideSchedulerProvider();
+
+  ApiBridge provideApiBridge();
+
+  RecipientRepo provideRecipientRepo();
+
+  AccountManager provideAccountManager();
 
   BalanceManager provideBalanceManager();
 }

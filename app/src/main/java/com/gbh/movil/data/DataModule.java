@@ -6,7 +6,7 @@ import android.net.ConnectivityManager;
 import com.gbh.movil.data.api.ApiModule;
 import com.gbh.movil.data.net.ConnectivityManagerNetworkHelper;
 import com.gbh.movil.data.repo.RepoModule;
-import com.gbh.movil.domain.NetworkHelper;
+import com.gbh.movil.data.net.NetworkHelper;
 
 import javax.inject.Singleton;
 
@@ -14,8 +14,6 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 @Module(includes = { ApiModule.class, RepoModule.class })
@@ -31,5 +29,11 @@ public final class DataModule {
   NetworkHelper provideNetworkHelper(Context context) {
     return new ConnectivityManagerNetworkHelper((ConnectivityManager) context.getSystemService(
       Context.CONNECTIVITY_SERVICE));
+  }
+
+  @Provides
+  @Singleton
+  SchedulerProvider provideSchedulerProvider() {
+    return new SchedulerProvider();
   }
 }

@@ -5,7 +5,6 @@ import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 
 import com.gbh.movil.Utils;
-import com.gbh.movil.domain.NetworkHelper;
 
 /**
  * TODO

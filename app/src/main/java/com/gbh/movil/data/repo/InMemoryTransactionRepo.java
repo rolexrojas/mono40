@@ -14,6 +14,8 @@ import rx.functions.Func1;
 import rx.functions.Func2;
 
 /**
+ * {@link TransactionRepo Transaction repository} implementation that uses memory as storage.
+ *
  * @author hecvasro
  */
 class InMemoryTransactionRepo implements TransactionRepo {

@@ -8,6 +8,10 @@ import android.support.annotation.NonNull;
  * @author hecvasro
  */
 public class NotAttachedException extends RuntimeException {
+  public NotAttachedException() {
+    super();
+  }
+
   public NotAttachedException(@NonNull String message) {
     super(message);
   }

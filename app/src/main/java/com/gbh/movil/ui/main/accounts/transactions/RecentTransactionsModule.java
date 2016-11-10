@@ -2,7 +2,6 @@ package com.gbh.movil.ui.main.accounts.transactions;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.domain.DataLoader;
 import com.gbh.movil.ui.FragmentScope;
 
 import dagger.Module;
@@ -30,14 +29,11 @@ class RecentTransactionsModule {
   /**
    * TODO
    *
-   * @param dataLoader
-   *   TODO
-   *
    * @return TODO
    */
   @Provides
   @FragmentScope
-  RecentTransactionsPresenter providePresenter(DataLoader dataLoader) {
-    return new RecentTransactionsPresenter(screen, dataLoader);
+  RecentTransactionsPresenter providePresenter() {
+    return new RecentTransactionsPresenter(screen);
   }
 }

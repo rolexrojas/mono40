@@ -6,6 +6,7 @@ import android.support.v4.util.Pair;
 
 import com.gbh.movil.RxUtils;
 import com.gbh.movil.Utils;
+import com.gbh.movil.data.net.NetworkHelper;
 import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.domain.api.ApiCode;
 import com.gbh.movil.domain.api.ApiUtils;
