@@ -25,14 +25,14 @@ import timber.log.Timber;
  * @author hecvasro
  */
 public final class AccountManager {
+  private final EventBus eventBus;
   private final AccountRepo accountRepo;
-  private final NotificationHolder notificationHolder;
   private final ApiBridge apiBridge;
 
-  public AccountManager(@NonNull AccountRepo accountRepo,
-    @NonNull NotificationHolder notificationHolder, @NonNull ApiBridge apiBridge) {
+  public AccountManager(@NonNull EventBus eventBus, @NonNull AccountRepo accountRepo,
+    @NonNull ApiBridge apiBridge) {
+    this.eventBus = eventBus;
     this.accountRepo = accountRepo;
-    this.notificationHolder = notificationHolder;
     this.apiBridge = apiBridge;
   }
 
@@ -78,9 +78,9 @@ public final class AccountManager {
             final Action action = pair.first;
             final Account account = pair.second;
             if (action == Action.ADD) {
-              notificationHolder.add(new AccountAdditionNotification());
+              eventBus.dispatch(new AccountAdditionEvent());
             } else if (action == Action.REMOVE) {
-              notificationHolder.add(new AccountRemovalNotification());
+              eventBus.dispatch(new AccountRemovalEvent());
             }
             Timber.d("%1$s %2$s", account, action);
           }
@@ -136,7 +136,7 @@ public final class AccountManager {
                 return Observable.just(null);
               }
             } else {
-              Timber.d("Loading all registered accounts failed (%1$s)", result);
+              Timber.d("Failed to load all registered accounts (%1$s)", result);
               return Observable.just(null);
             }
           }

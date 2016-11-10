@@ -17,7 +17,7 @@ public abstract class Presenter<S extends Screen> {
    *
    * @return TODO
    */
-  protected final boolean isScreenAttached() {
+  private boolean isScreenAttached() {
     return Utils.isNotNull(screen);
   }
 
@@ -41,20 +41,6 @@ public abstract class Presenter<S extends Screen> {
       this.detachScreen();
     }
     this.screen = screen;
-  }
-
-  /**
-   * TODO
-   */
-  public void start() {
-    assertScreen();
-  }
-
-  /**
-   * TODO
-   */
-  public void stop() {
-    assertScreen();
   }
 
   /**

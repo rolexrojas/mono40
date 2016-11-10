@@ -65,7 +65,7 @@ class AccountsPresenter {
 //        }
 //      });
 //    compositeSubscription.add(subscription);
-//    subscription = balanceManager.expiration()
+//    subscription = balanceManager.onBalanceExpired()
 //      .observeOn(AndroidSchedulers.mainThread())
 //      .subscribe(new Action1<Account>() {
 //        @Override
@@ -75,7 +75,7 @@ class AccountsPresenter {
 //      }, new Action1<Throwable>() {
 //        @Override
 //        public void call(Throwable throwable) {
-//          Timber.e(throwable, "Listening to balance expiration events");
+//          Timber.e(throwable, "Listening to balance onBalanceExpired events");
 //        }
 //      });
 //    compositeSubscription.add(subscription);

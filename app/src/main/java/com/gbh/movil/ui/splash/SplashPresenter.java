@@ -34,11 +34,10 @@ final class SplashPresenter extends Presenter<SplashScreen> {
   }
 
   /**
-   * {@inheritDoc}
+   * TODO
    */
-  @Override
-  public final void start() {
-    super.start();
+  final void start() {
+    assertScreen();
     if (networkHelper.isNetworkAvailable()) {
       subscription = initialDataLoader.load()
         .subscribeOn(schedulerProvider.io())
@@ -73,11 +72,10 @@ final class SplashPresenter extends Presenter<SplashScreen> {
   }
 
   /**
-   * {@inheritDoc}
+   * TODO
    */
-  @Override
-  public final void stop() {
-    super.stop();
+  final void stop() {
+    assertScreen();
     RxUtils.unsubscribe(subscription);
   }
 }

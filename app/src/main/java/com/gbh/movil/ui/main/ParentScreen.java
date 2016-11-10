@@ -3,12 +3,14 @@ package com.gbh.movil.ui.main;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.gbh.movil.ui.Screen;
+
 /**
  * TODO
  *
  * @author hecvasro
  */
-public interface ParentScreen {
+public interface ParentScreen extends Screen {
   /**
    * TODO
    *

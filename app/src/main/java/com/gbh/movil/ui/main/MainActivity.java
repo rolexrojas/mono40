@@ -1,6 +1,7 @@
 package com.gbh.movil.ui.main;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,6 +18,7 @@ import com.gbh.movil.R;
 import com.gbh.movil.Utils;
 import com.gbh.movil.data.MessageHelper;
 import com.gbh.movil.ui.BaseActivity;
+import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.main.accounts.AccountsFragment;
 import com.gbh.movil.ui.main.payments.PaymentsFragment;
 import com.gbh.movil.ui.view.widget.SlidingPaneLayout;
@@ -33,7 +35,7 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class MainActivity extends BaseActivity implements ParentScreen {
+public class MainActivity extends BaseActivity implements MainScreen {
   private Unbinder unbinder;
   private MainComponent component;
 
@@ -95,23 +97,31 @@ public class MainActivity extends BaseActivity implements ParentScreen {
         .build();
     }
     component.inject(this);
+    // Initializes the presenter.
+    presenter.attachScreen(this);
+    presenter.create();
   }
 
   @Override
   protected void onStart() {
     super.onStart();
+    // Starts the presenter.
     presenter.start();
   }
 
   @Override
   protected void onStop() {
     super.onStop();
+    // Stops the presenter.
     presenter.stop();
   }
 
   @Override
   protected void onDestroy() {
     super.onDestroy();
+    // Deinitializes the presenter.
+    presenter.destroy();
+    presenter.detachScreen();
     // Unbinds all the annotated views and methods.
     unbinder.unbind();
   }
@@ -194,5 +204,20 @@ public class MainActivity extends BaseActivity implements ParentScreen {
     if (Utils.isNotNull(actionBar)) {
       actionBar.setTitle(title);
     }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void showAccountAdditionOrRemovalNotification(@NonNull String message) {
+    UiUtils.createDialog(this, messageHelper.doneWithExclamationMark(),
+      message, messageHelper.ok(), null, messageHelper.goToAccounts(),
+      new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+          setSubScreen(AccountsFragment.newInstance());
+        }
+      }).show();
   }
 }

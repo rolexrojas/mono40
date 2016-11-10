@@ -6,8 +6,7 @@ import android.support.annotation.NonNull;
 import com.gbh.movil.domain.AccountManager;
 import com.gbh.movil.domain.AccountRepo;
 import com.gbh.movil.domain.BalanceManager;
-import com.gbh.movil.data.net.NetworkHelper;
-import com.gbh.movil.domain.NotificationHolder;
+import com.gbh.movil.domain.EventBus;
 import com.gbh.movil.domain.api.ApiBridge;
 
 import javax.inject.Singleton;
@@ -34,20 +33,20 @@ final class AppModule {
 
   @Provides
   @Singleton
-  NotificationHolder provideNotificationHolder() {
-    return new NotificationHolder();
+  EventBus provideNotificationHolder() {
+    return new EventBus();
   }
 
   @Provides
   @Singleton
-  AccountManager provideAccountManager(AccountRepo accountRepo,
-    NotificationHolder notificationHolder) {
-    return new AccountManager(accountRepo, notificationHolder);
+  AccountManager provideAccountManager(EventBus eventBus, AccountRepo accountRepo,
+    ApiBridge apiBridge) {
+    return new AccountManager(eventBus, accountRepo, apiBridge);
   }
 
   @Provides
   @Singleton
-  BalanceManager provideBalanceManager(NetworkHelper networkHelper, ApiBridge apiBridge) {
-    return new BalanceManager(networkHelper, apiBridge);
+  BalanceManager provideBalanceManager(EventBus eventBus, ApiBridge apiBridge) {
+    return new BalanceManager(eventBus, apiBridge);
   }
 }
