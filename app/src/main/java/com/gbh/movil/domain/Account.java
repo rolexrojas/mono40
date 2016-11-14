@@ -19,6 +19,10 @@ public abstract class Account {
    */
   private final String alias;
   /**
+   * Account's number.
+   */
+  private final String number;
+  /**
    * Account's amount.
    */
   private final String currency;
@@ -38,6 +42,8 @@ public abstract class Account {
    *   Account's {@link AccountType type}.
    * @param alias
    *   Account's identifier.
+   *   @param number
+   *   Account's number.
    * @param currency
    *   Account's amount.
    * @param bank
@@ -45,10 +51,11 @@ public abstract class Account {
    * @param queryFee
    *   Cost of querying the balance.
    */
-  protected Account(@NonNull AccountType type, @NonNull String alias, @NonNull String currency,
-    @NonNull Bank bank, double queryFee) {
+  protected Account(@NonNull AccountType type, @NonNull String alias, @NonNull String number,
+    @NonNull String currency, @NonNull Bank bank, double queryFee) {
     this.type = type;
     this.alias = alias;
+    this.number = number;
     this.currency = currency;
     this.bank = bank;
     this.queryFee = queryFee;
@@ -72,6 +79,15 @@ public abstract class Account {
   @NonNull
   public final String getAlias() {
     return alias;
+  }
+
+  /**
+   * Gets the number of the account.
+   * @return Account's number.
+   */
+  @NonNull
+  public final String getNumber() {
+    return number;
   }
 
   /**
@@ -129,7 +145,7 @@ public abstract class Account {
 
   @Override
   public String toString() {
-    return Account.class.getSimpleName() + ":{type=" + type + ",alias='" + alias + "',amount='"
-      + currency + "',bank=" + bank + ",queryFee=" + queryFee + "'}";
+    return Account.class.getSimpleName() + ":{type=" + type + ",alias='" + alias + "',number='"
+      + number + "',currency='" + currency + "',bank=" + bank + ",queryFee=" + queryFee + "}";
   }
 }
