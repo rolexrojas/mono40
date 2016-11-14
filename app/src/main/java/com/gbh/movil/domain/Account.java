@@ -23,13 +23,13 @@ public abstract class Account {
    */
   private final String number;
   /**
-   * Account's amount.
-   */
-  private final String currency;
-  /**
    * Account's {@link Bank holder}.
    */
   private final Bank bank;
+  /**
+   * Account's amount.
+   */
+  private final String currency;
   /**
    * Cost of querying the balance.
    */
@@ -52,12 +52,12 @@ public abstract class Account {
    *   Cost of querying the balance.
    */
   protected Account(@NonNull AccountType type, @NonNull String alias, @NonNull String number,
-    @NonNull String currency, @NonNull Bank bank, double queryFee) {
+    @NonNull Bank bank, @NonNull String currency, double queryFee) {
     this.type = type;
     this.alias = alias;
     this.number = number;
-    this.currency = currency;
     this.bank = bank;
+    this.currency = currency;
     this.queryFee = queryFee;
   }
 
@@ -91,16 +91,6 @@ public abstract class Account {
   }
 
   /**
-   * Gets the amount of the account.
-   *
-   * @return Account's amount.
-   */
-  @NonNull
-  public final String getCurrency() {
-    return currency;
-  }
-
-  /**
    * Gets the {@link Bank holder} of the account.
    *
    * @return Account's {@link Bank holder}.
@@ -108,6 +98,16 @@ public abstract class Account {
   @NonNull
   public final Bank getBank() {
     return bank;
+  }
+
+  /**
+   * Gets the amount of the account.
+   *
+   * @return Account's amount.
+   */
+  @NonNull
+  public final String getCurrency() {
+    return currency;
   }
 
   /**
@@ -134,8 +134,9 @@ public abstract class Account {
 
   @Override
   public boolean equals(Object object) {
-    return super.equals(object) || (Utils.isNotNull(object) && object instanceof Account &&
-      ((Account) object).type.equals(type) && ((Account) object).alias.equals(alias));
+    return super.equals(object) || (Utils.isNotNull(object) && object instanceof Account
+      && ((Account) object).type.equals(type) && ((Account) object).alias.equals(alias))
+      && ((Account) object).bank.equals(bank);
   }
 
   @Override

@@ -21,7 +21,30 @@ android {
   }
 
   buildTypes {
+    def TYPE_INTEGER = "Integer"
+    def TYPE_STRING = "String"
+
+    def TIME_OUT_CONNECTION = "TIME_OUT_CONNECT"
+    def TIME_OUT_READ = "TIME_OUT_READ"
+    def TIME_OUT_WRITE = "TIME_OUT_WRITE"
+
+    def API_URL = "API_URL"
+
+    debug {
+      buildConfigField TYPE_INTEGER, TIME_OUT_CONNECTION, "30"
+      buildConfigField TYPE_INTEGER, TIME_OUT_READ, "30"
+      buildConfigField TYPE_INTEGER, TIME_OUT_WRITE, "30"
+      buildConfigField TYPE_STRING, API_URL, "\"http://172.19.1.103:8081/api/neo/\""
+
+      signingConfig signingConfigs.debug
+    }
+
     release {
+      buildConfigField TYPE_INTEGER, TIME_OUT_CONNECTION, "30" // TODO
+      buildConfigField TYPE_INTEGER, TIME_OUT_READ, "30" // TODO
+      buildConfigField TYPE_INTEGER, TIME_OUT_WRITE, "30" // TODO
+      buildConfigField TYPE_STRING, API_URL, "\"http://172.19.1.103:8081/api/neo/\"" // TODO
+
       minifyEnabled false
       proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
     }
@@ -42,14 +65,14 @@ dependencies {
   def halariousVersion = "0.14"
   def jUnitVersion = "4.12"
   def jsr250Version = "1.0"
-  def okHttpVersion = "3.4.1"
+  def okHttpVersion = "3.4.2"
   def picassoOkHttpDownloaderVersion = "1.0.2"
   def picassoVersion = "2.5.2"
   def recyclerViewFlexibleDivider = "1.4.0"
   def retrofitVersion = "2.1.0"
   def rxAndroidVersion = "1.2.1"
   def rxBindingVersion = "0.4.0"
-  def rxJavaVersion = "1.1.10"
+  def rxJavaVersion = "1.2.2"
   def supportLibraryVersion = "24.2.1"
   def timberVersion = "4.3.1"
 
@@ -70,6 +93,8 @@ dependencies {
   compile "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}"
   compile "com.squareup.okhttp3:okhttp:${okHttpVersion}"
   compile "com.squareup.picasso:picasso:${picassoVersion}"
+  compile "com.squareup.retrofit2:adapter-rxjava:${retrofitVersion}"
+  compile "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
   compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"
   compile "com.yqritc:recyclerview-flexibledivider:${recyclerViewFlexibleDivider}"
   compile "io.reactivex:rxandroid:${rxAndroidVersion}"

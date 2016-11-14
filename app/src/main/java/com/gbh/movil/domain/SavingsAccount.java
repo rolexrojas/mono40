@@ -11,9 +11,9 @@ public class SavingsAccount extends Account {
   /**
    * {@inheritDoc}
    */
-  public SavingsAccount(@NonNull String alias, @NonNull String number, @NonNull String currency,
-    @NonNull Bank bank, double queryFee) {
-    super(AccountType.SAVINGS, alias, number, currency, bank, queryFee);
+  public SavingsAccount(@NonNull String alias, @NonNull String number, @NonNull Bank bank,
+    @NonNull String currency, double queryFee) {
+    super(AccountType.SAVINGS, alias, number, bank, currency, queryFee);
   }
 
   @Override

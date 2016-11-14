@@ -35,7 +35,7 @@ public class DecoratedApiBridge implements ApiBridge {
     return new Observable.Transformer<ApiResult<T>, ApiResult<T>>() {
       @Override
       public Observable<ApiResult<T>> call(Observable<ApiResult<T>> observable) {
-        // TODO
+        // TODO: Assert user's authorization.
         return observable;
       }
     };
