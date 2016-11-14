@@ -7,7 +7,6 @@ import com.gbh.movil.domain.Balance;
 import com.gbh.movil.domain.Bank;
 import com.gbh.movil.domain.InitialData;
 import com.gbh.movil.domain.Recipient;
-import com.gbh.movil.domain.Result;
 import com.gbh.movil.domain.Transaction;
 
 import java.util.List;
@@ -30,7 +29,7 @@ public interface ApiBridge {
    * @return An {@link Observable observable} that emits all the associated {@link Bank banks}.
    */
   @NonNull
-  Observable<Result<ApiCode, Set<Bank>>> banks();
+  Observable<ApiResult<Set<Bank>>> banks();
 
   /**
    * TODO
@@ -38,7 +37,7 @@ public interface ApiBridge {
    * @return TODO
    */
   @NonNull
-  Observable<Result<ApiCode, InitialData>> initialLoad();
+  Observable<ApiResult<InitialData>> initialLoad();
 
   /**
    * Creates an {@link Observable observable} that emits all the registered {@link Account
@@ -51,7 +50,7 @@ public interface ApiBridge {
    * accounts}.
    */
   @NonNull
-  Observable<Result<ApiCode, Set<Account>>> accounts();
+  Observable<ApiResult<Set<Account>>> accounts();
 
   /**
    * Query the {@link Balance balance} of an {@link Account account} from the API.
@@ -67,7 +66,7 @@ public interface ApiBridge {
    * @return {@link Balance balance} of an {@link Account account} from the API.
    */
   @NonNull
-  Observable<Result<ApiCode, Balance>> queryBalance(@NonNull Account account, @NonNull String pin);
+  Observable<ApiResult<Balance>> queryBalance(@NonNull Account account, @NonNull String pin);
 
   /**
    * Creates an {@link Observable observable} that emits all the registered {@link Recipient
@@ -80,7 +79,7 @@ public interface ApiBridge {
    * recipients}.
    */
   @NonNull
-  Observable<Result<ApiCode, Set<Recipient>>> recipients();
+  Observable<ApiResult<Set<Recipient>>> recipients();
 
   /**
    * Creates an {@link Observable observable} that emits the latest {@link Transaction transactions}
@@ -93,5 +92,5 @@ public interface ApiBridge {
    * that were made.
    */
   @NonNull
-  Observable<Result<ApiCode, List<Transaction>>> recentTransactions();
+  Observable<ApiResult<List<Transaction>>> recentTransactions();
 }

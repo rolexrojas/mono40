@@ -45,5 +45,5 @@ public interface RecipientRepo {
    * @return TODO
    */
   @NonNull
-  Observable<Set<Recipient>> save(@NonNull Set<Recipient> recipients);
+  Observable<Set<Recipient>> saveAll(@NonNull Set<Recipient> recipients);
 }

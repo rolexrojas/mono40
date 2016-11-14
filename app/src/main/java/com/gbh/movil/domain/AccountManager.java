@@ -6,8 +6,7 @@ import android.support.v4.util.Pair;
 import com.gbh.movil.RxUtils;
 import com.gbh.movil.Utils;
 import com.gbh.movil.domain.api.ApiBridge;
-import com.gbh.movil.domain.api.ApiCode;
-import com.gbh.movil.domain.api.ApiUtils;
+import com.gbh.movil.domain.api.ApiResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,19 +124,20 @@ public final class AccountManager {
   public final Observable<Set<Account>> getAll() {
     return accountRepo.getAll()
       .concatWith(apiBridge.accounts()
-        .flatMap(new Func1<Result<ApiCode, Set<Account>>, Observable<Set<Account>>>() {
+        .flatMap(new Func1<ApiResult<Set<Account>>, Observable<Set<Account>>>() {
           @Override
-          public Observable<Set<Account>> call(Result<ApiCode, Set<Account>> result) {
-            if (ApiUtils.isSuccessful(result)) {
+          public Observable<Set<Account>> call(ApiResult<Set<Account>> result) {
+            if (result.isSuccessful()) {
               final Set<Account> accounts = result.getData();
               if (Utils.isNotNull(accounts)) {
                 return syncAccounts(accounts, false);
               } else { // This is not supposed to happen.
-                return Observable.just(null);
+                return Observable.error(new NullPointerException("Result's data is not available"));
               }
             } else {
               Timber.d("Failed to load all registered accounts (%1$s)", result);
-              return Observable.just(null);
+              // TODO: Find or create a suitable exception for this case.
+              return Observable.error(new Exception());
             }
           }
         }));

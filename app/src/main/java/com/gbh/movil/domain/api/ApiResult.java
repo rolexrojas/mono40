@@ -1,4 +1,4 @@
-package com.gbh.movil.domain;
+package com.gbh.movil.domain.api;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,11 +8,11 @@ import android.support.annotation.Nullable;
  *
  * @author hecvasro
  */
-public final class Result<C, D> {
+public final class ApiResult<D> {
   /**
    * Result's code.
    */
-  private final C code;
+  private final ApiCode code;
   /**
    * Result's data.
    */
@@ -26,24 +26,24 @@ public final class Result<C, D> {
    * @param data
    *   Result's data.
    */
-  private Result(@NonNull C code, @Nullable D data) {
+  private ApiResult(@NonNull ApiCode code, @Nullable D data) {
     this.code = code;
     this.data = data;
   }
 
   /**
-   * Creates a {@link Result result} with the given code and data.
+   * Creates a {@link ApiResult result} with the given code and data.
    */
   @NonNull
-  public static <C, D> Result<C, D> create(@NonNull C code, @Nullable D data) {
-    return new Result<>(code, data);
+  public static <D> ApiResult<D> create(@NonNull ApiCode code, @Nullable D data) {
+    return new ApiResult<>(code, data);
   }
 
   /**
-   * Creates a {@link Result result} with the given code.
+   * Creates a {@link ApiResult result} with the given code.
    */
   @NonNull
-  public static <C, D> Result<C, D> create(@NonNull C code) {
+  public static <D> ApiResult<D> create(@NonNull ApiCode code) {
     return create(code, null);
   }
 
@@ -53,7 +53,7 @@ public final class Result<C, D> {
    * @return Result's code.
    */
   @NonNull
-  public final C getCode() {
+  public final ApiCode getCode() {
     return code;
   }
 
@@ -65,6 +65,15 @@ public final class Result<C, D> {
   @Nullable
   public final D getData() {
     return data;
+  }
+
+  /**
+   * Indicates if is successful result or not.
+   *
+   * @return True if it is successful result, false otherwise.
+   */
+  public final boolean isSuccessful() {
+    return code == ApiCode.OK;
   }
 
   @Override

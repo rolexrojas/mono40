@@ -7,8 +7,7 @@ import android.support.v4.util.Pair;
 import com.gbh.movil.RxUtils;
 import com.gbh.movil.Utils;
 import com.gbh.movil.domain.api.ApiBridge;
-import com.gbh.movil.domain.api.ApiCode;
-import com.gbh.movil.domain.api.ApiUtils;
+import com.gbh.movil.domain.api.ApiResult;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -141,11 +140,11 @@ public final class BalanceManager {
   public final Observable<Pair<Boolean, Balance>> queryBalance(@NonNull final Account account,
     @NonNull String pin) {
     return apiBridge.queryBalance(account, pin)
-      .map(new Func1<Result<ApiCode, Balance>, Pair<Boolean, Balance>>() {
+      .map(new Func1<ApiResult<Balance>, Pair<Boolean, Balance>>() {
         @Override
-        public Pair<Boolean, Balance> call(Result<ApiCode, Balance> result) {
+        public Pair<Boolean, Balance> call(ApiResult<Balance> result) {
           Balance balance = null;
-          if (ApiUtils.isSuccessful(result)) {
+          if (result.isSuccessful()) {
             balance = result.getData();
             if (Utils.isNotNull(balance)) {
               balances.put(account, Pair.create(System.currentTimeMillis(), balance));

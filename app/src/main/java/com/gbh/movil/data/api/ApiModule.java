@@ -1,6 +1,7 @@
 package com.gbh.movil.data.api;
 
 import com.gbh.movil.domain.api.ApiBridge;
+import com.gbh.movil.domain.api.DecoratedApiBridge;
 
 import javax.inject.Singleton;
 
@@ -15,6 +16,6 @@ public class ApiModule {
   @Provides
   @Singleton
   ApiBridge provideApiBridge() {
-    return new FakeApiBridge();
+    return new DecoratedApiBridge(new FakeApiBridge());
   }
 }

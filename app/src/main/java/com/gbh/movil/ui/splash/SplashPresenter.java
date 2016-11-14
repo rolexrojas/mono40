@@ -9,6 +9,7 @@ import com.gbh.movil.data.net.NetworkHelper;
 import com.gbh.movil.ui.Presenter;
 
 import rx.Subscription;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
@@ -41,10 +42,16 @@ final class SplashPresenter extends Presenter<SplashScreen> {
       subscription = initialDataLoader.load()
         .subscribeOn(schedulerProvider.io())
         .observeOn(schedulerProvider.ui())
+        .doOnUnsubscribe(new Action0() {
+          @Override
+          public void call() {
+            screen.terminate();
+          }
+        })
         .subscribe(new Action1<Object>() {
           @Override
           public void call(Object notification) {
-            screen.terminate();
+            // Nothing to do here.
           }
         }, new Action1<Throwable>() {
           @Override

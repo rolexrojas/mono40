@@ -4,8 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.gbh.movil.Utils;
 import com.gbh.movil.domain.api.ApiBridge;
-import com.gbh.movil.domain.api.ApiCode;
-import com.gbh.movil.domain.api.ApiUtils;
+import com.gbh.movil.domain.api.ApiResult;
 
 import java.util.List;
 
@@ -18,37 +17,38 @@ import timber.log.Timber;
  *
  * @author hecvasro
  */
-public final class TransactionManager {
+public class DecoratedTransactionProvider implements TransactionProvider {
   private final TransactionRepo transactionRepo;
   private final ApiBridge apiBridge;
 
-  public TransactionManager(@NonNull TransactionRepo transactionRepo,
+  public DecoratedTransactionProvider(@NonNull TransactionRepo transactionRepo,
     @NonNull ApiBridge apiBridge) {
     this.transactionRepo = transactionRepo;
     this.apiBridge = apiBridge;
   }
 
   /**
-   * TODO
-   *
-   * @return TODO
+   * {@inheritDoc}
    */
-  public final Observable<List<Transaction>> getAll() {
+  @NonNull
+  @Override
+  public Observable<List<Transaction>> getAll() {
     return transactionRepo.getAll()
       .concatWith(apiBridge.recentTransactions()
-        .flatMap(new Func1<Result<ApiCode, List<Transaction>>, Observable<List<Transaction>>>() {
+        .flatMap(new Func1<ApiResult<List<Transaction>>, Observable<List<Transaction>>>() {
           @Override
-          public Observable<List<Transaction>> call(Result<ApiCode, List<Transaction>> result) {
-            if (ApiUtils.isSuccessful(result)) {
+          public Observable<List<Transaction>> call(ApiResult<List<Transaction>> result) {
+            if (result.isSuccessful()) {
               final List<Transaction> transactions = result.getData();
               if (Utils.isNotNull(transactions)) {
                 return transactionRepo.saveAll(transactions);
               } else { // This is not supposed to happen.
-                return Observable.just(null);
+                return Observable.error(new NullPointerException("Result's data is not available"));
               }
             } else {
               Timber.d("Failed to load latest transactions (%1$s)", result);
-              return Observable.just(null);
+              // TODO: Find or create a suitable exception for this case.
+              return Observable.error(new Exception());
             }
           }
         }));

@@ -54,7 +54,7 @@ class InMemoryRecipientRepo implements RecipientRepo {
    */
   @NonNull
   @Override
-  public Observable<Set<Recipient>> save(@NonNull Set<Recipient> recipients) {
+  public Observable<Set<Recipient>> saveAll(@NonNull Set<Recipient> recipients) {
     return Observable.from(recipients)
       .flatMap(new Func1<Recipient, Observable<Recipient>>() {
         @Override

@@ -6,7 +6,7 @@ import com.gbh.movil.RxUtils;
 import com.gbh.movil.Utils;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.Transaction;
-import com.gbh.movil.domain.TransactionManager;
+import com.gbh.movil.domain.TransactionProvider;
 import com.gbh.movil.ui.Presenter;
 import com.gbh.movil.ui.UiUtils;
 
@@ -29,14 +29,14 @@ import timber.log.Timber;
  */
 class RecentTransactionsPresenter extends Presenter<RecentTransactionsScreen> {
   private final SchedulerProvider schedulerProvider;
-  private final TransactionManager transactionManager;
+  private final TransactionProvider transactionProvider;
 
   private Subscription subscription = Subscriptions.unsubscribed();
 
   RecentTransactionsPresenter(@NonNull SchedulerProvider schedulerProvider,
-    @NonNull TransactionManager transactionManager) {
+    @NonNull TransactionProvider transactionProvider) {
     this.schedulerProvider = schedulerProvider;
-    this.transactionManager = transactionManager;
+    this.transactionProvider = transactionProvider;
   }
 
   /**
@@ -61,7 +61,7 @@ class RecentTransactionsPresenter extends Presenter<RecentTransactionsScreen> {
   void refresh() {
     assertScreen();
     if (subscription.isUnsubscribed()) {
-      subscription = transactionManager.getAll()
+      subscription = transactionProvider.getAll()
         .subscribeOn(schedulerProvider.io())
         .observeOn(schedulerProvider.ui())
         .doOnSubscribe(new Action0() {
