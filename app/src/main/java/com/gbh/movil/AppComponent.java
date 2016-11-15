@@ -8,6 +8,7 @@ import com.gbh.movil.domain.BalanceManager;
 import com.gbh.movil.data.net.NetworkHelper;
 import com.gbh.movil.domain.EventBus;
 import com.gbh.movil.domain.RecipientRepo;
+import com.gbh.movil.domain.SessionManager;
 import com.gbh.movil.domain.TransactionRepo;
 import com.gbh.movil.domain.api.ApiBridge;
 
@@ -22,6 +23,8 @@ import dagger.Component;
 @Component(modules = { AppModule.class, DataModule.class })
 public interface AppComponent {
   MessageHelper provideMessageHelper();
+
+  SessionManager provideSessionManager();
 
   NetworkHelper provideNetworkHelper();
 

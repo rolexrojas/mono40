@@ -7,6 +7,7 @@ import com.gbh.movil.domain.AccountManager;
 import com.gbh.movil.domain.AccountRepo;
 import com.gbh.movil.domain.BalanceManager;
 import com.gbh.movil.domain.EventBus;
+import com.gbh.movil.domain.SessionManager;
 import com.gbh.movil.domain.api.ApiBridge;
 
 import javax.inject.Singleton;
@@ -33,8 +34,14 @@ final class AppModule {
 
   @Provides
   @Singleton
-  EventBus provideNotificationHolder() {
+  EventBus provideEventBus() {
     return new EventBus();
+  }
+
+  @Provides
+  @Singleton
+  SessionManager provideSessionManager() {
+    return new SessionManager();
   }
 
   @Provides
