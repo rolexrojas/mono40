@@ -234,7 +234,7 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
         transactionHolder.typeTextView.setText(transaction.getType());
         final double value = transaction.getValue();
         final String currencyCode = transaction.getCurrency();
-        final int colorId = transaction.getRequestType() == Transaction.RequestType.CREDIT ?
+        final int colorId = transaction.getRequestType() == Transaction.RequestType.C ?
           R.color.transaction_type_credit : R.color.transaction_type_debit;
         transactionHolder.amountView.setCurrency(currencyCode);
         transactionHolder.amountView.setCurrencyColor(colorId);

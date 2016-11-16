@@ -4,6 +4,7 @@ import com.gbh.movil.BuildConfig;
 import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.Bank;
 import com.gbh.movil.domain.InitialData;
+import com.gbh.movil.domain.Transaction;
 import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.domain.api.DecoratedApiBridge;
 import com.google.gson.Gson;
@@ -29,6 +30,7 @@ public class ApiModule {
     final Gson gson = new GsonBuilder()
       .registerTypeAdapter(Bank.class, new BankJsonDeserializer())
       .registerTypeAdapter(Account.class, new AccountJsonDeserializer())
+      .registerTypeAdapter(Transaction.class, new TransactionJsonDeserializer())
       .registerTypeAdapter(InitialData.class, new InitialDataDeserializer())
       .create();
     final Retrofit retrofit = new Retrofit.Builder()

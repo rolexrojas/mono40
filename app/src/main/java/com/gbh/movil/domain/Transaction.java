@@ -1,12 +1,8 @@
 package com.gbh.movil.domain;
 
-import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 
 import com.gbh.movil.Utils;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 
 /**
  * Transaction representation.
@@ -27,8 +23,7 @@ public class Transaction {
   /**
    * Transaction's {@link RequestType request type}.
    */
-  @RequestType
-  private final int requestType;
+  private final RequestType requestType;
   /**
    * Transaction's currency code.
    */
@@ -55,7 +50,7 @@ public class Transaction {
    *   Transaction's getValue.
    */
   public Transaction(@NonNull String type, @NonNull String name, long date,
-    @RequestType int requestType, @NonNull String currency, double value) {
+    RequestType requestType, @NonNull String currency, double value) {
     this.type = type;
     this.name = name;
     this.date = date;
@@ -98,8 +93,8 @@ public class Transaction {
    *
    * @return Transaction's {@link RequestType request type}.
    */
-  @RequestType
-  public final int getRequestType() {
+  @NonNull
+  public final RequestType getRequestType() {
     return requestType;
   }
 
@@ -143,10 +138,8 @@ public class Transaction {
   /**
    * Transaction request type enumeration.
    */
-  @Retention(RetentionPolicy.SOURCE)
-  @IntDef({ RequestType.CREDIT, RequestType.DEBIT })
-  public @interface RequestType {
-    int CREDIT = 0;
-    int DEBIT = 1;
+  public enum RequestType {
+    D, // Debit
+    C // Credit
   }
 }

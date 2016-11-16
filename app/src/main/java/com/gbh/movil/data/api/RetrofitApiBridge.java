@@ -149,6 +149,7 @@ class RetrofitApiBridge implements ApiBridge {
   @NonNull
   @Override
   public Observable<ApiResult<List<Transaction>>> recentTransactions() {
-    return Observable.error(new UnsupportedOperationException());
+    return apiService.recentTransactions()
+      .compose(this.<List<Transaction>>transformToApiResult());
   }
 }
