@@ -11,20 +11,7 @@ import rx.Observable;
  *
  * @author hecvasro
  */
-public interface RecipientRepo {
-  /**
-   * Creates an {@link Observable observable} that emits all the {@link Recipient recipients} saved
-   * locally.
-   * <p>
-   * <em>Note:</em> By default {@link #getAll()} does not operates on a particular {@link
-   * rx.Scheduler}.
-   *
-   * @return An {@link Observable observable} that emits all the {@link Recipient recipients} saved
-   * locally.
-   */
-  @NonNull
-  Observable<Set<Recipient>> getAll();
-
+public interface RecipientRepo extends RecipientProvider {
   /**
    * TODO
    *

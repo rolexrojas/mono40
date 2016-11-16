@@ -2,7 +2,7 @@ package com.gbh.movil.data.repo;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.RxUtils;
+import com.gbh.movil.rx.RxUtils;
 import com.gbh.movil.domain.Transaction;
 import com.gbh.movil.domain.TransactionRepo;
 

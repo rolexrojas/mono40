@@ -1,10 +1,12 @@
 package com.gbh.movil.data.api;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.Balance;
 import com.gbh.movil.domain.Bank;
+import com.gbh.movil.domain.Contact;
 import com.gbh.movil.domain.SavingsAccount;
 import com.gbh.movil.domain.CreditCard;
 import com.gbh.movil.domain.InitialData;
@@ -29,10 +31,11 @@ import rx.Observable;
  * @author hecvasro
  */
 class FakeApiBridge implements ApiBridge {
-  private final List<Transaction> transactions = new ArrayList<>();
-  private final Map<Account, Balance> balances = new HashMap<>();
-  private final Set<Account> accounts = new HashSet<>();
   private final Set<Bank> banks = new HashSet<>();
+  private final Set<Account> accounts = new HashSet<>();
+  private final Map<Account, Balance> balances = new HashMap<>();
+  private final List<Transaction> transactions = new ArrayList<>();
+  private final Set<Contact> contacts = new HashSet<>();
   private final Set<Recipient> recipients = new HashSet<>();
 
   FakeApiBridge() {
@@ -75,6 +78,8 @@ class FakeApiBridge implements ApiBridge {
     calendar.set(Calendar.DAY_OF_MONTH, 29);
     transactions.add(new Transaction("Pago en tienda", "Farmacia Plus", calendar.getTimeInMillis(),
       Transaction.RequestType.DEBIT, "DOP", 1230.77));
+    contacts.add(new Contact("Hector Vasquez", "8098829887", Uri.EMPTY));
+    contacts.add(new Contact("Luis Miguel Ruiz", "8092817626", Uri.EMPTY));
   }
 
   @NonNull

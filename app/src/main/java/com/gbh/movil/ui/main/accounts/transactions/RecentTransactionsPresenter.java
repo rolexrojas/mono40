@@ -2,7 +2,7 @@ package com.gbh.movil.ui.main.accounts.transactions;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.RxUtils;
+import com.gbh.movil.rx.RxUtils;
 import com.gbh.movil.Utils;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.Transaction;

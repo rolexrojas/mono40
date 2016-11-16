@@ -6,6 +6,7 @@ import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.AccountManager;
 import com.gbh.movil.domain.BalanceManager;
 import com.gbh.movil.domain.EventBus;
+import com.gbh.movil.domain.RecipientManager;
 import com.gbh.movil.ui.ActivityScope;
 
 import dagger.Component;
@@ -29,4 +30,6 @@ public interface MainComponent {
   AccountManager provideAccountManager();
 
   BalanceManager provideBalanceManager();
+
+  RecipientManager provideRecipientManager();
 }

@@ -216,13 +216,6 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
   }
 
   @Override
-  public void showLastTransactionsButton() {
-    if (Utils.isNotNull(adapter)) {
-      adapter.showLastTransactionsItem();
-    }
-  }
-
-  @Override
   public void onShowRecentTransactionsButtonClicked() {
     startActivity(RecentTransactionsActivity.getLaunchIntent(getContext()));
   }
@@ -253,6 +246,8 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
 
     private Adapter(@NonNull ShowRecentTransactionsViewHolder.Listener listener) {
       this.listener = listener;
+      this.items.add(showRecentTransactionsItem);
+      this.notifyItemInserted(this.getItemCount());
     }
 
     /**
@@ -278,9 +273,11 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
      */
     final void clear() {
       final int count = getItemCount();
-      if (count > 0) {
-        items.clear();
-        notifyItemRangeRemoved(0, count);
+      if (count > 1) {
+        final List<Object> itemsToRemove = items.subList(0,
+          items.indexOf(showRecentTransactionsItem) - 1);
+        items.removeAll(itemsToRemove);
+        notifyItemRangeRemoved(0, itemsToRemove.size());
       }
     }
 
@@ -293,8 +290,10 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
     final void add(@NonNull Account account) {
       final AccountItem item = findByAccount(account);
       if (Utils.isNull(item)) {
-        items.add(new AccountItem(account));
-        notifyItemInserted(getItemCount());
+        final int count = getItemCount();
+        final int index = items.contains(showRecentTransactionsItem) ? count - 1 : count;
+        items.add(index, new AccountItem(account));
+        notifyItemInserted(index);
       }
     }
 
@@ -311,16 +310,6 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
       if (Utils.isNotNull(item)) {
         item.setBalance(balance);
         notifyItemChanged(items.indexOf(item));
-      }
-    }
-
-    /**
-     * TODO
-     */
-    final void showLastTransactionsItem() {
-      if (!items.contains(showRecentTransactionsItem)) {
-        items.add(showRecentTransactionsItem);
-        notifyItemInserted(getItemCount());
       }
     }
 

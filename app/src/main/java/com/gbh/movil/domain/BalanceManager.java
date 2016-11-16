@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
-import com.gbh.movil.RxUtils;
+import com.gbh.movil.rx.RxUtils;
 import com.gbh.movil.Utils;
 import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.domain.api.ApiResult;

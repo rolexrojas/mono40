@@ -7,7 +7,7 @@ import com.gbh.movil.domain.AccountManager;
 import com.gbh.movil.domain.BalanceManager;
 import com.gbh.movil.data.net.NetworkHelper;
 import com.gbh.movil.domain.EventBus;
-import com.gbh.movil.domain.RecipientRepo;
+import com.gbh.movil.domain.RecipientManager;
 import com.gbh.movil.domain.SessionManager;
 import com.gbh.movil.domain.TransactionRepo;
 import com.gbh.movil.domain.api.ApiBridge;
@@ -24,21 +24,21 @@ import dagger.Component;
 public interface AppComponent {
   MessageHelper provideMessageHelper();
 
-  SessionManager provideSessionManager();
-
   NetworkHelper provideNetworkHelper();
 
   SchedulerProvider provideSchedulerProvider();
 
+  EventBus provideNotificationHolder();
+
+  SessionManager provideSessionManager();
+
   ApiBridge provideApiBridge();
 
-  RecipientRepo provideRecipientRepo();
-
   TransactionRepo provideTransactionRepo();
-
-  EventBus provideNotificationHolder();
 
   AccountManager provideAccountManager();
 
   BalanceManager provideBalanceManager();
+
+  RecipientManager provideRecipientManager();
 }

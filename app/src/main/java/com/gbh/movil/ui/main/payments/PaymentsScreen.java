@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.ui.Refreshable;
+import com.gbh.movil.ui.Screen;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -13,7 +14,7 @@ import rx.android.schedulers.AndroidSchedulers;
  *
  * @author hecvasro
  */
-interface PaymentsScreen extends Refreshable {
+interface PaymentsScreen extends Screen, Refreshable {
   /**
    * TODO
    */

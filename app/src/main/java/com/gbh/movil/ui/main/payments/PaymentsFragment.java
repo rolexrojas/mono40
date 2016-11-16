@@ -72,9 +72,10 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen {
     // Injects all the annotated dependencies.
     final PaymentsComponent component = DaggerPaymentsComponent.builder()
       .mainComponent(parentScreen.getComponent())
-      .paymentsModule(new PaymentsModule(this))
       .build();
     component.inject(this);
+    // Attaches the screen to the presenter.
+    presenter.attachScreen(this);
   }
 
   @Override
@@ -96,6 +97,8 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen {
   @Override
   public void onDestroyView() {
     super.onDestroyView();
+    // Detaches the screen from the presenter.
+    presenter.detachScreen();
     // Unbinds all the annotated views and methods.
     unbinder.unbind();
   }

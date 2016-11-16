@@ -1,5 +1,8 @@
 package com.gbh.movil.data.net;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+
 import com.gbh.movil.BuildConfig;
 import com.gbh.movil.Utils;
 import com.gbh.movil.domain.SessionManager;
@@ -24,6 +27,13 @@ import okhttp3.logging.HttpLoggingInterceptor;
 public class NetModule {
   private static final String HEADER_AUTHORIZATION = "Authorization";
   private static final String HEADER_USER_AGENT = "User-Agent";
+
+  @Provides
+  @Singleton
+  NetworkHelper provideNetworkHelper(Context context) {
+    return new ConnectivityManagerNetworkHelper((ConnectivityManager) context.getSystemService(
+      Context.CONNECTIVITY_SERVICE));
+  }
 
   @Provides
   @Singleton

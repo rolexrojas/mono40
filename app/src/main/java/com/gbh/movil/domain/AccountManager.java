@@ -3,7 +3,7 @@ package com.gbh.movil.domain;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
-import com.gbh.movil.RxUtils;
+import com.gbh.movil.rx.RxUtils;
 import com.gbh.movil.Utils;
 import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.domain.api.ApiResult;
@@ -23,7 +23,7 @@ import timber.log.Timber;
  *
  * @author hecvasro
  */
-public final class AccountManager {
+public final class AccountManager implements AccountProvider {
   private final EventBus eventBus;
   private final AccountRepo accountRepo;
   private final ApiBridge apiBridge;
@@ -45,6 +45,7 @@ public final class AccountManager {
    *
    * @return TODO
    */
+  @NonNull
   private Observable<Set<Account>> syncAccounts(@NonNull Set<Account> accounts,
     final boolean mustEmitAdditionAndRemovalNotifications) {
     return accountRepo.getAll()
@@ -116,21 +117,20 @@ public final class AccountManager {
   }
 
   /**
-   * TODO
-   *
-   * @return TODO
+   * {@inheritDoc}
    */
   @NonNull
-  public final Observable<Set<Account>> getAll() {
+  @Override
+  public Observable<Set<Account>> getAll() {
     return accountRepo.getAll()
       .concatWith(apiBridge.accounts()
         .flatMap(new Func1<ApiResult<Set<Account>>, Observable<Set<Account>>>() {
           @Override
           public Observable<Set<Account>> call(ApiResult<Set<Account>> result) {
             if (result.isSuccessful()) {
-              final Set<Account> accounts = result.getData();
-              if (Utils.isNotNull(accounts)) {
-                return syncAccounts(accounts, false);
+              final Set<Account> data = result.getData();
+              if (Utils.isNotNull(data)) {
+                return syncAccounts(data, false);
               } else { // This is not supposed to happen.
                 return Observable.error(new NullPointerException("Result's data is not available"));
               }

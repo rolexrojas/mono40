@@ -34,11 +34,9 @@ class BankJsonDeserializer implements JsonDeserializer<Bank> {
       final Bank bank = new Bank(
         jsonObject.get(PROPERTY_BANK_PARTNER_CODE).getAsInt(),
         jsonObject.get(PROPERTY_BANK_PARTNER_ID).getAsString(),
-        jsonObject.get(PROPERTY_BANK_PARTNER_NAME).getAsString()
-      );
-      if (jsonObject.has(PROPERTY_BANK_PARTNER_STATE)) {
-        bank.setState(jsonObject.get(PROPERTY_BANK_PARTNER_STATE).getAsBoolean());
-      }
+        jsonObject.get(PROPERTY_BANK_PARTNER_NAME).getAsString());
+      bank.setState(jsonObject.has(PROPERTY_BANK_PARTNER_STATE)
+        && jsonObject.get(PROPERTY_BANK_PARTNER_STATE).getAsBoolean());
       return bank;
     }
   }

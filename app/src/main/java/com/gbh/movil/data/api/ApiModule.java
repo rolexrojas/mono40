@@ -17,7 +17,6 @@ import dagger.Provides;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * @author hecvasro
@@ -35,11 +34,11 @@ public class ApiModule {
       .registerTypeAdapter(HalResource.class, new HalDeserializer(InitialDataHalResource.class))
       .create();
     final Retrofit retrofit = new Retrofit.Builder()
-      .addConverterFactory(GsonConverterFactory.create(gson))
+      .addConverterFactory(HalConverterFactory.create(gson))
       .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
       .baseUrl(BuildConfig.API_URL)
       .client(okHttpClient)
       .build();
-    return new DecoratedApiBridge(new RetrofitApiBridge(retrofit.create(ApiService.class)));
+    return new DecoratedApiBridge(new FakeApiBridge());//new RetrofitApiBridge(retrofit.create(ApiService.class)));
   }
 }

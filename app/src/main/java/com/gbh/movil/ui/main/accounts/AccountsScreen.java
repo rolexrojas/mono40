@@ -48,9 +48,4 @@ interface AccountsScreen extends Screen, Refreshable {
    *   TODO
    */
   void setBalance(@NonNull Account account, @Nullable Balance balance);
-
-  /**
-   * TODO
-   */
-  void showLastTransactionsButton();
 }

@@ -2,6 +2,7 @@ package com.gbh.movil.domain;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.gbh.movil.Utils;
 
@@ -10,7 +11,7 @@ import com.gbh.movil.Utils;
  *
  * @author hecvasro
  */
-public class Contact {
+public class Contact implements Matchable {
   /**
    * Contact's name.
    */
@@ -85,5 +86,11 @@ public class Contact {
   public String toString() {
     return Contact.class.getSimpleName() + ":{name='" + name + "',phoneNumber='" + phoneNumber
       + "',pictureUri='" + pictureUri + "'}";
+  }
+
+  @Override
+  public boolean matches(@Nullable String query) {
+    return Utils.isNull(query) || name.toLowerCase().contains(query.toLowerCase())
+      || phoneNumber.toLowerCase().contains(query.toLowerCase());
   }
 }

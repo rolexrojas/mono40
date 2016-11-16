@@ -18,13 +18,13 @@ import timber.log.Timber;
 public final class InitialDataLoader {
   private final ApiBridge apiBridge;
   private final AccountManager accountManager;
-  private final RecipientRepo recipientRepo;
+  private final RecipientManager recipientManager;
 
   public InitialDataLoader(@NonNull ApiBridge apiBridge, @NonNull AccountManager accountManager,
-    @NonNull RecipientRepo recipientRepo) {
+    @NonNull RecipientManager recipientManager) {
     this.apiBridge = apiBridge;
     this.accountManager = accountManager;
-    this.recipientRepo = recipientRepo;
+    this.recipientManager = recipientManager;
   }
 
   /**
@@ -43,7 +43,7 @@ public final class InitialDataLoader {
             if (Utils.isNotNull(data)) {
               return accountManager.syncAccounts(data.getAccounts())
                 .cast(Object.class)
-                .concatWith(recipientRepo.saveAll(data.getRecipients()))
+                .concatWith(recipientManager.syncRecipients(data.getRecipients()))
                 .last();
             } else { // This is no suppose to happen.
               return Observable.error(new NullPointerException("Result's data is not available"));

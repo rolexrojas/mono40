@@ -7,6 +7,8 @@ import com.gbh.movil.domain.AccountManager;
 import com.gbh.movil.domain.AccountRepo;
 import com.gbh.movil.domain.BalanceManager;
 import com.gbh.movil.domain.EventBus;
+import com.gbh.movil.domain.RecipientManager;
+import com.gbh.movil.domain.RecipientRepo;
 import com.gbh.movil.domain.SessionManager;
 import com.gbh.movil.domain.api.ApiBridge;
 
@@ -55,5 +57,11 @@ final class AppModule {
   @Singleton
   BalanceManager provideBalanceManager(EventBus eventBus, ApiBridge apiBridge) {
     return new BalanceManager(eventBus, apiBridge);
+  }
+
+  @Provides
+  @Singleton
+  RecipientManager provideRecipientManager(RecipientRepo recipientRepo, ApiBridge apiBridge) {
+    return new RecipientManager(recipientRepo, apiBridge);
   }
 }

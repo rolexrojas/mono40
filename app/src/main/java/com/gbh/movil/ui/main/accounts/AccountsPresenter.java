@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
 import com.gbh.movil.Utils;
-import com.gbh.movil.RxUtils;
+import com.gbh.movil.rx.RxUtils;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.BalanceExpirationEvent;
@@ -78,24 +78,25 @@ class AccountsPresenter extends Presenter<AccountsScreen> {
           UiUtils.showRefreshIndicator(screen);
         }
       })
+      .doOnNext(new Action1<Set<Account>>() {
+        @Override
+        public void call(Set<Account> accounts) {
+          screen.clear();
+        }
+      })
       .doOnUnsubscribe(new Action0() {
         @Override
         public void call() {
           UiUtils.hideRefreshIndicator(screen);
         }
       })
-      .subscribe(new Action1<Set<Account>>() {
+      .compose(RxUtils.<Account>fromCollection())
+      .subscribe(new Action1<Account>() {
         @Override
-        public void call(Set<Account> accounts) {
-          if (Utils.isNotNull(accounts)) {
-            screen.clear();
-            for (Account account : accounts) {
-              screen.add(account);
-              if (balanceManager.hasValidBalance(account)) {
-                screen.setBalance(account, balanceManager.getBalance(account));
-              }
-            }
-            screen.showLastTransactionsButton();
+        public void call(Account account) {
+          screen.add(account);
+          if (balanceManager.hasValidBalance(account)) {
+            screen.setBalance(account, balanceManager.getBalance(account));
           }
         }
       }, new Action1<Throwable>() {

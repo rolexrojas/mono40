@@ -1,6 +1,7 @@
 package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.gbh.movil.Utils;
 
@@ -46,7 +47,7 @@ public class ContactRecipient extends Recipient {
    * {@inheritDoc}
    */
   @Override
-  public boolean matches(@NonNull String query) {
-    return true;
+  public boolean matches(@Nullable String query) {
+    return contact.matches(query);
   }
 }

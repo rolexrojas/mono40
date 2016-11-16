@@ -1,7 +1,12 @@
 package com.gbh.movil.data.repo;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import com.gbh.movil.rx.RxUtils;
+import com.gbh.movil.domain.Contact;
+import com.gbh.movil.domain.ContactRecipient;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.RecipientRepo;
 
@@ -10,8 +15,6 @@ import java.util.Set;
 
 import rx.Observable;
 import rx.functions.Action1;
-import rx.functions.Action2;
-import rx.functions.Func0;
 import rx.functions.Func1;
 
 /**
@@ -22,13 +25,26 @@ import rx.functions.Func1;
 class InMemoryRecipientRepo implements RecipientRepo {
   private final Set<Recipient> recipients = new HashSet<>();
 
+  InMemoryRecipientRepo() {
+    recipients.add(new ContactRecipient(new Contact("Luis Ruiz", "8092817626", Uri.EMPTY)));
+    recipients.add(new ContactRecipient(new Contact("Hector Vasquez", "8098829887", Uri.EMPTY)));
+  }
+
   /**
    * {@inheritDoc}
    */
   @NonNull
   @Override
-  public Observable<Set<Recipient>> getAll() {
-    return Observable.just(recipients);
+  public Observable<Set<Recipient>> getAll(@Nullable final String query) {
+    return Observable.just(recipients)
+      .compose(RxUtils.<Recipient>fromCollection())
+      .filter(new Func1<Recipient, Boolean>() {
+        @Override
+        public Boolean call(Recipient recipient) {
+          return recipient.matches(query);
+        }
+      })
+      .compose(RxUtils.<Recipient>toSet());
   }
 
   /**
@@ -62,16 +78,6 @@ class InMemoryRecipientRepo implements RecipientRepo {
           return save(recipient);
         }
       })
-      .collect(new Func0<Set<Recipient>>() {
-        @Override
-        public Set<Recipient> call() {
-          return new HashSet<>();
-        }
-      }, new Action2<Set<Recipient>, Recipient>() {
-        @Override
-        public void call(Set<Recipient> recipients, Recipient recipient) {
-          recipients.add(recipient);
-        }
-      });
+      .compose(RxUtils.<Recipient>toSet());
   }
 }

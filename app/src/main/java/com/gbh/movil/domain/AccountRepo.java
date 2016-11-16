@@ -2,8 +2,6 @@ package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
 
-import java.util.Set;
-
 import rx.Observable;
 
 /**
@@ -11,20 +9,7 @@ import rx.Observable;
  *
  * @author hecvasro
  */
-public interface AccountRepo {
-  /**
-   * Creates an {@link Observable observable} that emits all the {@link Account accounts} saved
-   * locally.
-   * <p>
-   * <em>Note:</em> By default {@link #getAll()} does not operates on a particular {@link
-   * rx.Scheduler}.
-   *
-   * @return An {@link Observable observable} that emits all the {@link Account accounts} saved
-   * locally.
-   */
-  @NonNull
-  Observable<Set<Account>> getAll();
-
+public interface AccountRepo extends AccountProvider {
   /**
    * TODO
    *

@@ -1,7 +1,7 @@
 package com.gbh.movil.ui.main.payments;
 
-import android.support.annotation.NonNull;
-
+import com.gbh.movil.data.SchedulerProvider;
+import com.gbh.movil.domain.RecipientManager;
 import com.gbh.movil.ui.FragmentScope;
 
 import dagger.Module;
@@ -12,15 +12,13 @@ import dagger.Provides;
  */
 @Module
 class PaymentsModule {
-  private final PaymentsScreen screen;
-
-  PaymentsModule(@NonNull PaymentsScreen screen) {
-    this.screen = screen;
+  PaymentsModule() {
   }
 
   @Provides
   @FragmentScope
-  PaymentsPresenter providePresenter() {
-    return new PaymentsPresenter(screen);
+  PaymentsPresenter providePresenter(SchedulerProvider schedulerProvider,
+    RecipientManager recipientManager) {
+    return new PaymentsPresenter(schedulerProvider, recipientManager);
   }
 }

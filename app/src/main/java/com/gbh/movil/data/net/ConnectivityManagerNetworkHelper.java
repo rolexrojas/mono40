@@ -11,10 +11,10 @@ import com.gbh.movil.Utils;
  *
  * @author hecvasro
  */
-public final class ConnectivityManagerNetworkHelper implements NetworkHelper {
+final class ConnectivityManagerNetworkHelper implements NetworkHelper {
   private final ConnectivityManager connectivityManager;
 
-  public ConnectivityManagerNetworkHelper(@NonNull ConnectivityManager connectivityManager) {
+  ConnectivityManagerNetworkHelper(@NonNull ConnectivityManager connectivityManager) {
     this.connectivityManager = connectivityManager;
   }
 
