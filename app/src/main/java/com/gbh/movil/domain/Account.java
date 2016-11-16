@@ -9,7 +9,7 @@ import com.gbh.movil.Utils;
  *
  * @author hecvasro
  */
-public abstract class Account {
+public class Account {
   /**
    * Account's {@link AccountType type}.
    */
@@ -51,7 +51,7 @@ public abstract class Account {
    * @param queryFee
    *   Cost of querying the balance.
    */
-  protected Account(@NonNull AccountType type, @NonNull String alias, @NonNull String number,
+  public Account(@NonNull AccountType type, @NonNull String alias, @NonNull String number,
     @NonNull Bank bank, @NonNull String currency, double queryFee) {
     this.type = type;
     this.alias = alias;

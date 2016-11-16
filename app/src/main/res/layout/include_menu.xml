@@ -25,7 +25,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="17dp"
     android:drawableStart="@drawable/ic_payments"
-    android:text="@string/payments"/>
+    android:text="@string/pay"/>
 
   <TextView
     android:id="@+id/text_view_commerce"
@@ -34,7 +34,7 @@
     android:layout_height="wrap_content"
     android:drawableStart="@drawable/ic_commerce"
     android:gravity="center_vertical"
-    android:text="@string/commerce"/>
+    android:text="@string/buy"/>
 
   <TextView
     android:id="@+id/text_view_accounts"

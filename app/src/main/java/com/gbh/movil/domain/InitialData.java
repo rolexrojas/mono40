@@ -2,6 +2,7 @@ package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -16,6 +17,10 @@ public final class InitialData {
   public InitialData(@NonNull Set<Account> accounts, @NonNull Set<Recipient> recipients) {
     this.accounts = accounts;
     this.recipients = recipients;
+  }
+
+  public InitialData(@NonNull Set<Account> accounts) {
+    this(accounts, new HashSet<Recipient>());
   }
 
   @NonNull

@@ -61,7 +61,7 @@ public final class MessageHelper {
 
   @NonNull
   public final String payments() {
-    return getString(R.string.payments);
+    return getString(R.string.pay);
   }
 
   @NonNull

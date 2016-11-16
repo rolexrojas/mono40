@@ -14,7 +14,7 @@
     android:layout_height="wrap_content"
     android:layout_marginEnd="@dimen/list_item_inset"
     android:layout_marginStart="@dimen/list_item_inset"
-    app:hint="@string/payment_options_search_hint"/>
+    app:hint="@string/pay_screen_search_hint"/>
   <include layout="@layout/divider"/>
   <android.support.v4.widget.SwipeRefreshLayout
     android:id="@+id/swipe_refresh_layout"

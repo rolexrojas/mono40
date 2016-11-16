@@ -48,6 +48,22 @@ public final class ApiResult<D> {
   }
 
   /**
+   * TODO
+   */
+  @NonNull
+  public static <D> ApiResult<D> create(@NonNull D data) {
+    return create(ApiCode.OK, data);
+  }
+
+  /**
+   * TODO
+   */
+  @NonNull
+  public static <D> ApiResult<D> create() {
+    return create(ApiCode.OK);
+  }
+
+  /**
    * Gets the code of the result.
    *
    * @return Result's code.

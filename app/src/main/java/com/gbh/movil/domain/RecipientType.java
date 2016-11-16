@@ -11,9 +11,8 @@ import java.lang.annotation.RetentionPolicy;
  * @author hecvasro
  */
 @Retention(RetentionPolicy.SOURCE)
-@IntDef({ RecipientType.CONTACT, RecipientType.INVOICE, RecipientType.CREDIT_CARD})
+@IntDef({ RecipientType.CONTACT, RecipientType.INVOICE })
 public @interface RecipientType {
   int CONTACT = 0;
   int INVOICE = 1;
-  int CREDIT_CARD = 2;
 }

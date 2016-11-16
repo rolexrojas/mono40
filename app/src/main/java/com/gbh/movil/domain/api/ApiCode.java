@@ -1,6 +1,6 @@
 package com.gbh.movil.domain.api;
 
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 /**
  * API code enumeration.
@@ -29,7 +29,7 @@ public enum ApiCode {
    *
    * @return TODO
    */
-  @NonNull
+  @Nullable
   public static ApiCode fromValue(int value) {
     for (ApiCode apiCode : ApiCode.values()) {
       if (value == apiCode.value) {

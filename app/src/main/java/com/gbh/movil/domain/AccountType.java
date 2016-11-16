@@ -1,24 +1,19 @@
 package com.gbh.movil.domain;
 
-import android.support.annotation.NonNull;
-
 /**
  * {@link Account} type enumeration.
  *
  * @author hecvasro
  */
 public enum AccountType {
-  SAVINGS ("SAV"),
-  CREDIT_CARD ("CC");
-
-  private final String value;
-
-  AccountType(@NonNull String value) {
-    this.value = value;
-  }
-
-  @NonNull
-  public final String getValue() {
-    return value;
-  }
+  LOAN, // PRESTAMO
+  PPA, // CUENTA PREPAGO  (Los monederos tienen este tipo de cuenta)
+  SAVELLA, // BANCO UNION  AHORRO (CREDITO Y DEBITO)
+  TBD, // BANCO UNION TARJETA DE DEBITO VISA
+  SAV, // SAVING CUENTA DE AHORRO
+  CDA, // CITIBANK CUENTA  QUE SOLO PERMITE CREDITO (Pagos suplidores citi)
+  DDA, // CUENTA CORRIENTE (DEBIT DIRECT ACCOUNT)
+  AMEX, // TARJETA AMEX
+  CC, // TARJETA VISA/MASTERCARD
+  SAVCLARO // BANCO UNION  AHORRO (SOLO PERMITE CREDITOS)
 }

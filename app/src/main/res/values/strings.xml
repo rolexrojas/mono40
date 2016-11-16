@@ -4,7 +4,7 @@
   <string name="add_another_account">Agregar otra cuenta</string>
   <string name="app_name">tPago</string>
   <string name="balance">Saldo</string>
-  <string name="commerce">En comercio</string>
+  <string name="buy">Comprar</string>
   <string name="delete">Eliminar</string>
   <string name="done_with_exclamation_mark">¡Listo!</string>
   <string name="dot">Punto</string>
@@ -26,7 +26,8 @@
   <string name="my_profile">Mi perfil</string>
   <string name="no_internet_connection">Sin conexión a Internet.</string>
   <string name="ok">Ok</string>
-  <string name="payments">Pagos</string>
+  <string name="pay">Pagar</string>
+  <string name="pay_screen_search_hint">Nombre, número o facturador</string>
   <string name="pin_confirmation">Confirma con tu PIN</string>
   <string name="preferences">Preferencias</string>
   <string name="recent_transactions">Últimas transacciones</string>
@@ -34,6 +35,4 @@
   <string name="see_bank_branches">Ver sucursales bancarias</string>
   <string name="your_account_have_been_added">Tu cuenta se agregó exitosamente al mundo %1$s. Ya puedes usarla como cuenta de fondos.</string>
   <string name="your_account_have_been_removed">Tu cuenta se removió exitosamente del mundo %1$s. Ya no puedes usarla como cuenta de fondos.</string>
-  <!-- Payment options screen -->
-  <string name="payment_options_search_hint">Nombre, número o facturador</string>
 </resources>
