@@ -3,7 +3,7 @@ package com.gbh.movil.domain;
 import android.support.annotation.NonNull;
 
 /**
- * Notification representation.
+ * Event representation.
  *
  * @author hecvasro
  */

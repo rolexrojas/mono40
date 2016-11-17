@@ -1,6 +1,6 @@
 package com.gbh.movil.data.api;
 
-import com.gbh.movil.domain.Account;
+import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.InitialData;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -56,22 +56,22 @@ class InitialDataDeserializer implements JsonDeserializer<InitialData> {
     if (!loansJsonElement.isJsonArray()) {
       throw new JsonParseException(PROPERTY_CREDIT_CARDS + " must be an array");
     }
-    final Set<Account> accounts = new HashSet<>();
+    final Set<Product> products = new HashSet<>();
     final JsonArray accountsArray = accountsJsonElement.getAsJsonArray();
     for (int i = 0; i < accountsArray.size(); i++) {
-      accounts.add((Account) context.deserialize(accountsArray.get(i).getAsJsonObject(),
-        Account.class));
+      products.add((Product) context.deserialize(accountsArray.get(i).getAsJsonObject(),
+        Product.class));
     }
     final JsonArray creditCardsArray = creditCardsJsonElement.getAsJsonArray();
     for (int i = 0; i < creditCardsArray.size(); i++) {
-      accounts.add((Account) context.deserialize(creditCardsArray.get(i).getAsJsonObject(),
-        Account.class));
+      products.add((Product) context.deserialize(creditCardsArray.get(i).getAsJsonObject(),
+        Product.class));
     }
     final JsonArray loansArray = loansJsonElement.getAsJsonArray();
     for (int i = 0; i < loansArray.size(); i++) {
-      accounts.add((Account) context.deserialize(loansArray.get(i).getAsJsonObject(),
-        Account.class));
+      products.add((Product) context.deserialize(loansArray.get(i).getAsJsonObject(),
+        Product.class));
     }
-    return new InitialData(accounts);
+    return new InitialData(products);
   }
 }

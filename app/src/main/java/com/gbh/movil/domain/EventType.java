@@ -1,12 +1,12 @@
 package com.gbh.movil.domain;
 
 /**
- * {@link Event} type enumration.
+ * {@link Event} type enumeration.
  *
  * @author hecvasro
  */
 public enum EventType {
-  ACCOUNT_ADDITION,
-  ACCOUNT_REMOVAL,
-  ACCOUNT_BALANCE_EXPIRATION
+  PRODUCT_ADDITION,
+  PRODUCT_REMOVAL,
+  PRODUCT_BALANCE_EXPIRATION
 }

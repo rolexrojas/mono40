@@ -2,13 +2,13 @@ package com.gbh.movil.domain.api;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.Balance;
 import com.gbh.movil.domain.Bank;
-import com.gbh.movil.domain.CreditCardAccount;
-import com.gbh.movil.domain.ElectronicAccount;
+import com.gbh.movil.domain.CreditCard;
+import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.InitialData;
-import com.gbh.movil.domain.LoanAccount;
+import com.gbh.movil.domain.Loan;
+import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.Transaction;
 
@@ -43,93 +43,57 @@ public interface ApiBridge {
   Observable<ApiResult<InitialData>> initialLoad();
 
   /**
-   * Creates an {@link Observable observable} that emits all the registered {@link ElectronicAccount
+   * Creates an {@link Observable observable} that emits all the registered {@link Account
    * accounts}.
    * <p>
    * <em>Note:</em> By default {@link #accounts()} does not operates on a particular {@link
    * rx.Scheduler}.
    *
-   * @return An {@link Observable observable} that emits all the registered {@link ElectronicAccount
+   * @return An {@link Observable observable} that emits all the registered {@link Account
    * accounts}.
    */
   @NonNull
-  Observable<ApiResult<Set<ElectronicAccount>>> accounts();
+  Observable<ApiResult<Set<Account>>> accounts();
 
   /**
-   * Query the {@link Balance balance} of an {@link ElectronicAccount account} from the API.
-   * <p>
-   * <em>Note:</em> By default {@link #queryBalance(ElectronicAccount, String)} does not operates on
-   * a particular {@link rx.Scheduler}.
-   *
-   * @param account
-   *   {@link ElectronicAccount Account} that will be queried.
-   * @param pin
-   *   User's PIN code.
-   *
-   * @return {@link Balance balance} of an {@link ElectronicAccount account} from the API.
-   */
-  @NonNull
-  Observable<ApiResult<Balance>> queryBalance(@NonNull ElectronicAccount account,
-    @NonNull String pin);
-
-  /**
-   * Creates an {@link Observable observable} that emits all the registered {@link CreditCardAccount
-   * credit cards}.
+   * Creates an {@link Observable observable} that emits all the registered {@link CreditCard credit
+   * cards}.
    * <p>
    * <em>Note:</em> By default {@link #creditCards()} does not operates on a particular {@link
    * rx.Scheduler}.
    *
-   * @return An {@link Observable observable} that emits all the registered {@link CreditCardAccount
-   * credit cards}.
+   * @return An {@link Observable observable} that emits all the registered {@link CreditCard credit
+   * cards}.
    */
   @NonNull
-  Observable<ApiResult<Set<CreditCardAccount>>> creditCards();
+  Observable<ApiResult<Set<CreditCard>>> creditCards();
 
   /**
-   * Query the {@link Balance balance} of a {@link CreditCardAccount credit card} from the API.
-   * <p>
-   * <em>Note:</em> By default {@link #queryBalance(CreditCardAccount, String)} does not operates on
-   * a particular {@link rx.Scheduler}.
-   *
-   * @param creditCard
-   *   {@link CreditCardAccount Credit card} that will be queried.
-   * @param pin
-   *   User's PIN code.
-   *
-   * @return {@link Balance balance} of a {@link CreditCardAccount credit card} from the API.
-   */
-  @NonNull
-  Observable<ApiResult<Balance>> queryBalance(@NonNull CreditCardAccount creditCard,
-    @NonNull String pin);
-
-  /**
-   * Creates an {@link Observable observable} that emits all the registered {@link LoanAccount
-   * loans}.
+   * Creates an {@link Observable observable} that emits all the registered {@link Loan loans}.
    * <p>
    * <em>Note:</em> By default {@link #loans()} does not operates on a particular {@link
    * rx.Scheduler}.
    *
-   * @return An {@link Observable observable} that emits all the registered {@link LoanAccount
-   * loans}.
+   * @return An {@link Observable observable} that emits all the registered {@link Loan loans}.
    */
   @NonNull
-  Observable<ApiResult<Set<LoanAccount>>> loans();
+  Observable<ApiResult<Set<Loan>>> loans();
 
   /**
-   * Query the {@link Balance balance} of a {@link LoanAccount loan} from the API.
+   * Query the {@link Balance balance} of a {@link Product product} from the API.
    * <p>
-   * <em>Note:</em> By default {@link #queryBalance(LoanAccount, String)} does not operates on a
+   * <em>Note:</em> By default {@link #queryBalance(Product, String)} does not operates on a
    * particular {@link rx.Scheduler}.
    *
-   * @param loan
-   *   {@link LoanAccount Loan} that will be queried.
+   * @param product
+   *   {@link Product} that will be queried.
    * @param pin
    *   User's PIN code.
    *
-   * @return {@link Balance balance} of a {@link LoanAccount loan} from the API.
+   * @return {@link Balance balance} of a {@link Product product} from the API.
    */
   @NonNull
-  Observable<ApiResult<Balance>> queryBalance(@NonNull LoanAccount loan, @NonNull String pin);
+  Observable<ApiResult<Balance>> queryBalance(@NonNull Product product, @NonNull String pin);
 
   /**
    * Creates an {@link Observable observable} that emits all the registered {@link Recipient

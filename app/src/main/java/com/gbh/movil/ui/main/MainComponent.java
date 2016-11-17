@@ -3,7 +3,7 @@ package com.gbh.movil.ui.main;
 import com.gbh.movil.AppComponent;
 import com.gbh.movil.data.MessageHelper;
 import com.gbh.movil.data.SchedulerProvider;
-import com.gbh.movil.domain.AccountManager;
+import com.gbh.movil.domain.ProductManager;
 import com.gbh.movil.domain.BalanceManager;
 import com.gbh.movil.domain.EventBus;
 import com.gbh.movil.domain.RecipientManager;
@@ -27,7 +27,7 @@ public interface MainComponent {
 
   EventBus provideEventBus();
 
-  AccountManager provideAccountManager();
+  ProductManager provideAccountManager();
 
   BalanceManager provideBalanceManager();
 

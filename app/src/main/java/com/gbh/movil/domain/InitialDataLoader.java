@@ -16,13 +16,13 @@ import rx.functions.Func1;
  */
 public final class InitialDataLoader {
   private final ApiBridge apiBridge;
-  private final AccountManager accountManager;
+  private final ProductManager productManager;
   private final RecipientManager recipientManager;
 
-  public InitialDataLoader(@NonNull ApiBridge apiBridge, @NonNull AccountManager accountManager,
+  public InitialDataLoader(@NonNull ApiBridge apiBridge, @NonNull ProductManager productManager,
     @NonNull RecipientManager recipientManager) {
     this.apiBridge = apiBridge;
-    this.accountManager = accountManager;
+    this.productManager = productManager;
     this.recipientManager = recipientManager;
   }
 
@@ -40,7 +40,7 @@ public final class InitialDataLoader {
           if (result.isSuccessful()) {
             final InitialData data = result.getData();
             if (Utils.isNotNull(data)) {
-              return accountManager.syncAccounts(data.getAccounts())
+              return productManager.syncAccounts(data.getProducts())
                 .cast(Object.class)
                 .concatWith(recipientManager.syncRecipients(data.getRecipients()))
                 .last();

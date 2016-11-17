@@ -5,10 +5,12 @@ import android.support.annotation.NonNull;
 import com.gbh.movil.Utils;
 import com.gbh.movil.domain.Balance;
 import com.gbh.movil.domain.Bank;
-import com.gbh.movil.domain.CreditCardAccount;
-import com.gbh.movil.domain.ElectronicAccount;
+import com.gbh.movil.domain.CreditCard;
+import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.InitialData;
-import com.gbh.movil.domain.LoanAccount;
+import com.gbh.movil.domain.Loan;
+import com.gbh.movil.domain.Product;
+import com.gbh.movil.domain.ProductCategory;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.Transaction;
 import com.gbh.movil.domain.api.ApiBridge;
@@ -85,9 +87,9 @@ class RetrofitApiBridge implements ApiBridge {
    */
   @NonNull
   @Override
-  public Observable<ApiResult<Set<ElectronicAccount>>> accounts() {
+  public Observable<ApiResult<Set<Account>>> accounts() {
     return apiService.accounts()
-      .compose(this.<Set<ElectronicAccount>>transformToApiResult());
+      .compose(this.<Set<Account>>transformToApiResult());
   }
 
   /**
@@ -95,20 +97,9 @@ class RetrofitApiBridge implements ApiBridge {
    */
   @NonNull
   @Override
-  public Observable<ApiResult<Balance>> queryBalance(@NonNull ElectronicAccount account,
-    @NonNull String pin) {
-    return apiService.accountBalance(new BalanceQueryRequest(account, pin))
-      .compose(this.<Balance>transformToApiResult());
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @NonNull
-  @Override
-  public Observable<ApiResult<Set<CreditCardAccount>>> creditCards() {
+  public Observable<ApiResult<Set<CreditCard>>> creditCards() {
     return apiService.creditCards()
-      .compose(this.<Set<CreditCardAccount>>transformToApiResult());
+      .compose(this.<Set<CreditCard>>transformToApiResult());
   }
 
   /**
@@ -116,20 +107,9 @@ class RetrofitApiBridge implements ApiBridge {
    */
   @NonNull
   @Override
-  public Observable<ApiResult<Balance>> queryBalance(@NonNull CreditCardAccount creditCard,
-    @NonNull String pin) {
-    return apiService.creditCardBalance(new BalanceQueryRequest(creditCard, pin))
-      .compose(this.<Balance>transformToApiResult());
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @NonNull
-  @Override
-  public Observable<ApiResult<Set<LoanAccount>>> loans() {
+  public Observable<ApiResult<Set<Loan>>> loans() {
     return apiService.loans()
-      .compose(this.<Set<LoanAccount>>transformToApiResult());
+      .compose(this.<Set<Loan>>transformToApiResult());
   }
 
   /**
@@ -137,10 +117,31 @@ class RetrofitApiBridge implements ApiBridge {
    */
   @NonNull
   @Override
-  public Observable<ApiResult<Balance>> queryBalance(@NonNull LoanAccount loan,
+  public Observable<ApiResult<Balance>> queryBalance(@NonNull Product product,
     @NonNull String pin) {
-    return apiService.loanBalance(new BalanceQueryRequest(loan, pin))
-      .compose(this.<Balance>transformToApiResult());
+    final Func1<Response<? extends Balance>, Observable<ApiResult<Balance>>> func1
+      = new Func1<Response<? extends Balance>, Observable<ApiResult<Balance>>>() {
+      @Override
+      public Observable<ApiResult<Balance>> call(Response<? extends Balance> response) {
+        final ApiCode code = ApiCode.fromValue(response.code());
+        if (Utils.isNotNull(code)) {
+          return Observable.just(ApiResult.create((Balance) response.body()));
+        } else {
+          // TODO: Find or create a suitable exception for these cases.
+          return Observable.error(new Exception("Unexpected response code (" + response.code()
+            + ")"));
+        }
+      }
+    };
+    final ProductCategory category = product.getCategory();
+    final BalanceQueryRequest request = new BalanceQueryRequest(product, pin);
+    if (category.equals(ProductCategory.ACCOUNT)) {
+      return apiService.accountBalance(request).flatMap(func1);
+    } else if (category.equals(ProductCategory.CREDIT_CARD)) {
+      return apiService.creditCardBalance(request).flatMap(func1);
+    } else {
+      return apiService.loanBalance(request).flatMap(func1);
+    }
   }
 
   /**

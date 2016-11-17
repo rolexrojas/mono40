@@ -1,6 +1,6 @@
 package com.gbh.movil.ui.splash;
 
-import com.gbh.movil.domain.AccountManager;
+import com.gbh.movil.domain.ProductManager;
 import com.gbh.movil.domain.RecipientManager;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.InitialDataLoader;
@@ -23,9 +23,9 @@ class SplashModule {
 
   @Provides
   @ActivityScope
-  InitialDataLoader provideInitialDataLoader(ApiBridge apiBridge, AccountManager accountManager,
+  InitialDataLoader provideInitialDataLoader(ApiBridge apiBridge, ProductManager productManager,
     RecipientManager recipientManager) {
-    return new InitialDataLoader(apiBridge, accountManager, recipientManager);
+    return new InitialDataLoader(apiBridge, productManager, recipientManager);
   }
 
   @Provides

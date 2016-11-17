@@ -39,10 +39,10 @@ public final class BalanceManager {
   private final ApiBridge apiBridge;
 
   /**
-   * Hash that uses an {@link Account account} as key and a {@link Pair pair} with the creation date
-   * and the last queried {@link Balance balance} as getValue.
+   * Key-value structured used to store the last queried {@link Balance balance} of a {@link Product
+   * product}.
    */
-  private final Map<Account, Pair<Long, Balance>> balances;
+  private final Map<Product, Pair<Long, Balance>> balances;
 
   private Subscription subscription = Subscriptions.unsubscribed();
 
@@ -52,17 +52,14 @@ public final class BalanceManager {
     this.balances = new HashMap<>();
   }
 
-  /**
-   * Starts checking for {@link Account account} {@link Balance balance} expiration.
-   */
   public final void start() {
     subscription = Observable.interval(0L, 1L, TimeUnit.MINUTES) // One (1) minute intervals.
       .observeOn(AndroidSchedulers.mainThread())
       .doOnUnsubscribe(new Action0() {
         @Override
         public void call() {
-          for (Account account : balances.keySet()) {
-            eventBus.dispatch(new BalanceExpirationEvent(account));
+          for (Product product : balances.keySet()) {
+            eventBus.dispatch(new BalanceExpirationEvent(product));
           }
           balances.clear();
         }
@@ -71,12 +68,12 @@ public final class BalanceManager {
         @Override
         public void call(Long interval) {
           Pair<Long, Balance> pair;
-          for (Account account : balances.keySet()) {
-            pair = balances.get(account);
+          for (Product product : balances.keySet()) {
+            pair = balances.get(product);
             if ((System.currentTimeMillis() - pair.first) >= EXPIRATION_TIME) {
-              Timber.d("Account's balance expired (%1$s, %2$s)", account, pair.second);
-              eventBus.dispatch(new BalanceExpirationEvent(account));
-              balances.remove(account);
+              Timber.d("Account's balance expired (%1$s, %2$s)", product, pair.second);
+              eventBus.dispatch(new BalanceExpirationEvent(product));
+              balances.remove(product);
             }
           }
         }
@@ -88,39 +85,35 @@ public final class BalanceManager {
       });
   }
 
-  /**
-   * Stops checking for {@link Account account} {@link Balance balance} expiration.
-   */
   public final void stop() {
     RxUtils.unsubscribe(subscription);
   }
 
   /**
-   * Indicates whether the given {@link Account account} has a valid {@link Balance balance} or
+   * Indicates whether the given {@link Product product} has a valid {@link Balance balance} or
    * not.
    *
-   * @param account
-   *   {@link Account} that will be checked.
+   * @param product
+   *   {@link Product} that will be checked.
    *
    * @return True if it has a valid {@link Balance balance}, false otherwise.
    */
-  public final boolean hasValidBalance(@NonNull Account account) {
-    return balances.containsKey(account);
+  public final boolean hasValidBalance(@NonNull Product product) {
+    return balances.containsKey(product);
   }
 
   /**
-   * Gets the last queried {@link Balance balance} of the given {@link Account account}.
+   * Gets the last queried {@link Balance balance} of the given {@link Product product}.
    *
-   * @param account
-   *   {@link Account} that will be queried.
+   * @param product
+   *   {@link Product} that will be queried.
    *
-   * @return {@link Account}'s last queried {@link Balance balance} or {@code null} if it hasn't
-   * been queried.
+   * @return {@link Product}'s last queried {@link Balance balance} or {@code null}.
    */
   @Nullable
-  public final Balance getBalance(@NonNull Account account) {
-    if (hasValidBalance(account)) {
-      return balances.get(account).second;
+  public final Balance getBalance(@NonNull Product product) {
+    if (hasValidBalance(product)) {
+      return balances.get(product).second;
     } else {
       return null;
     }
@@ -129,7 +122,7 @@ public final class BalanceManager {
   /**
    * TODO
    *
-   * @param account
+   * @param product
    *   TODO
    * @param pin
    *   TODO
@@ -137,17 +130,9 @@ public final class BalanceManager {
    * @return TODO
    */
   @NonNull
-  public final Observable<Pair<Boolean, Balance>> queryBalance(@NonNull final Account account,
-    @NonNull String pin) {
-    final Observable<ApiResult<Balance>> observable;
-    if (account.getCategory().equals(AccountCategory.ELECTRONIC)) {
-      observable = apiBridge.queryBalance((ElectronicAccount) account, pin);
-    } else if (account.getCategory().equals(AccountCategory.CREDIT_CARD)) {
-      observable = apiBridge.queryBalance((CreditCardAccount) account, pin);
-    } else {
-      observable = apiBridge.queryBalance((LoanAccount) account, pin);
-    }
-    return observable
+  public final Observable<Pair<Boolean, Balance>> queryBalance(
+    @NonNull final Product product, @NonNull String pin) {
+    return apiBridge.queryBalance(product, pin)
       .map(new Func1<ApiResult<Balance>, Pair<Boolean, Balance>>() {
         @Override
         public Pair<Boolean, Balance> call(ApiResult<Balance> result) {
@@ -155,10 +140,10 @@ public final class BalanceManager {
           if (result.isSuccessful()) {
             balance = result.getData();
             if (Utils.isNotNull(balance)) {
-              balances.put(account, Pair.create(System.currentTimeMillis(), balance));
+              balances.put(product, Pair.create(System.currentTimeMillis(), balance));
             }
           } else {
-            Timber.d("Failed to query the balance of an account (%1$s, %2$s)", account, result);
+            Timber.d("Failed to query the balance of a product (%1$s, %2$s)", product, result);
           }
           return Pair.create(Utils.isNotNull(balance), balance);
         }

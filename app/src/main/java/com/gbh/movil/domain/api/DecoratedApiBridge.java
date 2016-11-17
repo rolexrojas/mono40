@@ -4,10 +4,11 @@ import android.support.annotation.NonNull;
 
 import com.gbh.movil.domain.Balance;
 import com.gbh.movil.domain.Bank;
-import com.gbh.movil.domain.CreditCardAccount;
-import com.gbh.movil.domain.ElectronicAccount;
+import com.gbh.movil.domain.CreditCard;
+import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.InitialData;
-import com.gbh.movil.domain.LoanAccount;
+import com.gbh.movil.domain.Loan;
+import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.Transaction;
 
@@ -43,6 +44,9 @@ public class DecoratedApiBridge implements ApiBridge {
     };
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @NonNull
   @Override
   public Observable<ApiResult<Set<Bank>>> banks() {
@@ -50,6 +54,9 @@ public class DecoratedApiBridge implements ApiBridge {
       .compose(this.<Set<Bank>>assertAuthorization());
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @NonNull
   @Override
   public Observable<ApiResult<InitialData>> initialLoad() {
@@ -57,51 +64,50 @@ public class DecoratedApiBridge implements ApiBridge {
       .compose(this.<InitialData>assertAuthorization());
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @NonNull
   @Override
-  public Observable<ApiResult<Set<ElectronicAccount>>> accounts() {
+  public Observable<ApiResult<Set<Account>>> accounts() {
     return apiBridge.accounts()
-      .compose(this.<Set<ElectronicAccount>>assertAuthorization());
+      .compose(this.<Set<Account>>assertAuthorization());
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @NonNull
   @Override
-  public Observable<ApiResult<Balance>> queryBalance(@NonNull ElectronicAccount account,
-    @NonNull String pin) {
-    return apiBridge.queryBalance(account, pin)
-      .compose(this.<Balance>assertAuthorization());
-  }
-
-  @NonNull
-  @Override
-  public Observable<ApiResult<Set<CreditCardAccount>>> creditCards() {
+  public Observable<ApiResult<Set<CreditCard>>> creditCards() {
     return apiBridge.creditCards()
-      .compose(this.<Set<CreditCardAccount>>assertAuthorization());
+      .compose(this.<Set<CreditCard>>assertAuthorization());
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @NonNull
   @Override
-  public Observable<ApiResult<Balance>> queryBalance(@NonNull CreditCardAccount creditCard,
-    @NonNull String pin) {
-    return apiBridge.queryBalance(creditCard, pin)
-      .compose(this.<Balance>assertAuthorization());
-  }
-
-  @NonNull
-  @Override
-  public Observable<ApiResult<Set<LoanAccount>>> loans() {
+  public Observable<ApiResult<Set<Loan>>> loans() {
     return apiBridge.loans()
-      .compose(this.<Set<LoanAccount>>assertAuthorization());
+      .compose(this.<Set<Loan>>assertAuthorization());
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @NonNull
   @Override
-  public Observable<ApiResult<Balance>> queryBalance(@NonNull LoanAccount loan,
+  public Observable<ApiResult<Balance>> queryBalance(@NonNull Product product,
     @NonNull String pin) {
-    return apiBridge.queryBalance(loan, pin)
+    return apiBridge.queryBalance(product, pin)
       .compose(this.<Balance>assertAuthorization());
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @NonNull
   @Override
   public Observable<ApiResult<Set<Recipient>>> recipients() {
@@ -109,6 +115,9 @@ public class DecoratedApiBridge implements ApiBridge {
       .compose(this.<Set<Recipient>>assertAuthorization());
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @NonNull
   @Override
   public Observable<ApiResult<List<Transaction>>> recentTransactions() {

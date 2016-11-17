@@ -5,8 +5,8 @@ import android.support.annotation.NonNull;
 import com.gbh.movil.Utils;
 
 /**
- * {@link Event} that represents the expiration of the {@link Balance balance} of an {@link Account
- * account}.
+ * {@link Event} that represents the expiration of the {@link Balance balance} of a {@link Product
+ * product}.
  *
  * @author hecvasro
  */
@@ -14,17 +14,17 @@ public class BalanceExpirationEvent extends Event {
   /**
    * TODO
    */
-  private final Account account;
+  private final Product product;
 
   /**
    * TODO
    *
-   * @param account
+   * @param product
    *   TODO
    */
-  public BalanceExpirationEvent(@NonNull Account account) {
-    super(EventType.ACCOUNT_BALANCE_EXPIRATION, false);
-    this.account = account;
+  public BalanceExpirationEvent(@NonNull Product product) {
+    super(EventType.PRODUCT_BALANCE_EXPIRATION, false);
+    this.product = product;
   }
 
   /**
@@ -33,25 +33,25 @@ public class BalanceExpirationEvent extends Event {
    * @return TODO
    */
   @NonNull
-  public final Account getAccount() {
-    return account;
+  public final Product getProduct() {
+    return product;
   }
 
   @Override
   public boolean equals(Object object) {
     return super.equals(object) || (Utils.isNotNull(object)
       && object instanceof BalanceExpirationEvent
-      && ((BalanceExpirationEvent) object).account.equals(account));
+      && ((BalanceExpirationEvent) object).product.equals(product));
   }
 
   @Override
   public int hashCode() {
-    return account.hashCode();
+    return product.hashCode();
   }
 
   @Override
   public String toString() {
     return BalanceExpirationEvent.class.getSimpleName() + ":{super=" + super.toString()
-      + ",account=" + account + "}";
+      + ",account=" + product + "}";
   }
 }

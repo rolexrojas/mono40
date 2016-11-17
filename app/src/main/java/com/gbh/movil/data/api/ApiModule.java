@@ -2,12 +2,15 @@ package com.gbh.movil.data.api;
 
 import com.gbh.movil.BuildConfig;
 import com.gbh.movil.domain.Account;
+import com.gbh.movil.domain.AccountBalance;
 import com.gbh.movil.domain.Balance;
 import com.gbh.movil.domain.Bank;
-import com.gbh.movil.domain.CreditCardAccount;
-import com.gbh.movil.domain.ElectronicAccount;
+import com.gbh.movil.domain.CreditCard;
+import com.gbh.movil.domain.CreditCardBalance;
 import com.gbh.movil.domain.InitialData;
-import com.gbh.movil.domain.LoanAccount;
+import com.gbh.movil.domain.Loan;
+import com.gbh.movil.domain.LoanBalance;
+import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Transaction;
 import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.domain.api.DecoratedApiBridge;
@@ -33,13 +36,16 @@ public class ApiModule {
   ApiBridge provideApiBridge(OkHttpClient okHttpClient) {
     final Gson gson = new GsonBuilder()
       .registerTypeAdapter(Bank.class, new BankTypeAdapter())
-      .registerTypeAdapter(Account.class, new AccountTypeAdapter())
-      .registerTypeAdapter(ElectronicAccount.class, new AccountTypeAdapter())
-      .registerTypeAdapter(CreditCardAccount.class, new AccountTypeAdapter())
-      .registerTypeAdapter(LoanAccount.class, new AccountTypeAdapter())
-      .registerTypeAdapter(Balance.class, new BalanceJsonDeserializer())
       .registerTypeAdapter(Transaction.class, new TransactionJsonDeserializer())
       .registerTypeAdapter(InitialData.class, new InitialDataDeserializer())
+      .registerTypeAdapter(Product.class, new ProductTypeAdapter())
+      .registerTypeAdapter(Account.class, new ProductTypeAdapter())
+      .registerTypeAdapter(CreditCard.class, new ProductTypeAdapter())
+      .registerTypeAdapter(Loan.class, new ProductTypeAdapter())
+      .registerTypeAdapter(Balance.class, new BalanceTypeAdapter())
+      .registerTypeAdapter(AccountBalance.class, new BalanceTypeAdapter())
+      .registerTypeAdapter(CreditCardBalance.class, new BalanceTypeAdapter())
+      .registerTypeAdapter(LoanBalance.class, new BalanceTypeAdapter())
       .create();
     final Retrofit retrofit = new Retrofit.Builder()
       .addConverterFactory(GsonConverterFactory.create(gson))

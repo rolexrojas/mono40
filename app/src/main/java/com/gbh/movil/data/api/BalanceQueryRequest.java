@@ -2,7 +2,7 @@ package com.gbh.movil.data.api;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.domain.Account;
+import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Bank;
 
 /**
@@ -18,12 +18,12 @@ class BalanceQueryRequest {
   private final String currency;
   private final String pin;
 
-  BalanceQueryRequest(@NonNull Account account, @NonNull String pin) {
-    this.accountType = account.getType().name();
-    this.accountAlias = account.getAlias();
-    this.accountNumber = account.getNumber();
-    this.bank = account.getBank();
-    this.currency = account.getCurrency();
+  BalanceQueryRequest(@NonNull Product product, @NonNull String pin) {
+    this.accountType = product.getIdentifier().name();
+    this.accountAlias = product.getAlias();
+    this.accountNumber = product.getNumber();
+    this.bank = product.getBank();
+    this.currency = product.getCurrency();
     this.pin = pin;
   }
 }

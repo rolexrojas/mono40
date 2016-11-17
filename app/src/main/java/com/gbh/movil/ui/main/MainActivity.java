@@ -19,7 +19,7 @@ import com.gbh.movil.Utils;
 import com.gbh.movil.data.MessageHelper;
 import com.gbh.movil.ui.BaseActivity;
 import com.gbh.movil.ui.UiUtils;
-import com.gbh.movil.ui.main.accounts.AccountsFragment;
+import com.gbh.movil.ui.main.products.ProductsFragment;
 import com.gbh.movil.ui.main.payments.PaymentsFragment;
 import com.gbh.movil.ui.view.widget.SlidingPaneLayout;
 
@@ -147,10 +147,10 @@ public class MainActivity extends BaseActivity implements MainScreen {
         subFragment = PaymentsFragment.newInstance();
         break;
       case R.id.text_view_accounts:
-        subFragment = AccountsFragment.newInstance();
+        subFragment = ProductsFragment.newInstance();
         break;
       case R.id.text_view_add_another_account:
-        subFragment = AddAnotherAccountFragment.newInstance();
+        subFragment = AddAnotherProductFragment.newInstance();
         break;
       default:
         subFragment = null;
@@ -218,7 +218,7 @@ public class MainActivity extends BaseActivity implements MainScreen {
       new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-          setSubScreen(AccountsFragment.newInstance());
+          setSubScreen(ProductsFragment.newInstance());
         }
       }).show();
   }

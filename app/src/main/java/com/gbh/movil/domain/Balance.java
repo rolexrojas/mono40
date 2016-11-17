@@ -5,74 +5,55 @@ import android.support.annotation.NonNull;
 import java.math.BigDecimal;
 
 /**
- * Account balance representation.
+ * {@link Product}'s balance representation.
  *
  * @author hecvasro
  */
-public class Balance {
+public abstract class Balance {
   /**
-   * Balance's total amount.
+   * Balance's {@link ProductCategory category}.
    */
-  private final BigDecimal total;
+  private final ProductCategory category;
   /**
-   * Balance's available amount.
+   * Balance's value.
    */
-  private final BigDecimal available;
-  /**
-   * Balance's description.
-   */
-  private final String description;
+  private final BigDecimal value;
 
   /**
    * Constructs a new balance.
    *
-   * @param total
-   *   Balance's total amount.
-   * @param available
-   *   Balance's available amount.
-   * @param description
-   *   Balance's description
+   * @param category
+   *   Balance's {@link ProductCategory category}.
+   * @param value
+   *   Balance's value.
    */
-  public Balance(@NonNull BigDecimal total, @NonNull BigDecimal available,
-    @NonNull String description) {
-    this.total = total;
-    this.available = available;
-    this.description = description;
+  Balance(@NonNull ProductCategory category, @NonNull BigDecimal value) {
+    this.category = category;
+    this.value = value;
   }
 
   /**
-   * Gets the total amount of the balance.
+   * Gets the {@link ProductCategory category} of the balance.
    *
-   * @return Balance's total amount.
+   * @return Balance's {@link ProductCategory category}.
    */
   @NonNull
-  public final BigDecimal getTotal() {
-    return total;
+  public final ProductCategory getCategory() {
+    return category;
   }
 
   /**
-   * Gets the available amount of the balance.
+   * Gets the value of the balance.
    *
-   * @return Balance's available amount.
+   * @return Balance's value.
    */
   @NonNull
-  public final BigDecimal getAvailable() {
-    return available;
-  }
-
-  /**
-   * Gets the description of the balance.
-   *
-   * @return Balance's description.
-   */
-  @NonNull
-  public final String getDescription() {
-    return description;
+  public final BigDecimal getValue() {
+    return value;
   }
 
   @Override
   public String toString() {
-    return Balance.class.getSimpleName() + ":{total=" + total + ",available=" + available
-      + ",description='" + description + "'}";
+    return Balance.class.getSimpleName() + ":{category='" + category + "',value=" + value + "'}";
   }
 }

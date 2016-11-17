@@ -11,21 +11,21 @@ import java.util.Set;
  * @author hecvasro
  */
 public final class InitialData {
-  private final Set<Account> accounts;
+  private final Set<Product> products;
   private final Set<Recipient> recipients;
 
-  public InitialData(@NonNull Set<Account> accounts, @NonNull Set<Recipient> recipients) {
-    this.accounts = accounts;
+  public InitialData(@NonNull Set<Product> products, @NonNull Set<Recipient> recipients) {
+    this.products = products;
     this.recipients = recipients;
   }
 
-  public InitialData(@NonNull Set<Account> accounts) {
-    this(accounts, new HashSet<Recipient>());
+  public InitialData(@NonNull Set<Product> products) {
+    this(products, new HashSet<Recipient>());
   }
 
   @NonNull
-  public final Set<Account> getAccounts() {
-    return accounts;
+  public final Set<Product> getProducts() {
+    return products;
   }
 
   @NonNull

@@ -49,15 +49,15 @@ final class MainPresenter extends Presenter<MainScreen> {
    */
   final void start() {
     assertScreen();
-    subscription = eventBus.onEventDispatched(EventType.ACCOUNT_ADDITION, EventType.ACCOUNT_REMOVAL)
+    subscription = eventBus.onEventDispatched(EventType.PRODUCT_ADDITION, EventType.PRODUCT_REMOVAL)
       .observeOn(AndroidSchedulers.mainThread())
       .subscribe(new Action1<Event>() {
         @Override
         public void call(Event event) {
           String message = null;
-          if (event.getType().equals(EventType.ACCOUNT_ADDITION)) {
+          if (event.getType().equals(EventType.PRODUCT_ADDITION)) {
             message = messageHelper.yourAccountHaveBeenAdded();
-          } else if (event.getType().equals(EventType.ACCOUNT_REMOVAL)) {
+          } else if (event.getType().equals(EventType.PRODUCT_REMOVAL)) {
             message = messageHelper.yourAccountHaveBeenRemoved();
           }
           eventBus.release(event);

@@ -3,8 +3,8 @@ package com.gbh.movil;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.domain.AccountManager;
-import com.gbh.movil.domain.AccountRepo;
+import com.gbh.movil.domain.ProductManager;
+import com.gbh.movil.domain.ProductRepo;
 import com.gbh.movil.domain.BalanceManager;
 import com.gbh.movil.domain.EventBus;
 import com.gbh.movil.domain.RecipientManager;
@@ -48,9 +48,9 @@ final class AppModule {
 
   @Provides
   @Singleton
-  AccountManager provideAccountManager(EventBus eventBus, AccountRepo accountRepo,
+  ProductManager provideProductManager(EventBus eventBus, ProductRepo productRepo,
     ApiBridge apiBridge) {
-    return new AccountManager(eventBus, accountRepo, apiBridge);
+    return new ProductManager(eventBus, productRepo, apiBridge);
   }
 
   @Provides

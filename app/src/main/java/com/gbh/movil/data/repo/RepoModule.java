@@ -1,6 +1,6 @@
 package com.gbh.movil.data.repo;
 
-import com.gbh.movil.domain.AccountRepo;
+import com.gbh.movil.domain.ProductRepo;
 import com.gbh.movil.domain.RecipientRepo;
 import com.gbh.movil.domain.TransactionRepo;
 
@@ -16,8 +16,8 @@ import dagger.Provides;
 public class RepoModule {
   @Provides
   @Singleton
-  AccountRepo provideAccountRepository() {
-    return new InMemoryAccountRepo();
+  ProductRepo provideAccountRepository() {
+    return new InMemoryProductRepo();
   }
 
   @Provides
