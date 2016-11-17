@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import com.gbh.movil.rx.RxUtils;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.Recipient;
-import com.gbh.movil.domain.recipient.RecipientManager;
+import com.gbh.movil.domain.RecipientManager;
 import com.gbh.movil.ui.Presenter;
 import com.gbh.movil.ui.UiUtils;
 

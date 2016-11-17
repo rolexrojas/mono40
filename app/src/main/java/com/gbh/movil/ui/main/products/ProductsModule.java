@@ -1,9 +1,9 @@
 package com.gbh.movil.ui.main.products;
 
 import com.gbh.movil.data.SchedulerProvider;
-import com.gbh.movil.domain.product.ProductManager;
-import com.gbh.movil.domain.product.BalanceManager;
-import com.gbh.movil.domain.EventBus;
+import com.gbh.movil.domain.ProductManager;
+import com.gbh.movil.domain.BalanceManager;
+import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.ui.FragmentScope;
 
 import dagger.Module;

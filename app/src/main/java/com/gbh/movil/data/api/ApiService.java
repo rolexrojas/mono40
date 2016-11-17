@@ -1,13 +1,13 @@
 package com.gbh.movil.data.api;
 
-import com.gbh.movil.domain.product.AccountBalance;
-import com.gbh.movil.domain.product.CreditCard;
-import com.gbh.movil.domain.product.Account;
-import com.gbh.movil.domain.product.CreditCardBalance;
+import com.gbh.movil.domain.AccountBalance;
+import com.gbh.movil.domain.CreditCard;
+import com.gbh.movil.domain.Account;
+import com.gbh.movil.domain.CreditCardBalance;
 import com.gbh.movil.domain.InitialData;
-import com.gbh.movil.domain.product.Loan;
-import com.gbh.movil.domain.product.LoanBalance;
-import com.gbh.movil.domain.product.transaction.Transaction;
+import com.gbh.movil.domain.Loan;
+import com.gbh.movil.domain.LoanBalance;
+import com.gbh.movil.domain.Transaction;
 
 import java.util.List;
 import java.util.Set;

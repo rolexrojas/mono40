@@ -5,10 +5,10 @@ import android.support.annotation.NonNull;
 import com.gbh.movil.rx.RxUtils;
 import com.gbh.movil.Utils;
 import com.gbh.movil.data.MessageHelper;
-import com.gbh.movil.domain.product.BalanceManager;
-import com.gbh.movil.domain.Event;
-import com.gbh.movil.domain.EventBus;
-import com.gbh.movil.domain.EventType;
+import com.gbh.movil.domain.BalanceManager;
+import com.gbh.movil.domain.util.Event;
+import com.gbh.movil.domain.util.EventBus;
+import com.gbh.movil.domain.util.EventType;
 import com.gbh.movil.ui.Presenter;
 
 import rx.Subscription;

@@ -1,8 +1,8 @@
 package com.gbh.movil.data.api;
 
-import com.gbh.movil.domain.product.Product;
-import com.gbh.movil.domain.product.ProductCreator;
-import com.gbh.movil.domain.product.ProductIdentifier;
+import com.gbh.movil.domain.Product;
+import com.gbh.movil.domain.ProductCreator;
+import com.gbh.movil.domain.ProductIdentifier;
 import com.gbh.movil.domain.Bank;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

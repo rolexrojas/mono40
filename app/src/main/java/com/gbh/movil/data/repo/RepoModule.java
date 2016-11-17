@@ -1,8 +1,8 @@
 package com.gbh.movil.data.repo;
 
-import com.gbh.movil.domain.product.ProductRepo;
-import com.gbh.movil.domain.recipient.RecipientRepo;
-import com.gbh.movil.domain.product.transaction.TransactionRepo;
+import com.gbh.movil.domain.ProductRepo;
+import com.gbh.movil.domain.RecipientRepo;
+import com.gbh.movil.domain.TransactionRepo;
 
 import javax.inject.Singleton;
 

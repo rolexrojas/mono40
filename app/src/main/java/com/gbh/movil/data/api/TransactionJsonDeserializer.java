@@ -1,6 +1,6 @@
 package com.gbh.movil.data.api;
 
-import com.gbh.movil.domain.product.transaction.Transaction;
+import com.gbh.movil.domain.Transaction;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;

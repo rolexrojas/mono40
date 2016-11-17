@@ -1,7 +1,7 @@
 package com.gbh.movil.ui.splash;
 
-import com.gbh.movil.domain.product.ProductManager;
-import com.gbh.movil.domain.recipient.RecipientManager;
+import com.gbh.movil.domain.ProductManager;
+import com.gbh.movil.domain.RecipientManager;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.InitialDataLoader;
 import com.gbh.movil.data.net.NetworkHelper;

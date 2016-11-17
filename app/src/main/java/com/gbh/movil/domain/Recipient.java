@@ -1,6 +1,6 @@
 package com.gbh.movil.domain;
 
-import com.gbh.movil.domain.recipient.RecipientType;
+import android.support.annotation.NonNull;
 
 /**
  * Abstract recipient representation.
@@ -9,28 +9,27 @@ import com.gbh.movil.domain.recipient.RecipientType;
  */
 public abstract class Recipient implements Matchable {
   /**
-   * Recipient's type.
+   * Recipient's {@link RecipientType type}.
    */
-  @RecipientType
-  protected final int type;
+  protected final RecipientType type;
 
   /**
    * Constructs a new recipient.
    *
    * @param type
-   *   Recipient's type.
+   *   Recipient's {@link RecipientType type}.
    */
-  protected Recipient(@RecipientType int type) {
+  protected Recipient(@NonNull RecipientType type) {
     this.type = type;
   }
 
   /**
-   * Gets the type of the recipient.
+   * Gets the {@link RecipientType type} of the recipient.
    *
-   * @return Recipient's type.
+   * @return Recipient's {@link RecipientType type}.
    */
-  @RecipientType
-  public final int getType() {
+  @NonNull
+  public final RecipientType getType() {
     return type;
   }
 

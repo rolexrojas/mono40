@@ -1,8 +1,8 @@
 package com.gbh.movil.ui.main;
 
 import com.gbh.movil.data.MessageHelper;
-import com.gbh.movil.domain.product.BalanceManager;
-import com.gbh.movil.domain.EventBus;
+import com.gbh.movil.domain.BalanceManager;
+import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.ui.ActivityScope;
 
 import dagger.Module;

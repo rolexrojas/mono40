@@ -2,15 +2,15 @@ package com.gbh.movil.domain.api;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.domain.product.Balance;
+import com.gbh.movil.domain.Balance;
 import com.gbh.movil.domain.Bank;
-import com.gbh.movil.domain.product.CreditCard;
-import com.gbh.movil.domain.product.Account;
+import com.gbh.movil.domain.CreditCard;
+import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.InitialData;
-import com.gbh.movil.domain.product.Loan;
-import com.gbh.movil.domain.product.Product;
+import com.gbh.movil.domain.Loan;
+import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Recipient;
-import com.gbh.movil.domain.product.transaction.Transaction;
+import com.gbh.movil.domain.Transaction;
 
 import java.util.List;
 import java.util.Set;

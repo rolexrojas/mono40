@@ -1,7 +1,7 @@
 package com.gbh.movil.ui.main.payments;
 
 import com.gbh.movil.data.SchedulerProvider;
-import com.gbh.movil.domain.recipient.RecipientManager;
+import com.gbh.movil.domain.RecipientManager;
 import com.gbh.movil.ui.FragmentScope;
 
 import dagger.Module;
