@@ -1,7 +1,7 @@
 package com.gbh.movil.ui.main.payments;
 
 /**
- * {@link Action} type definition.
+ * {@link ActionItem} type definition.
  *
  * @author hecvasro
  */

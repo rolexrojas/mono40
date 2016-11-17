@@ -2,7 +2,7 @@ package com.gbh.movil.ui.main.payments;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.domain.Recipient;
+import com.gbh.movil.ui.Item;
 import com.gbh.movil.ui.Refreshable;
 import com.gbh.movil.ui.Screen;
 
@@ -23,18 +23,10 @@ interface PaymentsScreen extends Screen, Refreshable {
   /**
    * TODO
    *
-   * @param recipient
+   * @param item
    *   TODO
    */
-  void add(@NonNull Recipient recipient);
-
-  /**
-   * TODO
-   *
-   * @param action
-   *   TODO
-   */
-  void add(@NonNull Action action);
+  void add(@NonNull Item item);
 
   /**
    * Creates an {@link Observable observable} that emits all query change events.

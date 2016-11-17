@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
 import com.gbh.movil.data.MessageHelper;
-import com.gbh.movil.domain.Recipient;
+import com.gbh.movil.ui.Item;
 import com.gbh.movil.ui.view.widget.RefreshIndicator;
 import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.gbh.movil.ui.main.SubFragment;
@@ -109,12 +109,7 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen {
   }
 
   @Override
-  public void add(@NonNull Recipient recipient) {
-    // TODO
-  }
-
-  @Override
-  public void add(@NonNull Action action) {
+  public void add(@NonNull Item item) {
     // TODO
   }
 

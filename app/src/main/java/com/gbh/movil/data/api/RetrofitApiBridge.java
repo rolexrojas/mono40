@@ -17,6 +17,7 @@ import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.domain.api.ApiCode;
 import com.gbh.movil.domain.api.ApiResult;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -160,6 +161,7 @@ class RetrofitApiBridge implements ApiBridge {
   @NonNull
   @Override
   public Observable<ApiResult<Set<Recipient>>> recipients() {
-    return Observable.error(new UnsupportedOperationException());
+    final Set<Recipient> recipients = new HashSet<>();
+    return Observable.just(ApiResult.create(recipients));
   }
 }

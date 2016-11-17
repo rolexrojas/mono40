@@ -45,29 +45,35 @@ public final class RecipientManager implements RecipientProvider {
   @NonNull
   @Override
   public Observable<Set<Recipient>> getAll(@Nullable final String query) {
-    return recipientRepo.getAll(query)
-      .concatWith(apiBridge.recipients()
-        .flatMap(new Func1<ApiResult<Set<Recipient>>, Observable<Set<Recipient>>>() {
-          @Override
-          public Observable<Set<Recipient>> call(ApiResult<Set<Recipient>> result) {
-            if (result.isSuccessful()) {
-              final Set<Recipient> data = result.getData();
-              if (Utils.isNotNull(data)) {
-                return syncRecipients(data)
-                  .flatMap(new Func1<Set<Recipient>, Observable<Set<Recipient>>>() {
-                    @Override
-                    public Observable<Set<Recipient>> call(Set<Recipient> recipients) {
-                      return recipientRepo.getAll(query);
-                    }
-                  });
-              } else { // This is not supposed to happen.
-                return Observable.error(new NullPointerException("Result's data is missing"));
-              }
-            } else {
-              // TODO: Find or create a suitable exception for this case.
-              return Observable.error(new Exception("Failed to load all registered recipients"));
+    return apiBridge.recipients()
+      .flatMap(new Func1<ApiResult<Set<Recipient>>, Observable<Set<Recipient>>>() {
+        @Override
+        public Observable<Set<Recipient>> call(ApiResult<Set<Recipient>> result) {
+          if (result.isSuccessful()) {
+            final Set<Recipient> data = result.getData();
+            if (Utils.isNotNull(data)) {
+              return syncRecipients(data)
+                .flatMap(new Func1<Set<Recipient>, Observable<Set<Recipient>>>() {
+                  @Override
+                  public Observable<Set<Recipient>> call(Set<Recipient> recipients) {
+                    return recipientRepo.getAll(query);
+                  }
+                });
+            } else { // This is not supposed to happen.
+              return Observable.error(new NullPointerException("Result's data is missing"));
             }
+          } else {
+            // TODO: Find or create a suitable exception for this case.
+            return Observable.error(new Exception("Failed to load all registered recipients"));
           }
-        }));
+        }
+      })
+      .flatMap(new Func1<Set<Recipient>, Observable<Set<Recipient>>>() {
+        @Override
+        public Observable<Set<Recipient>> call(Set<Recipient> recipients) {
+          return recipientRepo.getAll(query);
+        }
+      })
+      .onErrorResumeNext(recipientRepo.getAll(query));
   }
 }

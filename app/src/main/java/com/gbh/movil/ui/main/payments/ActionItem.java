@@ -1,11 +1,13 @@
 package com.gbh.movil.ui.main.payments;
 
+import com.gbh.movil.ui.Item;
+
 /**
- * Action representation.
+ * Action {@link Item item} representation.
  *
  * @author hecvasro
  */
-abstract class Action {
+abstract class ActionItem implements Item {
   /**
    * Action's {@link ActionType type}.
    */
@@ -18,7 +20,7 @@ abstract class Action {
    * @param type
    *   Action's {@link ActionType type}.
    */
-  Action(@ActionType int type) {
+  ActionItem(@ActionType int type) {
     this.type = type;
   }
 
