@@ -6,6 +6,8 @@ import android.support.annotation.StringRes;
 
 import com.gbh.movil.R;
 
+import java.math.BigDecimal;
+
 /**
  * TODO
  *
@@ -39,7 +41,7 @@ public final class MessageHelper {
   }
 
   @NonNull
-  public final String feeForTransaction(@NonNull String currencyCode, double fee) {
+  public final String feeForTransaction(@NonNull String currencyCode, @NonNull BigDecimal fee) {
     return String.format(getString(R.string.fee_for_transaction), Formatter.amount(currencyCode,
       fee));
   }

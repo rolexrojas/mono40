@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 
 import com.gbh.movil.Utils;
 
+import java.math.BigDecimal;
+
 /**
  * Transaction representation.
  */
@@ -31,7 +33,7 @@ public class Transaction {
   /**
    * Transaction's getValue.
    */
-  private final double value;
+  private final BigDecimal value;
 
   /**
    * Constructs a new transaction.
@@ -50,7 +52,7 @@ public class Transaction {
    *   Transaction's getValue.
    */
   public Transaction(@NonNull String type, @NonNull String name, long date,
-    RequestType requestType, @NonNull String currency, double value) {
+    RequestType requestType, @NonNull String currency, BigDecimal value) {
     this.type = type;
     this.name = name;
     this.date = date;
@@ -113,7 +115,8 @@ public class Transaction {
    *
    * @return Transaction's getValue.
    */
-  public final double getValue() {
+  @NonNull
+  public final BigDecimal getValue() {
     return value;
   }
 

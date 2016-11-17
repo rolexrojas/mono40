@@ -2,6 +2,8 @@ package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
 
+import java.math.BigDecimal;
+
 /**
  * Account balance representation.
  *
@@ -9,9 +11,13 @@ import android.support.annotation.NonNull;
  */
 public class Balance {
   /**
-   * Balance's getValue.
+   * Balance's total amount.
    */
-  private final double value;
+  private final BigDecimal total;
+  /**
+   * Balance's available amount.
+   */
+  private final BigDecimal available;
   /**
    * Balance's description.
    */
@@ -20,23 +26,38 @@ public class Balance {
   /**
    * Constructs a new balance.
    *
-   * @param value
-   *   Balance's getValue.
+   * @param total
+   *   Balance's total amount.
+   * @param available
+   *   Balance's available amount.
    * @param description
    *   Balance's description
    */
-  public Balance(double value, @NonNull String description) {
-    this.value = value;
+  public Balance(@NonNull BigDecimal total, @NonNull BigDecimal available,
+    @NonNull String description) {
+    this.total = total;
+    this.available = available;
     this.description = description;
   }
 
   /**
-   * Gets the getValue of the balance.
+   * Gets the total amount of the balance.
    *
-   * @return Balance's getValue.
+   * @return Balance's total amount.
    */
-  public final double getValue() {
-    return value;
+  @NonNull
+  public final BigDecimal getTotal() {
+    return total;
+  }
+
+  /**
+   * Gets the available amount of the balance.
+   *
+   * @return Balance's available amount.
+   */
+  @NonNull
+  public final BigDecimal getAvailable() {
+    return available;
   }
 
   /**
@@ -47,5 +68,11 @@ public class Balance {
   @NonNull
   public final String getDescription() {
     return description;
+  }
+
+  @Override
+  public String toString() {
+    return Balance.class.getSimpleName() + ":{total=" + total + ",available=" + available
+      + ",description='" + description + "'}";
   }
 }

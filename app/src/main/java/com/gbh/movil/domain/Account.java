@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 
 import com.gbh.movil.Utils;
 
+import java.math.BigDecimal;
+
 /**
  * Abstract account representation.
  *
@@ -33,7 +35,7 @@ public class Account {
   /**
    * Cost of querying the balance.
    */
-  private double queryFee;
+  private BigDecimal queryFee;
 
   /**
    * Constructs a new account.
@@ -52,7 +54,7 @@ public class Account {
    *   Cost of querying the balance.
    */
   public Account(@NonNull AccountType type, @NonNull String alias, @NonNull String number,
-    @NonNull Bank bank, @NonNull String currency, double queryFee) {
+    @NonNull Bank bank, @NonNull String currency, @NonNull BigDecimal queryFee) {
     this.type = type;
     this.alias = alias;
     this.number = number;
@@ -115,7 +117,8 @@ public class Account {
    *
    * @return Cost of querying the balance.
    */
-  public double getQueryFee() {
+  @NonNull
+  public BigDecimal getQueryFee() {
     return queryFee;
   }
 
@@ -125,9 +128,9 @@ public class Account {
    * @param queryFee
    *   Cost of querying the balance.
    */
-  public void setQueryFee(double queryFee) {
-    if (queryFee < 0) {
-      queryFee = 0;
+  public void setQueryFee(@NonNull BigDecimal queryFee) {
+    if (queryFee.compareTo(BigDecimal.ZERO) < 0) {
+      queryFee = BigDecimal.ZERO;
     }
     this.queryFee = queryFee;
   }

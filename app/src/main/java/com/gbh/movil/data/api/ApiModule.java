@@ -28,8 +28,8 @@ public class ApiModule {
   @Singleton
   ApiBridge provideApiBridge(OkHttpClient okHttpClient) {
     final Gson gson = new GsonBuilder()
-      .registerTypeAdapter(Bank.class, new BankJsonDeserializer())
-      .registerTypeAdapter(Account.class, new AccountJsonDeserializer())
+      .registerTypeAdapter(Bank.class, new BankTypeAdapter())
+      .registerTypeAdapter(Account.class, new AccountTypeAdapter())
       .registerTypeAdapter(Transaction.class, new TransactionJsonDeserializer())
       .registerTypeAdapter(InitialData.class, new InitialDataDeserializer())
       .create();

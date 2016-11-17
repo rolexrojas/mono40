@@ -25,6 +25,7 @@ import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.yqritc.recyclerviewflexibledivider.FlexibleDividerDecoration;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -232,13 +233,13 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
         final TransactionItemViewHolder transactionHolder = (TransactionItemViewHolder) holder;
         transactionHolder.nameTextView.setText(transaction.getName());
         transactionHolder.typeTextView.setText(transaction.getType());
-        final double value = transaction.getValue();
+        final BigDecimal value = transaction.getValue();
         final String currencyCode = transaction.getCurrency();
         final int colorId = transaction.getRequestType() == Transaction.RequestType.C ?
           R.color.transaction_type_credit : R.color.transaction_type_debit;
         transactionHolder.amountView.setCurrency(currencyCode);
         transactionHolder.amountView.setCurrencyColor(colorId);
-        transactionHolder.amountView.setValue(Math.abs(value));
+        transactionHolder.amountView.setValue(value.abs());
         transactionHolder.amountView.setValueColor(colorId);
       }
     }

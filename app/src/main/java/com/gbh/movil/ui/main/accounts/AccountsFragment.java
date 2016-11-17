@@ -344,7 +344,7 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
         if (balance != null) {
           accountHolder.amountView.setVisibility(View.VISIBLE);
           accountHolder.amountView.setCurrency(account.getCurrency());
-          accountHolder.amountView.setValue(balance.getValue());
+          accountHolder.amountView.setValue(balance.getAvailable());
           accountHolder.queryAccountBalanceButton.setVisibility(View.GONE);
         } else {
           accountHolder.amountView.setVisibility(View.GONE);
