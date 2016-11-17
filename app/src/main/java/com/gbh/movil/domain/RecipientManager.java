@@ -11,7 +11,6 @@ import java.util.Set;
 
 import rx.Observable;
 import rx.functions.Func1;
-import timber.log.Timber;
 
 /**
  * TODO
@@ -62,12 +61,11 @@ public final class RecipientManager implements RecipientProvider {
                     }
                   });
               } else { // This is not supposed to happen.
-                return Observable.error(new NullPointerException("Result's data is not available"));
+                return Observable.error(new NullPointerException("Result's data is missing"));
               }
             } else {
-              Timber.d("Failed to load all registered accounts (%1$s)", result);
               // TODO: Find or create a suitable exception for this case.
-              return Observable.error(new Exception());
+              return Observable.error(new Exception("Failed to load all registered recipients (%1$s)"));
             }
           }
         }));

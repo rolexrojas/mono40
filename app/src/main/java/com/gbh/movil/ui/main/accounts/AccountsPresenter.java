@@ -144,6 +144,8 @@ class AccountsPresenter extends Presenter<AccountsScreen> {
           @Override
           public void call(Throwable throwable) {
             Timber.e(throwable, "Querying the balance of an account (%1$s)", account);
+            screen.onBalanceQueried(false, account, null);
+            // TODO: Let the user know that an error occurred.
           }
         });
       compositeSubscription.add(subscription);

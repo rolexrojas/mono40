@@ -2,10 +2,12 @@ package com.gbh.movil.domain.api;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.Balance;
 import com.gbh.movil.domain.Bank;
+import com.gbh.movil.domain.CreditCardAccount;
+import com.gbh.movil.domain.ElectronicAccount;
 import com.gbh.movil.domain.InitialData;
+import com.gbh.movil.domain.LoanAccount;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.Transaction;
 
@@ -57,16 +59,46 @@ public class DecoratedApiBridge implements ApiBridge {
 
   @NonNull
   @Override
-  public Observable<ApiResult<Set<Account>>> accounts() {
+  public Observable<ApiResult<Set<ElectronicAccount>>> accounts() {
     return apiBridge.accounts()
-      .compose(this.<Set<Account>>assertAuthorization());
+      .compose(this.<Set<ElectronicAccount>>assertAuthorization());
   }
 
   @NonNull
   @Override
-  public Observable<ApiResult<Balance>> queryBalance(@NonNull Account account,
+  public Observable<ApiResult<Balance>> queryBalance(@NonNull ElectronicAccount account,
     @NonNull String pin) {
     return apiBridge.queryBalance(account, pin)
+      .compose(this.<Balance>assertAuthorization());
+  }
+
+  @NonNull
+  @Override
+  public Observable<ApiResult<Set<CreditCardAccount>>> creditCards() {
+    return apiBridge.creditCards()
+      .compose(this.<Set<CreditCardAccount>>assertAuthorization());
+  }
+
+  @NonNull
+  @Override
+  public Observable<ApiResult<Balance>> queryBalance(@NonNull CreditCardAccount creditCard,
+    @NonNull String pin) {
+    return apiBridge.queryBalance(creditCard, pin)
+      .compose(this.<Balance>assertAuthorization());
+  }
+
+  @NonNull
+  @Override
+  public Observable<ApiResult<Set<LoanAccount>>> loans() {
+    return apiBridge.loans()
+      .compose(this.<Set<LoanAccount>>assertAuthorization());
+  }
+
+  @NonNull
+  @Override
+  public Observable<ApiResult<Balance>> queryBalance(@NonNull LoanAccount loan,
+    @NonNull String pin) {
+    return apiBridge.queryBalance(loan, pin)
       .compose(this.<Balance>assertAuthorization());
   }
 

@@ -139,7 +139,15 @@ public final class BalanceManager {
   @NonNull
   public final Observable<Pair<Boolean, Balance>> queryBalance(@NonNull final Account account,
     @NonNull String pin) {
-    return apiBridge.queryBalance(account, pin)
+    final Observable<ApiResult<Balance>> observable;
+    if (account.getCategory().equals(AccountCategory.ELECTRONIC)) {
+      observable = apiBridge.queryBalance((ElectronicAccount) account, pin);
+    } else if (account.getCategory().equals(AccountCategory.CREDIT_CARD)) {
+      observable = apiBridge.queryBalance((CreditCardAccount) account, pin);
+    } else {
+      observable = apiBridge.queryBalance((LoanAccount) account, pin);
+    }
+    return observable
       .map(new Func1<ApiResult<Balance>, Pair<Boolean, Balance>>() {
         @Override
         public Pair<Boolean, Balance> call(ApiResult<Balance> result) {

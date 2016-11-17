@@ -2,8 +2,12 @@ package com.gbh.movil.data.api;
 
 import com.gbh.movil.BuildConfig;
 import com.gbh.movil.domain.Account;
+import com.gbh.movil.domain.Balance;
 import com.gbh.movil.domain.Bank;
+import com.gbh.movil.domain.CreditCardAccount;
+import com.gbh.movil.domain.ElectronicAccount;
 import com.gbh.movil.domain.InitialData;
+import com.gbh.movil.domain.LoanAccount;
 import com.gbh.movil.domain.Transaction;
 import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.domain.api.DecoratedApiBridge;
@@ -30,6 +34,10 @@ public class ApiModule {
     final Gson gson = new GsonBuilder()
       .registerTypeAdapter(Bank.class, new BankTypeAdapter())
       .registerTypeAdapter(Account.class, new AccountTypeAdapter())
+      .registerTypeAdapter(ElectronicAccount.class, new AccountTypeAdapter())
+      .registerTypeAdapter(CreditCardAccount.class, new AccountTypeAdapter())
+      .registerTypeAdapter(LoanAccount.class, new AccountTypeAdapter())
+      .registerTypeAdapter(Balance.class, new BalanceJsonDeserializer())
       .registerTypeAdapter(Transaction.class, new TransactionJsonDeserializer())
       .registerTypeAdapter(InitialData.class, new InitialDataDeserializer())
       .create();

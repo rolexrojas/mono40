@@ -1,6 +1,7 @@
 package com.gbh.movil.data.api;
 
 import com.gbh.movil.domain.Account;
+import com.gbh.movil.domain.AccountCreator;
 import com.gbh.movil.domain.AccountType;
 import com.gbh.movil.domain.Bank;
 import com.google.gson.JsonDeserializationContext;
@@ -14,6 +15,8 @@ import com.google.gson.JsonSerializer;
 import java.lang.reflect.Type;
 
 /**
+ * TODO
+ *
  * @author hecvasro
  */
 class AccountTypeAdapter implements JsonDeserializer<Account>, JsonSerializer<Account> {
@@ -41,9 +44,8 @@ class AccountTypeAdapter implements JsonDeserializer<Account>, JsonSerializer<Ac
     } else if (!jsonObject.has(PROPERTY_QUERY_FEE)) {
       throw new JsonParseException("Property '" + PROPERTY_QUERY_FEE + "' is missing");
     } else {
-      return new Account(AccountType.valueOf(jsonObject.get(PROPERTY_TYPE).getAsString()),
-        jsonObject.get(PROPERTY_ALIAS).getAsString(),
-        jsonObject.get(PROPERTY_NUMBER).getAsString(),
+      return AccountCreator.create(AccountType.valueOf(jsonObject.get(PROPERTY_TYPE).getAsString()),
+        jsonObject.get(PROPERTY_ALIAS).getAsString(), jsonObject.get(PROPERTY_NUMBER).getAsString(),
         (Bank) context.deserialize(jsonObject.get(PROPERTY_BANK), Bank.class),
         jsonObject.get(PROPERTY_CURRENCY).getAsString(),
         jsonObject.get(PROPERTY_QUERY_FEE).getAsBigDecimal());

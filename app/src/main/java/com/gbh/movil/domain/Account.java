@@ -11,7 +11,11 @@ import java.math.BigDecimal;
  *
  * @author hecvasro
  */
-public class Account {
+public abstract class Account {
+  /**
+   * Account's {@link AccountCategory category}.
+   */
+  private final AccountCategory category;
   /**
    * Account's {@link AccountType type}.
    */
@@ -40,11 +44,13 @@ public class Account {
   /**
    * Constructs a new account.
    *
+   * @param category
+   *   Account's {@link AccountCategory category}.
    * @param type
    *   Account's {@link AccountType type}.
    * @param alias
    *   Account's identifier.
-   *   @param number
+   * @param number
    *   Account's number.
    * @param currency
    *   Account's amount.
@@ -53,14 +59,26 @@ public class Account {
    * @param queryFee
    *   Cost of querying the balance.
    */
-  public Account(@NonNull AccountType type, @NonNull String alias, @NonNull String number,
-    @NonNull Bank bank, @NonNull String currency, @NonNull BigDecimal queryFee) {
+  Account(@NonNull AccountCategory category, @NonNull AccountType type, @NonNull String alias,
+    @NonNull String number, @NonNull Bank bank, @NonNull String currency,
+    @NonNull BigDecimal queryFee) {
+    this.category = category;
     this.type = type;
     this.alias = alias;
     this.number = number;
     this.bank = bank;
     this.currency = currency;
     this.queryFee = queryFee;
+  }
+
+  /**
+   * Gets the {@link AccountCategory category} of the account.
+   *
+   * @return Account's {@link AccountCategory category}.
+   */
+  @NonNull
+  public final AccountCategory getCategory() {
+    return category;
   }
 
   /**
@@ -85,6 +103,7 @@ public class Account {
 
   /**
    * Gets the number of the account.
+   *
    * @return Account's number.
    */
   @NonNull
@@ -138,8 +157,8 @@ public class Account {
   @Override
   public boolean equals(Object object) {
     return super.equals(object) || (Utils.isNotNull(object) && object instanceof Account
-      && ((Account) object).type.equals(type) && ((Account) object).alias.equals(alias))
-      && ((Account) object).bank.equals(bank);
+      && ((Account) object).category.equals(category) && ((Account) object).type.equals(type)
+      && ((Account) object).alias.equals(alias)) && ((Account) object).bank.equals(bank);
   }
 
   @Override
@@ -149,7 +168,8 @@ public class Account {
 
   @Override
   public String toString() {
-    return Account.class.getSimpleName() + ":{type=" + type + ",alias='" + alias + "',number='"
-      + number + "',currency='" + currency + "',bank=" + bank + ",queryFee=" + queryFee + "}";
+    return Account.class.getSimpleName() + ":{category='" + category + "', type='" + type
+      + "',alias='" + alias + "',number='" + number + "',currency='" + currency + "',bank=" + bank
+      + ",queryFee=" + queryFee + "}";
   }
 }

@@ -246,8 +246,7 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
 
     private Adapter(@NonNull ShowRecentTransactionsViewHolder.Listener listener) {
       this.listener = listener;
-      this.items.add(showRecentTransactionsItem);
-      this.notifyItemInserted(this.getItemCount());
+      this.addShowRecentTransactionsItem();
     }
 
     /**
@@ -268,16 +267,29 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
       return null;
     }
 
+    private boolean isShowRecentTransactionsItemAdded() {
+      return items.contains(showRecentTransactionsItem);
+    }
+
+    /**
+     * TODO
+     */
+    private void addShowRecentTransactionsItem() {
+      if (!isShowRecentTransactionsItemAdded()) {
+        items.add(showRecentTransactionsItem);
+        notifyItemInserted(getItemCount());
+      }
+    }
+
     /**
      * TODO
      */
     final void clear() {
       final int count = getItemCount();
-      if (count > 1) {
-        final List<Object> itemsToRemove = items.subList(0,
-          items.indexOf(showRecentTransactionsItem) - 1);
-        items.removeAll(itemsToRemove);
-        notifyItemRangeRemoved(0, itemsToRemove.size());
+      if (count > 0) {
+        items.clear();
+        notifyItemRangeRemoved(0, count);
+        addShowRecentTransactionsItem();
       }
     }
 
@@ -291,7 +303,7 @@ public class AccountsFragment extends SubFragment implements AccountsScreen,
       final AccountItem item = findByAccount(account);
       if (Utils.isNull(item)) {
         final int count = getItemCount();
-        final int index = items.contains(showRecentTransactionsItem) ? count - 1 : count;
+        final int index = isShowRecentTransactionsItemAdded() ? count - 1 : count;
         items.add(index, new AccountItem(account));
         notifyItemInserted(index);
       }

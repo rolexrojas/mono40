@@ -10,7 +10,6 @@ import java.util.List;
 
 import rx.Observable;
 import rx.functions.Func1;
-import timber.log.Timber;
 
 /**
  * TODO
@@ -43,12 +42,11 @@ public class DecoratedTransactionProvider implements TransactionProvider {
               if (Utils.isNotNull(transactions)) {
                 return transactionRepo.saveAll(transactions);
               } else { // This is not supposed to happen.
-                return Observable.error(new NullPointerException("Result's data is not available"));
+                return Observable.error(new NullPointerException("Result's data is missing"));
               }
             } else {
-              Timber.d("Failed to load latest transactions (%1$s)", result);
               // TODO: Find or create a suitable exception for this case.
-              return Observable.error(new Exception());
+              return Observable.error(new Exception("Failed to load latest transactions"));
             }
           }
         }));

@@ -8,7 +8,6 @@ import com.gbh.movil.domain.api.ApiResult;
 
 import rx.Observable;
 import rx.functions.Func1;
-import timber.log.Timber;
 
 /**
  * TODO
@@ -46,12 +45,11 @@ public final class InitialDataLoader {
                 .concatWith(recipientManager.syncRecipients(data.getRecipients()))
                 .last();
             } else { // This is no suppose to happen.
-              return Observable.error(new NullPointerException("Result's data is not available"));
+              return Observable.error(new NullPointerException("Result's data is missing"));
             }
           } else {
-            Timber.d("Initial load failed (%1$s)", result);
             // TODO: Find or create a suitable exception for this case.
-            return Observable.error(new Exception());
+            return Observable.error(new Exception("Failed to load initial data"));
           }
         }
       });
