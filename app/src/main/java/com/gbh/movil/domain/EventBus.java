@@ -33,7 +33,7 @@ public final class EventBus {
    * @param event
    *   TODO
    */
-  void dispatch(@NonNull Event event) {
+  public void dispatch(@NonNull Event event) {
     if (event.isSticky()) {
       if (stickyEvents.contains(event)) {
         stickyEvents.remove(event);

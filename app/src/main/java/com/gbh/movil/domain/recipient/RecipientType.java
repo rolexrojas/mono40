@@ -1,4 +1,4 @@
-package com.gbh.movil.domain;
+package com.gbh.movil.domain.recipient;
 
 import android.support.annotation.IntDef;
 

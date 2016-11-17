@@ -2,15 +2,15 @@ package com.gbh.movil.domain.api;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.domain.Balance;
+import com.gbh.movil.domain.product.Balance;
 import com.gbh.movil.domain.Bank;
-import com.gbh.movil.domain.CreditCard;
-import com.gbh.movil.domain.Account;
+import com.gbh.movil.domain.product.CreditCard;
+import com.gbh.movil.domain.product.Account;
 import com.gbh.movil.domain.InitialData;
-import com.gbh.movil.domain.Loan;
-import com.gbh.movil.domain.Product;
+import com.gbh.movil.domain.product.Loan;
+import com.gbh.movil.domain.product.Product;
 import com.gbh.movil.domain.Recipient;
-import com.gbh.movil.domain.Transaction;
+import com.gbh.movil.domain.product.transaction.Transaction;
 
 import java.util.List;
 import java.util.Set;
@@ -96,19 +96,6 @@ public interface ApiBridge {
   Observable<ApiResult<Balance>> queryBalance(@NonNull Product product, @NonNull String pin);
 
   /**
-   * Creates an {@link Observable observable} that emits all the registered {@link Recipient
-   * recipients}.
-   * <p>
-   * <em>Note:</em> By default {@link #recipients()} does not operates on a particular {@link
-   * rx.Scheduler}.
-   *
-   * @return An {@link Observable observable} that emits all the registered {@link Recipient
-   * recipients}.
-   */
-  @NonNull
-  Observable<ApiResult<Set<Recipient>>> recipients();
-
-  /**
    * Creates an {@link Observable observable} that emits the latest {@link Transaction transactions}
    * that were made.
    * <p>
@@ -120,4 +107,17 @@ public interface ApiBridge {
    */
   @NonNull
   Observable<ApiResult<List<Transaction>>> recentTransactions();
+
+  /**
+   * Creates an {@link Observable observable} that emits all the registered {@link Recipient
+   * recipients}.
+   * <p>
+   * <em>Note:</em> By default {@link #recipients()} does not operates on a particular {@link
+   * rx.Scheduler}.
+   *
+   * @return An {@link Observable observable} that emits all the registered {@link Recipient
+   * recipients}.
+   */
+  @NonNull
+  Observable<ApiResult<Set<Recipient>>> recipients();
 }

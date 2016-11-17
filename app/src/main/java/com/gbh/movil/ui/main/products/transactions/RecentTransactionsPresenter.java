@@ -5,8 +5,8 @@ import android.support.annotation.NonNull;
 import com.gbh.movil.rx.RxUtils;
 import com.gbh.movil.Utils;
 import com.gbh.movil.data.SchedulerProvider;
-import com.gbh.movil.domain.Transaction;
-import com.gbh.movil.domain.TransactionProvider;
+import com.gbh.movil.domain.product.transaction.Transaction;
+import com.gbh.movil.domain.product.transaction.TransactionProvider;
 import com.gbh.movil.ui.Presenter;
 import com.gbh.movil.ui.UiUtils;
 

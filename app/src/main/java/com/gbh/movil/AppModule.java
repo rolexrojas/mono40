@@ -3,12 +3,12 @@ package com.gbh.movil;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.domain.ProductManager;
-import com.gbh.movil.domain.ProductRepo;
-import com.gbh.movil.domain.BalanceManager;
+import com.gbh.movil.domain.product.ProductManager;
+import com.gbh.movil.domain.product.ProductRepo;
+import com.gbh.movil.domain.product.BalanceManager;
 import com.gbh.movil.domain.EventBus;
-import com.gbh.movil.domain.RecipientManager;
-import com.gbh.movil.domain.RecipientRepo;
+import com.gbh.movil.domain.recipient.RecipientManager;
+import com.gbh.movil.domain.recipient.RecipientRepo;
 import com.gbh.movil.domain.SessionManager;
 import com.gbh.movil.domain.api.ApiBridge;
 

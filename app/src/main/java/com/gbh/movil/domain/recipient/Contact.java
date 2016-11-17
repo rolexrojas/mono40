@@ -1,10 +1,11 @@
-package com.gbh.movil.domain;
+package com.gbh.movil.domain.recipient;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.gbh.movil.Utils;
+import com.gbh.movil.domain.Matchable;
 
 /**
  * Contact representation.

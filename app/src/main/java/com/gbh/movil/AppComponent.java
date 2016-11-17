@@ -3,13 +3,13 @@ package com.gbh.movil;
 import com.gbh.movil.data.DataModule;
 import com.gbh.movil.data.MessageHelper;
 import com.gbh.movil.data.SchedulerProvider;
-import com.gbh.movil.domain.ProductManager;
-import com.gbh.movil.domain.BalanceManager;
+import com.gbh.movil.domain.product.ProductManager;
+import com.gbh.movil.domain.product.BalanceManager;
 import com.gbh.movil.data.net.NetworkHelper;
 import com.gbh.movil.domain.EventBus;
-import com.gbh.movil.domain.RecipientManager;
+import com.gbh.movil.domain.recipient.RecipientManager;
 import com.gbh.movil.domain.SessionManager;
-import com.gbh.movil.domain.TransactionRepo;
+import com.gbh.movil.domain.product.transaction.TransactionRepo;
 import com.gbh.movil.domain.api.ApiBridge;
 
 import javax.inject.Singleton;

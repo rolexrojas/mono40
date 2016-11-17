@@ -1,6 +1,8 @@
-package com.gbh.movil.domain;
+package com.gbh.movil.domain.product;
 
 import com.gbh.movil.Utils;
+import com.gbh.movil.domain.Event;
+import com.gbh.movil.domain.EventType;
 
 /**
  * {@link Event} that represents the removal of a {@link Product product}.

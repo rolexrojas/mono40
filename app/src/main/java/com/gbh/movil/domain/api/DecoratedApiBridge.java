@@ -2,15 +2,15 @@ package com.gbh.movil.domain.api;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.domain.Balance;
+import com.gbh.movil.domain.product.Balance;
 import com.gbh.movil.domain.Bank;
-import com.gbh.movil.domain.CreditCard;
-import com.gbh.movil.domain.Account;
+import com.gbh.movil.domain.product.CreditCard;
+import com.gbh.movil.domain.product.Account;
 import com.gbh.movil.domain.InitialData;
-import com.gbh.movil.domain.Loan;
-import com.gbh.movil.domain.Product;
+import com.gbh.movil.domain.product.Loan;
+import com.gbh.movil.domain.product.Product;
 import com.gbh.movil.domain.Recipient;
-import com.gbh.movil.domain.Transaction;
+import com.gbh.movil.domain.product.transaction.Transaction;
 
 import java.util.List;
 import java.util.Set;
@@ -110,9 +110,9 @@ public class DecoratedApiBridge implements ApiBridge {
    */
   @NonNull
   @Override
-  public Observable<ApiResult<Set<Recipient>>> recipients() {
-    return apiBridge.recipients()
-      .compose(this.<Set<Recipient>>assertAuthorization());
+  public Observable<ApiResult<List<Transaction>>> recentTransactions() {
+    return apiBridge.recentTransactions()
+      .compose(this.<List<Transaction>>assertAuthorization());
   }
 
   /**
@@ -120,8 +120,8 @@ public class DecoratedApiBridge implements ApiBridge {
    */
   @NonNull
   @Override
-  public Observable<ApiResult<List<Transaction>>> recentTransactions() {
-    return apiBridge.recentTransactions()
-      .compose(this.<List<Transaction>>assertAuthorization());
+  public Observable<ApiResult<Set<Recipient>>> recipients() {
+    return apiBridge.recipients()
+      .compose(this.<Set<Recipient>>assertAuthorization());
   }
 }

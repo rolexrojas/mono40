@@ -1,6 +1,8 @@
-package com.gbh.movil.domain;
+package com.gbh.movil.domain.recipient;
 
 import android.support.annotation.NonNull;
+
+import com.gbh.movil.domain.Recipient;
 
 import java.util.Set;
 

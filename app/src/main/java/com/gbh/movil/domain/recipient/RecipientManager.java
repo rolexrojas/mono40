@@ -1,9 +1,10 @@
-package com.gbh.movil.domain;
+package com.gbh.movil.domain.recipient;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.gbh.movil.Utils;
+import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.domain.api.ApiResult;
 
@@ -35,7 +36,7 @@ public final class RecipientManager implements RecipientProvider {
    * @return TODO
    */
   @NonNull
-  Observable<Set<Recipient>> syncRecipients(@NonNull Set<Recipient> recipients) {
+  public final Observable<Set<Recipient>> syncRecipients(@NonNull Set<Recipient> recipients) {
     return recipientRepo.saveAll(recipients);
   }
 

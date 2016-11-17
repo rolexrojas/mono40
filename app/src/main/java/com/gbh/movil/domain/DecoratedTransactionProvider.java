@@ -5,6 +5,9 @@ import android.support.annotation.NonNull;
 import com.gbh.movil.Utils;
 import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.domain.api.ApiResult;
+import com.gbh.movil.domain.product.transaction.Transaction;
+import com.gbh.movil.domain.product.transaction.TransactionProvider;
+import com.gbh.movil.domain.product.transaction.TransactionRepo;
 
 import java.util.List;
 

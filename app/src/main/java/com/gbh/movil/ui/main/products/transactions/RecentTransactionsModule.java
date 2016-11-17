@@ -2,8 +2,8 @@ package com.gbh.movil.ui.main.products.transactions;
 
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.DecoratedTransactionProvider;
-import com.gbh.movil.domain.TransactionProvider;
-import com.gbh.movil.domain.TransactionRepo;
+import com.gbh.movil.domain.product.transaction.TransactionProvider;
+import com.gbh.movil.domain.product.transaction.TransactionRepo;
 import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.ui.FragmentScope;
 

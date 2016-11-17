@@ -5,10 +5,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.gbh.movil.rx.RxUtils;
-import com.gbh.movil.domain.Contact;
-import com.gbh.movil.domain.ContactRecipient;
+import com.gbh.movil.domain.recipient.Contact;
+import com.gbh.movil.domain.recipient.ContactRecipient;
 import com.gbh.movil.domain.Recipient;
-import com.gbh.movil.domain.RecipientRepo;
+import com.gbh.movil.domain.recipient.RecipientRepo;
 
 import java.util.HashSet;
 import java.util.Set;

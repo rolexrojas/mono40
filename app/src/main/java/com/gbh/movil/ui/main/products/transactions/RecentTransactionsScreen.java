@@ -2,7 +2,7 @@ package com.gbh.movil.ui.main.products.transactions;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.domain.Transaction;
+import com.gbh.movil.domain.product.transaction.Transaction;
 import com.gbh.movil.ui.Refreshable;
 import com.gbh.movil.ui.Screen;
 

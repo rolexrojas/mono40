@@ -1,5 +1,7 @@
 package com.gbh.movil.domain;
 
+import com.gbh.movil.domain.recipient.RecipientType;
+
 /**
  * Abstract recipient representation.
  *

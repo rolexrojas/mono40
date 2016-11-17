@@ -1,8 +1,8 @@
-package com.gbh.movil.domain;
+package com.gbh.movil.domain.product.transaction;
 
 import android.support.annotation.NonNull;
 
-import java.util.Set;
+import java.util.List;
 
 import rx.Observable;
 
@@ -11,12 +11,12 @@ import rx.Observable;
  *
  * @author hecvasro
  */
-public interface ProductProvider {
+public interface TransactionProvider {
   /**
    * TODO
    *
    * @return TODO
    */
   @NonNull
-  Observable<Set<Product>> getAll();
+  Observable<List<Transaction>> getAll();
 }

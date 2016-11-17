@@ -1,9 +1,10 @@
-package com.gbh.movil.domain;
+package com.gbh.movil.domain.product;
 
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
 import com.gbh.movil.Utils;
+import com.gbh.movil.domain.EventBus;
 import com.gbh.movil.domain.api.ApiResult;
 import com.gbh.movil.rx.RxUtils;
 import com.gbh.movil.domain.api.ApiBridge;
@@ -144,7 +145,7 @@ public final class ProductManager implements ProductProvider {
    * @return TODO
    */
   @NonNull
-  final Observable<Set<Product>> syncAccounts(@NonNull Set<Product> products) {
+  public final Observable<Set<Product>> syncAccounts(@NonNull Set<Product> products) {
     return syncAccounts(products, true);
   }
 

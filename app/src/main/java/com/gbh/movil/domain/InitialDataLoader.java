@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import com.gbh.movil.Utils;
 import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.domain.api.ApiResult;
+import com.gbh.movil.domain.product.ProductManager;
+import com.gbh.movil.domain.recipient.RecipientManager;
 
 import rx.Observable;
 import rx.functions.Func1;

@@ -1,4 +1,4 @@
-package com.gbh.movil.domain;
+package com.gbh.movil.domain.product;
 
 /**
  * {@link Product} category enumeration.

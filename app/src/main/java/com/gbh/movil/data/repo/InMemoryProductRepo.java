@@ -2,8 +2,8 @@ package com.gbh.movil.data.repo;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.domain.Product;
-import com.gbh.movil.domain.ProductRepo;
+import com.gbh.movil.domain.product.Product;
+import com.gbh.movil.domain.product.ProductRepo;
 
 import java.util.HashSet;
 import java.util.Set;

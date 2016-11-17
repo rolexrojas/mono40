@@ -1,9 +1,9 @@
 package com.gbh.movil.data.api;
 
-import com.gbh.movil.domain.AccountBalance;
-import com.gbh.movil.domain.Balance;
-import com.gbh.movil.domain.CreditCardBalance;
-import com.gbh.movil.domain.LoanBalance;
+import com.gbh.movil.domain.product.AccountBalance;
+import com.gbh.movil.domain.product.Balance;
+import com.gbh.movil.domain.product.CreditCardBalance;
+import com.gbh.movil.domain.product.LoanBalance;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;

@@ -1,6 +1,8 @@
-package com.gbh.movil.domain;
+package com.gbh.movil.domain.product;
 
 import android.support.annotation.NonNull;
+
+import com.gbh.movil.domain.Bank;
 
 import java.math.BigDecimal;
 

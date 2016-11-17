@@ -1,8 +1,10 @@
-package com.gbh.movil.domain;
+package com.gbh.movil.domain.product;
 
 import android.support.annotation.NonNull;
 
 import com.gbh.movil.Utils;
+import com.gbh.movil.domain.Event;
+import com.gbh.movil.domain.EventType;
 
 /**
  * {@link Event} that represents the expiration of the {@link Balance balance} of a {@link Product

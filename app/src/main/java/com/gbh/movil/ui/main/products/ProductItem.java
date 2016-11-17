@@ -3,8 +3,8 @@ package com.gbh.movil.ui.main.products;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.gbh.movil.domain.Product;
-import com.gbh.movil.domain.Balance;
+import com.gbh.movil.domain.product.Product;
+import com.gbh.movil.domain.product.Balance;
 
 /**
  * TODO

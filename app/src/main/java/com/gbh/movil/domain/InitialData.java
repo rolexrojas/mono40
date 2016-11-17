@@ -2,6 +2,8 @@ package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
 
+import com.gbh.movil.domain.product.Product;
+
 import java.util.HashSet;
 import java.util.Set;
 
