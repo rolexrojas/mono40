@@ -12,7 +12,7 @@ import java.util.Map;
  *
  * @author hecvasro
  */
-public final class ItemBinderFactory {
+public final class ItemHolderBinderFactory {
   /**
    * TODO
    */
@@ -25,7 +25,7 @@ public final class ItemBinderFactory {
    * @param binders
    *   TODO
    */
-  private ItemBinderFactory(@NonNull Map<
+  private ItemHolderBinderFactory(@NonNull Map<
     Pair<Class<? extends Item>, Class<? extends ItemHolder>>,
     ItemHolderBinder<? extends Item, ? extends ItemHolder>> binders) {
     this.binders = binders;
@@ -42,7 +42,7 @@ public final class ItemBinderFactory {
    * @return TODO
    */
   @Nullable
-  public final ItemHolderBinder<? extends Item, ? extends ItemHolder> getBinder(
+  final ItemHolderBinder<? extends Item, ? extends ItemHolder> getBinder(
     @NonNull Class<? extends Item> itemType, @NonNull Class<? extends ItemHolder> holderType) {
     return binders.get(Pair.<Class<? extends Item>, Class<? extends ItemHolder>>create(itemType,
       holderType));
@@ -92,8 +92,8 @@ public final class ItemBinderFactory {
      * @return TODO
      */
     @NonNull
-    public final ItemBinderFactory build() {
-      return new ItemBinderFactory(binders);
+    public final ItemHolderBinderFactory build() {
+      return new ItemHolderBinderFactory(binders);
     }
   }
 }

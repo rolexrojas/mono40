@@ -18,11 +18,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
   /**
    * TODO
    */
-  private final ItemViewCreatorFactory holderCreatorFactory;
+  private final ItemHolderCreatorFactory holderCreatorFactory;
   /**
    * TODO
    */
-  private final ItemBinderFactory binderFactory;
+  private final ItemHolderBinderFactory binderFactory;
 
   /**
    * TODO
@@ -37,8 +37,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
    * @param binderFactory
    *   TODO
    */
-  public ItemAdapter(@NonNull ItemViewCreatorFactory holderCreatorFactory,
-    @NonNull ItemBinderFactory binderFactory) {
+  public ItemAdapter(@NonNull ItemHolderCreatorFactory holderCreatorFactory,
+    @NonNull ItemHolderBinderFactory binderFactory) {
     this.holderCreatorFactory = holderCreatorFactory;
     this.binderFactory = binderFactory;
   }
@@ -84,18 +84,17 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public void onBindViewHolder(ItemHolder holder, int position) {
     final Item item = items.get(position);
     final Class<? extends Item> itemType = item.getClass();
     final Class<? extends ItemHolder> holderType = holder.getClass();
-    final ItemHolderBinder<? extends Item, ? extends ItemHolder> binder
-      = binderFactory.getBinder(itemType, holderType);
+    final ItemHolderBinder binder = binderFactory.getBinder(itemType, holderType);
     if (Utils.isNull(binder)) {
       throw new NullPointerException("Binder for '" + itemType + "' and '" + holderType
         + "' is missing");
     } else {
-      // TODO: Find a way to make this work.
-//      binder.bind(itemType.cast(item), holderType.cast(holder));
+      binder.bind(item, holder);
     }
   }
 

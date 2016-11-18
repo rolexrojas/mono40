@@ -90,7 +90,8 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
     recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,
       false));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(this)
-      .drawable(R.drawable.list_item_divider)
+      .drawable(R.drawable.divider)
+      .marginResId(R.dimen.list_item_inset_horizontal)
       .visibilityProvider(new FlexibleDividerDecoration.VisibilityProvider() {
         @Override
         public boolean shouldHideDivider(int position, RecyclerView parent) {

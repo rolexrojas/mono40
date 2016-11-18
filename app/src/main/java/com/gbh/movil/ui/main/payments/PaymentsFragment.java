@@ -16,8 +16,8 @@ import com.gbh.movil.Utils;
 import com.gbh.movil.data.MessageHelper;
 import com.gbh.movil.ui.main.list.Item;
 import com.gbh.movil.ui.main.list.ItemAdapter;
-import com.gbh.movil.ui.main.list.ItemBinderFactory;
-import com.gbh.movil.ui.main.list.ItemViewCreatorFactory;
+import com.gbh.movil.ui.main.list.ItemHolderBinderFactory;
+import com.gbh.movil.ui.main.list.ItemHolderCreatorFactory;
 import com.gbh.movil.ui.view.widget.RefreshIndicator;
 import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.gbh.movil.ui.main.SubFragment;
@@ -77,10 +77,10 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen {
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
     // Prepares the actions and recipients list.
-    final ItemViewCreatorFactory holderCreatorFactory = new ItemViewCreatorFactory.Builder()
+    final ItemHolderCreatorFactory holderCreatorFactory = new ItemHolderCreatorFactory.Builder()
       .addCreator(ContactRecipientItem.class, new ContactRecipientItemHolderCreator())
       .build();
-    final ItemBinderFactory binderFactory = new ItemBinderFactory.Builder()
+    final ItemHolderBinderFactory binderFactory = new ItemHolderBinderFactory.Builder()
       .addBinder(ContactRecipientItem.class, ContactRecipientItemHolder.class,
         new ContactRecipientItemHolderBinder())
       .build();
@@ -92,7 +92,8 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen {
     recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL,
       false));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
-      .drawable(R.drawable.list_item_divider)
+      .drawable(R.drawable.divider)
+      .marginResId(R.dimen.list_item_inset_horizontal)
       .build();
     recyclerView.addItemDecoration(divider);
     // Injects all the annotated dependencies.

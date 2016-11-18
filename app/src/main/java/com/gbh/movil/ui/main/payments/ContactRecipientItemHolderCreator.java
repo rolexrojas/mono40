@@ -17,6 +17,6 @@ class ContactRecipientItemHolderCreator implements ItemHolderCreator<ContactReci
   @Override
   public ContactRecipientItemHolder create(@NonNull ViewGroup parent) {
     return new ContactRecipientItemHolder(LayoutInflater.from(parent.getContext())
-      .inflate(R.layout.item_recipient_contact, parent, false));
+      .inflate(R.layout.list_item_recipient_contact, parent, false));
   }
 }

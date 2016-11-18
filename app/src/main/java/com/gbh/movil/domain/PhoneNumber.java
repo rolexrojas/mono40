@@ -82,7 +82,7 @@ public class PhoneNumber implements Matchable {
 
   @Override
   public String toString() {
-    return PhoneNumber.class.getSimpleName() + ":{content=" + content + "}";
+    return content;
   }
 
   @Override

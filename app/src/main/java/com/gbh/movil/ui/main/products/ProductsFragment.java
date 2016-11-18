@@ -147,7 +147,8 @@ public class ProductsFragment extends SubFragment implements ProductsScreen,
     recyclerView.setLayoutManager(layoutManager);
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration
       .Builder(getContext())
-      .drawable(R.drawable.list_item_divider)
+      .drawable(R.drawable.divider)
+      .marginResId(R.dimen.list_item_inset_horizontal)
       .build();
     recyclerView.addItemDecoration(divider);
     // Injects all the annotated dependencies.

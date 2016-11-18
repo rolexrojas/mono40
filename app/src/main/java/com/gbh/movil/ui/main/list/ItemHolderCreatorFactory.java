@@ -13,7 +13,7 @@ import java.util.Map;
  *
  * @author hecvasro
  */
-public final class ItemViewCreatorFactory {
+public final class ItemHolderCreatorFactory {
   /**
    * TODO
    */
@@ -30,7 +30,7 @@ public final class ItemViewCreatorFactory {
    * @param creators
    *   TODO
    */
-  private ItemViewCreatorFactory(@NonNull Map<Class<? extends Item>,
+  private ItemHolderCreatorFactory(@NonNull Map<Class<? extends Item>,
     ItemHolderCreator<? extends ItemHolder>> creators) {
     this.creators = creators;
     this.identifiers = new ArrayList<>();
@@ -45,7 +45,7 @@ public final class ItemViewCreatorFactory {
    *
    * @return TODO
    */
-  public final int getIdentifier(@NonNull Class<? extends Item> type) {
+  final int getIdentifier(@NonNull Class<? extends Item> type) {
     return identifiers.indexOf(type);
   }
 
@@ -58,8 +58,12 @@ public final class ItemViewCreatorFactory {
    * @return TODO
    */
   @Nullable
-  public final ItemHolderCreator<? extends ItemHolder> getCreator(int identifier) {
-    return creators.get(identifiers.get(identifier));
+  final ItemHolderCreator<? extends ItemHolder> getCreator(int identifier) {
+    if (identifier < 0 || identifier >= identifiers.size()) {
+      return null;
+    } else {
+      return creators.get(identifiers.get(identifier));
+    }
   }
 
   /**
@@ -102,8 +106,8 @@ public final class ItemViewCreatorFactory {
      * @return TODO
      */
     @NonNull
-    public final ItemViewCreatorFactory build() {
-      return new ItemViewCreatorFactory(creators);
+    public final ItemHolderCreatorFactory build() {
+      return new ItemHolderCreatorFactory(creators);
     }
   }
 }
