@@ -3,9 +3,8 @@ package com.gbh.movil.domain;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.gbh.movil.Utils;
 import com.gbh.movil.domain.api.ApiBridge;
-import com.gbh.movil.domain.api.ApiResult;
+import com.gbh.movil.domain.api.ApiUtils;
 
 import java.util.Set;
 
@@ -46,32 +45,17 @@ public final class RecipientManager implements RecipientProvider {
   @Override
   public Observable<Set<Recipient>> getAll(@Nullable final String query) {
     return apiBridge.recipients()
-      .flatMap(new Func1<ApiResult<Set<Recipient>>, Observable<Set<Recipient>>>() {
-        @Override
-        public Observable<Set<Recipient>> call(ApiResult<Set<Recipient>> result) {
-          if (result.isSuccessful()) {
-            final Set<Recipient> data = result.getData();
-            if (Utils.isNotNull(data)) {
-              return syncRecipients(data)
-                .flatMap(new Func1<Set<Recipient>, Observable<Set<Recipient>>>() {
-                  @Override
-                  public Observable<Set<Recipient>> call(Set<Recipient> recipients) {
-                    return recipientRepo.getAll(query);
-                  }
-                });
-            } else { // This is not supposed to happen.
-              return Observable.error(new NullPointerException("Result's data is missing"));
-            }
-          } else {
-            // TODO: Find or create a suitable exception for this case.
-            return Observable.error(new Exception("Failed to load all registered recipients"));
-          }
-        }
-      })
+      .compose(ApiUtils.<Set<Recipient>>handleApiResult(true))
       .flatMap(new Func1<Set<Recipient>, Observable<Set<Recipient>>>() {
         @Override
         public Observable<Set<Recipient>> call(Set<Recipient> recipients) {
-          return recipientRepo.getAll(query);
+          return syncRecipients(recipients)
+            .flatMap(new Func1<Set<Recipient>, Observable<Set<Recipient>>>() {
+              @Override
+              public Observable<Set<Recipient>> call(Set<Recipient> recipients) {
+                return recipientRepo.getAll(query);
+              }
+            });
         }
       })
       .onErrorResumeNext(recipientRepo.getAll(query));

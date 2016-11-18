@@ -3,7 +3,7 @@ package com.gbh.movil.domain;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
-import com.gbh.movil.Utils;
+import com.gbh.movil.domain.api.ApiUtils;
 import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.domain.api.ApiResult;
 import com.gbh.movil.rx.RxUtils;
@@ -47,22 +47,7 @@ public final class ProductManager implements ProductProvider {
       @Override
       public Observable<T> call(Observable<ApiResult<Set<T>>> observable) {
         return observable
-          .flatMap(new Func1<ApiResult<Set<T>>, Observable<Set<T>>>() {
-            @Override
-            public Observable<Set<T>> call(ApiResult<Set<T>> result) {
-              if (result.isSuccessful()) {
-                final Set<T> data = result.getData();
-                if (Utils.isNotNull(data)) {
-                  return Observable.just(data);
-                } else { // This is no supposed to happen.
-                  return Observable.error(new NullPointerException("Result's data is missing"));
-                }
-              } else {
-                // TODO: Find or create a suitable exception for this case.
-                return Observable.error(new Exception("Failed to fetch registered products"));
-              }
-            }
-          })
+          .compose(ApiUtils.<Set<T>>handleApiResult(true))
           .compose(RxUtils.<T>fromCollection());
       }
     };

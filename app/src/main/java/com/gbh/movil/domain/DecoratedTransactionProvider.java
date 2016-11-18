@@ -2,9 +2,8 @@ package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.Utils;
 import com.gbh.movil.domain.api.ApiBridge;
-import com.gbh.movil.domain.api.ApiResult;
+import com.gbh.movil.domain.api.ApiUtils;
 
 import java.util.List;
 
@@ -34,20 +33,11 @@ public class DecoratedTransactionProvider implements TransactionProvider {
   public Observable<List<Transaction>> getAll() {
     return transactionRepo.getAll()
       .concatWith(apiBridge.recentTransactions()
-        .flatMap(new Func1<ApiResult<List<Transaction>>, Observable<List<Transaction>>>() {
+        .compose(ApiUtils.<List<Transaction>>handleApiResult(true))
+        .flatMap(new Func1<List<Transaction>, Observable<List<Transaction>>>() {
           @Override
-          public Observable<List<Transaction>> call(ApiResult<List<Transaction>> result) {
-            if (result.isSuccessful()) {
-              final List<Transaction> transactions = result.getData();
-              if (Utils.isNotNull(transactions)) {
-                return transactionRepo.saveAll(transactions);
-              } else { // This is not supposed to happen.
-                return Observable.error(new NullPointerException("Result's data is missing"));
-              }
-            } else {
-              // TODO: Find or create a suitable exception for this case.
-              return Observable.error(new Exception("Failed to load latest transactions"));
-            }
+          public Observable<List<Transaction>> call(List<Transaction> transactions) {
+            return transactionRepo.saveAll(transactions);
           }
         }));
   }

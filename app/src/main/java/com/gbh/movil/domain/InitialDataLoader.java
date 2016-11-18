@@ -2,9 +2,8 @@ package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.Utils;
 import com.gbh.movil.domain.api.ApiBridge;
-import com.gbh.movil.domain.api.ApiResult;
+import com.gbh.movil.domain.api.ApiUtils;
 
 import rx.Observable;
 import rx.functions.Func1;
@@ -34,23 +33,14 @@ public final class InitialDataLoader {
   @NonNull
   public final Observable<Object> load() {
     return apiBridge.initialLoad()
-      .flatMap(new Func1<ApiResult<InitialData>, Observable<Object>>() {
+      .compose(ApiUtils.<InitialData>handleApiResult(true))
+      .flatMap(new Func1<InitialData, Observable<Object>>() {
         @Override
-        public Observable<Object> call(ApiResult<InitialData> result) {
-          if (result.isSuccessful()) {
-            final InitialData data = result.getData();
-            if (Utils.isNotNull(data)) {
-              return productManager.syncAccounts(data.getProducts())
-                .cast(Object.class)
-                .concatWith(recipientManager.syncRecipients(data.getRecipients()))
-                .last();
-            } else { // This is no suppose to happen.
-              return Observable.error(new NullPointerException("Result's data is missing"));
-            }
-          } else {
-            // TODO: Find or create a suitable exception for this case.
-            return Observable.error(new Exception("Failed to load initial data"));
-          }
+        public Observable<Object> call(InitialData data) {
+          return productManager.syncAccounts(data.getProducts())
+            .cast(Object.class)
+            .concatWith(recipientManager.syncRecipients(data.getRecipients()))
+            .last();
         }
       });
   }

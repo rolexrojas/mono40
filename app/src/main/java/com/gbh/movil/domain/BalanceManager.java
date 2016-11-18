@@ -4,11 +4,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
+import com.gbh.movil.domain.api.ApiCode;
+import com.gbh.movil.domain.api.ApiUtils;
 import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.rx.RxUtils;
 import com.gbh.movil.Utils;
 import com.gbh.movil.domain.api.ApiBridge;
-import com.gbh.movil.domain.api.ApiResult;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -134,17 +135,22 @@ public final class BalanceManager {
   public final Observable<Pair<Boolean, Balance>> queryBalance(
     @NonNull final Product product, @NonNull String pin) {
     return apiBridge.queryBalance(product, pin)
-      .map(new Func1<ApiResult<Balance>, Pair<Boolean, Balance>>() {
+      .compose(ApiUtils.handleApiResult(true, new Func1<ApiCode, Observable<Balance>>() {
         @Override
-        public Pair<Boolean, Balance> call(ApiResult<Balance> result) {
-          Balance balance = null;
-          if (result.isSuccessful()) {
-            balance = result.getData();
-            if (Utils.isNotNull(balance)) {
-              balances.put(product, Pair.create(System.currentTimeMillis(), balance));
-            }
+        public Observable<Balance> call(ApiCode code) {
+          if (code.equals(ApiCode.FORBIDDEN)) {
+            return Observable.just(null);
           } else {
-            Timber.d("Failed to query the balance of a product (%1$s, %2$s)", product, result);
+            Timber.d("Failed to query the balance of a product (%1$s, %2$s)", product, code);
+            return Observable.error(new Exception("Failed to query the balance of a product"));
+          }
+        }
+      }))
+      .map(new Func1<Balance, Pair<Boolean, Balance>>() {
+        @Override
+        public Pair<Boolean, Balance> call(Balance balance) {
+          if (Utils.isNotNull(balance)) {
+            balances.put(product, Pair.create(System.currentTimeMillis(), balance));
           }
           return Pair.create(Utils.isNotNull(balance), balance);
         }
