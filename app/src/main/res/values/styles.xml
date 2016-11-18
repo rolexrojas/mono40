@@ -41,6 +41,7 @@
   <style name="List"/>
   <style name="List.Vertical"/>
   <style name="ListItem">
+    <item name="android:layout_width">match_parent</item>
     <item name="android:paddingEnd">@dimen/list_item_padding_horizontal</item>
     <item name="android:paddingStart">@dimen/list_item_padding_horizontal</item>
   </style>
@@ -272,6 +273,10 @@
     <item name="android:textSize">16sp</item>
     <item name="fontPath">@string/gotham_rounded_book</item>
   </style>
+  <!-- Payments styles -->
+  <style
+    name="RecipientListItem"
+    parent="ListItem.Normal"/>
   <!-- Themes -->
   <style
     name="AppTheme"
@@ -304,4 +309,28 @@
     <item name="colorPrimary">@color/primary</item>
     <item name="colorPrimaryDark">@color/primary_dark</item>
   </style>
+  <!-- [START] Contact styles -->
+  <style
+    name="ContactText"
+    parent="TextAppearance.AppCompat">
+    <item name="android:textColor">#333</item>
+    <item name="fontPath">@string/gotham_rounded_book</item>
+  </style>
+  <style
+    name="ContactName"
+    parent="ContactText">
+    <item name="android:textSize">16sp</item>
+  </style>
+  <style name="ContactName.Medium">
+    <item name="fontPath">@string/gotham_rounded_medium</item>
+  </style>
+  <style
+    name="BaseContactPhoneNumber"
+    parent="ContactText">
+    <item name="android:textSize">10sp</item>
+  </style>
+  <style
+    name="ContactPhoneNumber"
+    parent="BaseContactPhoneNumber"/>
+  <!-- [END] Contact styles -->
 </resources>

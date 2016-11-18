@@ -1,9 +1,11 @@
 package com.gbh.movil.ui.main.payments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +14,15 @@ import android.view.ViewGroup;
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
 import com.gbh.movil.data.MessageHelper;
-import com.gbh.movil.ui.Item;
+import com.gbh.movil.ui.main.list.Item;
+import com.gbh.movil.ui.main.list.ItemAdapter;
+import com.gbh.movil.ui.main.list.ItemBinderFactory;
+import com.gbh.movil.ui.main.list.ItemViewCreatorFactory;
 import com.gbh.movil.ui.view.widget.RefreshIndicator;
 import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.gbh.movil.ui.main.SubFragment;
 import com.gbh.movil.ui.view.widget.SearchView;
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import javax.inject.Inject;
 
@@ -34,6 +40,7 @@ import rx.Observable;
 public class PaymentsFragment extends SubFragment implements PaymentsScreen {
   private Unbinder unbinder;
   private RefreshIndicator refreshIndicator;
+  private ItemAdapter adapter;
 
   @BindView(R.id.search_view)
   SearchView searchView;
@@ -69,6 +76,25 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen {
     super.onViewCreated(view, savedInstanceState);
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
+    // Prepares the actions and recipients list.
+    final ItemViewCreatorFactory holderCreatorFactory = new ItemViewCreatorFactory.Builder()
+      .addCreator(ContactRecipientItem.class, new ContactRecipientItemHolderCreator())
+      .build();
+    final ItemBinderFactory binderFactory = new ItemBinderFactory.Builder()
+      .addBinder(ContactRecipientItem.class, ContactRecipientItemHolder.class,
+        new ContactRecipientItemHolderBinder())
+      .build();
+    adapter = new ItemAdapter(holderCreatorFactory, binderFactory);
+    recyclerView.setAdapter(adapter);
+    recyclerView.setHasFixedSize(true);
+    recyclerView.setItemAnimator(null);
+    final Context context = getContext();
+    recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL,
+      false));
+    final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
+      .drawable(R.drawable.list_item_divider)
+      .build();
+    recyclerView.addItemDecoration(divider);
     // Injects all the annotated dependencies.
     final PaymentsComponent component = DaggerPaymentsComponent.builder()
       .mainComponent(parentScreen.getComponent())
@@ -105,12 +131,12 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen {
 
   @Override
   public void clear() {
-    // TODO
+    adapter.clear();
   }
 
   @Override
   public void add(@NonNull Item item) {
-    // TODO
+    adapter.add(item);
   }
 
   @NonNull

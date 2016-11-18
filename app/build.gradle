@@ -59,6 +59,7 @@ repositories {
 dependencies {
   def butterKnifeVersion = "8.4.0"
   def calligraphyVersion = "2.2.0"
+  def circleImageViewVersion = "2.1.0"
   def circularRevealVersion = "2.0.1"
   def crashlyticsVersion = "2.6.5"
   def daggerVersion = "2.7"
@@ -99,6 +100,7 @@ dependencies {
   compile "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
   compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"
   compile "com.yqritc:recyclerview-flexibledivider:${recyclerViewFlexibleDivider}"
+  compile "de.hdodenhof:circleimageview:${circleImageViewVersion}"
   compile "io.reactivex:rxandroid:${rxAndroidVersion}"
   compile "io.reactivex:rxjava:${rxJavaVersion}"
   compile "uk.co.chrisjenx:calligraphy:${calligraphyVersion}"

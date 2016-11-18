@@ -4,21 +4,33 @@ import android.support.annotation.NonNull;
 
 import com.gbh.movil.Utils;
 import com.gbh.movil.domain.Recipient;
-import com.gbh.movil.ui.Item;
+import com.gbh.movil.ui.main.list.Item;
 
 /**
+ * TODO
+ *
  * @author hecvasro
  */
+abstract class RecipientItem<T extends Recipient> implements Item {
+  private final T recipient;
 
-class RecipientItem implements Item {
-  private final Recipient recipient;
+  private boolean selected = false;
 
-  RecipientItem(@NonNull Recipient recipient) {
+  RecipientItem(@NonNull T recipient) {
     this.recipient = recipient;
   }
 
-  final Recipient getRecipient() {
+  @NonNull
+  final T getRecipient() {
     return recipient;
+  }
+
+  final boolean isSelected() {
+    return selected;
+  }
+
+  void setSelected(boolean selected) {
+    this.selected = selected;
   }
 
   @Override
@@ -34,6 +46,7 @@ class RecipientItem implements Item {
 
   @Override
   public String toString() {
-    return RecipientItem.class.getSimpleName() + ":{recipient=" + recipient + "}";
+    return RecipientItem.class.getSimpleName() + ":{recipient=" + recipient + "selected='"
+      + selected + "'}";
   }
 }

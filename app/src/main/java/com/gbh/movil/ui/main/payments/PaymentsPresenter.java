@@ -7,7 +7,7 @@ import com.gbh.movil.rx.RxUtils;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.RecipientManager;
-import com.gbh.movil.ui.Item;
+import com.gbh.movil.ui.main.list.Item;
 import com.gbh.movil.ui.Presenter;
 import com.gbh.movil.ui.UiUtils;
 import com.google.i18n.phonenumbers.NumberParseException;
@@ -64,7 +64,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
             .map(new Func1<Recipient, Item>() {
               @Override
               public Item call(Recipient recipient) {
-                return new RecipientItem(recipient);
+                return RecipientItemCreator.create(recipient);
               }
             });
           final Observable<Item> actionsObservable = Observable

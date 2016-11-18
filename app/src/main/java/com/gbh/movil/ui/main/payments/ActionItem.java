@@ -1,6 +1,6 @@
 package com.gbh.movil.ui.main.payments;
 
-import com.gbh.movil.ui.Item;
+import com.gbh.movil.ui.main.list.Item;
 
 /**
  * Action {@link Item item} representation.

@@ -1,4 +1,4 @@
-package com.gbh.movil.ui;
+package com.gbh.movil.ui.main.list;
 
 /**
  * TODO
