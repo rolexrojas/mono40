@@ -52,6 +52,16 @@ public abstract class ItemHolder extends RecyclerView.ViewHolder {
 
   /**
    * TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  public final View getRootView() {
+    return rootView;
+  }
+
+  /**
+   * TODO
    */
   public interface OnClickListener {
     /**

@@ -10,10 +10,6 @@
   <string name="dot">Punto</string>
   <string name="fee_for_transaction">Cargo por transacción %1$s</string>
   <string name="go_to_accounts">Ver cuentas</string>
-  <string name="gotham_rounded_bold">fonts/GothamRounded-Bold.otf</string>
-  <string name="gotham_rounded_book">fonts/GothamRounded-Book.otf</string>
-  <string name="gotham_rounded_light">fonts/GothamRounded-Light.otf</string>
-  <string name="gotham_rounded_medium">fonts/GothamRounded-Medium.otf</string>
   <string name="help">Ayuda</string>
   <string name="instruction_content_first">¡Listo! Visita la sucursal del banco donde tienes la cuenta o tarjeta de crédito que deseas agregar.</string>
   <string name="instruction_content_second">Con tu cédula y celular en mano, solicita a un representante de servicio, que active tu cuenta o tarjeta a tPago.</string>
@@ -35,6 +31,16 @@
   <string name="see_bank_branches">Ver sucursales bancarias</string>
   <string name="your_account_have_been_added">Tu cuenta se agregó exitosamente al mundo %1$s. Ya puedes usarla como cuenta de fondos.</string>
   <string name="your_account_have_been_removed">Tu cuenta se removió exitosamente del mundo %1$s. Ya no puedes usarla como cuenta de fondos.</string>
+
+  <!-- [START] Font strings -->
+  <string name="font.gotham_rounded.bold">fonts/GothamRounded-Bold.otf</string>
+  <string name="font.gotham_rounded.book">fonts/GothamRounded-Book.otf</string>
+  <string name="font.gotham_rounded.light">fonts/GothamRounded-Light.otf</string>
+  <string name="font.gotham_rounded.medium">fonts/GothamRounded-Medium.otf</string>
+  <!-- [END] Font strings -->
+  <!-- [START] List strings -->
+  <string name="list.no_results">No hay resultados para \'%1$s\'</string>
+  <!-- [END] List strings -->
   <!-- [START] Contact strings -->
   <string name="contact.picture.description">Contact\'s picture</string>
   <!-- [END] Contact strings -->

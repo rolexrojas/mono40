@@ -26,13 +26,18 @@ public final class MessageHelper {
   }
 
   @NonNull
-  public final String accounts() {
-    return getString(R.string.accounts);
+  public final String appName() {
+    return getString(R.string.app_name);
   }
 
   @NonNull
-  public final String appName() {
-    return getString(R.string.app_name);
+  public final String noResults(@NonNull String query) {
+    return String.format(getString(R.string.list_no_results), query);
+  }
+
+  @NonNull
+  public final String accounts() {
+    return getString(R.string.accounts);
   }
 
   @NonNull

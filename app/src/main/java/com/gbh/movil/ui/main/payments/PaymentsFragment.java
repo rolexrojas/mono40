@@ -18,6 +18,10 @@ import com.gbh.movil.ui.main.list.Item;
 import com.gbh.movil.ui.main.list.ItemAdapter;
 import com.gbh.movil.ui.main.list.ItemHolderBinderFactory;
 import com.gbh.movil.ui.main.list.ItemHolderCreatorFactory;
+import com.gbh.movil.ui.main.list.NoResultsItem;
+import com.gbh.movil.ui.main.list.NoResultsItemHolder;
+import com.gbh.movil.ui.main.list.NoResultsItemHolderBinder;
+import com.gbh.movil.ui.main.list.NoResultsItemHolderCreator;
 import com.gbh.movil.ui.view.widget.RefreshIndicator;
 import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.gbh.movil.ui.main.SubFragment;
@@ -74,15 +78,23 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen {
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    // Injects all the annotated dependencies.
+    final PaymentsComponent component = DaggerPaymentsComponent.builder()
+      .mainComponent(parentScreen.getComponent())
+      .build();
+    component.inject(this);
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
     // Prepares the actions and recipients list.
     final ItemHolderCreatorFactory holderCreatorFactory = new ItemHolderCreatorFactory.Builder()
       .addCreator(ContactRecipientItem.class, new ContactRecipientItemHolderCreator())
+      .addCreator(NoResultsItem.class, new NoResultsItemHolderCreator())
       .build();
     final ItemHolderBinderFactory binderFactory = new ItemHolderBinderFactory.Builder()
       .addBinder(ContactRecipientItem.class, ContactRecipientItemHolder.class,
         new ContactRecipientItemHolderBinder())
+      .addBinder(NoResultsItem.class, NoResultsItemHolder.class,
+        new NoResultsItemHolderBinder(messageHelper))
       .build();
     adapter = new ItemAdapter(holderCreatorFactory, binderFactory);
     recyclerView.setAdapter(adapter);
@@ -96,11 +108,6 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen {
       .marginResId(R.dimen.list_item_inset_horizontal)
       .build();
     recyclerView.addItemDecoration(divider);
-    // Injects all the annotated dependencies.
-    final PaymentsComponent component = DaggerPaymentsComponent.builder()
-      .mainComponent(parentScreen.getComponent())
-      .build();
-    component.inject(this);
     // Attaches the screen to the presenter.
     presenter.attachScreen(this);
   }

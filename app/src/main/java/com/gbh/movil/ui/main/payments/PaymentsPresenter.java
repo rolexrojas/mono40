@@ -10,6 +10,7 @@ import com.gbh.movil.domain.RecipientManager;
 import com.gbh.movil.ui.main.list.Item;
 import com.gbh.movil.ui.Presenter;
 import com.gbh.movil.ui.UiUtils;
+import com.gbh.movil.ui.main.list.NoResultsItem;
 import com.google.i18n.phonenumbers.NumberParseException;
 
 import java.util.concurrent.TimeUnit;
@@ -85,7 +86,9 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
                 }
               }
             });
-          searchSubscription = recipientsObservable.switchIfEmpty(actionsObservable)
+          searchSubscription = recipientsObservable
+            .switchIfEmpty(actionsObservable)
+            .switchIfEmpty(Observable.just(new NoResultsItem(query)))
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
             .doOnSubscribe(new Action0() {

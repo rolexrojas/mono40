@@ -90,10 +90,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
     final Class<? extends Item> itemType = item.getClass();
     final Class<? extends ItemHolder> holderType = holder.getClass();
     final ItemHolderBinder binder = binderFactory.getBinder(itemType, holderType);
-    if (Utils.isNull(binder)) {
-      throw new NullPointerException("Binder for '" + itemType + "' and '" + holderType
-        + "' is missing");
-    } else {
+    if (Utils.isNotNull(binder)) {
       binder.bind(item, holder);
     }
   }
