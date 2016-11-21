@@ -5,24 +5,26 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
 import com.gbh.movil.R;
+import com.gbh.movil.domain.PhoneNumber;
 
 import java.math.BigDecimal;
+import java.util.Locale;
 
 /**
  * TODO
  *
  * @author hecvasro
  */
-public final class MessageHelper {
+public final class StringHelper {
   private final Resources resources;
 
-  MessageHelper(@NonNull Resources resources) {
+  StringHelper(@NonNull Resources resources) {
     this.resources = resources;
   }
 
   @NonNull
-  private String getString(@StringRes int resourceId) {
-    return resources.getString(resourceId);
+  private String getString(@StringRes int stringId) {
+    return resources.getString(stringId);
   }
 
   @NonNull
@@ -69,6 +71,18 @@ public final class MessageHelper {
   @NonNull
   public final String payments() {
     return getString(R.string.pay);
+  }
+
+  @NonNull
+  public final String add(@NonNull PhoneNumber phoneNumber) {
+    return String.format(Locale.getDefault(),
+      getString(R.string.payments_action_phone_number_add), phoneNumber);
+  }
+
+  @NonNull
+  public final String transactionWith(@NonNull PhoneNumber phoneNumber) {
+    return String.format(Locale.getDefault(),
+      getString(R.string.payments_action_phone_number_transaction), phoneNumber);
   }
 
   @NonNull

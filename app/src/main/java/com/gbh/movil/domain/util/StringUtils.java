@@ -7,8 +7,8 @@ import android.support.annotation.NonNull;
  *
  * @author hecvasro
  */
-public final class StringHelper {
-  private StringHelper() {
+public final class StringUtils {
+  private StringUtils() {
   }
 
   /**

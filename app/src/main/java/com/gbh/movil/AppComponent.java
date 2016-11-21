@@ -1,7 +1,7 @@
 package com.gbh.movil;
 
 import com.gbh.movil.data.DataModule;
-import com.gbh.movil.data.MessageHelper;
+import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.ProductManager;
 import com.gbh.movil.domain.BalanceManager;
@@ -22,7 +22,7 @@ import dagger.Component;
 @Singleton
 @Component(modules = { AppModule.class, DataModule.class })
 public interface AppComponent {
-  MessageHelper provideMessageHelper();
+  StringHelper provideStringHelper();
 
   NetworkHelper provideNetworkHelper();
 

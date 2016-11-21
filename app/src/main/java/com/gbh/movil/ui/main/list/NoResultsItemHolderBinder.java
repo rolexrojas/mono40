@@ -2,7 +2,7 @@ package com.gbh.movil.ui.main.list;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.data.MessageHelper;
+import com.gbh.movil.data.StringHelper;
 
 /**
  * TODO
@@ -11,16 +11,16 @@ import com.gbh.movil.data.MessageHelper;
  */
 public class NoResultsItemHolderBinder
   implements ItemHolderBinder<NoResultsItem, NoResultsItemHolder> {
-  private final MessageHelper messageHelper;
+  private final StringHelper stringHelper;
 
   /**
    * TODO
    *
-   * @param messageHelper
+   * @param stringHelper
    *   TODO
    */
-  public NoResultsItemHolderBinder(@NonNull MessageHelper messageHelper) {
-    this.messageHelper = messageHelper;
+  public NoResultsItemHolderBinder(@NonNull StringHelper stringHelper) {
+    this.stringHelper = stringHelper;
   }
 
   /**
@@ -28,6 +28,6 @@ public class NoResultsItemHolderBinder
    */
   @Override
   public void bind(@NonNull NoResultsItem item, @NonNull NoResultsItemHolder holder) {
-    holder.getQueryTextView().setText(messageHelper.noResults(item.getQuery()));
+    holder.getQueryTextView().setText(stringHelper.noResults(item.getQuery()));
   }
 }

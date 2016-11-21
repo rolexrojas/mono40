@@ -24,7 +24,7 @@ import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.gbh.movil.ui.main.AddAnotherProductFragment;
 import com.gbh.movil.ui.main.PinConfirmationDialogFragment;
 import com.gbh.movil.R;
-import com.gbh.movil.data.MessageHelper;
+import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Balance;
 import com.gbh.movil.ui.main.SubFragment;
@@ -54,7 +54,7 @@ public class ProductsFragment extends SubFragment implements ProductsScreen,
   private RefreshIndicator refreshIndicator;
 
   @Inject
-  MessageHelper messageHelper;
+  StringHelper stringHelper;
   @Inject
   ProductsPresenter presenter;
 
@@ -89,7 +89,7 @@ public class ProductsFragment extends SubFragment implements ProductsScreen,
     }
     Timber.d("X = %1$d, Y = %2$d", x, y);
     PinConfirmationDialogFragment.newInstance(x, y,
-      messageHelper.feeForTransaction(product.getCurrency(), product.getQueryFee()),
+      stringHelper.feeForTransaction(product.getCurrency(), product.getQueryFee()),
       new PinConfirmationDialogFragment.Callback() {
         @Override
         public void confirm(@NonNull String pin) {
@@ -174,7 +174,7 @@ public class ProductsFragment extends SubFragment implements ProductsScreen,
   public void onStart() {
     super.onStart();
     // Sets the title.
-    parentScreen.setTitle(messageHelper.accounts());
+    parentScreen.setTitle(stringHelper.accounts());
     // Starts the presenter.
     presenter.start();
   }

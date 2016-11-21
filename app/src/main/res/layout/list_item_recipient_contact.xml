@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
   style="@style/ContactListItem"
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent">
+  xmlns:android="http://schemas.android.com/apk/res/android">
   <ImageView
     android:id="@+id/contact.picture"
     android:layout_width="@dimen/payments.picture"
@@ -12,7 +11,7 @@
     android:contentDescription="@string/contact.picture.description"/>
   <include
     android:id="@+id/action.proceed"
-    layout="@layout/include_action_proceed"/>
+    layout="@layout/action_proceed"/>
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"

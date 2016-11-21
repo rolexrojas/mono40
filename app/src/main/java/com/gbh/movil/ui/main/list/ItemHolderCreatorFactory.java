@@ -3,6 +3,8 @@ package com.gbh.movil.ui.main.list;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.gbh.movil.Utils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +48,17 @@ public final class ItemHolderCreatorFactory {
    * @return TODO
    */
   final int getIdentifier(@NonNull Class<? extends Item> type) {
-    return identifiers.indexOf(type);
+    final int identifier = identifiers.indexOf(type);
+    if (identifier >= 0) {
+      return identifier;
+    } else {
+      final Class<?> superType = type.getSuperclass();
+      if (Utils.isNotNull(superType) && Item.class.isAssignableFrom(superType)) {
+        return getIdentifier(superType.asSubclass(Item.class));
+      } else {
+        return -1;
+      }
+    }
   }
 
   /**
@@ -59,10 +71,10 @@ public final class ItemHolderCreatorFactory {
    */
   @Nullable
   final ItemHolderCreator<? extends ItemHolder> getCreator(int identifier) {
-    if (identifier < 0 || identifier >= identifiers.size()) {
-      return null;
-    } else {
+    if (identifier >= 0 && identifier < identifiers.size()) {
       return creators.get(identifiers.get(identifier));
+    } else {
+      return null;
     }
   }
 

@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.gbh.movil.Utils;
-import com.gbh.movil.domain.util.StringHelper;
+import com.gbh.movil.domain.util.StringUtils;
 
 /**
  * Contact representation.
@@ -91,6 +91,6 @@ public class Contact implements Matchable {
 
   @Override
   public boolean matches(@Nullable String query) {
-    return Utils.isNull(query) || StringHelper.matches(name, query) || phoneNumber.matches(query);
+    return Utils.isNull(query) || StringUtils.matches(name, query) || phoneNumber.matches(query);
   }
 }

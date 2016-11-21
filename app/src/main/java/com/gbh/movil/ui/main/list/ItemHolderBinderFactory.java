@@ -2,7 +2,8 @@ package com.gbh.movil.ui.main.list;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.util.Pair;
+
+import com.gbh.movil.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,19 +17,52 @@ public final class ItemHolderBinderFactory {
   /**
    * TODO
    */
-  private final Map<Pair<Class<? extends Item>, Class<? extends ItemHolder>>,
-    ItemHolderBinder<? extends Item, ? extends ItemHolder>> binders;
+  private final Map<
+    Class<? extends Item>,
+    Map<
+      Class<? extends ItemHolder>,
+      ItemHolderBinder<? extends Item, ? extends ItemHolder>>> binderMap;
 
   /**
    * TODO
    *
-   * @param binders
+   * @param binderMap
    *   TODO
    */
   private ItemHolderBinderFactory(@NonNull Map<
-    Pair<Class<? extends Item>, Class<? extends ItemHolder>>,
-    ItemHolderBinder<? extends Item, ? extends ItemHolder>> binders) {
-    this.binders = binders;
+    Class<? extends Item>,
+    Map<
+      Class<? extends ItemHolder>,
+      ItemHolderBinder<? extends Item, ? extends ItemHolder>>> binderMap) {
+    this.binderMap = binderMap;
+  }
+
+  /**
+   * TODO
+   *
+   * @param holderType
+   *   TODO
+   * @param binderSubMap
+   *   TODO
+   *
+   * @return TODO
+   */
+  @Nullable
+  private static ItemHolderBinder<? extends Item, ? extends ItemHolder> getBinder(
+    @NonNull Class<? extends ItemHolder> holderType,
+    @NonNull Map<
+      Class<? extends ItemHolder>,
+      ItemHolderBinder<? extends Item, ? extends ItemHolder>> binderSubMap) {
+    if (binderSubMap.containsKey(holderType)) {
+      return binderSubMap.get(holderType);
+    } else {
+      final Class<?> holderSuperType = holderType.getSuperclass();
+      if (Utils.isNotNull(holderSuperType) && ItemHolder.class.isAssignableFrom(holderSuperType)) {
+        return getBinder(holderSuperType.asSubclass(ItemHolder.class), binderSubMap);
+      } else {
+        return null;
+      }
+    }
   }
 
   /**
@@ -44,8 +78,16 @@ public final class ItemHolderBinderFactory {
   @Nullable
   final ItemHolderBinder<? extends Item, ? extends ItemHolder> getBinder(
     @NonNull Class<? extends Item> itemType, @NonNull Class<? extends ItemHolder> holderType) {
-    return binders.get(Pair.<Class<? extends Item>, Class<? extends ItemHolder>>create(itemType,
-      holderType));
+    if (binderMap.containsKey(itemType)) {
+      return getBinder(holderType, binderMap.get(itemType));
+    } else {
+      final Class<?> itemSuperType = itemType.getSuperclass();
+      if (Utils.isNotNull(itemSuperType) && Item.class.isAssignableFrom(itemSuperType)) {
+        return getBinder(itemSuperType.asSubclass(Item.class), holderType);
+      } else {
+        return null;
+      }
+    }
   }
 
   /**
@@ -55,14 +97,17 @@ public final class ItemHolderBinderFactory {
     /**
      * TODO
      */
-    private final Map<Pair<Class<? extends Item>, Class<? extends ItemHolder>>,
-      ItemHolderBinder<? extends Item, ? extends ItemHolder>> binders;
+    private final Map<
+      Class<? extends Item>,
+      Map<
+        Class<? extends ItemHolder>,
+        ItemHolderBinder<? extends Item, ? extends ItemHolder>>> binderMap;
 
     /**
      * TODO
      */
     public Builder() {
-      binders = new HashMap<>();
+      binderMap = new HashMap<>();
     }
 
     /**
@@ -81,8 +126,16 @@ public final class ItemHolderBinderFactory {
     public final Builder addBinder(@NonNull Class<? extends Item> itemType,
       @NonNull Class<? extends ItemHolder> holderType,
       @NonNull ItemHolderBinder<? extends Item, ? extends ItemHolder> binder) {
-      binders.put(Pair.<Class<? extends Item>, Class<? extends ItemHolder>>create(itemType,
-        holderType), binder);
+      final Map<
+        Class<? extends ItemHolder>,
+        ItemHolderBinder<? extends Item, ? extends ItemHolder>> map;
+      if (binderMap.containsKey(itemType)) {
+        map = binderMap.get(itemType);
+      } else {
+        map = new HashMap<>();
+        binderMap.put(itemType, map);
+      }
+      map.put(holderType, binder);
       return this;
     }
 
@@ -93,7 +146,7 @@ public final class ItemHolderBinderFactory {
      */
     @NonNull
     public final ItemHolderBinderFactory build() {
-      return new ItemHolderBinderFactory(binders);
+      return new ItemHolderBinderFactory(binderMap);
     }
   }
 }

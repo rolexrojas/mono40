@@ -16,7 +16,7 @@ import android.view.View;
 import com.gbh.movil.App;
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
-import com.gbh.movil.data.MessageHelper;
+import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.ui.BaseActivity;
 import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.main.products.ProductsFragment;
@@ -40,7 +40,7 @@ public class MainActivity extends BaseActivity implements MainScreen {
   private MainComponent component;
 
   @Inject
-  MessageHelper messageHelper;
+  StringHelper stringHelper;
   @Inject
   MainPresenter presenter;
 
@@ -213,8 +213,8 @@ public class MainActivity extends BaseActivity implements MainScreen {
    */
   @Override
   public void showAccountAdditionOrRemovalNotification(@NonNull String message) {
-    UiUtils.createDialog(this, messageHelper.doneWithExclamationMark(),
-      message, messageHelper.ok(), null, messageHelper.goToAccounts(),
+    UiUtils.createDialog(this, stringHelper.doneWithExclamationMark(),
+      message, stringHelper.ok(), null, stringHelper.goToAccounts(),
       new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {

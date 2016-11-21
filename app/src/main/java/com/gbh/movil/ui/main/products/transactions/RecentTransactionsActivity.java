@@ -17,7 +17,7 @@ import com.gbh.movil.App;
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
 import com.gbh.movil.data.Formatter;
-import com.gbh.movil.data.MessageHelper;
+import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.domain.Transaction;
 import com.gbh.movil.ui.BaseActivity;
 import com.gbh.movil.ui.view.widget.RefreshIndicator;
@@ -48,7 +48,7 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
   private RefreshIndicator refreshIndicator;
 
   @Inject
-  MessageHelper messageHelper;
+  StringHelper stringHelper;
   @Inject
   RecentTransactionsPresenter presenter;
 

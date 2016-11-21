@@ -41,6 +41,10 @@
   <!-- [START] List strings -->
   <string name="list.no_results">No hay resultados para \'%1$s\'</string>
   <!-- [END] List strings -->
+  <!-- [START] Payments screen strings -->
+  <string name="payments.action.phone_number.add">Agregar \'%1$s\'</string>
+  <string name="payments.action.phone_number.transaction">Transacción con \'%1$s\'</string>
+  <!-- [END] Payments strings -->
   <!-- [START] Contact strings -->
   <string name="contact.picture.description">Contact\'s picture</string>
   <!-- [END] Contact strings -->

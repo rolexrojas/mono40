@@ -2,9 +2,9 @@ package com.gbh.movil.ui.main;
 
 import android.support.annotation.NonNull;
 
+import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.rx.RxUtils;
 import com.gbh.movil.Utils;
-import com.gbh.movil.data.MessageHelper;
 import com.gbh.movil.domain.BalanceManager;
 import com.gbh.movil.domain.util.Event;
 import com.gbh.movil.domain.util.EventBus;
@@ -23,15 +23,15 @@ import timber.log.Timber;
  * @author hecvasro
  */
 final class MainPresenter extends Presenter<MainScreen> {
-  private final MessageHelper messageHelper;
+  private final StringHelper stringHelper;
   private final EventBus eventBus;
   private final BalanceManager balanceManager;
 
   private Subscription subscription = Subscriptions.unsubscribed();
 
-  MainPresenter(@NonNull MessageHelper messageHelper, @NonNull EventBus eventBus,
+  MainPresenter(@NonNull StringHelper stringHelper, @NonNull EventBus eventBus,
     @NonNull BalanceManager balanceManager) {
-    this.messageHelper = messageHelper;
+    this.stringHelper = stringHelper;
     this.eventBus = eventBus;
     this.balanceManager = balanceManager;
   }
@@ -56,9 +56,9 @@ final class MainPresenter extends Presenter<MainScreen> {
         public void call(Event event) {
           String message = null;
           if (event.getType().equals(EventType.PRODUCT_ADDITION)) {
-            message = messageHelper.yourAccountHaveBeenAdded();
+            message = stringHelper.yourAccountHaveBeenAdded();
           } else if (event.getType().equals(EventType.PRODUCT_REMOVAL)) {
-            message = messageHelper.yourAccountHaveBeenRemoved();
+            message = stringHelper.yourAccountHaveBeenRemoved();
           }
           eventBus.release(event);
           if (Utils.isNotNull(message)) {

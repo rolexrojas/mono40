@@ -377,14 +377,4 @@
     <item name="android:background">?attr/selectableItemBackground</item>
   </style>
   <!-- [END] Contact styles -->
-  <!-- [START] Payments screen styles -->
-  <style name="PaymentsContainer">
-    <item name="android:background">@drawable/background_payment_options</item>
-  </style>
-  <style
-    name="PaymentsList"
-    parent="List.Vertical">
-    <item name="android:background">@color/transparent</item>
-  </style>
-  <!-- [END] Payments screen styles -->
 </resources>

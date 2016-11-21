@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-  style="@style/PaymentsContainer"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
+  android:background="@drawable/background_payment_options"
   android:focusable="true"
   android:focusableInTouchMode="true"
   android:orientation="vertical">
@@ -23,7 +23,7 @@
     android:enabled="false">
     <android.support.v7.widget.RecyclerView
       android:id="@+id/recycler_view"
-      style="@style/PaymentsList"
+      style="@style/List.Vertical"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:background="@color/transparent"/>

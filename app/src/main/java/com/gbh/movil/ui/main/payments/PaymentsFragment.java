@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
-import com.gbh.movil.data.MessageHelper;
+import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.ui.main.list.Item;
 import com.gbh.movil.ui.main.list.ItemAdapter;
 import com.gbh.movil.ui.main.list.ItemHolder;
@@ -56,7 +56,7 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen,
   RecyclerView recyclerView;
 
   @Inject
-  MessageHelper messageHelper;
+  StringHelper stringHelper;
   @Inject
   PaymentsPresenter presenter;
 
@@ -90,18 +90,19 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen,
     // Prepares the actions and recipients list.
     final ItemHolderCreatorFactory holderCreatorFactory = new ItemHolderCreatorFactory.Builder()
       .addCreator(ContactRecipientItem.class, new ContactRecipientItemHolderCreator(this))
+      .addCreator(ActionItem.class, new ActionItemHolderCreator(this))
       .addCreator(NoResultsItem.class, new NoResultsItemHolderCreator())
       .build();
     final ItemHolderBinderFactory binderFactory = new ItemHolderBinderFactory.Builder()
       .addBinder(ContactRecipientItem.class, ContactRecipientItemHolder.class,
         new ContactRecipientItemHolderBinder())
+      .addBinder(ActionItem.class, ActionItemHolder.class, new ActionItemHolderBinder(stringHelper))
       .addBinder(NoResultsItem.class, NoResultsItemHolder.class,
-        new NoResultsItemHolderBinder(messageHelper))
+        new NoResultsItemHolderBinder(stringHelper))
       .build();
     itemAdapter = new ItemAdapter(holderCreatorFactory, binderFactory);
     recyclerView.setAdapter(itemAdapter);
     recyclerView.setHasFixedSize(true);
-    recyclerView.setItemAnimator(null);
     final Context context = getContext();
     recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL,
       false));
@@ -118,7 +119,7 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen,
   public void onStart() {
     super.onStart();
     // Sets the title.
-    parentScreen.setTitle(messageHelper.payments());
+    parentScreen.setTitle(stringHelper.payments());
     // Starts the presenter.
     presenter.start();
   }
@@ -169,6 +170,8 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen,
     final Item item = itemAdapter.getItem(position);
     if (item instanceof ContactRecipientItem) {
       // TODO: Start transfer or payment process.
+    } else if (item instanceof ActionItem) {
+      // TODO: Start transfer or add process.
     }
   }
 }

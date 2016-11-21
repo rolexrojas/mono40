@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.gbh.movil.Utils;
-import com.gbh.movil.domain.util.StringHelper;
+import com.gbh.movil.domain.util.StringUtils;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
@@ -87,6 +87,6 @@ public class PhoneNumber implements Matchable {
 
   @Override
   public boolean matches(@Nullable String query) {
-    return Utils.isNull(query) || StringHelper.matches(content, query);
+    return Utils.isNull(query) || StringUtils.matches(content, query);
   }
 }

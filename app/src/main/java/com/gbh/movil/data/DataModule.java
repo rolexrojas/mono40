@@ -18,8 +18,8 @@ import dagger.Provides;
 public final class DataModule {
   @Provides
   @Singleton
-  MessageHelper provideMessageHelper(Context context) {
-    return new MessageHelper(context.getResources());
+  StringHelper provideMessageHelper(Context context) {
+    return new StringHelper(context.getResources());
   }
 
   @Provides

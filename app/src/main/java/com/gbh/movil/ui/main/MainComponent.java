@@ -1,7 +1,7 @@
 package com.gbh.movil.ui.main;
 
 import com.gbh.movil.AppComponent;
-import com.gbh.movil.data.MessageHelper;
+import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.ProductManager;
 import com.gbh.movil.domain.BalanceManager;
@@ -21,7 +21,7 @@ import dagger.Component;
 public interface MainComponent {
   void inject(MainActivity activity);
 
-  MessageHelper provideMessageHelper();
+  StringHelper provideMessageHelper();
 
   SchedulerProvider provideSchedulerProvider();
 
