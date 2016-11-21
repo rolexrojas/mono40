@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <style
+    name="AppTheme"
+    parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="android:windowBackground">@color/background</item>
+    <item name="colorAccent">@color/accent</item>
+    <item name="colorPrimary">@color/primary</item>
+    <item name="colorPrimaryDark">@color/primary_dark</item>
+    <item name="android:buttonStyle">@style/Widget.Button</item>
+    <!-- Custom attributes -->
+    <item name="searchViewStyle">@style/Widget.SearchView</item>
+    <item name="amountViewStyle">@style/Widget.AmountView</item>
+  </style>
+  <style
+    name="FullScreenDialogTheme"
+    parent="AppTheme">
+    <item name="android:windowBackground">@color/transparent</item>
+  </style>
+  <style
+    name="ToolbarTheme"
+    parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <item name="fontPath">@string/font.gotham_rounded.book</item>
+    <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+  </style>
+  <style
+    name="SplashTheme"
+    parent="Theme.AppCompat.NoActionBar">
+    <item name="android:background">@drawable/background_splash</item>
+    <item name="colorAccent">@color/accent</item>
+    <item name="colorPrimary">@color/primary</item>
+    <item name="colorPrimaryDark">@color/primary_dark</item>
+  </style>
+</resources>

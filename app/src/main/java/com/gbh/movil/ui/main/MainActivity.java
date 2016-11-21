@@ -66,6 +66,13 @@ public class MainActivity extends BaseActivity implements MainScreen {
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    // Injects all the annotated dependencies.
+    if (Utils.isNull(component)) {
+      component = DaggerMainComponent.builder()
+        .appComponent(((App) getApplication()).getComponent())
+        .build();
+    }
+    component.inject(this);
     // Sets the content layout identifier.
     setContentView(R.layout.activity_main);
     // Binds all the annotated views and methods.
@@ -90,13 +97,6 @@ public class MainActivity extends BaseActivity implements MainScreen {
     });
     // Sets the startup screen.
     replaceFragment(PaymentsFragment.newInstance(), false);
-    // Injects all the annotated dependencies.
-    if (Utils.isNull(component)) {
-      component = DaggerMainComponent.builder()
-        .appComponent(((App) getApplication()).getComponent())
-        .build();
-    }
-    component.inject(this);
     // Attaches the screen to the presenter.
     presenter.attachScreen(this);
     // Creates the presenter.

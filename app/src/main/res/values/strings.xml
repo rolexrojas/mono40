@@ -44,6 +44,8 @@
   <!-- [START] Payments screen strings -->
   <string name="payments.action.phone_number.add">Agregar \'%1$s\'</string>
   <string name="payments.action.phone_number.transaction">Transacción con \'%1$s\'</string>
+  <string name="payments.menu.option.add_recipient">Agregar recipiente</string>
+  <string name="payments.menu.option.remove_recipient">Remover recipiente</string>
   <!-- [END] Payments strings -->
   <!-- [START] Contact strings -->
   <string name="contact.picture.description">Contact\'s picture</string>

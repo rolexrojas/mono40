@@ -106,6 +106,16 @@ public class ProductsFragment extends SubFragment implements ProductsScreen,
     parentScreen.setSubScreen(AddAnotherProductFragment.newInstance());
   }
 
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    // Injects all the annotated dependencies.
+    final ProductsComponent component = DaggerProductsComponent.builder()
+      .mainComponent(parentScreen.getComponent())
+      .build();
+    component.inject(this);
+  }
+
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -116,11 +126,6 @@ public class ProductsFragment extends SubFragment implements ProductsScreen,
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    // Injects all the annotated dependencies.
-    final ProductsComponent component = DaggerProductsComponent.builder()
-      .mainComponent(parentScreen.getComponent())
-      .build();
-    component.inject(this);
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
     // Prepares the recycler view.

@@ -8,6 +8,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -70,6 +73,18 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen,
     return new PaymentsFragment();
   }
 
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    // Prepares the fragment.
+    setHasOptionsMenu(true);
+    // Injects all the annotated dependencies.
+    final PaymentsComponent component = DaggerPaymentsComponent.builder()
+      .mainComponent(parentScreen.getComponent())
+      .build();
+    component.inject(this);
+  }
+
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -80,11 +95,6 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen,
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    // Injects all the annotated dependencies.
-    final PaymentsComponent component = DaggerPaymentsComponent.builder()
-      .mainComponent(parentScreen.getComponent())
-      .build();
-    component.inject(this);
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
     // Prepares the actions and recipients list.
@@ -122,6 +132,27 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen,
     parentScreen.setTitle(stringHelper.payments());
     // Starts the presenter.
     presenter.start();
+  }
+
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    // Inflates the menu of the fragment.
+    inflater.inflate(R.menu.payments, menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.payments_menu_option_add_recipient:
+        // TODO
+        return true;
+      case R.id.payments_menu_option_remove_recipient:
+        // TODO
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
   }
 
   @Override
