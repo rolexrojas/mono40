@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  style="@style/ContactListItem"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+  <ImageView
+    android:id="@+id/contact.picture"
+    android:layout_width="@dimen/payments.picture"
+    android:layout_height="@dimen/payments.picture"
+    android:layout_alignParentStart="true"
+    android:layout_centerVertical="true"
+    android:contentDescription="@string/contact.picture.description"/>
+  <include
+    android:id="@+id/action.proceed"
+    layout="@layout/action_proceed"/>
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentTop="true"
+    android:layout_marginEnd="12dp"
+    android:layout_marginStart="12dp"
+    android:layout_toEndOf="@+id/contact.picture"
+    android:layout_toStartOf="@+id/action.proceed"
+    android:orientation="vertical">
+    <TextView
+      android:id="@+id/contact.name"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      android:ellipsize="end"
+      android:gravity="start|bottom"
+      android:textAppearance="@style/ContactName.Medium"/>
+    <TextView
+      android:id="@+id/contact.phone_number"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      android:ellipsize="end"
+      android:gravity="start|top"
+      android:paddingTop="4dp"
+      android:textAppearance="@style/ContactPhoneNumber"/>
+  </LinearLayout>
+</RelativeLayout>

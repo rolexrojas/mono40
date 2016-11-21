@@ -1,100 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:background="@color/white"
-  android:clickable="true"
-  android:orientation="vertical">
-
-  <RelativeLayout
-    style="@style/ListItemInstruction"
-    android:layout_width="match_parent">
-
-    <TextView
-      android:id="@+id/list_item_instruction_index_first"
-      style="@style/ListItemInstructionIndex"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:gravity="center_vertical"
-      android:text="@string/instruction_index_first"/>
-
+  android:layout_height="match_parent">
+  <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <LinearLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_centerVertical="true"
-      android:layout_marginStart="44dp"
+      android:background="@color/white"
       android:orientation="vertical">
-
-      <TextView
-        style="@style/ListItemInstructionContent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:gravity="center_vertical"
-        android:text="@string/instruction_content_first"/>
-
-      <TextView
-        style="@style/Text.Label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/see_bank_branches"/>
+      <RelativeLayout
+        style="@style/ListItemInstruction"
+        android:layout_width="match_parent">
+        <TextView
+          android:id="@+id/list_item_instruction_index_first"
+          style="@style/ListItemInstructionIndex"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:gravity="center_vertical"
+          android:text="@string/instruction_index_first"/>
+        <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_marginStart="44dp"
+          android:orientation="vertical">
+          <TextView
+            style="@style/ListItemInstructionContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_vertical"
+            android:text="@string/instruction_content_first"/>
+          <TextView
+            style="@style/Text.Label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/see_bank_branches"/>
+        </LinearLayout>
+      </RelativeLayout>
+      <include layout="@layout/list_item_divider"/>
+      <RelativeLayout
+        style="@style/ListItemInstruction"
+        android:layout_width="match_parent">
+        <TextView
+          style="@style/ListItemInstructionIndex"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:gravity="center_vertical"
+          android:text="@string/instruction_index_second"/>
+        <TextView
+          android:id="@+id/textView"
+          style="@style/ListItemInstructionContent"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_marginStart="44dp"
+          android:gravity="center_vertical"
+          android:text="@string/instruction_content_second"/>
+      </RelativeLayout>
+      <include layout="@layout/list_item_divider"/>
+      <RelativeLayout
+        style="@style/ListItemInstruction"
+        android:layout_width="match_parent">
+        <TextView
+          style="@style/ListItemInstructionIndex"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:gravity="center_vertical"
+          android:text="@string/instruction_index_third"/>
+        <TextView
+          style="@style/ListItemInstructionContent"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_marginStart="44dp"
+          android:gravity="center_vertical"
+          android:text="@string/instruction_content_third"/>
+      </RelativeLayout>
     </LinearLayout>
-  </RelativeLayout>
-
-  <View
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/list_item_divider_size"
-    android:background="@drawable/list_item_divider"/>
-
-  <RelativeLayout
-    style="@style/ListItemInstruction"
-    android:layout_width="match_parent">
-
-    <TextView
-      style="@style/ListItemInstructionIndex"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:gravity="center_vertical"
-      android:text="@string/instruction_index_second"/>
-
-    <TextView
-      android:id="@+id/textView"
-      style="@style/ListItemInstructionContent"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_marginStart="44dp"
-      android:gravity="center_vertical"
-      android:text="@string/instruction_content_second"/>
-  </RelativeLayout>
-
-  <View
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/list_item_divider_size"
-    android:background="@drawable/list_item_divider"/>
-
-  <RelativeLayout
-    style="@style/ListItemInstruction"
-    android:layout_width="match_parent">
-
-    <TextView
-      style="@style/ListItemInstructionIndex"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:gravity="center_vertical"
-      android:text="@string/instruction_index_third"/>
-
-    <TextView
-      style="@style/ListItemInstructionContent"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_marginStart="44dp"
-      android:gravity="center_vertical"
-      android:text="@string/instruction_content_third"/>
-  </RelativeLayout>
-
-  <View
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/list_item_divider_size"
-    android:background="@drawable/list_item_divider"/>
-</LinearLayout>
+  </ScrollView>
+</FrameLayout>

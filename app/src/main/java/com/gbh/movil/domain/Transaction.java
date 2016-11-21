@@ -1,12 +1,10 @@
 package com.gbh.movil.domain;
 
-import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 
 import com.gbh.movil.Utils;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import java.math.BigDecimal;
 
 /**
  * Transaction representation.
@@ -27,16 +25,15 @@ public class Transaction {
   /**
    * Transaction's {@link RequestType request type}.
    */
-  @RequestType
-  private final int requestType;
+  private final RequestType requestType;
   /**
    * Transaction's currency code.
    */
   private final String currency;
   /**
-   * Transaction's value.
+   * Transaction's getValue.
    */
-  private final double value;
+  private final BigDecimal value;
 
   /**
    * Constructs a new transaction.
@@ -52,10 +49,10 @@ public class Transaction {
    * @param currency
    *   Transaction's currency code.
    * @param value
-   *   Transaction's value.
+   *   Transaction's getValue.
    */
   public Transaction(@NonNull String type, @NonNull String name, long date,
-    @RequestType int requestType, @NonNull String currency, double value) {
+    RequestType requestType, @NonNull String currency, BigDecimal value) {
     this.type = type;
     this.name = name;
     this.date = date;
@@ -98,8 +95,8 @@ public class Transaction {
    *
    * @return Transaction's {@link RequestType request type}.
    */
-  @RequestType
-  public final int getRequestType() {
+  @NonNull
+  public final RequestType getRequestType() {
     return requestType;
   }
 
@@ -114,11 +111,12 @@ public class Transaction {
   }
 
   /**
-   * Gets the value of the transaction.
+   * Gets the getValue of the transaction.
    *
-   * @return Transaction's value.
+   * @return Transaction's getValue.
    */
-  public final double getValue() {
+  @NonNull
+  public final BigDecimal getValue() {
     return value;
   }
 
@@ -136,16 +134,15 @@ public class Transaction {
   @Override
   public String toString() {
     return Transaction.class.getSimpleName() + ":{type='" + type + "',name='" + name + "',date='"
-      + date + "'requestType=" + requestType + ",currency='" + currency + "',value=" + value + "}";
+      + date + "'requestType=" + requestType + ",currency='" + currency + "',getValue=" + value
+      + "}";
   }
 
   /**
    * Transaction request type enumeration.
    */
-  @Retention(RetentionPolicy.SOURCE)
-  @IntDef({ RequestType.CREDIT, RequestType.DEBIT })
-  public @interface RequestType {
-    int CREDIT = 0;
-    int DEBIT = 1;
+  public enum RequestType {
+    D, // Debit
+    C // Credit
   }
 }

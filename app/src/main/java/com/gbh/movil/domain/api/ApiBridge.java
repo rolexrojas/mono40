@@ -2,12 +2,14 @@ package com.gbh.movil.domain.api;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.Balance;
 import com.gbh.movil.domain.Bank;
+import com.gbh.movil.domain.CreditCard;
+import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.InitialData;
+import com.gbh.movil.domain.Loan;
+import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Recipient;
-import com.gbh.movil.domain.Result;
 import com.gbh.movil.domain.Transaction;
 
 import java.util.List;
@@ -30,7 +32,7 @@ public interface ApiBridge {
    * @return An {@link Observable observable} that emits all the associated {@link Bank banks}.
    */
   @NonNull
-  Observable<Result<ApiCode, Set<Bank>>> banks();
+  Observable<ApiResult<Set<Bank>>> banks();
 
   /**
    * TODO
@@ -38,7 +40,7 @@ public interface ApiBridge {
    * @return TODO
    */
   @NonNull
-  Observable<Result<ApiCode, InitialData>> initialLoad();
+  Observable<ApiResult<InitialData>> initialLoad();
 
   /**
    * Creates an {@link Observable observable} that emits all the registered {@link Account
@@ -51,36 +53,47 @@ public interface ApiBridge {
    * accounts}.
    */
   @NonNull
-  Observable<Result<ApiCode, Set<Account>>> accounts();
+  Observable<ApiResult<Set<Account>>> accounts();
 
   /**
-   * Query the {@link Balance balance} of an {@link Account account} from the API.
+   * Creates an {@link Observable observable} that emits all the registered {@link CreditCard credit
+   * cards}.
    * <p>
-   * <em>Note:</em> By default {@link #queryBalance(Account, String)} does not operates on a
+   * <em>Note:</em> By default {@link #creditCards()} does not operates on a particular {@link
+   * rx.Scheduler}.
+   *
+   * @return An {@link Observable observable} that emits all the registered {@link CreditCard credit
+   * cards}.
+   */
+  @NonNull
+  Observable<ApiResult<Set<CreditCard>>> creditCards();
+
+  /**
+   * Creates an {@link Observable observable} that emits all the registered {@link Loan loans}.
+   * <p>
+   * <em>Note:</em> By default {@link #loans()} does not operates on a particular {@link
+   * rx.Scheduler}.
+   *
+   * @return An {@link Observable observable} that emits all the registered {@link Loan loans}.
+   */
+  @NonNull
+  Observable<ApiResult<Set<Loan>>> loans();
+
+  /**
+   * Query the {@link Balance balance} of a {@link Product product} from the API.
+   * <p>
+   * <em>Note:</em> By default {@link #queryBalance(Product, String)} does not operates on a
    * particular {@link rx.Scheduler}.
    *
-   * @param account
-   *   {@link Account} that will be queried.
+   * @param product
+   *   {@link Product} that will be queried.
    * @param pin
    *   User's PIN code.
    *
-   * @return {@link Balance balance} of an {@link Account account} from the API.
+   * @return {@link Balance balance} of a {@link Product product} from the API.
    */
   @NonNull
-  Observable<Result<ApiCode, Balance>> queryBalance(@NonNull Account account, @NonNull String pin);
-
-  /**
-   * Creates an {@link Observable observable} that emits all the registered {@link Recipient
-   * recipients}.
-   * <p>
-   * <em>Note:</em> By default {@link #recipients()} does not operates on a particular {@link
-   * rx.Scheduler}.
-   *
-   * @return An {@link Observable observable} that emits all the registered {@link Recipient
-   * recipients}.
-   */
-  @NonNull
-  Observable<Result<ApiCode, Set<Recipient>>> recipients();
+  Observable<ApiResult<Balance>> queryBalance(@NonNull Product product, @NonNull String pin);
 
   /**
    * Creates an {@link Observable observable} that emits the latest {@link Transaction transactions}
@@ -93,5 +106,18 @@ public interface ApiBridge {
    * that were made.
    */
   @NonNull
-  Observable<Result<ApiCode, List<Transaction>>> recentTransactions();
+  Observable<ApiResult<List<Transaction>>> recentTransactions();
+
+  /**
+   * Creates an {@link Observable observable} that emits all the registered {@link Recipient
+   * recipients}.
+   * <p>
+   * <em>Note:</em> By default {@link #recipients()} does not operates on a particular {@link
+   * rx.Scheduler}.
+   *
+   * @return An {@link Observable observable} that emits all the registered {@link Recipient
+   * recipients}.
+   */
+  @NonNull
+  Observable<ApiResult<Set<Recipient>>> recipients();
 }

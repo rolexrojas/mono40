@@ -4,11 +4,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
-import com.gbh.movil.RxUtils;
-import com.gbh.movil.Utils;
-import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.domain.api.ApiCode;
 import com.gbh.movil.domain.api.ApiUtils;
+import com.gbh.movil.domain.util.EventBus;
+import com.gbh.movil.rx.RxUtils;
+import com.gbh.movil.Utils;
+import com.gbh.movil.domain.api.ApiBridge;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,8 +21,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.schedulers.Schedulers;
-import rx.subjects.PublishSubject;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
@@ -38,39 +37,31 @@ public final class BalanceManager {
    */
   private static final long EXPIRATION_TIME = 300000L; // Five (5) minutes.
 
-  private final NetworkHelper networkHelper;
+  private final EventBus eventBus;
   private final ApiBridge apiBridge;
 
   /**
-   * Hash that uses an {@link Account account} as key and a {@link Pair pair} with the creation date
-   * and the last queried {@link Balance balance} as value.
+   * Key-value structured used to store the last queried {@link Balance balance} of a {@link Product
+   * product}.
    */
-  private final Map<Account, Pair<Long, Balance>> balances;
-
-  /**
-   * Emits an {@link Account account} every time its {@link Balance balance} expires.
-   */
-  private final PublishSubject<Account> subject = PublishSubject.create();
+  private final Map<Product, Pair<Long, Balance>> balances;
 
   private Subscription subscription = Subscriptions.unsubscribed();
 
-  public BalanceManager(@NonNull NetworkHelper networkHelper, @NonNull ApiBridge apiBridge) {
-    this.networkHelper = networkHelper;
+  public BalanceManager(@NonNull EventBus eventBus, @NonNull ApiBridge apiBridge) {
+    this.eventBus = eventBus;
     this.apiBridge = apiBridge;
     this.balances = new HashMap<>();
   }
 
-  /**
-   * Starts notifying observers.
-   */
   public final void start() {
     subscription = Observable.interval(0L, 1L, TimeUnit.MINUTES) // One (1) minute intervals.
       .observeOn(AndroidSchedulers.mainThread())
       .doOnUnsubscribe(new Action0() {
         @Override
         public void call() {
-          for (Account account : balances.keySet()) {
-            subject.onNext(account);
+          for (Product product : balances.keySet()) {
+            eventBus.dispatch(new BalanceExpirationEvent(product));
           }
           balances.clear();
         }
@@ -78,11 +69,13 @@ public final class BalanceManager {
       .subscribe(new Action1<Long>() {
         @Override
         public void call(Long interval) {
-          for (Account account : balances.keySet()) {
-            if ((System.currentTimeMillis() - balances.get(account).first) >= EXPIRATION_TIME) {
-              Timber.d("%1$s balance expired", account.toString());
-              subject.onNext(account);
-              balances.remove(account);
+          Pair<Long, Balance> pair;
+          for (Product product : balances.keySet()) {
+            pair = balances.get(product);
+            if ((System.currentTimeMillis() - pair.first) >= EXPIRATION_TIME) {
+              Timber.d("Account's balance expired (%1$s, %2$s)", product, pair.second);
+              eventBus.dispatch(new BalanceExpirationEvent(product));
+              balances.remove(product);
             }
           }
         }
@@ -94,94 +87,73 @@ public final class BalanceManager {
       });
   }
 
-  /**
-   * Expires all queried {@link Balance balances} and stop notifying observers.
-   */
   public final void stop() {
     RxUtils.unsubscribe(subscription);
   }
 
   /**
-   * Creates an {@link Observable observable} that emits every {@link Account account} of which its
-   * last queried {@link Balance balance} has expired.
-   * <p>
-   * <em>Note:</em> By default {@link #expiration()} does not operates on a particular {@link
-   * rx.Scheduler}.
-   *
-   * @return An {@link Observable observable} that emits every {@link Account account} of which its
-   * last queried {@link Balance balance} has expired.
-   */
-  public final Observable<Account> expiration() {
-    return subject.asObservable();
-  }
-
-  /**
-   * Indicates whether the given {@link Account account} has a valid {@link Balance balance} or
+   * Indicates whether the given {@link Product product} has a valid {@link Balance balance} or
    * not.
    *
-   * @param account
-   *   {@link Account} that will be checked.
+   * @param product
+   *   {@link Product} that will be checked.
    *
    * @return True if it has a valid {@link Balance balance}, false otherwise.
    */
-  public final boolean hasValidBalance(@NonNull Account account) {
-    return balances.containsKey(account);
+  public final boolean hasValidBalance(@NonNull Product product) {
+    return balances.containsKey(product);
   }
 
   /**
-   * Gets the last queried {@link Balance balance} of the given {@link Account account}.
+   * Gets the last queried {@link Balance balance} of the given {@link Product product}.
    *
-   * @param account
-   *   {@link Account} that will be queried.
+   * @param product
+   *   {@link Product} that will be queried.
    *
-   * @return {@link Account}'s last queried {@link Balance balance} or {@code null} if it hasn't
-   * been queried.
+   * @return {@link Product}'s last queried {@link Balance balance} or {@code null}.
    */
   @Nullable
-  public final Balance getBalance(@NonNull Account account) {
-    if (hasValidBalance(account)) {
-      return balances.get(account).second;
+  public final Balance getBalance(@NonNull Product product) {
+    if (hasValidBalance(product)) {
+      return balances.get(product).second;
     } else {
       return null;
     }
   }
 
   /**
-   * Creates an {@link Observable observable} that queries the {@link Balance balance} of the given
-   * {@link Account account}, saves and emit it.
-   * <p>
-   * <em>Note:</em> By default {@link #queryBalance(Account, String)} operates on {@link
-   * Schedulers#io()}.
+   * TODO
    *
-   * @param account
-   *   {@link Account} that will be queried.
+   * @param product
+   *   TODO
    * @param pin
-   *   User's PIN.
+   *   TODO
    *
-   * @return An {@link Observable observable} that queries the {@link Balance balance} of the given
-   * {@link Account account}, saves and emit it.
+   * @return TODO
    */
   @NonNull
-  public final Observable<Result<DomainCode, Balance>> queryBalance(@NonNull final Account account,
-    @NonNull String pin) {
-    return apiBridge.queryBalance(account, pin)
-      .map(new Func1<Result<ApiCode, Balance>, Result<DomainCode, Balance>>() {
+  public final Observable<Pair<Boolean, Balance>> queryBalance(
+    @NonNull final Product product, @NonNull String pin) {
+    return apiBridge.queryBalance(product, pin)
+      .compose(ApiUtils.handleApiResult(true, new Func1<ApiCode, Observable<Balance>>() {
         @Override
-        public Result<DomainCode, Balance> call(Result<ApiCode, Balance> apiResult) {
-          if (ApiUtils.isSuccessful(apiResult)) {
-            final Balance balance = apiResult.getData();
-            if (Utils.isNotNull(balance)) {
-              balances.put(account, Pair.create(System.currentTimeMillis(), balance));
-            }
-            return Result.create(DomainCode.SUCCESSFUL, balance);
-          } else if (apiResult.getCode() == ApiCode.UNAUTHORIZED) {
-            return Result.create(DomainCode.FAILURE_UNAUTHORIZED);
+        public Observable<Balance> call(ApiCode code) {
+          if (code.equals(ApiCode.FORBIDDEN)) {
+            return Observable.just(null);
           } else {
-            return Result.create(DomainCode.FAILURE_UNKNOWN);
+            Timber.d("Failed to query the balance of a product (%1$s, %2$s)", product, code);
+            return Observable.error(new Exception("Failed to query the balance of a product"));
           }
         }
-      })
-      .compose(DomainUtils.<Balance>assertNetwork(networkHelper))
-      .subscribeOn(Schedulers.io());
+      }))
+      .map(new Func1<Balance, Pair<Boolean, Balance>>() {
+        @Override
+        public Pair<Boolean, Balance> call(Balance balance) {
+          if (Utils.isNotNull(balance)) {
+            balances.put(product, Pair.create(System.currentTimeMillis(), balance));
+          }
+          return Pair.create(Utils.isNotNull(balance), balance);
+        }
+      });
   }
 }

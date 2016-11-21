@@ -2,7 +2,7 @@ package com.gbh.movil.data.repo;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.RxUtils;
+import com.gbh.movil.rx.RxUtils;
 import com.gbh.movil.domain.Transaction;
 import com.gbh.movil.domain.TransactionRepo;
 
@@ -14,6 +14,8 @@ import rx.functions.Func1;
 import rx.functions.Func2;
 
 /**
+ * {@link TransactionRepo Transaction repository} implementation that uses memory as storage.
+ *
  * @author hecvasro
  */
 class InMemoryTransactionRepo implements TransactionRepo {
@@ -26,7 +28,7 @@ class InMemoryTransactionRepo implements TransactionRepo {
   @Override
   public Observable<List<Transaction>> saveAll(@NonNull List<Transaction> transactionsToSave) {
     return Observable.just(transactionsToSave)
-      .compose(RxUtils.<Transaction>fromList())
+      .compose(RxUtils.<Transaction>fromCollection())
       .toSortedList(new Func2<Transaction, Transaction, Integer>() {
         @Override
         public Integer call(Transaction a, Transaction b) {

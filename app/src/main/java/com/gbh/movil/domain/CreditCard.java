@@ -2,18 +2,17 @@ package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
 
+import java.math.BigDecimal;
+
 /**
  * Credit card representation.
  *
  * @author hecvasro
  */
-public class CreditCard extends Account {
-  /**
-   * {@inheritDoc}
-   */
-  public CreditCard(@NonNull String alias, @NonNull String currency, @NonNull Bank bank,
-    double queryFee, @NonNull String queryFeeDescription) {
-    super(AccountType.CREDIT_CARD, alias, currency, bank, queryFee, queryFeeDescription );
+public class CreditCard extends Product {
+  CreditCard(@NonNull ProductIdentifier type, @NonNull String alias, @NonNull String number,
+    @NonNull Bank bank, @NonNull String currency, @NonNull BigDecimal queryFee) {
+    super(ProductCategory.CREDIT_CARD, type, alias, number, bank, currency, queryFee);
   }
 
   @Override

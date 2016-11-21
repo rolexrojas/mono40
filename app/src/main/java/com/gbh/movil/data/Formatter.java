@@ -2,6 +2,7 @@ package com.gbh.movil.data;
 
 import android.support.annotation.NonNull;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -40,7 +41,7 @@ public final class Formatter {
    * @return TODO
    */
   @NonNull
-  public static String amount(double value) {
+  public static String amount(@NonNull BigDecimal value) {
     return String.format(LOCALE_EN, "%1$,.2f", value);
   }
 
@@ -55,7 +56,7 @@ public final class Formatter {
    * @return TODO
    */
   @NonNull
-  public static String amount(@NonNull String currencyCode, double value) {
+  public static String amount(@NonNull String currencyCode, @NonNull BigDecimal value) {
     return String.format(LOCALE_EN, "%1$s$%2$s", currencyCode, amount(value));
   }
 

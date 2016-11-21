@@ -2,32 +2,44 @@ package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
 
+import java.math.BigDecimal;
+
 /**
- * Account balance representation.
+ * {@link Product}'s balance representation.
  *
  * @author hecvasro
  */
-public class Balance {
+public abstract class Balance {
+  /**
+   * Balance's {@link ProductCategory category}.
+   */
+  private final ProductCategory category;
   /**
    * Balance's value.
    */
-  private final double value;
-  /**
-   * Balance's description.
-   */
-  private final String description;
+  private final BigDecimal value;
 
   /**
    * Constructs a new balance.
    *
+   * @param category
+   *   Balance's {@link ProductCategory category}.
    * @param value
    *   Balance's value.
-   * @param description
-   *   Balance's description
    */
-  public Balance(double value, @NonNull String description) {
+  Balance(@NonNull ProductCategory category, @NonNull BigDecimal value) {
+    this.category = category;
     this.value = value;
-    this.description = description;
+  }
+
+  /**
+   * Gets the {@link ProductCategory category} of the balance.
+   *
+   * @return Balance's {@link ProductCategory category}.
+   */
+  @NonNull
+  public final ProductCategory getCategory() {
+    return category;
   }
 
   /**
@@ -35,17 +47,13 @@ public class Balance {
    *
    * @return Balance's value.
    */
-  public final double getValue() {
+  @NonNull
+  public final BigDecimal getValue() {
     return value;
   }
 
-  /**
-   * Gets the description of the balance.
-   *
-   * @return Balance's description.
-   */
-  @NonNull
-  public final String getDescription() {
-    return description;
+  @Override
+  public String toString() {
+    return Balance.class.getSimpleName() + ":{category='" + category + "',value=" + value + "'}";
   }
 }

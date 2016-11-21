@@ -4,7 +4,7 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="#F8F0F8"
+  android:background="@drawable/background_payment_options"
   android:focusable="true"
   android:focusableInTouchMode="true"
   android:orientation="vertical">
@@ -12,13 +12,20 @@
     android:id="@+id/search_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/list_item_inset"
-    android:layout_marginStart="@dimen/list_item_inset"
-    app:hint="@string/payment_options_search_hint"/>
+    android:layout_marginEnd="@dimen/list.item.inset.horizontal"
+    android:layout_marginStart="@dimen/list.item.inset.horizontal"
+    app:hint="@string/pay_screen_search_hint"/>
   <include layout="@layout/divider"/>
-  <android.support.v7.widget.RecyclerView
-    android:id="@+id/recycler_view"
-    style="@style/List.Vertical"
+  <android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"/>
+    android:layout_height="match_parent"
+    android:enabled="false">
+    <android.support.v7.widget.RecyclerView
+      android:id="@+id/recycler_view"
+      style="@style/List.Vertical"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/transparent"/>
+  </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

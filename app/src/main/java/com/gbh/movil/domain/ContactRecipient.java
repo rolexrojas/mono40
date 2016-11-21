@@ -1,6 +1,7 @@
 package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.gbh.movil.Utils;
 
@@ -28,6 +29,7 @@ public class ContactRecipient extends Recipient {
   @Override
   public boolean equals(Object object) {
     return super.equals(object) || (Utils.isNotNull(object) && object instanceof ContactRecipient
+      && ((ContactRecipient) object).type.equals(type)
       && ((ContactRecipient) object).contact.equals(contact));
   }
 
@@ -40,5 +42,13 @@ public class ContactRecipient extends Recipient {
   public String toString() {
     return ContactRecipient.class.getSimpleName() + ":{super=" + super.toString() + ",contact="
       + contact + "}";
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean matches(@Nullable String query) {
+    return contact.matches(query);
   }
 }

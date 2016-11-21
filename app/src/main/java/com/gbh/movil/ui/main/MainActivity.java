@@ -10,16 +10,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.gbh.movil.App;
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
-import com.gbh.movil.data.MessageHelper;
+import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.ui.BaseActivity;
-import com.gbh.movil.ui.main.accounts.AccountsFragment;
+import com.gbh.movil.ui.UiUtils;
+import com.gbh.movil.ui.main.products.ProductsFragment;
 import com.gbh.movil.ui.main.payments.PaymentsFragment;
 import com.gbh.movil.ui.view.widget.SlidingPaneLayout;
 
@@ -35,15 +35,12 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class MainActivity extends BaseActivity implements ParentScreen {
-  private static final String KEY_WERE_ACCOUNT_ADDITIONS = "wereAccountAdditions";
-  private static final String KEY_WERE_ACCOUNT_REMOVALS = "wereAccountRemovals";
-
+public class MainActivity extends BaseActivity implements MainScreen {
   private Unbinder unbinder;
   private MainComponent component;
 
   @Inject
-  MessageHelper messageHelper;
+  StringHelper stringHelper;
   @Inject
   MainPresenter presenter;
 
@@ -53,12 +50,8 @@ public class MainActivity extends BaseActivity implements ParentScreen {
   Toolbar toolbar;
 
   @NonNull
-  public static Intent getLaunchIntent(@NonNull Context context, boolean wereAccountAdditions,
-    boolean wereAccountRemovals) {
-    final Intent intent = new Intent(context, MainActivity.class);
-    intent.putExtra(KEY_WERE_ACCOUNT_ADDITIONS, wereAccountAdditions);
-    intent.putExtra(KEY_WERE_ACCOUNT_REMOVALS, wereAccountRemovals);
-    return intent;
+  public static Intent getLaunchIntent(@NonNull Context context) {
+    return new Intent(context, MainActivity.class);
   }
 
   private void replaceFragment(@NonNull Fragment fragment, boolean addToBackStack) {
@@ -104,55 +97,33 @@ public class MainActivity extends BaseActivity implements ParentScreen {
         .build();
     }
     component.inject(this);
-    // Shows account additions and/or removals notifications.
-    final Intent intent = getIntent();
-    if (Utils.isNotNull(intent)) {
-      final boolean wereAccountAdditions = intent.getBooleanExtra(KEY_WERE_ACCOUNT_ADDITIONS, false);
-      if (wereAccountAdditions) {
-        new AlertDialog.Builder(this)
-          .setTitle(messageHelper.doneWithExclamationMark())
-          .setMessage(messageHelper.yourAccountHaveBeenAdded())
-          .setNegativeButton(messageHelper.goToAccounts(), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              setSubScreen(AccountsFragment.newInstance());
-            }
-          })
-          .setPositiveButton(R.string.ok, null)
-          .show();
-      }
-      final boolean wereAccountRemovals = intent.getBooleanExtra(KEY_WERE_ACCOUNT_REMOVALS, false);
-      if (wereAccountRemovals) {
-        new AlertDialog.Builder(this)
-          .setTitle(messageHelper.doneWithExclamationMark())
-          .setMessage(messageHelper.yourAccountHaveBeenRemoved())
-          .setNegativeButton(messageHelper.goToAccounts(), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              setSubScreen(AccountsFragment.newInstance());
-            }
-          })
-          .setPositiveButton(messageHelper.ok(), null)
-          .show();
-      }
-    }
+    // Attaches the screen to the presenter.
+    presenter.attachScreen(this);
+    // Creates the presenter.
+    presenter.create();
   }
 
   @Override
   protected void onStart() {
     super.onStart();
+    // Starts the presenter.
     presenter.start();
   }
 
   @Override
   protected void onStop() {
     super.onStop();
+    // Stops the presenter.
     presenter.stop();
   }
 
   @Override
   protected void onDestroy() {
     super.onDestroy();
+    // Destroys the presenter.
+    presenter.destroy();
+    // Detaches the screen from the presenter.
+    presenter.detachScreen();
     // Unbinds all the annotated views and methods.
     unbinder.unbind();
   }
@@ -176,10 +147,10 @@ public class MainActivity extends BaseActivity implements ParentScreen {
         subFragment = PaymentsFragment.newInstance();
         break;
       case R.id.text_view_accounts:
-        subFragment = AccountsFragment.newInstance();
+        subFragment = ProductsFragment.newInstance();
         break;
       case R.id.text_view_add_another_account:
-        subFragment = AddAnotherAccountFragment.newInstance();
+        subFragment = AddAnotherProductFragment.newInstance();
         break;
       default:
         subFragment = null;
@@ -235,5 +206,20 @@ public class MainActivity extends BaseActivity implements ParentScreen {
     if (Utils.isNotNull(actionBar)) {
       actionBar.setTitle(title);
     }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void showAccountAdditionOrRemovalNotification(@NonNull String message) {
+    UiUtils.createDialog(this, stringHelper.doneWithExclamationMark(),
+      message, stringHelper.ok(), null, stringHelper.goToAccounts(),
+      new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+          setSubScreen(ProductsFragment.newInstance());
+        }
+      }).show();
   }
 }

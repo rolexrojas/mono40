@@ -46,4 +46,19 @@
     parent="BaseListItemInstructionIndex">
     <item name="android:letterSpacing">0.062</item> <!-- 1sp -->
   </style>
+
+  <!-- [START] Product styles -->
+  <style
+    name="ProductAliasText"
+    parent="BaseProductAliasText">
+    <item name="android:letterSpacing">@dimen/text.letter_spacing.normal</item>
+  </style>
+  <!-- [END] Product styles -->
+  <!-- [START] Contact styles -->
+  <style
+    name="ContactPhoneNumber"
+    parent="BaseContactPhoneNumber">
+    <item name="android:letterSpacing">@dimen/text.letter_spacing.small</item>
+  </style>
+  <!-- [END] Contact styles -->
 </resources>

@@ -3,6 +3,7 @@ package com.gbh.movil.ui.view.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -14,6 +15,8 @@ import com.gbh.movil.R;
 import com.gbh.movil.data.Formatter;
 import com.gbh.movil.ui.UiUtils;
 
+import java.math.BigDecimal;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -24,7 +27,7 @@ import butterknife.ButterKnife;
  */
 public class AmountView extends LinearLayout {
   private String currency;
-  private double value;
+  private BigDecimal value;
 
   @BindView(R.id.text_view_currency)
   TextView currencyTextView;
@@ -46,7 +49,7 @@ public class AmountView extends LinearLayout {
       defStyleAttr, R.style.Widget_AmountView);
     try {
       currency = array.getString(R.styleable.AmountView_currency);
-      value = array.getFloat(R.styleable.AmountView_value, 0F);
+      value = BigDecimal.valueOf(array.getFloat(R.styleable.AmountView_value, 0F));
     } finally {
       array.recycle();
     }
@@ -98,7 +101,8 @@ public class AmountView extends LinearLayout {
    *
    * @return TODO
    */
-  public double getValue() {
+  @Nullable
+  public BigDecimal getValue() {
     return value;
   }
 
@@ -108,7 +112,7 @@ public class AmountView extends LinearLayout {
    * @param value
    *   TODO
    */
-  public void setValue(double value) {
+  public void setValue(@NonNull BigDecimal value) {
     this.value = value;
     this.valueTextView.setText(Formatter.amount(this.value));
   }

@@ -11,6 +11,10 @@ import com.gbh.movil.Utils;
  */
 public class Bank {
   /**
+   * Bank's code.
+   */
+  private final int code;
+  /**
    * Bank's identifier.
    */
   private final String id;
@@ -26,14 +30,26 @@ public class Bank {
   /**
    * Constructs a new bank.
    *
+   * @param code
+   *   Bank's code.
    * @param id
    *   Bank's identifier.
    * @param name
    *   Bank's name.
    */
-  public Bank(@NonNull String id, @NonNull String name) {
+  public Bank(int code, @NonNull String id, @NonNull String name) {
+    this.code = code;
     this.id = id;
     this.name = name;
+  }
+
+  /**
+   * Gets the code of the bank.
+   *
+   * @return Bank's code.
+   */
+  public final int getCode() {
+    return code;
   }
 
   /**
@@ -77,18 +93,18 @@ public class Bank {
 
   @Override
   public boolean equals(Object object) {
-    return super.equals(object) || (Utils.isNotNull(object) && object instanceof Bank &&
-      ((Bank) object).id.equals(id));
+    return super.equals(object) || (Utils.isNotNull(object) && object instanceof Bank
+      && ((Bank) object).code == code && ((Bank) object).id.equals(id));
   }
 
   @Override
   public int hashCode() {
-    return id.hashCode();
+    return Utils.hashCode(code, id);
   }
 
   @Override
   public String toString() {
-    return Bank.class.getSimpleName() + ":{id='" + id + "',name='" + name + "',state=" + state
-      + "'}";
+    return Bank.class.getSimpleName() + ":{code='" + code + "',id='" + id + "',name='" + name
+      + "',state=" + state + "'}";
   }
 }
