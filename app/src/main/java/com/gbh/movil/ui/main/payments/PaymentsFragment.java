@@ -16,6 +16,7 @@ import com.gbh.movil.Utils;
 import com.gbh.movil.data.MessageHelper;
 import com.gbh.movil.ui.main.list.Item;
 import com.gbh.movil.ui.main.list.ItemAdapter;
+import com.gbh.movil.ui.main.list.ItemHolder;
 import com.gbh.movil.ui.main.list.ItemHolderBinderFactory;
 import com.gbh.movil.ui.main.list.ItemHolderCreatorFactory;
 import com.gbh.movil.ui.main.list.NoResultsItem;
@@ -34,6 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import rx.Observable;
+import timber.log.Timber;
 
 /**
  * {@link PaymentsScreen Screen} implementation that uses a {@link SubFragment fragment} as
@@ -41,7 +43,8 @@ import rx.Observable;
  *
  * @author hecvasro
  */
-public class PaymentsFragment extends SubFragment implements PaymentsScreen {
+public class PaymentsFragment extends SubFragment implements PaymentsScreen,
+  ItemHolder.OnClickListener {
   private Unbinder unbinder;
   private RefreshIndicator refreshIndicator;
   private ItemAdapter adapter;
@@ -87,7 +90,7 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen {
     unbinder = ButterKnife.bind(this, view);
     // Prepares the actions and recipients list.
     final ItemHolderCreatorFactory holderCreatorFactory = new ItemHolderCreatorFactory.Builder()
-      .addCreator(ContactRecipientItem.class, new ContactRecipientItemHolderCreator())
+      .addCreator(ContactRecipientItem.class, new ContactRecipientItemHolderCreator(this))
       .addCreator(NoResultsItem.class, new NoResultsItemHolderCreator())
       .build();
     final ItemHolderBinderFactory binderFactory = new ItemHolderBinderFactory.Builder()
@@ -139,12 +142,12 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen {
 
   @Override
   public void clear() {
-    adapter.clear();
+    adapter.clearItems();
   }
 
   @Override
   public void add(@NonNull Item item) {
-    adapter.add(item);
+    adapter.addItem(item);
   }
 
   @NonNull
@@ -160,5 +163,13 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen {
       refreshIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
     }
     return refreshIndicator;
+  }
+
+  @Override
+  public void onClick(int position) {
+    final Item item = adapter.getItem(position);
+    if (item instanceof ContactRecipientItem) {
+      // TODO: Start transfer or payment process.
+    }
   }
 }

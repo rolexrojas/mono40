@@ -46,7 +46,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
   /**
    * TODO
    */
-  public void clear() {
+  public void clearItems() {
     final int count = getItemCount();
     if (count > 0) {
       items.clear();
@@ -59,17 +59,42 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
    *
    * @param item
    *   TODO
+   *
+   * @return TODo
    */
-  public void add(@NonNull Item item) {
-    if (!items.contains(item)) {
+  public boolean containsItem(@NonNull Item item) {
+    return items.contains(item);
+  }
+
+  /**
+   * TODO
+   *
+   * @param item
+   *   TODO
+   */
+  public void addItem(@NonNull Item item) {
+    if (!containsItem(item)) {
       items.add(item);
       notifyItemInserted(getItemCount());
     }
   }
 
+  /**
+   * TODO
+   *
+   * @param position
+   *   TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  public Item getItem(int position) {
+    return items.get(position);
+  }
+
   @Override
   public int getItemViewType(int position) {
-    return holderCreatorFactory.getIdentifier(items.get(position).getClass());
+    return holderCreatorFactory.getIdentifier(getItem(position).getClass());
   }
 
   @Override
@@ -86,7 +111,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
   @Override
   @SuppressWarnings("unchecked")
   public void onBindViewHolder(ItemHolder holder, int position) {
-    final Item item = items.get(position);
+    final Item item = getItem(position);
     final Class<? extends Item> itemType = item.getClass();
     final Class<? extends ItemHolder> holderType = holder.getClass();
     final ItemHolderBinder binder = binderFactory.getBinder(itemType, holderType);

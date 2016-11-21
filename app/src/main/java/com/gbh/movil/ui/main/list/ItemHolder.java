@@ -7,6 +7,8 @@ import android.view.View;
 
 import com.gbh.movil.Utils;
 
+import butterknife.ButterKnife;
+
 /**
  * TODO
  *
@@ -26,11 +28,14 @@ public abstract class ItemHolder extends RecyclerView.ViewHolder {
    * @param onClickListener
    *   TODO
    */
-  public ItemHolder(@NonNull final View rootView,
+  protected ItemHolder(@NonNull final View rootView,
     @Nullable final OnClickListener onClickListener) {
     super(rootView);
     this.rootView = rootView;
+    // Binds all the annotated views and methods.
+    ButterKnife.bind(this, this.rootView);
     if (Utils.isNotNull(onClickListener)) {
+      // Adds a listener that gets notified every time the root view gets clicked.
       this.rootView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {

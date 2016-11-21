@@ -126,9 +126,9 @@ public class ProductsFragment extends SubFragment implements ProductsScreen,
       @Override
       public void onLayoutCompleted(RecyclerView.State state) {
         super.onLayoutCompleted(state);
-        // Determines whether the add another account button must be visible or not. It will only be
+        // Determines whether the addItem another account button must be visible or not. It will only be
         // visible if the bottom of the last child of the recycler view does not collide with the
-        // top of the add another account button.
+        // top of the addItem another account button.
         final int lastChildPosition = findLastVisibleItemPosition();
         if (lastChildPosition >= 0) {
           final View lastChild = recyclerView.getChildAt(lastChildPosition);
