@@ -35,7 +35,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import rx.Observable;
-import timber.log.Timber;
 
 /**
  * {@link PaymentsScreen Screen} implementation that uses a {@link SubFragment fragment} as
@@ -47,7 +46,7 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen,
   ItemHolder.OnClickListener {
   private Unbinder unbinder;
   private RefreshIndicator refreshIndicator;
-  private ItemAdapter adapter;
+  private ItemAdapter itemAdapter;
 
   @BindView(R.id.search_view)
   SearchView searchView;
@@ -99,8 +98,8 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen,
       .addBinder(NoResultsItem.class, NoResultsItemHolder.class,
         new NoResultsItemHolderBinder(messageHelper))
       .build();
-    adapter = new ItemAdapter(holderCreatorFactory, binderFactory);
-    recyclerView.setAdapter(adapter);
+    itemAdapter = new ItemAdapter(holderCreatorFactory, binderFactory);
+    recyclerView.setAdapter(itemAdapter);
     recyclerView.setHasFixedSize(true);
     recyclerView.setItemAnimator(null);
     final Context context = getContext();
@@ -142,12 +141,12 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen,
 
   @Override
   public void clear() {
-    adapter.clearItems();
+    itemAdapter.clearItems();
   }
 
   @Override
   public void add(@NonNull Item item) {
-    adapter.addItem(item);
+    itemAdapter.addItem(item);
   }
 
   @NonNull
@@ -167,7 +166,7 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen,
 
   @Override
   public void onClick(int position) {
-    final Item item = adapter.getItem(position);
+    final Item item = itemAdapter.getItem(position);
     if (item instanceof ContactRecipientItem) {
       // TODO: Start transfer or payment process.
     }

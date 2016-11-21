@@ -60,10 +60,22 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
    * @param item
    *   TODO
    *
-   * @return TODo
+   * @return TODO
    */
   public boolean containsItem(@NonNull Item item) {
     return items.contains(item);
+  }
+
+  /**
+   * TODO
+   *
+   * @param item
+   *   TODO
+   *
+   * @return TODO
+   */
+  public int indexOf(@NonNull Item item) {
+    return items.indexOf(item);
   }
 
   /**
@@ -77,6 +89,19 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
       items.add(item);
       notifyItemInserted(getItemCount());
     }
+  }
+
+  /**
+   * TODO
+   *
+   * @param position
+   *   TODO
+   * @param item
+   *   TODO
+   */
+  public void setItem(int position, @NonNull Item item) {
+    items.set(position, item);
+    notifyItemChanged(position);
   }
 
   /**

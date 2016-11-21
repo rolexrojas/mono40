@@ -3,25 +3,23 @@
   style="@style/ListItem.Normal"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
   tools:ignore="MissingPrefix">
-
+  <Button
+    android:id="@+id/show_recent_transactions.button"
+    style="@style/ListItemButton"
+    android:layout_alignParentEnd="true"
+    android:layout_centerVertical="true"
+    android:text="@string/see"/>
   <TextView
+    android:id="@+id/show_recent_transactions.message"
     fontPath="@string/font.gotham_rounded.book"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_alignParentStart="true"
-    android:layout_toStartOf="@+id/button"
+    android:layout_toStartOf="@+id/show_recent_transactions.button"
     android:ellipsize="end"
     android:gravity="center_vertical"
     android:text="@string/recent_transactions"
     android:textColor="#333"
     android:textSize="16sp"/>
-
-  <Button
-    android:id="@+id/button"
-    style="@style/ListItemButton"
-    android:layout_alignParentEnd="true"
-    android:layout_centerVertical="true"
-    android:text="@string/see"/>
 </RelativeLayout>

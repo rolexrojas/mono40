@@ -3,24 +3,26 @@ package com.gbh.movil.ui.main.products;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.gbh.movil.Utils;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Balance;
+import com.gbh.movil.ui.main.list.Item;
 
 /**
  * TODO
  *
  * @author hecvasro
  */
-class ProductItem {
+class ProductItem implements Item {
   /**
    * TODO
    */
-  protected final Product product;
+  private final Product product;
 
   /**
    * TODO
    */
-  protected Balance balance;
+  private Balance balance;
 
   /**
    * TODO
@@ -60,5 +62,21 @@ class ProductItem {
    */
   public void setBalance(@Nullable Balance balance) {
     this.balance = balance;
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    return super.equals(object) || (Utils.isNotNull(object) && object instanceof ProductItem
+      && ((ProductItem) object).product.equals(product));
+  }
+
+  @Override
+  public int hashCode() {
+    return product.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return ProductItem.class.getSimpleName() + ":{product=" + product + ",balance=" + balance + "}";
   }
 }

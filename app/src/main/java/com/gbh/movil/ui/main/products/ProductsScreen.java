@@ -7,6 +7,7 @@ import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Balance;
 import com.gbh.movil.ui.Refreshable;
 import com.gbh.movil.ui.Screen;
+import com.gbh.movil.ui.main.list.Item;
 
 /**
  * TODO
@@ -22,10 +23,10 @@ interface ProductsScreen extends Screen, Refreshable {
   /**
    * TODO
    *
-   * @param product
+   * @param item
    *   TODO
    */
-  void add(@NonNull Product product);
+  void add(@NonNull Item item);
 
   /**
    * TODO

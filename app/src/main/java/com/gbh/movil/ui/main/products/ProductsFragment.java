@@ -1,5 +1,6 @@
 package com.gbh.movil.ui.main.products;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,6 +15,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.gbh.movil.Utils;
+import com.gbh.movil.ui.main.list.Item;
+import com.gbh.movil.ui.main.list.ItemAdapter;
+import com.gbh.movil.ui.main.list.ItemHolderBinderFactory;
+import com.gbh.movil.ui.main.list.ItemHolderCreatorFactory;
 import com.gbh.movil.ui.view.widget.RefreshIndicator;
 import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.gbh.movil.ui.main.AddAnotherProductFragment;
@@ -22,13 +27,9 @@ import com.gbh.movil.R;
 import com.gbh.movil.data.MessageHelper;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Balance;
-import com.gbh.movil.domain.Bank;
 import com.gbh.movil.ui.main.SubFragment;
 import com.gbh.movil.ui.main.products.transactions.RecentTransactionsActivity;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -44,11 +45,12 @@ import timber.log.Timber;
  * @author hecvasro
  */
 public class ProductsFragment extends SubFragment implements ProductsScreen,
-  ShowRecentTransactionsViewHolder.Listener {
+  ProductItemHolder.OnQueryActionButtonClickedListener,
+  ShowRecentTransactionsItemHolder.OnShowRecentTransactionsButtonClickedListener {
   private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
 
   private Unbinder unbinder;
-  private Adapter adapter;
+  private ItemAdapter itemAdapter;
   private RefreshIndicator refreshIndicator;
 
   @Inject
@@ -114,21 +116,35 @@ public class ProductsFragment extends SubFragment implements ProductsScreen,
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    // Injects all the annotated dependencies.
+    final ProductsComponent component = DaggerProductsComponent.builder()
+      .mainComponent(parentScreen.getComponent())
+      .build();
+    component.inject(this);
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
     // Prepares the recycler view.
-    adapter = new Adapter(this);
-    recyclerView.setAdapter(adapter);
+    final ItemHolderCreatorFactory holderCreatorFactory = new ItemHolderCreatorFactory.Builder()
+      .addCreator(ShowRecentTransactionsItem.class,
+        new ShowRecentTransactionsItemHolderCreator(this))
+      .addCreator(ProductItem.class, new ProductItemHolderCreator(this))
+      .build();
+    final ItemHolderBinderFactory holderBinderFactory = new ItemHolderBinderFactory.Builder()
+      .addBinder(ProductItem.class, ProductItemHolder.class, new ProductItemHolderBinder())
+      .build();
+    itemAdapter = new ItemAdapter(holderCreatorFactory, holderBinderFactory);
+    recyclerView.setAdapter(itemAdapter);
     recyclerView.setHasFixedSize(true);
     recyclerView.setItemAnimator(null);
-    final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),
+    final Context context = getContext();
+    final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context,
       LinearLayoutManager.VERTICAL, false) {
       @Override
       public void onLayoutCompleted(RecyclerView.State state) {
         super.onLayoutCompleted(state);
-        // Determines whether the addItem another account button must be visible or not. It will only be
-        // visible if the bottom of the last child of the recycler view does not collide with the
-        // top of the addItem another account button.
+        // Determines whether the addItem another account button must be visible or not. It will
+        // only be visible if the bottom of the last child of the recycler view does not collide
+        // with the top of the addItem another account button.
         final int lastChildPosition = findLastVisibleItemPosition();
         if (lastChildPosition >= 0) {
           final View lastChild = recyclerView.getChildAt(lastChildPosition);
@@ -145,17 +161,11 @@ public class ProductsFragment extends SubFragment implements ProductsScreen,
       }
     };
     recyclerView.setLayoutManager(layoutManager);
-    final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration
-      .Builder(getContext())
+    final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
       .drawable(R.drawable.divider)
       .marginResId(R.dimen.list_item_inset_horizontal)
       .build();
     recyclerView.addItemDecoration(divider);
-    // Injects all the annotated dependencies.
-    final ProductsComponent component = DaggerProductsComponent.builder()
-      .mainComponent(parentScreen.getComponent())
-      .build();
-    component.inject(this);
     // Attaches the screen to the presenter.
     presenter.attachScreen(this);
   }
@@ -187,16 +197,12 @@ public class ProductsFragment extends SubFragment implements ProductsScreen,
 
   @Override
   public void clear() {
-    if (Utils.isNotNull(adapter)) {
-      adapter.clear();
-    }
+    itemAdapter.clearItems();
   }
 
   @Override
-  public void add(@NonNull Product product) {
-    if (Utils.isNotNull(adapter)) {
-      adapter.add(product);
-    }
+  public void add(@NonNull Item item) {
+    itemAdapter.addItem(item);
   }
 
   @Override
@@ -211,14 +217,13 @@ public class ProductsFragment extends SubFragment implements ProductsScreen,
 
   @Override
   public void setBalance(@NonNull Product product, @Nullable Balance balance) {
-    if (Utils.isNotNull(adapter)) {
-      adapter.setBalance(product, balance);
+    final ProductItem item = new ProductItem(product);
+    if (itemAdapter.containsItem(item)) {
+      final int index = itemAdapter.indexOf(item);
+      final ProductItem actualItem = (ProductItem) itemAdapter.getItem(index);
+      actualItem.setBalance(balance);
+      itemAdapter.setItem(index, actualItem);
     }
-  }
-
-  @Override
-  public void onShowRecentTransactionsButtonClicked() {
-    startActivity(RecentTransactionsActivity.getLaunchIntent(getContext()));
   }
 
   @Nullable
@@ -230,150 +235,13 @@ public class ProductsFragment extends SubFragment implements ProductsScreen,
     return refreshIndicator;
   }
 
-  /**
-   * TODO
-   */
-  private class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
-    implements ProductItemViewHolder.Listener {
-    private static final int TYPE_ACCOUNT = 0;
-    private static final int TYPE_LAST_TRANSACTIONS = 1;
+  @Override
+  public void onQueryBalanceButtonClicked(int position, int x, int y) {
+    queryBalance(((ProductItem) itemAdapter.getItem(position)).getProduct(), x, y);
+  }
 
-    private final ShowRecentTransactionsViewHolder.Listener listener;
-
-    private final ShowRecentTransactionsItem showRecentTransactionsItem
-      = new ShowRecentTransactionsItem();
-
-    private final List<Object> items = new ArrayList<>();
-
-    private Adapter(@NonNull ShowRecentTransactionsViewHolder.Listener listener) {
-      this.listener = listener;
-      this.addShowRecentTransactionsItem();
-    }
-
-    /**
-     * TODO
-     *
-     * @param product
-     *   TODO
-     *
-     * @return TODO
-     */
-    @Nullable
-    private ProductItem findByAccount(@NonNull Product product) {
-      for (Object item : items) {
-        if (item instanceof ProductItem && ((ProductItem) item).product.equals(product)) {
-          return (ProductItem) item;
-        }
-      }
-      return null;
-    }
-
-    private boolean isShowRecentTransactionsItemAdded() {
-      return items.contains(showRecentTransactionsItem);
-    }
-
-    /**
-     * TODO
-     */
-    private void addShowRecentTransactionsItem() {
-      if (!isShowRecentTransactionsItemAdded()) {
-        items.add(showRecentTransactionsItem);
-        notifyItemInserted(getItemCount());
-      }
-    }
-
-    /**
-     * TODO
-     */
-    final void clear() {
-      final int count = getItemCount();
-      if (count > 0) {
-        items.clear();
-        notifyItemRangeRemoved(0, count);
-        addShowRecentTransactionsItem();
-      }
-    }
-
-    /**
-     * TODO
-     *
-     * @param product
-     *   TODO
-     */
-    final void add(@NonNull Product product) {
-      final ProductItem item = findByAccount(product);
-      if (Utils.isNull(item)) {
-        final int count = getItemCount();
-        final int index = isShowRecentTransactionsItemAdded() ? count - 1 : count;
-        items.add(index, new ProductItem(product));
-        notifyItemInserted(index);
-      }
-    }
-
-    /**
-     * TODO
-     *
-     * @param product
-     *   TODO
-     * @param balance
-     *   TODO
-     */
-    final void setBalance(@NonNull Product product, @Nullable Balance balance) {
-      final ProductItem item = findByAccount(product);
-      if (Utils.isNotNull(item)) {
-        item.setBalance(balance);
-        notifyItemChanged(items.indexOf(item));
-      }
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-      return items.get(position) instanceof ProductItem ? TYPE_ACCOUNT : TYPE_LAST_TRANSACTIONS;
-    }
-
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-      final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-      if (viewType == TYPE_ACCOUNT) {
-        return new ProductItemViewHolder(inflater.inflate(R.layout.list_item_account, parent,
-          false), this);
-      } else {
-        return new ShowRecentTransactionsViewHolder(inflater
-          .inflate(R.layout.list_item_show_recent_transactions, parent, false), listener);
-      }
-    }
-
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-      if (getItemViewType(position) == TYPE_ACCOUNT) {
-        final ProductItemViewHolder accountHolder = (ProductItemViewHolder) holder;
-        final ProductItem item = (ProductItem) items.get(position);
-        final Product product = item.getProduct();
-        final Bank bank = product.getBank();
-        // TODO: Load bank's logo.
-        accountHolder.accountAliasTextView.setText(product.getAlias());
-        accountHolder.bankNameTextView.setText(bank.getName());
-        final Balance balance = item.getBalance();
-        if (balance != null) {
-          accountHolder.amountView.setVisibility(View.VISIBLE);
-          accountHolder.amountView.setCurrency(product.getCurrency());
-          accountHolder.amountView.setValue(balance.getValue());
-          accountHolder.queryAccountBalanceButton.setVisibility(View.GONE);
-        } else {
-          accountHolder.amountView.setVisibility(View.GONE);
-          accountHolder.queryAccountBalanceButton.setVisibility(View.VISIBLE);
-        }
-      }
-    }
-
-    @Override
-    public int getItemCount() {
-      return items.size();
-    }
-
-    @Override
-    public void onQueryBalanceButtonClicked(int position, int x, int y) {
-      queryBalance(((ProductItem) items.get(position)).getProduct(), x, y);
-    }
+  @Override
+  public void onShowRecentTransactionsButtonClicked() {
+    startActivity(RecentTransactionsActivity.getLaunchIntent(getContext()));
   }
 }

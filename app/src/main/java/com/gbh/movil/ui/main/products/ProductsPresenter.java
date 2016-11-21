@@ -94,7 +94,7 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
       .subscribe(new Action1<Product>() {
         @Override
         public void call(Product product) {
-          screen.add(product);
+//          screen.add(product);
           if (balanceManager.hasValidBalance(product)) {
             screen.setBalance(product, balanceManager.getBalance(product));
           }
