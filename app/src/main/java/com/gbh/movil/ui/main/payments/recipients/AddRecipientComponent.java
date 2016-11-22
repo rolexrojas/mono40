@@ -1,5 +1,7 @@
 package com.gbh.movil.ui.main.payments.recipients;
 
+import android.content.Context;
+
 import com.gbh.movil.AppComponent;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.ui.ActivityComponent;
@@ -23,6 +25,13 @@ public interface AddRecipientComponent extends ActivityComponent {
    *   TODO
    */
   void inject(AddRecipientActivity activity);
+
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
+  Context provideContext();
 
   /**
    * TODO
