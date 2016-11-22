@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
 import com.gbh.movil.data.StringHelper;
+import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.ui.main.list.Item;
 import com.gbh.movil.ui.main.list.ItemAdapter;
 import com.gbh.movil.ui.main.list.ItemHolder;
@@ -26,6 +27,7 @@ import com.gbh.movil.ui.main.list.NoResultsItem;
 import com.gbh.movil.ui.main.list.NoResultsItemHolder;
 import com.gbh.movil.ui.main.list.NoResultsItemHolderBinder;
 import com.gbh.movil.ui.main.list.NoResultsItemHolderCreator;
+import com.gbh.movil.ui.main.payments.recipients.AddRecipientActivity;
 import com.gbh.movil.ui.view.widget.RefreshIndicator;
 import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.gbh.movil.ui.main.SubFragment;
@@ -119,6 +121,7 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen,
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
       .drawable(R.drawable.divider)
       .marginResId(R.dimen.list_item_inset_horizontal)
+      .showLastDivider()
       .build();
     recyclerView.addItemDecoration(divider);
     // Attaches the screen to the presenter.
@@ -129,7 +132,7 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen,
   public void onStart() {
     super.onStart();
     // Sets the title.
-    parentScreen.setTitle(stringHelper.payments());
+    parentScreen.setTitle(getString(R.string.payments_title));
     // Starts the presenter.
     presenter.start();
   }
@@ -145,7 +148,7 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen,
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.payments_menu_option_add_recipient:
-        // TODO
+        startActivity(AddRecipientActivity.getLaunchIntent(getContext()));
         return true;
       case R.id.payments_menu_option_remove_recipient:
         // TODO
@@ -171,6 +174,12 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen,
     unbinder.unbind();
   }
 
+  @NonNull
+  @Override
+  public Observable<String> onQueryChanged() {
+    return searchView.onQueryChanged();
+  }
+
   @Override
   public void clear() {
     itemAdapter.clearItems();
@@ -181,10 +190,9 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen,
     itemAdapter.addItem(item);
   }
 
-  @NonNull
   @Override
-  public Observable<String> onQueryChanged() {
-    return searchView.onQueryChanged();
+  public void startAddRecipientScreen(@NonNull PhoneNumber phoneNumber) {
+    startActivity(AddRecipientActivity.getLaunchIntent(getContext(), phoneNumber));
   }
 
   @Nullable
@@ -198,11 +206,6 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen,
 
   @Override
   public void onClick(int position) {
-    final Item item = itemAdapter.getItem(position);
-    if (item instanceof ContactRecipientItem) {
-      // TODO: Start transfer or payment process.
-    } else if (item instanceof ActionItem) {
-      // TODO: Start transfer or add process.
-    }
+    presenter.onItemClicked(itemAdapter.getItem(position));
   }
 }

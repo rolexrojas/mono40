@@ -1,6 +1,5 @@
 package com.gbh.movil.data.repo;
 
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -29,10 +28,15 @@ class InMemoryRecipientRepo implements RecipientRepo {
 
   InMemoryRecipientRepo() {
     try {
-      recipients.add(new ContactRecipient(new Contact("Luis Ruiz", new PhoneNumber("8092817626"),
-        Uri.EMPTY)));
-      recipients.add(new ContactRecipient(new Contact("Hector Vasquez",
-        new PhoneNumber("8098829887"), Uri.EMPTY)));
+      Contact contact;
+      ContactRecipient contactRecipient;
+      contact = new Contact(new PhoneNumber("8092817626"));
+      contactRecipient = new ContactRecipient(contact);
+      recipients.add(contactRecipient);
+      contact = new Contact(new PhoneNumber("8098829887"));
+      contact.setName("Hector Vasquez");
+      contactRecipient = new ContactRecipient(contact);
+      recipients.add(contactRecipient);
     } catch (NumberParseException exception) {
       // Ignored.
     }

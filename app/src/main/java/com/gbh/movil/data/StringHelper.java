@@ -74,12 +74,6 @@ public final class StringHelper {
   }
 
   @NonNull
-  public final String add(@NonNull PhoneNumber phoneNumber) {
-    return String.format(Locale.getDefault(),
-      getString(R.string.payments_action_phone_number_add), phoneNumber);
-  }
-
-  @NonNull
   public final String transactionWith(@NonNull PhoneNumber phoneNumber) {
     return String.format(Locale.getDefault(),
       getString(R.string.payments_action_phone_number_transaction), phoneNumber);
@@ -98,5 +92,10 @@ public final class StringHelper {
   @NonNull
   public final String yourAccountHaveBeenRemoved() {
     return String.format(getString(R.string.your_account_have_been_removed), appName());
+  }
+
+  @NonNull
+  public final String add(@NonNull PhoneNumber phoneNumber) {
+    return String.format(getString(R.string.payments_action_phone_number_add), phoneNumber);
   }
 }

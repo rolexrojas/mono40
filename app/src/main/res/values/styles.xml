@@ -43,6 +43,7 @@
   </style>
   <style name="List.Vertical"/>
   <style name="ListItem">
+    <item name="android:background">?attr/selectableItemBackground</item>
     <item name="android:layout_width">match_parent</item>
     <item name="android:paddingEnd">@dimen/list.item.inset.horizontal</item>
     <item name="android:paddingStart">@dimen/list.item.inset.horizontal</item>
@@ -340,10 +341,5 @@
   <style
     name="ContactPhoneNumber"
     parent="BaseContactPhoneNumber"/>
-  <style
-    name="ContactListItem"
-    parent="ListItem.Normal">
-    <item name="android:background">?attr/selectableItemBackground</item>
-  </style>
   <!-- [END] Contact styles -->
 </resources>

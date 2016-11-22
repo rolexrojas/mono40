@@ -27,6 +27,9 @@
       android:name=".ui.main.MainActivity"
       android:screenOrientation="portrait"/>
     <activity
+      android:name=".ui.main.payments.recipients.AddRecipientActivity"
+      android:screenOrientation="portrait"/>
+    <activity
       android:name=".ui.main.products.transactions.RecentTransactionsActivity"
       android:screenOrientation="portrait"/>
   </application>

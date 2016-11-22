@@ -9,12 +9,14 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 
+import java.io.Serializable;
+
 /**
  * Phone number representation.
  *
  * @author hecvasro
  */
-public class PhoneNumber implements Matchable {
+public class PhoneNumber implements Serializable, Matchable {
   /**
    * TODO
    */
@@ -87,6 +89,6 @@ public class PhoneNumber implements Matchable {
 
   @Override
   public boolean matches(@Nullable String query) {
-    return Utils.isNull(query) || StringUtils.matches(content, query);
+    return StringUtils.matches(content, query);
   }
 }

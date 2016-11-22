@@ -1,6 +1,9 @@
 package com.gbh.movil.domain.util;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.gbh.movil.Utils;
 
 /**
  * TODO
@@ -19,7 +22,7 @@ public final class StringUtils {
    *
    * @return TODO
    */
-  public static String sanitize(@NonNull String string) {
+  private static String sanitize(@NonNull String string) {
     return string.toUpperCase().replaceAll("[^0-9A-z]", "");
   }
 
@@ -33,7 +36,7 @@ public final class StringUtils {
    *
    * @return TODO
    */
-  public static boolean matches(@NonNull String a, @NonNull String b) {
-    return sanitize(a).contains(sanitize(b));
+  public static boolean matches(@Nullable String a, @Nullable String b) {
+    return Utils.isNotNull(a) && Utils.isNotNull(b) && sanitize(a).contains(sanitize(b));
   }
 }

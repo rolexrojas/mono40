@@ -134,4 +134,25 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
     RxUtils.unsubscribe(searchSubscription);
     RxUtils.unsubscribe(querySubscription);
   }
+
+  /**
+   * TODO
+   *
+   * @param item
+   *   TODO
+   */
+  void onItemClicked(@NonNull Item item) {
+    if (item instanceof ContactRecipientItem) {
+      // TODO: Start transfer or payment process.
+    } else if (item instanceof ActionItem) {
+      switch (((ActionItem) item).getType()) {
+        case ActionType.ADD_PHONE_NUMBER:
+          screen.startAddRecipientScreen(((PhoneNumberActionItem) item).getPhoneNumber());
+          break;
+        case ActionType.TRANSACTION_WITH_PHONE_NUMBER:
+          // TODO
+          break;
+      }
+    }
+  }
 }

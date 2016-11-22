@@ -7,49 +7,36 @@ import android.support.annotation.Nullable;
 import com.gbh.movil.Utils;
 import com.gbh.movil.domain.util.StringUtils;
 
+import java.io.Serializable;
+
 /**
  * Contact representation.
  *
  * @author hecvasro
  */
-public class Contact implements Matchable {
-  /**
-   * Contact's name.
-   */
-  private final String name;
+public class Contact implements Serializable, Matchable {
   /**
    * Contact's phone number.
    */
   private final PhoneNumber phoneNumber;
+
+  /**
+   * Contact's name.
+   */
+  private String name;
   /**
    * Contact's picture {@link Uri}.
    */
-  private final Uri pictureUri;
+  private Uri pictureUri;
 
   /**
    * Constructs a new contact.
    *
-   * @param name
-   *   Contact's name.
    * @param phoneNumber
    *   Contact's {@link PhoneNumber phone number}.
-   * @param pictureUri
-   *   Contact's picture {@link Uri}.
    */
-  public Contact(@NonNull String name, @NonNull PhoneNumber phoneNumber, @NonNull Uri pictureUri) {
-    this.name = name;
+  public Contact(@NonNull PhoneNumber phoneNumber) {
     this.phoneNumber = phoneNumber;
-    this.pictureUri = pictureUri;
-  }
-
-  /**
-   * Gets the name of the contact.
-   *
-   * @return Contact's name.
-   */
-  @NonNull
-  public final String getName() {
-    return name;
   }
 
   /**
@@ -63,13 +50,43 @@ public class Contact implements Matchable {
   }
 
   /**
-   * Gets the picture {@link Uri} of the contact.
+   * Gets the name of the contact.
    *
-   * @return Contact's picture {@link Uri}.
+   * @return Contact's name.
    */
-  @NonNull
-  public final Uri getPictureUri() {
+  @Nullable
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * Sets the name of the contact.
+   *
+   * @param name
+   *   Contact's name.
+   */
+  public void setName(@Nullable String name) {
+    this.name = name;
+  }
+
+  /**
+   * Gets the picture {@link Uri uri} of the contact.
+   *
+   * @return Contact's picture {@link Uri uri}.
+   */
+  @Nullable
+  public Uri getPictureUri() {
     return pictureUri;
+  }
+
+  /**
+   * Sets the picture {@link Uri uri} of the contact.
+   *
+   * @param pictureUri
+   *   Contact's picture {@link Uri uri}.
+   */
+  public void setPictureUri(@Nullable Uri pictureUri) {
+    this.pictureUri = pictureUri;
   }
 
   @Override
@@ -85,12 +102,12 @@ public class Contact implements Matchable {
 
   @Override
   public String toString() {
-    return Contact.class.getSimpleName() + ":{name='" + name + "',phoneNumber='" + phoneNumber
+    return Contact.class.getSimpleName() + ":{phoneNumber='" + phoneNumber + "',name='" + name
       + "',pictureUri='" + pictureUri + "'}";
   }
 
   @Override
   public boolean matches(@Nullable String query) {
-    return Utils.isNull(query) || StringUtils.matches(name, query) || phoneNumber.matches(query);
+    return phoneNumber.matches(query) || StringUtils.matches(name, query);
   }
 }
