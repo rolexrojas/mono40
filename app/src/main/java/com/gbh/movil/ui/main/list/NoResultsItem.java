@@ -9,7 +9,7 @@ import com.gbh.movil.Utils;
  *
  * @author hecvasro
  */
-public class NoResultsItem implements Item {
+public class NoResultsItem {
   /**
    * TODO
    */

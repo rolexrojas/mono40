@@ -5,8 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.rx.RxUtils;
-import com.gbh.movil.domain.Contact;
-import com.gbh.movil.domain.ContactRecipient;
+import com.gbh.movil.domain.PhoneNumberRecipient;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.RecipientRepo;
 import com.google.i18n.phonenumbers.NumberParseException;
@@ -28,15 +27,11 @@ class InMemoryRecipientRepo implements RecipientRepo {
 
   InMemoryRecipientRepo() {
     try {
-      Contact contact;
-      ContactRecipient contactRecipient;
-      contact = new Contact(new PhoneNumber("8092817626"));
-      contactRecipient = new ContactRecipient(contact);
-      recipients.add(contactRecipient);
-      contact = new Contact(new PhoneNumber("8098829887"));
-      contact.setName("Hector Vasquez");
-      contactRecipient = new ContactRecipient(contact);
-      recipients.add(contactRecipient);
+      Recipient recipient;
+      recipient = new PhoneNumberRecipient(new PhoneNumber("8092817626"));
+      recipients.add(recipient);
+      recipient = new PhoneNumberRecipient(new PhoneNumber("8098829887"), "Hector Vasquez");
+      recipients.add(recipient);
     } catch (NumberParseException exception) {
       // Ignored.
     }

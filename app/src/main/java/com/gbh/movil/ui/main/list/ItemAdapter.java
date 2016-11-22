@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author hecvasro
  */
-public class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
+public class ItemAdapter extends RecyclerView.Adapter<Holder> {
   /**
    * TODO
    */
@@ -27,7 +27,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
   /**
    * TODO
    */
-  private final List<Item> items = new ArrayList<>();
+  private final List<Object> items = new ArrayList<>();
 
   /**
    * TODO
@@ -62,7 +62,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
    *
    * @return TODO
    */
-  public boolean containsItem(@NonNull Item item) {
+  public boolean containsItem(@NonNull Object item) {
     return items.contains(item);
   }
 
@@ -74,7 +74,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
    *
    * @return TODO
    */
-  public int indexOf(@NonNull Item item) {
+  public int indexOf(@NonNull Object item) {
     return items.indexOf(item);
   }
 
@@ -84,7 +84,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
    * @param item
    *   TODO
    */
-  public void addItem(@NonNull Item item) {
+  public void addItem(@NonNull Object item) {
     if (!containsItem(item)) {
       items.add(item);
       notifyItemInserted(getItemCount());
@@ -99,7 +99,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
    * @param item
    *   TODO
    */
-  public void setItem(int position, @NonNull Item item) {
+  public void setItem(int position, @NonNull Object item) {
     items.set(position, item);
     notifyItemChanged(position);
   }
@@ -113,7 +113,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
    * @return TODO
    */
   @NonNull
-  public Item getItem(int position) {
+  public Object getItem(int position) {
     return items.get(position);
   }
 
@@ -123,8 +123,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
   }
 
   @Override
-  public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    final ItemHolderCreator<? extends ItemHolder> creator
+  public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+    final HolderCreator<? extends Holder> creator
       = holderCreatorFactory.getCreator(viewType);
     if (Utils.isNull(creator)) {
       throw new NullPointerException("Creator for '" + viewType + "' is missing");
@@ -135,13 +135,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
 
   @Override
   @SuppressWarnings("unchecked")
-  public void onBindViewHolder(ItemHolder holder, int position) {
-    final Item item = getItem(position);
-    final Class<? extends Item> itemType = item.getClass();
-    final Class<? extends ItemHolder> holderType = holder.getClass();
-    final ItemHolderBinder binder = binderFactory.getBinder(itemType, holderType);
-    if (Utils.isNotNull(binder)) {
-      binder.bind(item, holder);
+  public void onBindViewHolder(Holder holder, int position) {
+    final Object item = getItem(position);
+    final Class<?> itemType = item.getClass();
+    final Class<? extends Holder> holderType = holder.getClass();
+    final HolderBinder holderBinder = binderFactory.getBinder(itemType, holderType);
+    if (Utils.isNotNull(holderBinder)) {
+      holderBinder.bind(item, holder);
     }
   }
 

@@ -4,33 +4,54 @@ import android.support.annotation.NonNull;
 
 import com.gbh.movil.Utils;
 import com.gbh.movil.domain.Recipient;
-import com.gbh.movil.ui.main.list.Item;
 
 /**
  * TODO
  *
  * @author hecvasro
  */
-abstract class RecipientItem<T extends Recipient> implements Item {
+abstract class RecipientItem<T extends Recipient> {
+  /**
+   * TODO
+   */
   private final T recipient;
 
   private boolean selected = false;
 
+  /**
+   * TODO
+   *
+   * @param recipient
+   *   TODO
+   */
   RecipientItem(@NonNull T recipient) {
     this.recipient = recipient;
   }
 
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
   @NonNull
   final T getRecipient() {
     return recipient;
   }
 
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
   final boolean isSelected() {
     return selected;
   }
 
-  void setSelected(boolean selected) {
-    this.selected = selected;
+  /**
+   * TODO
+   */
+  final boolean toggleSelection() {
+    return (selected = !selected);
   }
 
   @Override

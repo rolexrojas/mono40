@@ -17,11 +17,7 @@ public final class ItemHolderBinderFactory {
   /**
    * TODO
    */
-  private final Map<
-    Class<? extends Item>,
-    Map<
-      Class<? extends ItemHolder>,
-      ItemHolderBinder<? extends Item, ? extends ItemHolder>>> binderMap;
+  private final Map<Class<?>, Map<Class<? extends Holder>, HolderBinder<?, ? extends Holder>>> binderMap;
 
   /**
    * TODO
@@ -29,11 +25,7 @@ public final class ItemHolderBinderFactory {
    * @param binderMap
    *   TODO
    */
-  private ItemHolderBinderFactory(@NonNull Map<
-    Class<? extends Item>,
-    Map<
-      Class<? extends ItemHolder>,
-      ItemHolderBinder<? extends Item, ? extends ItemHolder>>> binderMap) {
+  private ItemHolderBinderFactory(@NonNull Map<Class<?>, Map<Class<? extends Holder>, HolderBinder<?, ? extends Holder>>> binderMap) {
     this.binderMap = binderMap;
   }
 
@@ -48,17 +40,13 @@ public final class ItemHolderBinderFactory {
    * @return TODO
    */
   @Nullable
-  private static ItemHolderBinder<? extends Item, ? extends ItemHolder> getBinder(
-    @NonNull Class<? extends ItemHolder> holderType,
-    @NonNull Map<
-      Class<? extends ItemHolder>,
-      ItemHolderBinder<? extends Item, ? extends ItemHolder>> binderSubMap) {
+  private static HolderBinder<?, ? extends Holder> getBinder(@NonNull Class<? extends Holder> holderType, @NonNull Map<Class<? extends Holder>, HolderBinder<?, ? extends Holder>> binderSubMap) {
     if (binderSubMap.containsKey(holderType)) {
       return binderSubMap.get(holderType);
     } else {
       final Class<?> holderSuperType = holderType.getSuperclass();
-      if (Utils.isNotNull(holderSuperType) && ItemHolder.class.isAssignableFrom(holderSuperType)) {
-        return getBinder(holderSuperType.asSubclass(ItemHolder.class), binderSubMap);
+      if (Utils.isNotNull(holderSuperType) && Holder.class.isAssignableFrom(holderSuperType)) {
+        return getBinder(holderSuperType.asSubclass(Holder.class), binderSubMap);
       } else {
         return null;
       }
@@ -76,14 +64,14 @@ public final class ItemHolderBinderFactory {
    * @return TODO
    */
   @Nullable
-  final ItemHolderBinder<? extends Item, ? extends ItemHolder> getBinder(
-    @NonNull Class<? extends Item> itemType, @NonNull Class<? extends ItemHolder> holderType) {
+  final HolderBinder<?, ? extends Holder> getBinder(
+    @NonNull Class<?> itemType, @NonNull Class<? extends Holder> holderType) {
     if (binderMap.containsKey(itemType)) {
       return getBinder(holderType, binderMap.get(itemType));
     } else {
       final Class<?> itemSuperType = itemType.getSuperclass();
-      if (Utils.isNotNull(itemSuperType) && Item.class.isAssignableFrom(itemSuperType)) {
-        return getBinder(itemSuperType.asSubclass(Item.class), holderType);
+      if (Utils.isNotNull(itemSuperType)) {
+        return getBinder(itemSuperType, holderType);
       } else {
         return null;
       }
@@ -97,11 +85,7 @@ public final class ItemHolderBinderFactory {
     /**
      * TODO
      */
-    private final Map<
-      Class<? extends Item>,
-      Map<
-        Class<? extends ItemHolder>,
-        ItemHolderBinder<? extends Item, ? extends ItemHolder>>> binderMap;
+    private final Map<Class<?>, Map<Class<? extends Holder>, HolderBinder<?, ? extends Holder>>> binderMap;
 
     /**
      * TODO
@@ -117,25 +101,21 @@ public final class ItemHolderBinderFactory {
      *   TODO
      * @param holderType
      *   TODO
-     * @param binder
+     * @param holderBinder
      *   TODO
      *
      * @return TODO
      */
     @NonNull
-    public final Builder addBinder(@NonNull Class<? extends Item> itemType,
-      @NonNull Class<? extends ItemHolder> holderType,
-      @NonNull ItemHolderBinder<? extends Item, ? extends ItemHolder> binder) {
-      final Map<
-        Class<? extends ItemHolder>,
-        ItemHolderBinder<? extends Item, ? extends ItemHolder>> map;
+    public final Builder addBinder(@NonNull Class<?> itemType, @NonNull Class<? extends Holder> holderType, @NonNull HolderBinder<?, ? extends Holder> holderBinder) {
+      final Map<Class<? extends Holder>, HolderBinder<?, ? extends Holder>> map;
       if (binderMap.containsKey(itemType)) {
         map = binderMap.get(itemType);
       } else {
         map = new HashMap<>();
         binderMap.put(itemType, map);
       }
-      map.put(holderType, binder);
+      map.put(holderType, holderBinder);
       return this;
     }
 

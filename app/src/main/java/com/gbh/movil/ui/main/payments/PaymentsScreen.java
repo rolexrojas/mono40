@@ -3,7 +3,6 @@ package com.gbh.movil.ui.main.payments;
 import android.support.annotation.NonNull;
 
 import com.gbh.movil.domain.PhoneNumber;
-import com.gbh.movil.ui.main.list.Item;
 import com.gbh.movil.ui.Refreshable;
 import com.gbh.movil.ui.Screen;
 
@@ -43,7 +42,7 @@ interface PaymentsScreen extends Screen, Refreshable {
    * @param item
    *   TODO
    */
-  void add(@NonNull Item item);
+  void add(@NonNull Object item);
 
   /**
    * TODO

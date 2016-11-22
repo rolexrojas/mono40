@@ -19,12 +19,11 @@ public final class ItemHolderCreatorFactory {
   /**
    * TODO
    */
-  private final Map<Class<? extends Item>,
-    ItemHolderCreator<? extends ItemHolder>> creators;
+  private final Map<Class<?>, HolderCreator<? extends Holder>> creators;
   /**
    * TODO
    */
-  private final List<Class<? extends Item>> identifiers;
+  private final List<Class<?>> identifiers;
 
   /**
    * TODO
@@ -32,8 +31,7 @@ public final class ItemHolderCreatorFactory {
    * @param creators
    *   TODO
    */
-  private ItemHolderCreatorFactory(@NonNull Map<Class<? extends Item>,
-    ItemHolderCreator<? extends ItemHolder>> creators) {
+  private ItemHolderCreatorFactory(@NonNull Map<Class<?>, HolderCreator<? extends Holder>> creators) {
     this.creators = creators;
     this.identifiers = new ArrayList<>();
     this.identifiers.addAll(this.creators.keySet());
@@ -47,14 +45,14 @@ public final class ItemHolderCreatorFactory {
    *
    * @return TODO
    */
-  final int getIdentifier(@NonNull Class<? extends Item> type) {
+  final int getIdentifier(@NonNull Class<?> type) {
     final int identifier = identifiers.indexOf(type);
     if (identifier >= 0) {
       return identifier;
     } else {
       final Class<?> superType = type.getSuperclass();
-      if (Utils.isNotNull(superType) && Item.class.isAssignableFrom(superType)) {
-        return getIdentifier(superType.asSubclass(Item.class));
+      if (Utils.isNotNull(superType)) {
+        return getIdentifier(superType);
       } else {
         return -1;
       }
@@ -70,7 +68,7 @@ public final class ItemHolderCreatorFactory {
    * @return TODO
    */
   @Nullable
-  final ItemHolderCreator<? extends ItemHolder> getCreator(int identifier) {
+  final HolderCreator<? extends Holder> getCreator(int identifier) {
     if (identifier >= 0 && identifier < identifiers.size()) {
       return creators.get(identifiers.get(identifier));
     } else {
@@ -85,8 +83,7 @@ public final class ItemHolderCreatorFactory {
     /**
      * TODO
      */
-    private final Map<Class<? extends Item>,
-      ItemHolderCreator<? extends ItemHolder>> creators;
+    private final Map<Class<?>, HolderCreator<? extends Holder>> creators;
 
     /**
      * TODO
@@ -106,8 +103,7 @@ public final class ItemHolderCreatorFactory {
      * @return TODO
      */
     @NonNull
-    public final Builder addCreator(@NonNull Class<? extends Item> type,
-      @NonNull ItemHolderCreator<? extends ItemHolder> creator) {
+    public final Builder addCreator(@NonNull Class<?> type, @NonNull HolderCreator<? extends Holder> creator) {
       creators.put(type, creator);
       return this;
     }

@@ -18,19 +18,19 @@ import com.gbh.movil.R;
 import com.gbh.movil.Utils;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.domain.PhoneNumber;
-import com.gbh.movil.ui.main.list.Item;
+import com.gbh.movil.ui.main.MainComponent;
 import com.gbh.movil.ui.main.list.ItemAdapter;
-import com.gbh.movil.ui.main.list.ItemHolder;
+import com.gbh.movil.ui.main.list.Holder;
 import com.gbh.movil.ui.main.list.ItemHolderBinderFactory;
 import com.gbh.movil.ui.main.list.ItemHolderCreatorFactory;
 import com.gbh.movil.ui.main.list.NoResultsItem;
-import com.gbh.movil.ui.main.list.NoResultsItemHolder;
-import com.gbh.movil.ui.main.list.NoResultsItemHolderBinder;
-import com.gbh.movil.ui.main.list.NoResultsItemHolderCreator;
+import com.gbh.movil.ui.main.list.NoResultsHolder;
+import com.gbh.movil.ui.main.list.NoResultsHolderBinder;
+import com.gbh.movil.ui.main.list.NoResultsHolderCreator;
 import com.gbh.movil.ui.main.payments.recipients.AddRecipientActivity;
 import com.gbh.movil.ui.view.widget.RefreshIndicator;
 import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
-import com.gbh.movil.ui.main.SubFragment;
+import com.gbh.movil.ui.SubFragment;
 import com.gbh.movil.ui.view.widget.SearchView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
@@ -47,8 +47,8 @@ import rx.Observable;
  *
  * @author hecvasro
  */
-public class PaymentsFragment extends SubFragment implements PaymentsScreen,
-  ItemHolder.OnClickListener {
+public class PaymentsFragment extends SubFragment<MainComponent> implements PaymentsScreen,
+  Holder.OnClickListener {
   private Unbinder unbinder;
   private RefreshIndicator refreshIndicator;
   private ItemAdapter itemAdapter;
@@ -101,21 +101,20 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen,
     unbinder = ButterKnife.bind(this, view);
     // Prepares the actions and recipients list.
     final ItemHolderCreatorFactory holderCreatorFactory = new ItemHolderCreatorFactory.Builder()
-      .addCreator(ContactRecipientItem.class, new ContactRecipientItemHolderCreator(this))
-      .addCreator(ActionItem.class, new ActionItemHolderCreator(this))
-      .addCreator(NoResultsItem.class, new NoResultsItemHolderCreator())
+      .addCreator(PhoneNumberRecipientItem.class, new RecipientHolderCreator(this))
+      .addCreator(Action.class, new ActionHolderCreator(this))
+      .addCreator(NoResultsItem.class, new NoResultsHolderCreator())
       .build();
+    final Context context = getContext();
     final ItemHolderBinderFactory binderFactory = new ItemHolderBinderFactory.Builder()
-      .addBinder(ContactRecipientItem.class, ContactRecipientItemHolder.class,
-        new ContactRecipientItemHolderBinder())
-      .addBinder(ActionItem.class, ActionItemHolder.class, new ActionItemHolderBinder(stringHelper))
-      .addBinder(NoResultsItem.class, NoResultsItemHolder.class,
-        new NoResultsItemHolderBinder(stringHelper))
+      .addBinder(PhoneNumberRecipientItem.class, RecipientHolder.class,
+        new PhoneNumberRecipientItemHolderBinder())
+      .addBinder(Action.class, ActionHolder.class, new ActionHolderBinder(stringHelper))
+      .addBinder(NoResultsItem.class, NoResultsHolder.class, new NoResultsHolderBinder(context))
       .build();
     itemAdapter = new ItemAdapter(holderCreatorFactory, binderFactory);
     recyclerView.setAdapter(itemAdapter);
     recyclerView.setHasFixedSize(true);
-    final Context context = getContext();
     recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL,
       false));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
@@ -186,7 +185,7 @@ public class PaymentsFragment extends SubFragment implements PaymentsScreen,
   }
 
   @Override
-  public void add(@NonNull Item item) {
+  public void add(@NonNull Object item) {
     itemAdapter.addItem(item);
   }
 

@@ -7,7 +7,6 @@ import com.gbh.movil.rx.RxUtils;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.RecipientManager;
-import com.gbh.movil.ui.main.list.Item;
 import com.gbh.movil.ui.Presenter;
 import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.main.list.NoResultsItem;
@@ -60,24 +59,24 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
         public void call(final String query) {
           Timber.d(query);
           RxUtils.unsubscribe(searchSubscription);
-          final Observable<Item> recipientsObservable = recipientManager.getAll(query)
+          final Observable<Object> recipientsObservable = recipientManager.getAll(query)
             .compose(RxUtils.<Recipient>fromCollection())
-            .map(new Func1<Recipient, Item>() {
+            .map(new Func1<Recipient, Object>() {
               @Override
-              public Item call(Recipient recipient) {
+              public Object call(Recipient recipient) {
                 return RecipientItemCreator.create(recipient);
               }
             });
-          final Observable<Item> actionsObservable = Observable
-            .defer(new Func0<Observable<Item>>() {
+          final Observable<Object> actionsObservable = Observable
+            .defer(new Func0<Observable<Object>>() {
               @Override
-              public Observable<Item> call() {
+              public Observable<Object> call() {
                 if (PhoneNumber.isValid(query)) {
                   try {
                     final PhoneNumber phoneNumber = new PhoneNumber(query);
-                    return Observable.just(new TransactionWithPhoneNumberActionItem(phoneNumber),
-                      new AddPhoneNumberActionItem(phoneNumber))
-                      .cast(Item.class);
+                    return Observable.just(new TransactionWithPhoneNumberAction(phoneNumber),
+                      new AddPhoneNumberAction(phoneNumber))
+                      .cast(Object.class);
                   } catch (NumberParseException exception) {
                     return Observable.error(exception);
                   }
@@ -104,9 +103,9 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
                 UiUtils.hideRefreshIndicator(screen);
               }
             })
-            .subscribe(new Action1<Item>() {
+            .subscribe(new Action1<Object>() {
               @Override
-              public void call(Item item) {
+              public void call(Object item) {
                 Timber.d(item.toString());
                 screen.add(item);
               }
@@ -141,13 +140,13 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
    * @param item
    *   TODO
    */
-  void onItemClicked(@NonNull Item item) {
-    if (item instanceof ContactRecipientItem) {
+  void onItemClicked(@NonNull Object item) {
+    if (item instanceof PhoneNumberRecipientItem) {
       // TODO: Start transfer or payment process.
-    } else if (item instanceof ActionItem) {
-      switch (((ActionItem) item).getType()) {
+    } else if (item instanceof Action) {
+      switch (((Action) item).getType()) {
         case ActionType.ADD_PHONE_NUMBER:
-          screen.startAddRecipientScreen(((PhoneNumberActionItem) item).getPhoneNumber());
+          screen.startAddRecipientScreen(((PhoneNumberAction) item).getPhoneNumber());
           break;
         case ActionType.TRANSACTION_WITH_PHONE_NUMBER:
           // TODO

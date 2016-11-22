@@ -1,4 +1,23 @@
 <resources>
+  <string name="action.add">Agregar</string>
+  <string name="action.remove">Remover</string>
+  <string name="add_recipient.search.hint">Seleccione o busque el recipiente</string>
+  <string name="add_recipient.title">Agregar recipiente</string>
+  <string name="contacts">Contactos</string>
+  <string name="font.gotham_rounded.bold">fonts/GothamRounded-Bold.otf</string>
+  <string name="font.gotham_rounded.book">fonts/GothamRounded-Book.otf</string>
+  <string name="font.gotham_rounded.light">fonts/GothamRounded-Light.otf</string>
+  <string name="font.gotham_rounded.medium">fonts/GothamRounded-Medium.otf</string>
+  <string name="list.no_results">No hay resultados para \'%1$s\'</string>
+  <string name="payments.action.phone_number.add">Agregar \'%1$s\'</string>
+  <string name="payments.action.phone_number.transaction">Transacción con \'%1$s\'</string>
+  <string name="payments.menu.option.add_recipient">Agregar recipiente</string>
+  <string name="payments.menu.option.remove_recipient">Remover recipiente</string>
+  <string name="payments.title">Pagar</string>
+  <string name="recipient">Recipiente</string>
+  <string name="recipient.picture">Recipient\'s picture</string>
+  <string name="contact.picture">Contact\'s picture</string>
+
   <string name="about">Acerca de</string>
   <string name="accounts">Cuentas</string>
   <string name="add_another_account">Agregar otra cuenta</string>
@@ -31,34 +50,4 @@
   <string name="see_bank_branches">Ver sucursales bancarias</string>
   <string name="your_account_have_been_added">Tu cuenta se agregó exitosamente al mundo %1$s. Ya puedes usarla como cuenta de fondos.</string>
   <string name="your_account_have_been_removed">Tu cuenta se removió exitosamente del mundo %1$s. Ya no puedes usarla como cuenta de fondos.</string>
-
-  <!-- [START] Font strings -->
-  <string name="font.gotham_rounded.bold">fonts/GothamRounded-Bold.otf</string>
-  <string name="font.gotham_rounded.book">fonts/GothamRounded-Book.otf</string>
-  <string name="font.gotham_rounded.light">fonts/GothamRounded-Light.otf</string>
-  <string name="font.gotham_rounded.medium">fonts/GothamRounded-Medium.otf</string>
-  <!-- [END] Font strings -->
-  <!-- [START] General strings -->
-  <string name="recipient">Recipiente</string>
-  <!-- [END] General strings -->
-  <!-- [START] Action strings -->
-  <string name="action.add">Agregar</string>
-  <string name="action.remove">Remover</string>
-  <!-- [END] Action strings -->
-  <!-- [START] List strings -->
-  <string name="list.no_results">No hay resultados para \'%1$s\'</string>
-  <!-- [END] List strings -->
-  <!-- [START] Contact strings -->
-  <string name="contact.picture.description">Contact\'s picture</string>
-  <!-- [END] Contact strings -->
-  <!-- [START] Payments screen strings -->
-  <string name="payments.title">Pagar</string>
-  <string name="payments.action.phone_number.add">Agregar \'%1$s\'</string>
-  <string name="payments.action.phone_number.transaction">Transacción con \'%1$s\'</string>
-  <string name="payments.menu.option.add_recipient">Agregar recipiente</string>
-  <string name="payments.menu.option.remove_recipient">Remover recipiente</string>
-  <!-- [END] Payments strings -->
-  <!-- [START] Add recipient screen strings -->
-  <string name="add_recipient.title">Agregar recipiente</string>
-  <!-- [END] Add recipient screen strings -->
 </resources>

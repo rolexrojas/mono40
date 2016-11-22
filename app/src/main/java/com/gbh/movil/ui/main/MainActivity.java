@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -18,6 +17,7 @@ import com.gbh.movil.R;
 import com.gbh.movil.Utils;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.ui.BaseActivity;
+import com.gbh.movil.ui.SubFragment;
 import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.main.products.ProductsFragment;
 import com.gbh.movil.ui.main.payments.PaymentsFragment;
@@ -54,24 +54,13 @@ public class MainActivity extends BaseActivity implements MainScreen {
     return new Intent(context, MainActivity.class);
   }
 
-  private void replaceFragment(@NonNull Fragment fragment, boolean addToBackStack) {
-    final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
-      .replace(R.id.fragment_container, fragment);
-    if (addToBackStack) {
-      transaction.addToBackStack(null);
-    }
-    transaction.commit();
-  }
-
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // Injects all the annotated dependencies.
-    if (Utils.isNull(component)) {
-      component = DaggerMainComponent.builder()
-        .appComponent(((App) getApplication()).getComponent())
-        .build();
-    }
+    component = DaggerMainComponent.builder()
+      .appComponent(((App) getApplication()).getComponent())
+      .build();
     component.inject(this);
     // Sets the content layout identifier.
     setContentView(R.layout.activity_main);
@@ -96,7 +85,9 @@ public class MainActivity extends BaseActivity implements MainScreen {
       }
     });
     // Sets the startup screen.
-    replaceFragment(PaymentsFragment.newInstance(), false);
+    getSupportFragmentManager().beginTransaction()
+      .replace(R.id.fragment_container, PaymentsFragment.newInstance())
+      .commit();
     // Attaches the screen to the presenter.
     presenter.attachScreen(this);
     // Creates the presenter.
@@ -183,7 +174,7 @@ public class MainActivity extends BaseActivity implements MainScreen {
    * {@inheritDoc}
    */
   @Override
-  public void setSubScreen(@NonNull SubFragment subFragment) {
+  public void setSubScreen(@NonNull SubFragment<MainComponent> subFragment) {
     final FragmentManager manager = getSupportFragmentManager();
     final Fragment currentFragment = manager.findFragmentById(R.id.fragment_container);
     if (Utils.isNull(currentFragment) || currentFragment.getClass() != subFragment.getClass()) {

@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.gbh.movil.Utils;
-import com.gbh.movil.ui.main.list.Item;
+import com.gbh.movil.ui.main.MainComponent;
 import com.gbh.movil.ui.main.list.ItemAdapter;
 import com.gbh.movil.ui.main.list.ItemHolderBinderFactory;
 import com.gbh.movil.ui.main.list.ItemHolderCreatorFactory;
@@ -27,7 +27,7 @@ import com.gbh.movil.R;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Balance;
-import com.gbh.movil.ui.main.SubFragment;
+import com.gbh.movil.ui.SubFragment;
 import com.gbh.movil.ui.main.products.transactions.RecentTransactionsActivity;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
@@ -44,9 +44,9 @@ import timber.log.Timber;
  *
  * @author hecvasro
  */
-public class ProductsFragment extends SubFragment implements ProductsScreen,
-  ProductItemHolder.OnQueryActionButtonClickedListener,
-  ShowRecentTransactionsItemHolder.OnShowRecentTransactionsButtonClickedListener {
+public class ProductsFragment extends SubFragment<MainComponent> implements ProductsScreen,
+  ProductHolder.OnQueryActionButtonClickedListener,
+  ShowRecentTransactionsHolder.OnShowRecentTransactionsButtonClickedListener {
   private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
 
   private Unbinder unbinder;
@@ -131,11 +131,11 @@ public class ProductsFragment extends SubFragment implements ProductsScreen,
     // Prepares the recycler view.
     final ItemHolderCreatorFactory holderCreatorFactory = new ItemHolderCreatorFactory.Builder()
       .addCreator(ShowRecentTransactionsItem.class,
-        new ShowRecentTransactionsItemHolderCreator(this))
-      .addCreator(ProductItem.class, new ProductItemHolderCreator(this))
+        new ShowRecentTransactionsHolderCreator(this))
+      .addCreator(ProductItem.class, new ProductHolderCreator(this))
       .build();
     final ItemHolderBinderFactory holderBinderFactory = new ItemHolderBinderFactory.Builder()
-      .addBinder(ProductItem.class, ProductItemHolder.class, new ProductItemHolderBinder())
+      .addBinder(ProductItem.class, ProductHolder.class, new ProductHolderBinder())
       .build();
     itemAdapter = new ItemAdapter(holderCreatorFactory, holderBinderFactory);
     recyclerView.setAdapter(itemAdapter);
@@ -206,7 +206,7 @@ public class ProductsFragment extends SubFragment implements ProductsScreen,
   }
 
   @Override
-  public void add(@NonNull Item item) {
+  public void add(@NonNull Object item) {
     itemAdapter.addItem(item);
   }
 
