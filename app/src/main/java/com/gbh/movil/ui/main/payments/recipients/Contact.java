@@ -1,10 +1,11 @@
-package com.gbh.movil.ui.main.payments.recipients.contacts;
+package com.gbh.movil.ui.main.payments.recipients;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.gbh.movil.Utils;
+import com.gbh.movil.data.UriUtils;
 import com.gbh.movil.domain.Matchable;
 import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.util.StringUtils;
@@ -14,30 +15,64 @@ import com.gbh.movil.domain.util.StringUtils;
  *
  * @author hecvasro
  */
-class Contact implements Matchable {
+public class Contact implements Matchable {
   /**
    * Contact's phone number.
    */
-  final PhoneNumber phoneNumber;
+  private final PhoneNumber phoneNumber;
   /**
    * Contact's name.
    */
-  final String name;
+  private final String name;
   /**
    * Contact's picture {@link Uri}.
    */
-  final Uri pictureUri;
+  private final Uri pictureUri;
 
   /**
    * Constructs a new contact.
    *
    * @param phoneNumber
    *   Contact's {@link PhoneNumber phone number}.
+   * @param name
+   *   Contact's name.
+   * @param pictureUri
+   *   Contact's picture {@link Uri uri}.
    */
-  Contact(@NonNull PhoneNumber phoneNumber, @NonNull String name, @Nullable Uri pictureUri) {
+  public Contact(@NonNull PhoneNumber phoneNumber, @NonNull String name, @Nullable Uri pictureUri) {
     this.phoneNumber = phoneNumber;
     this.name = name;
-    this.pictureUri = pictureUri;
+    this.pictureUri = UriUtils.getUriOrEmpty(pictureUri);
+  }
+
+  /**
+   * Gets the {@link PhoneNumber phone number} of the contact.
+   *
+   * @return Contact's {@link PhoneNumber phone number}.
+   */
+  @NonNull
+  public final PhoneNumber getPhoneNumber() {
+    return phoneNumber;
+  }
+
+  /**
+   * Gets the name of the contact.
+   *
+   * @return Contact's name.
+   */
+  @NonNull
+  public final String getName() {
+    return name;
+  }
+
+  /**
+   * Gets the picture {@link Uri uri} of the contact.
+   *
+   * @return Contact's picture {@link Uri uri}.
+   */
+  @NonNull
+  public final Uri getPictureUri() {
+    return pictureUri;
   }
 
   @Override

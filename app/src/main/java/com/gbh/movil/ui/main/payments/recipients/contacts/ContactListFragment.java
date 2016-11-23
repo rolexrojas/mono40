@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.gbh.movil.ui.main.list.HolderBinderFactory;
 import com.gbh.movil.ui.main.list.HolderCreatorFactory;
+import com.gbh.movil.ui.main.payments.recipients.Contact;
 import com.gbh.movil.ui.main.payments.recipients.RecipientCandidateListFragment;
 
 /**

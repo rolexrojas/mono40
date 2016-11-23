@@ -10,7 +10,7 @@ import android.support.annotation.Nullable;
 import com.gbh.movil.Utils;
 import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.rx.RxUtils;
-import com.gbh.movil.ui.main.payments.recipients.contacts.Contact;
+import com.gbh.movil.ui.main.payments.recipients.Contact;
 import com.google.i18n.phonenumbers.NumberParseException;
 
 import java.util.ArrayList;
@@ -19,7 +19,6 @@ import java.util.List;
 import rx.Observable;
 import rx.functions.Func0;
 import rx.functions.Func1;
-import timber.log.Timber;
 
 /**
  * TODO

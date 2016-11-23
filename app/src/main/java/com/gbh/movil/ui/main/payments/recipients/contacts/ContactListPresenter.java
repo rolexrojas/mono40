@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.rx.RxUtils;
+import com.gbh.movil.ui.main.payments.recipients.Contact;
 import com.gbh.movil.ui.main.payments.recipients.RecipientCandidateListPresenter;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
