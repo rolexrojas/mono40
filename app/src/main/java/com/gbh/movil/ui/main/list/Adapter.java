@@ -14,15 +14,15 @@ import java.util.List;
  *
  * @author hecvasro
  */
-public class ItemAdapter extends RecyclerView.Adapter<Holder> {
+public class Adapter extends RecyclerView.Adapter<Holder> {
   /**
    * TODO
    */
-  private final ItemHolderCreatorFactory holderCreatorFactory;
+  private final HolderCreatorFactory holderCreatorFactory;
   /**
    * TODO
    */
-  private final ItemHolderBinderFactory binderFactory;
+  private final HolderBinderFactory holderBinderFactory;
 
   /**
    * TODO
@@ -34,19 +34,19 @@ public class ItemAdapter extends RecyclerView.Adapter<Holder> {
    *
    * @param holderCreatorFactory
    *   TODO
-   * @param binderFactory
+   * @param holderBinderFactory
    *   TODO
    */
-  public ItemAdapter(@NonNull ItemHolderCreatorFactory holderCreatorFactory,
-    @NonNull ItemHolderBinderFactory binderFactory) {
+  public Adapter(@NonNull HolderCreatorFactory holderCreatorFactory,
+    @NonNull HolderBinderFactory holderBinderFactory) {
     this.holderCreatorFactory = holderCreatorFactory;
-    this.binderFactory = binderFactory;
+    this.holderBinderFactory = holderBinderFactory;
   }
 
   /**
    * TODO
    */
-  public void clearItems() {
+  public void clear() {
     final int count = getItemCount();
     if (count > 0) {
       items.clear();
@@ -62,7 +62,7 @@ public class ItemAdapter extends RecyclerView.Adapter<Holder> {
    *
    * @return TODO
    */
-  public boolean containsItem(@NonNull Object item) {
+  public boolean contains(@NonNull Object item) {
     return items.contains(item);
   }
 
@@ -84,8 +84,8 @@ public class ItemAdapter extends RecyclerView.Adapter<Holder> {
    * @param item
    *   TODO
    */
-  public void addItem(@NonNull Object item) {
-    if (!containsItem(item)) {
+  public void add(@NonNull Object item) {
+    if (!contains(item)) {
       items.add(item);
       notifyItemInserted(getItemCount());
     }
@@ -99,7 +99,7 @@ public class ItemAdapter extends RecyclerView.Adapter<Holder> {
    * @param item
    *   TODO
    */
-  public void setItem(int position, @NonNull Object item) {
+  public void set(int position, @NonNull Object item) {
     items.set(position, item);
     notifyItemChanged(position);
   }
@@ -113,13 +113,13 @@ public class ItemAdapter extends RecyclerView.Adapter<Holder> {
    * @return TODO
    */
   @NonNull
-  public Object getItem(int position) {
+  public Object get(int position) {
     return items.get(position);
   }
 
   @Override
   public int getItemViewType(int position) {
-    return holderCreatorFactory.getIdentifier(getItem(position).getClass());
+    return holderCreatorFactory.getIdentifier(get(position).getClass());
   }
 
   @Override
@@ -136,10 +136,10 @@ public class ItemAdapter extends RecyclerView.Adapter<Holder> {
   @Override
   @SuppressWarnings("unchecked")
   public void onBindViewHolder(Holder holder, int position) {
-    final Object item = getItem(position);
+    final Object item = get(position);
     final Class<?> itemType = item.getClass();
     final Class<? extends Holder> holderType = holder.getClass();
-    final HolderBinder holderBinder = binderFactory.getBinder(itemType, holderType);
+    final HolderBinder holderBinder = holderBinderFactory.getBinder(itemType, holderType);
     if (Utils.isNotNull(holderBinder)) {
       holderBinder.bind(item, holder);
     }

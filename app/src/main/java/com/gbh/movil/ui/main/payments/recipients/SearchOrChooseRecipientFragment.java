@@ -20,13 +20,15 @@ import com.gbh.movil.ui.view.widget.SearchView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import rx.Observable;
 
 /**
  * TODO
  *
  * @author hecvasro
  */
-public class SearchOrChooseRecipientFragment extends SubFragment<AddRecipientComponent> {
+public class SearchOrChooseRecipientFragment extends SubFragment<AddRecipientComponent>
+  implements SearchOrChooseRecipientScreen {
   private Unbinder unbinder;
 
   @BindView(R.id.search_view)
@@ -69,6 +71,12 @@ public class SearchOrChooseRecipientFragment extends SubFragment<AddRecipientCom
     super.onDestroyView();
     // Unbinds all the annotated views and methods.
     unbinder.unbind();
+  }
+
+  @NonNull
+  @Override
+  public Observable<String> onQueryChanged() {
+    return searchView.onQueryChanged();
   }
 
   /**

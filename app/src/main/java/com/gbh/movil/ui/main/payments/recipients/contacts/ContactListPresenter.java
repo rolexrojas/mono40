@@ -2,49 +2,68 @@ package com.gbh.movil.ui.main.payments.recipients.contacts;
 
 import android.Manifest;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.rx.RxUtils;
-import com.gbh.movil.ui.Presenter;
-import com.gbh.movil.ui.UiUtils;
-import com.gbh.movil.ui.main.list.NoResultsItem;
+import com.gbh.movil.ui.main.payments.recipients.RecipientCandidateListPresenter;
 import com.tbruyelle.rxpermissions.RxPermissions;
-
-import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.Subscription;
-import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.subscriptions.Subscriptions;
-import timber.log.Timber;
 
 /**
  * TODO
  *
  * @author hecvasro
  */
-class ContactListPresenter extends Presenter<ContactListScreen> {
-  /**
-   * TODO
-   */
-  private static final long DEFAULT_TIME_SPAN_QUERY = 300L; // 0.3 seconds.
-
-  private final SchedulerProvider schedulerProvider;
+class ContactListPresenter extends RecipientCandidateListPresenter {
   private final RxPermissions permissionManager;
   private final ContactProvider contactProvider;
 
   private Subscription permissionSubscription = Subscriptions.unsubscribed();
-  private Subscription querySubscription = Subscriptions.unsubscribed();
-  private Subscription searchSubscription = Subscriptions.unsubscribed();
 
+  /**
+   * TODO
+   *
+   * @param schedulerProvider
+   *   TODO
+   * @param permissionManager
+   *   TODO
+   * @param contactProvider
+   *   TODO
+   */
   ContactListPresenter(@NonNull SchedulerProvider schedulerProvider,
     @NonNull RxPermissions permissionManager, @NonNull ContactProvider contactProvider) {
-    this.schedulerProvider = schedulerProvider;
+    super(schedulerProvider);
     this.permissionManager = permissionManager;
     this.contactProvider = contactProvider;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected boolean canStartListeningQueryChangeEvents() {
+    return permissionManager.isGranted(Manifest.permission.READ_CONTACTS);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @NonNull
+  @Override
+  protected Observable<Object> search(@Nullable String query) {
+    return contactProvider.getAll(query)
+      .compose(RxUtils.<Contact>fromCollection())
+      .cast(Object.class);
+  }
+
+  /**
+   * TODO
+   */
   void create() {
     assertScreen();
     permissionSubscription = permissionManager.request(Manifest.permission.READ_CONTACTS)
@@ -53,68 +72,7 @@ class ContactListPresenter extends Presenter<ContactListScreen> {
         @Override
         public void call(Boolean granted) {
           if (granted) {
-            querySubscription = screen.onQueryChanged()
-              .debounce(DEFAULT_TIME_SPAN_QUERY, TimeUnit.MILLISECONDS)
-              .observeOn(schedulerProvider.ui())
-              .subscribe(new Action1<String>() {
-                @Override
-                public void call(String query) {
-                  RxUtils.unsubscribe(searchSubscription);
-                  searchSubscription = contactProvider.getAll(query)
-                    .subscribeOn(schedulerProvider.io())
-                    .compose(RxUtils.<Contact>fromCollection())
-                    .cast(Object.class)
-                    .switchIfEmpty(Observable.just(new NoResultsItem(query)))
-                    .observeOn(schedulerProvider.ui())
-                    .doOnSubscribe(new Action0() {
-                      @Override
-                      public void call() {
-                        screen.clear();
-                        UiUtils.showRefreshIndicator(screen);
-                      }
-                    })
-                    .doOnUnsubscribe(new Action0() {
-                      @Override
-                      public void call() {
-                        UiUtils.showRefreshIndicator(screen);
-                      }
-                    })
-                    .subscribe(new Action1<Object>() {
-                      @Override
-                      public void call(Object item) {
-                        screen.add(item);
-                      }
-                    }, new Action1<Throwable>() {
-                      @Override
-                      public void call(Throwable throwable) {
-                        Timber.e(throwable, "Querying contacts");
-                        // TODO: Let the user know that querying contacts failed.
-                      }
-                    });
-                }
-              }, new Action1<Throwable>() {
-                @Override
-                public void call(Throwable throwable) {
-                  Timber.e(throwable, "Listening to query change events");
-                  // TODO: Let the user know that listening to query change events failed.
-                }
-              });
-            searchSubscription = contactProvider.getAll(null)
-              .subscribeOn(schedulerProvider.io())
-              .compose(RxUtils.<Contact>fromCollection())
-              .observeOn(schedulerProvider.ui())
-              .subscribe(new Action1<Contact>() {
-                @Override
-                public void call(Contact contact) {
-                  screen.add(contact);
-                }
-              }, new Action1<Throwable>() {
-                @Override
-                public void call(Throwable throwable) {
-                  Timber.e(throwable, "Querying user's contacts");
-                  // TODO: Let the user know that finding contacts with the given query failed.
-                }
-              });
+            startListeningQueryChangeEvents();
           } else {
             // TODO: Let the user know that the read contacts permission is required.
           }
@@ -122,12 +80,9 @@ class ContactListPresenter extends Presenter<ContactListScreen> {
       });
   }
 
-  void stop() {
-    assertScreen();
-    RxUtils.unsubscribe(searchSubscription);
-    RxUtils.unsubscribe(querySubscription);
-  }
-
+  /**
+   * TODO
+   */
   void destroy() {
     assertScreen();
     RxUtils.unsubscribe(permissionSubscription);

@@ -16,9 +16,9 @@ import android.widget.Button;
 
 import com.gbh.movil.Utils;
 import com.gbh.movil.ui.main.MainComponent;
-import com.gbh.movil.ui.main.list.ItemAdapter;
-import com.gbh.movil.ui.main.list.ItemHolderBinderFactory;
-import com.gbh.movil.ui.main.list.ItemHolderCreatorFactory;
+import com.gbh.movil.ui.main.list.Adapter;
+import com.gbh.movil.ui.main.list.HolderBinderFactory;
+import com.gbh.movil.ui.main.list.HolderCreatorFactory;
 import com.gbh.movil.ui.view.widget.RefreshIndicator;
 import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.gbh.movil.ui.main.AddAnotherProductFragment;
@@ -50,7 +50,7 @@ public class ProductsFragment extends SubFragment<MainComponent> implements Prod
   private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
 
   private Unbinder unbinder;
-  private ItemAdapter itemAdapter;
+  private Adapter adapter;
   private RefreshIndicator refreshIndicator;
 
   @Inject
@@ -129,16 +129,16 @@ public class ProductsFragment extends SubFragment<MainComponent> implements Prod
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
     // Prepares the recycler view.
-    final ItemHolderCreatorFactory holderCreatorFactory = new ItemHolderCreatorFactory.Builder()
+    final HolderCreatorFactory holderCreatorFactory = new HolderCreatorFactory.Builder()
       .addCreator(ShowRecentTransactionsItem.class,
         new ShowRecentTransactionsHolderCreator(this))
       .addCreator(ProductItem.class, new ProductHolderCreator(this))
       .build();
-    final ItemHolderBinderFactory holderBinderFactory = new ItemHolderBinderFactory.Builder()
+    final HolderBinderFactory holderBinderFactory = new HolderBinderFactory.Builder()
       .addBinder(ProductItem.class, ProductHolder.class, new ProductHolderBinder())
       .build();
-    itemAdapter = new ItemAdapter(holderCreatorFactory, holderBinderFactory);
-    recyclerView.setAdapter(itemAdapter);
+    adapter = new Adapter(holderCreatorFactory, holderBinderFactory);
+    recyclerView.setAdapter(adapter);
     recyclerView.setHasFixedSize(true);
     recyclerView.setItemAnimator(null);
     final Context context = getContext();
@@ -147,9 +147,9 @@ public class ProductsFragment extends SubFragment<MainComponent> implements Prod
       @Override
       public void onLayoutCompleted(RecyclerView.State state) {
         super.onLayoutCompleted(state);
-        // Determines whether the addItem another account button must be visible or not. It will
+        // Determines whether the add another account button must be visible or not. It will
         // only be visible if the bottom of the last child of the recycler view does not collide
-        // with the top of the addItem another account button.
+        // with the top of the add another account button.
         final int lastChildPosition = findLastVisibleItemPosition();
         if (lastChildPosition >= 0) {
           final View lastChild = recyclerView.getChildAt(lastChildPosition);
@@ -202,12 +202,12 @@ public class ProductsFragment extends SubFragment<MainComponent> implements Prod
 
   @Override
   public void clear() {
-    itemAdapter.clearItems();
+    adapter.clear();
   }
 
   @Override
   public void add(@NonNull Object item) {
-    itemAdapter.addItem(item);
+    adapter.add(item);
   }
 
   @Override
@@ -223,11 +223,11 @@ public class ProductsFragment extends SubFragment<MainComponent> implements Prod
   @Override
   public void setBalance(@NonNull Product product, @Nullable Balance balance) {
     final ProductItem item = new ProductItem(product);
-    if (itemAdapter.containsItem(item)) {
-      final int index = itemAdapter.indexOf(item);
-      final ProductItem actualItem = (ProductItem) itemAdapter.getItem(index);
+    if (adapter.contains(item)) {
+      final int index = adapter.indexOf(item);
+      final ProductItem actualItem = (ProductItem) adapter.get(index);
       actualItem.setBalance(balance);
-      itemAdapter.setItem(index, actualItem);
+      adapter.set(index, actualItem);
     }
   }
 
@@ -242,7 +242,7 @@ public class ProductsFragment extends SubFragment<MainComponent> implements Prod
 
   @Override
   public void onQueryBalanceButtonClicked(int position, int x, int y) {
-    queryBalance(((ProductItem) itemAdapter.getItem(position)).getProduct(), x, y);
+    queryBalance(((ProductItem) adapter.get(position)).getProduct(), x, y);
   }
 
   @Override

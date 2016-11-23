@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import com.gbh.movil.Utils;
 import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.rx.RxUtils;
+import com.gbh.movil.ui.main.payments.recipients.contacts.Contact;
 import com.google.i18n.phonenumbers.NumberParseException;
 
 import java.util.ArrayList;

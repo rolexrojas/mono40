@@ -1,37 +1,30 @@
-package com.gbh.movil.ui.main.payments;
+package com.gbh.movil.ui.main.payments.recipients;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
-import com.gbh.movil.data.StringHelper;
-import com.gbh.movil.domain.PhoneNumber;
-import com.gbh.movil.ui.main.MainComponent;
-import com.gbh.movil.ui.main.list.Adapter;
+import com.gbh.movil.ui.SubFragment;
 import com.gbh.movil.ui.main.list.Holder;
+import com.gbh.movil.ui.main.list.Adapter;
 import com.gbh.movil.ui.main.list.HolderBinderFactory;
 import com.gbh.movil.ui.main.list.HolderCreatorFactory;
-import com.gbh.movil.ui.main.list.NoResultsItem;
 import com.gbh.movil.ui.main.list.NoResultsHolder;
 import com.gbh.movil.ui.main.list.NoResultsHolderBinder;
 import com.gbh.movil.ui.main.list.NoResultsHolderCreator;
-import com.gbh.movil.ui.main.payments.recipients.AddRecipientActivity;
+import com.gbh.movil.ui.main.list.NoResultsItem;
 import com.gbh.movil.ui.view.widget.RefreshIndicator;
 import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
-import com.gbh.movil.ui.SubFragment;
-import com.gbh.movil.ui.view.widget.SearchView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import javax.inject.Inject;
@@ -42,56 +35,61 @@ import butterknife.Unbinder;
 import rx.Observable;
 
 /**
- * {@link PaymentsScreen Screen} implementation that uses a {@link SubFragment fragment} as
- * container.
+ * TODO
  *
  * @author hecvasro
  */
-public class PaymentsFragment extends SubFragment<MainComponent> implements PaymentsScreen,
+public abstract class RecipientCandidateListFragment<P extends RecipientCandidateListPresenter>
+  extends SubFragment<AddRecipientComponent> implements RecipientCandidateListScreen,
   Holder.OnClickListener {
+  private SearchOrChooseRecipientScreen directParent;
   private Unbinder unbinder;
   private RefreshIndicator refreshIndicator;
   private Adapter adapter;
 
-  @BindView(R.id.search_view)
-  SearchView searchView;
+  @Inject
+  protected P presenter;
+
   @BindView(R.id.swipe_refresh_layout)
   SwipeRefreshLayout swipeRefreshLayout;
   @BindView(R.id.recycler_view)
   RecyclerView recyclerView;
 
-  @Inject
-  StringHelper stringHelper;
-  @Inject
-  PaymentsPresenter presenter;
-
   /**
-   * Creates a new instance of the {@link PaymentsFragment screen}.
+   * TODO
    *
-   * @return A new instance of the {@link PaymentsFragment screen}.
+   * @return TODO
    */
   @NonNull
-  public static PaymentsFragment newInstance() {
-    return new PaymentsFragment();
-  }
+  protected abstract HolderCreatorFactory.Builder createHolderCreatorFactoryBuilder();
+
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  protected abstract HolderBinderFactory.Builder createHolderBinderFactoryBuilder();
 
   @Override
-  public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    // Prepares the fragment.
-    setHasOptionsMenu(true);
-    // Injects all the annotated dependencies.
-    final PaymentsComponent component = DaggerPaymentsComponent.builder()
-      .mainComponent(parentScreen.getComponent())
-      .build();
-    component.inject(this);
+  public void onAttach(Context context) {
+    super.onAttach(context);
+    // Attaches the direct parent to the fragment.
+    final Fragment fragment = getParentFragment();
+    if (Utils.isNull(fragment)) {
+      throw new NullPointerException("Parent fragment is missing");
+    } else if (!(fragment instanceof SearchOrChooseRecipientScreen)) {
+      throw new ClassCastException("Parent fragment must implement the 'SearchOrChooseRecipientScreen' interface");
+    } else {
+      directParent = (SearchOrChooseRecipientScreen) fragment;
+    }
   }
 
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_payments, container, false);
+    return inflater.inflate(R.layout.fragment_recipient_candidate_list, container, false);
   }
 
   @Override
@@ -99,20 +97,15 @@ public class PaymentsFragment extends SubFragment<MainComponent> implements Paym
     super.onViewCreated(view, savedInstanceState);
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
-    // Prepares the actions and recipients list.
-    final HolderCreatorFactory holderCreatorFactory = new HolderCreatorFactory.Builder()
-      .addCreator(PhoneNumberRecipientItem.class, new RecipientHolderCreator(this))
-      .addCreator(Action.class, new ActionHolderCreator(this))
+    // Prepares the contact item container.
+    final HolderCreatorFactory holderCreatorFactory = createHolderCreatorFactoryBuilder()
       .addCreator(NoResultsItem.class, new NoResultsHolderCreator())
       .build();
     final Context context = getContext();
-    final HolderBinderFactory binderFactory = new HolderBinderFactory.Builder()
-      .addBinder(PhoneNumberRecipientItem.class, RecipientHolder.class,
-        new PhoneNumberRecipientItemHolderBinder())
-      .addBinder(Action.class, ActionHolder.class, new ActionHolderBinder(stringHelper))
+    final HolderBinderFactory holderBinderFactory = createHolderBinderFactoryBuilder()
       .addBinder(NoResultsItem.class, NoResultsHolder.class, new NoResultsHolderBinder(context))
       .build();
-    adapter = new Adapter(holderCreatorFactory, binderFactory);
+    adapter = new Adapter(holderCreatorFactory, holderBinderFactory);
     recyclerView.setAdapter(adapter);
     recyclerView.setHasFixedSize(true);
     recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL,
@@ -123,38 +116,15 @@ public class PaymentsFragment extends SubFragment<MainComponent> implements Paym
       .showLastDivider()
       .build();
     recyclerView.addItemDecoration(divider);
-    // Attaches the screen to the presenter.
+    // Attaches the presenter to the fragment.
     presenter.attachScreen(this);
   }
 
   @Override
   public void onStart() {
     super.onStart();
-    // Sets the title.
-    parentScreen.setTitle(getString(R.string.payments_title));
     // Starts the presenter.
     presenter.start();
-  }
-
-  @Override
-  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-    // Inflates the menu of the fragment.
-    inflater.inflate(R.menu.payments, menu);
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.payments_menu_option_add_recipient:
-        startActivity(AddRecipientActivity.getLaunchIntent(getContext()));
-        return true;
-      case R.id.payments_menu_option_remove_recipient:
-        // TODO
-        return true;
-      default:
-        return super.onOptionsItemSelected(item);
-    }
   }
 
   @Override
@@ -167,16 +137,17 @@ public class PaymentsFragment extends SubFragment<MainComponent> implements Paym
   @Override
   public void onDestroyView() {
     super.onDestroyView();
-    // Detaches the screen from the presenter.
+    // Detaches the presenter for the fragment.
     presenter.detachScreen();
     // Unbinds all the annotated views and methods.
     unbinder.unbind();
   }
 
-  @NonNull
   @Override
-  public Observable<String> onQueryChanged() {
-    return searchView.onQueryChanged();
+  public void onDetach() {
+    super.onDetach();
+    // Detaches the direct parent from the fragment.
+    directParent = null;
   }
 
   @Override
@@ -189,11 +160,6 @@ public class PaymentsFragment extends SubFragment<MainComponent> implements Paym
     adapter.add(item);
   }
 
-  @Override
-  public void startAddRecipientScreen(@NonNull PhoneNumber phoneNumber) {
-    startActivity(AddRecipientActivity.getLaunchIntent(getContext(), phoneNumber));
-  }
-
   @Nullable
   @Override
   public RefreshIndicator getRefreshIndicator() {
@@ -203,8 +169,14 @@ public class PaymentsFragment extends SubFragment<MainComponent> implements Paym
     return refreshIndicator;
   }
 
+  @NonNull
+  @Override
+  public Observable<String> onQueryChanged() {
+    return directParent.onQueryChanged();
+  }
+
   @Override
   public void onClick(int position) {
-    presenter.onItemClicked(adapter.get(position));
+    // TODO: Let the direct parent screen that a recipient candidate was clicked.
   }
 }

@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 
-import com.gbh.movil.ui.ParentScreen;
-
 /**
  * TODO
  *
@@ -20,10 +18,10 @@ public abstract class SubFragment<C> extends Fragment {
     super.onAttach(context);
     // Attaches the parent screen to the fragment.
     final Activity activity = getActivity();
-    if (activity instanceof ParentScreen) {
-      parentScreen = (ParentScreen<C>) activity;
-    } else {
+    if (!(activity instanceof ParentScreen)) {
       throw new ClassCastException("Activity must implement the 'ParentScreen' interface");
+    } else {
+      parentScreen = (ParentScreen<C>) activity;
     }
   }
 

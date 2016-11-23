@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * @author hecvasro
  */
-public final class ItemHolderCreatorFactory {
+public final class HolderCreatorFactory {
   /**
    * TODO
    */
@@ -31,7 +31,7 @@ public final class ItemHolderCreatorFactory {
    * @param creators
    *   TODO
    */
-  private ItemHolderCreatorFactory(@NonNull Map<Class<?>, HolderCreator<? extends Holder>> creators) {
+  private HolderCreatorFactory(@NonNull Map<Class<?>, HolderCreator<? extends Holder>> creators) {
     this.creators = creators;
     this.identifiers = new ArrayList<>();
     this.identifiers.addAll(this.creators.keySet());
@@ -114,8 +114,8 @@ public final class ItemHolderCreatorFactory {
      * @return TODO
      */
     @NonNull
-    public final ItemHolderCreatorFactory build() {
-      return new ItemHolderCreatorFactory(creators);
+    public final HolderCreatorFactory build() {
+      return new HolderCreatorFactory(creators);
     }
   }
 }
