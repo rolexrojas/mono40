@@ -15,11 +15,13 @@ import android.widget.FrameLayout;
 import com.gbh.movil.App;
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
-import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.ui.ActivityModule;
 import com.gbh.movil.ui.BaseActivity;
+import com.gbh.movil.ui.Container;
 import com.gbh.movil.ui.SubFragment;
+import com.gbh.movil.ui.UiUtils;
+import com.gbh.movil.ui.view.widget.FullScreenRefreshIndicator;
 import com.gbh.movil.ui.view.widget.RefreshIndicator;
 
 import javax.inject.Inject;
@@ -33,7 +35,8 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class AddRecipientActivity extends BaseActivity implements AddRecipientScreen {
+public class AddRecipientActivity extends BaseActivity implements AddRecipientContainer,
+  AddRecipientScreen {
   /**
    * TODO
    */
@@ -41,9 +44,10 @@ public class AddRecipientActivity extends BaseActivity implements AddRecipientSc
 
   private AddRecipientComponent component;
   private Unbinder unbinder;
+  private RefreshIndicator refreshIndicator;
 
   @Inject
-  StringHelper stringHelper;
+  AddRecipientPresenter presenter;
 
   @BindView(R.id.toolbar)
   Toolbar toolbar;
@@ -134,11 +138,22 @@ public class AddRecipientActivity extends BaseActivity implements AddRecipientSc
     } else {
       replaceFragment(SearchOrChooseRecipientFragment.newInstance(), false, false);
     }
+    // Attaches the presenter to the fragment.
+    presenter.attachScreen(this);
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+    // Stops the presenter.
+    presenter.stop();
   }
 
   @Override
   protected void onDestroy() {
     super.onDestroy();
+    // Detaches the presenter for the fragment.
+    presenter.detachScreen();
     // Unbinds all the annotated views and methods.
     unbinder.unbind();
   }
@@ -160,21 +175,34 @@ public class AddRecipientActivity extends BaseActivity implements AddRecipientSc
   }
 
   @Override
-  public void setSubScreen(@NonNull SubFragment<AddRecipientComponent> fragment) {
+  public void setSubScreen(
+    @NonNull SubFragment<? extends Container<AddRecipientComponent>> fragment) {
     replaceFragment(fragment, true, true);
   }
 
   @Override
-  public void setTitle(@Nullable String title) {
-    final ActionBar actionBar = getSupportActionBar();
-    if (Utils.isNotNull(actionBar)) {
-      actionBar.setTitle(title);
-    }
+  public void onContactClicked(@NonNull Contact contact) {
+    presenter.add(contact);
   }
 
   @Nullable
   @Override
   public RefreshIndicator getRefreshIndicator() {
-    return null;
+    if (Utils.isNull(refreshIndicator)) {
+      refreshIndicator = new FullScreenRefreshIndicator(getSupportFragmentManager());
+    }
+    return refreshIndicator;
+  }
+
+  @Override
+  public void terminate() {
+    finish();
+  }
+
+  @Override
+  public void showNotSupportedOperationMessage() {
+    UiUtils.createDialog(this, getString(R.string.sorry),
+      getString(R.string.not_available_not_affiliated_recipient_addition), getString(R.string.ok),
+      null, null, null).show();
   }
 }

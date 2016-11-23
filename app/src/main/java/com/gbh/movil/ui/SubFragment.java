@@ -9,8 +9,8 @@ import android.support.v4.app.Fragment;
  *
  * @author hecvasro
  */
-public abstract class SubFragment<C> extends Fragment {
-  protected ParentScreen<C> parentScreen;
+public abstract class SubFragment<T extends Container<?>> extends Fragment {
+  protected T container;
 
   @Override
   @SuppressWarnings("unchecked")
@@ -18,10 +18,10 @@ public abstract class SubFragment<C> extends Fragment {
     super.onAttach(context);
     // Attaches the parent screen to the fragment.
     final Activity activity = getActivity();
-    if (!(activity instanceof ParentScreen)) {
-      throw new ClassCastException("Activity must implement the 'ParentScreen' interface");
+    if (!(activity instanceof Container)) {
+      throw new ClassCastException("Activity must implement the 'Container' interface");
     } else {
-      parentScreen = (ParentScreen<C>) activity;
+      container = (T) activity;
     }
   }
 
@@ -29,6 +29,6 @@ public abstract class SubFragment<C> extends Fragment {
   public void onDetach() {
     super.onDetach();
     // Detaches the parent screen from the fragment.
-    parentScreen = null;
+    container = null;
   }
 }

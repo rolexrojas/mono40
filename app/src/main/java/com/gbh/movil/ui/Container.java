@@ -8,21 +8,20 @@ import android.support.annotation.Nullable;
  *
  * @author hecvasro
  */
-public interface ParentScreen<C> extends Screen, Injectable<C> {
+public interface Container<C> {
   /**
    * TODO
    *
-   * @param subFragment
-   *   TODO
+   * @return TODO
    */
-  void setSubScreen(@NonNull SubFragment<C> subFragment);
+  @Nullable
+  C getComponent();
 
   /**
    * TODO
    *
-   * @param title
+   * @param fragment
    *   TODO
    */
-  void setTitle(@Nullable String title);
-
+  void setSubScreen(@NonNull SubFragment<? extends Container<C>> fragment);
 }

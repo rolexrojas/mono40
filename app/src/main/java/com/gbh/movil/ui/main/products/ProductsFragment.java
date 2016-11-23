@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.gbh.movil.Utils;
-import com.gbh.movil.ui.main.MainComponent;
+import com.gbh.movil.ui.main.MainContainer;
 import com.gbh.movil.ui.main.list.Adapter;
 import com.gbh.movil.ui.main.list.HolderBinderFactory;
 import com.gbh.movil.ui.main.list.HolderCreatorFactory;
@@ -44,7 +44,7 @@ import timber.log.Timber;
  *
  * @author hecvasro
  */
-public class ProductsFragment extends SubFragment<MainComponent> implements ProductsScreen,
+public class ProductsFragment extends SubFragment<MainContainer> implements ProductsScreen,
   ProductHolder.OnQueryActionButtonClickedListener,
   ShowRecentTransactionsHolder.OnShowRecentTransactionsButtonClickedListener {
   private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
@@ -103,7 +103,7 @@ public class ProductsFragment extends SubFragment<MainComponent> implements Prod
    */
   @OnClick(R.id.button_add_another_account)
   void onAddAnotherAccountButtonClicked() {
-    parentScreen.setSubScreen(AddAnotherProductFragment.newInstance());
+    container.setSubScreen(AddAnotherProductFragment.newInstance());
   }
 
   @Override
@@ -111,7 +111,7 @@ public class ProductsFragment extends SubFragment<MainComponent> implements Prod
     super.onCreate(savedInstanceState);
     // Injects all the annotated dependencies.
     final ProductsComponent component = DaggerProductsComponent.builder()
-      .mainComponent(parentScreen.getComponent())
+      .mainComponent(container.getComponent())
       .build();
     component.inject(this);
   }
@@ -179,7 +179,7 @@ public class ProductsFragment extends SubFragment<MainComponent> implements Prod
   public void onStart() {
     super.onStart();
     // Sets the title.
-    parentScreen.setTitle(stringHelper.accounts());
+    container.setTitle(stringHelper.accounts());
     // Starts the presenter.
     presenter.start();
   }

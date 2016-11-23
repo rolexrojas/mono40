@@ -15,7 +15,7 @@ import com.gbh.movil.ui.SubFragment;
  *
  * @author hecvasro
  */
-public class AddAnotherProductFragment extends SubFragment<MainComponent> {
+public class AddAnotherProductFragment extends SubFragment<MainContainer> {
   /**
    * TODO
    *

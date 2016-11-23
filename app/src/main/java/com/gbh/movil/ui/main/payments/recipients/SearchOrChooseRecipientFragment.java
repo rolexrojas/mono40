@@ -27,7 +27,7 @@ import rx.Observable;
  *
  * @author hecvasro
  */
-public class SearchOrChooseRecipientFragment extends SubFragment<AddRecipientComponent>
+public class SearchOrChooseRecipientFragment extends SubFragment<AddRecipientContainer>
   implements SearchOrChooseRecipientScreen {
   private Unbinder unbinder;
 

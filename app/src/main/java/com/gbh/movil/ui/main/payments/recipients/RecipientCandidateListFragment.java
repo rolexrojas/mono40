@@ -40,9 +40,9 @@ import rx.Observable;
  * @author hecvasro
  */
 public abstract class RecipientCandidateListFragment<P extends RecipientCandidateListPresenter>
-  extends SubFragment<AddRecipientComponent> implements RecipientCandidateListScreen,
+  extends SubFragment<AddRecipientContainer> implements RecipientCandidateListScreen,
   Holder.OnClickListener {
-  private SearchOrChooseRecipientScreen directParent;
+  private SearchOrChooseRecipientScreen parentScreen;
   private Unbinder unbinder;
   private RefreshIndicator refreshIndicator;
   private Adapter adapter;
@@ -81,7 +81,7 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
     } else if (!(fragment instanceof SearchOrChooseRecipientScreen)) {
       throw new ClassCastException("Parent fragment must implement the 'SearchOrChooseRecipientScreen' interface");
     } else {
-      directParent = (SearchOrChooseRecipientScreen) fragment;
+      parentScreen = (SearchOrChooseRecipientScreen) fragment;
     }
   }
 
@@ -147,7 +147,7 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
   public void onDetach() {
     super.onDetach();
     // Detaches the direct parent from the fragment.
-    directParent = null;
+    parentScreen = null;
   }
 
   @Override
@@ -172,11 +172,14 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
   @NonNull
   @Override
   public Observable<String> onQueryChanged() {
-    return directParent.onQueryChanged();
+    return parentScreen.onQueryChanged();
   }
 
   @Override
   public void onClick(int position) {
-    // TODO: Let the direct parent screen that a recipient candidate was clicked.
+    final Object item = adapter.get(position);
+    if (item instanceof Contact) {
+      container.onContactClicked((Contact) item);
+    }
   }
 }

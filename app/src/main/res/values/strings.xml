@@ -40,6 +40,7 @@
   <string name="logo">Logo</string>
   <string name="my_profile">Mi perfil</string>
   <string name="no_internet_connection">Sin conexión a Internet.</string>
+  <string name="not_available_not_affiliated_recipient_addition">No es posible agregar números no afiliados por el momento</string>
   <string name="ok">Ok</string>
   <string name="pay">Pagar</string>
   <string name="pay_screen_search_hint">Nombre, número o facturador</string>
@@ -48,6 +49,7 @@
   <string name="recent_transactions">Últimas transacciones</string>
   <string name="see">Ver</string>
   <string name="see_bank_branches">Ver sucursales bancarias</string>
+  <string name="sorry">¡Lo sentimos!</string>
   <string name="your_account_have_been_added">Tu cuenta se agregó exitosamente al mundo %1$s. Ya puedes usarla como cuenta de fondos.</string>
   <string name="your_account_have_been_removed">Tu cuenta se removió exitosamente del mundo %1$s. Ya no puedes usarla como cuenta de fondos.</string>
 </resources>

@@ -16,7 +16,8 @@ import dagger.Component;
  * @author hecvasro
  */
 @ActivityScope
-@Component(dependencies = AppComponent.class, modules = { ActivityModule.class })
+@Component(dependencies = AppComponent.class, modules = { ActivityModule.class,
+  AddRecipientModule.class })
 public interface AddRecipientComponent extends ActivityComponent {
   /**
    * TODO

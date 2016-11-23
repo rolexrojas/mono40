@@ -105,7 +105,7 @@ public final class UiUtils {
    * @return TODO
    */
   public static AlertDialog createDialog(@NonNull Context context, @NonNull String title,
-    @Nullable String message, @NonNull String positiveButtonText,
+    @Nullable String message, @Nullable String positiveButtonText,
     @Nullable DialogInterface.OnClickListener positiveButtonOnClickListener,
     @Nullable String negativeButtonText,
     @Nullable DialogInterface.OnClickListener negativeButtonOnClickListener) {

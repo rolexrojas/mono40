@@ -17,6 +17,7 @@ import com.gbh.movil.R;
 import com.gbh.movil.Utils;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.ui.BaseActivity;
+import com.gbh.movil.ui.Container;
 import com.gbh.movil.ui.SubFragment;
 import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.main.products.ProductsFragment;
@@ -35,7 +36,7 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class MainActivity extends BaseActivity implements MainScreen {
+public class MainActivity extends BaseActivity implements MainContainer, MainScreen {
   private Unbinder unbinder;
   private MainComponent component;
 
@@ -132,7 +133,7 @@ public class MainActivity extends BaseActivity implements MainScreen {
     if (slidingPaneLayout.isOpen()) {
       slidingPaneLayout.closePane();
     }
-    final SubFragment subFragment;
+    final SubFragment<MainContainer> subFragment;
     switch (view.getId()) {
       case R.id.text_view_payments:
         subFragment = PaymentsFragment.newInstance();
@@ -161,36 +162,27 @@ public class MainActivity extends BaseActivity implements MainScreen {
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Nullable
   @Override
   public MainComponent getComponent() {
     return component;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public void setSubScreen(@NonNull SubFragment<MainComponent> subFragment) {
+  public void setSubScreen(@NonNull SubFragment<? extends Container<MainComponent>> fragment) {
     final FragmentManager manager = getSupportFragmentManager();
     final Fragment currentFragment = manager.findFragmentById(R.id.fragment_container);
-    if (Utils.isNull(currentFragment) || currentFragment.getClass() != subFragment.getClass()) {
+    if (Utils.isNull(currentFragment) || currentFragment.getClass() != fragment.getClass()) {
       manager.beginTransaction()
         .setCustomAnimations(R.anim.fragment_transition_enter_sibling,
           R.anim.fragment_transition_exit_sibling, R.anim.fragment_transition_enter_sibling,
           R.anim.fragment_transition_exit_sibling)
-        .replace(R.id.fragment_container, subFragment)
+        .replace(R.id.fragment_container, fragment)
         .addToBackStack(null)
         .commit();
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void setTitle(@Nullable String title) {
     final ActionBar actionBar = getSupportActionBar();
@@ -199,9 +191,6 @@ public class MainActivity extends BaseActivity implements MainScreen {
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void showAccountAdditionOrRemovalNotification(@NonNull String message) {
     UiUtils.createDialog(this, stringHelper.doneWithExclamationMark(),

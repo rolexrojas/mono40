@@ -18,7 +18,7 @@ import com.gbh.movil.R;
 import com.gbh.movil.Utils;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.domain.PhoneNumber;
-import com.gbh.movil.ui.main.MainComponent;
+import com.gbh.movil.ui.main.MainContainer;
 import com.gbh.movil.ui.main.list.Adapter;
 import com.gbh.movil.ui.main.list.Holder;
 import com.gbh.movil.ui.main.list.HolderBinderFactory;
@@ -47,8 +47,8 @@ import rx.Observable;
  *
  * @author hecvasro
  */
-public class PaymentsFragment extends SubFragment<MainComponent> implements PaymentsScreen,
-  Holder.OnClickListener {
+public class PaymentsFragment extends SubFragment<MainContainer>
+  implements PaymentsScreen, Holder.OnClickListener {
   private Unbinder unbinder;
   private RefreshIndicator refreshIndicator;
   private Adapter adapter;
@@ -82,7 +82,7 @@ public class PaymentsFragment extends SubFragment<MainComponent> implements Paym
     setHasOptionsMenu(true);
     // Injects all the annotated dependencies.
     final PaymentsComponent component = DaggerPaymentsComponent.builder()
-      .mainComponent(parentScreen.getComponent())
+      .mainComponent(container.getComponent())
       .build();
     component.inject(this);
   }
@@ -131,7 +131,7 @@ public class PaymentsFragment extends SubFragment<MainComponent> implements Paym
   public void onStart() {
     super.onStart();
     // Sets the title.
-    parentScreen.setTitle(getString(R.string.payments_title));
+    container.setTitle(getString(R.string.payments_title));
     // Starts the presenter.
     presenter.start();
   }

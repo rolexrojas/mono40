@@ -8,6 +8,7 @@ import com.gbh.movil.domain.CreditCard;
 import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.InitialData;
 import com.gbh.movil.domain.Loan;
+import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.Transaction;
@@ -120,4 +121,15 @@ public interface ApiBridge {
    */
   @NonNull
   Observable<ApiResult<Set<Recipient>>> recipients();
+
+  /**
+   * TODO
+   *
+   * @param phoneNumber
+   *   TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  Observable<ApiResult<Boolean>> checkIfAssociated(@NonNull PhoneNumber phoneNumber);
 }
