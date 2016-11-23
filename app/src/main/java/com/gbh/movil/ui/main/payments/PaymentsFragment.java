@@ -52,7 +52,8 @@ import rx.Observable;
  * @author hecvasro
  */
 public class PaymentsFragment extends SubFragment<MainContainer>
-  implements PaymentsScreen, Holder.OnClickListener {
+  implements PaymentsScreen, Holder.OnClickListener,
+  RecipientAdditionConfirmationDialogFragment.OnSaveRecipientButtonClickedListener {
   /**
    * TODO
    */
@@ -247,9 +248,19 @@ public class PaymentsFragment extends SubFragment<MainContainer>
   }
 
   @Override
+  public void update(@NonNull Object item) {
+    final int index = adapter.indexOf(item);
+    if (index >= 0) {
+      adapter.notifyItemChanged(index);
+    } else {
+      add(item);
+    }
+  }
+
+  @Override
   public void showRecipientAdditionConfirmationDialog(@NonNull Recipient recipient) {
     RecipientAdditionConfirmationDialogFragment.newInstance(recipient)
-      .show(getFragmentManager(), null);
+      .show(getChildFragmentManager(), null);
   }
 
   @Override
@@ -274,5 +285,10 @@ public class PaymentsFragment extends SubFragment<MainContainer>
           break;
       }
     }
+  }
+
+  @Override
+  public void onSaveRecipientButtonClicked(@NonNull Recipient recipient, @Nullable String label) {
+    presenter.updateRecipient(recipient, label);
   }
 }

@@ -113,6 +113,19 @@ public final class RecipientManager implements RecipientProvider {
   }
 
   /**
+   * TODO
+   *
+   * @param recipient
+   *   TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  public final Observable<Recipient> updateRecipient(@NonNull Recipient recipient) {
+    return recipientRepo.save(recipient);
+  }
+
+  /**
    * {@inheritDoc}
    */
   @NonNull

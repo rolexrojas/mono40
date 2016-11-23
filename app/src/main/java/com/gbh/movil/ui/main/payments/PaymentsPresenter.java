@@ -1,6 +1,7 @@
 package com.gbh.movil.ui.main.payments;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
 import com.gbh.movil.domain.PhoneNumber;
@@ -40,7 +41,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   /**
    * TODO
    */
-  private Subscription addRecipientSubscription = Subscriptions.unsubscribed();
+  private Subscription recipientSubscription = Subscriptions.unsubscribed();
   /**
    * TODO
    */
@@ -139,7 +140,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
    */
   void stop() {
     assertScreen();
-    RxUtils.unsubscribe(addRecipientSubscription);
+    RxUtils.unsubscribe(recipientSubscription);
     RxUtils.unsubscribe(searchSubscription);
     RxUtils.unsubscribe(querySubscription);
   }
@@ -164,8 +165,8 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
    */
   void addRecipient(@NonNull PhoneNumber phoneNumber) {
     assertScreen();
-    if (addRecipientSubscription.isUnsubscribed()) {
-      addRecipientSubscription = recipientManager.addRecipient(phoneNumber)
+    if (recipientSubscription.isUnsubscribed()) {
+      recipientSubscription = recipientManager.addRecipient(phoneNumber)
         .subscribeOn(schedulerProvider.io())
         .observeOn(schedulerProvider.ui())
         .doOnSubscribe(new Action0() {
@@ -192,6 +193,48 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
             Timber.e(throwable, "Adding a phone number recipient");
             screen.hideLoadIndicator();
             // TODO: Let the user know that adding a phone number recipient failed.
+          }
+        });
+    }
+  }
+
+  /**
+   * TODO
+   *
+   * @param recipient
+   *   TODO
+   * @param label
+   *   TODO
+   */
+  void updateRecipient(@NonNull Recipient recipient, @Nullable String label) {
+    assertScreen();
+    if (recipientSubscription.isUnsubscribed()) {
+      recipient.setLabel(label);
+      recipientSubscription = recipientManager.updateRecipient(recipient)
+        .subscribeOn(schedulerProvider.io())
+        .observeOn(schedulerProvider.ui())
+        .doOnSubscribe(new Action0() {
+          @Override
+          public void call() {
+            screen.showLoadIndicator(true);
+          }
+        })
+        .doOnUnsubscribe(new Action0() {
+          @Override
+          public void call() {
+            screen.hideLoadIndicator();
+          }
+        })
+        .subscribe(new Action1<Recipient>() {
+          @Override
+          public void call(Recipient recipient) {
+            screen.update(recipient);
+          }
+        }, new Action1<Throwable>() {
+          @Override
+          public void call(Throwable throwable) {
+            Timber.e(throwable, "Updating a recipient");
+            // TODO: Let the user know that updating a recipient failed.
           }
         });
     }

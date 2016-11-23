@@ -64,6 +64,14 @@ interface PaymentsScreen extends Screen {
   /**
    * TODO
    *
+   * @param item
+   *   TODO
+   */
+  void update(@NonNull Object item);
+
+  /**
+   * TODO
+   *
    * @param recipient
    *   TODO
    */

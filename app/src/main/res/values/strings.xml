@@ -37,11 +37,11 @@
   <string name="instruction_index_first">1.</string>
   <string name="instruction_index_second">2.</string>
   <string name="instruction_index_third">3.</string>
-  <string name="label">Apodo</string>
   <string name="list.no_results">No hay resultados para \'%1$s\'</string>
   <string name="list_item_divider">Separador</string>
   <string name="logo">Logo</string>
   <string name="my_profile">Mi perfil</string>
+  <string name="nick_name">Apodo</string>
   <string name="no_internet_connection">Sin conexión a Internet.</string>
   <string name="ok">Ok</string>
   <string name="pay_screen_search_hint">Nombre, número o facturador</string>
