@@ -6,14 +6,13 @@ import android.support.annotation.Nullable;
 import com.gbh.movil.Utils;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Balance;
-import com.gbh.movil.ui.main.list.Item;
 
 /**
  * TODO
  *
  * @author hecvasro
  */
-class ProductItem implements Item {
+class ProductItem {
   /**
    * TODO
    */

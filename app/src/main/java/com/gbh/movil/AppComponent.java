@@ -1,5 +1,7 @@
 package com.gbh.movil;
 
+import android.content.Context;
+
 import com.gbh.movil.data.DataModule;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.data.SchedulerProvider;
@@ -22,6 +24,8 @@ import dagger.Component;
 @Singleton
 @Component(modules = { AppModule.class, DataModule.class })
 public interface AppComponent {
+  Context provideContext();
+
   StringHelper provideStringHelper();
 
   NetworkHelper provideNetworkHelper();

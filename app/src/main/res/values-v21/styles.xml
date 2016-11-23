@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <style name="AppTabText"
+    parent="BaseAppTabText">
+    <item name="android:letterSpacing">@dimen/text.letter_spacing.small</item>
+  </style>
+
+  <style
+    name="Text.Contact.PhoneNumber"
+    parent="Text.Contact.BasePhoneNumber">
+    <item name="android:letterSpacing">@dimen/text.letter_spacing.small</item>
+  </style>
+
   <!-- Menu styles -->
   <style
     name="MenuItem"
@@ -56,8 +67,8 @@
   <!-- [END] Product styles -->
   <!-- [START] Contact styles -->
   <style
-    name="ContactPhoneNumber"
-    parent="BaseContactPhoneNumber">
+    name="RecipientExtraText"
+    parent="BaseRecipientExtraText">
     <item name="android:letterSpacing">@dimen/text.letter_spacing.small</item>
   </style>
   <!-- [END] Contact styles -->

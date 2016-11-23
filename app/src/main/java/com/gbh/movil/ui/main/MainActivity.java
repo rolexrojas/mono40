@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -18,6 +17,8 @@ import com.gbh.movil.R;
 import com.gbh.movil.Utils;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.ui.BaseActivity;
+import com.gbh.movil.ui.Container;
+import com.gbh.movil.ui.SubFragment;
 import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.main.products.ProductsFragment;
 import com.gbh.movil.ui.main.payments.PaymentsFragment;
@@ -35,7 +36,7 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class MainActivity extends BaseActivity implements MainScreen {
+public class MainActivity extends BaseActivity implements MainContainer, MainScreen {
   private Unbinder unbinder;
   private MainComponent component;
 
@@ -54,18 +55,14 @@ public class MainActivity extends BaseActivity implements MainScreen {
     return new Intent(context, MainActivity.class);
   }
 
-  private void replaceFragment(@NonNull Fragment fragment, boolean addToBackStack) {
-    final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
-      .replace(R.id.fragment_container, fragment);
-    if (addToBackStack) {
-      transaction.addToBackStack(null);
-    }
-    transaction.commit();
-  }
-
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    // Injects all the annotated dependencies.
+    component = DaggerMainComponent.builder()
+      .appComponent(((App) getApplication()).getComponent())
+      .build();
+    component.inject(this);
     // Sets the content layout identifier.
     setContentView(R.layout.activity_main);
     // Binds all the annotated views and methods.
@@ -89,14 +86,9 @@ public class MainActivity extends BaseActivity implements MainScreen {
       }
     });
     // Sets the startup screen.
-    replaceFragment(PaymentsFragment.newInstance(), false);
-    // Injects all the annotated dependencies.
-    if (Utils.isNull(component)) {
-      component = DaggerMainComponent.builder()
-        .appComponent(((App) getApplication()).getComponent())
-        .build();
-    }
-    component.inject(this);
+    getSupportFragmentManager().beginTransaction()
+      .replace(R.id.fragment_container, PaymentsFragment.newInstance())
+      .commit();
     // Attaches the screen to the presenter.
     presenter.attachScreen(this);
     // Creates the presenter.
@@ -141,10 +133,15 @@ public class MainActivity extends BaseActivity implements MainScreen {
     if (slidingPaneLayout.isOpen()) {
       slidingPaneLayout.closePane();
     }
-    final SubFragment subFragment;
+    final SubFragment<MainContainer> subFragment;
     switch (view.getId()) {
       case R.id.text_view_payments:
         subFragment = PaymentsFragment.newInstance();
+        break;
+      case R.id.text_view_commerce:
+        subFragment = null; // TODO
+        UiUtils.createDialog(this, getString(R.string.sorry), getString(R.string.info_not_available_buy),
+          getString(R.string.ok), null, null, null).show();
         break;
       case R.id.text_view_accounts:
         subFragment = ProductsFragment.newInstance();
@@ -170,36 +167,27 @@ public class MainActivity extends BaseActivity implements MainScreen {
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Nullable
   @Override
   public MainComponent getComponent() {
     return component;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public void setSubScreen(@NonNull SubFragment subFragment) {
+  public void setSubScreen(@NonNull SubFragment<? extends Container<MainComponent>> fragment) {
     final FragmentManager manager = getSupportFragmentManager();
     final Fragment currentFragment = manager.findFragmentById(R.id.fragment_container);
-    if (Utils.isNull(currentFragment) || currentFragment.getClass() != subFragment.getClass()) {
+    if (Utils.isNull(currentFragment) || currentFragment.getClass() != fragment.getClass()) {
       manager.beginTransaction()
         .setCustomAnimations(R.anim.fragment_transition_enter_sibling,
           R.anim.fragment_transition_exit_sibling, R.anim.fragment_transition_enter_sibling,
           R.anim.fragment_transition_exit_sibling)
-        .replace(R.id.fragment_container, subFragment)
+        .replace(R.id.fragment_container, fragment)
         .addToBackStack(null)
         .commit();
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void setTitle(@Nullable String title) {
     final ActionBar actionBar = getSupportActionBar();
@@ -208,9 +196,6 @@ public class MainActivity extends BaseActivity implements MainScreen {
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void showAccountAdditionOrRemovalNotification(@NonNull String message) {
     UiUtils.createDialog(this, stringHelper.doneWithExclamationMark(),

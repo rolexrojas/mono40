@@ -9,6 +9,7 @@ import com.gbh.movil.domain.CreditCard;
 import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.InitialData;
 import com.gbh.movil.domain.Loan;
+import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.ProductCategory;
 import com.gbh.movil.domain.Recipient;
@@ -163,5 +164,17 @@ class RetrofitApiBridge implements ApiBridge {
   public Observable<ApiResult<Set<Recipient>>> recipients() {
     final Set<Recipient> recipients = new HashSet<>();
     return Observable.just(ApiResult.create(recipients));
+  }
+
+  @NonNull
+  @Override
+  public Observable<ApiResult<Boolean>> checkIfAffiliated(@NonNull PhoneNumber phoneNumber) {
+    return apiService.checkIfAssociated(phoneNumber.toString())
+      .flatMap(new Func1<Response<Void>, Observable<ApiResult<Boolean>>>() {
+        @Override
+        public Observable<ApiResult<Boolean>> call(Response<Void> response) {
+          return Observable.just(ApiResult.create(response.isSuccessful()));
+        }
+      });
   }
 }

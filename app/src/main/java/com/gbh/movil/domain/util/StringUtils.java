@@ -1,6 +1,9 @@
 package com.gbh.movil.domain.util;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.gbh.movil.Utils;
 
 /**
  * TODO
@@ -33,7 +36,7 @@ public final class StringUtils {
    *
    * @return TODO
    */
-  public static boolean matches(@NonNull String a, @NonNull String b) {
-    return sanitize(a).contains(sanitize(b));
+  public static boolean matches(@NonNull String a, @Nullable String b) {
+    return Utils.isNull(b) || sanitize(a).contains(sanitize(b));
   }
 }

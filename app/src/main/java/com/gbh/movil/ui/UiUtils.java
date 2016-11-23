@@ -1,5 +1,6 @@
 package com.gbh.movil.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.PorterDuff;
@@ -10,10 +11,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
 import com.gbh.movil.Utils;
-import com.gbh.movil.ui.view.widget.RefreshIndicator;
+import com.gbh.movil.ui.view.widget.LoadIndicator;
 
 /**
  * UI utility methods.
@@ -62,9 +65,9 @@ public final class UiUtils {
    *   TODO
    */
   public static void showRefreshIndicator(@NonNull Refreshable refreshable) {
-    final RefreshIndicator refreshIndicator = refreshable.getRefreshIndicator();
-    if (Utils.isNotNull(refreshIndicator)) {
-      refreshIndicator.show();
+    final LoadIndicator loadIndicator = refreshable.getRefreshIndicator();
+    if (Utils.isNotNull(loadIndicator)) {
+      loadIndicator.show();
     }
   }
 
@@ -75,9 +78,9 @@ public final class UiUtils {
    *   TODO
    */
   public static void hideRefreshIndicator(@NonNull Refreshable refreshable) {
-    final RefreshIndicator refreshIndicator = refreshable.getRefreshIndicator();
-    if (Utils.isNotNull(refreshIndicator)) {
-      refreshIndicator.hide();
+    final LoadIndicator loadIndicator = refreshable.getRefreshIndicator();
+    if (Utils.isNotNull(loadIndicator)) {
+      loadIndicator.hide();
     }
   }
 
@@ -102,7 +105,7 @@ public final class UiUtils {
    * @return TODO
    */
   public static AlertDialog createDialog(@NonNull Context context, @NonNull String title,
-    @Nullable String message, @NonNull String positiveButtonText,
+    @Nullable String message, @Nullable String positiveButtonText,
     @Nullable DialogInterface.OnClickListener positiveButtonOnClickListener,
     @Nullable String negativeButtonText,
     @Nullable DialogInterface.OnClickListener negativeButtonOnClickListener) {
@@ -112,5 +115,20 @@ public final class UiUtils {
       .setPositiveButton(positiveButtonText, positiveButtonOnClickListener)
       .setNegativeButton(negativeButtonText, negativeButtonOnClickListener)
       .create();
+  }
+
+  /**
+   * TODO
+   *
+   * @param activity
+   *   TODO
+   */
+  public static void closeKeyboard(@NonNull Activity activity) {
+    final View focusedView = activity.getCurrentFocus();
+    if (Utils.isNotNull(focusedView)) {
+      final InputMethodManager inputMethodManager = (InputMethodManager) activity
+        .getSystemService(Context.INPUT_METHOD_SERVICE);
+      inputMethodManager.hideSoftInputFromInputMethod(focusedView.getWindowToken(), 0);
+    }
   }
 }

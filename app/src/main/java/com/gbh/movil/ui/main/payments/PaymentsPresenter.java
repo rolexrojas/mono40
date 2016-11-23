@@ -1,15 +1,15 @@
 package com.gbh.movil.ui.main.payments;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 
 import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.rx.RxUtils;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.RecipientManager;
-import com.gbh.movil.ui.main.list.Item;
 import com.gbh.movil.ui.Presenter;
-import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.main.list.NoResultsItem;
 import com.google.i18n.phonenumbers.NumberParseException;
 
@@ -33,12 +33,22 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   /**
    * TODO
    */
-  private static final long TIME_SPAN_QUERY = 300L; // 0.3 seconds.
+  private static final long DEFAULT_IME_SPAN_QUERY = 300L; // 0.3 seconds.
 
   private final SchedulerProvider schedulerProvider;
   private final RecipientManager recipientManager;
 
+  /**
+   * TODO
+   */
+  private Subscription recipientSubscription = Subscriptions.unsubscribed();
+  /**
+   * TODO
+   */
   private Subscription querySubscription = Subscriptions.unsubscribed();
+  /**
+   * TODO
+   */
   private Subscription searchSubscription = Subscriptions.unsubscribed();
 
   PaymentsPresenter(@NonNull SchedulerProvider schedulerProvider,
@@ -53,31 +63,30 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   void start() {
     assertScreen();
     querySubscription = screen.onQueryChanged()
-      .debounce(TIME_SPAN_QUERY, TimeUnit.MILLISECONDS)
+      .debounce(DEFAULT_IME_SPAN_QUERY, TimeUnit.MILLISECONDS)
       .observeOn(schedulerProvider.ui())
       .subscribe(new Action1<String>() {
         @Override
         public void call(final String query) {
-          Timber.d(query);
           RxUtils.unsubscribe(searchSubscription);
-          final Observable<Item> recipientsObservable = recipientManager.getAll(query)
+          final Observable<Object> recipientsObservable = recipientManager.getAll(query)
             .compose(RxUtils.<Recipient>fromCollection())
-            .map(new Func1<Recipient, Item>() {
+            .map(new Func1<Recipient, Object>() {
               @Override
-              public Item call(Recipient recipient) {
-                return RecipientItemCreator.create(recipient);
+              public Object call(Recipient recipient) {
+                return recipient;
               }
             });
-          final Observable<Item> actionsObservable = Observable
-            .defer(new Func0<Observable<Item>>() {
+          final Observable<Object> actionsObservable = Observable
+            .defer(new Func0<Observable<Object>>() {
               @Override
-              public Observable<Item> call() {
+              public Observable<Object> call() {
                 if (PhoneNumber.isValid(query)) {
                   try {
                     final PhoneNumber phoneNumber = new PhoneNumber(query);
-                    return Observable.just(new TransactionWithPhoneNumberActionItem(phoneNumber),
-                      new AddPhoneNumberActionItem(phoneNumber))
-                      .cast(Item.class);
+                    return Observable.just(new TransactionWithPhoneNumberAction(phoneNumber),
+                      new AddPhoneNumberAction(phoneNumber))
+                      .cast(Object.class);
                   } catch (NumberParseException exception) {
                     return Observable.error(exception);
                   }
@@ -87,27 +96,26 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
               }
             });
           searchSubscription = recipientsObservable
+            .subscribeOn(schedulerProvider.io())
             .switchIfEmpty(actionsObservable)
             .switchIfEmpty(Observable.just(new NoResultsItem(query)))
-            .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
             .doOnSubscribe(new Action0() {
               @Override
               public void call() {
                 screen.clear();
-                UiUtils.showRefreshIndicator(screen);
+                screen.showLoadIndicator(false);
               }
             })
             .doOnUnsubscribe(new Action0() {
               @Override
               public void call() {
-                UiUtils.hideRefreshIndicator(screen);
+                screen.hideLoadIndicator();
               }
             })
-            .subscribe(new Action1<Item>() {
+            .subscribe(new Action1<Object>() {
               @Override
-              public void call(Item item) {
-                Timber.d(item.toString());
+              public void call(Object item) {
                 screen.add(item);
               }
             }, new Action1<Throwable>() {
@@ -122,6 +130,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
         @Override
         public void call(Throwable throwable) {
           Timber.e(throwable, "Listening to query change events");
+          // TODO: Let the user know that listening to query change events failed.
         }
       });
   }
@@ -131,7 +140,103 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
    */
   void stop() {
     assertScreen();
+    RxUtils.unsubscribe(recipientSubscription);
     RxUtils.unsubscribe(searchSubscription);
     RxUtils.unsubscribe(querySubscription);
+  }
+
+  /**
+   * TODO
+   *
+   * @param recipient
+   *   TODO
+   */
+  void addRecipient(@NonNull Recipient recipient) {
+    assertScreen();
+    screen.clearQuery();
+    screen.showRecipientAdditionConfirmationDialog(recipient);
+  }
+
+  /**
+   * TODO
+   *
+   * @param phoneNumber
+   *   TODO
+   */
+  void addRecipient(@NonNull PhoneNumber phoneNumber) {
+    assertScreen();
+    if (recipientSubscription.isUnsubscribed()) {
+      recipientSubscription = recipientManager.addRecipient(phoneNumber)
+        .subscribeOn(schedulerProvider.io())
+        .observeOn(schedulerProvider.ui())
+        .doOnSubscribe(new Action0() {
+          @Override
+          public void call() {
+            screen.showLoadIndicator(true);
+          }
+        })
+        .subscribe(new Action1<Pair<Boolean, Recipient>>() {
+          @Override
+          public void call(Pair<Boolean, Recipient> pair) {
+            screen.hideLoadIndicator();
+            if (pair.first) {
+              screen.clear();
+              screen.add(pair.second);
+              addRecipient(pair.second);
+            } else {
+              screen.showUnaffiliatedRecipientAdditionNotAvailableMessage();
+            }
+          }
+        }, new Action1<Throwable>() {
+          @Override
+          public void call(Throwable throwable) {
+            Timber.e(throwable, "Adding a phone number recipient");
+            screen.hideLoadIndicator();
+            // TODO: Let the user know that adding a phone number recipient failed.
+          }
+        });
+    }
+  }
+
+  /**
+   * TODO
+   *
+   * @param recipient
+   *   TODO
+   * @param label
+   *   TODO
+   */
+  void updateRecipient(@NonNull Recipient recipient, @Nullable String label) {
+    assertScreen();
+    if (recipientSubscription.isUnsubscribed()) {
+      recipient.setLabel(label);
+      recipientSubscription = recipientManager.updateRecipient(recipient)
+        .subscribeOn(schedulerProvider.io())
+        .observeOn(schedulerProvider.ui())
+        .doOnSubscribe(new Action0() {
+          @Override
+          public void call() {
+            screen.showLoadIndicator(true);
+          }
+        })
+        .doOnUnsubscribe(new Action0() {
+          @Override
+          public void call() {
+            screen.hideLoadIndicator();
+          }
+        })
+        .subscribe(new Action1<Recipient>() {
+          @Override
+          public void call(Recipient recipient) {
+            screen.update(recipient);
+          }
+        }, new Action1<Throwable>() {
+          @Override
+          public void call(Throwable throwable) {
+            Timber.e(throwable, "Updating a recipient");
+            // TODO: Let the user know that updating a recipient failed.
+          }
+        });
+    }
   }
 }

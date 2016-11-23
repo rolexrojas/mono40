@@ -1,17 +1,41 @@
 package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.gbh.movil.Utils;
+import com.gbh.movil.domain.util.StringUtils;
+
+import java.io.Serializable;
 
 /**
  * Abstract recipient representation.
  *
  * @author hecvasro
  */
-public abstract class Recipient implements Matchable {
+public abstract class Recipient implements Serializable, Matchable {
   /**
    * Recipient's {@link RecipientType type}.
    */
-  protected final RecipientType type;
+  private final RecipientType type;
+
+  /**
+   * Recipient's label.
+   */
+  private String label;
+
+  /**
+   * Constructs a new recipient.
+   *
+   * @param type
+   *   Recipient's {@link RecipientType type}.
+   * @param label
+   *   Recipient's label.
+   */
+  protected Recipient(@NonNull RecipientType type, @Nullable String label) {
+    this.type = type;
+    this.label = label;
+  }
 
   /**
    * Constructs a new recipient.
@@ -20,7 +44,7 @@ public abstract class Recipient implements Matchable {
    *   Recipient's {@link RecipientType type}.
    */
   protected Recipient(@NonNull RecipientType type) {
-    this.type = type;
+    this(type, null);
   }
 
   /**
@@ -33,8 +57,41 @@ public abstract class Recipient implements Matchable {
     return type;
   }
 
+  /**
+   * Gets the label of the recipient.
+   *
+   * @return Recipient's label.
+   */
+  @Nullable
+  public String getLabel() {
+    return label;
+  }
+
+  /**
+   * Gets the identifier of the recipient.
+   *
+   * @return Recipient's identifier.
+   */
+  @NonNull
+  public abstract String getIdentifier();
+
+  /**
+   * Sets the label of the recipient.
+   *
+   * @param label
+   *   Recipient's label.
+   */
+  public void setLabel(@Nullable String label) {
+    this.label = label;
+  }
+
   @Override
   public String toString() {
-    return "Recipient:{type=" + type + "}";
+    return "Recipient:{type='" + type + "',label='" + label + "'}";
+  }
+
+  @Override
+  public boolean matches(@Nullable String query) {
+    return Utils.isNotNull(label) && StringUtils.matches(label, query);
   }
 }

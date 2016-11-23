@@ -88,13 +88,14 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
         @Override
         public void call() {
           UiUtils.hideRefreshIndicator(screen);
+          screen.add(new ShowRecentTransactionsItem());
         }
       })
       .compose(RxUtils.<Product>fromCollection())
       .subscribe(new Action1<Product>() {
         @Override
         public void call(Product product) {
-//          screen.add(product);
+          screen.add(new ProductItem(product));
           if (balanceManager.hasValidBalance(product)) {
             screen.setBalance(product, balanceManager.getBalance(product));
           }

@@ -20,7 +20,7 @@ import com.gbh.movil.data.Formatter;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.domain.Transaction;
 import com.gbh.movil.ui.BaseActivity;
-import com.gbh.movil.ui.view.widget.RefreshIndicator;
+import com.gbh.movil.ui.view.widget.LoadIndicator;
 import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.yqritc.recyclerviewflexibledivider.FlexibleDividerDecoration;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -45,7 +45,7 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
   SwipeRefreshLayout.OnRefreshListener {
   private Unbinder unbinder;
   private Adapter adapter;
-  private RefreshIndicator refreshIndicator;
+  private LoadIndicator loadIndicator;
 
   @Inject
   StringHelper stringHelper;
@@ -135,12 +135,11 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
   }
 
   @Nullable
-  @Override
-  public RefreshIndicator getRefreshIndicator() {
-    if (Utils.isNull(refreshIndicator) && Utils.isNotNull(swipeRefreshLayout)) {
-      refreshIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
+  public LoadIndicator getRefreshIndicator() {
+    if (Utils.isNull(loadIndicator) && Utils.isNotNull(swipeRefreshLayout)) {
+      loadIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
     }
-    return refreshIndicator;
+    return loadIndicator;
   }
 
   @Override

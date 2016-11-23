@@ -15,11 +15,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.gbh.movil.Utils;
-import com.gbh.movil.ui.main.list.Item;
-import com.gbh.movil.ui.main.list.ItemAdapter;
-import com.gbh.movil.ui.main.list.ItemHolderBinderFactory;
-import com.gbh.movil.ui.main.list.ItemHolderCreatorFactory;
-import com.gbh.movil.ui.view.widget.RefreshIndicator;
+import com.gbh.movil.ui.UiUtils;
+import com.gbh.movil.ui.main.MainContainer;
+import com.gbh.movil.ui.main.list.Adapter;
+import com.gbh.movil.ui.main.list.HolderBinderFactory;
+import com.gbh.movil.ui.main.list.HolderCreatorFactory;
+import com.gbh.movil.ui.view.widget.LoadIndicator;
 import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.gbh.movil.ui.main.AddAnotherProductFragment;
 import com.gbh.movil.ui.main.PinConfirmationDialogFragment;
@@ -27,8 +28,7 @@ import com.gbh.movil.R;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Balance;
-import com.gbh.movil.ui.main.SubFragment;
-import com.gbh.movil.ui.main.products.transactions.RecentTransactionsActivity;
+import com.gbh.movil.ui.SubFragment;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import javax.inject.Inject;
@@ -44,14 +44,14 @@ import timber.log.Timber;
  *
  * @author hecvasro
  */
-public class ProductsFragment extends SubFragment implements ProductsScreen,
-  ProductItemHolder.OnQueryActionButtonClickedListener,
-  ShowRecentTransactionsItemHolder.OnShowRecentTransactionsButtonClickedListener {
+public class ProductsFragment extends SubFragment<MainContainer> implements ProductsScreen,
+  ProductHolder.OnQueryActionButtonClickedListener,
+  ShowRecentTransactionsHolder.OnShowRecentTransactionsButtonClickedListener {
   private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
 
   private Unbinder unbinder;
-  private ItemAdapter itemAdapter;
-  private RefreshIndicator refreshIndicator;
+  private Adapter adapter;
+  private LoadIndicator loadIndicator;
 
   @Inject
   StringHelper stringHelper;
@@ -103,7 +103,17 @@ public class ProductsFragment extends SubFragment implements ProductsScreen,
    */
   @OnClick(R.id.button_add_another_account)
   void onAddAnotherAccountButtonClicked() {
-    parentScreen.setSubScreen(AddAnotherProductFragment.newInstance());
+    container.setSubScreen(AddAnotherProductFragment.newInstance());
+  }
+
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    // Injects all the annotated dependencies.
+    final ProductsComponent component = DaggerProductsComponent.builder()
+      .mainComponent(container.getComponent())
+      .build();
+    component.inject(this);
   }
 
   @Nullable
@@ -116,24 +126,19 @@ public class ProductsFragment extends SubFragment implements ProductsScreen,
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    // Injects all the annotated dependencies.
-    final ProductsComponent component = DaggerProductsComponent.builder()
-      .mainComponent(parentScreen.getComponent())
-      .build();
-    component.inject(this);
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
     // Prepares the recycler view.
-    final ItemHolderCreatorFactory holderCreatorFactory = new ItemHolderCreatorFactory.Builder()
+    final HolderCreatorFactory holderCreatorFactory = new HolderCreatorFactory.Builder()
       .addCreator(ShowRecentTransactionsItem.class,
-        new ShowRecentTransactionsItemHolderCreator(this))
-      .addCreator(ProductItem.class, new ProductItemHolderCreator(this))
+        new ShowRecentTransactionsHolderCreator(this))
+      .addCreator(ProductItem.class, new ProductHolderCreator(this))
       .build();
-    final ItemHolderBinderFactory holderBinderFactory = new ItemHolderBinderFactory.Builder()
-      .addBinder(ProductItem.class, ProductItemHolder.class, new ProductItemHolderBinder())
+    final HolderBinderFactory holderBinderFactory = new HolderBinderFactory.Builder()
+      .addBinder(ProductItem.class, ProductHolder.class, new ProductHolderBinder())
       .build();
-    itemAdapter = new ItemAdapter(holderCreatorFactory, holderBinderFactory);
-    recyclerView.setAdapter(itemAdapter);
+    adapter = new Adapter(holderCreatorFactory, holderBinderFactory);
+    recyclerView.setAdapter(adapter);
     recyclerView.setHasFixedSize(true);
     recyclerView.setItemAnimator(null);
     final Context context = getContext();
@@ -142,9 +147,9 @@ public class ProductsFragment extends SubFragment implements ProductsScreen,
       @Override
       public void onLayoutCompleted(RecyclerView.State state) {
         super.onLayoutCompleted(state);
-        // Determines whether the addItem another account button must be visible or not. It will
+        // Determines whether the add another account button must be visible or not. It will
         // only be visible if the bottom of the last child of the recycler view does not collide
-        // with the top of the addItem another account button.
+        // with the top of the add another account button.
         final int lastChildPosition = findLastVisibleItemPosition();
         if (lastChildPosition >= 0) {
           final View lastChild = recyclerView.getChildAt(lastChildPosition);
@@ -174,7 +179,7 @@ public class ProductsFragment extends SubFragment implements ProductsScreen,
   public void onStart() {
     super.onStart();
     // Sets the title.
-    parentScreen.setTitle(stringHelper.accounts());
+    container.setTitle(stringHelper.accounts());
     // Starts the presenter.
     presenter.start();
   }
@@ -197,12 +202,12 @@ public class ProductsFragment extends SubFragment implements ProductsScreen,
 
   @Override
   public void clear() {
-    itemAdapter.clearItems();
+    adapter.clear();
   }
 
   @Override
-  public void add(@NonNull Item item) {
-    itemAdapter.addItem(item);
+  public void add(@NonNull Object item) {
+    adapter.add(item);
   }
 
   @Override
@@ -218,30 +223,32 @@ public class ProductsFragment extends SubFragment implements ProductsScreen,
   @Override
   public void setBalance(@NonNull Product product, @Nullable Balance balance) {
     final ProductItem item = new ProductItem(product);
-    if (itemAdapter.containsItem(item)) {
-      final int index = itemAdapter.indexOf(item);
-      final ProductItem actualItem = (ProductItem) itemAdapter.getItem(index);
+    if (adapter.contains(item)) {
+      final int index = adapter.indexOf(item);
+      final ProductItem actualItem = (ProductItem) adapter.get(index);
       actualItem.setBalance(balance);
-      itemAdapter.setItem(index, actualItem);
+      adapter.set(index, actualItem);
     }
   }
 
   @Nullable
-  @Override
-  public RefreshIndicator getRefreshIndicator() {
-    if (Utils.isNull(refreshIndicator) && Utils.isNotNull(swipeRefreshLayout)) {
-      refreshIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
+  public LoadIndicator getRefreshIndicator() {
+    if (Utils.isNull(loadIndicator) && Utils.isNotNull(swipeRefreshLayout)) {
+      loadIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
     }
-    return refreshIndicator;
+    return loadIndicator;
   }
 
   @Override
   public void onQueryBalanceButtonClicked(int position, int x, int y) {
-    queryBalance(((ProductItem) itemAdapter.getItem(position)).getProduct(), x, y);
+    queryBalance(((ProductItem) adapter.get(position)).getProduct(), x, y);
   }
 
   @Override
   public void onShowRecentTransactionsButtonClicked() {
-    startActivity(RecentTransactionsActivity.getLaunchIntent(getContext()));
+//    startActivity(RecentTransactionsActivity.getLaunchIntent(getContext()));
+    UiUtils.createDialog(getContext(), getString(R.string.sorry),
+      getString(R.string.info_not_available_recent_transactions), getString(R.string.ok), null, null,
+      null).show();
   }
 }

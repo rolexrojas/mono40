@@ -16,6 +16,7 @@ import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
@@ -47,4 +48,7 @@ interface ApiService {
 
   @GET("query/last-transactions")
   Observable<Response<List<Transaction>>> recentTransactions();
+
+  @GET("transfer/recipient-info")
+  Observable<Response<Void>> checkIfAssociated(@Query("recipient-msisdn") String phoneNumber);
 }

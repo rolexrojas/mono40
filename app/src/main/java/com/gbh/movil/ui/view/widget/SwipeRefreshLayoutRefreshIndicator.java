@@ -4,12 +4,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 
 /**
- * {@link RefreshIndicator} implementation that uses a {@link
+ * {@link LoadIndicator} implementation that uses a {@link
  * android.support.v4.widget.SwipeRefreshLayout}.
  *
  * @author hecvasro
  */
-public class SwipeRefreshLayoutRefreshIndicator implements RefreshIndicator {
+public class SwipeRefreshLayoutRefreshIndicator implements LoadIndicator {
   private final SwipeRefreshLayout swipeRefreshLayout;
 
   public SwipeRefreshLayoutRefreshIndicator(@NonNull SwipeRefreshLayout swipeRefreshLayout) {

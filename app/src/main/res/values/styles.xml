@@ -1,8 +1,73 @@
 <resources>
+  <style
+    name="BaseAppTabText"
+    parent="TextAppearance.Design.Tab">
+    <item name="android:textColor">#666</item>
+    <item name="android:textSize">10sp</item>
+    <item name="fontPath">@string/font.gotham_rounded.bold</item>
+  </style>
+  <style
+    name="AppTabText"
+    parent="BaseAppTabText"/>
+  <style
+    name="AppTabLayout"
+    parent="Widget.Design.TabLayout">
+    <item name="android:layout_height">48dp</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:paddingBottom">8dp</item>
+    <item name="android:paddingTop">8dp</item>
+    <item name="tabIndicatorColor">#666</item>
+    <item name="tabIndicatorHeight">2dp</item>
+    <item name="tabPaddingEnd">0dp</item>
+    <item name="tabPaddingStart">0dp</item>
+    <item name="tabSelectedTextColor">#666</item>
+    <item name="tabTextAppearance">@style/AppTabText</item>
+    <item name="tabTextColor">#666</item>
+  </style>
+
+  <style
+    name="RecipientText"
+    parent="TextAppearance.AppCompat">
+    <item name="android:textColor">#333</item>
+    <item name="fontPath">@string/font.gotham_rounded.book</item>
+  </style>
+  <style
+    name="RecipientLabelText"
+    parent="RecipientText">
+    <item name="android:textSize">16sp</item>
+  </style>
+  <style name="RecipientLabelText.Medium">
+    <item name="fontPath">@string/font.gotham_rounded.medium</item>
+  </style>
+  <style
+    name="BaseRecipientExtraText"
+    parent="RecipientText">
+    <item name="android:textSize">10sp</item>
+  </style>
+  <style
+    name="RecipientExtraText"
+    parent="BaseRecipientExtraText"/>
+
+  <style name="Text.Contact">
+    <item name="android:textColor">#333</item>
+    <item name="fontPath">@string/font.gotham_rounded.book</item>
+  </style>
+  <style name="Text.Contact.Name">
+    <item name="android:ellipsize">end</item>
+    <item name="android:textSize">16sp</item>
+  </style>
+  <style name="Text.Contact.BasePhoneNumber">
+    <item name="android:textSize">10sp</item>
+  </style>
+  <style
+    name="Text.Contact.PhoneNumber"
+    parent="Text.Contact.BasePhoneNumber"/>
+
   <!-- Text styles -->
   <style
     name="Text"
     parent="TextAppearance.AppCompat"/>
+
   <style name="Text.Label">
     <item name="android:textAllCaps">true</item>
     <item name="android:textColor">@color/primary</item>
@@ -43,6 +108,7 @@
   </style>
   <style name="List.Vertical"/>
   <style name="ListItem">
+    <item name="android:background">?attr/selectableItemBackground</item>
     <item name="android:layout_width">match_parent</item>
     <item name="android:paddingEnd">@dimen/list.item.inset.horizontal</item>
     <item name="android:paddingStart">@dimen/list.item.inset.horizontal</item>
@@ -267,37 +333,6 @@
     name="RecipientListItem"
     parent="ListItem.Normal"/>
   <!-- Themes -->
-  <style
-    name="AppTheme"
-    parent="Theme.AppCompat.Light.NoActionBar">
-    <item name="android:windowBackground">@color/background</item>
-    <item name="colorAccent">@color/accent</item>
-    <item name="colorPrimary">@color/primary</item>
-    <item name="colorPrimaryDark">@color/primary_dark</item>
-    <item name="android:buttonStyle">@style/Widget.Button</item>
-    <!-- Custom attributes -->
-    <item name="searchViewStyle">@style/Widget.SearchView</item>
-    <item name="amountViewStyle">@style/Widget.AmountView</item>
-  </style>
-  <style
-    name="FullScreenDialogTheme"
-    parent="AppTheme">
-    <item name="android:windowBackground">@color/transparent</item>
-  </style>
-  <style
-    name="ToolbarTheme"
-    parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-    <item name="android:background">@color/primary</item>
-    <item name="fontPath">@string/font.gotham_rounded.book</item>
-  </style>
-  <style
-    name="SplashTheme"
-    parent="Theme.AppCompat.NoActionBar">
-    <item name="android:background">@drawable/background_splash</item>
-    <item name="colorAccent">@color/accent</item>
-    <item name="colorPrimary">@color/primary</item>
-    <item name="colorPrimaryDark">@color/primary_dark</item>
-  </style>
 
   <!-- [START] List styles -->
   <style
@@ -348,33 +383,6 @@
     name="ProductAliasText"
     parent="BaseProductAliasText"/>
   <!-- [END] Product styles -->
-  <!-- [START] Contact styles -->
-  <style
-    name="ContactText"
-    parent="TextAppearance.AppCompat">
-    <item name="android:textColor">#333</item>
-    <item name="fontPath">@string/font.gotham_rounded.book</item>
-  </style>
-  <style
-    name="ContactName"
-    parent="ContactText">
-    <item name="android:textSize">16sp</item>
-  </style>
-  <style name="ContactName.Medium">
-    <item name="fontPath">@string/font.gotham_rounded.medium</item>
-  </style>
-  <style
-    name="BaseContactPhoneNumber"
-    parent="ContactText">
-    <item name="android:textSize">10sp</item>
-  </style>
-  <style
-    name="ContactPhoneNumber"
-    parent="BaseContactPhoneNumber"/>
-  <style
-    name="ContactListItem"
-    parent="ListItem.Normal">
-    <item name="android:background">?attr/selectableItemBackground</item>
-  </style>
+  <!-- [START] Recipient styles -->
   <!-- [END] Contact styles -->
 </resources>

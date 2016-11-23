@@ -9,17 +9,26 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 
+import java.io.Serializable;
+
 /**
  * Phone number representation.
  *
  * @author hecvasro
  */
-public class PhoneNumber implements Matchable {
+public class PhoneNumber implements Serializable, Matchable {
   /**
    * TODO
    */
   private static final String REGION_DO = "DO"; // ISO 3166-1
 
+  /**
+   * TODO
+   */
+  private final String formattedContent;
+  /**
+   * TODO
+   */
   private final String content;
 
   /**
@@ -32,8 +41,8 @@ public class PhoneNumber implements Matchable {
    *   TODO
    */
   public PhoneNumber(@NonNull String content) throws NumberParseException {
-    this.content = PhoneNumberUtil.getInstance().format(parse(content),
-      PhoneNumberUtil.PhoneNumberFormat.NATIONAL);
+    this.formattedContent = format(content);
+    this.content = StringUtils.sanitize(formattedContent);
   }
 
   /**
@@ -69,6 +78,33 @@ public class PhoneNumber implements Matchable {
     return false;
   }
 
+  /**
+   * TODO
+   *
+   * @param content
+   *   TODO
+   *
+   * @return TODO
+   *
+   * @throws NumberParseException
+   *   TODO
+   */
+  @NonNull
+  public static String format(@NonNull String content) throws NumberParseException {
+    return PhoneNumberUtil.getInstance().format(parse(content),
+      PhoneNumberUtil.PhoneNumberFormat.NATIONAL);
+  }
+
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  public final String formatted() {
+    return formattedContent;
+  }
+
   @Override
   public boolean equals(Object object) {
     return super.equals(object) || (Utils.isNotNull(object) && object instanceof PhoneNumber
@@ -87,6 +123,6 @@ public class PhoneNumber implements Matchable {
 
   @Override
   public boolean matches(@Nullable String query) {
-    return Utils.isNull(query) || StringUtils.matches(content, query);
+    return StringUtils.matches(content, query);
   }
 }

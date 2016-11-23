@@ -70,13 +70,7 @@ public final class StringHelper {
 
   @NonNull
   public final String payments() {
-    return getString(R.string.pay);
-  }
-
-  @NonNull
-  public final String add(@NonNull PhoneNumber phoneNumber) {
-    return String.format(Locale.getDefault(),
-      getString(R.string.payments_action_phone_number_add), phoneNumber);
+    return getString(R.string.action_pay);
   }
 
   @NonNull
@@ -98,5 +92,10 @@ public final class StringHelper {
   @NonNull
   public final String yourAccountHaveBeenRemoved() {
     return String.format(getString(R.string.your_account_have_been_removed), appName());
+  }
+
+  @NonNull
+  public final String add(@NonNull PhoneNumber phoneNumber) {
+    return String.format(getString(R.string.payments_action_phone_number_add), phoneNumber);
   }
 }

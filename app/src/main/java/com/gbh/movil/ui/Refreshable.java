@@ -2,7 +2,7 @@ package com.gbh.movil.ui;
 
 import android.support.annotation.Nullable;
 
-import com.gbh.movil.ui.view.widget.RefreshIndicator;
+import com.gbh.movil.ui.view.widget.LoadIndicator;
 
 /**
  * TODO
@@ -16,5 +16,5 @@ public interface Refreshable {
    * @return TODO
    */
   @Nullable
-  RefreshIndicator getRefreshIndicator();
+  LoadIndicator getRefreshIndicator();
 }

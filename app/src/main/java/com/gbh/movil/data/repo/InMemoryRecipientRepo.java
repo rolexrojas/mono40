@@ -1,16 +1,11 @@
 package com.gbh.movil.data.repo;
 
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.rx.RxUtils;
-import com.gbh.movil.domain.Contact;
-import com.gbh.movil.domain.ContactRecipient;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.RecipientRepo;
-import com.google.i18n.phonenumbers.NumberParseException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,14 +23,6 @@ class InMemoryRecipientRepo implements RecipientRepo {
   private final Set<Recipient> recipients = new HashSet<>();
 
   InMemoryRecipientRepo() {
-    try {
-      recipients.add(new ContactRecipient(new Contact("Luis Ruiz", new PhoneNumber("8092817626"),
-        Uri.EMPTY)));
-      recipients.add(new ContactRecipient(new Contact("Hector Vasquez",
-        new PhoneNumber("8098829887"), Uri.EMPTY)));
-    } catch (NumberParseException exception) {
-      // Ignored.
-    }
   }
 
   /**

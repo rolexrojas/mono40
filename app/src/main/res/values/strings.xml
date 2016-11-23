@@ -1,51 +1,63 @@
 <resources>
   <string name="about">Acerca de</string>
   <string name="accounts">Cuentas</string>
+  <string name="action.add">Agregar</string>
+  <string name="action.pay">Pagar</string>
+  <string name="action.remove">Remover</string>
+  <string name="action.save">Guardar</string>
+  <string name="action.skip">Saltar</string>
   <string name="add_another_account">Agregar otra cuenta</string>
+  <string name="add_recipient.search.hint">Seleccione o busque el recipiente</string>
+  <string name="add_recipient.title">Agregar recipiente</string>
   <string name="app_name">tPago</string>
   <string name="balance">Saldo</string>
   <string name="buy">Comprar</string>
+  <string name="contact.picture">Imagen del contacto</string>
+  <string name="contact_added.message">¿Le gustaría dar un apodo a %1$s para reconocerlo más fácil en tu lista de pagos?</string>
+  <string name="contact_added.title">¡Contacto agregado!</string>
+  <string name="contacts">Contactos</string>
   <string name="delete">Eliminar</string>
   <string name="done_with_exclamation_mark">¡Listo!</string>
   <string name="dot">Punto</string>
   <string name="fee_for_transaction">Cargo por transacción %1$s</string>
+  <string name="font.gotham_rounded.bold">fonts/GothamRounded-Bold.otf</string>
+  <string name="font.gotham_rounded.book">fonts/GothamRounded-Book.otf</string>
+  <string name="font.gotham_rounded.light">fonts/GothamRounded-Light.otf</string>
+  <string name="font.gotham_rounded.medium">fonts/GothamRounded-Medium.otf</string>
   <string name="go_to_accounts">Ver cuentas</string>
   <string name="help">Ayuda</string>
+  <string name="info.not_available.buy">Por el momento no es posible comprar en comercios.</string>
+  <string name="info.not_available.payments">Por el momento no es posible realizar pagos.</string>
+  <string name="info.not_available.recent_transactions">Por el momento no es posible ver las últimas transacciones.</string>
+  <string name="info.not_available.remove_recipients">Por el momento no es posible remover recipientes.</string>
+  <string name="info.not_available.unaffiliated_contact_recipient_addition">Por el momento no es posible agregar números no afiliados.</string>
   <string name="instruction_content_first">¡Listo! Visita la sucursal del banco donde tienes la cuenta o tarjeta de crédito que deseas agregar.</string>
   <string name="instruction_content_second">Con tu cédula y celular en mano, solicita a un representante de servicio, que active tu cuenta o tarjeta a tPago.</string>
   <string name="instruction_content_third">¡Listo! Ya podrás pagar fácil y rápido usando tPago.</string>
   <string name="instruction_index_first">1.</string>
   <string name="instruction_index_second">2.</string>
   <string name="instruction_index_third">3.</string>
+  <string name="list.no_results">No hay resultados para \'%1$s\'</string>
   <string name="list_item_divider">Separador</string>
   <string name="logo">Logo</string>
   <string name="my_profile">Mi perfil</string>
+  <string name="nick_name">Apodo</string>
   <string name="no_internet_connection">Sin conexión a Internet.</string>
   <string name="ok">Ok</string>
-  <string name="pay">Pagar</string>
   <string name="pay_screen_search_hint">Nombre, número o facturador</string>
+  <string name="payments.action.phone_number.add">Agregar \'%1$s\'</string>
+  <string name="payments.action.phone_number.transaction">Transacción con \'%1$s\'</string>
+  <string name="payments.menu.option.add_recipient">Agregar recipiente</string>
+  <string name="payments.menu.option.remove_recipient">Remover recipiente</string>
+  <string name="payments.title">Pagar</string>
   <string name="pin_confirmation">Confirma con tu PIN</string>
   <string name="preferences">Preferencias</string>
   <string name="recent_transactions">Últimas transacciones</string>
+  <string name="recipient">Recipiente</string>
+  <string name="recipient.picture">Imagen del recipiente</string>
   <string name="see">Ver</string>
   <string name="see_bank_branches">Ver sucursales bancarias</string>
+  <string name="sorry">¡Lo sentimos!</string>
   <string name="your_account_have_been_added">Tu cuenta se agregó exitosamente al mundo %1$s. Ya puedes usarla como cuenta de fondos.</string>
   <string name="your_account_have_been_removed">Tu cuenta se removió exitosamente del mundo %1$s. Ya no puedes usarla como cuenta de fondos.</string>
-
-  <!-- [START] Font strings -->
-  <string name="font.gotham_rounded.bold">fonts/GothamRounded-Bold.otf</string>
-  <string name="font.gotham_rounded.book">fonts/GothamRounded-Book.otf</string>
-  <string name="font.gotham_rounded.light">fonts/GothamRounded-Light.otf</string>
-  <string name="font.gotham_rounded.medium">fonts/GothamRounded-Medium.otf</string>
-  <!-- [END] Font strings -->
-  <!-- [START] List strings -->
-  <string name="list.no_results">No hay resultados para \'%1$s\'</string>
-  <!-- [END] List strings -->
-  <!-- [START] Payments screen strings -->
-  <string name="payments.action.phone_number.add">Agregar \'%1$s\'</string>
-  <string name="payments.action.phone_number.transaction">Transacción con \'%1$s\'</string>
-  <!-- [END] Payments strings -->
-  <!-- [START] Contact strings -->
-  <string name="contact.picture.description">Contact\'s picture</string>
-  <!-- [END] Contact strings -->
 </resources>

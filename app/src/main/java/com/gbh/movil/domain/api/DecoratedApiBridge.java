@@ -8,6 +8,7 @@ import com.gbh.movil.domain.CreditCard;
 import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.InitialData;
 import com.gbh.movil.domain.Loan;
+import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.Transaction;
@@ -123,5 +124,12 @@ public class DecoratedApiBridge implements ApiBridge {
   public Observable<ApiResult<Set<Recipient>>> recipients() {
     return apiBridge.recipients()
       .compose(this.<Set<Recipient>>assertAuthorization());
+  }
+
+  @NonNull
+  @Override
+  public Observable<ApiResult<Boolean>> checkIfAffiliated(@NonNull PhoneNumber phoneNumber) {
+    return apiBridge.checkIfAffiliated(phoneNumber)
+      .compose(this.<Boolean>assertAuthorization());
   }
 }
