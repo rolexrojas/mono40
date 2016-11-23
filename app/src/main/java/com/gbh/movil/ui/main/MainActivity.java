@@ -138,6 +138,11 @@ public class MainActivity extends BaseActivity implements MainContainer, MainScr
       case R.id.text_view_payments:
         subFragment = PaymentsFragment.newInstance();
         break;
+      case R.id.text_view_commerce:
+        subFragment = null; // TODO
+        UiUtils.createDialog(this, getString(R.string.sorry), getString(R.string.info_not_available_buy),
+          getString(R.string.ok), null, null, null).show();
+        break;
       case R.id.text_view_accounts:
         subFragment = ProductsFragment.newInstance();
         break;

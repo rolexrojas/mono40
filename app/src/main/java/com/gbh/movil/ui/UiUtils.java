@@ -16,7 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
 import com.gbh.movil.Utils;
-import com.gbh.movil.ui.view.widget.RefreshIndicator;
+import com.gbh.movil.ui.view.widget.LoadIndicator;
 
 /**
  * UI utility methods.
@@ -65,9 +65,9 @@ public final class UiUtils {
    *   TODO
    */
   public static void showRefreshIndicator(@NonNull Refreshable refreshable) {
-    final RefreshIndicator refreshIndicator = refreshable.getRefreshIndicator();
-    if (Utils.isNotNull(refreshIndicator)) {
-      refreshIndicator.show();
+    final LoadIndicator loadIndicator = refreshable.getRefreshIndicator();
+    if (Utils.isNotNull(loadIndicator)) {
+      loadIndicator.show();
     }
   }
 
@@ -78,9 +78,9 @@ public final class UiUtils {
    *   TODO
    */
   public static void hideRefreshIndicator(@NonNull Refreshable refreshable) {
-    final RefreshIndicator refreshIndicator = refreshable.getRefreshIndicator();
-    if (Utils.isNotNull(refreshIndicator)) {
-      refreshIndicator.hide();
+    final LoadIndicator loadIndicator = refreshable.getRefreshIndicator();
+    if (Utils.isNotNull(loadIndicator)) {
+      loadIndicator.hide();
     }
   }
 

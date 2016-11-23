@@ -6,12 +6,14 @@ import android.support.annotation.Nullable;
 import com.gbh.movil.Utils;
 import com.gbh.movil.domain.util.StringUtils;
 
+import java.io.Serializable;
+
 /**
  * Abstract recipient representation.
  *
  * @author hecvasro
  */
-public abstract class Recipient implements Matchable {
+public abstract class Recipient implements Serializable, Matchable {
   /**
    * Recipient's {@link RecipientType type}.
    */
@@ -64,6 +66,14 @@ public abstract class Recipient implements Matchable {
   public String getLabel() {
     return label;
   }
+
+  /**
+   * Gets the identifier of the recipient.
+   *
+   * @return Recipient's identifier.
+   */
+  @NonNull
+  public abstract String getIdentifier();
 
   /**
    * Sets the label of the recipient.

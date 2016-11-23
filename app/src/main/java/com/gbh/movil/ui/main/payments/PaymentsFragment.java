@@ -1,6 +1,8 @@
 package com.gbh.movil.ui.main.payments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,7 +19,8 @@ import android.view.ViewGroup;
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
 import com.gbh.movil.data.StringHelper;
-import com.gbh.movil.domain.PhoneNumber;
+import com.gbh.movil.domain.Recipient;
+import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.main.MainContainer;
 import com.gbh.movil.ui.main.list.Adapter;
 import com.gbh.movil.ui.main.list.Holder;
@@ -28,10 +31,11 @@ import com.gbh.movil.ui.main.list.NoResultsHolder;
 import com.gbh.movil.ui.main.list.NoResultsHolderBinder;
 import com.gbh.movil.ui.main.list.NoResultsHolderCreator;
 import com.gbh.movil.ui.main.payments.recipients.AddRecipientActivity;
-import com.gbh.movil.ui.view.widget.RefreshIndicator;
-import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
+import com.gbh.movil.ui.view.widget.FullScreenRefreshIndicator;
+import com.gbh.movil.ui.view.widget.LoadIndicator;
 import com.gbh.movil.ui.SubFragment;
 import com.gbh.movil.ui.view.widget.SearchView;
+import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import javax.inject.Inject;
@@ -49,9 +53,17 @@ import rx.Observable;
  */
 public class PaymentsFragment extends SubFragment<MainContainer>
   implements PaymentsScreen, Holder.OnClickListener {
+  /**
+   * TODO
+   */
+  private static final int REQUEST_CODE_ADD_RECIPIENT = 0;
+
   private Unbinder unbinder;
-  private RefreshIndicator refreshIndicator;
   private Adapter adapter;
+
+  private LoadIndicator loadIndicator;
+  private LoadIndicator fullScreenLoadIndicator;
+  private LoadIndicator currentLoadIndicator;
 
   @BindView(R.id.search_view)
   SearchView searchView;
@@ -101,14 +113,13 @@ public class PaymentsFragment extends SubFragment<MainContainer>
     unbinder = ButterKnife.bind(this, view);
     // Prepares the actions and recipients list.
     final HolderCreatorFactory holderCreatorFactory = new HolderCreatorFactory.Builder()
-      .addCreator(PhoneNumberRecipientItem.class, new RecipientHolderCreator(this))
+      .addCreator(Recipient.class, new RecipientHolderCreator(this))
       .addCreator(Action.class, new ActionHolderCreator(this))
       .addCreator(NoResultsItem.class, new NoResultsHolderCreator())
       .build();
     final Context context = getContext();
     final HolderBinderFactory binderFactory = new HolderBinderFactory.Builder()
-      .addBinder(PhoneNumberRecipientItem.class, RecipientHolder.class,
-        new PhoneNumberRecipientItemHolderBinder())
+      .addBinder(Recipient.class, RecipientHolder.class, new RecipientHolderBinder())
       .addBinder(Action.class, ActionHolder.class, new ActionHolderBinder(stringHelper))
       .addBinder(NoResultsItem.class, NoResultsHolder.class, new NoResultsHolderBinder(context))
       .build();
@@ -150,7 +161,9 @@ public class PaymentsFragment extends SubFragment<MainContainer>
         startActivity(AddRecipientActivity.getLaunchIntent(getContext()));
         return true;
       case R.id.payments_menu_option_remove_recipient:
-        // TODO
+        UiUtils.createDialog(getContext(), getString(R.string.sorry),
+          getString(R.string.info_not_available_remove_recipients), getString(R.string.ok), null,
+          null, null).show();
         return true;
       default:
         return super.onOptionsItemSelected(item);
@@ -173,10 +186,54 @@ public class PaymentsFragment extends SubFragment<MainContainer>
     unbinder.unbind();
   }
 
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == REQUEST_CODE_ADD_RECIPIENT) {
+      if (resultCode == Activity.RESULT_OK) {
+        final Recipient recipient = AddRecipientActivity.deserializeResult(data);
+        if (Utils.isNotNull(recipient)) {
+          presenter.addRecipient(recipient);
+        } else {
+          // TODO: Let the user know that the recipient couldn't be added.
+        }
+      }
+    }
+  }
+
   @NonNull
   @Override
   public Observable<String> onQueryChanged() {
     return searchView.onQueryChanged();
+  }
+
+  @Override
+  public void clearQuery() {
+    searchView.clear();
+  }
+
+  @Override
+  public void showLoadIndicator(boolean fullscreen) {
+    if (fullscreen) {
+      if (Utils.isNull(fullScreenLoadIndicator)) {
+        fullScreenLoadIndicator = new FullScreenRefreshIndicator(getChildFragmentManager());
+      }
+      currentLoadIndicator = fullScreenLoadIndicator;
+    } else {
+      if (Utils.isNull(loadIndicator)) {
+        loadIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
+      }
+      currentLoadIndicator = loadIndicator;
+    }
+    currentLoadIndicator.show();
+  }
+
+  @Override
+  public void hideLoadIndicator() {
+    if (Utils.isNotNull(currentLoadIndicator)) {
+      currentLoadIndicator.hide();
+      currentLoadIndicator = null;
+    }
   }
 
   @Override
@@ -190,21 +247,32 @@ public class PaymentsFragment extends SubFragment<MainContainer>
   }
 
   @Override
-  public void startAddRecipientScreen(@NonNull PhoneNumber phoneNumber) {
-    startActivity(AddRecipientActivity.getLaunchIntent(getContext(), phoneNumber));
+  public void showRecipientAdditionConfirmationDialog(@NonNull Recipient recipient) {
+    RecipientAdditionConfirmationDialogFragment.newInstance(recipient)
+      .show(getFragmentManager(), null);
   }
 
-  @Nullable
   @Override
-  public RefreshIndicator getRefreshIndicator() {
-    if (Utils.isNull(refreshIndicator) && Utils.isNotNull(swipeRefreshLayout)) {
-      refreshIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
-    }
-    return refreshIndicator;
+  public void showUnaffiliatedRecipientAdditionNotAvailableMessage() {
+    UiUtils.createDialog(getContext(), getString(R.string.sorry),
+      getString(R.string.info_not_available_unaffiliated_contact_recipient_addition),
+      getString(R.string.ok), null, null, null).show();
   }
 
   @Override
   public void onClick(int position) {
-    presenter.onItemClicked(adapter.get(position));
+    final Object item = adapter.get(position);
+    if (item instanceof Action) {
+      switch (((Action) item).getType()) {
+        case ActionType.ADD_PHONE_NUMBER:
+          presenter.addRecipient(((PhoneNumberAction) item).getPhoneNumber());
+          break;
+        case ActionType.TRANSACTION_WITH_PHONE_NUMBER:
+          UiUtils.createDialog(getContext(), getString(R.string.sorry),
+            getString(R.string.info_not_available_payments), getString(R.string.ok), null, null,
+            null).show();
+          break;
+      }
+    }
   }
 }

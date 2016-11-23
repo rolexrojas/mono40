@@ -1,6 +1,7 @@
 package com.gbh.movil.ui.main.payments.recipients;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.Recipient;
@@ -9,11 +10,9 @@ import com.gbh.movil.rx.RxUtils;
 import com.gbh.movil.ui.Presenter;
 import com.gbh.movil.ui.UiUtils;
 
-import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action0;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
@@ -48,23 +47,7 @@ class AddRecipientPresenter extends Presenter<AddRecipientScreen> {
   void add(@NonNull final Contact contact) {
     assertScreen();
     if (subscription.isUnsubscribed()) {
-      subscription = recipientManager.checkIfAssociated(contact.getPhoneNumber())
-        .flatMap(new Func1<Boolean, Observable<Boolean>>() {
-          @Override
-          public Observable<Boolean> call(Boolean associated) {
-            if (associated) {
-              return recipientManager.addRecipient(contact)
-                .map(new Func1<Recipient, Boolean>() {
-                  @Override
-                  public Boolean call(Recipient recipient) {
-                    return true;
-                  }
-                });
-            } else {
-              return Observable.just(false);
-            }
-          }
-        })
+      subscription = recipientManager.addRecipient(contact)
         .subscribeOn(schedulerProvider.io())
         .observeOn(schedulerProvider.ui())
         .doOnSubscribe(new Action0() {
@@ -73,12 +56,12 @@ class AddRecipientPresenter extends Presenter<AddRecipientScreen> {
             UiUtils.showRefreshIndicator(screen);
           }
         })
-        .subscribe(new Action1<Boolean>() {
+        .subscribe(new Action1<Pair<Boolean, Recipient>>() {
           @Override
-          public void call(Boolean added) {
+          public void call(Pair<Boolean, Recipient> pair) {
             UiUtils.hideRefreshIndicator(screen);
-            if (added) {
-              screen.terminate();
+            if (pair.first) {
+              screen.finish(pair.second);
             } else {
               screen.showNotSupportedOperationMessage();
             }
@@ -86,8 +69,9 @@ class AddRecipientPresenter extends Presenter<AddRecipientScreen> {
         }, new Action1<Throwable>() {
           @Override
           public void call(Throwable throwable) {
-            Timber.e(throwable, "Adding a contact recipient");
+            Timber.e(throwable, "Adding a phone number recipient");
             UiUtils.hideRefreshIndicator(screen);
+            // TODO: Let the user know that adding a phone number recipient failed.
           }
         });
     }

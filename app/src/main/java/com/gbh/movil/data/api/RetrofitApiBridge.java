@@ -168,7 +168,7 @@ class RetrofitApiBridge implements ApiBridge {
 
   @NonNull
   @Override
-  public Observable<ApiResult<Boolean>> checkIfAssociated(@NonNull PhoneNumber phoneNumber) {
+  public Observable<ApiResult<Boolean>> checkIfAffiliated(@NonNull PhoneNumber phoneNumber) {
     return apiService.checkIfAssociated(phoneNumber.toString())
       .flatMap(new Func1<Response<Void>, Observable<ApiResult<Boolean>>>() {
         @Override

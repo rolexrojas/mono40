@@ -22,6 +22,13 @@ public class PhoneNumber implements Serializable, Matchable {
    */
   private static final String REGION_DO = "DO"; // ISO 3166-1
 
+  /**
+   * TODO
+   */
+  private final String formattedContent;
+  /**
+   * TODO
+   */
   private final String content;
 
   /**
@@ -34,8 +41,8 @@ public class PhoneNumber implements Serializable, Matchable {
    *   TODO
    */
   public PhoneNumber(@NonNull String content) throws NumberParseException {
-    this.content = PhoneNumberUtil.getInstance().format(parse(content),
-      PhoneNumberUtil.PhoneNumberFormat.NATIONAL);
+    this.formattedContent = format(content);
+    this.content = StringUtils.sanitize(formattedContent);
   }
 
   /**
@@ -69,6 +76,33 @@ public class PhoneNumber implements Serializable, Matchable {
       // Ignored.
     }
     return false;
+  }
+
+  /**
+   * TODO
+   *
+   * @param content
+   *   TODO
+   *
+   * @return TODO
+   *
+   * @throws NumberParseException
+   *   TODO
+   */
+  @NonNull
+  public static String format(@NonNull String content) throws NumberParseException {
+    return PhoneNumberUtil.getInstance().format(parse(content),
+      PhoneNumberUtil.PhoneNumberFormat.NATIONAL);
+  }
+
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  public final String formatted() {
+    return formattedContent;
   }
 
   @Override

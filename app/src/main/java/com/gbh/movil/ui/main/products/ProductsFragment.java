@@ -15,11 +15,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.gbh.movil.Utils;
+import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.main.MainContainer;
 import com.gbh.movil.ui.main.list.Adapter;
 import com.gbh.movil.ui.main.list.HolderBinderFactory;
 import com.gbh.movil.ui.main.list.HolderCreatorFactory;
-import com.gbh.movil.ui.view.widget.RefreshIndicator;
+import com.gbh.movil.ui.view.widget.LoadIndicator;
 import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.gbh.movil.ui.main.AddAnotherProductFragment;
 import com.gbh.movil.ui.main.PinConfirmationDialogFragment;
@@ -28,7 +29,6 @@ import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Balance;
 import com.gbh.movil.ui.SubFragment;
-import com.gbh.movil.ui.main.products.transactions.RecentTransactionsActivity;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import javax.inject.Inject;
@@ -51,7 +51,7 @@ public class ProductsFragment extends SubFragment<MainContainer> implements Prod
 
   private Unbinder unbinder;
   private Adapter adapter;
-  private RefreshIndicator refreshIndicator;
+  private LoadIndicator loadIndicator;
 
   @Inject
   StringHelper stringHelper;
@@ -232,12 +232,11 @@ public class ProductsFragment extends SubFragment<MainContainer> implements Prod
   }
 
   @Nullable
-  @Override
-  public RefreshIndicator getRefreshIndicator() {
-    if (Utils.isNull(refreshIndicator) && Utils.isNotNull(swipeRefreshLayout)) {
-      refreshIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
+  public LoadIndicator getRefreshIndicator() {
+    if (Utils.isNull(loadIndicator) && Utils.isNotNull(swipeRefreshLayout)) {
+      loadIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
     }
-    return refreshIndicator;
+    return loadIndicator;
   }
 
   @Override
@@ -247,6 +246,9 @@ public class ProductsFragment extends SubFragment<MainContainer> implements Prod
 
   @Override
   public void onShowRecentTransactionsButtonClicked() {
-    startActivity(RecentTransactionsActivity.getLaunchIntent(getContext()));
+//    startActivity(RecentTransactionsActivity.getLaunchIntent(getContext()));
+    UiUtils.createDialog(getContext(), getString(R.string.sorry),
+      getString(R.string.info_not_available_recent_transactions), getString(R.string.ok), null, null,
+      null).show();
   }
 }

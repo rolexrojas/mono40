@@ -13,29 +13,19 @@ import com.gbh.movil.ui.main.list.HolderBinder;
  *
  * @author hecvasro
  */
-abstract class RecipientHolderBinder<T extends Recipient>
-  implements HolderBinder<RecipientItem<T>, RecipientHolder> {
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
-  @NonNull
-  abstract String getExtra(@NonNull T recipient);
-
+class RecipientHolderBinder implements HolderBinder<Recipient, RecipientHolder> {
   @Override
-  public void bind(@NonNull RecipientItem<T> item, @NonNull RecipientHolder holder) {
-    final T recipient = item.getRecipient();
-    final String label = recipient.getLabel();
-    final String extra = getExtra(recipient);
+  public void bind(@NonNull Recipient item, @NonNull RecipientHolder holder) {
+    final String label = item.getLabel();
+    final String identifier = item.getIdentifier();
     if (Utils.isNotNull(label)) {
       holder.recipientLabelTextView.setText(label);
       holder.recipientLabelTextView.setGravity(Gravity.START | Gravity.BOTTOM);
-      holder.recipientExtraTextView.setText(extra);
+      holder.recipientExtraTextView.setText(identifier);
       holder.recipientExtraTextView.setGravity(Gravity.START | Gravity.TOP);
       holder.recipientExtraTextView.setVisibility(View.VISIBLE);
     } else {
-      holder.recipientLabelTextView.setText(extra);
+      holder.recipientLabelTextView.setText(identifier);
       holder.recipientLabelTextView.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
       holder.recipientExtraTextView.setText(null);
       holder.recipientExtraTextView.setVisibility(View.GONE);

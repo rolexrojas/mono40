@@ -5,7 +5,7 @@ package com.gbh.movil.ui.view.widget;
  *
  * @author hecvasro
  */
-public interface RefreshIndicator {
+public interface LoadIndicator {
   /**
    * Shows the indicator, if it is not visible.
    */

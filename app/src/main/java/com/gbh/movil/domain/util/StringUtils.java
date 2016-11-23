@@ -22,7 +22,7 @@ public final class StringUtils {
    *
    * @return TODO
    */
-  private static String sanitize(@NonNull String string) {
+  public static String sanitize(@NonNull String string) {
     return string.toUpperCase().replaceAll("[^0-9A-z]", "");
   }
 

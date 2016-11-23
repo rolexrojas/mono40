@@ -128,8 +128,8 @@ public class DecoratedApiBridge implements ApiBridge {
 
   @NonNull
   @Override
-  public Observable<ApiResult<Boolean>> checkIfAssociated(@NonNull PhoneNumber phoneNumber) {
-    return apiBridge.checkIfAssociated(phoneNumber)
+  public Observable<ApiResult<Boolean>> checkIfAffiliated(@NonNull PhoneNumber phoneNumber) {
+    return apiBridge.checkIfAffiliated(phoneNumber)
       .compose(this.<Boolean>assertAuthorization());
   }
 }

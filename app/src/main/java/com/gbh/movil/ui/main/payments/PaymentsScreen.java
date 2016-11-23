@@ -2,8 +2,7 @@ package com.gbh.movil.ui.main.payments;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.domain.PhoneNumber;
-import com.gbh.movil.ui.Refreshable;
+import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.ui.Screen;
 
 import rx.Observable;
@@ -14,7 +13,7 @@ import rx.android.schedulers.AndroidSchedulers;
  *
  * @author hecvasro
  */
-interface PaymentsScreen extends Screen, Refreshable {
+interface PaymentsScreen extends Screen {
   /**
    * Creates an {@link Observable observable} that emits all query change events.
    * <p>
@@ -34,6 +33,24 @@ interface PaymentsScreen extends Screen, Refreshable {
   /**
    * TODO
    */
+  void clearQuery();
+
+  /**
+   * TODO
+   *
+   * @param fullscreen
+   *   TODO
+   */
+  void showLoadIndicator(boolean fullscreen);
+
+  /**
+   * TODO
+   */
+  void hideLoadIndicator();
+
+  /**
+   * TODO
+   */
   void clear();
 
   /**
@@ -47,8 +64,13 @@ interface PaymentsScreen extends Screen, Refreshable {
   /**
    * TODO
    *
-   * @param phoneNumber
+   * @param recipient
    *   TODO
    */
-  void startAddRecipientScreen(@NonNull PhoneNumber phoneNumber);
+  void showRecipientAdditionConfirmationDialog(@NonNull Recipient recipient);
+
+  /**
+   * TODO
+   */
+  void showUnaffiliatedRecipientAdditionNotAvailableMessage();
 }

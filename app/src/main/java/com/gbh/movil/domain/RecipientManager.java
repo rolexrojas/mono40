@@ -2,6 +2,7 @@ package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 
 import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.domain.api.ApiUtils;
@@ -48,9 +49,54 @@ public final class RecipientManager implements RecipientProvider {
    * @return TODO
    */
   @NonNull
-  public final Observable<Boolean> checkIfAssociated(@NonNull PhoneNumber phoneNumber) {
-    return apiBridge.checkIfAssociated(phoneNumber)
+  public final Observable<Boolean> checkIfAffiliated(@NonNull PhoneNumber phoneNumber) {
+    return apiBridge.checkIfAffiliated(phoneNumber)
       .compose(ApiUtils.<Boolean>handleApiResult(true));
+  }
+
+  /**
+   * TODO
+   *
+   * @param phoneNumber
+   *   TODO
+   * @param label
+   *   TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  public final Observable<Pair<Boolean, Recipient>> addRecipient(
+    @NonNull final PhoneNumber phoneNumber, @Nullable final String label) {
+    return checkIfAffiliated(phoneNumber)
+      .flatMap(new Func1<Boolean, Observable<Pair<Boolean, Recipient>>>() {
+        @Override
+        public Observable<Pair<Boolean, Recipient>> call(Boolean affiliated) {
+          if (affiliated) {
+            return recipientRepo.save(new PhoneNumberRecipient(phoneNumber, label))
+              .map(new Func1<Recipient, Pair<Boolean, Recipient>>() {
+                @Override
+                public Pair<Boolean, Recipient> call(Recipient recipient) {
+                  return Pair.create(true, recipient);
+                }
+              });
+          } else {
+            return Observable.just(Pair.<Boolean, Recipient>create(false, null));
+          }
+        }
+      });
+  }
+
+  /**
+   * TODO
+   *
+   * @param phoneNumber
+   *   TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  public final Observable<Pair<Boolean, Recipient>> addRecipient(@NonNull PhoneNumber phoneNumber) {
+    return addRecipient(phoneNumber, null);
   }
 
   /**
@@ -62,15 +108,8 @@ public final class RecipientManager implements RecipientProvider {
    * @return TODO
    */
   @NonNull
-  public final Observable<Recipient> addRecipient(@NonNull Contact contact) {
-    return Observable.just(contact)
-      .flatMap(new Func1<Contact, Observable<Recipient>>() {
-        @Override
-        public Observable<Recipient> call(Contact contact) {
-          return recipientRepo.save(new PhoneNumberRecipient(contact.getPhoneNumber(),
-            contact.getName()));
-        }
-      });
+  public final Observable<Pair<Boolean, Recipient>> addRecipient(@NonNull Contact contact) {
+    return addRecipient(contact.getPhoneNumber(), contact.getName());
   }
 
   /**

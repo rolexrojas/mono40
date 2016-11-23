@@ -19,7 +19,7 @@ import com.gbh.movil.ui.FullScreenDialogFragment;
  *
  * @author hecvasro
  */
-public class FullScreenRefreshIndicator implements RefreshIndicator {
+public class FullScreenRefreshIndicator implements LoadIndicator {
   /**
    * TODO
    */

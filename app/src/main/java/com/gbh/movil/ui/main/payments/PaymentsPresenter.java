@@ -1,6 +1,7 @@
 package com.gbh.movil.ui.main.payments;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 
 import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.rx.RxUtils;
@@ -8,7 +9,6 @@ import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.RecipientManager;
 import com.gbh.movil.ui.Presenter;
-import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.main.list.NoResultsItem;
 import com.google.i18n.phonenumbers.NumberParseException;
 
@@ -37,7 +37,17 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   private final SchedulerProvider schedulerProvider;
   private final RecipientManager recipientManager;
 
+  /**
+   * TODO
+   */
+  private Subscription addRecipientSubscription = Subscriptions.unsubscribed();
+  /**
+   * TODO
+   */
   private Subscription querySubscription = Subscriptions.unsubscribed();
+  /**
+   * TODO
+   */
   private Subscription searchSubscription = Subscriptions.unsubscribed();
 
   PaymentsPresenter(@NonNull SchedulerProvider schedulerProvider,
@@ -63,7 +73,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
             .map(new Func1<Recipient, Object>() {
               @Override
               public Object call(Recipient recipient) {
-                return RecipientItemCreator.create(recipient);
+                return recipient;
               }
             });
           final Observable<Object> actionsObservable = Observable
@@ -93,13 +103,13 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
               @Override
               public void call() {
                 screen.clear();
-                UiUtils.showRefreshIndicator(screen);
+                screen.showLoadIndicator(false);
               }
             })
             .doOnUnsubscribe(new Action0() {
               @Override
               public void call() {
-                UiUtils.hideRefreshIndicator(screen);
+                screen.hideLoadIndicator();
               }
             })
             .subscribe(new Action1<Object>() {
@@ -129,6 +139,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
    */
   void stop() {
     assertScreen();
+    RxUtils.unsubscribe(addRecipientSubscription);
     RxUtils.unsubscribe(searchSubscription);
     RxUtils.unsubscribe(querySubscription);
   }
@@ -136,21 +147,53 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   /**
    * TODO
    *
-   * @param item
+   * @param recipient
    *   TODO
    */
-  void onItemClicked(@NonNull Object item) {
-    if (item instanceof PhoneNumberRecipientItem) {
-      // TODO: Start transfer or payment process.
-    } else if (item instanceof Action) {
-      switch (((Action) item).getType()) {
-        case ActionType.ADD_PHONE_NUMBER:
-          screen.startAddRecipientScreen(((PhoneNumberAction) item).getPhoneNumber());
-          break;
-        case ActionType.TRANSACTION_WITH_PHONE_NUMBER:
-          // TODO
-          break;
-      }
+  void addRecipient(@NonNull Recipient recipient) {
+    assertScreen();
+    screen.clearQuery();
+    screen.showRecipientAdditionConfirmationDialog(recipient);
+  }
+
+  /**
+   * TODO
+   *
+   * @param phoneNumber
+   *   TODO
+   */
+  void addRecipient(@NonNull PhoneNumber phoneNumber) {
+    assertScreen();
+    if (addRecipientSubscription.isUnsubscribed()) {
+      addRecipientSubscription = recipientManager.addRecipient(phoneNumber)
+        .subscribeOn(schedulerProvider.io())
+        .observeOn(schedulerProvider.ui())
+        .doOnSubscribe(new Action0() {
+          @Override
+          public void call() {
+            screen.showLoadIndicator(true);
+          }
+        })
+        .subscribe(new Action1<Pair<Boolean, Recipient>>() {
+          @Override
+          public void call(Pair<Boolean, Recipient> pair) {
+            screen.hideLoadIndicator();
+            if (pair.first) {
+              screen.clear();
+              screen.add(pair.second);
+              addRecipient(pair.second);
+            } else {
+              screen.showUnaffiliatedRecipientAdditionNotAvailableMessage();
+            }
+          }
+        }, new Action1<Throwable>() {
+          @Override
+          public void call(Throwable throwable) {
+            Timber.e(throwable, "Adding a phone number recipient");
+            screen.hideLoadIndicator();
+            // TODO: Let the user know that adding a phone number recipient failed.
+          }
+        });
     }
   }
 }

@@ -15,14 +15,14 @@ import android.widget.FrameLayout;
 import com.gbh.movil.App;
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
-import com.gbh.movil.domain.PhoneNumber;
+import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.ui.ActivityModule;
 import com.gbh.movil.ui.BaseActivity;
 import com.gbh.movil.ui.Container;
 import com.gbh.movil.ui.SubFragment;
 import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.view.widget.FullScreenRefreshIndicator;
-import com.gbh.movil.ui.view.widget.RefreshIndicator;
+import com.gbh.movil.ui.view.widget.LoadIndicator;
 
 import javax.inject.Inject;
 
@@ -40,11 +40,11 @@ public class AddRecipientActivity extends BaseActivity implements AddRecipientCo
   /**
    * TODO
    */
-  private static final String EXTRA_PHONE_NUMBER = "contact";
+  private static final String EXTRA_RECIPIENT = "recipient";
 
   private AddRecipientComponent component;
   private Unbinder unbinder;
-  private RefreshIndicator refreshIndicator;
+  private LoadIndicator loadIndicator;
 
   @Inject
   AddRecipientPresenter presenter;
@@ -53,6 +53,23 @@ public class AddRecipientActivity extends BaseActivity implements AddRecipientCo
   Toolbar toolbar;
   @BindView(R.id.container)
   FrameLayout containerFrameLayout;
+
+  /**
+   * TODO
+   *
+   * @param recipient
+   *   TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  private static Intent serializeResult(@Nullable Recipient recipient) {
+    final Intent intent = new Intent();
+    if (Utils.isNotNull(recipient)) {
+      intent.putExtra(EXTRA_RECIPIENT, recipient);
+    }
+    return intent;
+  }
 
   /**
    * TODO
@@ -70,18 +87,14 @@ public class AddRecipientActivity extends BaseActivity implements AddRecipientCo
   /**
    * TODO
    *
-   * @param context
-   *   TODO
-   * @param phoneNumber
+   * @param intent
    *   TODO
    *
    * @return TODO
    */
-  @NonNull
-  public static Intent getLaunchIntent(@NonNull Context context, @NonNull PhoneNumber phoneNumber) {
-    final Intent intent = getLaunchIntent(context);
-    intent.putExtra(EXTRA_PHONE_NUMBER, phoneNumber);
-    return intent;
+  @Nullable
+  public static Recipient deserializeResult(@NonNull Intent intent) {
+    return (Recipient) intent.getSerializableExtra(EXTRA_RECIPIENT);
   }
 
   /**
@@ -130,14 +143,8 @@ public class AddRecipientActivity extends BaseActivity implements AddRecipientCo
       actionBar.setDisplayShowTitleEnabled(true);
       actionBar.setTitle(R.string.add_recipient_title);
     }
-    //
-    final Bundle bundle = Utils.isNotNull(savedInstanceState) ? savedInstanceState
-      : getIntent().getExtras();
-    if (Utils.isNotNull(bundle) && bundle.containsKey(EXTRA_PHONE_NUMBER)) {
-      // TODO: Start the phone number validation process.
-    } else {
-      replaceFragment(SearchOrChooseRecipientFragment.newInstance(), false, false);
-    }
+    // Sets the initial screen.
+    replaceFragment(SearchOrChooseRecipientFragment.newInstance(), false, false);
     // Attaches the presenter to the fragment.
     presenter.attachScreen(this);
   }
@@ -186,23 +193,23 @@ public class AddRecipientActivity extends BaseActivity implements AddRecipientCo
   }
 
   @Nullable
-  @Override
-  public RefreshIndicator getRefreshIndicator() {
-    if (Utils.isNull(refreshIndicator)) {
-      refreshIndicator = new FullScreenRefreshIndicator(getSupportFragmentManager());
+  public LoadIndicator getRefreshIndicator() {
+    if (Utils.isNull(loadIndicator)) {
+      loadIndicator = new FullScreenRefreshIndicator(getSupportFragmentManager());
     }
-    return refreshIndicator;
+    return loadIndicator;
   }
 
   @Override
-  public void terminate() {
+  public void finish(@Nullable Recipient recipient) {
+    setResult(Utils.isNotNull(recipient) ? RESULT_OK : RESULT_CANCELED, serializeResult(recipient));
     finish();
   }
 
   @Override
   public void showNotSupportedOperationMessage() {
     UiUtils.createDialog(this, getString(R.string.sorry),
-      getString(R.string.not_available_not_affiliated_recipient_addition), getString(R.string.ok),
+      getString(R.string.info_not_available_unaffiliated_contact_recipient_addition), getString(R.string.ok),
       null, null, null).show();
   }
 }

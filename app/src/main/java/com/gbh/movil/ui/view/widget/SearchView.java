@@ -123,9 +123,22 @@ public class SearchView extends LinearLayout {
     RxUtils.unsubscribe(queryChangedSubscription);
   }
 
+  /**
+   * TODO
+   *
+   * @param hint
+   *   TODO
+   */
   public void setHint(@Nullable String hint) {
     this.hint = hint;
     this.queryEditText.setHint(hint);
+  }
+
+  /**
+   * TODO
+   */
+  public void clear() {
+    this.queryEditText.setText(null);
   }
 
   /**

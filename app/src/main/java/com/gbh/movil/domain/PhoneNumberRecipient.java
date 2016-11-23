@@ -34,6 +34,12 @@ public class PhoneNumberRecipient extends Recipient {
     return phoneNumber;
   }
 
+  @NonNull
+  @Override
+  public String getIdentifier() {
+    return phoneNumber.formatted();
+  }
+
   @Override
   public boolean equals(Object object) {
     return super.equals(object) || (Utils.isNotNull(object)

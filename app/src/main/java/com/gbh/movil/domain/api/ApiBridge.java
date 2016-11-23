@@ -131,5 +131,5 @@ public interface ApiBridge {
    * @return TODO
    */
   @NonNull
-  Observable<ApiResult<Boolean>> checkIfAssociated(@NonNull PhoneNumber phoneNumber);
+  Observable<ApiResult<Boolean>> checkIfAffiliated(@NonNull PhoneNumber phoneNumber);
 }

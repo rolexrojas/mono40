@@ -70,7 +70,7 @@ public final class StringHelper {
 
   @NonNull
   public final String payments() {
-    return getString(R.string.pay);
+    return getString(R.string.action_pay);
   }
 
   @NonNull

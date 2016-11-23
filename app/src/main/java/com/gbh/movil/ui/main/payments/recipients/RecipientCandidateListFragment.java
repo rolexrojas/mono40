@@ -23,7 +23,7 @@ import com.gbh.movil.ui.main.list.NoResultsHolder;
 import com.gbh.movil.ui.main.list.NoResultsHolderBinder;
 import com.gbh.movil.ui.main.list.NoResultsHolderCreator;
 import com.gbh.movil.ui.main.list.NoResultsItem;
-import com.gbh.movil.ui.view.widget.RefreshIndicator;
+import com.gbh.movil.ui.view.widget.LoadIndicator;
 import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
@@ -44,7 +44,7 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
   Holder.OnClickListener {
   private SearchOrChooseRecipientScreen parentScreen;
   private Unbinder unbinder;
-  private RefreshIndicator refreshIndicator;
+  private LoadIndicator loadIndicator;
   private Adapter adapter;
 
   @Inject
@@ -161,12 +161,11 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
   }
 
   @Nullable
-  @Override
-  public RefreshIndicator getRefreshIndicator() {
-    if (Utils.isNull(refreshIndicator) && Utils.isNotNull(swipeRefreshLayout)) {
-      refreshIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
+  public LoadIndicator getRefreshIndicator() {
+    if (Utils.isNull(loadIndicator) && Utils.isNotNull(swipeRefreshLayout)) {
+      loadIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
     }
-    return refreshIndicator;
+    return loadIndicator;
   }
 
   @NonNull
