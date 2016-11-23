@@ -88,8 +88,6 @@ class AddRecipientPresenter extends Presenter<AddRecipientScreen> {
           public void call(Throwable throwable) {
             Timber.e(throwable, "Adding a contact recipient");
             UiUtils.hideRefreshIndicator(screen);
-            screen.showNotSupportedOperationMessage();
-            // TODO: Let the user know that adding a contact recipient failed.
           }
         });
     }
