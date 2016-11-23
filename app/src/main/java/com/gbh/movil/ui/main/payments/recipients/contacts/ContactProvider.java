@@ -55,18 +55,13 @@ final class ContactProvider {
   /**
    * TODO
    *
-   * @param pageSize
-   *   TODO
    * @param query
-   *   TODO
-   * @param contact
    *   TODO
    *
    * @return TODO
    */
   @NonNull
-  Observable<List<Contact>> getAll(final int pageSize, @Nullable final String query,
-    @Nullable final Contact contact) {
+  Observable<List<Contact>> getAll(@Nullable final String query) {
     return Observable.defer(new Func0<Observable<List<Contact>>>() {
       @Override
       public Observable<List<Contact>> call() {
@@ -76,20 +71,20 @@ final class ContactProvider {
             QUERY_ORDER);
           if (Utils.isNotNull(cursor)) {
             String name;
-            PhoneNumber phoneNumber;
+            String phoneNumber;
             Contact currentContact;
             while (cursor.moveToNext()) {
-              try {
-                name = cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_NAME));
-                phoneNumber = new PhoneNumber(cursor.getString(cursor.getColumnIndex(
-                  COLUMN_CONTACT_PHONE_NUMBER)));
-                currentContact = new Contact(phoneNumber, name, null);
-                if (!contactList.contains(currentContact)) {
-                  contactList.add(currentContact);
-                  Timber.d(currentContact.toString());
+              name = cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_NAME));
+              phoneNumber = cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_PHONE_NUMBER));
+              if (PhoneNumber.isValid(phoneNumber)) {
+                try {
+                  currentContact = new Contact(new PhoneNumber(phoneNumber), name, null);
+                  if (!contactList.contains(currentContact)) {
+                    contactList.add(currentContact);
+                  }
+                } catch (NumberParseException exception) {
+                  // No supposed to happen, since we are validating it before.
                 }
-              } catch (NumberParseException exception) {
-                // Since we only want valid phone numbers, we ignore these cases.
               }
             }
             cursor.close();
@@ -98,23 +93,6 @@ final class ContactProvider {
         return Observable.just(contactList);
       }
     })
-      .map(new Func1<List<Contact>, List<Contact>>() {
-        @Override
-        public List<Contact> call(List<Contact> contactList) {
-          if (Utils.isNull(contact)) {
-            return contactList;
-          } else {
-            final int index = contactList.indexOf(contact);
-            if (index == -1) {
-              return contactList;
-            } else if (index == (contactList.size() - 1)) {
-              return new ArrayList<>();
-            } else {
-              return contactList.subList(index, contactList.size());
-            }
-          }
-        }
-      })
       .compose(RxUtils.<Contact>fromCollection())
       .filter(new Func1<Contact, Boolean>() {
         @Override
@@ -122,7 +100,6 @@ final class ContactProvider {
           return contact.matches(query);
         }
       })
-      .limit(pageSize)
       .toList();
   }
 }

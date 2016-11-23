@@ -2,10 +2,12 @@
 <resources>
   <style name="AppTabText"
     parent="BaseAppTabText">
-   <item name="android:letterSpacing">@dimen/text.letter_spacing.small</item>
+    <item name="android:letterSpacing">@dimen/text.letter_spacing.small</item>
   </style>
 
-  <style name="Text.Contact.PhoneNumber">
+  <style
+    name="Text.Contact.PhoneNumber"
+    parent="Text.Contact.BasePhoneNumber">
     <item name="android:letterSpacing">@dimen/text.letter_spacing.small</item>
   </style>
 

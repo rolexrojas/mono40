@@ -32,7 +32,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   /**
    * TODO
    */
-  private static final long TIME_SPAN_QUERY = 300L; // 0.3 seconds.
+  private static final long DEFAULT_IME_SPAN_QUERY = 300L; // 0.3 seconds.
 
   private final SchedulerProvider schedulerProvider;
   private final RecipientManager recipientManager;
@@ -52,12 +52,11 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   void start() {
     assertScreen();
     querySubscription = screen.onQueryChanged()
-      .debounce(TIME_SPAN_QUERY, TimeUnit.MILLISECONDS)
+      .debounce(DEFAULT_IME_SPAN_QUERY, TimeUnit.MILLISECONDS)
       .observeOn(schedulerProvider.ui())
       .subscribe(new Action1<String>() {
         @Override
         public void call(final String query) {
-          Timber.d(query);
           RxUtils.unsubscribe(searchSubscription);
           final Observable<Object> recipientsObservable = recipientManager.getAll(query)
             .compose(RxUtils.<Recipient>fromCollection())
@@ -86,9 +85,9 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
               }
             });
           searchSubscription = recipientsObservable
+            .subscribeOn(schedulerProvider.io())
             .switchIfEmpty(actionsObservable)
             .switchIfEmpty(Observable.just(new NoResultsItem(query)))
-            .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
             .doOnSubscribe(new Action0() {
               @Override
@@ -106,7 +105,6 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
             .subscribe(new Action1<Object>() {
               @Override
               public void call(Object item) {
-                Timber.d(item.toString());
                 screen.add(item);
               }
             }, new Action1<Throwable>() {
@@ -121,6 +119,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
         @Override
         public void call(Throwable throwable) {
           Timber.e(throwable, "Listening to query change events");
+          // TODO: Let the user know that listening to query change events failed.
         }
       });
   }

@@ -2,6 +2,7 @@ package com.gbh.movil.ui.main.payments.recipients.contacts;
 
 import android.support.annotation.NonNull;
 
+import com.gbh.movil.ui.Refreshable;
 import com.gbh.movil.ui.Screen;
 
 import rx.Observable;
@@ -12,7 +13,7 @@ import rx.android.schedulers.AndroidSchedulers;
  *
  * @author hecvasro
  */
-interface ContactListScreen extends Screen {
+interface ContactListScreen extends Screen, Refreshable {
   /**
    * Creates an {@link Observable observable} that emits all query change events.
    * <p>
@@ -28,6 +29,11 @@ interface ContactListScreen extends Screen {
    */
   @NonNull
   Observable<String> onQueryChanged();
+
+  /**
+   * TODO
+   */
+  void clear();
 
   /**
    * TODO

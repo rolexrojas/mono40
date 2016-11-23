@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.gbh.movil.R;
+import com.gbh.movil.Utils;
 import com.gbh.movil.ui.SubFragment;
 import com.gbh.movil.ui.main.list.ItemAdapter;
 import com.gbh.movil.ui.main.list.Holder;
@@ -18,8 +20,11 @@ import com.gbh.movil.ui.main.list.ItemHolderBinderFactory;
 import com.gbh.movil.ui.main.list.ItemHolderCreatorFactory;
 import com.gbh.movil.ui.main.list.NoResultsHolder;
 import com.gbh.movil.ui.main.list.NoResultsHolderBinder;
+import com.gbh.movil.ui.main.list.NoResultsHolderCreator;
 import com.gbh.movil.ui.main.list.NoResultsItem;
 import com.gbh.movil.ui.main.payments.recipients.AddRecipientComponent;
+import com.gbh.movil.ui.view.widget.RefreshIndicator;
+import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import javax.inject.Inject;
@@ -37,11 +42,14 @@ import rx.Observable;
 public class ContactListFragment extends SubFragment<AddRecipientComponent>
   implements ContactListScreen, Holder.OnClickListener {
   private Unbinder unbinder;
+  private RefreshIndicator refreshIndicator;
   private ItemAdapter itemAdapter;
 
   @Inject
   ContactListPresenter presenter;
 
+  @BindView(R.id.swipe_refresh_layout)
+  SwipeRefreshLayout swipeRefreshLayout;
   @BindView(R.id.recycler_view)
   RecyclerView recyclerView;
 
@@ -65,6 +73,7 @@ public class ContactListFragment extends SubFragment<AddRecipientComponent>
     // Prepares the contact item container.
     final ItemHolderCreatorFactory holderCreatorFactory = new ItemHolderCreatorFactory.Builder()
       .addCreator(Contact.class, new ContactHolderCreator(this))
+      .addCreator(NoResultsItem.class, new NoResultsHolderCreator())
       .build();
     final Context context = getContext();
     final ItemHolderBinderFactory holderBinderFactory = new ItemHolderBinderFactory.Builder()
@@ -113,8 +122,22 @@ public class ContactListFragment extends SubFragment<AddRecipientComponent>
   }
 
   @Override
+  public void clear() {
+    itemAdapter.clearItems();
+  }
+
+  @Override
   public void add(@NonNull Object item) {
     itemAdapter.addItem(item);
+  }
+
+  @Nullable
+  @Override
+  public RefreshIndicator getRefreshIndicator() {
+     if (Utils.isNull(refreshIndicator) && Utils.isNotNull(swipeRefreshLayout)) {
+      refreshIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
+    }
+    return refreshIndicator;
   }
 
   @Override
