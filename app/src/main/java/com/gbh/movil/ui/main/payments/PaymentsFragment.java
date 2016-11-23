@@ -273,7 +273,11 @@ public class PaymentsFragment extends SubFragment<MainContainer>
   @Override
   public void onClick(int position) {
     final Object item = adapter.get(position);
-    if (item instanceof Action) {
+    if (item instanceof Recipient) {
+      UiUtils.createDialog(getContext(), getString(R.string.sorry),
+        getString(R.string.info_not_available_payments), getString(R.string.ok), null, null, null)
+        .show();
+    } else if (item instanceof Action) {
       switch (((Action) item).getType()) {
         case ActionType.ADD_PHONE_NUMBER:
           presenter.addRecipient(((PhoneNumberAction) item).getPhoneNumber());
