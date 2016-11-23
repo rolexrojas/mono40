@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 
 import com.gbh.movil.Utils;
 import com.gbh.movil.domain.PhoneNumber;
+import com.gbh.movil.rx.RxUtils;
 import com.google.i18n.phonenumbers.NumberParseException;
 
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ import java.util.List;
 
 import rx.Observable;
 import rx.functions.Func0;
+import rx.functions.Func1;
+import timber.log.Timber;
 
 /**
  * TODO
@@ -23,33 +26,21 @@ import rx.functions.Func0;
  * @author hecvasro
  */
 final class ContactProvider {
-  private static final String COLUMN_ID = ContactsContract.Contacts._ID;
-  private static final String COLUMN_DISPLAY_NAME = ContactsContract.Contacts.DISPLAY_NAME;
-  private static final String COLUMN_HAS_PHONE_NUMBER = ContactsContract.Contacts.HAS_PHONE_NUMBER;
+  private static final String COLUMN_CONTACT_NAME
+    = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME;
+  private static final String COLUMN_CONTACT_PHONE_NUMBER
+    = ContactsContract.CommonDataKinds.Phone.NUMBER;
 
-  private static final Uri QUERY_CONTACT_URI = ContactsContract.Contacts.CONTENT_URI;
-  private static final String[] QUERY_CONTACT_PROJECTION = new String[] {
-    COLUMN_ID,
-    COLUMN_DISPLAY_NAME,
-    COLUMN_HAS_PHONE_NUMBER
-  };
-  private static final String QUERY_CONTACT_SELECTION = COLUMN_HAS_PHONE_NUMBER + " = ?";
-  private static final String[] QUERY_CONTACT_SELECTION_ARGUMENTS = new String[] { "1" };
-  private static final String QUERY_CONTACT_ORDER = COLUMN_DISPLAY_NAME + " ASC";
-
-  private static final String COLUMN_PHONE_NUMBER_ID = ContactsContract.CommonDataKinds.Phone._ID;
-  private static final String COLUMN_PHONE_NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
-
-  private static final Uri QUERY_PHONE_NUMBER_URI
+  private static final Uri QUERY_URI
     = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-  private static final String[] QUERY_PHONE_NUMBER_PROJECTION = new String[] {
-    COLUMN_PHONE_NUMBER_ID,
-    COLUMN_PHONE_NUMBER
-  };
-  private static final String QUERY_PHONE_NUMBER_SELECTION = COLUMN_PHONE_NUMBER_ID + " = ?";
-  private static final String QUERY_PHONE_NUMBER_ORDER = COLUMN_PHONE_NUMBER + " ASC";
+  private static final String[] QUERY_PROJECTION
+    = new String[] { COLUMN_CONTACT_NAME, COLUMN_CONTACT_PHONE_NUMBER };
+  private static final String QUERY_ORDER
+    = String.format("%1$s, %2$s ASC", COLUMN_CONTACT_NAME, COLUMN_CONTACT_PHONE_NUMBER);
 
   private final ContentResolver contentResolver;
+
+  private List<Contact> contactList;
 
   /**
    * TODO
@@ -64,69 +55,74 @@ final class ContactProvider {
   /**
    * TODO
    *
+   * @param pageSize
+   *   TODO
    * @param query
+   *   TODO
+   * @param contact
    *   TODO
    *
    * @return TODO
    */
   @NonNull
-  private String getQuerySelection(@Nullable String query) {
-    String selection = COLUMN_HAS_PHONE_NUMBER + "='1'";
-    if (Utils.isNotNull(query)) {
-      selection += " AND " + COLUMN_DISPLAY_NAME + " LIKE '" + query + "'";
-    }
-    return selection;
-  }
-
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
-  @NonNull
-  Observable<List<Contact>> getAll() {
+  Observable<List<Contact>> getAll(final int pageSize, @Nullable final String query,
+    @Nullable final Contact contact) {
     return Observable.defer(new Func0<Observable<List<Contact>>>() {
       @Override
       public Observable<List<Contact>> call() {
-        final List<Contact> contacts = new ArrayList<>();
-        final Cursor contactCursor = contentResolver.query(QUERY_CONTACT_URI,
-          QUERY_CONTACT_PROJECTION, QUERY_CONTACT_SELECTION, QUERY_CONTACT_SELECTION_ARGUMENTS,
-          QUERY_CONTACT_ORDER);
-        if (Utils.isNotNull(contactCursor)) {
-          String id;
-          String name;
-          int hasPhoneNumber;
-          String phoneNumber;
-          while (contactCursor.moveToNext()) {
-            id = contactCursor.getString(contactCursor.getColumnIndex(COLUMN_ID));
-            name = contactCursor.getString(contactCursor.getColumnIndex(COLUMN_DISPLAY_NAME));
-            hasPhoneNumber = contactCursor.getInt(contactCursor
-              .getColumnIndex(COLUMN_HAS_PHONE_NUMBER));
-            if (hasPhoneNumber > 0) {
-              final Cursor phoneNumberCursor = contentResolver.query(QUERY_PHONE_NUMBER_URI,
-                QUERY_PHONE_NUMBER_PROJECTION, QUERY_PHONE_NUMBER_SELECTION, new String[] { id },
-                QUERY_PHONE_NUMBER_ORDER);
-              if (Utils.isNotNull(phoneNumberCursor)) {
-                while (phoneNumberCursor.moveToNext()) {
-                  phoneNumber = phoneNumberCursor.getString(phoneNumberCursor
-                    .getColumnIndex(COLUMN_PHONE_NUMBER));
-                  if (PhoneNumber.isValid(phoneNumber)) {
-                    try {
-                      contacts.add(new Contact(new PhoneNumber(phoneNumber), name, null));
-                    } catch (NumberParseException exception) {
-                      // No supposed to happen because we are validating the phone number first, so
-                      // we ignore it.
-                    }
-                  }
+        if (Utils.isNull(contactList)) {
+          contactList = new ArrayList<>();
+          final Cursor cursor = contentResolver.query(QUERY_URI, QUERY_PROJECTION, null, null,
+            QUERY_ORDER);
+          if (Utils.isNotNull(cursor)) {
+            String name;
+            PhoneNumber phoneNumber;
+            Contact currentContact;
+            while (cursor.moveToNext()) {
+              try {
+                name = cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_NAME));
+                phoneNumber = new PhoneNumber(cursor.getString(cursor.getColumnIndex(
+                  COLUMN_CONTACT_PHONE_NUMBER)));
+                currentContact = new Contact(phoneNumber, name, null);
+                if (!contactList.contains(currentContact)) {
+                  contactList.add(currentContact);
+                  Timber.d(currentContact.toString());
                 }
-                phoneNumberCursor.close();
+              } catch (NumberParseException exception) {
+                // Since we only want valid phone numbers, we ignore these cases.
               }
             }
+            cursor.close();
           }
-          contactCursor.close();
         }
-        return Observable.just(contacts);
+        return Observable.just(contactList);
       }
-    });
+    })
+      .map(new Func1<List<Contact>, List<Contact>>() {
+        @Override
+        public List<Contact> call(List<Contact> contactList) {
+          if (Utils.isNull(contact)) {
+            return contactList;
+          } else {
+            final int index = contactList.indexOf(contact);
+            if (index == -1) {
+              return contactList;
+            } else if (index == (contactList.size() - 1)) {
+              return new ArrayList<>();
+            } else {
+              return contactList.subList(index, contactList.size());
+            }
+          }
+        }
+      })
+      .compose(RxUtils.<Contact>fromCollection())
+      .filter(new Func1<Contact, Boolean>() {
+        @Override
+        public Boolean call(Contact contact) {
+          return contact.matches(query);
+        }
+      })
+      .limit(pageSize)
+      .toList();
   }
 }

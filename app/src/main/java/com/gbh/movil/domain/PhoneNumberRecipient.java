@@ -58,6 +58,6 @@ public class PhoneNumberRecipient extends Recipient {
    */
   @Override
   public boolean matches(@Nullable String query) {
-    return phoneNumber.matches(query);
+    return super.matches(query) || phoneNumber.matches(query);
   }
 }

@@ -36,7 +36,7 @@ public final class StringUtils {
    *
    * @return TODO
    */
-  public static boolean matches(@Nullable String a, @Nullable String b) {
-    return Utils.isNotNull(a) && Utils.isNotNull(b) && sanitize(a).contains(sanitize(b));
+  public static boolean matches(@NonNull String a, @Nullable String b) {
+    return Utils.isNull(b) || sanitize(a).contains(sanitize(b));
   }
 }

@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import rx.Observable;
 
 /**
  * TODO
@@ -88,6 +89,13 @@ public class ContactListFragment extends SubFragment<AddRecipientComponent>
   }
 
   @Override
+  public void onStop() {
+    super.onStop();
+    // Stops the presenter.
+    presenter.stop();
+  }
+
+  @Override
   public void onDestroyView() {
     super.onDestroyView();
     // Destroys the presenter.
@@ -96,6 +104,12 @@ public class ContactListFragment extends SubFragment<AddRecipientComponent>
     presenter.detachScreen();
     // Unbinds all the annotated views and methods.
     unbinder.unbind();
+  }
+
+  @NonNull
+  @Override
+  public Observable<String> onQueryChanged() {
+    return Observable.empty();
   }
 
   @Override
