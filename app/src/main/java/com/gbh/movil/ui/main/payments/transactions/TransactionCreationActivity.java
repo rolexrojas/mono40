@@ -128,21 +128,24 @@ public class TransactionCreationActivity extends ContainerActivity<TransactionCr
   @Override
   protected void onStart() {
     super.onStart();
-    // Sets the title and subtitle of the activity
-    final ActionBar actionBar = getSupportActionBar();
-    if (Utils.isNotNull(actionBar)) {
-      String title;
-      String subtitle = null;
-      final String label = recipient.getLabel();
-      if (Utils.isNotNull(label)) {
-        title = label;
-        subtitle = recipient.getIdentifier();
-      } else {
-        title = recipient.getIdentifier();
-      }
-      actionBar.setTitle(String.format(getString(R.string.transaction_creation_title), title));
-      actionBar.setSubtitle(subtitle);
+    // Sets the title and subtitle.
+    final String title;
+    final String subtitle;
+    final String label = recipient.getLabel();
+    if (Utils.isNotNull(label)) {
+      title = label;
+      subtitle = recipient.getIdentifier();
+    } else {
+      title = recipient.getIdentifier();
+      subtitle = null;
     }
+    toolbar.post(new Runnable() {
+      @Override
+      public void run() {
+        toolbar.setTitle(String.format(getString(R.string.transaction_creation_title), title));
+        toolbar.setSubtitle(subtitle);
+      }
+    });
   }
 
   @Override
