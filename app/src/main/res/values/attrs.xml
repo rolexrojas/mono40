@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <!-- Search view attributes -->
+  <declare-styleable name="AmountView">
+    <attr
+      name="currencyTextAppearance"
+      format="reference"/>
+    <attr
+      name="currency"
+      format="string"/>
+    <attr
+      name="valueTextAppearance"
+      format="reference"/>
+    <attr
+      name="value"
+      format="float"/>
+  </declare-styleable>
   <declare-styleable name="SearchView">
     <attr
       name="hint"
       format="reference|string"/>
   </declare-styleable>
-  <!-- Amount view attributes -->
-  <declare-styleable name="AmountView">
-    <attr
-      name="currency"
-      format="string"/>
-    <attr
-      name="value"
-      format="float"/>
-  </declare-styleable>
-  <!-- Num pad attributes -->
   <declare-styleable name="NumPad">
     <attr
       name="buttonColor"

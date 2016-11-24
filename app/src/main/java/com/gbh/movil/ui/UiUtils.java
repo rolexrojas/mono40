@@ -3,20 +3,27 @@ package com.gbh.movil.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StyleRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.gbh.movil.Utils;
 import com.gbh.movil.ui.view.widget.LoadIndicator;
+
+import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 /**
  * UI utility methods.
@@ -25,6 +32,45 @@ import com.gbh.movil.ui.view.widget.LoadIndicator;
  */
 public final class UiUtils {
   private UiUtils() {
+  }
+
+  /**
+   * TODO
+   *
+   * @param textView
+   *   TODO
+   * @param styleId
+   *   TODO
+   */
+  public static void setTypeface(@NonNull TextView textView, @StyleRes int styleId) {
+    final Context context = textView.getContext();
+    final TypedArray array = context
+      .obtainStyledAttributes(styleId, new int[] { uk.co.chrisjenx.calligraphy.R.attr.fontPath });
+    try {
+      final String fontPath = array.getString(0);
+      if (Utils.isNotNull(fontPath)) {
+        textView.setTypeface(TypefaceUtils.load(context.getAssets(), fontPath));
+      }
+    } finally {
+      array.recycle();
+    }
+  }
+
+  /**
+   * TODO
+   *
+   * @param textView
+   *   TODO
+   * @param textAppearanceId
+   *   TODO
+   */
+  public static void setTextAppearance(@NonNull TextView textView, @StyleRes int textAppearanceId) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      textView.setTextAppearance(textAppearanceId);
+    } else {
+      textView.setTextAppearance(textView.getContext(), textAppearanceId);
+    }
+    setTypeface(textView, textAppearanceId);
   }
 
   /**

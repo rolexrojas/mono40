@@ -3,16 +3,33 @@
   style="@style/App.Widget.Container"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
-  android:orientation="vertical">
+  xmlns:tools="http://schemas.android.com/tools"
+  android:orientation="vertical"
+  tools:ignore="MissingPrefix">
   <include layout="@layout/reusable_payment_option_chooser"/>
+  <com.gbh.movil.ui.view.widget.AmountView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/space.horizontal.normal"
+    android:layout_marginStart="@dimen/space.horizontal.normal"
+    android:layout_marginTop="@dimen/space.vertical.normal"
+    app:currencyTextAppearance="@style/TransactionCreation.Text.AmountView.Currency"
+    app:valueTextAppearance="@style/TransactionCreation.Text.AmountView.Value"/>
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="2dp"
+    android:layout_marginEnd="@dimen/space.horizontal.large"
+    android:layout_marginStart="@dimen/space.horizontal.large"
+    android:alpha="0.1"
+    android:background="@color/black"/>
   <com.gbh.movil.ui.view.widget.NumPad
     style="@style/NumPad.Dark"
     android:layout_width="match_parent"
     android:layout_height="0dp"
-    android:layout_marginBottom="@dimen/space.vertical.large"
+    android:layout_marginBottom="@dimen/space.vertical.normal"
     android:layout_marginEnd="@dimen/space.horizontal.large"
     android:layout_marginStart="@dimen/space.horizontal.large"
-    android:layout_marginTop="@dimen/space.vertical.large"
+    android:layout_marginTop="@dimen/space.vertical.normal"
     android:layout_weight="1"
     app:showDot="true"/>
   <LinearLayout

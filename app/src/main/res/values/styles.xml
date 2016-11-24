@@ -23,6 +23,17 @@
   <style name="Base.Text.Widget.Toolbar.Subtitle">
     <item name="android:textSize">10sp</item>
   </style>
+  <style name="Base.Text.Widget.AmountView">
+    <item name="android:textColor">#333</item>
+  </style>
+  <style name="Base.Text.Widget.AmountView.Currency">
+    <item name="android:textSize">10sp</item>
+    <item name="fontPath">@string/font.gotham_rounded.book</item>
+  </style>
+  <style name="Base.Text.Widget.AmountView.Value">
+    <item name="android:textSize">16sp</item>
+    <item name="fontPath">@string/font.gotham_rounded.medium</item>
+  </style>
   <style name="Base.Text.Bank"/>
   <style name="Base.Text.Bank.Name">
     <item name="android:ellipsize">end</item>
@@ -68,6 +79,13 @@
   <style name="Base.Widget.Container.Colored">
     <item name="android:background">@drawable/background_colored</item>
   </style>
+  <style name="Base.Widget.AmountView">
+    <item name="android:gravity">center_horizontal</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_width">wrap_content</item>
+    <item name="currencyTextAppearance">@style/App.Text.Widget.AmountView.Currency</item>
+    <item name="valueTextAppearance">@style/App.Text.Widget.AmountView.Value</item>
+  </style>
 
   <style
     name="Base.Theme"
@@ -77,8 +95,8 @@
     <item name="colorPrimary">@color/primary</item>
     <item name="colorPrimaryDark">@color/primary_dark</item>
     <item name="android:buttonStyle">@style/App.Widget.Button</item>
-    <item name="searchViewStyle">@style/App.Widget.SearchView</item>
     <item name="amountViewStyle">@style/App.Widget.AmountView</item>
+    <item name="searchViewStyle">@style/App.Widget.SearchView</item>
   </style>
   <style
     name="Base.Theme.AppBar"
@@ -111,6 +129,15 @@
     name="App.Text.Widget.Toolbar.Subtitle"
     parent="Base.Text.Widget.Toolbar.Subtitle"/>
   <style
+    name="App.Text.Widget.AmountView"
+    parent="Base.Text.Widget.AmountView"/>
+  <style
+    name="App.Text.Widget.AmountView.Currency"
+    parent="Base.Text.Widget.AmountView.Currency"/>
+  <style
+    name="App.Text.Widget.AmountView.Value"
+    parent="Base.Text.Widget.AmountView.Value"/>
+  <style
     name="App.Text.Bank"
     parent="Base.Text.Bank"/>
   <style
@@ -138,6 +165,9 @@
   <style
     name="App.Widget.Container.Colored"
     parent="Base.Widget.Container.Colored"/>
+  <style
+    name="App.Widget.AmountView"
+    parent="Base.Widget.AmountView"/>
 
   <style
     name="App.Theme"
@@ -145,6 +175,19 @@
   <style
     name="App.Theme.AppBar"
     parent="Base.Theme.AppBar"/>
+
+  <style
+    name="TransactionCreation.Text.AmountView.Currency"
+    parent="App.Text.Widget.AmountView.Currency">
+    <item name="android:textSize">30sp</item>
+    <item name="fontPath">@string/font.gotham_rounded.light</item>
+  </style>
+  <style
+    name="TransactionCreation.Text.AmountView.Value"
+    parent="App.Text.Widget.AmountView.Value">
+    <item name="android:textSize">75sp</item>
+    <item name="fontPath">@string/font.gotham_rounded.light</item>
+  </style>
 
   <!-- TODO -->
   <style
@@ -292,26 +335,6 @@
   <style
     name="MenuItem.Large"
     parent="BaseMenuItem.Large"/>
-  <!-- Amount view styles -->
-  <style name="App.Text.Widget.AmountView">
-    <item name="android:textColor">#333</item>
-  </style>
-  <style name="App.Text.Widget.AmountView.Currency">
-    <item name="android:textSize">10sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.book</item>
-  </style>
-  <style name="App.Text.Widget.AmountView.Value">
-    <item name="android:textSize">16sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.medium</item>
-  </style>
-  <style name="App.Widget.AmountView"/>
-  <style name="App.Widget.AmountViewCurrency">
-    <item name="android:alpha">0.5</item>
-    <item name="android:textAppearance">@style/App.Text.Widget.AmountView.Currency</item>
-  </style>
-  <style name="App.Widget.AmountViewValue">
-    <item name="android:textAppearance">@style/App.Text.Widget.AmountView.Value</item>
-  </style>
   <!-- Num pad styles -->
   <style name="NumPad"/>
   <style name="NumPad.Light">

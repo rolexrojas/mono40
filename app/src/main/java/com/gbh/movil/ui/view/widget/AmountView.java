@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,12 +27,28 @@ import butterknife.ButterKnife;
  * @author hecvasro
  */
 public class AmountView extends LinearLayout {
+  /**
+   * TODO
+   */
+  @StyleRes
+  private int currencyTextAppearance;
+  /**
+   * TODO
+   */
   private String currency;
+  /**
+   * TODO
+   */
+  @StyleRes
+  private int valueTextAppearance;
+  /**
+   * TODO
+   */
   private BigDecimal value;
 
-  @BindView(R.id.text_view_currency)
+  @BindView(R.id.currency)
   TextView currencyTextView;
-  @BindView(R.id.text_view_value)
+  @BindView(R.id.value)
   TextView valueTextView;
 
   public AmountView(Context context) {
@@ -46,21 +63,27 @@ public class AmountView extends LinearLayout {
     super(context, attrs, defStyleAttr);
     setOrientation(LinearLayout.HORIZONTAL);
     final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.AmountView,
-      defStyleAttr, R.style.App_Widget_SearchView);
+      defStyleAttr, R.style.App_Widget_AmountView);
     try {
+      currencyTextAppearance = array.getResourceId(R.styleable.AmountView_currencyTextAppearance,
+        R.style.App_Text_Widget_AmountView_Currency);
       currency = array.getString(R.styleable.AmountView_currency);
+      valueTextAppearance = array.getResourceId(R.styleable.AmountView_valueTextAppearance,
+        R.style.App_Text_Widget_AmountView_Value);
       value = BigDecimal.valueOf(array.getFloat(R.styleable.AmountView_value, 0F));
     } finally {
       array.recycle();
     }
-    LayoutInflater.from(context).inflate(R.layout.amount_view, this);
+    LayoutInflater.from(context).inflate(R.layout.widget_amount_view, this);
   }
 
   @Override
   protected void onFinishInflate() {
     super.onFinishInflate();
     ButterKnife.bind(this);
+    UiUtils.setTextAppearance(currencyTextView, currencyTextAppearance);
     setCurrency(currency);
+    UiUtils.setTextAppearance(valueTextView, valueTextAppearance);
     setValue(value);
   }
 
