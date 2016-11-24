@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  android:id="@+id/container"
+  style="@style/App.Widget.Container.Colored"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical">
+  <android.support.design.widget.AppBarLayout
+    android:id="@+id/container.app_bar"
+    style="@style/AppToolbar">
+    <android.support.v7.widget.Toolbar
+      android:id="@+id/container.app_bar.toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"/>
+  </android.support.design.widget.AppBarLayout>
+  <FrameLayout
+    android:id="@+id/container.content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
+</LinearLayout>

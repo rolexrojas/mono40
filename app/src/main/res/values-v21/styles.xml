@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <style
+    name="App.Widget.Button.Blurred"
+    parent="Base.App.Widget.Button.Blurred">
+    <item name="android:background">@drawable/app_widget_button_blurred</item>
+  </style>
+
   <style name="AppTabText"
     parent="BaseAppTabText">
     <item name="android:letterSpacing">@dimen/text.letter_spacing.small</item>
@@ -7,7 +13,7 @@
 
   <style
     name="Text.Contact.PhoneNumber"
-    parent="Text.Contact.BasePhoneNumber">
+    parent="App.Text.Contact.BasePhoneNumber">
     <item name="android:letterSpacing">@dimen/text.letter_spacing.small</item>
   </style>
 

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <dimen name="button.height">50dp</dimen>
-  <dimen name="button.radius">2dp</dimen>
   <dimen name="divider.size">1dp</dimen>
   <dimen name="list.item.button.height">36dp</dimen>
   <dimen name="list.item.button.width">80dp</dimen>
@@ -16,6 +14,8 @@
   <dimen name="pin_dot_margin_horizontal">6dp</dimen>
   <dimen name="pin_dot_size">14dp</dimen>
   <dimen name="pin_view_padding_vertical">16dp</dimen>
+  <dimen name="widget.button.height">50dp</dimen>
+  <dimen name="widget.button.radius">2dp</dimen>
   <item name="text.letter_spacing.large" format="float" type="dimen">0.081</item> <!-- 1.3sp -->
   <item name="text.letter_spacing.normal" format="float" type="dimen">0.062</item> <!-- 1.0sp -->
   <item name="text.letter_spacing.small" format="float" type="dimen">0.05</item> <!-- 0.8sp -->

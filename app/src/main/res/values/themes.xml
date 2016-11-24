@@ -7,10 +7,10 @@
     <item name="colorAccent">@color/accent</item>
     <item name="colorPrimary">@color/primary</item>
     <item name="colorPrimaryDark">@color/primary_dark</item>
-    <item name="android:buttonStyle">@style/Widget.Button</item>
+    <item name="android:buttonStyle">@style/App.Widget.Button</item>
     <!-- Custom attributes -->
-    <item name="searchViewStyle">@style/Widget.SearchView</item>
-    <item name="amountViewStyle">@style/Widget.AmountView</item>
+    <item name="searchViewStyle">@style/App.Widget.SearchView</item>
+    <item name="amountViewStyle">@style/App.Widget.AmountView</item>
   </style>
   <style
     name="FullScreenDialogTheme"

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  style="@style/App.Widget.Container"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:orientation="vertical">
+  <Spinner
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp"
+    android:layout_marginEnd="56dp"
+    android:layout_marginStart="56dp"
+    android:layout_marginTop="20dp"
+    android:paddingBottom="20dp"
+    android:paddingTop="20dp"/>
+  <com.gbh.movil.ui.view.widget.NumPad
+    style="@style/NumPad.Dark"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    app:showDot="true"/>
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <Button
+      android:id="@+id/action.recharge"
+      style="@style/App.Widget.Button.Blurred"
+      android:layout_width="0dp"
+      android:layout_weight="1"
+      android:text="@string/action.recharge"/>
+    <View
+      android:layout_width="1dp"
+      android:layout_height="match_parent"/>
+    <Button
+      android:id="@+id/action.transfer"
+      style="@style/App.Widget.Button.Blurred"
+      android:layout_width="0dp"
+      android:layout_weight="1"
+      android:text="@string/action.transfer"/>
+  </LinearLayout>
+</LinearLayout>

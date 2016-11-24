@@ -3,9 +3,11 @@
   <string name="accounts">Cuentas</string>
   <string name="action.add">Agregar</string>
   <string name="action.pay">Pagar</string>
+  <string name="action.recharge">Recargar</string>
   <string name="action.remove">Remover</string>
   <string name="action.save">Guardar</string>
   <string name="action.skip">Saltar</string>
+  <string name="action.transfer">Transferir</string>
   <string name="add_another_account">Agregar otra cuenta</string>
   <string name="add_recipient.search.hint">Seleccione o busque el recipiente</string>
   <string name="add_recipient.title">Agregar recipiente</string>
