@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <style
+    name="App.Text.Widget.Toolbar.Subtitle"
+    parent="Base.Text.Widget.Toolbar.Subtitle">
+    <item name="android:letterSpacing">@dimen/text.letter_spacing.small</item>
+  </style>
+
+  <style
     name="App.Widget.Button.Blurred"
-    parent="Base.App.Widget.Button.Blurred">
+    parent="Base.Widget.Button.Blurred">
     <item name="android:background">@drawable/app_widget_button_blurred</item>
   </style>
 
+  <!-- TODO -->
   <style name="AppTabText"
     parent="BaseAppTabText">
     <item name="android:letterSpacing">@dimen/text.letter_spacing.small</item>

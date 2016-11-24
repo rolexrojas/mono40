@@ -10,7 +10,7 @@
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
     android:supportsRtl="true"
-    android:theme="@style/AppTheme">
+    android:theme="@style/App.Theme">
     <meta-data
       android:name="io.fabric.ApiKey"
       android:value="fa97cc2f5c3339e67fe12a40ce7ae391909b4e9d"/>

@@ -1,20 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <style
-    name="AppTheme"
-    parent="Theme.AppCompat.Light.NoActionBar">
-    <item name="android:windowBackground">@color/background</item>
-    <item name="colorAccent">@color/accent</item>
-    <item name="colorPrimary">@color/primary</item>
-    <item name="colorPrimaryDark">@color/primary_dark</item>
-    <item name="android:buttonStyle">@style/App.Widget.Button</item>
-    <!-- Custom attributes -->
-    <item name="searchViewStyle">@style/App.Widget.SearchView</item>
-    <item name="amountViewStyle">@style/App.Widget.AmountView</item>
-  </style>
+  <!-- TODO -->
   <style
     name="FullScreenDialogTheme"
-    parent="AppTheme">
+    parent="App.Theme">
     <item name="android:windowBackground">@color/transparent</item>
   </style>
   <style

@@ -9,7 +9,7 @@ import dagger.Component;
  * @author hecvasro
  */
 @ActivityScope
-@Component(dependencies = AppComponent.class)
+@Component(dependencies = AppComponent.class, modules = TransactionCreationModule.class)
 public interface TransactionCreationComponent {
   /**
    * TODO

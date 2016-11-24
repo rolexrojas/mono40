@@ -13,8 +13,11 @@ import com.gbh.movil.App;
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
 import com.gbh.movil.domain.PhoneNumber;
+import com.gbh.movil.domain.PhoneNumberRecipient;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.ui.ContainerActivity;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,13 +33,12 @@ public class TransactionCreationActivity extends ContainerActivity<TransactionCr
   /**
    * TODO
    */
-  private static final String ARGUMENT_PHONE_NUMBER = "phoneNumber";
-  /**
-   * TODO
-   */
   private static final String ARGUMENT_RECIPIENT = "recipient";
 
   private TransactionCreationComponent component;
+
+  @Inject
+  Recipient recipient;
 
   private Unbinder unbinder;
 
@@ -61,23 +63,6 @@ public class TransactionCreationActivity extends ContainerActivity<TransactionCr
    *
    * @param context
    *   TODO
-   * @param phoneNumber
-   *   TODO
-   *
-   * @return TODO
-   */
-  @NonNull
-  public static Intent getLaunchIntent(@NonNull Context context, @NonNull PhoneNumber phoneNumber) {
-    final Intent intent = getLaunchIntent(context);
-    intent.putExtra(ARGUMENT_PHONE_NUMBER, phoneNumber);
-    return intent;
-  }
-
-  /**
-   * TODO
-   *
-   * @param context
-   *   TODO
    * @param recipient
    *   TODO
    *
@@ -90,6 +75,21 @@ public class TransactionCreationActivity extends ContainerActivity<TransactionCr
     return intent;
   }
 
+  /**
+   * TODO
+   *
+   * @param context
+   *   TODO
+   * @param phoneNumber
+   *   TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  public static Intent getLaunchIntent(@NonNull Context context, @NonNull PhoneNumber phoneNumber) {
+    return getLaunchIntent(context, new PhoneNumberRecipient(phoneNumber));
+  }
+
   @Override
   protected int getContainerId() {
     return R.id.container_content;
@@ -98,19 +98,21 @@ public class TransactionCreationActivity extends ContainerActivity<TransactionCr
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    // Asserts all the required arguments.
     final Bundle bundle = Utils.isNotNull(savedInstanceState) ? savedInstanceState : getIntent()
       .getExtras();
-    // Asserts all the required arguments.
     if (Utils.isNull(bundle) || !bundle.containsKey(ARGUMENT_RECIPIENT)) {
-      throw new NullPointerException("Argument '" + ARGUMENT_RECIPIENT + "' is missing");
+      throw new NullPointerException("Argument '" + ARGUMENT_RECIPIENT + "' must be provided");
     } else {
-      // Sets the content layout identifier.
-      setContentView(R.layout.activity_transaction_creation);
+      final Recipient recipient = (Recipient) bundle.getSerializable(ARGUMENT_RECIPIENT);
       // Injects all the annotated dependencies.
       component = DaggerTransactionCreationComponent.builder()
         .appComponent(((App) getApplication()).getComponent())
+        .transactionCreationModule(new TransactionCreationModule(recipient))
         .build();
       component.inject(this);
+      // Sets the content layout identifier.
+      setContentView(R.layout.activity_transaction_creation);
       // Binds all the annotated views and methods.
       unbinder = ButterKnife.bind(this);
       // Prepares the app bar.
@@ -120,6 +122,26 @@ public class TransactionCreationActivity extends ContainerActivity<TransactionCr
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
       }
+    }
+  }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+    // Sets the title and subtitle of the activity
+    final ActionBar actionBar = getSupportActionBar();
+    if (Utils.isNotNull(actionBar)) {
+      String title;
+      String subtitle = null;
+      final String label = recipient.getLabel();
+      if (Utils.isNotNull(label)) {
+        title = label;
+        subtitle = recipient.getIdentifier();
+      } else {
+        title = recipient.getIdentifier();
+      }
+      actionBar.setTitle(String.format(getString(R.string.transaction_creation_title), title));
+      actionBar.setSubtitle(subtitle);
     }
   }
 
@@ -144,21 +166,5 @@ public class TransactionCreationActivity extends ContainerActivity<TransactionCr
   @Override
   public TransactionCreationComponent getComponent() {
     return component;
-  }
-
-  @Override
-  public void setTitle(@Nullable String title) {
-    final ActionBar actionBar = getSupportActionBar();
-    if (Utils.isNotNull(actionBar)) {
-      actionBar.setTitle(title);
-    }
-  }
-
-  @Override
-  public void setSubTitle(@Nullable String subtitle) {
-    final ActionBar actionBar = getSupportActionBar();
-    if (Utils.isNotNull(actionBar)) {
-      actionBar.setSubtitle(subtitle);
-    }
   }
 }
