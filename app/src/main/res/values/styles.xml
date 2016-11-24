@@ -23,6 +23,15 @@
   <style name="Base.Text.Widget.Toolbar.Subtitle">
     <item name="android:textSize">10sp</item>
   </style>
+  <style name="Base.Text.Bank"/>
+  <style name="Base.Text.Bank.Name">
+    <item name="android:ellipsize">end</item>
+    <item name="android:maxLines">1</item>
+    <item name="android:textColor">#333</item>
+    <item name="android:textSize">16sp</item>
+    <item name="fontPath">@string/font.gotham_rounded.bold</item>
+  </style>
+
   <style
     name="Base.Widget"
     parent="android:Widget"/>
@@ -101,6 +110,13 @@
   <style
     name="App.Text.Widget.Toolbar.Subtitle"
     parent="Base.Text.Widget.Toolbar.Subtitle"/>
+  <style
+    name="App.Text.Bank"
+    parent="Base.Text.Bank"/>
+  <style
+    name="App.Text.Bank.Name"
+    parent="Base.Text.Bank.Name"/>
+
   <style
     name="App.Widget"
     parent="Base.Widget"/>
@@ -218,8 +234,8 @@
   <style name="ListItem">
     <item name="android:background">?attr/selectableItemBackground</item>
     <item name="android:layout_width">match_parent</item>
-    <item name="android:paddingEnd">@dimen/list.item.inset.horizontal</item>
-    <item name="android:paddingStart">@dimen/list.item.inset.horizontal</item>
+    <item name="android:paddingEnd">@dimen/space.horizontal.normal</item>
+    <item name="android:paddingStart">@dimen/space.horizontal.normal</item>
   </style>
   <style name="ListItem.Normal">
     <item name="android:layout_height">@dimen/list.item.height.normal</item>
@@ -297,12 +313,7 @@
     <item name="android:textAppearance">@style/App.Text.Widget.AmountView.Value</item>
   </style>
   <!-- Num pad styles -->
-  <style name="NumPad">
-    <item name="android:paddingBottom">@dimen/num_pad_padding_vertical</item>
-    <item name="android:paddingEnd">@dimen/num_pad_padding_horizontal</item>
-    <item name="android:paddingStart">@dimen/num_pad_padding_horizontal</item>
-    <item name="android:paddingTop">@dimen/num_pad_padding_vertical</item>
-  </style>
+  <style name="NumPad"/>
   <style name="NumPad.Light">
     <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark</item>
     <item name="buttonColor">@color/white</item>
@@ -380,8 +391,8 @@
   <style name="BaseListItemGroupTitle">
     <item name="android:gravity">center_vertical</item>
     <item name="android:layout_height">35dp</item>
-    <item name="android:paddingEnd">@dimen/list.item.inset.horizontal</item>
-    <item name="android:paddingStart">@dimen/list.item.inset.horizontal</item>
+    <item name="android:paddingEnd">@dimen/space.horizontal.normal</item>
+    <item name="android:paddingStart">@dimen/space.horizontal.normal</item>
     <item name="android:textAllCaps">true</item>
     <item name="android:textColor">#666</item>
     <item name="android:textSize">10sp</item>
@@ -468,17 +479,6 @@
     <item name="android:textAppearance">@style/NoResultsListItemText</item>
   </style>
   <!-- [END] List styles -->
-  <!-- [START] Bank styles -->
-  <style
-    name="BankNameText"
-    parent="App.Text">
-    <item name="android:ellipsize">end</item>
-    <item name="android:maxLines">1</item>
-    <item name="android:textColor">#333</item>
-    <item name="android:textSize">16sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.bold</item>
-  </style>
-  <!-- [END] Bank styles -->
   <!-- [START] Product styles -->
   <style
     name="BaseProductAliasText"

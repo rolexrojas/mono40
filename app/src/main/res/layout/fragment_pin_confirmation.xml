@@ -56,7 +56,9 @@
         android:id="@+id/num_pad"
         style="@style/NumPad.Light"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/space.horizontal.large"
+        android:layout_marginStart="@dimen/space.horizontal.large"/>
     </LinearLayout>
   </FrameLayout>
 </io.codetail.widget.RevealFrameLayout>

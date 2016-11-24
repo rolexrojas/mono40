@@ -11,8 +11,9 @@ import dagger.Component;
  * @author hecvasro
  */
 @FragmentScope
-@Component(dependencies = TransactionCreationComponent.class)
-public interface ContactTransactionCreationComponent {
+@Component(dependencies = TransactionCreationComponent.class,
+  modules = PhoneNumberTransactionCreationModule.class)
+interface ContactTransactionCreationComponent {
   /**
    * TODO
    *

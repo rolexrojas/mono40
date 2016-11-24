@@ -1,6 +1,8 @@
 package com.gbh.movil.ui.main.payments.transactions;
 
 import com.gbh.movil.AppComponent;
+import com.gbh.movil.data.SchedulerProvider;
+import com.gbh.movil.domain.ProductManager;
 import com.gbh.movil.ui.ActivityScope;
 
 import dagger.Component;
@@ -18,4 +20,8 @@ public interface TransactionCreationComponent {
    *   TODO
    */
   void inject(TransactionCreationActivity activity);
+
+  SchedulerProvider provideSchedulerProvider();
+
+  ProductManager provideProductManager();
 }

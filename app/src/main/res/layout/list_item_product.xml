@@ -46,5 +46,5 @@
     android:layout_centerVertical="true"
     android:layout_toEndOf="@+id/linear_layout_anchor"
     android:layout_toStartOf="@+id/frame_layout_anchor"
-    android:textAppearance="@style/BankNameText"/>
+    android:textAppearance="@style/App.Text.Bank.Name"/>
 </RelativeLayout>

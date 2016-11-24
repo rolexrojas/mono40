@@ -13,6 +13,7 @@
   <string name="add_recipient.title">Agregar recipiente</string>
   <string name="app_name">tPago</string>
   <string name="balance">Saldo</string>
+  <string name="bank.logo">Logo</string>
   <string name="buy">Comprar</string>
   <string name="contact.picture">Imagen del contacto</string>
   <string name="contact_added.message">¿Le gustaría dar un apodo a %1$s para reconocerlo más fácil en tu lista de pagos?</string>
@@ -31,6 +32,7 @@
   <string name="info.not_available.buy">Por el momento no es posible comprar en comercios.</string>
   <string name="info.not_available.payments">Por el momento no es posible realizar pagos.</string>
   <string name="info.not_available.recent_transactions">Por el momento no es posible ver las últimas transacciones.</string>
+  <string name="info.not_available.recharge">Por el momento no es posible recargar.</string>
   <string name="info.not_available.remove_recipients">Por el momento no es posible remover recipientes.</string>
   <string name="info.not_available.unaffiliated_contact_recipient_addition">Por el momento no es posible agregar números no afiliados.</string>
   <string name="instruction_content_first">¡Listo! Visita la sucursal del banco donde tienes la cuenta o tarjeta de crédito que deseas agregar.</string>

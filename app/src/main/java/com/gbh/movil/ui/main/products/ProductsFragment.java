@@ -168,7 +168,7 @@ public class ProductsFragment extends SubFragment<MainContainer> implements Prod
     recyclerView.setLayoutManager(layoutManager);
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
       .drawable(R.drawable.divider)
-      .marginResId(R.dimen.list_item_inset_horizontal)
+      .marginResId(R.dimen.space_horizontal_normal)
       .build();
     recyclerView.addItemDecoration(divider);
     // Attaches the screen to the presenter.

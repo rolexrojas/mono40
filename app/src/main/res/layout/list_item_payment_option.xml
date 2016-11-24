@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  style="@style/ListItem.Normal"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+  <ImageView
+    android:id="@+id/bank.logo"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    android:layout_marginEnd="@dimen/space.horizontal.small"
+    android:contentDescription="@string/bank.logo"/>
+  <TextView
+    android:id="@+id/bank.name"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_toEndOf="@+id/bank.logo"
+    android:gravity="center_vertical"
+    android:textAppearance="@style/App.Text.Bank.Name"/>
+</RelativeLayout>
