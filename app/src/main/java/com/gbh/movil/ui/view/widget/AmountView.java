@@ -47,9 +47,9 @@ public class AmountView extends LinearLayout {
   private BigDecimal value;
 
   @BindView(R.id.currency)
-  TextView currencyTextView;
+  protected TextView currencyTextView;
   @BindView(R.id.value)
-  TextView valueTextView;
+  protected TextView valueTextView;
 
   public AmountView(Context context) {
     this(context, null);
@@ -75,6 +75,24 @@ public class AmountView extends LinearLayout {
       array.recycle();
     }
     LayoutInflater.from(context).inflate(R.layout.widget_amount_view, this);
+  }
+
+  /**
+   * TODO
+   * @return TODO
+   */
+  @NonNull
+  protected final String getFormattedValue() {
+    return Formatter.amount(value, alwaysShowCents());
+  }
+
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
+  protected boolean alwaysShowCents() {
+    return true;
   }
 
   @Override
@@ -137,7 +155,7 @@ public class AmountView extends LinearLayout {
    */
   public void setValue(@NonNull BigDecimal value) {
     this.value = value;
-    this.valueTextView.setText(Formatter.amount(this.value));
+    this.valueTextView.setText(this.getFormattedValue());
   }
 
   /**

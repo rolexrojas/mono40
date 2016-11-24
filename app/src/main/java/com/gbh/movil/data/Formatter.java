@@ -41,8 +41,12 @@ public final class Formatter {
    * @return TODO
    */
   @NonNull
-  public static String amount(@NonNull BigDecimal value) {
-    return String.format(LOCALE_EN, "%1$,.2f", value);
+  public static String amount(@NonNull BigDecimal value, boolean showCents) {
+    String s = String.format(LOCALE_EN, "%1$,.2f", value);
+    if (!showCents) {
+      s = s.replace(".00", "");
+    }
+    return s;
   }
 
   /**
@@ -56,8 +60,9 @@ public final class Formatter {
    * @return TODO
    */
   @NonNull
-  public static String amount(@NonNull String currencyCode, @NonNull BigDecimal value) {
-    return String.format(LOCALE_EN, "%1$s$%2$s", currencyCode, amount(value));
+  public static String amount(@NonNull String currencyCode, @NonNull BigDecimal value,
+    boolean showCents) {
+    return String.format(LOCALE_EN, "%1$s$%2$s", currencyCode, amount(value, showCents));
   }
 
   /**

@@ -3,18 +3,25 @@ package com.gbh.movil.ui.main.payments.transactions.contacts;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Spinner;
 
 import com.gbh.movil.R;
+import com.gbh.movil.Utils;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.ui.SubFragment;
 import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.main.payments.transactions.PaymentOptionAdapter;
 import com.gbh.movil.ui.main.payments.transactions.TransactionCreationContainer;
+import com.gbh.movil.ui.view.widget.AmountView;
+import com.gbh.movil.ui.view.widget.CustomAmountView;
+import com.gbh.movil.ui.view.widget.NumPad;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -30,7 +37,8 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 public class ContactTransactionCreationFragment extends SubFragment<TransactionCreationContainer>
-  implements PhoneNumberTransactionCreationScreen {
+  implements PhoneNumberTransactionCreationScreen, Spinner.OnItemSelectedListener,
+  NumPad.OnButtonClickedListener {
   @Inject
   PhoneNumberTransactionCreationPresenter presenter;
 
@@ -40,6 +48,10 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
 
   @BindView(R.id.transaction_creation_payment_option_chooser)
   Spinner paymentOptionChooser;
+  @BindView(R.id.transaction_creation_amount)
+  CustomAmountView amountView;
+  @BindView(R.id.transaction_creation_num_pad)
+  NumPad numPad;
 
   /**
    * TODO
@@ -84,6 +96,10 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
     // Prepares the list of payment options.
     paymentOptionAdapter = new PaymentOptionAdapter(getContext());
     paymentOptionChooser.setAdapter(paymentOptionAdapter);
+    // Adds a listener that gets notified every time a payment option is chosen.
+    paymentOptionChooser.setOnItemSelectedListener(this);
+    // Adds a listener that gets notified every time a num pad button is pressed.
+    numPad.setOnButtonClickedListener(this);
     // Attaches the screen to the presenter.
     presenter.attachScreen(this);
   }
@@ -105,6 +121,10 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
   @Override
   public void onDestroyView() {
     super.onDestroyView();
+    // Removes the listener that gets notified every time a num pad button is pressed.
+    numPad.setOnButtonClickedListener(null);
+    // Removes the listener that gets notified every time a payment option is chosen.
+    paymentOptionChooser.setOnItemSelectedListener(null);
     // Detaches the screen from the presenter.
     presenter.detachScreen();
     // Unbinds all the annotated views and methods.
@@ -114,5 +134,33 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
   @Override
   public void setPaymentOptions(@NonNull Set<Product> paymentOptions) {
     paymentOptionAdapter.addAll(paymentOptions);
+  }
+
+  @Override
+  public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+    final Product product = paymentOptionAdapter.getItem(position);
+    if (Utils.isNotNull(product)) {
+      amountView.setCurrency(product.getCurrency());
+      amountView.setValue(BigDecimal.ZERO);
+    }
+  }
+
+  @Override
+  public void onNothingSelected(AdapterView<?> parent) {
+    // TODO
+  }
+
+  @Override
+  public void onTextButtonClicked(@NonNull String content) {
+    if (TextUtils.isDigitsOnly(content)) {
+      amountView.pushDigit(Integer.parseInt(content));
+    } else {
+      amountView.pushDot();
+    }
+  }
+
+  @Override
+  public void onDeleteButtonClicked() {
+    amountView.pop();
   }
 }

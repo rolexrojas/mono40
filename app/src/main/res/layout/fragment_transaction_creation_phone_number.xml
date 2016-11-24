@@ -7,7 +7,8 @@
   android:orientation="vertical"
   tools:ignore="MissingPrefix">
   <include layout="@layout/reusable_payment_option_chooser"/>
-  <com.gbh.movil.ui.view.widget.AmountView
+  <com.gbh.movil.ui.view.widget.CustomAmountView
+    android:id="@+id/transaction_creation.amount"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginEnd="@dimen/space.horizontal.normal"
@@ -23,6 +24,7 @@
     android:alpha="0.1"
     android:background="@color/black"/>
   <com.gbh.movil.ui.view.widget.NumPad
+    android:id="@+id/transaction_creation.num_pad"
     style="@style/NumPad.Dark"
     android:layout_width="match_parent"
     android:layout_height="0dp"
