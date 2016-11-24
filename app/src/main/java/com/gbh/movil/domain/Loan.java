@@ -11,8 +11,9 @@ import java.math.BigDecimal;
  */
 public class Loan extends Product {
   Loan(@NonNull ProductIdentifier type, @NonNull String alias, @NonNull String number,
-    @NonNull Bank bank, @NonNull String currency, @NonNull BigDecimal queryFee) {
-    super(ProductCategory.LOAN, type, alias, number, bank, currency, queryFee);
+    @NonNull Bank bank, @NonNull String currency, @NonNull BigDecimal queryFee,
+    boolean paymentOption) {
+    super(ProductCategory.LOAN, type, alias, number, bank, currency, queryFee, paymentOption);
   }
 
   @Override

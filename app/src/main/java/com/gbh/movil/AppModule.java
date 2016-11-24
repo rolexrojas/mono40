@@ -48,9 +48,8 @@ final class AppModule {
 
   @Provides
   @Singleton
-  ProductManager provideProductManager(EventBus eventBus, ProductRepo productRepo,
-    ApiBridge apiBridge) {
-    return new ProductManager(eventBus, productRepo, apiBridge);
+  ProductManager provideProductManager(EventBus eventBus, ProductRepo productRepo) {
+    return new ProductManager(eventBus, productRepo);
   }
 
   @Provides

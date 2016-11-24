@@ -21,7 +21,7 @@ public class Bank {
   /**
    * Bank's name.
    */
-  private final String name;
+  private String name;
   /**
    * Bank's state. True if it is active, false otherwise.
    */
@@ -68,8 +68,18 @@ public class Bank {
    * @return Bank's name.
    */
   @NonNull
-  public final String getName() {
+  public String getName() {
     return name;
+  }
+
+  /**
+   * Sets the name of the bank.
+   *
+   * @param name
+   *   Bank's name.
+   */
+  public void setName(@NonNull String name) {
+    this.name = name;
   }
 
   /**

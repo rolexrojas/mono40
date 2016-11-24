@@ -15,7 +15,10 @@ import com.gbh.movil.Utils;
 import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.PhoneNumberRecipient;
 import com.gbh.movil.domain.Recipient;
+import com.gbh.movil.domain.RecipientType;
 import com.gbh.movil.ui.ContainerActivity;
+import com.gbh.movil.ui.SubFragment;
+import com.gbh.movil.ui.main.payments.transactions.contacts.ContactTransactionCreationFragment;
 
 import javax.inject.Inject;
 
@@ -91,11 +94,6 @@ public class TransactionCreationActivity extends ContainerActivity<TransactionCr
   }
 
   @Override
-  protected int getContainerId() {
-    return R.id.container_content;
-  }
-
-  @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // Asserts all the required arguments.
@@ -122,6 +120,17 @@ public class TransactionCreationActivity extends ContainerActivity<TransactionCr
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
       }
+      // Resolves the initial sub-screen.
+      final RecipientType type = recipient.getType();
+      final SubFragment<TransactionCreationContainer> fragment;
+      switch (type) {
+        case PHONE_NUMBER:
+          fragment = ContactTransactionCreationFragment.newInstance();
+          break;
+        default:
+          throw new UnsupportedOperationException("Transaction type '" + type + "' not supported");
+      }
+      setSubScreen(fragment);
     }
   }
 

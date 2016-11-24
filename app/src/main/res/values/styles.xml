@@ -26,9 +26,7 @@
   <style
     name="Base.Widget"
     parent="android:Widget"/>
-  <style
-    name="Base.Widget.Button"
-    parent="Widget.AppCompat.Button">
+  <style name="Base.Widget.Button">
     <item name="android:background">?attr/selectableItemBackground</item>
     <item name="android:clickable">true</item>
     <item name="android:gravity">center</item>
