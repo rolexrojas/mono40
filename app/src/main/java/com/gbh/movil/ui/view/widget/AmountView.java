@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,13 +27,29 @@ import butterknife.ButterKnife;
  * @author hecvasro
  */
 public class AmountView extends LinearLayout {
+  /**
+   * TODO
+   */
+  @StyleRes
+  private int currencyTextAppearance;
+  /**
+   * TODO
+   */
   private String currency;
+  /**
+   * TODO
+   */
+  @StyleRes
+  private int valueTextAppearance;
+  /**
+   * TODO
+   */
   private BigDecimal value;
 
-  @BindView(R.id.text_view_currency)
-  TextView currencyTextView;
-  @BindView(R.id.text_view_value)
-  TextView valueTextView;
+  @BindView(R.id.currency)
+  protected TextView currencyTextView;
+  @BindView(R.id.value)
+  protected TextView valueTextView;
 
   public AmountView(Context context) {
     this(context, null);
@@ -46,21 +63,37 @@ public class AmountView extends LinearLayout {
     super(context, attrs, defStyleAttr);
     setOrientation(LinearLayout.HORIZONTAL);
     final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.AmountView,
-      defStyleAttr, R.style.Widget_AmountView);
+      defStyleAttr, R.style.App_Widget_AmountView);
     try {
+      currencyTextAppearance = array.getResourceId(R.styleable.AmountView_currencyTextAppearance,
+        R.style.App_Text_Widget_AmountView_Currency);
       currency = array.getString(R.styleable.AmountView_currency);
+      valueTextAppearance = array.getResourceId(R.styleable.AmountView_valueTextAppearance,
+        R.style.App_Text_Widget_AmountView_Value);
       value = BigDecimal.valueOf(array.getFloat(R.styleable.AmountView_value, 0F));
     } finally {
       array.recycle();
     }
-    LayoutInflater.from(context).inflate(R.layout.amount_view, this);
+    LayoutInflater.from(context).inflate(R.layout.widget_amount_view, this);
+  }
+
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  protected String getFormattedValue() {
+    return Formatter.amount(value);
   }
 
   @Override
   protected void onFinishInflate() {
     super.onFinishInflate();
     ButterKnife.bind(this);
+    UiUtils.setTextAppearance(currencyTextView, currencyTextAppearance);
     setCurrency(currency);
+    UiUtils.setTextAppearance(valueTextView, valueTextAppearance);
     setValue(value);
   }
 
@@ -101,7 +134,7 @@ public class AmountView extends LinearLayout {
    *
    * @return TODO
    */
-  @Nullable
+  @NonNull
   public BigDecimal getValue() {
     return value;
   }
@@ -114,7 +147,7 @@ public class AmountView extends LinearLayout {
    */
   public void setValue(@NonNull BigDecimal value) {
     this.value = value;
-    this.valueTextView.setText(Formatter.amount(this.value));
+    this.valueTextView.setText(this.getFormattedValue());
   }
 
   /**

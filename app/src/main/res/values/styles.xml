@@ -1,4 +1,195 @@
 <resources>
+  <style name="Base"/>
+  <style
+    name="Base.Text"
+    parent="TextAppearance.AppCompat"/>
+  <style name="Base.Text.Label">
+    <item name="android:textAllCaps">true</item>
+    <item name="android:textColor">@color/primary</item>
+    <item name="android:textSize">14sp</item>
+    <item name="fontPath">@string/font.gotham_rounded.bold</item>
+  </style>
+  <style name="Base.Text.Widget"/>
+  <style
+    name="Base.Text.Widget.Button"
+    parent="Base.Text.Label"/>
+  <style name="Base.Text.Widget.Toolbar">
+    <item name="android:textColor">@color/white</item>
+    <item name="fontPath">@string/font.gotham_rounded.book</item>
+  </style>
+  <style name="Base.Text.Widget.Toolbar.Title">
+    <item name="android:textSize">16sp</item>
+  </style>
+  <style name="Base.Text.Widget.Toolbar.Subtitle">
+    <item name="android:textSize">10sp</item>
+  </style>
+  <style name="Base.Text.Widget.AmountView">
+    <item name="android:textColor">#333</item>
+  </style>
+  <style name="Base.Text.Widget.AmountView.Currency">
+    <item name="android:textSize">10sp</item>
+    <item name="fontPath">@string/font.gotham_rounded.book</item>
+  </style>
+  <style name="Base.Text.Widget.AmountView.Value">
+    <item name="android:textSize">16sp</item>
+    <item name="fontPath">@string/font.gotham_rounded.medium</item>
+  </style>
+  <style name="Base.Text.Bank"/>
+  <style name="Base.Text.Bank.Name">
+    <item name="android:ellipsize">end</item>
+    <item name="android:maxLines">1</item>
+    <item name="android:textColor">#333</item>
+    <item name="android:textSize">16sp</item>
+    <item name="fontPath">@string/font.gotham_rounded.bold</item>
+  </style>
+
+  <style
+    name="Base.Widget"
+    parent="android:Widget"/>
+  <style name="Base.Widget.Button">
+    <item name="android:background">?attr/selectableItemBackground</item>
+    <item name="android:clickable">true</item>
+    <item name="android:gravity">center</item>
+    <item name="android:layout_height">@dimen/widget.button.height</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:textAppearance">@style/App.Text.Widget.Button</item>
+  </style>
+  <style name="Base.Widget.Button.Blurred">
+    <item name="android:background">@drawable/app_widget_button_blurred_shape</item>
+  </style>
+  <style
+    name="Base.Widget.Toolbar"
+    parent="Widget.AppCompat.Toolbar">
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="subtitleTextAppearance">@style/App.Text.Widget.Toolbar.Subtitle</item>
+    <item name="titleTextAppearance">@style/App.Text.Widget.Toolbar.Title</item>
+  </style>
+  <style
+    name="Base.Widget.AppBar"
+    parent="Widget.Design.AppBarLayout">
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:theme">@style/App.Theme.AppBar</item>
+  </style>
+  <style name="Base.Widget.Container">
+    <item name="android:layout_height">match_parent</item>
+    <item name="android:layout_width">match_parent</item>
+  </style>
+  <style name="Base.Widget.Container.Colored">
+    <item name="android:background">@drawable/background_colored</item>
+  </style>
+  <style name="Base.Widget.AmountView">
+    <item name="android:gravity">center_horizontal</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_width">wrap_content</item>
+    <item name="currencyTextAppearance">@style/App.Text.Widget.AmountView.Currency</item>
+    <item name="valueTextAppearance">@style/App.Text.Widget.AmountView.Value</item>
+  </style>
+
+  <style
+    name="Base.Theme"
+    parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="android:windowBackground">@color/background</item>
+    <item name="colorAccent">@color/accent</item>
+    <item name="colorPrimary">@color/primary</item>
+    <item name="colorPrimaryDark">@color/primary_dark</item>
+    <item name="android:buttonStyle">@style/App.Widget.Button</item>
+    <item name="amountViewStyle">@style/App.Widget.AmountView</item>
+    <item name="searchViewStyle">@style/App.Widget.SearchView</item>
+  </style>
+  <style
+    name="Base.Theme.AppBar"
+    parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+  </style>
+
+  <style
+    name="App"
+    parent="Base"/>
+  <style
+    name="App.Text"
+    parent="Base.Text"/>
+  <style
+    name="App.Text.Label"
+    parent="Base.Text.Label"/>
+  <style
+    name="App.Text.Widget"
+    parent="Base.Text.Widget"/>
+  <style
+    name="App.Text.Widget.Button"
+    parent="Base.Text.Widget.Button"/>
+  <style
+    name="App.Text.Widget.Toolbar"
+    parent="Base.Text.Widget.Toolbar"/>
+  <style
+    name="App.Text.Widget.Toolbar.Title"
+    parent="Base.Text.Widget.Toolbar.Title"/>
+  <style
+    name="App.Text.Widget.Toolbar.Subtitle"
+    parent="Base.Text.Widget.Toolbar.Subtitle"/>
+  <style
+    name="App.Text.Widget.AmountView"
+    parent="Base.Text.Widget.AmountView"/>
+  <style
+    name="App.Text.Widget.AmountView.Currency"
+    parent="Base.Text.Widget.AmountView.Currency"/>
+  <style
+    name="App.Text.Widget.AmountView.Value"
+    parent="Base.Text.Widget.AmountView.Value"/>
+  <style
+    name="App.Text.Bank"
+    parent="Base.Text.Bank"/>
+  <style
+    name="App.Text.Bank.Name"
+    parent="Base.Text.Bank.Name"/>
+
+  <style
+    name="App.Widget"
+    parent="Base.Widget"/>
+  <style
+    name="App.Widget.Button"
+    parent="Base.Widget.Button"/>
+  <style
+    name="App.Widget.Button.Blurred"
+    parent="Base.Widget.Button.Blurred"/>
+  <style
+    name="App.Widget.Toolbar"
+    parent="Base.Widget.Toolbar"/>
+  <style
+    name="App.Widget.AppBar"
+    parent="Base.Widget.AppBar"/>
+  <style
+    name="App.Widget.Container"
+    parent="Base.Widget.Container"/>
+  <style
+    name="App.Widget.Container.Colored"
+    parent="Base.Widget.Container.Colored"/>
+  <style
+    name="App.Widget.AmountView"
+    parent="Base.Widget.AmountView"/>
+
+  <style
+    name="App.Theme"
+    parent="Base.Theme"/>
+  <style
+    name="App.Theme.AppBar"
+    parent="Base.Theme.AppBar"/>
+
+  <style
+    name="TransactionCreation.Text.AmountView.Currency"
+    parent="App.Text.Widget.AmountView.Currency">
+    <item name="android:textSize">30sp</item>
+    <item name="fontPath">@string/font.gotham_rounded.light</item>
+  </style>
+  <style
+    name="TransactionCreation.Text.AmountView.Value"
+    parent="App.Text.Widget.AmountView.Value">
+    <item name="android:textSize">75sp</item>
+    <item name="fontPath">@string/font.gotham_rounded.light</item>
+  </style>
+
+  <!-- TODO -->
   <style
     name="BaseAppTabText"
     parent="TextAppearance.Design.Tab">
@@ -48,59 +239,35 @@
     name="RecipientExtraText"
     parent="BaseRecipientExtraText"/>
 
-  <style name="Text.Contact">
+  <style name="App.Text.Contact">
     <item name="android:textColor">#333</item>
     <item name="fontPath">@string/font.gotham_rounded.book</item>
   </style>
-  <style name="Text.Contact.Name">
+  <style name="App.Text.Contact.Name">
     <item name="android:ellipsize">end</item>
     <item name="android:textSize">16sp</item>
   </style>
-  <style name="Text.Contact.BasePhoneNumber">
+  <style name="App.Text.Contact.BasePhoneNumber">
     <item name="android:textSize">10sp</item>
   </style>
   <style
     name="Text.Contact.PhoneNumber"
-    parent="Text.Contact.BasePhoneNumber"/>
+    parent="App.Text.Contact.BasePhoneNumber"/>
 
-  <!-- Text styles -->
-  <style
-    name="Text"
-    parent="TextAppearance.AppCompat"/>
-
-  <style name="Text.Label">
-    <item name="android:textAllCaps">true</item>
-    <item name="android:textColor">@color/primary</item>
-    <item name="android:textSize">14sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.bold</item>
-  </style>
-  <style name="Text.Widget"/>
-  <!-- Widget styles -->
-  <style name="Widget"/>
-  <style
-    name="Text.Widget.Button"
-    parent="Text.Label"/>
-  <style name="Widget.Button">
-    <item name="android:background">?attr/selectableItemBackground</item>
-    <item name="android:clickable">true</item>
-    <item name="android:gravity">center</item>
-    <item name="android:layout_height">@dimen/button.height</item>
-    <item name="android:textAppearance">@style/Text.Widget.Button</item>
-  </style>
   <!-- Search view styles -->
-  <style name="Text.Widget.SearchView"/>
-  <style name="Text.Widget.SearchView.Query">
+  <style name="App.Text.Widget.SearchView"/>
+  <style name="App.Text.Widget.SearchView.Query">
     <item name="android:textColor">@color/search_view_text</item>
     <item name="android:textColorHint">@color/search_view_hint</item>
     <item name="android:textSize">16sp</item>
     <item name="fontPath">@string/font.gotham_rounded.medium</item>
   </style>
-  <style name="Widget.SearchView"/>
-  <style name="Widget.SearchViewQuery">
+  <style name="App.Widget.SearchView"/>
+  <style name="App.Widget.SearchViewQuery">
     <item name="android:background">@null</item>
     <item name="android:paddingBottom">16dp</item>
     <item name="android:paddingTop">16dp</item>
-    <item name="android:textAppearance">@style/Text.Widget.SearchView.Query</item>
+    <item name="android:textAppearance">@style/App.Text.Widget.SearchView.Query</item>
   </style>
   <!-- List styles -->
   <style name="List">
@@ -110,8 +277,8 @@
   <style name="ListItem">
     <item name="android:background">?attr/selectableItemBackground</item>
     <item name="android:layout_width">match_parent</item>
-    <item name="android:paddingEnd">@dimen/list.item.inset.horizontal</item>
-    <item name="android:paddingStart">@dimen/list.item.inset.horizontal</item>
+    <item name="android:paddingEnd">@dimen/space.horizontal.normal</item>
+    <item name="android:paddingStart">@dimen/space.horizontal.normal</item>
   </style>
   <style name="ListItem.Normal">
     <item name="android:layout_height">@dimen/list.item.height.normal</item>
@@ -168,33 +335,8 @@
   <style
     name="MenuItem.Large"
     parent="BaseMenuItem.Large"/>
-  <!-- Amount view styles -->
-  <style name="Text.Widget.AmountView">
-    <item name="android:textColor">#333</item>
-  </style>
-  <style name="Text.Widget.AmountView.Currency">
-    <item name="android:textSize">10sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.book</item>
-  </style>
-  <style name="Text.Widget.AmountView.Value">
-    <item name="android:textSize">16sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.medium</item>
-  </style>
-  <style name="Widget.AmountView"/>
-  <style name="Widget.AmountViewCurrency">
-    <item name="android:alpha">0.5</item>
-    <item name="android:textAppearance">@style/Text.Widget.AmountView.Currency</item>
-  </style>
-  <style name="Widget.AmountViewValue">
-    <item name="android:textAppearance">@style/Text.Widget.AmountView.Value</item>
-  </style>
   <!-- Num pad styles -->
-  <style name="NumPad">
-    <item name="android:paddingBottom">@dimen/num_pad_padding_vertical</item>
-    <item name="android:paddingEnd">@dimen/num_pad_padding_horizontal</item>
-    <item name="android:paddingStart">@dimen/num_pad_padding_horizontal</item>
-    <item name="android:paddingTop">@dimen/num_pad_padding_vertical</item>
-  </style>
+  <style name="NumPad"/>
   <style name="NumPad.Light">
     <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark</item>
     <item name="buttonColor">@color/white</item>
@@ -272,8 +414,8 @@
   <style name="BaseListItemGroupTitle">
     <item name="android:gravity">center_vertical</item>
     <item name="android:layout_height">35dp</item>
-    <item name="android:paddingEnd">@dimen/list.item.inset.horizontal</item>
-    <item name="android:paddingStart">@dimen/list.item.inset.horizontal</item>
+    <item name="android:paddingEnd">@dimen/space.horizontal.normal</item>
+    <item name="android:paddingStart">@dimen/space.horizontal.normal</item>
     <item name="android:textAllCaps">true</item>
     <item name="android:textColor">#666</item>
     <item name="android:textSize">10sp</item>
@@ -337,7 +479,7 @@
   <!-- [START] List styles -->
   <style
     name="ListItemButton"
-    parent="Widget.Button">
+    parent="App.Widget.Button">
     <item name="android:background">@drawable/item_button</item>
     <item name="android:layout_height">@dimen/list.item.button.height</item>
     <item name="android:layout_width">@dimen/list.item.button.width</item>
@@ -347,7 +489,7 @@
     parent="ListItem.Normal"/>
   <style
     name="NoResultsListItemText"
-    parent="Text">
+    parent="App.Text">
     <item name="android:ellipsize">end</item>
     <item name="android:textColor">#666</item>
     <item name="android:textSize">16sp</item>
@@ -360,21 +502,10 @@
     <item name="android:textAppearance">@style/NoResultsListItemText</item>
   </style>
   <!-- [END] List styles -->
-  <!-- [START] Bank styles -->
-  <style
-    name="BankNameText"
-    parent="Text">
-    <item name="android:ellipsize">end</item>
-    <item name="android:maxLines">1</item>
-    <item name="android:textColor">#333</item>
-    <item name="android:textSize">16sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.bold</item>
-  </style>
-  <!-- [END] Bank styles -->
   <!-- [START] Product styles -->
   <style
     name="BaseProductAliasText"
-    parent="Text">
+    parent="App.Text">
     <item name="android:textColor">#333</item>
     <item name="android:textSize">12sp</item>
     <item name="fontPath">@string/font.gotham_rounded.light</item>

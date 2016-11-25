@@ -3,14 +3,17 @@
   <string name="accounts">Cuentas</string>
   <string name="action.add">Agregar</string>
   <string name="action.pay">Pagar</string>
+  <string name="action.recharge">Recargar</string>
   <string name="action.remove">Remover</string>
   <string name="action.save">Guardar</string>
   <string name="action.skip">Saltar</string>
+  <string name="action.transfer">Transferir</string>
   <string name="add_another_account">Agregar otra cuenta</string>
   <string name="add_recipient.search.hint">Seleccione o busque el recipiente</string>
   <string name="add_recipient.title">Agregar recipiente</string>
   <string name="app_name">tPago</string>
   <string name="balance">Saldo</string>
+  <string name="bank.logo">Logo</string>
   <string name="buy">Comprar</string>
   <string name="contact.picture">Imagen del contacto</string>
   <string name="contact_added.message">¿Le gustaría dar un apodo a %1$s para reconocerlo más fácil en tu lista de pagos?</string>
@@ -24,11 +27,14 @@
   <string name="font.gotham_rounded.book">fonts/GothamRounded-Book.otf</string>
   <string name="font.gotham_rounded.light">fonts/GothamRounded-Light.otf</string>
   <string name="font.gotham_rounded.medium">fonts/GothamRounded-Medium.otf</string>
+  <string name="format.transfer_to">Transferir %1$s a %2$s</string>
   <string name="go_to_accounts">Ver cuentas</string>
   <string name="help">Ayuda</string>
   <string name="info.not_available.buy">Por el momento no es posible comprar en comercios.</string>
+  <string name="info.not_available.payment_to_unaffiliated_recipient">Por el momento no es posible agregar números no afiliados.</string>
   <string name="info.not_available.payments">Por el momento no es posible realizar pagos.</string>
   <string name="info.not_available.recent_transactions">Por el momento no es posible ver las últimas transacciones.</string>
+  <string name="info.not_available.recharge">Por el momento no es posible recargar.</string>
   <string name="info.not_available.remove_recipients">Por el momento no es posible remover recipientes.</string>
   <string name="info.not_available.unaffiliated_contact_recipient_addition">Por el momento no es posible agregar números no afiliados.</string>
   <string name="instruction_content_first">¡Listo! Visita la sucursal del banco donde tienes la cuenta o tarjeta de crédito que deseas agregar.</string>
@@ -58,6 +64,7 @@
   <string name="see">Ver</string>
   <string name="see_bank_branches">Ver sucursales bancarias</string>
   <string name="sorry">¡Lo sentimos!</string>
+  <string name="transaction_creation.title">Transacción con %1$s</string>
   <string name="your_account_have_been_added">Tu cuenta se agregó exitosamente al mundo %1$s. Ya puedes usarla como cuenta de fondos.</string>
   <string name="your_account_have_been_removed">Tu cuenta se removió exitosamente del mundo %1$s. Ya no puedes usarla como cuenta de fondos.</string>
 </resources>

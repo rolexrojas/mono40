@@ -12,10 +12,10 @@
     android:id="@+id/search_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/list.item.inset.horizontal"
-    android:layout_marginStart="@dimen/list.item.inset.horizontal"
+    android:layout_marginEnd="@dimen/space.horizontal.normal"
+    android:layout_marginStart="@dimen/space.horizontal.normal"
     app:hint="@string/pay_screen_search_hint"/>
-  <include layout="@layout/divider"/>
+  <include layout="@layout/reusable_divider"/>
   <android.support.v4.widget.SwipeRefreshLayout
     android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"

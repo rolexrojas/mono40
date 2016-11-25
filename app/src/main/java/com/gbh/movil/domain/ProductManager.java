@@ -3,11 +3,8 @@ package com.gbh.movil.domain;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
-import com.gbh.movil.domain.api.ApiUtils;
 import com.gbh.movil.domain.util.EventBus;
-import com.gbh.movil.domain.api.ApiResult;
 import com.gbh.movil.rx.RxUtils;
-import com.gbh.movil.domain.api.ApiBridge;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,30 +24,10 @@ import timber.log.Timber;
 public final class ProductManager implements ProductProvider {
   private final EventBus eventBus;
   private final ProductRepo productRepo;
-  private final ApiBridge apiBridge;
 
-  public ProductManager(@NonNull EventBus eventBus, @NonNull ProductRepo productRepo,
-    @NonNull ApiBridge apiBridge) {
+  public ProductManager(@NonNull EventBus eventBus, @NonNull ProductRepo productRepo) {
     this.eventBus = eventBus;
     this.productRepo = productRepo;
-    this.apiBridge = apiBridge;
-  }
-
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
-  @NonNull
-  private <T extends Product> Observable.Transformer<ApiResult<Set<T>>, T> handleApiResult() {
-    return new Observable.Transformer<ApiResult<Set<T>>, T>() {
-      @Override
-      public Observable<T> call(Observable<ApiResult<Set<T>>> observable) {
-        return observable
-          .compose(ApiUtils.<Set<T>>handleApiResult(true))
-          .compose(RxUtils.<T>fromCollection());
-      }
-    };
   }
 
   /**
@@ -135,26 +112,27 @@ public final class ProductManager implements ProductProvider {
   }
 
   /**
-   * {@inheritDoc}
+   * TODO
+   *
+   * @return TODO
    */
+  @NonNull
+  public final Observable<Set<Product>> getAllPaymentOptions() {
+    return getAll()
+      .compose(RxUtils.<Product>fromCollection())
+      .filter(new Func1<Product, Boolean>() {
+        @Override
+        public Boolean call(Product product) {
+          return Product.checkPaymentOption(product);
+        }
+      })
+      .compose(RxUtils.<Product>toSet());
+  }
+
   @NonNull
   @Override
   public Observable<Set<Product>> getAll() {
-    return productRepo.getAll()
-      .concatWith(Observable.merge(
-        apiBridge.accounts()
-          .compose(this.<Account>handleApiResult()),
-        apiBridge.creditCards()
-          .compose(this.<CreditCard>handleApiResult()),
-        apiBridge.loans()
-          .compose(this.<Loan>handleApiResult()))
-        .compose(RxUtils.<Product>toSet())
-        .flatMap(new Func1<Set<Product>, Observable<Set<Product>>>() {
-          @Override
-          public Observable<Set<Product>> call(Set<Product> products) {
-            return syncAccounts(products, false);
-          }
-        }));
+    return productRepo.getAll();
   }
 
   /**

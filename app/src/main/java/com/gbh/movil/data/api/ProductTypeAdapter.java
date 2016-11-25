@@ -26,6 +26,7 @@ class ProductTypeAdapter implements JsonDeserializer<Product>, JsonSerializer<Pr
   private static final String PROPERTY_BANK = "bank";
   private static final String PROPERTY_CURRENCY = "currency";
   private static final String PROPERTY_QUERY_FEE = "queryFee";
+  private static final String PROPERTY_PAYMENT_OPTION = "payable";
 
   @Override
   public Product deserialize(JsonElement json, Type typeOfT,
@@ -43,12 +44,17 @@ class ProductTypeAdapter implements JsonDeserializer<Product>, JsonSerializer<Pr
       throw new JsonParseException("Property '" + PROPERTY_CURRENCY + "' is missing");
     } else if (!jsonObject.has(PROPERTY_QUERY_FEE)) {
       throw new JsonParseException("Property '" + PROPERTY_QUERY_FEE + "' is missing");
+    } else if (!jsonObject.has(PROPERTY_PAYMENT_OPTION)) {
+      throw new JsonParseException("Property '" + PROPERTY_PAYMENT_OPTION + "' is missing");
     } else {
-      return ProductCreator.create(ProductIdentifier.valueOf(jsonObject.get(PROPERTY_TYPE).getAsString()),
-        jsonObject.get(PROPERTY_ALIAS).getAsString(), jsonObject.get(PROPERTY_NUMBER).getAsString(),
+      return ProductCreator.create(
+        ProductIdentifier.valueOf(jsonObject.get(PROPERTY_TYPE).getAsString()),
+        jsonObject.get(PROPERTY_ALIAS).getAsString(),
+        jsonObject.get(PROPERTY_NUMBER).getAsString(),
         (Bank) context.deserialize(jsonObject.get(PROPERTY_BANK), Bank.class),
         jsonObject.get(PROPERTY_CURRENCY).getAsString(),
-        jsonObject.get(PROPERTY_QUERY_FEE).getAsBigDecimal());
+        jsonObject.get(PROPERTY_QUERY_FEE).getAsBigDecimal(),
+        jsonObject.get(PROPERTY_PAYMENT_OPTION).getAsBoolean());
     }
   }
 

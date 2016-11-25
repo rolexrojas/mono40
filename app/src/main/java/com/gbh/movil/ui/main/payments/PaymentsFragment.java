@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
 import com.gbh.movil.data.StringHelper;
+import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.main.MainContainer;
@@ -31,6 +32,7 @@ import com.gbh.movil.ui.main.list.NoResultsHolder;
 import com.gbh.movil.ui.main.list.NoResultsHolderBinder;
 import com.gbh.movil.ui.main.list.NoResultsHolderCreator;
 import com.gbh.movil.ui.main.payments.recipients.AddRecipientActivity;
+import com.gbh.movil.ui.main.payments.transactions.TransactionCreationActivity;
 import com.gbh.movil.ui.view.widget.FullScreenRefreshIndicator;
 import com.gbh.movil.ui.view.widget.LoadIndicator;
 import com.gbh.movil.ui.SubFragment;
@@ -57,7 +59,11 @@ public class PaymentsFragment extends SubFragment<MainContainer>
   /**
    * TODO
    */
-  private static final int REQUEST_CODE_ADD_RECIPIENT = 0;
+  private static final int REQUEST_CODE_RECIPIENT_ADDITION = 0;
+  /**
+   * TODO
+   */
+  private static final int REQUEST_CODE_TRANSACTION_CREATION = 1;
 
   private Unbinder unbinder;
   private Adapter adapter;
@@ -131,7 +137,7 @@ public class PaymentsFragment extends SubFragment<MainContainer>
       false));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
       .drawable(R.drawable.divider)
-      .marginResId(R.dimen.list_item_inset_horizontal)
+      .marginResId(R.dimen.space_horizontal_normal)
       .showLastDivider()
       .build();
     recyclerView.addItemDecoration(divider);
@@ -190,7 +196,7 @@ public class PaymentsFragment extends SubFragment<MainContainer>
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    if (requestCode == REQUEST_CODE_ADD_RECIPIENT) {
+    if (requestCode == REQUEST_CODE_RECIPIENT_ADDITION) {
       if (resultCode == Activity.RESULT_OK) {
         final Recipient recipient = AddRecipientActivity.deserializeResult(data);
         if (Utils.isNotNull(recipient)) {
@@ -271,21 +277,32 @@ public class PaymentsFragment extends SubFragment<MainContainer>
   }
 
   @Override
+  public void showPaymentToUnaffiliatedRecipientNotAvailableMessage() {
+    UiUtils.createDialog(getContext(), getString(R.string.sorry),
+      getString(R.string.info_not_available_payment_to_unaffiliated_recipient),
+      getString(R.string.ok), null, null, null).show();
+  }
+
+  @Override
+  public void startTransfer(@NonNull PhoneNumber phoneNumber) {
+    startActivityForResult(TransactionCreationActivity.getLaunchIntent(getContext(), phoneNumber),
+      REQUEST_CODE_TRANSACTION_CREATION);
+  }
+
+  @Override
   public void onClick(int position) {
+    final Context context = getContext();
     final Object item = adapter.get(position);
     if (item instanceof Recipient) {
-      UiUtils.createDialog(getContext(), getString(R.string.sorry),
-        getString(R.string.info_not_available_payments), getString(R.string.ok), null, null, null)
-        .show();
+      startActivityForResult(TransactionCreationActivity.getLaunchIntent(context, (Recipient) item),
+        REQUEST_CODE_TRANSACTION_CREATION);
     } else if (item instanceof Action) {
       switch (((Action) item).getType()) {
         case ActionType.ADD_PHONE_NUMBER:
           presenter.addRecipient(((PhoneNumberAction) item).getPhoneNumber());
           break;
         case ActionType.TRANSACTION_WITH_PHONE_NUMBER:
-          UiUtils.createDialog(getContext(), getString(R.string.sorry),
-            getString(R.string.info_not_available_payments), getString(R.string.ok), null, null,
-            null).show();
+          presenter.startTransfer(((PhoneNumberAction) item).getPhoneNumber());
           break;
       }
     }

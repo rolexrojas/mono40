@@ -24,5 +24,5 @@
     android:layout_centerVertical="true"
     android:layout_toEndOf="@+id/contact.picture"
     android:layout_toStartOf="@+id/contact.phone_number"
-    android:textAppearance="@style/Text.Contact.Name"/>
+    android:textAppearance="@style/App.Text.Contact.Name"/>
 </RelativeLayout>

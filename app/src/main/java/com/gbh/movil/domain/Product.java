@@ -37,6 +37,10 @@ public abstract class Product {
    */
   private final String currency;
   /**
+   * Indicates whether can be used as payment option or not.
+   */
+  private final boolean paymentOption;
+  /**
    * Cost of querying the balance.
    */
   private BigDecimal queryFee;
@@ -58,10 +62,12 @@ public abstract class Product {
    *   Product's {@link Bank holder}.
    * @param queryFee
    *   Cost of querying the balance.
+   * @param paymentOption
+   *   Indicates whether can be used as a payment option or not.
    */
-  Product(@NonNull ProductCategory category, @NonNull ProductIdentifier identifier, @NonNull String alias,
-    @NonNull String number, @NonNull Bank bank, @NonNull String currency,
-    @NonNull BigDecimal queryFee) {
+  Product(@NonNull ProductCategory category, @NonNull ProductIdentifier identifier,
+    @NonNull String alias, @NonNull String number, @NonNull Bank bank, @NonNull String currency,
+    @NonNull BigDecimal queryFee, boolean paymentOption) {
     this.category = category;
     this.identifier = identifier;
     this.alias = alias;
@@ -69,6 +75,20 @@ public abstract class Product {
     this.bank = bank;
     this.currency = currency;
     this.queryFee = queryFee;
+    this.paymentOption = paymentOption;
+  }
+
+  /**
+   * Checks if the given {@link Product product} can be used as a payment option.
+   *
+   * @param product
+   *   {@link Product} that will be checked.
+   *
+   * @return True if it can be used as a payment option, false otherwise.
+   */
+  public static boolean checkPaymentOption(@NonNull Product product) {
+    return (product.category.equals(ProductCategory.ACCOUNT)
+      || product.category.equals(ProductCategory.CREDIT_CARD)) && product.paymentOption;
   }
 
   /**

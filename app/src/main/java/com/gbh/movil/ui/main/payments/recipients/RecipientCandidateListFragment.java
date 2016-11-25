@@ -112,7 +112,7 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
       false));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
       .drawable(R.drawable.divider)
-      .marginResId(R.dimen.list_item_inset_horizontal)
+      .marginResId(R.dimen.space_horizontal_normal)
       .showLastDivider()
       .build();
     recyclerView.addItemDecoration(divider);

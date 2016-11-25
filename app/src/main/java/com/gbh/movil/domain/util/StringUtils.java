@@ -17,13 +17,13 @@ public final class StringUtils {
   /**
    * TODO
    *
-   * @param string
+   * @param s
    *   TODO
    *
    * @return TODO
    */
-  public static String sanitize(@NonNull String string) {
-    return string.toUpperCase().replaceAll("[^0-9A-z]", "");
+  public static String sanitize(@NonNull String s) {
+    return s.toUpperCase().replaceAll("[^0-9A-z]", "");
   }
 
   /**

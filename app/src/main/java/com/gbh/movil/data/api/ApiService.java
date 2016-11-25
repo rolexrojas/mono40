@@ -51,4 +51,7 @@ interface ApiService {
 
   @GET("transfer/recipient-info")
   Observable<Response<Void>> checkIfAssociated(@Query("recipient-msisdn") String phoneNumber);
+
+  @POST("transfer/gcs-gcs")
+  Observable<Response<Void>> transferTo(@Body TransferToRequest body);
 }

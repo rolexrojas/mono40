@@ -1,6 +1,7 @@
 package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.gbh.movil.Utils;
 
@@ -21,7 +22,7 @@ public class Bank {
   /**
    * Bank's name.
    */
-  private final String name;
+  private String name;
   /**
    * Bank's state. True if it is active, false otherwise.
    */
@@ -68,8 +69,18 @@ public class Bank {
    * @return Bank's name.
    */
   @NonNull
-  public final String getName() {
-    return name;
+  public String getName() {
+    return !TextUtils.isEmpty(name) ? name : id;
+  }
+
+  /**
+   * Sets the name of the bank.
+   *
+   * @param name
+   *   Bank's name.
+   */
+  public void setName(@NonNull String name) {
+    this.name = name;
   }
 
   /**

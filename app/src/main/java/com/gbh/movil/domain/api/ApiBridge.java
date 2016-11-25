@@ -13,6 +13,7 @@ import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.Transaction;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
@@ -132,4 +133,20 @@ public interface ApiBridge {
    */
   @NonNull
   Observable<ApiResult<Boolean>> checkIfAffiliated(@NonNull PhoneNumber phoneNumber);
+
+  /**
+   * TODO
+   *
+   * @param recipient
+   *   TODO
+   * @param amount
+   *   TODO
+   * @param pin
+   *   TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  Observable<ApiResult<Boolean>> transferTo(@NonNull Product product, @NonNull Recipient recipient,
+    @NonNull BigDecimal amount, @NonNull String pin);
 }
