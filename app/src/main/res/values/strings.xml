@@ -27,9 +27,11 @@
   <string name="font.gotham_rounded.book">fonts/GothamRounded-Book.otf</string>
   <string name="font.gotham_rounded.light">fonts/GothamRounded-Light.otf</string>
   <string name="font.gotham_rounded.medium">fonts/GothamRounded-Medium.otf</string>
+  <string name="format.transfer_to">Transferir %1$s a %2$s</string>
   <string name="go_to_accounts">Ver cuentas</string>
   <string name="help">Ayuda</string>
   <string name="info.not_available.buy">Por el momento no es posible comprar en comercios.</string>
+  <string name="info.not_available.payment_to_unaffiliated_recipient">Por el momento no es posible agregar números no afiliados.</string>
   <string name="info.not_available.payments">Por el momento no es posible realizar pagos.</string>
   <string name="info.not_available.recent_transactions">Por el momento no es posible ver las últimas transacciones.</string>
   <string name="info.not_available.recharge">Por el momento no es posible recargar.</string>

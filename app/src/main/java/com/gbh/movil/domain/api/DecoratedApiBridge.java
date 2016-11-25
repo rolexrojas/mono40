@@ -13,6 +13,7 @@ import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.Transaction;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
@@ -130,6 +131,14 @@ public class DecoratedApiBridge implements ApiBridge {
   @Override
   public Observable<ApiResult<Boolean>> checkIfAffiliated(@NonNull PhoneNumber phoneNumber) {
     return apiBridge.checkIfAffiliated(phoneNumber)
+      .compose(this.<Boolean>assertAuthorization());
+  }
+
+  @NonNull
+  @Override
+  public Observable<ApiResult<Boolean>> transferTo(@NonNull Product product,
+    @NonNull Recipient recipient, @NonNull BigDecimal amount, @NonNull String pin) {
+    return apiBridge.transferTo(product, recipient, amount, pin)
       .compose(this.<Boolean>assertAuthorization());
   }
 }

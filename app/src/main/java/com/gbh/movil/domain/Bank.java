@@ -1,6 +1,7 @@
 package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.gbh.movil.Utils;
 
@@ -69,7 +70,7 @@ public class Bank {
    */
   @NonNull
   public String getName() {
-    return name;
+    return !TextUtils.isEmpty(name) ? name : id;
   }
 
   /**

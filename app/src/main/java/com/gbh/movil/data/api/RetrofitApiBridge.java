@@ -18,6 +18,7 @@ import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.domain.api.ApiCode;
 import com.gbh.movil.domain.api.ApiResult;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -170,6 +171,19 @@ class RetrofitApiBridge implements ApiBridge {
   @Override
   public Observable<ApiResult<Boolean>> checkIfAffiliated(@NonNull PhoneNumber phoneNumber) {
     return apiService.checkIfAssociated(phoneNumber.toString())
+      .flatMap(new Func1<Response<Void>, Observable<ApiResult<Boolean>>>() {
+        @Override
+        public Observable<ApiResult<Boolean>> call(Response<Void> response) {
+          return Observable.just(ApiResult.create(response.isSuccessful()));
+        }
+      });
+  }
+
+  @NonNull
+  @Override
+  public Observable<ApiResult<Boolean>> transferTo(@NonNull Product product,
+    @NonNull Recipient recipient, @NonNull BigDecimal amount, @NonNull String pin) {
+    return apiService.transferTo(new TransferToRequest(product, recipient, amount, pin))
       .flatMap(new Func1<Response<Void>, Observable<ApiResult<Boolean>>>() {
         @Override
         public Observable<ApiResult<Boolean>> call(Response<Void> response) {

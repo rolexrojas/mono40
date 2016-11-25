@@ -3,18 +3,23 @@ package com.gbh.movil.ui.main.payments.transactions.contacts;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.Spinner;
 
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
+import com.gbh.movil.data.Formatter;
 import com.gbh.movil.domain.Product;
+import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.ui.SubFragment;
 import com.gbh.movil.ui.UiUtils;
+import com.gbh.movil.ui.main.PinConfirmationDialogFragment;
 import com.gbh.movil.ui.main.payments.transactions.PaymentOptionAdapter;
 import com.gbh.movil.ui.main.payments.transactions.TransactionCreationContainer;
 import com.gbh.movil.ui.view.widget.CustomAmountView;
@@ -38,8 +43,15 @@ import butterknife.Unbinder;
 public class ContactTransactionCreationFragment extends SubFragment<TransactionCreationContainer>
   implements PhoneNumberTransactionCreationScreen, Spinner.OnItemSelectedListener,
   NumPad.OnButtonClickedListener {
+  /**
+   * TODO
+   */
+  private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
+
   @Inject
   PhoneNumberTransactionCreationPresenter presenter;
+  @Inject
+  Recipient recipient;
 
   private Unbinder unbinder;
 
@@ -51,6 +63,8 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
   CustomAmountView amountView;
   @BindView(R.id.transaction_creation_num_pad)
   NumPad numPad;
+  @BindView(R.id.action_transfer)
+  Button transferActionButton;
 
   /**
    * TODO
@@ -67,6 +81,34 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
     UiUtils.createDialog(getContext(), getString(R.string.sorry),
       getString(R.string.info_not_available_recharge), getString(R.string.ok), null, null, null)
       .show();
+  }
+
+  @OnClick(R.id.action_transfer)
+  void onTransferButtonClicked() {
+    final BigDecimal value = amountView.getValue();
+    if (value.compareTo(BigDecimal.ZERO) > 0) {
+      final int[] location = new int[2];
+      transferActionButton.getLocationOnScreen(location);
+      final int x = location[0] + (transferActionButton.getWidth() / 2);
+      final int y = location[1];
+      final String identifier;
+      if (Utils.isNotNull(recipient.getLabel())) {
+        identifier = recipient.getLabel();
+      } else {
+        identifier = recipient.getIdentifier();
+      }
+      final String description = String.format(getString(R.string.format_transfer_to),
+        Formatter.amount(amountView.getCurrency(), value), identifier);
+      PinConfirmationDialogFragment.newInstance(x, y, description,
+        new PinConfirmationDialogFragment.Callback() {
+          @Override
+          public void confirm(@NonNull String pin) {
+            presenter.transferTo(value, pin);
+          }
+        }).show(getChildFragmentManager(), TAG_PIN_CONFIRMATION);
+    } else {
+      // TODO: Let the user know that he must set the amount that he wants to transfer.
+    }
   }
 
   @Override
@@ -132,15 +174,33 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
 
   @Override
   public void setPaymentOptions(@NonNull Set<Product> paymentOptions) {
+    paymentOptionAdapter.clear();
     paymentOptionAdapter.addAll(paymentOptions);
+  }
+
+  @Override
+  public void setPaymentOptionCurrency(@NonNull String currency) {
+    amountView.setCurrency(currency);
+  }
+
+  @Override
+  public void clearAmount() {
+    amountView.setValue(BigDecimal.ZERO);
+  }
+
+  @Override
+  public void setPaymentResult(boolean succeeded) {
+    final Fragment fragment = getChildFragmentManager().findFragmentByTag(TAG_PIN_CONFIRMATION);
+    if (Utils.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
+      ((PinConfirmationDialogFragment) fragment).resolve(succeeded);
+    }
   }
 
   @Override
   public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
     final Product product = paymentOptionAdapter.getItem(position);
     if (Utils.isNotNull(product)) {
-      amountView.setCurrency(product.getCurrency());
-      amountView.setValue(BigDecimal.ZERO);
+      presenter.setPaymentOption(product);
     }
   }
 

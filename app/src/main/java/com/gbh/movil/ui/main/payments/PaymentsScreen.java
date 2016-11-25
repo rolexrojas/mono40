@@ -2,6 +2,7 @@ package com.gbh.movil.ui.main.payments;
 
 import android.support.annotation.NonNull;
 
+import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.ui.Screen;
 
@@ -81,4 +82,17 @@ interface PaymentsScreen extends Screen {
    * TODO
    */
   void showUnaffiliatedRecipientAdditionNotAvailableMessage();
+
+  /**
+   * TODO
+   */
+  void showPaymentToUnaffiliatedRecipientNotAvailableMessage();
+
+  /**
+   * TODO
+   *
+   * @param phoneNumber
+   *   TODO
+   */
+  void startTransfer(@NonNull PhoneNumber phoneNumber);
 }

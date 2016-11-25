@@ -20,4 +20,25 @@ interface PhoneNumberTransactionCreationScreen extends Screen {
    *   TODO
    */
   void setPaymentOptions(@NonNull Set<Product> paymentOptions);
+
+  /**
+   * TODO
+   *
+   * @param currency
+   *   TODO
+   */
+  void setPaymentOptionCurrency(@NonNull String currency);
+
+  /**
+   * TODO
+   */
+  void clearAmount();
+
+  /**
+   * TODO
+   *
+   * @param succeeded
+   *   TODO
+   */
+  void setPaymentResult(boolean succeeded);
 }

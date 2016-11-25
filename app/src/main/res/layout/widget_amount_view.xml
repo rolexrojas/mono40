@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:alpha="0.5"
     android:gravity="top"
+    android:maxLines="1"
     android:textAppearance="@style/App.Text.Widget.AmountView.Currency"/>
   <TextView
     android:id="@+id/value"
@@ -14,5 +15,6 @@
     android:layout_height="match_parent"
     android:layout_marginStart="1dp"
     android:includeFontPadding="false"
+    android:maxLines="1"
     android:textAppearance="@style/App.Text.Widget.AmountView.Value"/>
 </merge>

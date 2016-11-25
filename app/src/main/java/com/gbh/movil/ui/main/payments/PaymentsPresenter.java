@@ -41,7 +41,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   /**
    * TODO
    */
-  private Subscription recipientSubscription = Subscriptions.unsubscribed();
+  private Subscription subscription = Subscriptions.unsubscribed();
   /**
    * TODO
    */
@@ -140,7 +140,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
    */
   void stop() {
     assertScreen();
-    RxUtils.unsubscribe(recipientSubscription);
+    RxUtils.unsubscribe(subscription);
     RxUtils.unsubscribe(searchSubscription);
     RxUtils.unsubscribe(querySubscription);
   }
@@ -165,8 +165,8 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
    */
   void addRecipient(@NonNull PhoneNumber phoneNumber) {
     assertScreen();
-    if (recipientSubscription.isUnsubscribed()) {
-      recipientSubscription = recipientManager.addRecipient(phoneNumber)
+    if (subscription.isUnsubscribed()) {
+      subscription = recipientManager.addRecipient(phoneNumber)
         .subscribeOn(schedulerProvider.io())
         .observeOn(schedulerProvider.ui())
         .doOnSubscribe(new Action0() {
@@ -208,9 +208,9 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
    */
   void updateRecipient(@NonNull Recipient recipient, @Nullable String label) {
     assertScreen();
-    if (recipientSubscription.isUnsubscribed()) {
+    if (subscription.isUnsubscribed()) {
       recipient.setLabel(label);
-      recipientSubscription = recipientManager.updateRecipient(recipient)
+      subscription = recipientManager.updateRecipient(recipient)
         .subscribeOn(schedulerProvider.io())
         .observeOn(schedulerProvider.ui())
         .doOnSubscribe(new Action0() {
@@ -235,6 +235,45 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
           public void call(Throwable throwable) {
             Timber.e(throwable, "Updating a recipient");
             // TODO: Let the user know that updating a recipient failed.
+          }
+        });
+    }
+  }
+
+  /**
+   * TODO
+   *
+   * @param phoneNumber
+   *   TODO
+   */
+  void startTransfer(@NonNull final PhoneNumber phoneNumber) {
+    assertScreen();
+    if (subscription.isUnsubscribed()) {
+      subscription = recipientManager.checkIfAffiliated(phoneNumber)
+        .subscribeOn(schedulerProvider.io())
+        .observeOn(schedulerProvider.ui())
+        .doOnSubscribe(new Action0() {
+          @Override
+          public void call() {
+            screen.showLoadIndicator(true);
+          }
+        })
+        .subscribe(new Action1<Boolean>() {
+          @Override
+          public void call(Boolean isAffiliated) {
+            screen.hideLoadIndicator();
+            if (isAffiliated) {
+              screen.startTransfer(phoneNumber);
+            } else {
+              screen.showPaymentToUnaffiliatedRecipientNotAvailableMessage();
+            }
+          }
+        }, new Action1<Throwable>() {
+          @Override
+          public void call(Throwable throwable) {
+            Timber.e(throwable, "Checking if a recipient is affiliated");
+            screen.hideLoadIndicator();
+            // TODO: Let the user know that checking if a recipient is affiliated failed.
           }
         });
     }
