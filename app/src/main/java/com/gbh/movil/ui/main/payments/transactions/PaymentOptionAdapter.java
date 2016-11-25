@@ -6,12 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
+import com.gbh.movil.data.res.ResourceProvider;
 import com.gbh.movil.domain.Bank;
 import com.gbh.movil.domain.Product;
+import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
 
@@ -21,8 +24,12 @@ import butterknife.ButterKnife;
  * @author hecvasro
  */
 public class PaymentOptionAdapter extends ArrayAdapter<Product> {
-  public PaymentOptionAdapter(@NonNull Context context) {
+  private final ResourceProvider resourceProvider;
+
+  public PaymentOptionAdapter(@NonNull Context context,
+    @NonNull ResourceProvider resourceProvider) {
     super(context, R.layout.list_item_payment_option, R.id.bank_name);
+    this.resourceProvider = resourceProvider;
   }
 
   /**
@@ -46,7 +53,10 @@ public class PaymentOptionAdapter extends ArrayAdapter<Product> {
     final Product product = getItem(position);
     if (Utils.isNotNull(product)) {
       final Bank bank = product.getBank();
-      // TODO: Load bank's logo.
+      final ImageView imageView = ButterKnife.findById(convertView, R.id.bank_logo);
+      Picasso.with(convertView.getContext())
+        .load(resourceProvider.getLogoUri(bank, ResourceProvider.STYLE_20_GRAY))
+        .into(imageView);
       final TextView textView = ButterKnife.findById(convertView, R.id.bank_name);
       textView.setText(bank.getName());
     }
