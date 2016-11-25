@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
 import com.gbh.movil.data.Formatter;
+import com.gbh.movil.data.res.ResourceProvider;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.ui.SubFragment;
@@ -48,6 +49,8 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
    */
   private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
 
+  @Inject
+  ResourceProvider resourceProvider;
   @Inject
   PhoneNumberTransactionCreationPresenter presenter;
   @Inject
@@ -135,7 +138,7 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
     // Prepares the list of payment options.
-    paymentOptionAdapter = new PaymentOptionAdapter(getContext());
+    paymentOptionAdapter = new PaymentOptionAdapter(getContext(), resourceProvider);
     paymentOptionChooser.setAdapter(paymentOptionAdapter);
     // Adds a listener that gets notified every time a payment option is chosen.
     paymentOptionChooser.setOnItemSelectedListener(this);

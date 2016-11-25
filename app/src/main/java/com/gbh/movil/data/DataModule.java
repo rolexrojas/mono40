@@ -5,6 +5,8 @@ import android.content.Context;
 import com.gbh.movil.data.api.ApiModule;
 import com.gbh.movil.data.net.NetModule;
 import com.gbh.movil.data.repo.RepoModule;
+import com.gbh.movil.data.res.LocalResourceProvider;
+import com.gbh.movil.data.res.ResourceProvider;
 
 import javax.inject.Singleton;
 
@@ -26,5 +28,11 @@ public final class DataModule {
   @Singleton
   SchedulerProvider provideSchedulerProvider() {
     return new SchedulerProvider();
+  }
+
+  @Provides
+  @Singleton
+  ResourceProvider provideResourceProvider() {
+    return new LocalResourceProvider();
   }
 }
