@@ -50,7 +50,7 @@ public final class StringHelper {
   @NonNull
   public final String feeForTransaction(@NonNull String currencyCode, @NonNull BigDecimal fee) {
     return String.format(getString(R.string.fee_for_transaction), Formatter.amount(currencyCode,
-      fee, true));
+      fee));
   }
 
   @NonNull

@@ -79,20 +79,12 @@ public class AmountView extends LinearLayout {
 
   /**
    * TODO
-   * @return TODO
-   */
-  @NonNull
-  protected final String getFormattedValue() {
-    return Formatter.amount(value, alwaysShowCents());
-  }
-
-  /**
-   * TODO
    *
    * @return TODO
    */
-  protected boolean alwaysShowCents() {
-    return true;
+  @NonNull
+  protected String getFormattedValue() {
+    return Formatter.amount(value);
   }
 
   @Override
@@ -142,7 +134,7 @@ public class AmountView extends LinearLayout {
    *
    * @return TODO
    */
-  @Nullable
+  @NonNull
   public BigDecimal getValue() {
     return value;
   }

@@ -17,7 +17,6 @@ import com.gbh.movil.ui.SubFragment;
 import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.main.payments.transactions.PaymentOptionAdapter;
 import com.gbh.movil.ui.main.payments.transactions.TransactionCreationContainer;
-import com.gbh.movil.ui.view.widget.AmountView;
 import com.gbh.movil.ui.view.widget.CustomAmountView;
 import com.gbh.movil.ui.view.widget.NumPad;
 
@@ -147,7 +146,7 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
 
   @Override
   public void onNothingSelected(AdapterView<?> parent) {
-    // TODO
+    // Ignored, there will be always a payment option selected.
   }
 
   @Override
