@@ -7,15 +7,15 @@
   android:orientation="vertical"
   tools:ignore="MissingPrefix">
   <include layout="@layout/reusable_payment_option_chooser"/>
-  <com.gbh.movil.ui.view.widget.CustomAmountView
+  <com.gbh.movil.ui.view.widget.PrefixableTextView
     android:id="@+id/transaction_creation.amount"
+    style="@style/TransactionCreation.Widget.Amount"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginEnd="@dimen/space.horizontal.normal"
     android:layout_marginStart="@dimen/space.horizontal.normal"
     android:layout_marginTop="@dimen/space.vertical.normal"
-    app:currencyTextAppearance="@style/TransactionCreation.Text.AmountView.Currency"
-    app:valueTextAppearance="@style/TransactionCreation.Text.AmountView.Value"/>
+    android:text="0.00"/>
   <View
     android:layout_width="match_parent"
     android:layout_height="2dp"

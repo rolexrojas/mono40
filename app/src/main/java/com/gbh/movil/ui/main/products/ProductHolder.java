@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.gbh.movil.R;
 import com.gbh.movil.ui.main.list.Holder;
-import com.gbh.movil.ui.view.widget.AmountView;
+import com.gbh.movil.ui.view.widget.PrefixableTextView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -30,7 +30,7 @@ class ProductHolder extends Holder {
   @BindView(R.id.action_query)
   Button queryActionButton;
   @BindView(R.id.product_balance)
-  AmountView productBalanceAmountView;
+  PrefixableTextView productBalanceTextView;
 
   /**
    * TODO

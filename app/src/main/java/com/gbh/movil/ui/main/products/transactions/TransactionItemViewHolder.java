@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.gbh.movil.R;
-import com.gbh.movil.ui.view.widget.AmountView;
+import com.gbh.movil.ui.view.widget.PrefixableTextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,7 +21,7 @@ class TransactionItemViewHolder extends RecyclerView.ViewHolder {
   @BindView(R.id.text_view_transaction_type)
   TextView typeTextView;
   @BindView(R.id.view_amount)
-  AmountView amountView;
+  PrefixableTextView amountTextView;
 
   TransactionItemViewHolder(View view) {
     super(view);

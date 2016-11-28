@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <color name="app.text.widget.prefixable_text_view">#333</color>
+
+  <!-- TODO: Apply standards from these point downward -->
   <color name="accent">#9C188F</color>
   <color name="accent_alpha_20">#339C188F</color>
   <color name="background">#EFEFEF</color>

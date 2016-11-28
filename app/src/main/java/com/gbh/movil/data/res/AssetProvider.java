@@ -15,7 +15,7 @@ import java.lang.annotation.RetentionPolicy;
  *
  * @author hecvasro
  */
-public interface ResourceProvider {
+public interface AssetProvider {
   /**
    * TODO
    */

@@ -5,8 +5,8 @@ import android.content.Context;
 import com.gbh.movil.data.api.ApiModule;
 import com.gbh.movil.data.net.NetModule;
 import com.gbh.movil.data.repo.RepoModule;
-import com.gbh.movil.data.res.LocalResourceProvider;
-import com.gbh.movil.data.res.ResourceProvider;
+import com.gbh.movil.data.res.AssetProvider;
+import com.gbh.movil.data.res.LocalAssetProvider;
 
 import javax.inject.Singleton;
 
@@ -32,7 +32,7 @@ public final class DataModule {
 
   @Provides
   @Singleton
-  ResourceProvider provideResourceProvider() {
-    return new LocalResourceProvider();
+  AssetProvider provideAssetProvider() {
+    return new LocalAssetProvider();
   }
 }

@@ -1,4 +1,7 @@
 <resources>
+  <string name="app.text.widget.prefixable_text_view.font">@string/font.gotham_rounded.book</string>
+
+  <!-- TODO: Apply standards from these point downward -->
   <string name="about">Acerca de</string>
   <string name="accounts">Cuentas</string>
   <string name="action.add">Agregar</string>

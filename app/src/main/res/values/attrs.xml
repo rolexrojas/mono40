@@ -1,19 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <declare-styleable name="AmountView">
-    <attr
-      name="currencyTextAppearance"
-      format="reference"/>
-    <attr
-      name="currency"
-      format="string"/>
-    <attr
-      name="valueTextAppearance"
-      format="reference"/>
-    <attr
-      name="value"
-      format="float"/>
+  <declare-styleable name="PrefixableTextViewAppearance">
+    <attr name="android:textSize"/>
+    <attr name="android:textColor"/>
+    <attr name="fontPath"/>
   </declare-styleable>
+  <declare-styleable name="PrefixableTextView">
+    <attr
+      name="prefix"
+      format="string|reference"/>
+    <attr
+      name="prefixTextAppearance"
+      format="reference"/>
+    <attr
+      name="prefixTextSize"
+      format="dimension|reference"/>
+    <attr
+      name="prefixTextColor"
+      format="color|reference"/>
+    <attr
+      name="prefixFontPath"
+      format="string|reference"/>
+  </declare-styleable>
+  <declare-styleable name="App.Theme">
+    <attr
+      name="prefixableTextViewStyle"
+      format="reference"/>
+    <attr
+      name="searchViewStyle"
+      format="reference"/>
+  </declare-styleable>
+
+  <!-- TODO: Apply standards from these point downward -->
   <declare-styleable name="SearchView">
     <attr
       name="hint"
@@ -29,14 +47,5 @@
     <attr
       name="showDot"
       format="boolean"/>
-  </declare-styleable>
-  <!-- App theme attributes -->
-  <declare-styleable name="AppTheme">
-    <attr
-      name="searchViewStyle"
-      format="reference"/>
-    <attr
-      name="amountViewStyle"
-      format="reference"/>
   </declare-styleable>
 </resources>

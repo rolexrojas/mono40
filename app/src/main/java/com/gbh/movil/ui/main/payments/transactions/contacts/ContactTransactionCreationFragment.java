@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +13,7 @@ import android.widget.Spinner;
 
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
-import com.gbh.movil.data.Formatter;
-import com.gbh.movil.data.res.ResourceProvider;
+import com.gbh.movil.data.res.AssetProvider;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.ui.SubFragment;
@@ -23,10 +21,9 @@ import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.main.PinConfirmationDialogFragment;
 import com.gbh.movil.ui.main.payments.transactions.PaymentOptionAdapter;
 import com.gbh.movil.ui.main.payments.transactions.TransactionCreationContainer;
-import com.gbh.movil.ui.view.widget.CustomAmountView;
 import com.gbh.movil.ui.view.widget.NumPad;
+import com.gbh.movil.ui.view.widget.PrefixableTextView;
 
-import java.math.BigDecimal;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -50,7 +47,7 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
   private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
 
   @Inject
-  ResourceProvider resourceProvider;
+  AssetProvider assetProvider;
   @Inject
   PhoneNumberTransactionCreationPresenter presenter;
   @Inject
@@ -63,7 +60,7 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
   @BindView(R.id.transaction_creation_payment_option_chooser)
   Spinner paymentOptionChooser;
   @BindView(R.id.transaction_creation_amount)
-  CustomAmountView amountView;
+  PrefixableTextView amountTextView;
   @BindView(R.id.transaction_creation_num_pad)
   NumPad numPad;
   @BindView(R.id.action_transfer)
@@ -88,30 +85,6 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
 
   @OnClick(R.id.action_transfer)
   void onTransferButtonClicked() {
-    final BigDecimal value = amountView.getValue();
-    if (value.compareTo(BigDecimal.ZERO) > 0) {
-      final int[] location = new int[2];
-      transferActionButton.getLocationOnScreen(location);
-      final int x = location[0] + (transferActionButton.getWidth() / 2);
-      final int y = location[1];
-      final String identifier;
-      if (Utils.isNotNull(recipient.getLabel())) {
-        identifier = recipient.getLabel();
-      } else {
-        identifier = recipient.getIdentifier();
-      }
-      final String description = String.format(getString(R.string.format_transfer_to),
-        Formatter.amount(amountView.getCurrency(), value), identifier);
-      PinConfirmationDialogFragment.newInstance(x, y, description,
-        new PinConfirmationDialogFragment.Callback() {
-          @Override
-          public void confirm(@NonNull String pin) {
-            presenter.transferTo(value, pin);
-          }
-        }).show(getChildFragmentManager(), TAG_PIN_CONFIRMATION);
-    } else {
-      // TODO: Let the user know that he must set the amount that he wants to transfer.
-    }
   }
 
   @Override
@@ -138,7 +111,7 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
     // Prepares the list of payment options.
-    paymentOptionAdapter = new PaymentOptionAdapter(getContext(), resourceProvider);
+    paymentOptionAdapter = new PaymentOptionAdapter(getContext(), assetProvider);
     paymentOptionChooser.setAdapter(paymentOptionAdapter);
     // Adds a listener that gets notified every time a payment option is chosen.
     paymentOptionChooser.setOnItemSelectedListener(this);
@@ -183,12 +156,12 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
 
   @Override
   public void setPaymentOptionCurrency(@NonNull String currency) {
-    amountView.setCurrency(currency);
+    amountTextView.setPrefix(currency);
   }
 
   @Override
   public void clearAmount() {
-    amountView.setValue(BigDecimal.ZERO);
+    // TODO
   }
 
   @Override
@@ -214,15 +187,11 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
 
   @Override
   public void onTextButtonClicked(@NonNull String content) {
-    if (TextUtils.isDigitsOnly(content)) {
-      amountView.pushDigit(Integer.parseInt(content));
-    } else {
-      amountView.pushDot();
-    }
+    // TODO
   }
 
   @Override
   public void onDeleteButtonClicked() {
-    amountView.pop();
+    // TODO
   }
 }

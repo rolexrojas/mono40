@@ -2,7 +2,7 @@ package com.gbh.movil.ui.main.payments.transactions;
 
 import com.gbh.movil.AppComponent;
 import com.gbh.movil.data.SchedulerProvider;
-import com.gbh.movil.data.res.ResourceProvider;
+import com.gbh.movil.data.res.AssetProvider;
 import com.gbh.movil.domain.ProductManager;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.TransactionManager;
@@ -26,7 +26,7 @@ public interface TransactionCreationComponent {
 
   SchedulerProvider provideSchedulerProvider();
 
-  ResourceProvider provideResourceProvider();
+  AssetProvider provideResourceProvider();
 
   ProductManager provideProductManager();
 

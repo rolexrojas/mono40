@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.gbh.movil.Utils;
-import com.gbh.movil.data.res.ResourceProvider;
+import com.gbh.movil.data.res.AssetProvider;
 import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.main.MainContainer;
 import com.gbh.movil.ui.main.list.Adapter;
@@ -57,7 +57,7 @@ public class ProductsFragment extends SubFragment<MainContainer> implements Prod
   @Inject
   StringHelper stringHelper;
   @Inject
-  ResourceProvider resourceProvider;
+  AssetProvider assetProvider;
   @Inject
   ProductsPresenter presenter;
 
@@ -138,7 +138,7 @@ public class ProductsFragment extends SubFragment<MainContainer> implements Prod
       .addCreator(ProductItem.class, new ProductHolderCreator(this))
       .build();
     final HolderBinderFactory holderBinderFactory = new HolderBinderFactory.Builder()
-      .addBinder(ProductItem.class, ProductHolder.class, new ProductHolderBinder(resourceProvider))
+      .addBinder(ProductItem.class, ProductHolder.class, new ProductHolderBinder(assetProvider))
       .build();
     adapter = new Adapter(holderCreatorFactory, holderBinderFactory);
     recyclerView.setAdapter(adapter);
