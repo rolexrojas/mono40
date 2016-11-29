@@ -4,10 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.gbh.movil.domain.Balance;
 import com.gbh.movil.domain.Bank;
-import com.gbh.movil.domain.CreditCard;
-import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.InitialData;
-import com.gbh.movil.domain.Loan;
 import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Recipient;
@@ -64,36 +61,6 @@ public class DecoratedApiBridge implements ApiBridge {
   public Observable<ApiResult<InitialData>> initialLoad() {
     return apiBridge.initialLoad()
       .compose(this.<InitialData>assertAuthorization());
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @NonNull
-  @Override
-  public Observable<ApiResult<Set<Account>>> accounts() {
-    return apiBridge.accounts()
-      .compose(this.<Set<Account>>assertAuthorization());
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @NonNull
-  @Override
-  public Observable<ApiResult<Set<CreditCard>>> creditCards() {
-    return apiBridge.creditCards()
-      .compose(this.<Set<CreditCard>>assertAuthorization());
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @NonNull
-  @Override
-  public Observable<ApiResult<Set<Loan>>> loans() {
-    return apiBridge.loans()
-      .compose(this.<Set<Loan>>assertAuthorization());
   }
 
   /**

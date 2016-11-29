@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="app.text.widget.prefixable_text_view">#333</color>
+  <!-- App's colors -->
+  <color name="app.text.widget.prefixable_text_view.content">#333333</color>
+  <color name="app.text.widget.prefixable_text_view.prefix">#7F333333</color>
+
+  <!-- Transaction creation screen's color -->
+  <color name="transaction_creation.text.widget.amount.value">@color/app.text.widget.prefixable_text_view.content</color>
+  <color name="transaction_creation.text.widget.amount.prefix">@color/app.text.widget.prefixable_text_view.prefix</color>
 
   <!-- TODO: Apply standards from these point downward -->
   <color name="accent">#9C188F</color>

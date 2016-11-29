@@ -79,7 +79,7 @@ public class PrefixableTextView extends TextView {
       final int defaultPrefixTextSize = getResources().getDimensionPixelSize(
         R.dimen.app_text_widget_prefixable_text_view_prefix);
       final int defaultPrefixTextColor = ContextCompat.getColor(context,
-        R.color.app_text_widget_prefixable_text_view);
+        R.color.app_text_widget_prefixable_text_view_content);
       final TypedArray prefixTextAppearanceArray = context.obtainStyledAttributes(
         prefixTextAppearance, R.styleable.PrefixableTextViewAppearance);
       try {
@@ -109,6 +109,7 @@ public class PrefixableTextView extends TextView {
     } finally {
       array.recycle();
     }
+    setMaxLines(1);
     setPrefix(prefix);
   }
 
@@ -199,7 +200,7 @@ public class PrefixableTextView extends TextView {
    *   TODO
    */
   public void setPrefixTextColorFromResource(@ColorRes int colorId) {
-    setTextColor(ContextCompat.getColor(getContext(), colorId));
+    setPrefixTextColor(ContextCompat.getColor(getContext(), colorId));
   }
 
   /**

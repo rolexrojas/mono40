@@ -7,7 +7,7 @@
   android:orientation="vertical"
   tools:ignore="MissingPrefix">
   <include layout="@layout/reusable_payment_option_chooser"/>
-  <com.gbh.movil.ui.view.widget.PrefixableTextView
+  <com.gbh.movil.ui.view.widget.AutoResizeablePrefixableTextView
     android:id="@+id/transaction_creation.amount"
     style="@style/TransactionCreation.Widget.Amount"
     android:layout_width="match_parent"

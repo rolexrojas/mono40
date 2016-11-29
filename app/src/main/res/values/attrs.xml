@@ -22,9 +22,27 @@
       name="prefixFontPath"
       format="string|reference"/>
   </declare-styleable>
+  <declare-styleable name="AutoResizeablePrefixableTextView">
+    <attr
+      name="maxTextSize"
+      format="dimension|reference"/>
+    <attr
+      name="minTextSize"
+      format="dimension|reference"/>
+    <attr
+      name="prefixMaxTextSize"
+      format="dimension|reference"/>
+    <attr
+      name="prefixMinTextSize"
+      format="dimension|reference"/>
+  </declare-styleable>
+
   <declare-styleable name="App.Theme">
     <attr
       name="prefixableTextViewStyle"
+      format="reference"/>
+    <attr
+      name="autoResizeablePrefixableTextViewStyle"
       format="reference"/>
     <attr
       name="searchViewStyle"

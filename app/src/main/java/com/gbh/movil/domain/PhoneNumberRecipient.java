@@ -37,7 +37,7 @@ public class PhoneNumberRecipient extends Recipient {
   @NonNull
   @Override
   public String getIdentifier() {
-    return phoneNumber.formatted();
+    return phoneNumber.getContent();
   }
 
   @Override

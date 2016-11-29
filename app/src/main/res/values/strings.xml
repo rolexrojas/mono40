@@ -1,5 +1,10 @@
 <resources>
+  <!-- App's strings -->
   <string name="app.text.widget.prefixable_text_view.font">@string/font.gotham_rounded.book</string>
+
+  <!-- Transaction creation screen's strings -->
+  <string name="transaction_creation.text.widget.amount.value.font">@string/font.gotham_rounded.light</string>
+  <string name="transaction_creation.text.widget.amount.currency.font">@string/font.gotham_rounded.light</string>
 
   <!-- TODO: Apply standards from these point downward -->
   <string name="about">Acerca de</string>

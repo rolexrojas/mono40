@@ -32,7 +32,7 @@
       style="@style/ListItemButton"
       android:layout_gravity="center"
       android:text="@string/balance"/>
-    <com.gbh.movil.ui.view.widget.AmountView
+    <com.gbh.movil.ui.view.widget.PrefixableTextView
       android:id="@+id/product.balance"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"

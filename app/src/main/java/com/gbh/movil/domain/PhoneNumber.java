@@ -25,10 +25,6 @@ public class PhoneNumber implements Serializable, Matchable {
   /**
    * TODO
    */
-  private final String formattedContent;
-  /**
-   * TODO
-   */
   private final String content;
 
   /**
@@ -41,8 +37,7 @@ public class PhoneNumber implements Serializable, Matchable {
    *   TODO
    */
   public PhoneNumber(@NonNull String content) throws NumberParseException {
-    this.formattedContent = format(content);
-    this.content = StringUtils.sanitize(formattedContent);
+    this.content = StringUtils.sanitize(format(content));
   }
 
   /**
@@ -95,20 +90,19 @@ public class PhoneNumber implements Serializable, Matchable {
       PhoneNumberUtil.PhoneNumberFormat.NATIONAL);
   }
 
+  @Override
+  public boolean equals(Object object) {
+    return super.equals(object) || (Utils.isNotNull(object) && object instanceof PhoneNumber
+      && ((PhoneNumber) object).content.equals(content));
+  }
+
   /**
    * TODO
    *
    * @return TODO
    */
-  @NonNull
-  public final String formatted() {
-    return formattedContent;
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    return super.equals(object) || (Utils.isNotNull(object) && object instanceof PhoneNumber
-      && ((PhoneNumber) object).content.equals(content));
+  public final String getContent() {
+    return content;
   }
 
   @Override
@@ -118,7 +112,7 @@ public class PhoneNumber implements Serializable, Matchable {
 
   @Override
   public String toString() {
-    return content;
+    return PhoneNumber.class.getSimpleName() + ":{content='" + content + "'}";
   }
 
   @Override
