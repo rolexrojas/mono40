@@ -58,6 +58,11 @@ public class PrefixableTextView extends TextView {
    * TODO
    */
   private String prefixFontPath;
+  /**
+   * TODO
+   */
+  @Dimension
+  private int prefixPaddingEnd;
 
   public PrefixableTextView(Context context) {
     this(context, null);
@@ -76,8 +81,9 @@ public class PrefixableTextView extends TextView {
       prefixTextAppearance = array.getResourceId(
         R.styleable.PrefixableTextView_prefixTextAppearance,
         R.style.App_Text_Widget_PrefixableTextView_Prefix);
-      final int defaultPrefixTextSize = getResources().getDimensionPixelSize(
-        R.dimen.app_text_widget_prefixable_text_view_prefix);
+      final Resources resources = getResources();
+      final int defaultPrefixTextSize = resources.getDimensionPixelSize(
+        R.dimen.app_text_widget_prefixable_text_view_prefix_size);
       final int defaultPrefixTextColor = ContextCompat.getColor(context,
         R.color.app_text_widget_prefixable_text_view_content);
       final TypedArray prefixTextAppearanceArray = context.obtainStyledAttributes(
@@ -106,6 +112,10 @@ public class PrefixableTextView extends TextView {
       if (TextUtils.isEmpty(prefixFontPath)) {
         prefixFontPath = context.getString(R.string.app_text_widget_prefixable_text_view_font);
       }
+      final int defaultPrefixPaddingEnd = resources.getDimensionPixelOffset(
+        R.dimen.app_text_widget_prefixable_text_view_prefix_padding_end);
+      prefixPaddingEnd = array.getDimensionPixelOffset(
+        R.styleable.PrefixableTextView_prefixPaddingEnd, defaultPrefixPaddingEnd);
     } finally {
       array.recycle();
     }

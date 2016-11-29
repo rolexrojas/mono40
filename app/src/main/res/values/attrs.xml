@@ -21,6 +21,9 @@
     <attr
       name="prefixFontPath"
       format="string|reference"/>
+    <attr
+      name="prefixPaddingEnd"
+      format="dimension|reference"/>
   </declare-styleable>
   <declare-styleable name="AutoResizeablePrefixableTextView">
     <attr
@@ -36,6 +39,20 @@
       name="prefixMinTextSize"
       format="dimension|reference"/>
   </declare-styleable>
+  <declare-styleable name="NumPad">
+    <attr
+      name="tintColor"
+      format="color|reference"/>
+    <attr
+      name="dotEnabled"
+      format="boolean"/>
+    <attr
+      name="deleteEnabled"
+      format="boolean"/>
+    <attr
+      name="deleteDrawable"
+      format="reference"/>
+  </declare-styleable>
 
   <declare-styleable name="App.Theme">
     <attr
@@ -43,6 +60,9 @@
       format="reference"/>
     <attr
       name="autoResizeablePrefixableTextViewStyle"
+      format="reference"/>
+    <attr
+      name="numPadStyle"
       format="reference"/>
     <attr
       name="searchViewStyle"
@@ -54,16 +74,5 @@
     <attr
       name="hint"
       format="reference|string"/>
-  </declare-styleable>
-  <declare-styleable name="NumPad">
-    <attr
-      name="buttonColor"
-      format="color"/>
-    <attr
-      name="deleteButtonDrawable"
-      format="reference"/>
-    <attr
-      name="showDot"
-      format="boolean"/>
   </declare-styleable>
 </resources>

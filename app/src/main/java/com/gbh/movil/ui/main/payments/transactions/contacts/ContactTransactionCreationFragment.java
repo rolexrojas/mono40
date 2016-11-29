@@ -40,7 +40,7 @@ import butterknife.Unbinder;
  */
 public class ContactTransactionCreationFragment extends SubFragment<TransactionCreationContainer>
   implements PhoneNumberTransactionCreationScreen, Spinner.OnItemSelectedListener,
-  NumPad.OnButtonClickedListener {
+  NumPad.OnDeleteClickedListener {
   /**
    * TODO
    */
@@ -116,7 +116,7 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
     // Adds a listener that gets notified every time a payment option is chosen.
     paymentOptionChooser.setOnItemSelectedListener(this);
     // Adds a listener that gets notified every time a num pad button is pressed.
-    numPad.setOnButtonClickedListener(this);
+    numPad.setOnDeleteClickedListener(this);
     // Attaches the screen to the presenter.
     presenter.attachScreen(this);
   }
@@ -139,7 +139,7 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
   public void onDestroyView() {
     super.onDestroyView();
     // Removes the listener that gets notified every time a num pad button is pressed.
-    numPad.setOnButtonClickedListener(null);
+    numPad.setOnDeleteClickedListener(null);
     // Removes the listener that gets notified every time a payment option is chosen.
     paymentOptionChooser.setOnItemSelectedListener(null);
     // Detaches the screen from the presenter.
@@ -186,12 +186,7 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
   }
 
   @Override
-  public void onTextButtonClicked(@NonNull String content) {
-    // TODO
-  }
-
-  @Override
-  public void onDeleteButtonClicked() {
+  public void onDeleteCellClicked() {
     // TODO
   }
 }

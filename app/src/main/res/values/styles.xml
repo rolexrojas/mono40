@@ -12,18 +12,6 @@
     <item name="fontPath">@string/font.gotham_rounded.bold</item>
   </style>
   <style name="Base.Text.Widget"/>
-  <style name="Base.Text.Widget.PrefixableTextView">
-    <item name="fontPath">@string/app.text.widget.prefixable_text_view.font</item>
-  </style>
-  <style name="Base.Text.Widget.PrefixableTextView.Content">
-    <item name="android:textColor">@color/app.text.widget.prefixable_text_view.content</item>
-    <item name="android:textSize">@dimen/app.text.widget.prefixable_text_view.content</item>
-  </style>
-  <style name="Base.Text.Widget.PrefixableTextView.Prefix">
-    <item name="android:textColor">@color/app.text.widget.prefixable_text_view.prefix</item>
-    <item name="android:textSize">@dimen/app.text.widget.prefixable_text_view.prefix</item>
-  </style>
-
   <style
     name="Base.Text.Widget.Button"
     parent="Base.Text.Label"/>
@@ -37,6 +25,23 @@
   <style name="Base.Text.Widget.Toolbar.Subtitle">
     <item name="android:textSize">10sp</item>
   </style>
+  <style name="Base.Text.Widget.PrefixableTextView">
+    <item name="fontPath">@string/app.text.widget.prefixable_text_view.font</item>
+  </style>
+  <style name="Base.Text.Widget.PrefixableTextView.Content">
+    <item name="android:textColor">@color/app_text_widget_prefixable_text_view_content</item>
+    <item name="android:textSize">@dimen/app_text_widget_prefixable_text_view_content</item>
+  </style>
+  <style name="Base.Text.Widget.PrefixableTextView.Prefix">
+    <item name="android:textColor">@color/app_text_widget_prefixable_text_view_prefix</item>
+    <item name="android:textSize">@dimen/app_text_widget_prefixable_text_view_prefix_size</item>
+  </style>
+  <style name="Base.Text.Widget.NumPadCell">
+    <item name="android:textColor">@color/app_widget_num_pad_tint</item>
+    <item name="android:textSize">@dimen/app_text_widget_num_pad_cell_size</item>
+    <item name="fontPath">@string/app.text.widget.num_pad.cell.font</item>
+  </style>
+
   <style name="Base.Text.Bank"/>
   <style name="Base.Text.Bank.Name">
     <item name="android:ellipsize">end</item>
@@ -49,30 +54,6 @@
   <style
     name="Base.Widget"
     parent="android:Widget"/>
-  <style name="Base.Widget.PrefixableTextView">
-    <item name="android:maxLines">1</item>
-    <item name="android:textAppearance">@style/App.Text.Widget.PrefixableTextView.Content</item>
-    <item name="prefixTextAppearance">@style/App.Text.Widget.PrefixableTextView.Prefix</item>
-  </style>
-  <style
-    name="Base.Widget.AutoResizeablePrefixableTextView"
-    parent="App.Widget.PrefixableTextView">
-    <item name="maxTextSize">@dimen/app.text.widget.auto_resizeable_prefixable_text_view.content.max</item>
-    <item name="minTextSize">@dimen/app.text.widget.auto_resizeable_prefixable_text_view.content.min</item>
-    <item name="prefixMaxTextSize">@dimen/app.text.widget.auto_resizeable_prefixable_text_view.prefix.max</item>
-    <item name="prefixMinTextSize">@dimen/app.text.widget.auto_resizeable_prefixable_text_view.prefix.min</item>
-  </style>
-  <style name="Base.Widget.Button">
-    <item name="android:background">?attr/selectableItemBackground</item>
-    <item name="android:clickable">true</item>
-    <item name="android:gravity">center</item>
-    <item name="android:layout_height">@dimen/app.widget.button.height</item>
-    <item name="android:layout_width">match_parent</item>
-    <item name="android:textAppearance">@style/App.Text.Widget.Button</item>
-  </style>
-  <style name="Base.Widget.Button.Blurred">
-    <item name="android:background">@drawable/app_widget_button_blurred_shape</item>
-  </style>
   <style
     name="Base.Widget.Toolbar"
     parent="Widget.AppCompat.Toolbar">
@@ -95,6 +76,54 @@
   <style name="Base.Widget.Container.Colored">
     <item name="android:background">@drawable/background_colored</item>
   </style>
+  <style name="Base.Widget.Button">
+    <item name="android:background">?attr/selectableItemBackground</item>
+    <item name="android:clickable">true</item>
+    <item name="android:gravity">center</item>
+    <item name="android:layout_height">@dimen/app_widget_button_height</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:textAppearance">@style/App.Text.Widget.Button</item>
+  </style>
+  <style name="Base.Widget.Button.Blurred">
+    <item name="android:background">@drawable/app_widget_button_blurred_shape</item>
+  </style>
+  <style name="Base.Widget.PrefixableTextView">
+    <item name="android:maxLines">1</item>
+    <item name="android:textAppearance">@style/App.Text.Widget.PrefixableTextView.Content</item>
+    <item name="prefixTextAppearance">@style/App.Text.Widget.PrefixableTextView.Prefix</item>
+  </style>
+  <style
+    name="Base.Widget.AutoResizeablePrefixableTextView"
+    parent="App.Widget.PrefixableTextView">
+    <item name="maxTextSize">@dimen/app_text_widget_auto_resizeable_prefixable_text_view_content_max</item>
+    <item name="minTextSize">@dimen/app_text_widget_auto_resizeable_prefixable_text_view_content_min</item>
+    <item name="prefixMaxTextSize">@dimen/app_text_widget_auto_resizeable_prefixable_text_view_prefix_max</item>
+    <item name="prefixMinTextSize">@dimen/app_text_widget_auto_resizeable_prefixable_text_view_prefix_min</item>
+  </style>
+  <style name="Base.Widget.NumPadRow">
+    <item name="android:layout_height">0dp</item>
+    <item name="android:layout_weight">1</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:orientation">horizontal</item>
+  </style>
+  <style name="Base.Widget.NumPadCell">
+    <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+    <item name="android:gravity">center</item>
+    <item name="android:layout_height">match_parent</item>
+    <item name="android:layout_weight">1</item>
+    <item name="android:layout_width">0dp</item>
+  </style>
+  <style name="Base.Widget.NumPadCell.Text">
+    <item name="android:lineSpacingExtra">@dimen/app_text_widget_num_pad_cell_line_spacing</item>
+    <item name="android:textAppearance">@style/App.Text.Widget.NumPadCell</item>
+  </style>
+  <style name="Base.Widget.NumPadCell.Image"/>
+  <style name="Base.Widget.NumPad">
+    <item name="tintColor">@color/app_widget_num_pad_tint</item>
+    <item name="dotEnabled">false</item>
+    <item name="deleteEnabled">true</item>
+    <item name="deleteDrawable">@drawable/app_widget_num_pad_delete</item>
+  </style>
 
   <style
     name="Base.Theme"
@@ -106,6 +135,7 @@
     <item name="android:buttonStyle">@style/App.Widget.Button</item>
     <item name="prefixableTextViewStyle">@style/App.Widget.PrefixableTextView</item>
     <item name="autoResizeablePrefixableTextViewStyle">@style/App.Widget.AutoResizeablePrefixableTextView</item>
+    <item name="numPadStyle">@style/App.Widget.NumPad</item>
     <item name="searchViewStyle">@style/App.Widget.SearchView</item>
   </style>
   <style
@@ -129,15 +159,6 @@
     name="App.Text.Widget"
     parent="Base.Text.Widget"/>
   <style
-    name="App.Text.Widget.PrefixableTextView"
-    parent="Base.Text.Widget.PrefixableTextView"/>
-  <style
-    name="App.Text.Widget.PrefixableTextView.Content"
-    parent="Base.Text.Widget.PrefixableTextView.Content"/>
-  <style
-    name="App.Text.Widget.PrefixableTextView.Prefix"
-    parent="Base.Text.Widget.PrefixableTextView.Prefix"/>
-  <style
     name="App.Text.Widget.Button"
     parent="Base.Text.Widget.Button"/>
   <style
@@ -150,6 +171,19 @@
     name="App.Text.Widget.Toolbar.Subtitle"
     parent="Base.Text.Widget.Toolbar.Subtitle"/>
   <style
+    name="App.Text.Widget.PrefixableTextView"
+    parent="Base.Text.Widget.PrefixableTextView"/>
+  <style
+    name="App.Text.Widget.PrefixableTextView.Content"
+    parent="Base.Text.Widget.PrefixableTextView.Content"/>
+  <style
+    name="App.Text.Widget.PrefixableTextView.Prefix"
+    parent="Base.Text.Widget.PrefixableTextView.Prefix"/>
+  <style
+    name="App.Text.Widget.NumPadCell"
+    parent="Base.Text.Widget.NumPadCell"/>
+
+  <style
     name="App.Text.Bank"
     parent="Base.Text.Bank"/>
   <style
@@ -159,12 +193,6 @@
   <style
     name="App.Widget"
     parent="Base.Widget"/>
-  <style
-    name="App.Widget.PrefixableTextView"
-    parent="Base.Widget.PrefixableTextView"/>
-  <style
-    name="App.Widget.AutoResizeablePrefixableTextView"
-    parent="Base.Widget.AutoResizeablePrefixableTextView"/>
   <style
     name="App.Widget.Button"
     parent="Base.Widget.Button"/>
@@ -183,6 +211,27 @@
   <style
     name="App.Widget.Container.Colored"
     parent="Base.Widget.Container.Colored"/>
+  <style
+    name="App.Widget.PrefixableTextView"
+    parent="Base.Widget.PrefixableTextView"/>
+  <style
+    name="App.Widget.AutoResizeablePrefixableTextView"
+    parent="Base.Widget.AutoResizeablePrefixableTextView"/>
+  <style
+    name="App.Widget.NumPadRow"
+    parent="Base.Widget.NumPadRow"/>
+  <style
+    name="App.Widget.NumPadCell"
+    parent="Base.Widget.NumPadCell"/>
+  <style
+    name="App.Widget.NumPadCell.Text"
+    parent="Base.Widget.NumPadCell.Text"/>
+  <style
+    name="App.Widget.NumPadCell.Image"
+    parent="Base.Widget.NumPadCell.Image"/>
+  <style
+    name="App.Widget.NumPad"
+    parent="Base.Widget.NumPad"/>
 
   <style
     name="App.Theme"
@@ -200,15 +249,15 @@
   <style
     name="TransactionCreation.Text.Widget.Amount.Value"
     parent="App.Text.Widget.PrefixableTextView.Content">
-    <item name="android:textColor">@color/transaction_creation.text.widget.amount.value</item>
-    <item name="android:textSize">@dimen/transaction_creation.text.widget.amount.value.max</item>
+    <item name="android:textColor">@color/transaction_creation_text_widget_amount_value</item>
+    <item name="android:textSize">@dimen/transaction_creation_text_widget_amount_value_max</item>
     <item name="fontPath">@string/transaction_creation.text.widget.amount.value.font</item>
   </style>
   <style
     name="TransactionCreation.Text.Widget.Amount.Currency"
     parent="App.Text.Widget.PrefixableTextView.Prefix">
-    <item name="android:textColor">@color/transaction_creation.text.widget.amount.prefix</item>
-    <item name="android:textSize">@dimen/transaction_creation.text.widget.amount.currency.max</item>
+    <item name="android:textColor">@color/transaction_creation_text_widget_amount_prefix</item>
+    <item name="android:textSize">@dimen/transaction_creation_text_widget_amount_currency_max</item>
     <item name="fontPath">@string/transaction_creation.text.widget.amount.currency.font</item>
   </style>
 
@@ -218,10 +267,10 @@
     parent="App.Widget.AutoResizeablePrefixableTextView">
     <item name="android:gravity">center_horizontal</item>
     <item name="android:textAppearance">@style/TransactionCreation.Text.Widget.Amount.Value</item>
-    <item name="maxTextSize">@dimen/transaction_creation.text.widget.amount.value.max</item>
-    <item name="minTextSize">@dimen/transaction_creation.text.widget.amount.value.min</item>
-    <item name="prefixMaxTextSize">@dimen/transaction_creation.text.widget.amount.currency.max</item>
-    <item name="prefixMinTextSize">@dimen/transaction_creation.text.widget.amount.currency.min</item>
+    <item name="maxTextSize">@dimen/transaction_creation_text_widget_amount_value_max</item>
+    <item name="minTextSize">@dimen/transaction_creation_text_widget_amount_value_min</item>
+    <item name="prefixMaxTextSize">@dimen/transaction_creation_text_widget_amount_currency_max</item>
+    <item name="prefixMinTextSize">@dimen/transaction_creation_text_widget_amount_currency_min</item>
     <item name="prefixTextAppearance">@style/TransactionCreation.Text.Widget.Amount.Currency</item>
   </style>
 
@@ -371,41 +420,6 @@
   <style
     name="MenuItem.Large"
     parent="BaseMenuItem.Large"/>
-  <!-- Num pad styles -->
-  <style name="NumPad"/>
-  <style name="NumPad.Light">
-    <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark</item>
-    <item name="buttonColor">@color/white</item>
-    <item name="deleteButtonDrawable">@drawable/ic_backspace_white_24dp</item>
-  </style>
-  <style name="NumPad.Dark">
-    <item name="android:theme">@style/ThemeOverlay.AppCompat.Light</item>
-    <item name="buttonColor">@color/black</item>
-    <item name="deleteButtonDrawable">@drawable/ic_backspace_black_24dp</item>
-  </style>
-  <style name="NumPadRow">
-    <item name="android:layout_height">0dp</item>
-    <item name="android:layout_weight">1</item>
-    <item name="android:layout_width">match_parent</item>
-    <item name="android:orientation">horizontal</item>
-  </style>
-  <style name="NumPadCell">
-    <item name="android:layout_height">match_parent</item>
-    <item name="android:layout_weight">1</item>
-    <item name="android:layout_width">0dp</item>
-  </style>
-  <style
-    name="NumPadButton"
-    parent="NumPadCell">
-    <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
-    <item name="android:clickable">true</item>
-  </style>
-  <style name="NumPadButton.Text">
-    <item name="android:gravity">center</item>
-    <item name="android:lineSpacingExtra">2sp</item>
-    <item name="android:textSize">24sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.medium</item>
-  </style>
   <!-- Pin confirmation styles -->
   <style name="PinConfirmationContainer">
     <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark</item>
