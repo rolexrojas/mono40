@@ -272,7 +272,7 @@ public class PhoneNumberTransactionCreationFragment
       } else {
         amount = amount.divideToIntegralValue(TEN);
       }
+      updateAmountText();
     }
-    updateAmountText();
   }
 }
