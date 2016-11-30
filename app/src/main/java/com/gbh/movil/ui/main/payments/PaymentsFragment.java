@@ -201,8 +201,13 @@ public class PaymentsFragment extends SubFragment<MainContainer>
         final Recipient recipient = AddRecipientActivity.deserializeResult(data);
         if (Utils.isNotNull(recipient)) {
           presenter.addRecipient(recipient);
-        } else {
-          // TODO: Let the user know that the recipient couldn't be added.
+        }
+      }
+    } else if (requestCode == REQUEST_CODE_TRANSACTION_CREATION) {
+      if (resultCode == Activity.RESULT_OK) {
+        final Recipient recipient = TransactionCreationActivity.deserializeResult(data);
+        if (Utils.isNotNull(recipient)) {
+          presenter.showTransactionConfirmation(recipient);
         }
       }
     }

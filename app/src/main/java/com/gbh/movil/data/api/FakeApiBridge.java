@@ -186,8 +186,25 @@ class FakeApiBridge implements ApiBridge {
 
   @NonNull
   @Override
-  public Observable<ApiResult<Boolean>> transferTo(@NonNull Product product,
-    @NonNull Recipient recipient, @NonNull BigDecimal amount, @NonNull String pin) {
-    return Observable.error(new UnsupportedOperationException());
+  public Observable<ApiResult<Boolean>> transferTo(@NonNull final Product product,
+    @NonNull final Recipient recipient, @NonNull BigDecimal amount, @NonNull String pin) {
+    return Observable.just(isLastDigitEven(pin))
+      .map(new Func1<Boolean, ApiResult<Boolean>>() {
+        @Override
+        public ApiResult<Boolean> call(Boolean flag) {
+          if (flag) {
+            if (!products.contains(product)) {
+              return ApiResult.create(ApiCode.BAD_REQUEST);
+            } else if (!recipients.contains(recipient)) {
+              return ApiResult.create(ApiCode.BAD_REQUEST);
+            } else {
+              return ApiResult.create(true);
+            }
+          } else {
+            return ApiResult.create(ApiCode.FORBIDDEN);
+          }
+        }
+      })
+      .compose(FakeApiBridge.<ApiResult<Boolean>>delay());
   }
 }

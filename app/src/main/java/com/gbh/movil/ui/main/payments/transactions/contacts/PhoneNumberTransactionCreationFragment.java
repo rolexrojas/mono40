@@ -1,5 +1,7 @@
 package com.gbh.movil.ui.main.payments.transactions.contacts;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +17,7 @@ import com.gbh.movil.R;
 import com.gbh.movil.Utils;
 import com.gbh.movil.data.Formatter;
 import com.gbh.movil.data.res.AssetProvider;
+import com.gbh.movil.domain.PhoneNumberRecipient;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.ui.SubFragment;
@@ -128,8 +131,24 @@ public class PhoneNumberTransactionCreationFragment
   }
 
   @OnClick(R.id.action_transfer)
-  void onTransferButtonClicked() {
-    // TODO
+  void onTransferButtonClicked(View view) {
+    if (amount.compareTo(ZERO) > 0) {
+      final int[] location = new int[2];
+      view.getLocationOnScreen(location);
+      final int x = location[0];
+      final int y = location[1];
+      final String description = String.format(getString(R.string.format_transfer_to),
+        recipient.getIdentifier(), Formatter.amount(amountTextView.getPrefix().toString(), amount));
+      PinConfirmationDialogFragment.newInstance(x, y, description,
+        new PinConfirmationDialogFragment.Callback() {
+          @Override
+          public void confirm(@NonNull String pin) {
+            presenter.transferTo(amount, pin);
+          }
+        }).show(getChildFragmentManager(), TAG_PIN_CONFIRMATION);
+    } else {
+      // TODO: Let the user know that he must insert an amount greater than zero.
+    }
   }
 
   @Override
@@ -219,6 +238,17 @@ public class PhoneNumberTransactionCreationFragment
     final Fragment fragment = getChildFragmentManager().findFragmentByTag(TAG_PIN_CONFIRMATION);
     if (Utils.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
       ((PinConfirmationDialogFragment) fragment).resolve(succeeded);
+    }
+    if (succeeded) {
+      final Activity activity = getActivity();
+      if (recipient instanceof PhoneNumberRecipient) {
+        final Intent intent = new Intent();
+        intent.putExtra("recipient", recipient);
+        activity.setResult(Activity.RESULT_OK, intent);
+      } else {
+        activity.setResult(Activity.RESULT_OK);
+      }
+      activity.finish();
     }
   }
 

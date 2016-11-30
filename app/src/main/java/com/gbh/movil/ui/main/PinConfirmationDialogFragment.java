@@ -99,20 +99,22 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
    * TODO
    */
   private void finish() {
-    // Prepares the background animator.
-    final int radius = (int) Math.hypot(containerFrameLayout.getWidth(),
-      containerLinearLayout.getHeight());
-    final Animator animator = ViewAnimationUtils
-      .createCircularReveal(containerFrameLayout, centerX, centerY, radius, 0)
-      .setDuration(exitDuration);
-    animator.addListener(new BaseAnimatorListener() {
-      @Override
-      public void onAnimationEnd(Animator animator) {
-        dismiss();
-      }
-    });
-    // Starts the background animator.
-    animator.start();
+    if (Utils.isNotNull(containerFrameLayout)) {
+      // Prepares the background animator.
+      final int radius = (int) Math.hypot(containerFrameLayout.getWidth(),
+        containerLinearLayout.getHeight());
+      final Animator animator = ViewAnimationUtils
+        .createCircularReveal(containerFrameLayout, centerX, centerY, radius, 0)
+        .setDuration(exitDuration);
+      animator.addListener(new BaseAnimatorListener() {
+        @Override
+        public void onAnimationEnd(Animator animator) {
+          dismiss();
+        }
+      });
+      // Starts the background animator.
+      animator.start();
+    }
   }
 
   /**

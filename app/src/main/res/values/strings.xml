@@ -5,6 +5,7 @@
 
   <!-- Screen's strings -->
   <string name="screen_products_text_widget_amount_value_font">@string/font.gotham_rounded.medium</string>
+  <string name="transaction_confirmation_title">¡Transacción exitosa!</string>
 
   <!-- TODO: Apply standards from these point downward -->
   <string name="transaction_creation.text.widget.amount.value.font">@string/font.gotham_rounded.light</string>
@@ -38,7 +39,7 @@
   <string name="font.gotham_rounded.book">fonts/GothamRounded-Book.otf</string>
   <string name="font.gotham_rounded.light">fonts/GothamRounded-Light.otf</string>
   <string name="font.gotham_rounded.medium">fonts/GothamRounded-Medium.otf</string>
-  <string name="format.transfer_to">Transferir %1$s a %2$s</string>
+  <string name="format_transfer_to">Transferir %1$s a %2$s</string>
   <string name="go_to_accounts">Ver cuentas</string>
   <string name="help">Ayuda</string>
   <string name="info.not_available.buy">Por el momento no es posible comprar en comercios.</string>

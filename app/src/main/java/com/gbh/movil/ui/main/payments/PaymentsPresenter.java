@@ -278,4 +278,15 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
         });
     }
   }
+
+  /**
+   * TODO
+   *
+   * @param recipient
+   *   TODO
+   */
+  void showTransactionConfirmation(@NonNull final Recipient recipient) {
+    assertScreen();
+    // TODO
+  }
 }
