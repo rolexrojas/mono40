@@ -2,6 +2,7 @@
 <LinearLayout
   style="@style/App.Widget.Container"
   xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:orientation="vertical"
   tools:ignore="MissingPrefix">
@@ -28,7 +29,9 @@
     android:layout_marginEnd="@dimen/space.horizontal.large"
     android:layout_marginStart="@dimen/space.horizontal.large"
     android:layout_marginTop="@dimen/space.vertical.normal"
-    android:layout_weight="1"/>
+    android:layout_weight="1"
+    app:deleteEnabled="true"
+    app:dotEnabled="true"/>
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

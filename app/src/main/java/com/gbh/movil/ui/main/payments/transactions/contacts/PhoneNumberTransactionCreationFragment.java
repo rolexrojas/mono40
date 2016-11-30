@@ -41,7 +41,7 @@ import butterknife.Unbinder;
  */
 public class PhoneNumberTransactionCreationFragment extends SubFragment<TransactionCreationContainer>
   implements PhoneNumberTransactionCreationScreen, Spinner.OnItemSelectedListener,
-  NumPad.OnDigitClickedListener, NumPad.OnDeleteClickedListener {
+  NumPad.OnDigitClickedListener, NumPad.OnDotClickedListener, NumPad.OnDeleteClickedListener {
   /**
    * TODO
    */
@@ -118,6 +118,7 @@ public class PhoneNumberTransactionCreationFragment extends SubFragment<Transact
     paymentOptionChooser.setOnItemSelectedListener(this);
     // Adds a listener that gets notified every time a num pad button is pressed.
     numPad.setOnDigitClickedListener(this);
+    numPad.setOnDotClickedListener(this);
     numPad.setOnDeleteClickedListener(this);
     // Attaches the screen to the presenter.
     presenter.attachScreen(this);
@@ -142,6 +143,7 @@ public class PhoneNumberTransactionCreationFragment extends SubFragment<Transact
     super.onDestroyView();
     // Removes the listener that gets notified every time a num pad button is pressed.
     numPad.setOnDeleteClickedListener(null);
+    numPad.setOnDotClickedListener(null);
     numPad.setOnDigitClickedListener(null);
     // Removes the listener that gets notified every time a payment option is chosen.
     paymentOptionChooser.setOnItemSelectedListener(null);
@@ -190,15 +192,16 @@ public class PhoneNumberTransactionCreationFragment extends SubFragment<Transact
 
   @Override
   public void onDigitClicked(@NonNull NumPad.Digit digit) {
-    amountTextView.setContent(TextUtils.concat(amountTextView.getContent(),
-      digit.getValue().toString()));
+    // TODO
+  }
+
+  @Override
+  public void onDotClicked() {
+    // TODO
   }
 
   @Override
   public void onDeleteClicked() {
-    final CharSequence text = amountTextView.getContent();
-    if (!TextUtils.isEmpty(text)) {
-      amountTextView.setContent(TextUtils.substring(text, 0, text.length() - 1));
-    }
+    // TODO
   }
 }

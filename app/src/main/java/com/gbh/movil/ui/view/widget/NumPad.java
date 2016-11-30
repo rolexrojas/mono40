@@ -33,7 +33,7 @@ import butterknife.OnClick;
  *
  * @author hecvasro
  */
-public class NumPad extends LinearLayout implements View.OnClickListener {
+public class NumPad extends LinearLayout {
   /**
    * TODO
    */
@@ -124,6 +124,7 @@ public class NumPad extends LinearLayout implements View.OnClickListener {
       button.setText(digit.getValue().toString());
       i++;
     }
+    dotButton.setText(".");
     dotButton.setTextColor(tintColor);
     dotButton.setClickable(dotEnabled);
     dotButton.setVisibility(dotEnabled ? View.VISIBLE : View.INVISIBLE);
@@ -197,11 +198,6 @@ public class NumPad extends LinearLayout implements View.OnClickListener {
    */
   public void setOnDeleteClickedListener(@Nullable OnDeleteClickedListener listener) {
     onDeleteClickedListener = listener;
-  }
-
-  @Override
-  public void onClick(View view) {
-    // TODO
   }
 
   /**
