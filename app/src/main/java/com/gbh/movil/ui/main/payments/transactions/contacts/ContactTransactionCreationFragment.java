@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ import butterknife.Unbinder;
  */
 public class ContactTransactionCreationFragment extends SubFragment<TransactionCreationContainer>
   implements PhoneNumberTransactionCreationScreen, Spinner.OnItemSelectedListener,
-  NumPad.OnDeleteClickedListener {
+  NumPad.OnDigitClickedListener, NumPad.OnDeleteClickedListener {
   /**
    * TODO
    */
@@ -116,6 +117,7 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
     // Adds a listener that gets notified every time a payment option is chosen.
     paymentOptionChooser.setOnItemSelectedListener(this);
     // Adds a listener that gets notified every time a num pad button is pressed.
+    numPad.setOnDigitClickedListener(this);
     numPad.setOnDeleteClickedListener(this);
     // Attaches the screen to the presenter.
     presenter.attachScreen(this);
@@ -140,6 +142,7 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
     super.onDestroyView();
     // Removes the listener that gets notified every time a num pad button is pressed.
     numPad.setOnDeleteClickedListener(null);
+    numPad.setOnDigitClickedListener(null);
     // Removes the listener that gets notified every time a payment option is chosen.
     paymentOptionChooser.setOnItemSelectedListener(null);
     // Detaches the screen from the presenter.
@@ -186,7 +189,16 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
   }
 
   @Override
-  public void onDeleteCellClicked() {
-    // TODO
+  public void onDigitClicked(@NonNull NumPad.Digit digit) {
+    amountTextView.setContent(TextUtils.concat(amountTextView.getContent(),
+      digit.getValue().toString()));
+  }
+
+  @Override
+  public void onDeleteClicked() {
+    final CharSequence text = amountTextView.getContent();
+    if (!TextUtils.isEmpty(text)) {
+      amountTextView.setContent(TextUtils.substring(text, 0, text.length() - 1));
+    }
   }
 }

@@ -231,7 +231,7 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
   }
 
   @Override
-  public void onDeleteCellClicked() {
+  public void onDeleteClicked() {
     pinView.pop();
   }
 

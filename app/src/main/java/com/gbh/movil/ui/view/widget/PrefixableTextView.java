@@ -11,8 +11,8 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.text.style.SuperscriptSpan;
 import android.text.style.TextAppearanceSpan;
 import android.util.AttributeSet;
@@ -33,6 +33,11 @@ public class PrefixableTextView extends TextView {
   /**
    * TODO
    */
+  private static final float DEFAULT_PREFIX_TEXT_SIZE_PROPORTION = 0.5F;
+
+  /**
+   * TODO
+   */
   private CharSequence content;
   /**
    * TODO
@@ -47,17 +52,16 @@ public class PrefixableTextView extends TextView {
   /**
    * TODO
    */
-  @Dimension
-  private int prefixTextSize;
-  /**
-   * TODO
-   */
   @ColorInt
   private int prefixTextColor;
   /**
    * TODO
    */
   private String prefixFontPath;
+  /**
+   * TODO
+   */
+  private float prefixTextSizeProportion;
   /**
    * TODO
    */
@@ -77,41 +81,20 @@ public class PrefixableTextView extends TextView {
     final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.PrefixableTextView,
       defStyleAttr, R.style.App_Text_Widget_PrefixableTextView);
     try {
+      content = array.getString(R.styleable.PrefixableTextView_content);
       prefix = array.getString(R.styleable.PrefixableTextView_prefix);
-      prefixTextAppearance = array.getResourceId(
-        R.styleable.PrefixableTextView_prefixTextAppearance,
-        R.style.App_Text_Widget_PrefixableTextView_Prefix);
       final Resources resources = getResources();
-      final int defaultPrefixTextSize = resources.getDimensionPixelSize(
-        R.dimen.app_text_widget_prefixable_text_view_prefix_size);
       final int defaultPrefixTextColor = ContextCompat.getColor(context,
         R.color.app_text_widget_prefixable_text_view_content);
-      final TypedArray prefixTextAppearanceArray = context.obtainStyledAttributes(
-        prefixTextAppearance, R.styleable.PrefixableTextViewAppearance);
-      try {
-        prefixTextSize = prefixTextAppearanceArray.getDimensionPixelSize(
-          R.styleable.PrefixableTextViewAppearance_android_textSize, defaultPrefixTextSize);
-        prefixTextColor = prefixTextAppearanceArray.getColor(
-          R.styleable.PrefixableTextViewAppearance_android_textColor, defaultPrefixTextColor);
-        prefixFontPath = prefixTextAppearanceArray.getString(
-          R.styleable.PrefixableTextViewAppearance_fontPath);
-      } finally {
-        prefixTextAppearanceArray.recycle();
-      }
-      if (array.hasValue(R.styleable.PrefixableTextView_prefixTextSize)) {
-        prefixTextSize = array.getDimensionPixelSize(R.styleable.PrefixableTextView_prefixTextSize,
-          defaultPrefixTextSize);
-      }
-      if (array.hasValue(R.styleable.PrefixableTextView_prefixTextColor)) {
-        prefixTextColor = array.getColor(R.styleable.PrefixableTextView_prefixTextColor,
-          defaultPrefixTextColor);
-      }
-      if (array.hasValue(R.styleable.PrefixableTextView_prefixFontPath)) {
-        prefixFontPath = array.getString(R.styleable.PrefixableTextView_prefixFontPath);
-      }
+      prefixTextColor = array.getColor(R.styleable.PrefixableTextView_prefixTextColor,
+        defaultPrefixTextColor);
+      prefixFontPath = array.getString(R.styleable.PrefixableTextView_prefixFontPath);
       if (TextUtils.isEmpty(prefixFontPath)) {
         prefixFontPath = context.getString(R.string.app_text_widget_prefixable_text_view_font);
       }
+      prefixTextSizeProportion = array.getFloat(
+        R.styleable.PrefixableTextView_prefixTextSizeProportion,
+        DEFAULT_PREFIX_TEXT_SIZE_PROPORTION);
       final int defaultPrefixPaddingEnd = resources.getDimensionPixelOffset(
         R.dimen.app_text_widget_prefixable_text_view_prefix_padding_end);
       prefixPaddingEnd = array.getDimensionPixelOffset(
@@ -120,35 +103,34 @@ public class PrefixableTextView extends TextView {
       array.recycle();
     }
     setMaxLines(1);
-    setPrefix(prefix);
+    updateText();
   }
 
   /**
-   * {@inheritDoc}
-   * <p>
    * TODO
    */
-  @Override
-  public void setText(CharSequence text, BufferType type) {
-    this.content = text;
-    final CharSequence result;
-    if (!TextUtils.isEmpty(this.prefix)) {
+  private void updateText() {
+    final CharSequence text;
+    if (!TextUtils.isEmpty(prefix)) {
       final Context context = getContext();
-      final Resources resources = getResources();
-      final AssetManager assetManager = resources.getAssets();
-      final CharSequence prefixResult = Truss.create()
+      final AssetManager assetManager = getResources().getAssets();
+      final CharSequence styledPrefix = Truss.create()
         .pushSpan(new TextAppearanceSpan(context, prefixTextAppearance))
-        .pushSpan(new AbsoluteSizeSpan(prefixTextSize))
         .pushSpan(new ForegroundColorSpan(prefixTextColor))
         .pushSpan(new CalligraphyTypefaceSpan(TypefaceUtils.load(assetManager, prefixFontPath)))
+        .pushSpan(new RelativeSizeSpan(prefixTextSizeProportion))
         .pushSpan(new SuperscriptSpan())
         .append(this.prefix)
         .build();
-      result = TextUtils.concat(prefixResult, this.content);
+      if (!TextUtils.isEmpty(content)) {
+        text = TextUtils.concat(styledPrefix, content);
+      } else {
+        text = styledPrefix;
+      }
     } else {
-      result = this.content;
+      text = content;
     }
-    super.setText(result, type);
+    setText(text);
   }
 
   /**
@@ -159,6 +141,27 @@ public class PrefixableTextView extends TextView {
    */
   public void setTextColorFromResource(@ColorRes int colorId) {
     setTextColor(ContextCompat.getColor(getContext(), colorId));
+  }
+
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
+  @Nullable
+  public CharSequence getContent() {
+    return content;
+  }
+
+  /**
+   * TODO
+   *
+   * @param content
+   *   TODO
+   */
+  public void setContent(@Nullable CharSequence content) {
+    this.content = content;
+    this.updateText();
   }
 
   /**
@@ -179,7 +182,7 @@ public class PrefixableTextView extends TextView {
    */
   public void setPrefix(@Nullable CharSequence prefix) {
     this.prefix = prefix;
-    this.setText(this.content);
+    this.updateText();
   }
 
   /**
@@ -200,7 +203,7 @@ public class PrefixableTextView extends TextView {
    */
   public void setPrefixTextColor(@ColorInt int color) {
     prefixTextColor = color;
-    setTextColor(getTextColors());
+    updateText();
   }
 
   /**
@@ -218,19 +221,24 @@ public class PrefixableTextView extends TextView {
    *
    * @return TODO
    */
-  @Dimension
-  public int getPrefixTextSize() {
-    return prefixTextSize;
+  public float getPrefixTextSizeProportion() {
+    return prefixTextSizeProportion;
   }
 
   /**
    * TODO
    *
-   * @param size
+   * @param proportion
    *   TODO
    */
-  public void setPrefixTextSize(@Dimension int size) {
-    prefixTextSize = size;
-    setTextSize(getTextSize());
+  public void setPrefixTextSizeProportion(float proportion) {
+    prefixTextSizeProportion = proportion;
+    updateText();
+  }
+
+  @Override
+  public void setTextSize(int unit, float size) {
+    super.setTextSize(unit, size);
+    updateText();
   }
 }

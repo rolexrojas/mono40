@@ -1,26 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <declare-styleable name="PrefixableTextViewAppearance">
-    <attr name="android:textSize"/>
-    <attr name="android:textColor"/>
-    <attr name="fontPath"/>
-  </declare-styleable>
   <declare-styleable name="PrefixableTextView">
+    <attr
+      name="content"
+      format="string|reference"/>
     <attr
       name="prefix"
       format="string|reference"/>
-    <attr
-      name="prefixTextAppearance"
-      format="reference"/>
-    <attr
-      name="prefixTextSize"
-      format="dimension|reference"/>
     <attr
       name="prefixTextColor"
       format="color|reference"/>
     <attr
       name="prefixFontPath"
       format="string|reference"/>
+    <attr
+      name="prefixTextSizeProportion"
+      format="float|reference"/>
     <attr
       name="prefixPaddingEnd"
       format="dimension|reference"/>

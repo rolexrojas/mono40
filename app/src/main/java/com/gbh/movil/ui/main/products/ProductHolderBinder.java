@@ -39,7 +39,7 @@ class ProductHolderBinder implements HolderBinder<ProductItem, ProductHolder> {
     if (balance != null) {
       holder.productBalanceTextView.setVisibility(View.VISIBLE);
       holder.productBalanceTextView.setPrefix(product.getCurrency());
-      holder.productBalanceTextView.setText(Formatter.amount(balance.getValue()));
+      holder.productBalanceTextView.setContent(Formatter.amount(balance.getValue()));
       holder.queryActionButton.setVisibility(View.GONE);
     } else {
       holder.productBalanceTextView.setVisibility(View.GONE);

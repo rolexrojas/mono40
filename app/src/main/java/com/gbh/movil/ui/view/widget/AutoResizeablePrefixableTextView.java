@@ -3,11 +3,15 @@ package com.gbh.movil.ui.view.widget;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.Paint;
+import android.support.annotation.NonNull;
+import android.text.TextPaint;
+import android.text.TextUtils;
+import android.text.method.TransformationMethod;
 import android.util.AttributeSet;
-import android.view.View;
+import android.util.TypedValue;
 
 import com.gbh.movil.R;
+import com.gbh.movil.Utils;
 
 import timber.log.Timber;
 
@@ -15,9 +19,15 @@ import timber.log.Timber;
  * TODO
  *
  * @author hecvasro
+ * @see <a href="http://stackoverflow.com/a/5535672">http://stackoverflow.com/a/5535672</a>
+ * @see <a href="https://github.com/grantland/android-autofittextview">https://github.com/grantland/android-autofittextview</a>
  */
-public class AutoResizeablePrefixableTextView extends PrefixableTextView
-  implements View.OnLayoutChangeListener {
+public class AutoResizeablePrefixableTextView extends PrefixableTextView {
+  /**
+   * TODO
+   */
+  private static final int RATIO = 2;
+
   /**
    * TODO
    */
@@ -30,11 +40,12 @@ public class AutoResizeablePrefixableTextView extends PrefixableTextView
   /**
    * TODO
    */
-  private int prefixMaxTextSize;
+  private boolean mustAdjustText = false;
+
   /**
    * TODO
    */
-  private int prefixMinTextSize;
+  private boolean isAdjusting = false;
 
   public AutoResizeablePrefixableTextView(Context context) {
     this(context, null);
@@ -55,18 +66,10 @@ public class AutoResizeablePrefixableTextView extends PrefixableTextView
         R.dimen.app_text_widget_auto_resizeable_prefixable_text_view_content_max);
       final int defaultMinTextSize = resources.getDimensionPixelSize(
         R.dimen.app_text_widget_auto_resizeable_prefixable_text_view_content_min);
-      final int defaultPrefixMaxTextSize = resources.getDimensionPixelSize(
-        R.dimen.app_text_widget_auto_resizeable_prefixable_text_view_prefix_max);
-      final int defaultPrefixMinTextSize = resources.getDimensionPixelSize(
-        R.dimen.app_text_widget_auto_resizeable_prefixable_text_view_prefix_min);
       maxTextSize = array.getDimensionPixelSize(
         R.styleable.AutoResizeablePrefixableTextView_maxTextSize, defaultMaxTextSize);
       minTextSize = array.getDimensionPixelSize(
         R.styleable.AutoResizeablePrefixableTextView_minTextSize, defaultMinTextSize);
-      prefixMaxTextSize = array.getDimensionPixelSize(
-        R.styleable.AutoResizeablePrefixableTextView_prefixMaxTextSize, defaultPrefixMaxTextSize);
-      prefixMinTextSize = array.getDimensionPixelSize(
-        R.styleable.AutoResizeablePrefixableTextView_prefixMinTextSize, defaultPrefixMinTextSize);
     } finally {
       array.recycle();
     }
@@ -74,38 +77,87 @@ public class AutoResizeablePrefixableTextView extends PrefixableTextView
 
   /**
    * TODO
+   *
+   * @param text
+   *   TODO
+   * @param paint
+   *   TODO
+   * @param targetTextSize
+   *   TODO
+   *
+   * @return TODO
    */
-  private void resizeText() {
-    final int width = getWidth() - getPaddingLeft() - getPaddingRight();
-    if (width > 0) {
-      Timber.d("width = %1$d", width);
-      final Paint paint = getPaint();
+  private static float getTextWidth(@NonNull final CharSequence text,
+    @NonNull final TextPaint paint, final float targetTextSize) {
+    final TextPaint copy = new TextPaint(paint);
+    copy.setTextSize(targetTextSize);
+    return copy.measureText(text, 0, text.length());
+  }
+
+  /**
+   * TODO
+   */
+  private void adjustText() {
+    if (mustAdjustText) {
+      isAdjusting = true;
       final CharSequence text = getText();
-      final float textWidth = paint.measureText(text, 0, text.length());
-      Timber.d("textWidth = %1$f", textWidth);
+      final int targetWidth = getWidth() - getCompoundPaddingLeft() - getCompoundPaddingRight();
+      if (!TextUtils.isEmpty(text) && targetWidth > 0) {
+        Timber.d("targetWidth = %1$d", targetWidth);
+        final CharSequence targetText;
+        final TransformationMethod transformationMethod = getTransformationMethod();
+        if (Utils.isNotNull(transformationMethod)) {
+          targetText = transformationMethod.getTransformation(text, this);
+        } else {
+          targetText = text;
+        }
+        final TextPaint paint = getPaint();
+        final float textSize = paint.getTextSize();
+        Timber.d("textSize = %1$f", textSize);
+        float targetTextSize = Math.min(textSize, maxTextSize);
+        Timber.d("targetTextSize = %1$f", targetTextSize);
+        float textWidth = getTextWidth(targetText, paint, targetTextSize);
+        Timber.d("textWidth = %1$f", textWidth);
+        if (textWidth > targetWidth && targetTextSize > minTextSize) {
+          while (textWidth > targetWidth && targetTextSize > minTextSize) {
+            targetTextSize = Math.max(targetTextSize - RATIO, minTextSize);
+            textWidth = getTextWidth(targetText, paint, targetTextSize);
+          }
+        } else if (textWidth < targetWidth && targetTextSize < maxTextSize) {
+          while (textWidth < targetWidth && targetTextSize < maxTextSize) {
+            targetTextSize = Math.min(targetTextSize + RATIO, maxTextSize);
+            textWidth = getTextWidth(targetText, paint, targetTextSize);
+          }
+        }
+        Timber.d("targetTextSize = %1$f", targetTextSize);
+        Timber.d("textWidth = %1$f", textWidth);
+        setTextSize(TypedValue.COMPLEX_UNIT_PX, targetTextSize);
+      }
+      mustAdjustText = false;
+      isAdjusting = false;
     }
   }
 
   @Override
-  protected void onAttachedToWindow() {
-    super.onAttachedToWindow();
-    addOnLayoutChangeListener(this);
-  }
-
-  @Override
-  protected void onDetachedFromWindow() {
-    super.onDetachedFromWindow();
-    removeOnLayoutChangeListener(this);
-  }
-
-  @Override
   protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
-    resizeText();
+    if (!isAdjusting) {
+      mustAdjustText = true;
+      adjustText();
+    }
   }
 
   @Override
-  public void onLayoutChange(View view, int left, int top, int right, int bottom, int oldLeft,
-    int oldTop, int oldRight, int oldBottom) {
-    resizeText();
+  protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+    if (w != oldh || h != oldh) {
+      mustAdjustText = true;
+    }
+  }
+
+  @Override
+  protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+    if (changed || mustAdjustText) {
+      adjustText();
+    }
+    super.onLayout(changed, left, top, right, bottom);
   }
 }

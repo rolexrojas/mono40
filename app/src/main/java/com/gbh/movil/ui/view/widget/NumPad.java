@@ -165,7 +165,7 @@ public class NumPad extends LinearLayout implements View.OnClickListener {
   @OnClick(R.id.num_pad_cell_delete)
   void onDeleteClicked() {
     if (deleteEnabled && Utils.isNotNull(onDeleteClickedListener)) {
-      onDeleteClickedListener.onDeleteCellClicked();
+      onDeleteClickedListener.onDeleteClicked();
     }
   }
 
@@ -284,6 +284,6 @@ public class NumPad extends LinearLayout implements View.OnClickListener {
     /**
      * TODO
      */
-    void onDeleteCellClicked();
+    void onDeleteClicked();
   }
 }

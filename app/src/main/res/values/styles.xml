@@ -32,10 +32,6 @@
     <item name="android:textColor">@color/app_text_widget_prefixable_text_view_content</item>
     <item name="android:textSize">@dimen/app_text_widget_prefixable_text_view_content</item>
   </style>
-  <style name="Base.Text.Widget.PrefixableTextView.Prefix">
-    <item name="android:textColor">@color/app_text_widget_prefixable_text_view_prefix</item>
-    <item name="android:textSize">@dimen/app_text_widget_prefixable_text_view_prefix_size</item>
-  </style>
   <style name="Base.Text.Widget.NumPadCell">
     <item name="android:textColor">@color/app_widget_num_pad_tint</item>
     <item name="android:textSize">@dimen/app_text_widget_num_pad_cell_size</item>
@@ -88,17 +84,20 @@
     <item name="android:background">@drawable/app_widget_button_blurred_shape</item>
   </style>
   <style name="Base.Widget.PrefixableTextView">
+    <item name="android:gravity">center_vertical</item>
     <item name="android:maxLines">1</item>
     <item name="android:textAppearance">@style/App.Text.Widget.PrefixableTextView.Content</item>
-    <item name="prefixTextAppearance">@style/App.Text.Widget.PrefixableTextView.Prefix</item>
+    <item name="prefixTextColor">@color/app_text_widget_prefixable_text_view_prefix</item>
   </style>
   <style
     name="Base.Widget.AutoResizeablePrefixableTextView"
     parent="App.Widget.PrefixableTextView">
-    <item name="maxTextSize">@dimen/app_text_widget_auto_resizeable_prefixable_text_view_content_max</item>
-    <item name="minTextSize">@dimen/app_text_widget_auto_resizeable_prefixable_text_view_content_min</item>
-    <item name="prefixMaxTextSize">@dimen/app_text_widget_auto_resizeable_prefixable_text_view_prefix_max</item>
-    <item name="prefixMinTextSize">@dimen/app_text_widget_auto_resizeable_prefixable_text_view_prefix_min</item>
+    <item name="maxTextSize">
+      @dimen/app_text_widget_auto_resizeable_prefixable_text_view_content_max
+    </item>
+    <item name="minTextSize">
+      @dimen/app_text_widget_auto_resizeable_prefixable_text_view_content_min
+    </item>
   </style>
   <style name="Base.Widget.NumPadRow">
     <item name="android:layout_height">0dp</item>
@@ -134,7 +133,9 @@
     <item name="colorPrimaryDark">@color/primary_dark</item>
     <item name="android:buttonStyle">@style/App.Widget.Button</item>
     <item name="prefixableTextViewStyle">@style/App.Widget.PrefixableTextView</item>
-    <item name="autoResizeablePrefixableTextViewStyle">@style/App.Widget.AutoResizeablePrefixableTextView</item>
+    <item name="autoResizeablePrefixableTextViewStyle">
+      @style/App.Widget.AutoResizeablePrefixableTextView
+    </item>
     <item name="numPadStyle">@style/App.Widget.NumPad</item>
     <item name="searchViewStyle">@style/App.Widget.SearchView</item>
   </style>
@@ -176,9 +177,7 @@
   <style
     name="App.Text.Widget.PrefixableTextView.Content"
     parent="Base.Text.Widget.PrefixableTextView.Content"/>
-  <style
-    name="App.Text.Widget.PrefixableTextView.Prefix"
-    parent="Base.Text.Widget.PrefixableTextView.Prefix"/>
+
   <style
     name="App.Text.Widget.NumPadCell"
     parent="Base.Text.Widget.NumPadCell"/>
@@ -252,6 +251,7 @@
     name="Screen.Products.Widget.Amount"
     parent="App.Widget.PrefixableTextView">
     <item name="android:textAppearance">@style/Screen.Products.Text.Widget.Amount.Content</item>
+    <item name="prefixTextSizeProportion">0.625</item>
   </style>
 
   <!-- TODO: Apply standards from these point downward -->
@@ -269,25 +269,18 @@
     <item name="android:textSize">@dimen/transaction_creation_text_widget_amount_value_max</item>
     <item name="fontPath">@string/transaction_creation.text.widget.amount.value.font</item>
   </style>
-  <style
-    name="TransactionCreation.Text.Widget.Amount.Currency"
-    parent="App.Text.Widget.PrefixableTextView.Prefix">
-    <item name="android:textColor">@color/transaction_creation_text_widget_amount_prefix</item>
-    <item name="android:textSize">@dimen/transaction_creation_text_widget_amount_currency_max</item>
-    <item name="fontPath">@string/transaction_creation.text.widget.amount.currency.font</item>
-  </style>
 
   <style name="TransactionCreation.Widget"/>
   <style
     name="TransactionCreation.Widget.Amount"
     parent="App.Widget.AutoResizeablePrefixableTextView">
-    <item name="android:gravity">center_horizontal</item>
+    <item name="android:gravity">center</item>
+    <item name="android:layout_height">100dp</item>
     <item name="android:textAppearance">@style/TransactionCreation.Text.Widget.Amount.Value</item>
     <item name="maxTextSize">@dimen/transaction_creation_text_widget_amount_value_max</item>
     <item name="minTextSize">@dimen/transaction_creation_text_widget_amount_value_min</item>
-    <item name="prefixMaxTextSize">@dimen/transaction_creation_text_widget_amount_currency_max</item>
-    <item name="prefixMinTextSize">@dimen/transaction_creation_text_widget_amount_currency_min</item>
-    <item name="prefixTextAppearance">@style/TransactionCreation.Text.Widget.Amount.Currency</item>
+    <item name="prefixTextColor">@color/transaction_creation_text_widget_amount_prefix</item>
+    <item name="prefixFontPath">@string/transaction_creation.text.widget.amount.currency.font</item>
   </style>
 
   <style
