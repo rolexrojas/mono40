@@ -39,7 +39,7 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class ContactTransactionCreationFragment extends SubFragment<TransactionCreationContainer>
+public class PhoneNumberTransactionCreationFragment extends SubFragment<TransactionCreationContainer>
   implements PhoneNumberTransactionCreationScreen, Spinner.OnItemSelectedListener,
   NumPad.OnDigitClickedListener, NumPad.OnDeleteClickedListener {
   /**
@@ -73,8 +73,8 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
    * @return TODO
    */
   @NonNull
-  public static ContactTransactionCreationFragment newInstance() {
-    return new ContactTransactionCreationFragment();
+  public static PhoneNumberTransactionCreationFragment newInstance() {
+    return new PhoneNumberTransactionCreationFragment();
   }
 
   @OnClick(R.id.action_recharge)
@@ -92,7 +92,7 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // Injects all the annotated dependencies.
-    final ContactTransactionCreationComponent component = DaggerContactTransactionCreationComponent
+    final PhoneNumberTransactionCreationComponent component = DaggerPhoneNumberTransactionCreationComponent
       .builder()
       .transactionCreationComponent(container.getComponent())
       .build();

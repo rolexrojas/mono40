@@ -18,7 +18,7 @@ import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.RecipientType;
 import com.gbh.movil.ui.ContainerActivity;
 import com.gbh.movil.ui.SubFragment;
-import com.gbh.movil.ui.main.payments.transactions.contacts.ContactTransactionCreationFragment;
+import com.gbh.movil.ui.main.payments.transactions.contacts.PhoneNumberTransactionCreationFragment;
 
 import javax.inject.Inject;
 
@@ -125,7 +125,7 @@ public class TransactionCreationActivity extends ContainerActivity<TransactionCr
       final SubFragment<TransactionCreationContainer> fragment;
       switch (type) {
         case PHONE_NUMBER:
-          fragment = ContactTransactionCreationFragment.newInstance();
+          fragment = PhoneNumberTransactionCreationFragment.newInstance();
           break;
         default:
           throw new UnsupportedOperationException("Transaction type '" + type + "' not supported");
