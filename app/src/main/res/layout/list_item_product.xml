@@ -32,15 +32,14 @@
       android:id="@+id/action.query"
       style="@style/ListItemButton"
       android:layout_gravity="center"
-      android:text="@string/balance"
-      android:visibility="gone"/>
+      android:text="@string/balance"/>
     <com.gbh.movil.ui.view.widget.PrefixableTextView
       android:id="@+id/product.balance"
+      style="@style/Screen.Products.Text.Widget.Amount.Content"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
-      android:text="0.00"
-      app:prefix="DOP"/>
+      android:visibility="gone"/>
   </FrameLayout>
   <TextView
     android:id="@+id/bank.name"

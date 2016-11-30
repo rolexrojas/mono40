@@ -26,7 +26,7 @@
     <item name="android:textSize">10sp</item>
   </style>
   <style name="Base.Text.Widget.PrefixableTextView">
-    <item name="fontPath">@string/app.text.widget.prefixable_text_view.font</item>
+    <item name="fontPath">@string/app_text_widget_prefixable_text_view_font</item>
   </style>
   <style name="Base.Text.Widget.PrefixableTextView.Content">
     <item name="android:textColor">@color/app_text_widget_prefixable_text_view_content</item>
@@ -39,7 +39,7 @@
   <style name="Base.Text.Widget.NumPadCell">
     <item name="android:textColor">@color/app_widget_num_pad_tint</item>
     <item name="android:textSize">@dimen/app_text_widget_num_pad_cell_size</item>
-    <item name="fontPath">@string/app.text.widget.num_pad.cell.font</item>
+    <item name="fontPath">@string/app_text_widget_num_pad_cell_font</item>
   </style>
 
   <style name="Base.Text.Bank"/>
@@ -240,12 +240,28 @@
     name="App.Theme.AppBar"
     parent="Base.Theme.AppBar"/>
 
-  <!-- Transaction creation screen's styles -->
+  <!-- Screen's styles -->
+  <style name="Screen"/>
+  <style name="Screen.Products"/>
+  <style
+    name="Screen.Products.Text.Widget.Amount.Content"
+    parent="App.Text.Widget.PrefixableTextView.Content">
+    <item name="fontPath">@string/screen_products_text_widget_amount_value_font</item>
+  </style>
+  <style
+    name="Screen.Products.Widget.Amount"
+    parent="App.Widget.PrefixableTextView">
+    <item name="android:textAppearance">@style/Screen.Products.Text.Widget.Amount.Content</item>
+  </style>
+
+  <!-- TODO: Apply standards from these point downward -->
   <style name="TransactionCreation"/>
 
   <style name="TransactionCreation.Text"/>
   <style name="TransactionCreation.Text.Widget"/>
-  <style name="TransactionCreation.Text.Widget.Amount"/>
+  <style
+    name="TransactionCreation.Text.Widget.Amount"
+    parent="App.Text.Widget.PrefixableTextView"/>
   <style
     name="TransactionCreation.Text.Widget.Amount.Value"
     parent="App.Text.Widget.PrefixableTextView.Content">
@@ -274,7 +290,6 @@
     <item name="prefixTextAppearance">@style/TransactionCreation.Text.Widget.Amount.Currency</item>
   </style>
 
-  <!-- TODO: Apply standards from these point downward -->
   <style
     name="BaseAppTabText"
     parent="TextAppearance.Design.Tab">

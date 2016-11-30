@@ -6,11 +6,12 @@
 
   <color name="app_widget_num_pad_tint">#333333</color>
 
-  <!-- Transaction creation screen's color -->
+  <!-- Screen's color -->
+
+  <!-- TODO: Apply standards from these point downward -->
   <color name="transaction_creation_text_widget_amount_value">@color/app_text_widget_prefixable_text_view_content</color>
   <color name="transaction_creation_text_widget_amount_prefix">@color/app_text_widget_prefixable_text_view_prefix</color>
 
-  <!-- TODO: Apply standards from these point downward -->
   <color name="accent">#9C188F</color>
   <color name="accent_alpha_20">#339C188F</color>
   <color name="background">#EFEFEF</color>
