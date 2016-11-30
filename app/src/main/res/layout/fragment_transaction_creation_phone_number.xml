@@ -21,7 +21,7 @@
     android:layout_marginStart="@dimen/space.horizontal.large"
     android:alpha="0.1"
     android:background="@color/black"/>
-  <com.gbh.movil.ui.view.widget.NumPad
+  <com.gbh.movil.ui.view.widget.pad.NumPad
     android:id="@+id/transaction_creation.num_pad"
     android:layout_width="match_parent"
     android:layout_height="0dp"

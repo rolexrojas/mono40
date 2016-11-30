@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import android.widget.Spinner;
 
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
+import com.gbh.movil.data.Formatter;
 import com.gbh.movil.data.res.AssetProvider;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Recipient;
@@ -22,9 +22,13 @@ import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.main.PinConfirmationDialogFragment;
 import com.gbh.movil.ui.main.payments.transactions.PaymentOptionAdapter;
 import com.gbh.movil.ui.main.payments.transactions.TransactionCreationContainer;
-import com.gbh.movil.ui.view.widget.NumPad;
+import com.gbh.movil.ui.view.widget.pad.Digit;
+import com.gbh.movil.ui.view.widget.pad.Dot;
+import com.gbh.movil.ui.view.widget.pad.NumPad;
 import com.gbh.movil.ui.view.widget.PrefixableTextView;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -39,13 +43,19 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class PhoneNumberTransactionCreationFragment extends SubFragment<TransactionCreationContainer>
-  implements PhoneNumberTransactionCreationScreen, Spinner.OnItemSelectedListener,
-  NumPad.OnDigitClickedListener, NumPad.OnDotClickedListener, NumPad.OnDeleteClickedListener {
+public class PhoneNumberTransactionCreationFragment
+  extends SubFragment<TransactionCreationContainer> implements PhoneNumberTransactionCreationScreen,
+  Spinner.OnItemSelectedListener, NumPad.OnDigitClickedListener, NumPad.OnDotClickedListener,
+  NumPad.OnDeleteClickedListener {
   /**
    * TODO
    */
   private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
+
+  private static final BigDecimal ZERO = BigDecimal.ZERO;
+  private static final BigDecimal ONE = BigDecimal.ONE;
+  private static final BigDecimal TEN = BigDecimal.TEN;
+  private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
 
   @Inject
   AssetProvider assetProvider;
@@ -67,6 +77,10 @@ public class PhoneNumberTransactionCreationFragment extends SubFragment<Transact
   @BindView(R.id.action_transfer)
   Button transferActionButton;
 
+  private boolean mustShowDot = false;
+  private BigDecimal amount = ZERO;
+  private BigDecimal fractionOffset = ONE;
+
   /**
    * TODO
    *
@@ -75,6 +89,35 @@ public class PhoneNumberTransactionCreationFragment extends SubFragment<Transact
   @NonNull
   public static PhoneNumberTransactionCreationFragment newInstance() {
     return new PhoneNumberTransactionCreationFragment();
+  }
+
+  @NonNull
+  private static BigDecimal getFraction(@NonNull BigDecimal value) {
+    return value.subtract(BigDecimal.valueOf(value.intValue()));
+  }
+
+  private static boolean isFraction(@NonNull BigDecimal value) {
+    return value.compareTo(BigDecimal.ZERO) > 0 && value.compareTo(BigDecimal.ONE) < 0;
+  }
+
+  @NonNull
+  private static String getFormattedValue(@NonNull BigDecimal value,
+    @NonNull BigDecimal fractionOffset, boolean mustShowDot) {
+    String formattedValue = Formatter.amount(value);
+    final BigDecimal fraction = getFraction(value);
+    if (!isFraction(fraction)) {
+      formattedValue = formattedValue.replace(".00", "");
+      if (mustShowDot) {
+        formattedValue += ".";
+      }
+    } else if (fraction.multiply(fractionOffset).compareTo(BigDecimal.TEN) < 0) {
+      formattedValue = formattedValue.substring(0, formattedValue.length() - 1);
+    }
+    return formattedValue;
+  }
+
+  private void updateAmountText() {
+    amountTextView.setContent(getFormattedValue(amount, fractionOffset, mustShowDot));
   }
 
   @OnClick(R.id.action_recharge)
@@ -86,6 +129,7 @@ public class PhoneNumberTransactionCreationFragment extends SubFragment<Transact
 
   @OnClick(R.id.action_transfer)
   void onTransferButtonClicked() {
+    // TODO
   }
 
   @Override
@@ -166,7 +210,8 @@ public class PhoneNumberTransactionCreationFragment extends SubFragment<Transact
 
   @Override
   public void clearAmount() {
-    // TODO
+    amount = ZERO;
+    updateAmountText();
   }
 
   @Override
@@ -191,17 +236,43 @@ public class PhoneNumberTransactionCreationFragment extends SubFragment<Transact
   }
 
   @Override
-  public void onDigitClicked(@NonNull NumPad.Digit digit) {
-    // TODO
+  public void onDigitClicked(@NonNull Digit digit) {
+    BigDecimal addition = BigDecimal.valueOf(digit.getValue());
+    if (mustShowDot) {
+      if (fractionOffset.compareTo(HUNDRED) < 0) {
+        amount = amount.add(addition.divide(TEN.multiply(fractionOffset), 2,
+          BigDecimal.ROUND_CEILING));
+        fractionOffset = fractionOffset.multiply(TEN);
+      }
+    } else {
+      amount = amount.multiply(TEN).add(addition);
+    }
+    updateAmountText();
   }
 
   @Override
-  public void onDotClicked() {
-    // TODO
+  public void onDotClicked(@NonNull Dot dot) {
+    if (!mustShowDot) {
+      mustShowDot = true;
+      updateAmountText();
+    }
   }
 
   @Override
   public void onDeleteClicked() {
-    // TODO
+    final int result = amount.compareTo(ZERO);
+    if (result > 0) {
+      final BigDecimal fraction = getFraction(amount);
+      if (isFraction(fraction)) {
+        amount = amount.subtract(fraction.multiply(fractionOffset).remainder(TEN)
+          .divide(fractionOffset, 2, BigDecimal.ROUND_CEILING));
+        fractionOffset = fractionOffset.divide(TEN, 2, RoundingMode.CEILING);
+      } else if (mustShowDot) {
+        mustShowDot = false;
+      } else {
+        amount = amount.divideToIntegralValue(TEN);
+      }
+    }
+    updateAmountText();
   }
 }

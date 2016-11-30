@@ -20,7 +20,8 @@ import com.gbh.movil.R;
 import com.gbh.movil.Utils;
 import com.gbh.movil.ui.FullScreenDialogFragment;
 import com.gbh.movil.ui.view.BaseAnimatorListener;
-import com.gbh.movil.ui.view.widget.NumPad;
+import com.gbh.movil.ui.view.widget.pad.Digit;
+import com.gbh.movil.ui.view.widget.pad.NumPad;
 import com.gbh.movil.ui.view.widget.PinView;
 
 import java.io.Serializable;
@@ -226,7 +227,7 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
   }
 
   @Override
-  public void onDigitClicked(@NonNull NumPad.Digit digit) {
+  public void onDigitClicked(@NonNull Digit digit) {
     pinView.push(digit.getValue());
   }
 
