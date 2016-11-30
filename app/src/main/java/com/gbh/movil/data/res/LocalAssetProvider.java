@@ -15,7 +15,7 @@ import com.gbh.movil.domain.Bank;
  *
  * @author hecvasro
  */
-public final class LocalResourceProvider implements ResourceProvider {
+public final class LocalAssetProvider implements AssetProvider {
   private static final int BANK_ADEMI = 38;
   private static final int BANK_ADOPEM = 44;
   private static final int BANK_ALAVER = 35;
@@ -29,7 +29,7 @@ public final class LocalResourceProvider implements ResourceProvider {
   /**
    * TODO
    */
-  public LocalResourceProvider() {
+  public LocalAssetProvider() {
   }
 
   /**

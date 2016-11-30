@@ -1,4 +1,15 @@
 <resources>
+  <!-- App's strings -->
+  <string name="app_text_widget_prefixable_text_view_font">@string/font.gotham_rounded.book</string>
+  <string name="app_text_widget_num_pad_cell_font">@string/font.gotham_rounded.medium</string>
+
+  <!-- Screen's strings -->
+  <string name="screen_products_text_widget_amount_value_font">@string/font.gotham_rounded.medium</string>
+
+  <!-- TODO: Apply standards from these point downward -->
+  <string name="transaction_creation.text.widget.amount.value.font">@string/font.gotham_rounded.light</string>
+  <string name="transaction_creation.text.widget.amount.currency.font">@string/font.gotham_rounded.light</string>
+
   <string name="about">Acerca de</string>
   <string name="accounts">Cuentas</string>
   <string name="action.add">Agregar</string>

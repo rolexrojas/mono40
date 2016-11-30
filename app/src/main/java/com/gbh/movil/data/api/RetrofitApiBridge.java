@@ -5,10 +5,7 @@ import android.support.annotation.NonNull;
 import com.gbh.movil.Utils;
 import com.gbh.movil.domain.Balance;
 import com.gbh.movil.domain.Bank;
-import com.gbh.movil.domain.CreditCard;
-import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.InitialData;
-import com.gbh.movil.domain.Loan;
 import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.ProductCategory;
@@ -83,36 +80,6 @@ class RetrofitApiBridge implements ApiBridge {
   public Observable<ApiResult<InitialData>> initialLoad() {
     return apiService.initialLoad()
       .compose(this.<InitialData>transformToApiResult());
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @NonNull
-  @Override
-  public Observable<ApiResult<Set<Account>>> accounts() {
-    return apiService.accounts()
-      .compose(this.<Set<Account>>transformToApiResult());
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @NonNull
-  @Override
-  public Observable<ApiResult<Set<CreditCard>>> creditCards() {
-    return apiService.creditCards()
-      .compose(this.<Set<CreditCard>>transformToApiResult());
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @NonNull
-  @Override
-  public Observable<ApiResult<Set<Loan>>> loans() {
-    return apiService.loans()
-      .compose(this.<Set<Loan>>transformToApiResult());
   }
 
   /**

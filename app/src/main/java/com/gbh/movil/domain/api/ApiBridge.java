@@ -4,10 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.gbh.movil.domain.Balance;
 import com.gbh.movil.domain.Bank;
-import com.gbh.movil.domain.CreditCard;
-import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.InitialData;
-import com.gbh.movil.domain.Loan;
 import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Recipient;
@@ -43,43 +40,6 @@ public interface ApiBridge {
    */
   @NonNull
   Observable<ApiResult<InitialData>> initialLoad();
-
-  /**
-   * Creates an {@link Observable observable} that emits all the registered {@link Account
-   * accounts}.
-   * <p>
-   * <em>Note:</em> By default {@link #accounts()} does not operates on a particular {@link
-   * rx.Scheduler}.
-   *
-   * @return An {@link Observable observable} that emits all the registered {@link Account
-   * accounts}.
-   */
-  @NonNull
-  Observable<ApiResult<Set<Account>>> accounts();
-
-  /**
-   * Creates an {@link Observable observable} that emits all the registered {@link CreditCard credit
-   * cards}.
-   * <p>
-   * <em>Note:</em> By default {@link #creditCards()} does not operates on a particular {@link
-   * rx.Scheduler}.
-   *
-   * @return An {@link Observable observable} that emits all the registered {@link CreditCard credit
-   * cards}.
-   */
-  @NonNull
-  Observable<ApiResult<Set<CreditCard>>> creditCards();
-
-  /**
-   * Creates an {@link Observable observable} that emits all the registered {@link Loan loans}.
-   * <p>
-   * <em>Note:</em> By default {@link #loans()} does not operates on a particular {@link
-   * rx.Scheduler}.
-   *
-   * @return An {@link Observable observable} that emits all the registered {@link Loan loans}.
-   */
-  @NonNull
-  Observable<ApiResult<Set<Loan>>> loans();
 
   /**
    * Query the {@link Balance balance} of a {@link Product product} from the API.

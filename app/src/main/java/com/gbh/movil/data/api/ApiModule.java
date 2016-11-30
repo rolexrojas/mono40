@@ -53,6 +53,6 @@ public class ApiModule {
       .baseUrl(BuildConfig.API_URL)
       .client(okHttpClient)
       .build();
-    return new DecoratedApiBridge(new RetrofitApiBridge(retrofit.create(ApiService.class)));
+    return new DecoratedApiBridge(new FakeApiBridge());//new RetrofitApiBridge(retrofit.create(ApiService.class)));
   }
 }

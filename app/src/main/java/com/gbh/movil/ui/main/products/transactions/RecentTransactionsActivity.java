@@ -233,14 +233,14 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
         final TransactionItemViewHolder transactionHolder = (TransactionItemViewHolder) holder;
         transactionHolder.nameTextView.setText(transaction.getName());
         transactionHolder.typeTextView.setText(transaction.getType());
-        final BigDecimal value = transaction.getValue();
-        final String currencyCode = transaction.getCurrency();
         final int colorId = transaction.getRequestType() == Transaction.RequestType.C ?
           R.color.transaction_type_credit : R.color.transaction_type_debit;
-        transactionHolder.amountView.setCurrency(currencyCode);
-        transactionHolder.amountView.setCurrencyColor(colorId);
-        transactionHolder.amountView.setValue(value.abs());
-        transactionHolder.amountView.setValueColor(colorId);
+        final String currency = transaction.getCurrency();
+        transactionHolder.amountTextView.setPrefix(currency);
+        transactionHolder.amountTextView.setPrefixTextColorFromResource(colorId);
+        final BigDecimal value = transaction.getValue();
+        transactionHolder.amountTextView.setText(Formatter.amount(value));
+        transactionHolder.amountTextView.setTextColorFromResource(colorId);
       }
     }
 

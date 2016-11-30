@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +37,8 @@ import io.codetail.animation.ViewAnimationUtils;
  * @author hecvasro
  */
 public class PinConfirmationDialogFragment extends FullScreenDialogFragment
-  implements DialogInterface.OnShowListener, PinView.Listener, NumPad.OnButtonClickedListener {
+  implements DialogInterface.OnShowListener, PinView.Listener, NumPad.OnDigitClickedListener,
+  NumPad.OnDeleteClickedListener {
   private static final String KEY_CENTER_X = "centerX";
   private static final String KEY_CENTER_Y = "centerY";
   private static final String KEY_ACTION_DESCRIPTION = "actionDescription";
@@ -175,14 +175,16 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
     // Adds a listener that gets notified every time the pin view starts or finishes loading.
     pinView.setListener(this);
     // Adds a listener that gets notified every time a button of the num pad is clicked.
-    numPad.setOnButtonClickedListener(this);
+    numPad.setOnDigitClickedListener(this);
+    numPad.setOnDeleteClickedListener(this);
   }
 
   @Override
   public void onDestroyView() {
     super.onDestroyView();
     // Removes the listener that gets notified every time a button of the num pad is clicked.
-    numPad.setOnButtonClickedListener(null);
+    numPad.setOnDeleteClickedListener(null);
+    numPad.setOnDigitClickedListener(null);
     // Removes the listener that gets notified every time the pin view starts or finishes loading.
     pinView.setListener(this);
     // Unbinds all the annotated views and methods.
@@ -224,14 +226,12 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
   }
 
   @Override
-  public void onTextButtonClicked(@NonNull String content) {
-    if (TextUtils.isDigitsOnly(content)) {
-      pinView.push(Integer.parseInt(content));
-    }
+  public void onDigitClicked(@NonNull NumPad.Digit digit) {
+    pinView.push(digit.getValue());
   }
 
   @Override
-  public void onDeleteButtonClicked() {
+  public void onDeleteClicked() {
     pinView.pop();
   }
 

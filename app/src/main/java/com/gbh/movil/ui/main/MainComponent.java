@@ -3,7 +3,7 @@ package com.gbh.movil.ui.main;
 import com.gbh.movil.AppComponent;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.data.SchedulerProvider;
-import com.gbh.movil.data.res.ResourceProvider;
+import com.gbh.movil.data.res.AssetProvider;
 import com.gbh.movil.domain.ProductManager;
 import com.gbh.movil.domain.BalanceManager;
 import com.gbh.movil.domain.util.EventBus;
@@ -26,7 +26,7 @@ public interface MainComponent {
 
   SchedulerProvider provideSchedulerProvider();
 
-  ResourceProvider provideResourceProvider();
+  AssetProvider provideResourceProvider();
 
   EventBus provideEventBus();
 

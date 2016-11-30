@@ -1,42 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <declare-styleable name="AmountView">
+  <declare-styleable name="PrefixableTextView">
     <attr
-      name="currencyTextAppearance"
-      format="reference"/>
+      name="content"
+      format="string|reference"/>
     <attr
-      name="currency"
-      format="string"/>
+      name="prefix"
+      format="string|reference"/>
     <attr
-      name="valueTextAppearance"
-      format="reference"/>
+      name="prefixTextColor"
+      format="color|reference"/>
     <attr
-      name="value"
-      format="float"/>
+      name="prefixFontPath"
+      format="string|reference"/>
+    <attr
+      name="prefixTextSizeProportion"
+      format="float|reference"/>
+    <attr
+      name="prefixPaddingEnd"
+      format="dimension|reference"/>
   </declare-styleable>
+  <declare-styleable name="AutoResizeablePrefixableTextView">
+    <attr
+      name="maxTextSize"
+      format="dimension|reference"/>
+    <attr
+      name="minTextSize"
+      format="dimension|reference"/>
+    <attr
+      name="prefixMaxTextSize"
+      format="dimension|reference"/>
+    <attr
+      name="prefixMinTextSize"
+      format="dimension|reference"/>
+  </declare-styleable>
+  <declare-styleable name="NumPad">
+    <attr
+      name="tintColor"
+      format="color|reference"/>
+    <attr
+      name="dotEnabled"
+      format="boolean"/>
+    <attr
+      name="deleteEnabled"
+      format="boolean"/>
+    <attr
+      name="deleteDrawable"
+      format="reference"/>
+  </declare-styleable>
+
+  <declare-styleable name="App.Theme">
+    <attr
+      name="prefixableTextViewStyle"
+      format="reference"/>
+    <attr
+      name="autoResizeablePrefixableTextViewStyle"
+      format="reference"/>
+    <attr
+      name="numPadStyle"
+      format="reference"/>
+    <attr
+      name="searchViewStyle"
+      format="reference"/>
+  </declare-styleable>
+
+  <!-- TODO: Apply standards from these point downward -->
   <declare-styleable name="SearchView">
     <attr
       name="hint"
       format="reference|string"/>
-  </declare-styleable>
-  <declare-styleable name="NumPad">
-    <attr
-      name="buttonColor"
-      format="color"/>
-    <attr
-      name="deleteButtonDrawable"
-      format="reference"/>
-    <attr
-      name="showDot"
-      format="boolean"/>
-  </declare-styleable>
-  <!-- App theme attributes -->
-  <declare-styleable name="AppTheme">
-    <attr
-      name="searchViewStyle"
-      format="reference"/>
-    <attr
-      name="amountViewStyle"
-      format="reference"/>
   </declare-styleable>
 </resources>
