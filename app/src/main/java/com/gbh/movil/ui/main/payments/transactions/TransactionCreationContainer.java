@@ -8,4 +8,8 @@ import com.gbh.movil.ui.Container;
  * @author hecvasro
  */
 public interface TransactionCreationContainer extends Container<TransactionCreationComponent> {
+  /**
+   * TODO
+   */
+  void finish(boolean succeeded);
 }

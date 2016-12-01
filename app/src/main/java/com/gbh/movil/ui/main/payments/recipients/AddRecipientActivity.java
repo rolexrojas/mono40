@@ -93,8 +93,12 @@ public class AddRecipientActivity extends BaseActivity implements AddRecipientCo
    * @return TODO
    */
   @Nullable
-  public static Recipient deserializeResult(@NonNull Intent intent) {
-    return (Recipient) intent.getSerializableExtra(EXTRA_RECIPIENT);
+  public static Recipient deserializeResult(@Nullable Intent intent) {
+    if (Utils.isNotNull(intent)) {
+      return (Recipient) intent.getSerializableExtra(EXTRA_RECIPIENT);
+    } else {
+      return null;
+    }
   }
 
   /**

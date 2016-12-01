@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.view.widget;
+package com.gbh.movil.ui.view.widget.pad;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -19,9 +19,7 @@ import android.widget.LinearLayout;
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -33,12 +31,7 @@ import butterknife.OnClick;
  *
  * @author hecvasro
  */
-public class NumPad extends LinearLayout implements View.OnClickListener {
-  /**
-   * TODO
-   */
-  private final Map<Button, Digit> digitValues = new HashMap<>();
-
+public class NumPad extends LinearLayout {
   /**
    * TODO
    */
@@ -115,15 +108,11 @@ public class NumPad extends LinearLayout implements View.OnClickListener {
   protected void onFinishInflate() {
     super.onFinishInflate();
     ButterKnife.bind(this);
-    int i = 0;
-    Digit digit;
-    for (Button button : digitButtons) {
-      digit = new Digit(i);
-      digitValues.put(button, digit);
-      button.setTextColor(tintColor);
-      button.setText(digit.getValue().toString());
-      i++;
+    for (int i = 0; i < digitButtons.size(); i++) {
+      digitButtons.get(i).setTextColor(tintColor);
+      digitButtons.get(i).setText(Digit.get(i).toString());
     }
+    dotButton.setText(Dot.INSTANCE.toString());
     dotButton.setTextColor(tintColor);
     dotButton.setClickable(dotEnabled);
     dotButton.setVisibility(dotEnabled ? View.VISIBLE : View.INVISIBLE);
@@ -148,14 +137,14 @@ public class NumPad extends LinearLayout implements View.OnClickListener {
     R.id.num_pad_cell_digit_eight, R.id.num_pad_cell_digit_nine })
   void onDigitClicked(@NonNull Button button) {
     if (Utils.isNotNull(onDigitClickedListener)) {
-      onDigitClickedListener.onDigitClicked(digitValues.get(button));
+      onDigitClickedListener.onDigitClicked(Digit.get(digitButtons.indexOf(button)));
     }
   }
 
   @OnClick(R.id.num_pad_cell_dot)
   void onDotClicked() {
     if (dotEnabled && Utils.isNotNull(onDotClickedListener)) {
-      onDotClickedListener.onDotClicked();
+      onDotClickedListener.onDotClicked(Dot.INSTANCE);
     }
   }
 
@@ -199,61 +188,6 @@ public class NumPad extends LinearLayout implements View.OnClickListener {
     onDeleteClickedListener = listener;
   }
 
-  @Override
-  public void onClick(View view) {
-    // TODO
-  }
-
-  /**
-   * Num pad's cell representation.
-   */
-  private static class Cell<T> {
-    /**
-     * Cell's value.
-     */
-    private final T value;
-
-    /**
-     * Constructs a new cell.
-     *
-     * @param value
-     *   Cell's value.
-     */
-    Cell(@NonNull T value) {
-      this.value = value;
-    }
-
-    /**
-     * Gets the value of the cell.
-     *
-     * @return Cell's value.
-     */
-    @NonNull
-    public final T getValue() {
-      return value;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      return super.equals(object) || (Utils.isNotNull(object) && object instanceof Cell
-        && ((Cell) object).value.equals(value));
-    }
-
-    @Override
-    public int hashCode() {
-      return value.hashCode();
-    }
-  }
-
-  /**
-   * Num pad's digit representation.
-   */
-  public static class Digit extends Cell<Integer> {
-    private Digit(@NonNull Integer value) {
-      super(value);
-    }
-  }
-
   /**
    * TODO
    */
@@ -274,7 +208,7 @@ public class NumPad extends LinearLayout implements View.OnClickListener {
     /**
      * TODO
      */
-    void onDotClicked();
+    void onDotClicked(@NonNull Dot dot);
   }
 
   /**

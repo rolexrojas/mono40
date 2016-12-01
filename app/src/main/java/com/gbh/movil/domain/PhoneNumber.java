@@ -96,15 +96,6 @@ public class PhoneNumber implements Serializable, Matchable {
       && ((PhoneNumber) object).content.equals(content));
   }
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
-  public final String getContent() {
-    return content;
-  }
-
   @Override
   public int hashCode() {
     return content.hashCode();
@@ -112,7 +103,7 @@ public class PhoneNumber implements Serializable, Matchable {
 
   @Override
   public String toString() {
-    return PhoneNumber.class.getSimpleName() + ":{content='" + content + "'}";
+    return content;
   }
 
   @Override

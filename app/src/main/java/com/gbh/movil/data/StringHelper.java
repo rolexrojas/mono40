@@ -2,10 +2,13 @@ package com.gbh.movil.data;
 
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import com.gbh.movil.R;
 import com.gbh.movil.domain.PhoneNumber;
+import com.gbh.movil.domain.Recipient;
+import com.gbh.movil.domain.RecipientType;
 
 import java.math.BigDecimal;
 import java.util.Locale;
@@ -23,13 +26,54 @@ public final class StringHelper {
   }
 
   @NonNull
-  private String getString(@StringRes int stringId) {
-    return resources.getString(stringId);
+  private String getString(@StringRes int id) {
+    return resources.getString(id);
+  }
+
+  @NonNull
+  private String format(@StringRes int id, @NonNull String... args) {
+    return String.format(getString(id), args);
   }
 
   @NonNull
   public final String appName() {
     return getString(R.string.app_name);
+  }
+
+  @NonNull
+  public final String recipientAdditionConfirmationTitle(@NonNull Recipient recipient) {
+    switch (recipient.getType()) {
+      case CONTACT:
+        return getString(R.string.recipient_addition_title_contact);
+      default:
+        return doneWithExclamationMark();
+    }
+  }
+
+  @Nullable
+  public final String recipientAdditionConfirmationMessage(@NonNull Recipient recipient) {
+    switch (recipient.getType()) {
+      case CONTACT:
+        return format(R.string.recipient_addition_message_contact, recipient.getIdentifier());
+      default:
+        return null;
+    }
+  }
+
+  @NonNull
+  public final String transactionCreationConfirmationTitle() {
+    return getString(R.string.transaction_confirmation_title);
+  }
+
+  @Nullable
+  public final String transactionCreationConfirmationMessage(@NonNull Recipient recipient) {
+    switch (recipient.getType()) {
+      case PHONE_NUMBER:
+        return format(R.string.transaction_confirmation_message_phone_number,
+          recipient.getIdentifier());
+      default:
+        return null;
+    }
   }
 
   @NonNull

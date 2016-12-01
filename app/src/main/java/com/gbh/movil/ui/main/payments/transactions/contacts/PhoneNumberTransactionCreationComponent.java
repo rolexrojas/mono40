@@ -13,12 +13,12 @@ import dagger.Component;
 @FragmentScope
 @Component(dependencies = TransactionCreationComponent.class,
   modules = PhoneNumberTransactionCreationModule.class)
-interface ContactTransactionCreationComponent {
+interface PhoneNumberTransactionCreationComponent {
   /**
    * TODO
    *
    * @param fragment
    *   TODO
    */
-  void inject(ContactTransactionCreationFragment fragment);
+  void inject(PhoneNumberTransactionCreationFragment fragment);
 }

@@ -18,7 +18,7 @@ import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.RecipientType;
 import com.gbh.movil.ui.ContainerActivity;
 import com.gbh.movil.ui.SubFragment;
-import com.gbh.movil.ui.main.payments.transactions.contacts.ContactTransactionCreationFragment;
+import com.gbh.movil.ui.main.payments.transactions.contacts.PhoneNumberTransactionCreationFragment;
 
 import javax.inject.Inject;
 
@@ -36,7 +36,7 @@ public class TransactionCreationActivity extends ContainerActivity<TransactionCr
   /**
    * TODO
    */
-  private static final String ARGUMENT_RECIPIENT = "recipient";
+  private static final String EXTRA_RECIPIENT = "recipient";
 
   private TransactionCreationComponent component;
 
@@ -47,6 +47,21 @@ public class TransactionCreationActivity extends ContainerActivity<TransactionCr
 
   @BindView(R.id.container_app_bar_toolbar)
   Toolbar toolbar;
+
+  /**
+   * TODO
+   *
+   * @param recipient
+   *   TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  private static Intent serializeResult(@NonNull Recipient recipient) {
+    final Intent intent = new Intent();
+    intent.putExtra(EXTRA_RECIPIENT, recipient);
+    return intent;
+  }
 
   /**
    * TODO
@@ -74,7 +89,7 @@ public class TransactionCreationActivity extends ContainerActivity<TransactionCr
   @NonNull
   public static Intent getLaunchIntent(@NonNull Context context, @NonNull Recipient recipient) {
     final Intent intent = getLaunchIntent(context);
-    intent.putExtra(ARGUMENT_RECIPIENT, recipient);
+    intent.putExtra(EXTRA_RECIPIENT, recipient);
     return intent;
   }
 
@@ -93,16 +108,33 @@ public class TransactionCreationActivity extends ContainerActivity<TransactionCr
     return getLaunchIntent(context, new PhoneNumberRecipient(phoneNumber));
   }
 
+  /**
+   * TODO
+   *
+   * @param intent
+   *   TODO
+   *
+   * @return TODO
+   */
+  @Nullable
+  public static Recipient deserializeResult(@Nullable Intent intent) {
+    if (Utils.isNotNull(intent)) {
+      return (Recipient) intent.getSerializableExtra(EXTRA_RECIPIENT);
+    } else {
+      return null;
+    }
+  }
+
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // Asserts all the required arguments.
     final Bundle bundle = Utils.isNotNull(savedInstanceState) ? savedInstanceState : getIntent()
       .getExtras();
-    if (Utils.isNull(bundle) || !bundle.containsKey(ARGUMENT_RECIPIENT)) {
-      throw new NullPointerException("Argument '" + ARGUMENT_RECIPIENT + "' must be provided");
+    if (Utils.isNull(bundle) || !bundle.containsKey(EXTRA_RECIPIENT)) {
+      throw new NullPointerException("Argument '" + EXTRA_RECIPIENT + "' must be provided");
     } else {
-      final Recipient recipient = (Recipient) bundle.getSerializable(ARGUMENT_RECIPIENT);
+      final Recipient recipient = (Recipient) bundle.getSerializable(EXTRA_RECIPIENT);
       // Injects all the annotated dependencies.
       component = DaggerTransactionCreationComponent.builder()
         .appComponent(((App) getApplication()).getComponent())
@@ -125,7 +157,10 @@ public class TransactionCreationActivity extends ContainerActivity<TransactionCr
       final SubFragment<TransactionCreationContainer> fragment;
       switch (type) {
         case PHONE_NUMBER:
-          fragment = ContactTransactionCreationFragment.newInstance();
+          fragment = PhoneNumberTransactionCreationFragment.newInstance();
+          break;
+        case CONTACT:
+          fragment = PhoneNumberTransactionCreationFragment.newInstance();
           break;
         default:
           throw new UnsupportedOperationException("Transaction type '" + type + "' not supported");
@@ -178,5 +213,15 @@ public class TransactionCreationActivity extends ContainerActivity<TransactionCr
   @Override
   public TransactionCreationComponent getComponent() {
     return component;
+  }
+
+  @Override
+  public void finish(boolean succeeded) {
+    if (succeeded) {
+      setResult(RESULT_OK, serializeResult(recipient));
+    } else {
+      setResult(RESULT_CANCELED);
+    }
+    finish();
   }
 }

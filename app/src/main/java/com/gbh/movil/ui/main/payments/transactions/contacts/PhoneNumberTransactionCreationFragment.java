@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import android.widget.Spinner;
 
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
+import com.gbh.movil.data.Formatter;
 import com.gbh.movil.data.res.AssetProvider;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Recipient;
@@ -22,9 +22,13 @@ import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.main.PinConfirmationDialogFragment;
 import com.gbh.movil.ui.main.payments.transactions.PaymentOptionAdapter;
 import com.gbh.movil.ui.main.payments.transactions.TransactionCreationContainer;
-import com.gbh.movil.ui.view.widget.NumPad;
+import com.gbh.movil.ui.view.widget.pad.Digit;
+import com.gbh.movil.ui.view.widget.pad.Dot;
+import com.gbh.movil.ui.view.widget.pad.NumPad;
 import com.gbh.movil.ui.view.widget.PrefixableTextView;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -39,13 +43,19 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class ContactTransactionCreationFragment extends SubFragment<TransactionCreationContainer>
-  implements PhoneNumberTransactionCreationScreen, Spinner.OnItemSelectedListener,
-  NumPad.OnDigitClickedListener, NumPad.OnDeleteClickedListener {
+public class PhoneNumberTransactionCreationFragment
+  extends SubFragment<TransactionCreationContainer> implements PhoneNumberTransactionCreationScreen,
+  Spinner.OnItemSelectedListener, NumPad.OnDigitClickedListener, NumPad.OnDotClickedListener,
+  NumPad.OnDeleteClickedListener, PinConfirmationDialogFragment.OnDismissListener {
   /**
    * TODO
    */
   private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
+
+  private static final BigDecimal ZERO = BigDecimal.ZERO;
+  private static final BigDecimal ONE = BigDecimal.ONE;
+  private static final BigDecimal TEN = BigDecimal.TEN;
+  private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
 
   @Inject
   AssetProvider assetProvider;
@@ -67,14 +77,47 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
   @BindView(R.id.action_transfer)
   Button transferActionButton;
 
+  private boolean mustShowDot = false;
+  private BigDecimal amount = ZERO;
+  private BigDecimal fractionOffset = ONE;
+
   /**
    * TODO
    *
    * @return TODO
    */
   @NonNull
-  public static ContactTransactionCreationFragment newInstance() {
-    return new ContactTransactionCreationFragment();
+  public static PhoneNumberTransactionCreationFragment newInstance() {
+    return new PhoneNumberTransactionCreationFragment();
+  }
+
+  @NonNull
+  private static BigDecimal getFraction(@NonNull BigDecimal value) {
+    return value.subtract(BigDecimal.valueOf(value.intValue()));
+  }
+
+  private static boolean isFraction(@NonNull BigDecimal value) {
+    return value.compareTo(BigDecimal.ZERO) > 0 && value.compareTo(BigDecimal.ONE) < 0;
+  }
+
+  @NonNull
+  private static String getFormattedValue(@NonNull BigDecimal value,
+    @NonNull BigDecimal fractionOffset, boolean mustShowDot) {
+    String formattedValue = Formatter.amount(value);
+    final BigDecimal fraction = getFraction(value);
+    if (!isFraction(fraction)) {
+      formattedValue = formattedValue.replace(".00", "");
+      if (mustShowDot) {
+        formattedValue += ".";
+      }
+    } else if (fraction.multiply(fractionOffset).compareTo(BigDecimal.TEN) < 0) {
+      formattedValue = formattedValue.substring(0, formattedValue.length() - 1);
+    }
+    return formattedValue;
+  }
+
+  private void updateAmountText() {
+    amountTextView.setContent(getFormattedValue(amount, fractionOffset, mustShowDot));
   }
 
   @OnClick(R.id.action_recharge)
@@ -85,14 +128,31 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
   }
 
   @OnClick(R.id.action_transfer)
-  void onTransferButtonClicked() {
+  void onTransferButtonClicked(View view) {
+    if (amount.compareTo(ZERO) > 0) {
+      final int[] location = new int[2];
+      view.getLocationOnScreen(location);
+      final int x = location[0] + (view.getWidth() / 2);
+      final int y = location[1];
+      final String description = String.format(getString(R.string.format_transfer_to),
+        recipient.getIdentifier(), Formatter.amount(amountTextView.getPrefix().toString(), amount));
+      PinConfirmationDialogFragment.newInstance(x, y, description,
+        new PinConfirmationDialogFragment.Callback() {
+          @Override
+          public void confirm(@NonNull String pin) {
+            presenter.transferTo(amount, pin);
+          }
+        }).show(getChildFragmentManager(), TAG_PIN_CONFIRMATION);
+    } else {
+      // TODO: Let the user know that he must insert an amount greater than zero.
+    }
   }
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // Injects all the annotated dependencies.
-    final ContactTransactionCreationComponent component = DaggerContactTransactionCreationComponent
+    final PhoneNumberTransactionCreationComponent component = DaggerPhoneNumberTransactionCreationComponent
       .builder()
       .transactionCreationComponent(container.getComponent())
       .build();
@@ -118,6 +178,7 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
     paymentOptionChooser.setOnItemSelectedListener(this);
     // Adds a listener that gets notified every time a num pad button is pressed.
     numPad.setOnDigitClickedListener(this);
+    numPad.setOnDotClickedListener(this);
     numPad.setOnDeleteClickedListener(this);
     // Attaches the screen to the presenter.
     presenter.attachScreen(this);
@@ -142,6 +203,7 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
     super.onDestroyView();
     // Removes the listener that gets notified every time a num pad button is pressed.
     numPad.setOnDeleteClickedListener(null);
+    numPad.setOnDotClickedListener(null);
     numPad.setOnDigitClickedListener(null);
     // Removes the listener that gets notified every time a payment option is chosen.
     paymentOptionChooser.setOnItemSelectedListener(null);
@@ -164,7 +226,9 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
 
   @Override
   public void clearAmount() {
-    // TODO
+    amount = ZERO;
+    mustShowDot = false;
+    updateAmountText();
   }
 
   @Override
@@ -189,16 +253,52 @@ public class ContactTransactionCreationFragment extends SubFragment<TransactionC
   }
 
   @Override
-  public void onDigitClicked(@NonNull NumPad.Digit digit) {
-    amountTextView.setContent(TextUtils.concat(amountTextView.getContent(),
-      digit.getValue().toString()));
+  public void onDigitClicked(@NonNull Digit digit) {
+    BigDecimal addition = BigDecimal.valueOf(digit.getValue());
+    if (mustShowDot && fractionOffset.compareTo(HUNDRED) < 0) {
+      amount = amount.add(addition.divide(TEN.multiply(fractionOffset), 2,
+        BigDecimal.ROUND_CEILING));
+      fractionOffset = fractionOffset.multiply(TEN);
+      updateAmountText();
+    } else if (!mustShowDot) {
+      amount = amount.multiply(TEN).add(addition);
+      updateAmountText();
+    }
+  }
+
+  @Override
+  public void onDotClicked(@NonNull Dot dot) {
+    if (!mustShowDot) {
+      mustShowDot = true;
+      updateAmountText();
+    }
   }
 
   @Override
   public void onDeleteClicked() {
-    final CharSequence text = amountTextView.getContent();
-    if (!TextUtils.isEmpty(text)) {
-      amountTextView.setContent(TextUtils.substring(text, 0, text.length() - 1));
+    final int result = amount.compareTo(ZERO);
+    if (result > 0) {
+      final BigDecimal fraction = getFraction(amount);
+      if (isFraction(fraction)) {
+        amount = amount.subtract(fraction.multiply(fractionOffset).remainder(TEN)
+          .divide(fractionOffset, 2, BigDecimal.ROUND_CEILING));
+        fractionOffset = fractionOffset.divide(TEN, 2, RoundingMode.CEILING);
+      } else if (mustShowDot) {
+        mustShowDot = false;
+      } else {
+        amount = amount.divideToIntegralValue(TEN);
+      }
+      updateAmountText();
+    } else if (mustShowDot) {
+      mustShowDot = false;
+      updateAmountText();
+    }
+  }
+
+  @Override
+  public void onDismiss(boolean succeeded) {
+    if (succeeded) {
+      container.finish(true);
     }
   }
 }

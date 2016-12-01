@@ -53,7 +53,7 @@
         android:layout_marginStart="60dp"
         android:layout_marginTop="16dp"/>
 
-      <com.gbh.movil.ui.view.widget.NumPad
+      <com.gbh.movil.ui.view.widget.pad.NumPad
         android:id="@+id/num_pad"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
