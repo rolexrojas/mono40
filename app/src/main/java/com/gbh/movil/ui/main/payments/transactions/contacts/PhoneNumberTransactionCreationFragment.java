@@ -135,7 +135,7 @@ public class PhoneNumberTransactionCreationFragment
     if (amount.compareTo(ZERO) > 0) {
       final int[] location = new int[2];
       view.getLocationOnScreen(location);
-      final int x = location[0];
+      final int x = location[0] + (view.getWidth() / 2);
       final int y = location[1];
       final String description = String.format(getString(R.string.format_transfer_to),
         recipient.getIdentifier(), Formatter.amount(amountTextView.getPrefix().toString(), amount));
@@ -268,16 +268,15 @@ public class PhoneNumberTransactionCreationFragment
   @Override
   public void onDigitClicked(@NonNull Digit digit) {
     BigDecimal addition = BigDecimal.valueOf(digit.getValue());
-    if (mustShowDot) {
-      if (fractionOffset.compareTo(HUNDRED) < 0) {
-        amount = amount.add(addition.divide(TEN.multiply(fractionOffset), 2,
-          BigDecimal.ROUND_CEILING));
-        fractionOffset = fractionOffset.multiply(TEN);
-      }
-    } else {
+    if (mustShowDot && fractionOffset.compareTo(HUNDRED) < 0) {
+      amount = amount.add(addition.divide(TEN.multiply(fractionOffset), 2,
+        BigDecimal.ROUND_CEILING));
+      fractionOffset = fractionOffset.multiply(TEN);
+      updateAmountText();
+    } else if (!mustShowDot) {
       amount = amount.multiply(TEN).add(addition);
+      updateAmountText();
     }
-    updateAmountText();
   }
 
   @Override
@@ -302,6 +301,9 @@ public class PhoneNumberTransactionCreationFragment
       } else {
         amount = amount.divideToIntegralValue(TEN);
       }
+      updateAmountText();
+    } else if (mustShowDot) {
+      mustShowDot = false;
       updateAmountText();
     }
   }
