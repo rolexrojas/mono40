@@ -2,7 +2,7 @@ package com.gbh.movil.data.api;
 
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.ProductCreator;
-import com.gbh.movil.domain.ProductIdentifier;
+import com.gbh.movil.domain.ProductType;
 import com.gbh.movil.domain.Bank;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -48,7 +48,7 @@ class ProductTypeAdapter implements JsonDeserializer<Product>, JsonSerializer<Pr
       throw new JsonParseException("Property '" + PROPERTY_PAYMENT_OPTION + "' is missing");
     } else {
       return ProductCreator.create(
-        ProductIdentifier.valueOf(jsonObject.get(PROPERTY_TYPE).getAsString()),
+        ProductType.valueOf(jsonObject.get(PROPERTY_TYPE).getAsString()),
         jsonObject.get(PROPERTY_ALIAS).getAsString(),
         jsonObject.get(PROPERTY_NUMBER).getAsString(),
         (Bank) context.deserialize(jsonObject.get(PROPERTY_BANK), Bank.class),
@@ -61,7 +61,7 @@ class ProductTypeAdapter implements JsonDeserializer<Product>, JsonSerializer<Pr
   @Override
   public JsonElement serialize(Product src, Type typeOfSrc, JsonSerializationContext context) {
     final JsonObject jsonObject = new JsonObject();
-    jsonObject.addProperty(PROPERTY_TYPE, src.getIdentifier().name());
+    jsonObject.addProperty(PROPERTY_TYPE, src.getType().name());
     jsonObject.addProperty(PROPERTY_ALIAS, src.getAlias());
     jsonObject.addProperty(PROPERTY_NUMBER, src.getNumber());
     jsonObject.add(PROPERTY_BANK, context.serialize(src.getBank(), Bank.class));

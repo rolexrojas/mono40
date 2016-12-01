@@ -15,7 +15,7 @@
   <style
     name="ToolbarTheme"
     parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-    <item name="fontPath">@string/font.gotham_rounded.book</item>
+    <item name="fontPath">@string/font_gotham_rounded_book</item>
     <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
   </style>
   <style

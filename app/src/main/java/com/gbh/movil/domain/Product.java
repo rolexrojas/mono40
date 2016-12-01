@@ -17,9 +17,9 @@ public abstract class Product {
    */
   private final ProductCategory category;
   /**
-   * Product's {@link ProductIdentifier identifier}.
+   * Product's {@link ProductType type}.
    */
-  private final ProductIdentifier identifier;
+  private final ProductType type;
   /**
    * Product's alias.
    */
@@ -50,10 +50,10 @@ public abstract class Product {
    *
    * @param category
    *   Product's {@link ProductCategory category}.
-   * @param identifier
-   *   Product's {@link ProductIdentifier identifier}.
+   * @param type
+   *   Product's {@link ProductType type}.
    * @param alias
-   *   Product's identifier.
+   *   Product's type.
    * @param number
    *   Product's number.
    * @param currency
@@ -65,11 +65,11 @@ public abstract class Product {
    * @param paymentOption
    *   Indicates whether can be used as a payment option or not.
    */
-  Product(@NonNull ProductCategory category, @NonNull ProductIdentifier identifier,
-    @NonNull String alias, @NonNull String number, @NonNull Bank bank, @NonNull String currency,
+  Product(@NonNull ProductCategory category, @NonNull ProductType type, @NonNull String alias,
+    @NonNull String number, @NonNull Bank bank, @NonNull String currency,
     @NonNull BigDecimal queryFee, boolean paymentOption) {
     this.category = category;
-    this.identifier = identifier;
+    this.type = type;
     this.alias = alias;
     this.number = number;
     this.bank = bank;
@@ -102,17 +102,17 @@ public abstract class Product {
   }
 
   /**
-   * Gets the {@link ProductIdentifier identifier} of the product.
+   * Gets the {@link ProductType type} of the product.
    *
-   * @return Product's {@link ProductIdentifier identifier}.
+   * @return Product's {@link ProductType type}.
    */
   @NonNull
-  public final ProductIdentifier getIdentifier() {
-    return identifier;
+  public final ProductType getType() {
+    return type;
   }
 
   /**
-   * Gets the identifier of the product.
+   * Gets the type of the product.
    *
    * @return Product's alias.
    */
@@ -152,6 +152,16 @@ public abstract class Product {
   }
 
   /**
+   * TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  public final String getIdentifier() {
+    return String.format("%1$s %2$s", bank.getName(), type);
+  }
+
+  /**
    * Gets the cost of querying the balance of the product.
    *
    * @return Cost of querying the balance.
@@ -177,19 +187,20 @@ public abstract class Product {
   @Override
   public boolean equals(Object object) {
     return super.equals(object) || (Utils.isNotNull(object) && object instanceof Product
-      && ((Product) object).category.equals(category) && ((Product) object).identifier.equals(identifier)
-      && ((Product) object).alias.equals(alias)) && ((Product) object).bank.equals(bank);
+      && ((Product) object).category.equals(category)
+      && ((Product) object).type.equals(type) && ((Product) object).alias.equals(alias))
+      && ((Product) object).bank.equals(bank);
   }
 
   @Override
   public int hashCode() {
-    return Utils.hashCode(category, identifier, alias, bank);
+    return Utils.hashCode(category, type, alias, bank);
   }
 
   @Override
   public String toString() {
-    return Product.class.getSimpleName() + ":{category='" + category + "', identifier='"
-      + identifier + "',alias='" + alias + "',number='" + number + "',currency='" + currency
+    return Product.class.getSimpleName() + ":{category='" + category + "', type='"
+      + type + "',alias='" + alias + "',number='" + number + "',currency='" + currency
       + "',bank=" + bank + ",queryFee=" + queryFee + "}";
   }
 }

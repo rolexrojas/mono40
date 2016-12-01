@@ -10,7 +10,7 @@ import java.math.BigDecimal;
  * @author hecvasro
  */
 public class CreditCard extends Product {
-  CreditCard(@NonNull ProductIdentifier type, @NonNull String alias, @NonNull String number,
+  CreditCard(@NonNull ProductType type, @NonNull String alias, @NonNull String number,
     @NonNull Bank bank, @NonNull String currency, @NonNull BigDecimal queryFee,
     boolean paymentOption) {
     super(ProductCategory.CREDIT_CARD, type, alias, number, bank, currency, queryFee,

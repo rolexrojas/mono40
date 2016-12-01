@@ -7,7 +7,7 @@ import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.rx.RxUtils;
 import com.gbh.movil.ui.Presenter;
 import com.gbh.movil.ui.UiUtils;
-import com.gbh.movil.ui.main.list.NoResultsItem;
+import com.gbh.movil.ui.main.list.NoResultsListItemItem;
 
 import java.util.concurrent.TimeUnit;
 
@@ -77,7 +77,7 @@ public abstract class RecipientCandidateListPresenter
             RxUtils.unsubscribe(searchSubscription);
             searchSubscription = search(query)
               .subscribeOn(schedulerProvider.io())
-              .switchIfEmpty(Observable.just(new NoResultsItem(query)))
+              .switchIfEmpty(Observable.just(new NoResultsListItemItem(query)))
               .observeOn(schedulerProvider.ui())
               .doOnSubscribe(new Action0() {
                 @Override

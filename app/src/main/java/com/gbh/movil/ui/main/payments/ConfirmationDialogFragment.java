@@ -44,10 +44,10 @@ public class ConfirmationDialogFragment extends DialogFragment {
   private Unbinder unbinder;
 
   @Nullable
-  @BindView(R.id.recipient_identifier_label)
+  @BindView(R.id.recipient_alias_label)
   TextInputLayout identifierTextInputLayout;
   @Nullable
-  @BindView(R.id.recipient_identifier)
+  @BindView(R.id.recipient_alias)
   EditText identifierEditText;
 
   /**

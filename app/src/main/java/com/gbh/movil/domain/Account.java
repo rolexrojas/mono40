@@ -10,7 +10,7 @@ import java.math.BigDecimal;
  * @author hecvasro
  */
 public class Account extends Product {
-  Account(@NonNull ProductIdentifier type, @NonNull String alias, @NonNull String number,
+  Account(@NonNull ProductType type, @NonNull String alias, @NonNull String number,
     @NonNull Bank bank, @NonNull String currency, @NonNull BigDecimal queryFee,
     boolean paymentOption) {
     super(ProductCategory.ACCOUNT, type, alias, number, bank, currency, queryFee, paymentOption);

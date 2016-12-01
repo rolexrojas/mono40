@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <!-- App's dimensions -->
+  <dimen name="space_horizontal_large">48dp</dimen>
+  <dimen name="space_horizontal_normal">20dp</dimen>
+  <dimen name="space_horizontal_small">12dp</dimen>
+  <dimen name="space_vertical_large">54dp</dimen>
+  <dimen name="space_vertical_normal">32dp</dimen>
+  <dimen name="space_vertical_small">20dp</dimen>
+
+  <dimen name="bank_logo_size_large">36dp</dimen>
+  <dimen name="bank_logo_size_normal">24dp</dimen>
+  <dimen name="bank_logo_size_small">20dp</dimen>
+
+  <!-- TODO: Apply standards from these point downward -->
+
+  <!-- App's text and widget dimensions -->
   <dimen name="app_text_widget_prefixable_text_view_content">16sp</dimen>
   <dimen name="app_text_widget_prefixable_text_view_prefix_padding_end">2dp</dimen>
   <dimen name="app_text_widget_auto_resizeable_prefixable_text_view_content_max">@dimen/app_text_widget_prefixable_text_view_content</dimen>
@@ -12,8 +25,6 @@
   <dimen name="app_widget_button_radius">2dp</dimen>
 
   <!-- Screen's dimensions -->
-
-  <!-- TODO: Apply standards from these point downward -->
   <dimen name="transaction_creation_text_widget_amount_value_max">75sp</dimen>
   <dimen name="transaction_creation_text_widget_amount_value_min">@dimen/app_text_widget_auto_resizeable_prefixable_text_view_content_min</dimen>
 
@@ -28,11 +39,6 @@
   <dimen name="pin_dot_margin_horizontal">6dp</dimen>
   <dimen name="pin_dot_size">14dp</dimen>
   <dimen name="pin_view_padding_vertical">16dp</dimen>
-  <dimen name="space.horizontal.large">48dp</dimen>
-  <dimen name="space.horizontal.normal">20dp</dimen>
-  <dimen name="space.horizontal.small">12dp</dimen>
-  <dimen name="space.vertical.large">54dp</dimen>
-  <dimen name="space.vertical.normal">32dp</dimen>
   <item name="text.letter_spacing.large" format="float" type="dimen">0.081</item> <!-- 1.3sp -->
   <item name="text.letter_spacing.normal" format="float" type="dimen">0.062</item> <!-- 1.0sp -->
   <item name="text.letter_spacing.small" format="float" type="dimen">0.05</item> <!-- 0.8sp -->

@@ -14,15 +14,15 @@ import android.view.ViewGroup;
 
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
+import com.gbh.movil.data.util.BinderFactory;
 import com.gbh.movil.ui.SubFragment;
-import com.gbh.movil.ui.main.list.Holder;
-import com.gbh.movil.ui.main.list.Adapter;
-import com.gbh.movil.ui.main.list.HolderBinderFactory;
-import com.gbh.movil.ui.main.list.HolderCreatorFactory;
-import com.gbh.movil.ui.main.list.NoResultsHolder;
-import com.gbh.movil.ui.main.list.NoResultsHolderBinder;
-import com.gbh.movil.ui.main.list.NoResultsHolderCreator;
-import com.gbh.movil.ui.main.list.NoResultsItem;
+import com.gbh.movil.ui.main.list.ListItemHolder;
+import com.gbh.movil.ui.main.list.ListItemAdapter;
+import com.gbh.movil.ui.main.list.ListItemHolderCreatorFactory;
+import com.gbh.movil.ui.main.list.NoResultsListItemHolder;
+import com.gbh.movil.ui.main.list.NoResultsListItemHolderBinder;
+import com.gbh.movil.ui.main.list.NoResultsListItemHolderCreator;
+import com.gbh.movil.ui.main.list.NoResultsListItemItem;
 import com.gbh.movil.ui.view.widget.LoadIndicator;
 import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -41,11 +41,11 @@ import rx.Observable;
  */
 public abstract class RecipientCandidateListFragment<P extends RecipientCandidateListPresenter>
   extends SubFragment<AddRecipientContainer> implements RecipientCandidateListScreen,
-  Holder.OnClickListener {
+  ListItemHolder.OnClickListener {
   private SearchOrChooseRecipientScreen parentScreen;
   private Unbinder unbinder;
   private LoadIndicator loadIndicator;
-  private Adapter adapter;
+  private ListItemAdapter adapter;
 
   @Inject
   protected P presenter;
@@ -61,7 +61,7 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
    * @return TODO
    */
   @NonNull
-  protected abstract HolderCreatorFactory.Builder createHolderCreatorFactoryBuilder();
+  protected abstract ListItemHolderCreatorFactory.Builder createHolderCreatorFactoryBuilder();
 
   /**
    * TODO
@@ -69,7 +69,7 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
    * @return TODO
    */
   @NonNull
-  protected abstract HolderBinderFactory.Builder createHolderBinderFactoryBuilder();
+  protected abstract BinderFactory.Builder createHolderBinderFactoryBuilder();
 
   @Override
   public void onAttach(Context context) {
@@ -98,14 +98,15 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
     // Prepares the contact item container.
-    final HolderCreatorFactory holderCreatorFactory = createHolderCreatorFactoryBuilder()
-      .addCreator(NoResultsItem.class, new NoResultsHolderCreator())
+    final ListItemHolderCreatorFactory holderCreatorFactory = createHolderCreatorFactoryBuilder()
+      .addCreator(NoResultsListItemItem.class, new NoResultsListItemHolderCreator())
       .build();
     final Context context = getContext();
-    final HolderBinderFactory holderBinderFactory = createHolderBinderFactoryBuilder()
-      .addBinder(NoResultsItem.class, NoResultsHolder.class, new NoResultsHolderBinder(context))
+    final BinderFactory holderBinderFactory = createHolderBinderFactoryBuilder()
+      .addBinder(NoResultsListItemItem.class, NoResultsListItemHolder.class,
+        new NoResultsListItemHolderBinder(context))
       .build();
-    adapter = new Adapter(holderCreatorFactory, holderBinderFactory);
+    adapter = new ListItemAdapter(holderCreatorFactory, holderBinderFactory);
     recyclerView.setAdapter(adapter);
     recyclerView.setHasFixedSize(true);
     recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL,

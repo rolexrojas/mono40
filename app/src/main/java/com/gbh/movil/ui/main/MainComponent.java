@@ -1,5 +1,7 @@
 package com.gbh.movil.ui.main;
 
+import android.content.Context;
+
 import com.gbh.movil.AppComponent;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.data.SchedulerProvider;
@@ -21,6 +23,8 @@ import dagger.Component;
 @Component(modules = MainModule.class, dependencies = AppComponent.class)
 public interface MainComponent {
   void inject(MainActivity activity);
+
+  Context provideContext();
 
   StringHelper provideMessageHelper();
 

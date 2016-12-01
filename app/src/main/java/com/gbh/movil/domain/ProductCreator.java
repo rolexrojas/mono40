@@ -14,7 +14,7 @@ public final class ProductCreator {
    * TODO
    *
    * @param identifier
-   *   Product's {@link ProductIdentifier identifier}.
+   *   Product's {@link ProductType identifier}.
    * @param alias
    *   Product's alias.
    * @param number
@@ -31,13 +31,13 @@ public final class ProductCreator {
    * @return TODO
    */
   @NonNull
-  public static Product create(@NonNull ProductIdentifier identifier, @NonNull String alias,
+  public static Product create(@NonNull ProductType identifier, @NonNull String alias,
     @NonNull String number, @NonNull Bank bank, @NonNull String currency,
     @NonNull BigDecimal queryFee, boolean paymentOption) {
-    if (identifier.equals(ProductIdentifier.LOAN)) {
+    if (identifier.equals(ProductType.LOAN)) {
       return new Loan(identifier, alias, number, bank, currency, queryFee, paymentOption);
-    } else if (identifier.equals(ProductIdentifier.AMEX) || identifier.equals(ProductIdentifier.CC)
-      || identifier.equals(ProductIdentifier.TBD)) {
+    } else if (identifier.equals(ProductType.AMEX) || identifier.equals(ProductType.CC)
+      || identifier.equals(ProductType.TBD)) {
       return new CreditCard(identifier, alias, number, bank, currency, queryFee, paymentOption);
     } else {
       return new Account(identifier, alias, number, bank, currency, queryFee, paymentOption);

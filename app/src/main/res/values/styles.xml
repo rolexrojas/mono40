@@ -9,7 +9,7 @@
     <item name="android:textAllCaps">true</item>
     <item name="android:textColor">@color/primary</item>
     <item name="android:textSize">14sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.bold</item>
+    <item name="fontPath">@string/font_gotham_rounded_bold</item>
   </style>
   <style name="Base.Text.Widget"/>
   <style
@@ -17,7 +17,7 @@
     parent="Base.Text.Label"/>
   <style name="Base.Text.Widget.Toolbar">
     <item name="android:textColor">@color/white</item>
-    <item name="fontPath">@string/font.gotham_rounded.book</item>
+    <item name="fontPath">@string/font_gotham_rounded_book</item>
   </style>
   <style name="Base.Text.Widget.Toolbar.Title">
     <item name="android:textSize">16sp</item>
@@ -44,7 +44,7 @@
     <item name="android:maxLines">1</item>
     <item name="android:textColor">#333</item>
     <item name="android:textSize">16sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.bold</item>
+    <item name="fontPath">@string/font_gotham_rounded_bold</item>
   </style>
 
   <style
@@ -288,7 +288,7 @@
     parent="TextAppearance.Design.Tab">
     <item name="android:textColor">#666</item>
     <item name="android:textSize">10sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.bold</item>
+    <item name="fontPath">@string/font_gotham_rounded_bold</item>
   </style>
   <style
     name="AppTabText"
@@ -313,7 +313,7 @@
     name="RecipientText"
     parent="TextAppearance.AppCompat">
     <item name="android:textColor">#333</item>
-    <item name="fontPath">@string/font.gotham_rounded.book</item>
+    <item name="fontPath">@string/font_gotham_rounded_book</item>
   </style>
   <style
     name="RecipientLabelText"
@@ -321,7 +321,7 @@
     <item name="android:textSize">16sp</item>
   </style>
   <style name="RecipientLabelText.Medium">
-    <item name="fontPath">@string/font.gotham_rounded.medium</item>
+    <item name="fontPath">@string/font_gotham_rounded_medium</item>
   </style>
   <style
     name="BaseRecipientExtraText"
@@ -334,7 +334,7 @@
 
   <style name="App.Text.Contact">
     <item name="android:textColor">#333</item>
-    <item name="fontPath">@string/font.gotham_rounded.book</item>
+    <item name="fontPath">@string/font_gotham_rounded_book</item>
   </style>
   <style name="App.Text.Contact.Name">
     <item name="android:ellipsize">end</item>
@@ -353,7 +353,7 @@
     <item name="android:textColor">@color/search_view_text</item>
     <item name="android:textColorHint">@color/search_view_hint</item>
     <item name="android:textSize">16sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.medium</item>
+    <item name="fontPath">@string/font_gotham_rounded_medium</item>
   </style>
   <style name="App.Widget.SearchView"/>
   <style name="App.Widget.SearchViewQuery">
@@ -370,8 +370,8 @@
   <style name="ListItem">
     <item name="android:background">?attr/selectableItemBackground</item>
     <item name="android:layout_width">match_parent</item>
-    <item name="android:paddingEnd">@dimen/space.horizontal.normal</item>
-    <item name="android:paddingStart">@dimen/space.horizontal.normal</item>
+    <item name="android:paddingEnd">@dimen/space_horizontal_normal</item>
+    <item name="android:paddingStart">@dimen/space_horizontal_normal</item>
   </style>
   <style name="ListItem.Normal">
     <item name="android:layout_height">@dimen/list.item.height.normal</item>
@@ -391,14 +391,14 @@
     <item name="android:paddingStart">27dp</item>
     <item name="android:paddingTop">6dp</item>
     <item name="android:textSize">12sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.book</item>
+    <item name="fontPath">@string/font_gotham_rounded_book</item>
   </style>
   <style name="BaseMenuItem.Normal">
     <item name="android:paddingBottom">8dp</item>
     <item name="android:paddingStart">27dp</item>
     <item name="android:paddingTop">8dp</item>
     <item name="android:textSize">15sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.book</item>
+    <item name="fontPath">@string/font_gotham_rounded_book</item>
   </style>
   <style name="BaseMenuItem.Large">
     <item name="android:drawablePadding">10dp</item>
@@ -407,7 +407,7 @@
     <item name="android:paddingTop">16dp</item>
     <item name="android:textAllCaps">true</item>
     <item name="android:textSize">15sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.medium</item>
+    <item name="fontPath">@string/font_gotham_rounded_medium</item>
   </style>
   <style name="Menu">
     <item name="android:background">@color/background_menu</item>
@@ -436,13 +436,13 @@
     <item name="android:gravity">center</item>
     <item name="android:textColor">@color/white</item>
     <item name="android:textSize">20sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.medium</item>
+    <item name="fontPath">@string/font_gotham_rounded_medium</item>
   </style>
   <style name="PinConfirmationDescription">
     <item name="android:gravity">center</item>
     <item name="android:textColor">#CCC</item>
     <item name="android:textSize">15sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.book</item>
+    <item name="fontPath">@string/font_gotham_rounded_book</item>
   </style>
   <!-- Accounts screen styles -->
   <style
@@ -455,7 +455,7 @@
     name="BaseListItemAccountAlias"
     parent="ListItemAccountText">
     <item name="android:textSize">12sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.light</item>
+    <item name="fontPath">@string/font_gotham_rounded_light</item>
   </style>
   <style
     name="ListItemAccountAlias"
@@ -466,18 +466,18 @@
     <item name="android:ellipsize">end</item>
     <item name="android:singleLine">true</item>
     <item name="android:textSize">16sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.book</item>
+    <item name="fontPath">@string/font_gotham_rounded_book</item>
   </style>
   <!-- Recent transactions screen styles -->
   <style name="BaseListItemGroupTitle">
     <item name="android:gravity">center_vertical</item>
     <item name="android:layout_height">35dp</item>
-    <item name="android:paddingEnd">@dimen/space.horizontal.normal</item>
-    <item name="android:paddingStart">@dimen/space.horizontal.normal</item>
+    <item name="android:paddingEnd">@dimen/space_horizontal_normal</item>
+    <item name="android:paddingStart">@dimen/space_horizontal_normal</item>
     <item name="android:textAllCaps">true</item>
     <item name="android:textColor">#666</item>
     <item name="android:textSize">10sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.medium</item>
+    <item name="fontPath">@string/font_gotham_rounded_medium</item>
   </style>
   <style
     name="ListItemGroupTitle"
@@ -488,7 +488,7 @@
   <style name="ListItemTransactionText">
     <item name="android:ellipsize">end</item>
     <item name="android:textColor">@color/black</item>
-    <item name="fontPath">@string/font.gotham_rounded.book</item>
+    <item name="fontPath">@string/font_gotham_rounded_book</item>
   </style>
   <style
     name="ListItemTransactionName"
@@ -516,7 +516,7 @@
     name="BaseListItemInstructionIndex"
     parent="ListItemInstructionText">
     <item name="android:textSize">12sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.light</item>
+    <item name="fontPath">@string/font_gotham_rounded_light</item>
   </style>
   <style
     name="ListItemInstructionIndex"
@@ -526,7 +526,7 @@
     parent="ListItemInstructionText">
     <item name="android:lineSpacingExtra">2sp</item>
     <item name="android:textSize">16sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.book</item>
+    <item name="fontPath">@string/font_gotham_rounded_book</item>
   </style>
   <!-- Payments styles -->
   <style
@@ -551,7 +551,7 @@
     <item name="android:ellipsize">end</item>
     <item name="android:textColor">#666</item>
     <item name="android:textSize">16sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.book</item>
+    <item name="fontPath">@string/font_gotham_rounded_book</item>
   </style>
   <style name="NoResultsListItemQuery">
     <item name="android:gravity">center_vertical</item>
@@ -566,7 +566,7 @@
     parent="App.Text">
     <item name="android:textColor">#333</item>
     <item name="android:textSize">12sp</item>
-    <item name="fontPath">@string/font.gotham_rounded.light</item>
+    <item name="fontPath">@string/font_gotham_rounded_light</item>
   </style>
   <style
     name="ProductAliasText"

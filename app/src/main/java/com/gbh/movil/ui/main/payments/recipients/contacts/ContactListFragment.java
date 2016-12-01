@@ -5,8 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import com.gbh.movil.ui.main.list.HolderBinderFactory;
-import com.gbh.movil.ui.main.list.HolderCreatorFactory;
+import com.gbh.movil.data.util.BinderFactory;
+import com.gbh.movil.ui.main.list.ListItemHolderCreatorFactory;
 import com.gbh.movil.ui.main.payments.recipients.Contact;
 import com.gbh.movil.ui.main.payments.recipients.RecipientCandidateListFragment;
 
@@ -29,16 +29,16 @@ public class ContactListFragment extends RecipientCandidateListFragment<ContactL
 
   @NonNull
   @Override
-  protected HolderCreatorFactory.Builder createHolderCreatorFactoryBuilder() {
-    return new HolderCreatorFactory.Builder()
-      .addCreator(Contact.class, new ContactHolderCreator(this));
+  protected ListItemHolderCreatorFactory.Builder createHolderCreatorFactoryBuilder() {
+    return new ListItemHolderCreatorFactory.Builder()
+      .addCreator(Contact.class, new ContactListItemHolderCreator(this));
   }
 
   @NonNull
   @Override
-  protected HolderBinderFactory.Builder createHolderBinderFactoryBuilder() {
-    return new HolderBinderFactory.Builder()
-      .addBinder(Contact.class, ContactHolder.class, new ContactHolderBinder());
+  protected BinderFactory.Builder createHolderBinderFactoryBuilder() {
+    return new BinderFactory.Builder()
+      .addBinder(Contact.class, ContactListItemHolder.class, new ContactListItemHolderBinder());
   }
 
   @Override

@@ -28,7 +28,7 @@ class TransferToRequest {
     @NonNull BigDecimal amount, @NonNull String pin) {
     this.accountAlias = product.getAlias();
     this.accountNumber = product.getNumber();
-    this.accountType = product.getIdentifier().name();
+    this.accountType = product.getType().name();
     this.bank = product.getBank();
     this.currency = product.getCurrency();
     this.pin = pin;

@@ -12,14 +12,14 @@
     android:id="@+id/search_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/space.horizontal.normal"
-    android:layout_marginStart="@dimen/space.horizontal.normal"
+    android:layout_marginEnd="@dimen/space_horizontal_normal"
+    android:layout_marginStart="@dimen/space_horizontal_normal"
     app:hint="@string/add_recipient.search.hint"/>
   <android.support.design.widget.TabLayout
     android:id="@+id/tab_layout"
     style="@style/AppTabLayout"
-    android:layout_marginEnd="@dimen/space.horizontal.normal"
-    android:layout_marginStart="@dimen/space.horizontal.normal"/>
+    android:layout_marginEnd="@dimen/space_horizontal_normal"
+    android:layout_marginStart="@dimen/space_horizontal_normal"/>
   <include layout="@layout/reusable_divider"/>
   <android.support.v4.view.ViewPager
     android:id="@+id/view_pager"

@@ -14,7 +14,7 @@ import com.gbh.movil.domain.LoanBalance;
 import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.ProductCreator;
-import com.gbh.movil.domain.ProductIdentifier;
+import com.gbh.movil.domain.ProductType;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.Transaction;
 import com.gbh.movil.domain.api.ApiBridge;
@@ -78,7 +78,7 @@ class FakeApiBridge implements ApiBridge {
     balances = new HashMap<>();
     final Random random = new Random();
     final String[] currencies = new String[] { "DOP", "USD" };
-    final ProductIdentifier[] identifiers = ProductIdentifier.values();
+    final ProductType[] identifiers = ProductType.values();
     for (Bank bank : banks) {
       alias = Integer.toString((i + 1) * 1000);
       product = ProductCreator.create(identifiers[random.nextInt(identifiers.length)], alias,
