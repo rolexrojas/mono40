@@ -48,7 +48,7 @@ public final class ApiUtils {
                 return doOnFailure.call(result.getCode());
               } else {
                 // TODO: Create a generic exception for these cases.
-                return Observable.error(new Exception());
+                return Observable.error(new Exception(result.toString()));
               }
             }
           });

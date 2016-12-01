@@ -1,7 +1,5 @@
 package com.gbh.movil.ui.main.payments.transactions.contacts;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,7 +15,6 @@ import com.gbh.movil.R;
 import com.gbh.movil.Utils;
 import com.gbh.movil.data.Formatter;
 import com.gbh.movil.data.res.AssetProvider;
-import com.gbh.movil.domain.PhoneNumberRecipient;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.ui.SubFragment;
@@ -49,7 +46,7 @@ import butterknife.Unbinder;
 public class PhoneNumberTransactionCreationFragment
   extends SubFragment<TransactionCreationContainer> implements PhoneNumberTransactionCreationScreen,
   Spinner.OnItemSelectedListener, NumPad.OnDigitClickedListener, NumPad.OnDotClickedListener,
-  NumPad.OnDeleteClickedListener {
+  NumPad.OnDeleteClickedListener, PinConfirmationDialogFragment.OnDismissListener {
   /**
    * TODO
    */
@@ -230,6 +227,7 @@ public class PhoneNumberTransactionCreationFragment
   @Override
   public void clearAmount() {
     amount = ZERO;
+    mustShowDot = false;
     updateAmountText();
   }
 
@@ -238,17 +236,6 @@ public class PhoneNumberTransactionCreationFragment
     final Fragment fragment = getChildFragmentManager().findFragmentByTag(TAG_PIN_CONFIRMATION);
     if (Utils.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
       ((PinConfirmationDialogFragment) fragment).resolve(succeeded);
-    }
-    if (succeeded) {
-      final Activity activity = getActivity();
-      if (recipient instanceof PhoneNumberRecipient) {
-        final Intent intent = new Intent();
-        intent.putExtra("recipient", recipient);
-        activity.setResult(Activity.RESULT_OK, intent);
-      } else {
-        activity.setResult(Activity.RESULT_OK);
-      }
-      activity.finish();
     }
   }
 
@@ -305,6 +292,13 @@ public class PhoneNumberTransactionCreationFragment
     } else if (mustShowDot) {
       mustShowDot = false;
       updateAmountText();
+    }
+  }
+
+  @Override
+  public void onDismiss(boolean succeeded) {
+    if (succeeded) {
+      container.finish(true);
     }
   }
 }

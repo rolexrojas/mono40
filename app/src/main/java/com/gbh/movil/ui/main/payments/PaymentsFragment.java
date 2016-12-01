@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -55,7 +56,7 @@ import rx.Observable;
  */
 public class PaymentsFragment extends SubFragment<MainContainer>
   implements PaymentsScreen, Holder.OnClickListener,
-  RecipientAdditionConfirmationDialogFragment.OnSaveRecipientButtonClickedListener {
+  ConfirmationDialogFragment.OnSaveButtonClickedListener {
   /**
    * TODO
    */
@@ -71,6 +72,8 @@ public class PaymentsFragment extends SubFragment<MainContainer>
   private LoadIndicator loadIndicator;
   private LoadIndicator fullScreenLoadIndicator;
   private LoadIndicator currentLoadIndicator;
+
+  private Pair<Integer, Recipient> requestResult;
 
   @BindView(R.id.search_view)
   SearchView searchView;
@@ -155,6 +158,21 @@ public class PaymentsFragment extends SubFragment<MainContainer>
   }
 
   @Override
+  public void onResume() {
+    super.onResume();
+    if (Utils.isNotNull(requestResult)) {
+      final int code = requestResult.first;
+      final Recipient recipient = requestResult.second;
+      if (code == REQUEST_CODE_RECIPIENT_ADDITION) {
+        presenter.addRecipient(recipient);
+      } else if (code == REQUEST_CODE_TRANSACTION_CREATION) {
+        presenter.showTransactionConfirmation(recipient);
+      }
+      requestResult = null;
+    }
+  }
+
+  @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     // Inflates the menu of the fragment.
@@ -200,14 +218,14 @@ public class PaymentsFragment extends SubFragment<MainContainer>
       if (resultCode == Activity.RESULT_OK) {
         final Recipient recipient = AddRecipientActivity.deserializeResult(data);
         if (Utils.isNotNull(recipient)) {
-          presenter.addRecipient(recipient);
+          requestResult = Pair.create(requestCode, recipient);
         }
       }
     } else if (requestCode == REQUEST_CODE_TRANSACTION_CREATION) {
       if (resultCode == Activity.RESULT_OK) {
         final Recipient recipient = TransactionCreationActivity.deserializeResult(data);
         if (Utils.isNotNull(recipient)) {
-          presenter.showTransactionConfirmation(recipient);
+          requestResult = Pair.create(requestCode, recipient);
         }
       }
     }
@@ -269,8 +287,9 @@ public class PaymentsFragment extends SubFragment<MainContainer>
   }
 
   @Override
-  public void showRecipientAdditionConfirmationDialog(@NonNull Recipient recipient) {
-    RecipientAdditionConfirmationDialogFragment.newInstance(recipient)
+  public void showConfirmationDialog(@NonNull Recipient recipient, @NonNull String title,
+    @Nullable String message) {
+    ConfirmationDialogFragment.newInstance(recipient, title, message)
       .show(getChildFragmentManager(), null);
   }
 
@@ -314,7 +333,7 @@ public class PaymentsFragment extends SubFragment<MainContainer>
   }
 
   @Override
-  public void onSaveRecipientButtonClicked(@NonNull Recipient recipient, @Nullable String label) {
+  public void onSaveButtonClicked(@NonNull Recipient recipient, @Nullable String label) {
     presenter.updateRecipient(recipient, label);
   }
 }

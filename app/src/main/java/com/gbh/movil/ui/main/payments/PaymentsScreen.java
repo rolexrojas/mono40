@@ -1,6 +1,7 @@
 package com.gbh.movil.ui.main.payments;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.Recipient;
@@ -76,7 +77,8 @@ interface PaymentsScreen extends Screen {
    * @param recipient
    *   TODO
    */
-  void showRecipientAdditionConfirmationDialog(@NonNull Recipient recipient);
+  void showConfirmationDialog(@NonNull Recipient recipient, @NonNull String title,
+    @Nullable String message);
 
   /**
    * TODO

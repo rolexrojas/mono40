@@ -13,8 +13,6 @@ import android.util.TypedValue;
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
 
-import timber.log.Timber;
-
 /**
  * TODO
  *
@@ -103,7 +101,6 @@ public class AutoResizeablePrefixableTextView extends PrefixableTextView {
       final CharSequence text = getText();
       final int targetWidth = getWidth() - getCompoundPaddingLeft() - getCompoundPaddingRight();
       if (!TextUtils.isEmpty(text) && targetWidth > 0) {
-        Timber.d("targetWidth = %1$d", targetWidth);
         final CharSequence targetText;
         final TransformationMethod transformationMethod = getTransformationMethod();
         if (Utils.isNotNull(transformationMethod)) {
@@ -113,11 +110,8 @@ public class AutoResizeablePrefixableTextView extends PrefixableTextView {
         }
         final TextPaint paint = getPaint();
         final float textSize = paint.getTextSize();
-        Timber.d("textSize = %1$f", textSize);
         float targetTextSize = Math.min(textSize, maxTextSize);
-        Timber.d("targetTextSize = %1$f", targetTextSize);
         float textWidth = getTextWidth(targetText, paint, targetTextSize);
-        Timber.d("textWidth = %1$f", textWidth);
         if (textWidth > targetWidth && targetTextSize > minTextSize) {
           while (textWidth > targetWidth && targetTextSize > minTextSize) {
             targetTextSize = Math.max(targetTextSize - RATIO, minTextSize);
@@ -129,8 +123,6 @@ public class AutoResizeablePrefixableTextView extends PrefixableTextView {
             textWidth = getTextWidth(targetText, paint, targetTextSize);
           }
         }
-        Timber.d("targetTextSize = %1$f", targetTextSize);
-        Timber.d("textWidth = %1$f", textWidth);
         setTextSize(TypedValue.COMPLEX_UNIT_PX, targetTextSize);
       }
       mustAdjustText = false;

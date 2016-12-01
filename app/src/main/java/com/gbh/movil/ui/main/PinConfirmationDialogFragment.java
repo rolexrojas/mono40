@@ -3,11 +3,14 @@ package com.gbh.movil.ui.main;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +55,9 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
   private String actionDescription;
 
   private Callback callback;
+
+  private boolean succeeded = false;
+  private OnDismissListener onDismissListener;
 
   @BindInt(android.R.integer.config_shortAnimTime)
   int enterDuration;
@@ -124,7 +130,22 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
    *   TODO
    */
   public final void resolve(boolean succeeded) {
-    pinView.resolve(succeeded);
+    this.succeeded = succeeded;
+    this.pinView.resolve(this.succeeded);
+  }
+
+  @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+    final Fragment fragment = getParentFragment();
+    if (Utils.isNotNull(fragment) && fragment instanceof OnDismissListener) {
+      onDismissListener = (OnDismissListener) fragment;
+    } else {
+      final Activity activity = getActivity();
+      if (activity instanceof OnDismissListener) {
+        onDismissListener = (OnDismissListener) activity;
+      }
+    }
   }
 
   @Override
@@ -183,6 +204,14 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
   }
 
   @Override
+  public void onDismiss(DialogInterface dialog) {
+    super.onDismiss(dialog);
+    if (Utils.isNotNull(onDismissListener)) {
+      onDismissListener.onDismiss(this.succeeded);
+    }
+  }
+
+  @Override
   public void onDestroyView() {
     super.onDestroyView();
     // Removes the listener that gets notified every time a button of the num pad is clicked.
@@ -199,6 +228,12 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
     super.onDestroy();
     // Detaches the callback from the fragment.
     callback = null;
+  }
+
+  @Override
+  public void onDetach() {
+    super.onDetach();
+    onDismissListener = null;
   }
 
   @Override
@@ -261,5 +296,15 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
      *   TODO
      */
     void confirm(@NonNull String pin);
+  }
+
+  /**
+   * TODO
+   */
+  public interface OnDismissListener {
+    /**
+     * TODO
+     */
+    void onDismiss(boolean succeeded);
   }
 }

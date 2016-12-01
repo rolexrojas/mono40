@@ -11,5 +11,5 @@ public interface TransactionCreationContainer extends Container<TransactionCreat
   /**
    * TODO
    */
-  void finishSuccessfully();
+  void finish(boolean succeeded);
 }

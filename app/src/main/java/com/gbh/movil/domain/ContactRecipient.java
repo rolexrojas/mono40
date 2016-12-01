@@ -6,32 +6,21 @@ import android.support.annotation.Nullable;
 import com.gbh.movil.Utils;
 
 /**
- * {@link PhoneNumber Phone number} recipient representation.
+ * TODO
  *
  * @author hecvasro
  */
-public class PhoneNumberRecipient extends Recipient {
+public class ContactRecipient extends Recipient {
   private final PhoneNumber phoneNumber;
 
-  /**
-   * Constructs a new {@link PhoneNumber phone number} recipient.
-   */
-  public PhoneNumberRecipient(@NonNull PhoneNumber phoneNumber, @Nullable String label) {
-    super(RecipientType.PHONE_NUMBER, label);
+  public ContactRecipient(@NonNull PhoneNumber phoneNumber, @Nullable String label) {
+    super(RecipientType.CONTACT, label);
     this.phoneNumber = phoneNumber;
   }
 
-  /**
-   * Constructs a new {@link PhoneNumber Phone number} recipient.
-   */
-  public PhoneNumberRecipient(@NonNull PhoneNumber phoneNumber) {
-    super(RecipientType.PHONE_NUMBER);
+  public ContactRecipient(@NonNull PhoneNumber phoneNumber) {
+    super(RecipientType.CONTACT);
     this.phoneNumber = phoneNumber;
-  }
-
-  @NonNull
-  public final PhoneNumber getPhoneNumber() {
-    return phoneNumber;
   }
 
   @NonNull
@@ -43,9 +32,9 @@ public class PhoneNumberRecipient extends Recipient {
   @Override
   public boolean equals(Object object) {
     return super.equals(object) || (Utils.isNotNull(object)
-      && object instanceof PhoneNumberRecipient
-      && ((PhoneNumberRecipient) object).getType().equals(getType())
-      && ((PhoneNumberRecipient) object).phoneNumber.equals(phoneNumber));
+      && object instanceof ContactRecipient
+      && ((ContactRecipient) object).getType().equals(getType())
+      && ((ContactRecipient) object).phoneNumber.equals(phoneNumber));
   }
 
   @Override

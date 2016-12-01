@@ -159,6 +159,9 @@ public class TransactionCreationActivity extends ContainerActivity<TransactionCr
         case PHONE_NUMBER:
           fragment = PhoneNumberTransactionCreationFragment.newInstance();
           break;
+        case CONTACT:
+          fragment = PhoneNumberTransactionCreationFragment.newInstance();
+          break;
         default:
           throw new UnsupportedOperationException("Transaction type '" + type + "' not supported");
       }
@@ -213,7 +216,12 @@ public class TransactionCreationActivity extends ContainerActivity<TransactionCr
   }
 
   @Override
-  public void finishSuccessfully() {
-    setResult(RESULT_OK, serializeResult(recipient));
+  public void finish(boolean succeeded) {
+    if (succeeded) {
+      setResult(RESULT_OK, serializeResult(recipient));
+    } else {
+      setResult(RESULT_CANCELED);
+    }
+    finish();
   }
 }

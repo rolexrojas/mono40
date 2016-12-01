@@ -72,7 +72,7 @@ public final class RecipientManager implements RecipientProvider {
         @Override
         public Observable<Pair<Boolean, Recipient>> call(Boolean affiliated) {
           if (affiliated) {
-            return recipientRepo.save(new PhoneNumberRecipient(phoneNumber, label))
+            return recipientRepo.save(new ContactRecipient(phoneNumber, label))
               .map(new Func1<Recipient, Pair<Boolean, Recipient>>() {
                 @Override
                 public Pair<Boolean, Recipient> call(Recipient recipient) {

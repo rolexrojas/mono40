@@ -3,11 +3,13 @@ package com.gbh.movil.domain;
 import android.support.annotation.NonNull;
 
 import com.gbh.movil.domain.api.ApiBridge;
+import com.gbh.movil.domain.api.ApiCode;
 import com.gbh.movil.domain.api.ApiUtils;
 
 import java.math.BigDecimal;
 
 import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * TODO
@@ -37,6 +39,11 @@ public final class TransactionManager {
   public final Observable<Boolean> transferTo(@NonNull Product product,
     @NonNull Recipient recipient, @NonNull BigDecimal amount, @NonNull String pin) {
     return apiBridge.transferTo(product, recipient, amount, pin)
-      .compose(ApiUtils.<Boolean>handleApiResult(true));
+      .compose(ApiUtils.handleApiResult(true, new Func1<ApiCode, Observable<Boolean>>() {
+        @Override
+        public Observable<Boolean> call(ApiCode code) {
+          return Observable.just(false);
+        }
+      }));
   }
 }

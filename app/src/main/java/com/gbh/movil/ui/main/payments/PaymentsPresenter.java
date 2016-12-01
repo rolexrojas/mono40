@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
+import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.rx.RxUtils;
 import com.gbh.movil.data.SchedulerProvider;
@@ -35,6 +36,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
    */
   private static final long DEFAULT_IME_SPAN_QUERY = 300L; // 0.3 seconds.
 
+  private final StringHelper stringHelper;
   private final SchedulerProvider schedulerProvider;
   private final RecipientManager recipientManager;
 
@@ -51,8 +53,9 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
    */
   private Subscription searchSubscription = Subscriptions.unsubscribed();
 
-  PaymentsPresenter(@NonNull SchedulerProvider schedulerProvider,
-    @NonNull RecipientManager recipientManager) {
+  PaymentsPresenter(@NonNull StringHelper stringHelper,
+    @NonNull SchedulerProvider schedulerProvider, @NonNull RecipientManager recipientManager) {
+    this.stringHelper = stringHelper;
     this.schedulerProvider = schedulerProvider;
     this.recipientManager = recipientManager;
   }
@@ -154,7 +157,9 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   void addRecipient(@NonNull Recipient recipient) {
     assertScreen();
     screen.clearQuery();
-    screen.showRecipientAdditionConfirmationDialog(recipient);
+    screen.showConfirmationDialog(recipient,
+      stringHelper.recipientAdditionConfirmationTitle(recipient),
+      stringHelper.recipientAdditionConfirmationMessage(recipient));
   }
 
   /**
@@ -287,6 +292,8 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
    */
   void showTransactionConfirmation(@NonNull final Recipient recipient) {
     assertScreen();
-    // TODO
+    screen.clearQuery();
+    screen.showConfirmationDialog(recipient, stringHelper.transactionCreationConfirmationTitle(),
+      stringHelper.transactionCreationConfirmationMessage(recipient));
   }
 }
