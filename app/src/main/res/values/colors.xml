@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <color name="commerce_payment_option_container_default_background">#D8D8D8</color>
+  <color name="commerce_payment_option_container_selected_border_color">#809C188F</color>
+
+  <!-- TODO: Apply standards from these point downward -->
   <!-- App's colors -->
   <color name="app_text_widget_prefixable_text_view_content">#333333</color>
   <color name="app_text_widget_prefixable_text_view_prefix">#7F333333</color>
@@ -7,8 +11,6 @@
   <color name="app_widget_num_pad_tint">#333333</color>
 
   <!-- Screen's color -->
-
-  <!-- TODO: Apply standards from these point downward -->
   <color name="transaction_creation_text_widget_amount_value">@color/app_text_widget_prefixable_text_view_content</color>
   <color name="transaction_creation_text_widget_amount_prefix">@color/app_text_widget_prefixable_text_view_prefix</color>
 

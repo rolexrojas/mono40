@@ -1,6 +1,7 @@
 package com.gbh.movil.ui.main.payments.commerce;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,20 +20,10 @@ import com.gbh.movil.ui.main.MainContainer;
 import com.gbh.movil.ui.main.list.ListItemAdapter;
 import com.gbh.movil.ui.main.list.ListItemHolder;
 import com.gbh.movil.ui.main.list.ListItemHolderCreatorFactory;
-import com.karumi.dividers.Divider;
-import com.karumi.dividers.DividerBuilder;
-import com.karumi.dividers.DividerItemDecoration;
-import com.karumi.dividers.Layer;
-import com.karumi.dividers.LayersBuilder;
-import com.karumi.dividers.selector.AllGroupSelector;
-import com.karumi.dividers.selector.AllItemsSelector;
-import com.karumi.dividers.selector.HeaderSelector;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 import javax.inject.Inject;
 
+import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -43,7 +34,8 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 public class CommercePaymentsFragment extends SubFragment<MainContainer>
-  implements CommercePaymentsScreen, ListItemHolder.OnClickListener {
+  implements CommercePaymentsScreen, ListItemHolder.OnClickListener,
+  SelectedItemDecoration.Provider {
   private Unbinder unbinder;
 
   private ListItemAdapter adapter;
@@ -103,12 +95,17 @@ public class CommercePaymentsFragment extends SubFragment<MainContainer>
     recyclerView.setHasFixedSize(true);
     recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL,
       false));
-//    final Divider divider = DividerBuilder.get()
-//      .with(ContextCompat.getDrawable(context, R.drawable.divider_space))
-//      .build();
-//    final Layer layer = new Layer(new AllItemsSelector(), divider);
-//    final RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(layer);
-//    recyclerView.addItemDecoration(itemDecoration);
+    final Resources resources = getResources();
+    recyclerView.addItemDecoration(new SpaceDividerItemDecoration(resources.getDimensionPixelSize(
+      R.dimen.commerce_payment_option_container_default_margin)));
+    final int borderWidth = resources.getDimensionPixelOffset(
+      R.dimen.commerce_payment_option_container_selected_border_width);
+    final int borderColor = ContextCompat.getColor(context,
+      R.color.commerce_payment_option_container_selected_border_color);
+    final int borderRadius = resources.getDimensionPixelOffset(
+      R.dimen.commerce_payment_option_container_default_border_radius);
+    recyclerView.addItemDecoration(new SelectedItemDecoration(this, borderWidth, borderColor,
+      borderRadius));
     // Attaches the screen to the presenter.
     presenter.attachScreen(this);
   }
@@ -151,5 +148,11 @@ public class CommercePaymentsFragment extends SubFragment<MainContainer>
   @Override
   public void onClick(int position) {
     // TODO
+  }
+
+  @Override
+  public int getSelectedItemPosition() {
+    // TODO
+    return 0;
   }
 }

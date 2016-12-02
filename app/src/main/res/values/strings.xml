@@ -1,4 +1,5 @@
 <resources>
+  <!-- TODO: Apply standards from these point downward -->
   <!-- General strings -->
   <string name="bank_logo">Logo</string>
   <string name="font_gotham_rounded_bold">fonts/GothamRounded/GothamRounded-Bold.otf</string>
@@ -21,8 +22,6 @@
   <!-- Screen's strings -->
   <string name="screen_payments_commerce_title">Comprar</string>
   <string name="screen_products_text_widget_amount_value_font">@string/font_gotham_rounded_medium</string>
-
-  <!-- TODO: Apply standards from these point downward -->
   <string name="transaction_creation.text.widget.amount.value.font">@string/font_gotham_rounded_light</string>
   <string name="transaction_creation.text.widget.amount.currency.font">@string/font_gotham_rounded_light</string>
 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:shape="rectangle">
+  <corners android:radius="@dimen/commerce_payment_option_container_default_border_radius"/>
+  <solid android:color="@color/commerce_payment_option_container_default_background"/>
+</shape>
