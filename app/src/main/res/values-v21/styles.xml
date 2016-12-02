@@ -4,12 +4,12 @@
   <style
     name="App.Widget.CommercePaymentOption.ProductNumber"
     parent="Base.Widget.CommercePaymentOption.ProductNumber">
-    <item name="android:letterSpacing">@dimen/commerce_payment_option_product_number_text_letter_spacing</item>
+    <item name="android:letterSpacing">@dimen/commerce_payment_option_product_number_default_text_letter_spacing</item>
   </style>
   <style
     name="App.Widget.CommercePaymentOption.ProductOwnerName"
     parent="Base.Widget.CommercePaymentOption.ProductOwnerName">
-    <item name="android:letterSpacing">@dimen/commerce_payment_option_product_owner_name_text_letter_spacing</item>
+    <item name="android:letterSpacing">@dimen/commerce_payment_option_product_owner_name_default_text_letter_spacing</item>
   </style>
 
   <!-- TODO: Apply standards from these point downward -->

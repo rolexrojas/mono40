@@ -9,15 +9,15 @@
     <item name="android:textColor">@color/commerce_payment_option_text_default</item>
   </style>
   <style name="Base.Text.CommercePaymentOption.ProductIdentifier">
-    <item name="android:textSize">@dimen/commerce_payment_option_product_identifier_text_size</item>
+    <item name="android:textSize">@dimen/commerce_payment_option_product_identifier_default_text_size</item>
     <item name="fontPath">@string/commerce_payment_option_product_identifier_text_font</item>
   </style>
   <style name="Base.Text.CommercePaymentOption.ProductNumber">
-    <item name="android:textSize">@dimen/commerce_payment_option_product_number_text_size</item>
+    <item name="android:textSize">@dimen/commerce_payment_option_product_number_default_text_size</item>
     <item name="fontPath">@string/commerce_payment_option_product_number_text_font</item>
   </style>
   <style name="Base.Text.CommercePaymentOption.ProductOwnerName">
-    <item name="android:textSize">@dimen/commerce_payment_option_product_owner_name_text_size</item>
+    <item name="android:textSize">@dimen/commerce_payment_option_product_owner_name_default_text_size</item>
     <item name="fontPath">@string/commerce_payment_option_product_owner_name_text_font</item>
   </style>
 
@@ -34,10 +34,10 @@
   </style>
   <style name="Base.Widget.CommercePaymentOption.ProductNumber">
     <item name="android:textAppearance">@style/App.Text.CommercePaymentOption.ProductNumber</item>
-    <item name="android:shadowRadius">@dimen/commerce_payment_option_product_number_text_shadow_radius</item>
-    <item name="android:shadowDx">@dimen/commerce_payment_option_product_number_text_shadow_dx</item>
-    <item name="android:shadowDy">@dimen/commerce_payment_option_product_number_text_shadow_dy</item>
-    <item name="android:shadowColor">@color/commerce_payment_option_product_number_text_shadow</item>
+    <item name="android:shadowRadius">@dimen/commerce_payment_option_product_number_default_text_shadow_radius</item>
+    <item name="android:shadowDx">@dimen/commerce_payment_option_product_number_default_text_shadow_dx</item>
+    <item name="android:shadowDy">@dimen/commerce_payment_option_product_number_default_text_shadow_dy</item>
+    <item name="android:shadowColor">@color/commerce_payment_option_product_number_default_text_shadow</item>
   </style>
   <style name="Base.Widget.CommercePaymentOption.ProductOwnerName">
     <item name="android:textAppearance">@style/App.Text.CommercePaymentOption.ProductOwnerName</item>
