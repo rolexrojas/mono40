@@ -212,6 +212,7 @@ public class ProductsFragment extends SubFragment<MainContainer> implements Prod
   @Override
   public void add(@NonNull Object item) {
     adapter.add(item);
+    adapter.notifyItemInserted(adapter.getItemCount());
   }
 
   @Override

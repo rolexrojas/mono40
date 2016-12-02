@@ -277,6 +277,7 @@ public class PaymentsFragment extends SubFragment<MainContainer>
   @Override
   public void add(@NonNull Object item) {
     adapter.add(item);
+    adapter.notifyItemInserted(adapter.getItemCount());
   }
 
   @Override

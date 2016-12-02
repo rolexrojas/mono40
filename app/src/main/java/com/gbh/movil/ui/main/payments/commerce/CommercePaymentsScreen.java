@@ -2,6 +2,7 @@ package com.gbh.movil.ui.main.payments.commerce;
 
 import android.support.annotation.NonNull;
 
+import com.gbh.movil.domain.Product;
 import com.gbh.movil.ui.Screen;
 
 /**
@@ -13,13 +14,21 @@ interface CommercePaymentsScreen extends Screen {
   /**
    * TODO
    */
-  void clearItemList();
+  void clearPaymentOptions();
 
   /**
    * TODO
    *
-   * @param item
+   * @param product
    *   TODO
    */
-  void addItemToList(@NonNull Object item);
+  void addPaymentOption(@NonNull Product product);
+
+  /**
+   * TODO
+   *
+   * @param product
+   *   TODO
+   */
+  void markAsSelected(@NonNull Product product);
 }

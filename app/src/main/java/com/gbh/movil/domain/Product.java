@@ -86,9 +86,21 @@ public abstract class Product {
    *
    * @return True if it can be used as a payment option, false otherwise.
    */
-  public static boolean checkPaymentOption(@NonNull Product product) {
+  public static boolean isPaymentOption(@NonNull Product product) {
     return (product.category.equals(ProductCategory.ACCOUNT)
       || product.category.equals(ProductCategory.CREDIT_CARD)) && product.paymentOption;
+  }
+
+  /**
+   * TODO
+   *
+   * @param product
+   *   TODO
+   *
+   * @return TODO
+   */
+  public static boolean isDefaultPaymentOption(@NonNull Product product) {
+    return isPaymentOption(product);
   }
 
   /**

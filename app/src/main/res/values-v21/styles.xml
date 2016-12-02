@@ -11,6 +11,11 @@
     parent="Base.Widget.CommercePaymentOption.ProductOwnerName">
     <item name="android:letterSpacing">@dimen/commerce_payment_option_product_owner_name_default_text_letter_spacing</item>
   </style>
+  <style
+    name="App.Widget.CommercePaymentOption.Ready"
+    parent="Base.Widget.CommercePaymentOption.Ready">
+    <item name="android:letterSpacing">@dimen/commerce_payment_option_ready_text_letter_spacing</item>
+  </style>
 
   <!-- TODO: Apply standards from these point downward -->
   <style

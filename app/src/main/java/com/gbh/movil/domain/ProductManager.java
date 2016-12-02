@@ -122,7 +122,7 @@ public final class ProductManager implements ProductProvider {
       .filter(new Func1<Product, Boolean>() {
         @Override
         public Boolean call(Product product) {
-          return Product.checkPaymentOption(product);
+          return Product.isPaymentOption(product);
         }
       })
       // TODO: Change order in a way that the primary payment option is the first one.

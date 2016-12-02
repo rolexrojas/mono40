@@ -20,6 +20,10 @@
     <item name="android:textSize">@dimen/commerce_payment_option_product_owner_name_default_text_size</item>
     <item name="fontPath">@string/commerce_payment_option_product_owner_name_text_font</item>
   </style>
+  <style name="Base.Text.CommercePaymentOption.Ready">
+    <item name="android:textSize">@dimen/commerce_payment_option_ready_text_size</item>
+    <item name="fontPath">@string/commerce_payment_option_ready_text_font</item>
+  </style>
 
   <style
     name="Base.Widget"
@@ -42,6 +46,12 @@
   <style name="Base.Widget.CommercePaymentOption.ProductOwnerName">
     <item name="android:textAppearance">@style/App.Text.CommercePaymentOption.ProductOwnerName</item>
   </style>
+  <style name="Base.Widget.CommercePaymentOption.Ready">
+    <item name="android:gravity">center_horizontal</item>
+    <item name="android:text">@string/commerce_payment_option_ready_text_value</item>
+    <item name="android:textAllCaps">true</item>
+    <item name="android:textAppearance">@style/App.Text.CommercePaymentOption.Ready</item>
+  </style>
 
   <style
     name="App"
@@ -63,6 +73,9 @@
   <style
     name="App.Text.CommercePaymentOption.ProductOwnerName"
     parent="Base.Text.CommercePaymentOption.ProductOwnerName"/>
+  <style
+    name="App.Text.CommercePaymentOption.Ready"
+    parent="Base.Text.CommercePaymentOption.Ready"/>
 
   <style
     name="App.Widget"
@@ -80,6 +93,9 @@
   <style
     name="App.Widget.CommercePaymentOption.ProductOwnerName"
     parent="Base.Widget.CommercePaymentOption.ProductOwnerName"/>
+  <style
+    name="App.Widget.CommercePaymentOption.Ready"
+    parent="Base.Widget.CommercePaymentOption.Ready"/>
 
   <!-- TODO: Apply standards from these point downward -->
   <style name="Base.Text.Label">

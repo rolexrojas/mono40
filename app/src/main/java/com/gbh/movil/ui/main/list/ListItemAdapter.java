@@ -50,11 +50,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemHolder> {
    * TODO
    */
   public void clear() {
-    final int count = getItemCount();
-    if (count > 0) {
-      items.clear();
-      notifyItemRangeRemoved(0, count);
-    }
+    items.clear();
   }
 
   /**
@@ -90,7 +86,20 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemHolder> {
   public void add(@NonNull Object item) {
     if (!contains(item)) {
       items.add(item);
-      notifyItemInserted(getItemCount());
+    }
+  }
+
+  /**
+   * TODO
+   *
+   * @param index
+   *   TODO
+   * @param item
+   *   TODO
+   */
+  public void add(int index, @NonNull Object item) {
+    if (!contains(item)) {
+      items.add(index, item);
     }
   }
 
@@ -104,7 +113,6 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemHolder> {
    */
   public void set(int position, @NonNull Object item) {
     items.set(position, item);
-    notifyItemChanged(position);
   }
 
   /**
@@ -118,6 +126,28 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemHolder> {
   @NonNull
   public Object get(int position) {
     return items.get(position);
+  }
+
+  /**
+   * TODO
+   *
+   * @param position
+   *   TODO
+   */
+  public void remove(int position) {
+    items.remove(position);
+  }
+
+  /**
+   * TODO
+   *
+   * @param item
+   *   TODO
+   */
+  public void remove(@NonNull Object item) {
+    if (items.contains(item)) {
+      items.remove(item);
+    }
   }
 
   @Override

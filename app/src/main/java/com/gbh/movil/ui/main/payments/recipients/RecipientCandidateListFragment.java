@@ -159,6 +159,7 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
   @Override
   public void add(@NonNull Object item) {
     adapter.add(item);
+    adapter.notifyItemInserted(adapter.getItemCount());
   }
 
   @Nullable

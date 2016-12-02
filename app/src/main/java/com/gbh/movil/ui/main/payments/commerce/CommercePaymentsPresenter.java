@@ -2,6 +2,7 @@ package com.gbh.movil.ui.main.payments.commerce;
 
 import android.support.annotation.NonNull;
 
+import com.gbh.movil.Utils;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.ProductManager;
@@ -29,6 +30,11 @@ class CommercePaymentsPresenter extends Presenter<CommercePaymentsScreen> {
   private final SchedulerProvider schedulerProvider;
   private final ProductManager productManager;
 
+  /**
+   * TODO
+   */
+  private Product selectedProduct;
+
   CommercePaymentsPresenter(@NonNull SchedulerProvider schedulerProvider,
     @NonNull ProductManager productManager) {
     this.schedulerProvider = schedulerProvider;
@@ -46,14 +52,17 @@ class CommercePaymentsPresenter extends Presenter<CommercePaymentsScreen> {
       .doOnNext(new Action1<List<Product>>() {
         @Override
         public void call(List<Product> products) {
-          screen.clearItemList();
+          screen.clearPaymentOptions();
         }
       })
       .compose(RxUtils.<Product>fromCollection())
       .subscribe(new Action1<Product>() {
         @Override
         public void call(Product product) {
-          screen.addItemToList(product);
+          screen.addPaymentOption(product);
+          if (Utils.isNull(selectedProduct) && Product.isDefaultPaymentOption(product)) {
+            selectedProduct = product;
+          }
         }
       }, new Action1<Throwable>() {
         @Override
@@ -70,5 +79,31 @@ class CommercePaymentsPresenter extends Presenter<CommercePaymentsScreen> {
   void stop() {
     assertScreen();
     RxUtils.unsubscribe(subscription);
+  }
+
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  Product getSelectedPaymentOption() {
+    return selectedProduct;
+  }
+
+  /**
+   * TODO
+   *
+   * @param product
+   *   TODO
+   */
+  void onPaymentOptionSelected(@NonNull Product product) {
+    assertScreen();
+    if (selectedProduct.equals(product)) {
+      // TODO
+    } else {
+      selectedProduct = product;
+      screen.markAsSelected(selectedProduct);
+    }
   }
 }

@@ -23,6 +23,7 @@ import com.gbh.movil.ui.main.list.ListItemHolderCreatorFactory;
 
 import javax.inject.Inject;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -43,6 +44,9 @@ public class CommercePaymentsFragment extends SubFragment<MainContainer>
   PaymentOptionBinder paymentOptionBinder;
   @Inject
   CommercePaymentsPresenter presenter;
+
+  @BindString(R.string.commerce_payment_option_ready_text_value)
+  String readyMessage;
 
   @BindView(R.id.recycler_view)
   RecyclerView recyclerView;
@@ -85,9 +89,11 @@ public class CommercePaymentsFragment extends SubFragment<MainContainer>
     final ListItemHolderCreatorFactory holderCreatorFactory = new ListItemHolderCreatorFactory
       .Builder()
       .addCreator(Product.class, new PaymentOptionListItemHolderCreator(this))
+      .addCreator(String.class, new TextListItemHolderCreator())
       .build();
     final BinderFactory holderBinderFactory = new BinderFactory.Builder()
       .addBinder(Product.class, PaymentOptionHolder.class, paymentOptionBinder)
+      .addBinder(String.class, TextListItemHolder.class, new TextListItemBinder())
       .build();
     adapter = new ListItemAdapter(holderCreatorFactory, holderBinderFactory);
     recyclerView.setAdapter(adapter);
@@ -135,23 +141,43 @@ public class CommercePaymentsFragment extends SubFragment<MainContainer>
   }
 
   @Override
-  public void clearItemList() {
-    adapter.clear();
+  public void clearPaymentOptions() {
+    final int count = adapter.getItemCount();
+    if (count > 0) {
+      adapter.clear();
+      adapter.notifyItemRangeRemoved(0, count);
+    }
   }
 
   @Override
-  public void addItemToList(@NonNull Object item) {
-    adapter.add(item);
+  public void addPaymentOption(@NonNull Product product) {
+    adapter.add(product);
+    adapter.notifyItemInserted(adapter.getItemCount());
+  }
+
+  @Override
+  public void markAsSelected(@NonNull Product product) {
+    int index = adapter.indexOf(readyMessage);
+    if (index >= 0) {
+      adapter.remove(index);
+      adapter.notifyItemRemoved(index);
+    }
+    index = adapter.indexOf(product);
+    adapter.add(index + 1, readyMessage);
+    adapter.notifyItemChanged(index);
+    adapter.notifyItemInserted(index + 1);
   }
 
   @Override
   public void onClick(int position) {
-    // TODO
+    final Object item = adapter.get(position);
+    if (item instanceof Product) {
+      presenter.onPaymentOptionSelected((Product) item);
+    }
   }
 
   @Override
   public int getSelectedItemPosition() {
-    // TODO
-    return 0;
+    return adapter.indexOf(presenter.getSelectedPaymentOption());
   }
 }
