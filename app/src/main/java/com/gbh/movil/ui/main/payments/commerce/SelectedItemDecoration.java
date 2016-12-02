@@ -9,6 +9,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.gbh.movil.Utils;
+
 /**
  * TODO
  *
@@ -56,10 +58,10 @@ class SelectedItemDecoration extends RecyclerView.ItemDecoration {
   @Override
   public void onDrawOver(Canvas canvas, RecyclerView parent, RecyclerView.State state) {
     super.onDrawOver(canvas, parent, state);
-    final int count = parent.getChildCount();
+    final RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
     final int selectedPosition = provider.getSelectedItemPosition();
-    if (count > 0 && (selectedPosition >= 0 && selectedPosition < count)) {
-      final View child = parent.getChildAt(selectedPosition);
+    final View child = layoutManager.findViewByPosition(selectedPosition);
+    if (Utils.isNotNull(child)) {
       final RectF childRect = new RectF(child.getLeft(), child.getTop(), child.getRight(),
         child.getBottom());
       canvas.drawRoundRect(childRect, borderRadius, borderRadius, borderPaint);
