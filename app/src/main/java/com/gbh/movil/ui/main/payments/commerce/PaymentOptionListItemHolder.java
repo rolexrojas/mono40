@@ -36,7 +36,7 @@ class PaymentOptionListItemHolder extends ListItemHolder implements PaymentOptio
   /**
    * TODO
    */
-  @BindView(R.id.user_name)
+  @BindView(R.id.product_owner_name)
   TextView userNameTextView;
 
   PaymentOptionListItemHolder(@NonNull View rootView, @NonNull OnClickListener onClickListener) {

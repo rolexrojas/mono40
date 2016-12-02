@@ -100,7 +100,7 @@ public class CommercePaymentsFragment extends SubFragment<MainContainer>
     final int borderWidth = resources.getDimensionPixelOffset(
       R.dimen.commerce_payment_option_container_selected_border_width);
     final int borderColor = ContextCompat.getColor(context,
-      R.color.commerce_payment_option_container_selected_border_color);
+      R.color.commerce_payment_option_container_selected_border);
     final int borderRadius = resources.getDimensionPixelOffset(
       R.dimen.commerce_payment_option_container_default_border_radius);
     recyclerView.addItemDecoration(new SelectedItemDecoration(this, borderWidth, borderColor,

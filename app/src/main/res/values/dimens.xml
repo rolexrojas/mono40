@@ -5,6 +5,14 @@
   <dimen name="commerce_payment_option_container_default_margin">20dp</dimen>
   <dimen name="commerce_payment_option_container_default_padding">20dp</dimen>
   <dimen name="commerce_payment_option_container_selected_border_width">2dp</dimen>
+  <dimen name="commerce_payment_option_product_identifier_text_size">16sp</dimen>
+  <item name="commerce_payment_option_product_number_text_shadow_dx" type="dimen" format="float">0.0</item>
+  <item name="commerce_payment_option_product_number_text_shadow_dy" type="dimen" format="float">4.0</item>
+  <item name="commerce_payment_option_product_number_text_shadow_radius" type="dimen" format="float">10.0</item>
+  <dimen name="commerce_payment_option_product_number_text_size">18sp</dimen>
+  <item name="commerce_payment_option_product_number_text_letter_spacing" type="dimen" format="float">0.17</item> <!-- letter_spacing_em = letter_spacing_sp / text_size_sp -->
+  <dimen name="commerce_payment_option_product_owner_name_text_size">14sp</dimen>
+  <item name="commerce_payment_option_product_owner_name_text_letter_spacing" type="dimen" format="float">0.07</item> <!-- letter_spacing_em = letter_spacing_sp / text_size_sp -->
 
   <!-- TODO: Apply standards from these point downward -->
 

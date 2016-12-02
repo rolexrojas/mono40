@@ -1,4 +1,8 @@
 <resources>
+  <string name="commerce_payment_option_product_identifier_text_font">@string/font_gotham_rounded_book</string>
+  <string name="commerce_payment_option_product_number_text_font">@string/font_roboto_medium</string>
+  <string name="commerce_payment_option_product_owner_name_text_font">@string/font_roboto_regular</string>
+
   <!-- TODO: Apply standards from these point downward -->
   <!-- General strings -->
   <string name="bank_logo">Logo</string>
