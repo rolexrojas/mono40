@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.ui.Screen;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * TODO
@@ -19,7 +19,7 @@ interface PhoneNumberTransactionCreationScreen extends Screen {
    * @param paymentOptions
    *   TODO
    */
-  void setPaymentOptions(@NonNull Set<Product> paymentOptions);
+  void setPaymentOptions(@NonNull List<Product> paymentOptions);
 
   /**
    * TODO

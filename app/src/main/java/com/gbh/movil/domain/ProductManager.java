@@ -8,7 +8,6 @@ import com.gbh.movil.rx.RxUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import rx.Observable;
 import rx.functions.Action1;
@@ -41,14 +40,14 @@ public final class ProductManager implements ProductProvider {
    * @return TODO
    */
   @NonNull
-  private Observable<Set<Product>> syncAccounts(@NonNull Set<Product> products,
+  private Observable<List<Product>> syncAccounts(@NonNull List<Product> products,
     final boolean mustEmitAdditionAndRemovalNotifications) {
     return productRepo.getAll()
-      .zipWith(Observable.just(products), new Func2<Set<Product>, Set<Product>,
+      .zipWith(Observable.just(products), new Func2<List<Product>, List<Product>,
         List<Pair<Action, Product>>>() {
         @Override
-        public List<Pair<Action, Product>> call(Set<Product> localProducts,
-          Set<Product> remoteProducts) {
+        public List<Pair<Action, Product>> call(List<Product> localProducts,
+          List<Product> remoteProducts) {
           final List<Pair<Action, Product>> actions = new ArrayList<>();
           for (Product product : remoteProducts) {
             if (!localProducts.contains(product)) {
@@ -95,7 +94,7 @@ public final class ProductManager implements ProductProvider {
           return observable;
         }
       })
-      .compose(RxUtils.<Product>toSet());
+      .toList();
   }
 
   /**
@@ -107,7 +106,7 @@ public final class ProductManager implements ProductProvider {
    * @return TODO
    */
   @NonNull
-  final Observable<Set<Product>> syncAccounts(@NonNull Set<Product> products) {
+  final Observable<List<Product>> syncAccounts(@NonNull List<Product> products) {
     return syncAccounts(products, true);
   }
 
@@ -117,7 +116,7 @@ public final class ProductManager implements ProductProvider {
    * @return TODO
    */
   @NonNull
-  public final Observable<Set<Product>> getAllPaymentOptions() {
+  public final Observable<List<Product>> getAllPaymentOptions() {
     return getAll()
       .compose(RxUtils.<Product>fromCollection())
       .filter(new Func1<Product, Boolean>() {
@@ -126,12 +125,13 @@ public final class ProductManager implements ProductProvider {
           return Product.checkPaymentOption(product);
         }
       })
-      .compose(RxUtils.<Product>toSet());
+      // TODO: Change order in a way that the primary payment option is the first one.
+      .toList();
   }
 
   @NonNull
   @Override
-  public Observable<Set<Product>> getAll() {
+  public Observable<List<Product>> getAll() {
     return productRepo.getAll();
   }
 

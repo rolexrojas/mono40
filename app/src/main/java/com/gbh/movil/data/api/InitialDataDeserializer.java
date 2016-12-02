@@ -10,8 +10,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * TODO
@@ -56,7 +56,7 @@ class InitialDataDeserializer implements JsonDeserializer<InitialData> {
     if (!loansJsonElement.isJsonArray()) {
       throw new JsonParseException(PROPERTY_CREDIT_CARDS + " must be an array");
     }
-    final Set<Product> products = new HashSet<>();
+    final List<Product> products = new ArrayList<>();
     final JsonArray accountsArray = accountsJsonElement.getAsJsonArray();
     for (int i = 0; i < accountsArray.size(); i++) {
       products.add((Product) context.deserialize(accountsArray.get(i).getAsJsonObject(),

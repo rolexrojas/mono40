@@ -8,7 +8,7 @@ import com.gbh.movil.domain.ProductManager;
 import com.gbh.movil.rx.RxUtils;
 import com.gbh.movil.ui.Presenter;
 
-import java.util.Set;
+import java.util.List;
 
 import rx.Subscription;
 import rx.functions.Action1;
@@ -43,9 +43,9 @@ class CommercePaymentsPresenter extends Presenter<CommercePaymentsScreen> {
     subscription = productManager.getAllPaymentOptions()
       .subscribeOn(schedulerProvider.io())
       .observeOn(schedulerProvider.ui())
-      .doOnNext(new Action1<Set<Product>>() {
+      .doOnNext(new Action1<List<Product>>() {
         @Override
-        public void call(Set<Product> products) {
+        public void call(List<Product> products) {
           screen.clearItemList();
         }
       })

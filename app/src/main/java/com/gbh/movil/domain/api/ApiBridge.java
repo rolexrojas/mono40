@@ -12,7 +12,6 @@ import com.gbh.movil.domain.Transaction;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 
 import rx.Observable;
 
@@ -31,7 +30,7 @@ public interface ApiBridge {
    * @return An {@link Observable observable} that emits all the associated {@link Bank banks}.
    */
   @NonNull
-  Observable<ApiResult<Set<Bank>>> banks();
+  Observable<ApiResult<List<Bank>>> banks();
 
   /**
    * TODO
@@ -81,7 +80,7 @@ public interface ApiBridge {
    * recipients}.
    */
   @NonNull
-  Observable<ApiResult<Set<Recipient>>> recipients();
+  Observable<ApiResult<List<Recipient>>> recipients();
 
   /**
    * TODO

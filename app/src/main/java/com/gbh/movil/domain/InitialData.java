@@ -2,8 +2,8 @@ package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * TODO
@@ -11,25 +11,25 @@ import java.util.Set;
  * @author hecvasro
  */
 public final class InitialData {
-  private final Set<Product> products;
-  private final Set<Recipient> recipients;
+  private final List<Product> products;
+  private final List<Recipient> recipients;
 
-  public InitialData(@NonNull Set<Product> products, @NonNull Set<Recipient> recipients) {
+  public InitialData(@NonNull List<Product> products, @NonNull List<Recipient> recipients) {
     this.products = products;
     this.recipients = recipients;
   }
 
-  public InitialData(@NonNull Set<Product> products) {
-    this(products, new HashSet<Recipient>());
+  public InitialData(@NonNull List<Product> products) {
+    this(products, new ArrayList<Recipient>());
   }
 
   @NonNull
-  public final Set<Product> getProducts() {
+  public final List<Product> getProducts() {
     return products;
   }
 
   @NonNull
-  public final Set<Recipient> getRecipients() {
+  public final List<Recipient> getRecipients() {
     return recipients;
   }
 }

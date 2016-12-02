@@ -16,18 +16,18 @@ import com.gbh.movil.domain.api.ApiCode;
 import com.gbh.movil.domain.api.ApiResult;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import retrofit2.Response;
 import rx.Observable;
 import rx.functions.Func1;
 
 /**
+ * TODO
+ *
  * @author hecvasro
  */
-
 class RetrofitApiBridge implements ApiBridge {
   private final ApiService apiService;
 
@@ -68,7 +68,7 @@ class RetrofitApiBridge implements ApiBridge {
    */
   @NonNull
   @Override
-  public Observable<ApiResult<Set<Bank>>> banks() {
+  public Observable<ApiResult<List<Bank>>> banks() {
     return Observable.error(new UnsupportedOperationException());
   }
 
@@ -129,9 +129,8 @@ class RetrofitApiBridge implements ApiBridge {
    */
   @NonNull
   @Override
-  public Observable<ApiResult<Set<Recipient>>> recipients() {
-    final Set<Recipient> recipients = new HashSet<>();
-    return Observable.just(ApiResult.create(recipients));
+  public Observable<ApiResult<List<Recipient>>> recipients() {
+    return Observable.just(ApiResult.<List<Recipient>>create(new ArrayList<Recipient>()));
   }
 
   @NonNull

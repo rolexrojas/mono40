@@ -23,7 +23,6 @@ import com.gbh.movil.ui.main.list.ListItemHolderCreatorFactory;
 
 import javax.inject.Inject;
 
-import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;

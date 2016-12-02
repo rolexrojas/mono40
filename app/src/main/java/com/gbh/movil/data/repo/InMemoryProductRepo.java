@@ -5,27 +5,27 @@ import android.support.annotation.NonNull;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.ProductRepo;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
 /**
- * {@link ProductRepo Account repository} implementation that uses memory as storage.
+ * {@link ProductRepo Product repository} implementation that uses memory as storage.
  *
  * @author hecvasro
  */
 class InMemoryProductRepo implements ProductRepo {
-  private final Set<Product> products = new HashSet<>();
+  private final List<Product> products = new ArrayList<>();
 
   /**
    * {@inheritDoc}
    */
   @NonNull
   @Override
-  public Observable<Set<Product>> getAll() {
+  public Observable<List<Product>> getAll() {
     return Observable.just(products);
   }
 

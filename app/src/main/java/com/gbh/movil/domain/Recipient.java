@@ -7,6 +7,10 @@ import com.gbh.movil.Utils;
 import com.gbh.movil.domain.util.StringUtils;
 
 import java.io.Serializable;
+import java.util.List;
+
+import rx.Observable;
+import rx.functions.Func2;
 
 /**
  * Abstract recipient representation.
@@ -45,6 +49,27 @@ public abstract class Recipient implements Serializable, Matchable {
    */
   protected Recipient(@NonNull RecipientType type) {
     this(type, null);
+  }
+
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  public static Observable.Transformer<Recipient, List<Recipient>> toSortedListByIdentifier() {
+    return new Observable.Transformer<Recipient, List<Recipient>>() {
+      @Override
+      public Observable<List<Recipient>> call(Observable<Recipient> observable) {
+        return observable
+          .toSortedList(new Func2<Recipient, Recipient, Integer>() {
+            @Override
+            public Integer call(Recipient a, Recipient b) {
+              return a.getIdentifier().compareTo(b.getIdentifier());
+            }
+          });
+      }
+    };
   }
 
   /**

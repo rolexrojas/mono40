@@ -3,7 +3,7 @@ package com.gbh.movil.domain;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.util.Set;
+import java.util.List;
 
 import rx.Observable;
 
@@ -14,10 +14,13 @@ import rx.Observable;
  */
 public interface RecipientProvider {
   /**
-   * TODO
+   * Gets all the {@link Recipient recipients} registered in the provider.
+   * <p>
+   * By default the resulting {@link List list} is ordered alphabetically by its {@link
+   * Recipient#getIdentifier() identifier}.
    *
-   * @return TODO
+   * @return All the {@link Recipient recipients} registered in the provider.
    */
   @NonNull
-  Observable<Set<Recipient>> getAll(@Nullable String query);
+  Observable<List<Recipient>> getAll(@Nullable String query);
 }

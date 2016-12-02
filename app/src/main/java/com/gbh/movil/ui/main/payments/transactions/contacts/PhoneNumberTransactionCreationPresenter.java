@@ -12,6 +12,7 @@ import com.gbh.movil.rx.RxUtils;
 import com.gbh.movil.ui.Presenter;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 import rx.Subscription;
@@ -53,9 +54,9 @@ class PhoneNumberTransactionCreationPresenter
     paymentOptionSubscription = productManager.getAllPaymentOptions()
       .subscribeOn(schedulerProvider.io())
       .observeOn(schedulerProvider.ui())
-      .subscribe(new Action1<Set<Product>>() {
+      .subscribe(new Action1<List<Product>>() {
         @Override
-        public void call(Set<Product> paymentOptions) {
+        public void call(List<Product> paymentOptions) {
           screen.setPaymentOptions(paymentOptions);
           // TODO: Let the user know that he is now able to choose a payment option.
         }

@@ -17,7 +17,7 @@ import com.gbh.movil.domain.util.EventType;
 import com.gbh.movil.ui.Presenter;
 import com.gbh.movil.ui.UiUtils;
 
-import java.util.Set;
+import java.util.List;
 
 import rx.Subscription;
 import rx.functions.Action0;
@@ -78,9 +78,9 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
           UiUtils.showRefreshIndicator(screen);
         }
       })
-      .doOnNext(new Action1<Set<Product>>() {
+      .doOnNext(new Action1<List<Product>>() {
         @Override
-        public void call(Set<Product> products) {
+        public void call(List<Product> products) {
           screen.clear();
         }
       })

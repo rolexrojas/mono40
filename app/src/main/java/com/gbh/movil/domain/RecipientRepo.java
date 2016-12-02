@@ -2,7 +2,7 @@ package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
 
-import java.util.Set;
+import java.util.List;
 
 import rx.Observable;
 
@@ -32,5 +32,5 @@ public interface RecipientRepo extends RecipientProvider {
    * @return TODO
    */
   @NonNull
-  Observable<Set<Recipient>> saveAll(@NonNull Set<Recipient> recipients);
+  Observable<List<Recipient>> saveAll(@NonNull List<Recipient> recipients);
 }

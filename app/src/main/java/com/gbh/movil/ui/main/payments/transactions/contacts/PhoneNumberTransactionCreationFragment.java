@@ -29,7 +29,7 @@ import com.gbh.movil.ui.view.widget.PrefixableTextView;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Set;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -214,7 +214,7 @@ public class PhoneNumberTransactionCreationFragment
   }
 
   @Override
-  public void setPaymentOptions(@NonNull Set<Product> paymentOptions) {
+  public void setPaymentOptions(@NonNull List<Product> paymentOptions) {
     paymentOptionAdapter.clear();
     paymentOptionAdapter.addAll(paymentOptions);
   }
