@@ -62,6 +62,7 @@ class CommercePaymentsPresenter extends Presenter<CommercePaymentsScreen> {
           screen.addPaymentOption(product);
           if (Utils.isNull(selectedProduct) && Product.isDefaultPaymentOption(product)) {
             selectedProduct = product;
+            screen.markAsSelected(selectedProduct);
           }
         }
       }, new Action1<Throwable>() {

@@ -2,7 +2,7 @@
   <string name="commerce_payment_option_product_identifier_text_font">@string/font_gotham_rounded_book</string>
   <string name="commerce_payment_option_product_number_text_font">@string/font_roboto_medium</string>
   <string name="commerce_payment_option_product_owner_name_text_font">@string/font_roboto_regular</string>
-  <string name="commerce_payment_option_ready_text_font">@string/font_roboto_regular</string>
+  <string name="commerce_payment_option_ready_text_font">@string/font_gotham_rounded_book</string>
   <string name="commerce_payment_option_ready_text_value">Listo para tocar y pagar</string>
 
   <!-- TODO: Apply standards from these point downward -->
