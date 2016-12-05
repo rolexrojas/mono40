@@ -123,6 +123,11 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
     }
   }
 
+  @Override
+  protected int getCustomTheme() {
+    return R.style.FullScreenDialogTheme;
+  }
+
   /**
    * TODO
    *

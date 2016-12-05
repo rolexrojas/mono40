@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="commerce_payment_option_container_default_background">#D8D8D8</color>
-  <color name="commerce_payment_option_container_default_shadow_border">#1A000000</color>
-  <color name="commerce_payment_option_container_selected_border">#809C188F</color>
+  <color name="window_background_default">#EFEFEF</color>
+
+  <color name="commerce_payment_option_background">#D8D8D8</color>
+  <color name="commerce_payment_option_shadow_border">#1A000000</color>
+  <color name="commerce_payment_option_border">#809C188F</color>
+
   <color name="commerce_payment_option_product_number_default_text_shadow">#33000000</color>
+
   <color name="commerce_payment_option_text_default">#333333</color>
+
+  <color name="commerce_payment_window_default_background">#CC000000</color>
+  <color name="commerce_payment_status_bar_default_background">#160414</color>
+
+  <color name="commerce_payment_indicator_background_solid">@color/window_background_default</color>
+  <color name="commerce_payment_indicator_background_gradient_start">#0D9C188F</color>
+  <color name="commerce_payment_indicator_background_gradient_end">#33821477</color>
+
+  <color name="commerce_payment_message_text_color">#FFFFFF</color>
 
   <!-- TODO: Apply standards from these point downward -->
   <!-- App's colors -->
@@ -19,7 +32,6 @@
 
   <color name="accent">#9C188F</color>
   <color name="accent_alpha_20">#339C188F</color>
-  <color name="background">#EFEFEF</color>
   <color name="background_menu">#821477</color>
   <color name="black">#000</color>
   <color name="black_alpha_12">#1F000000</color>

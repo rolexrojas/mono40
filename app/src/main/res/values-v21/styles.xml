@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    parent="Base.Widget.CommercePaymentOption.ProductIdentifier">
   <style
-    name="App.Widget.CommercePaymentOption.ProductNumber"
-    parent="Base.Widget.CommercePaymentOption.ProductNumber">
+    name="App.Text.CommercePaymentMessage"
+    parent="Base.Text.CommercePaymentMessage">
+    <item name="android:letterSpacing">@dimen/commerce_payment_message_text_default_letter_spacing</item>
+  </style>
+
+  <style
+    name="App.Widget.CommercePaymentOptionProductNumber"
+    parent="Base.Widget.CommercePaymentOptionProductNumber">
     <item name="android:letterSpacing">@dimen/commerce_payment_option_product_number_default_text_letter_spacing</item>
   </style>
+
   <style
-    name="App.Widget.CommercePaymentOption.ProductOwnerName"
-    parent="Base.Widget.CommercePaymentOption.ProductOwnerName">
+    name="App.Widget.CommercePaymentOptionProductOwnerName"
+    parent="Base.Widget.CommercePaymentOptionProductOwnerName">
     <item name="android:letterSpacing">@dimen/commerce_payment_option_product_owner_name_default_text_letter_spacing</item>
   </style>
+
   <style
-    name="App.Widget.CommercePaymentOption.Ready"
-    parent="Base.Widget.CommercePaymentOption.Ready">
+    name="App.Widget.CommercePaymentOptionReady"
+    parent="Base.Widget.CommercePaymentOptionReady">
     <item name="android:letterSpacing">@dimen/commerce_payment_option_ready_text_letter_spacing</item>
   </style>
 

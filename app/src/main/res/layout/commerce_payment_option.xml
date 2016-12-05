@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-  android:id="@+id/commerce_payment_option_container"
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="@dimen/commerce_payment_option_container_default_height"
-  android:background="@drawable/commerce_payment_option_container_default_background"
-  android:padding="@dimen/commerce_payment_option_container_default_padding">
+  style="@style/App.Widget.CommercePaymentOption"
+  xmlns:android="http://schemas.android.com/apk/res/android">
   <ImageView
     android:id="@+id/bank_logo"
     android:layout_width="@dimen/bank_logo_size_large"
@@ -24,14 +20,14 @@
     android:layout_toEndOf="@+id/bank_logo"/>
   <TextView
     android:id="@+id/product_owner_name"
-    style="@style/App.Widget.CommercePaymentOption.ProductOwnerName"
+    style="@style/App.Widget.CommercePaymentOptionProductOwnerName"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:layout_marginTop="12dp"/>
   <TextView
     android:id="@+id/product_number"
-    style="@style/App.Widget.CommercePaymentOption.ProductNumber"
+    style="@style/App.Widget.CommercePaymentOptionProductNumber"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_above="@+id/product_owner_name"

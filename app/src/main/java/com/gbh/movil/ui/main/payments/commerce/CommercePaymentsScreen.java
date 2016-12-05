@@ -31,4 +31,12 @@ interface CommercePaymentsScreen extends Screen {
    *   TODO
    */
   void markAsSelected(@NonNull Product product);
+
+  /**
+   * TODO
+   *
+   * @param paymentOption
+   *   TODO
+   */
+  void openPaymentScreen(@NonNull Product paymentOption);
 }

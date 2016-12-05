@@ -19,7 +19,7 @@ import com.squareup.picasso.Picasso;
  *
  * @author hecvasro
  */
-final class PaymentOptionBinder implements Binder<Product, PaymentOptionHolder> {
+final class CommercePaymentOptionBinder implements Binder<Product, CommercePaymentOptionHolder> {
   private final Context context;
   private final StringHelper stringHelper;
   private final AssetProvider assetProvider;
@@ -30,7 +30,7 @@ final class PaymentOptionBinder implements Binder<Product, PaymentOptionHolder> 
    * @param context
    *   TODO
    */
-  PaymentOptionBinder(@NonNull Context context, @NonNull StringHelper stringHelper,
+  CommercePaymentOptionBinder(@NonNull Context context, @NonNull StringHelper stringHelper,
     @NonNull AssetProvider assetProvider) {
     this.context = context;
     this.stringHelper = stringHelper;
@@ -38,7 +38,7 @@ final class PaymentOptionBinder implements Binder<Product, PaymentOptionHolder> 
   }
 
   @Override
-  public void bind(@NonNull Product item, @NonNull PaymentOptionHolder holder) {
+  public void bind(@NonNull Product item, @NonNull CommercePaymentOptionHolder holder) {
     final Bank bank = item.getBank();
     final Drawable drawable = holder.getRootViewBackground();
     if (Utils.isNotNull(drawable)) {

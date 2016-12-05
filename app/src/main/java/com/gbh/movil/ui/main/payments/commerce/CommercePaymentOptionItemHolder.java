@@ -8,16 +8,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gbh.movil.R;
-import com.gbh.movil.ui.main.list.ListItemHolder;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * TODO
  *
  * @author hecvasro
  */
-class PaymentOptionListItemHolder extends ListItemHolder implements PaymentOptionHolder {
+class CommercePaymentOptionItemHolder implements CommercePaymentOptionHolder {
+  /**
+   * TODO
+   */
+  private final View rootView;
+
   /**
    * TODO
    */
@@ -32,21 +37,28 @@ class PaymentOptionListItemHolder extends ListItemHolder implements PaymentOptio
    * TODO
    */
   @BindView(R.id.product_number)
-  TextView productAliasTextView;
+  TextView productNumberTextView;
   /**
    * TODO
    */
   @BindView(R.id.product_owner_name)
-  TextView userNameTextView;
+  TextView productOwnerNameTextView;
 
-  PaymentOptionListItemHolder(@NonNull View rootView, @NonNull OnClickListener onClickListener) {
-    super(rootView, onClickListener);
+  /**
+   * TODO
+   *
+   * @param rootView
+   *   TODO
+   */
+  CommercePaymentOptionItemHolder(@NonNull View rootView) {
+    this.rootView = rootView;
+    ButterKnife.bind(this, this.rootView);
   }
 
   @Nullable
   @Override
   public Drawable getRootViewBackground() {
-    return getRootView().getBackground();
+    return rootView.getBackground();
   }
 
   @NonNull
@@ -64,12 +76,12 @@ class PaymentOptionListItemHolder extends ListItemHolder implements PaymentOptio
   @NonNull
   @Override
   public TextView getProductNumberTextView() {
-    return productAliasTextView;
+    return productNumberTextView;
   }
 
   @NonNull
   @Override
-  public TextView getUserNameTextView() {
-    return userNameTextView;
+  public TextView getProductOwnerNameTextView() {
+    return productOwnerNameTextView;
   }
 }

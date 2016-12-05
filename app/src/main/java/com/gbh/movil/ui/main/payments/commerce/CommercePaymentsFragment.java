@@ -36,12 +36,18 @@ import butterknife.Unbinder;
 public class CommercePaymentsFragment extends SubFragment<MainContainer>
   implements CommercePaymentsScreen, ListItemHolder.OnClickListener,
   SelectedItemDecoration.Provider {
-  private Unbinder unbinder;
+  /**
+   * TODO
+   */
+  private static final String TAG_PAYMENT_SCREEN = "paymentScreen";
 
+  CommercePaymentsComponent component;
+
+  private Unbinder unbinder;
   private ListItemAdapter adapter;
 
   @Inject
-  PaymentOptionBinder paymentOptionBinder;
+  CommercePaymentOptionBinder paymentOptionBinder;
   @Inject
   CommercePaymentsPresenter presenter;
 
@@ -65,7 +71,7 @@ public class CommercePaymentsFragment extends SubFragment<MainContainer>
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // Injects all the annotated dependencies.
-    final CommercePaymentsComponent component = DaggerCommercePaymentsComponent.builder()
+    component = DaggerCommercePaymentsComponent.builder()
       .mainComponent(container.getComponent())
       .build();
     component.inject(this);
@@ -88,11 +94,11 @@ public class CommercePaymentsFragment extends SubFragment<MainContainer>
     // Prepares the payment options list.
     final ListItemHolderCreatorFactory holderCreatorFactory = new ListItemHolderCreatorFactory
       .Builder()
-      .addCreator(Product.class, new PaymentOptionListItemHolderCreator(this))
+      .addCreator(Product.class, new CommercePaymentOptionListItemHolderCreator(this))
       .addCreator(String.class, new TextListItemHolderCreator())
       .build();
     final BinderFactory holderBinderFactory = new BinderFactory.Builder()
-      .addBinder(Product.class, PaymentOptionHolder.class, paymentOptionBinder)
+      .addBinder(Product.class, CommercePaymentOptionHolder.class, paymentOptionBinder)
       .addBinder(String.class, TextListItemHolder.class, new TextListItemBinder())
       .build();
     adapter = new ListItemAdapter(holderCreatorFactory, holderBinderFactory);
@@ -102,13 +108,13 @@ public class CommercePaymentsFragment extends SubFragment<MainContainer>
       false));
     final Resources resources = getResources();
     recyclerView.addItemDecoration(new SpaceDividerItemDecoration(resources.getDimensionPixelSize(
-      R.dimen.commerce_payment_option_container_default_margin)));
+      R.dimen.commerce_payment_option_margin)));
     final int borderWidth = resources.getDimensionPixelOffset(
-      R.dimen.commerce_payment_option_container_selected_border_width);
+      R.dimen.commerce_payment_option_border_width);
     final int borderColor = ContextCompat.getColor(context,
-      R.color.commerce_payment_option_container_selected_border);
+      R.color.commerce_payment_option_border);
     final int borderRadius = resources.getDimensionPixelOffset(
-      R.dimen.commerce_payment_option_container_default_border_radius);
+      R.dimen.commerce_payment_option_border_radius);
     recyclerView.addItemDecoration(new SelectedItemDecoration(this, borderWidth, borderColor,
       borderRadius));
     // Attaches the screen to the presenter.
@@ -166,6 +172,12 @@ public class CommercePaymentsFragment extends SubFragment<MainContainer>
     adapter.add(index + 1, readyMessage);
     adapter.notifyItemChanged(index);
     adapter.notifyItemInserted(index + 1);
+  }
+
+  @Override
+  public void openPaymentScreen(@NonNull Product paymentOption) {
+    CommercePaymentDialogFragment.newInstance(paymentOption)
+      .show(getChildFragmentManager(), TAG_PAYMENT_SCREEN);
   }
 
   @Override

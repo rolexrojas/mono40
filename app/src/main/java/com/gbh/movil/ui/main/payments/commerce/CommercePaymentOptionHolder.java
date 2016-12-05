@@ -13,7 +13,7 @@ import com.gbh.movil.data.util.Holder;
  *
  * @author hecvasro
  */
-interface PaymentOptionHolder extends Holder {
+interface CommercePaymentOptionHolder extends Holder {
   /**
    * TODO
    *
@@ -52,5 +52,5 @@ interface PaymentOptionHolder extends Holder {
    * @return TODO
    */
   @NonNull
-  TextView getUserNameTextView();
+  TextView getProductOwnerNameTextView();
 }

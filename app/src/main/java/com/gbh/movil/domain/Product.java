@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.gbh.movil.Utils;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -11,7 +12,7 @@ import java.math.BigDecimal;
  *
  * @author hecvasro
  */
-public abstract class Product {
+public abstract class Product implements Serializable {
   /**
    * Product's {@link ProductCategory category}.
    */

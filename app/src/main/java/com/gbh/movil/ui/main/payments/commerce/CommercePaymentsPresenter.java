@@ -101,7 +101,7 @@ class CommercePaymentsPresenter extends Presenter<CommercePaymentsScreen> {
   void onPaymentOptionSelected(@NonNull Product product) {
     assertScreen();
     if (selectedProduct.equals(product)) {
-      // TODO
+      screen.openPaymentScreen(selectedProduct);
     } else {
       selectedProduct = product;
       screen.markAsSelected(selectedProduct);

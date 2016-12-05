@@ -5,12 +5,14 @@ import android.text.TextUtils;
 
 import com.gbh.movil.Utils;
 
+import java.io.Serializable;
+
 /**
  * Bank representation.
  *
  * @author hecvasro
  */
-public class Bank {
+public class Bank implements Serializable {
   /**
    * Bank's code.
    */

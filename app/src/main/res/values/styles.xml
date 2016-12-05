@@ -13,7 +13,8 @@
     <item name="fontPath">@string/commerce_payment_option_product_identifier_text_font</item>
   </style>
   <style name="Base.Text.CommercePaymentOption.ProductNumber">
-    <item name="android:textSize">@dimen/commerce_payment_option_product_number_default_text_size</item>
+    <item name="android:textSize">@dimen/commerce_payment_option_product_number_default_text_size
+    </item>
     <item name="fontPath">@string/commerce_payment_option_product_number_text_font</item>
   </style>
   <style name="Base.Text.CommercePaymentOption.ProductOwnerName">
@@ -25,32 +26,85 @@
     <item name="fontPath">@string/commerce_payment_option_ready_text_font</item>
   </style>
 
+  <style name="Base.Text.CommercePaymentMessage">
+    <item name="android:lineSpacingExtra">@dimen/commerce_payment_message_text_default_line_extra_spacing</item>
+    <item name="android:textAllCaps">true</item>
+    <item name="android:textColor">@color/commerce_payment_message_text_color</item>
+    <item name="android:textSize">@dimen/commerce_payment_message_text_size</item>
+    <item name="fontPath">@string/commerce_payment_message_text_font</item>
+  </style>
+
   <style
     name="Base.Widget"
     parent="android:Widget"/>
 
   <style name="Base.Widget.CommercePaymentOption">
+    <item name="android:background">@drawable/commerce_payment_option_background</item>
+    <item name="android:layout_height">@dimen/commerce_payment_option_height</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:padding">@dimen/commerce_payment_option_padding</item>
+  </style>
+
+  <style name="Base.Widget.CommercePaymentOptionProductIdentifier">
     <item name="android:ellipsize">end</item>
-  </style>
-  <style name="Base.Widget.CommercePaymentOption.ProductIdentifier">
     <item name="android:gravity">center_vertical</item>
-    <item name="android:textAppearance">@style/App.Text.CommercePaymentOption.ProductIdentifier</item>
+    <item name="android:textAppearance">@style/App.Text.CommercePaymentOption.ProductIdentifier
+    </item>
   </style>
-  <style name="Base.Widget.CommercePaymentOption.ProductNumber">
+
+  <style name="Base.Widget.CommercePaymentOptionProductNumber">
+    <item name="android:ellipsize">end</item>
     <item name="android:textAppearance">@style/App.Text.CommercePaymentOption.ProductNumber</item>
     <item name="android:shadowRadius">@dimen/commerce_payment_option_product_number_default_text_shadow_radius</item>
     <item name="android:shadowDx">@dimen/commerce_payment_option_product_number_default_text_shadow_dx</item>
     <item name="android:shadowDy">@dimen/commerce_payment_option_product_number_default_text_shadow_dy</item>
     <item name="android:shadowColor">@color/commerce_payment_option_product_number_default_text_shadow</item>
   </style>
-  <style name="Base.Widget.CommercePaymentOption.ProductOwnerName">
-    <item name="android:textAppearance">@style/App.Text.CommercePaymentOption.ProductOwnerName</item>
+
+  <style name="Base.Widget.CommercePaymentOptionProductOwnerName">
+    <item name="android:ellipsize">end</item>
+    <item name="android:textAppearance">@style/App.Text.CommercePaymentOptionProductOwnerName</item>
   </style>
-  <style name="Base.Widget.CommercePaymentOption.Ready">
+
+  <style name="Base.Widget.CommercePaymentOptionReady">
     <item name="android:gravity">center_horizontal</item>
     <item name="android:text">@string/commerce_payment_option_ready_text_value</item>
     <item name="android:textAllCaps">true</item>
     <item name="android:textAppearance">@style/App.Text.CommercePaymentOption.Ready</item>
+  </style>
+
+  <style name="Base.Widget.CommercePaymentIndicator">
+    <item name="android:background">@drawable/commerce_payment_indicator_default_background</item>
+    <item name="android:layout_centerHorizontal">true</item>
+    <item name="android:layout_height">@dimen/commerce_payment_indicator_default_height</item>
+    <item name="android:layout_marginTop">@dimen/commerce_payment_indicator_default_margin_top</item>
+    <item name="android:layout_width">@dimen/commerce_payment_indicator_default_width</item>
+  </style>
+
+  <style name="Base.Widget.CommercePaymentMessage">
+    <item name="android:gravity">center</item>
+    <item name="android:layout_centerHorizontal">true</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginEnd">@dimen/commerce_payment_message_default_margin_horizontal</item>
+    <item name="android:layout_marginStart">@dimen/commerce_payment_message_default_margin_horizontal</item>
+    <item name="android:layout_marginTop">@dimen/commerce_payment_message_default_margin_top</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:text">@string/commerce_payment_message_step_1</item>
+    <item name="android:textAppearance">@style/App.Text.CommercePaymentMessage</item>
+  </style>
+
+  <style
+    name="Base.Theme"
+    parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="android:windowBackground">@color/window_background_default</item>
+    <item name="colorAccent">@color/accent</item>
+    <item name="colorPrimary">@color/primary</item>
+    <item name="colorPrimaryDark">@color/primary_dark</item>
+    <item name="android:buttonStyle">@style/App.Widget.Button</item>
+    <item name="prefixableTextViewStyle">@style/App.Widget.PrefixableTextView</item>
+    <item name="autoResizeablePrefixableTextViewStyle">@style/App.Widget.AutoResizeablePrefixableTextView</item>
+    <item name="numPadStyle">@style/App.Widget.NumPad</item>
+    <item name="searchViewStyle">@style/App.Widget.SearchView</item>
   </style>
 
   <style
@@ -71,11 +125,15 @@
     name="App.Text.CommercePaymentOption.ProductNumber"
     parent="Base.Text.CommercePaymentOption.ProductNumber"/>
   <style
-    name="App.Text.CommercePaymentOption.ProductOwnerName"
+    name="App.Text.CommercePaymentOptionProductOwnerName"
     parent="Base.Text.CommercePaymentOption.ProductOwnerName"/>
   <style
     name="App.Text.CommercePaymentOption.Ready"
     parent="Base.Text.CommercePaymentOption.Ready"/>
+
+  <style
+    name="App.Text.CommercePaymentMessage"
+    parent="Base.Text.CommercePaymentMessage"/>
 
   <style
     name="App.Widget"
@@ -84,18 +142,48 @@
   <style
     name="App.Widget.CommercePaymentOption"
     parent="Base.Widget.CommercePaymentOption"/>
+
+  <style name="App.Widget.CommercePaymentOption.Standalone">
+    <item name="android:layout_alignParentBottom">true</item>
+    <item name="android:layout_marginBottom">@dimen/commerce_payment_option_standalone_margin_bottom</item>
+    <item name="android:layout_marginEnd">@dimen/commerce_payment_option_margin</item>
+    <item name="android:layout_marginStart">@dimen/commerce_payment_option_margin</item>
+  </style>
+
   <style
     name="App.Widget.CommercePaymentOption.ProductIdentifier"
-    parent="Base.Widget.CommercePaymentOption.ProductIdentifier"/>
+    parent="Base.Widget.CommercePaymentOptionProductIdentifier"/>
+
   <style
-    name="App.Widget.CommercePaymentOption.ProductNumber"
-    parent="Base.Widget.CommercePaymentOption.ProductNumber"/>
+    name="App.Widget.CommercePaymentOptionProductNumber"
+    parent="Base.Widget.CommercePaymentOptionProductNumber"/>
+
   <style
-    name="App.Widget.CommercePaymentOption.ProductOwnerName"
-    parent="Base.Widget.CommercePaymentOption.ProductOwnerName"/>
+    name="App.Widget.CommercePaymentOptionProductOwnerName"
+    parent="Base.Widget.CommercePaymentOptionProductOwnerName"/>
+
   <style
-    name="App.Widget.CommercePaymentOption.Ready"
-    parent="Base.Widget.CommercePaymentOption.Ready"/>
+    name="App.Widget.CommercePaymentOptionReady"
+    parent="Base.Widget.CommercePaymentOptionReady"/>
+
+  <style
+    name="App.Widget.CommercePaymentIndicator"
+    parent="Base.Widget.CommercePaymentIndicator"/>
+
+  <style
+    name="App.Widget.CommercePaymentMessage"
+    parent="Base.Widget.CommercePaymentMessage"/>
+
+  <style
+    name="App.Theme"
+    parent="Base.Theme"/>
+
+  <style
+    name="CommercePaymentTheme"
+    parent="App.Theme">
+    <item name="android:windowBackground">@color/commerce_payment_window_default_background</item>
+    <item name="colorPrimaryDark">@color/commerce_payment_status_bar_default_background</item>
+  </style>
 
   <!-- TODO: Apply standards from these point downward -->
   <style name="Base.Text.Label">
@@ -215,21 +303,6 @@
   </style>
 
   <style
-    name="Base.Theme"
-    parent="Theme.AppCompat.Light.NoActionBar">
-    <item name="android:windowBackground">@color/background</item>
-    <item name="colorAccent">@color/accent</item>
-    <item name="colorPrimary">@color/primary</item>
-    <item name="colorPrimaryDark">@color/primary_dark</item>
-    <item name="android:buttonStyle">@style/App.Widget.Button</item>
-    <item name="prefixableTextViewStyle">@style/App.Widget.PrefixableTextView</item>
-    <item name="autoResizeablePrefixableTextViewStyle">
-      @style/App.Widget.AutoResizeablePrefixableTextView
-    </item>
-    <item name="numPadStyle">@style/App.Widget.NumPad</item>
-    <item name="searchViewStyle">@style/App.Widget.SearchView</item>
-  </style>
-  <style
     name="Base.Theme.AppBar"
     parent="ThemeOverlay.AppCompat.Dark.ActionBar">
     <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
@@ -312,9 +385,6 @@
     name="App.Widget.NumPad"
     parent="Base.Widget.NumPad"/>
 
-  <style
-    name="App.Theme"
-    parent="Base.Theme"/>
   <style
     name="App.Theme.AppBar"
     parent="Base.Theme.AppBar"/>

@@ -20,4 +20,12 @@ interface CommercePaymentsComponent {
    *   TODO
    */
   void inject(CommercePaymentsFragment screen);
+
+  /**
+   * TODO
+   *
+   * @param fragment
+   *   TODO
+   */
+  void inject(CommercePaymentDialogFragment fragment);
 }

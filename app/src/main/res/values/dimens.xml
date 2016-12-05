@@ -1,22 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <dimen name="commerce_payment_option_container_default_border_radius">10dp</dimen>
-  <dimen name="commerce_payment_option_container_default_height">200dp</dimen>
-  <dimen name="commerce_payment_option_container_default_margin">20dp</dimen>
-  <dimen name="commerce_payment_option_container_default_padding">20dp</dimen>
-  <dimen name="commerce_payment_option_container_default_shadow_border_radius">10dp</dimen>
-  <dimen name="commerce_payment_option_container_default_shadow_size">1dp</dimen>
-  <dimen name="commerce_payment_option_container_selected_border_width">2dp</dimen>
+  <dimen name="commerce_payment_option_border_radius">10dp</dimen>
+  <dimen name="commerce_payment_option_border_width">2dp</dimen>
+  <dimen name="commerce_payment_option_height">200dp</dimen>
+  <dimen name="commerce_payment_option_margin">20dp</dimen>
+  <dimen name="commerce_payment_option_padding">20dp</dimen>
+  <dimen name="commerce_payment_option_shadow_border_radius">10dp</dimen>
+  <dimen name="commerce_payment_option_shadow_size">1dp</dimen>
+
+  <dimen name="commerce_payment_option_standalone_margin_bottom">92dp</dimen>
+
   <dimen name="commerce_payment_option_product_identifier_default_text_size">16sp</dimen>
+
   <dimen name="commerce_payment_option_product_number_default_text_size">18sp</dimen>
+
   <dimen name="commerce_payment_option_product_owner_name_default_text_size">14sp</dimen>
+
   <dimen name="commerce_payment_option_ready_text_size">10sp</dimen>
+
   <item name="commerce_payment_option_product_number_default_text_letter_spacing" type="dimen" format="float">0.17</item> <!-- letter_spacing_em = letter_spacing_sp / text_size_sp -->
   <item name="commerce_payment_option_product_number_default_text_shadow_dx" type="dimen" format="float">0.0</item>
   <item name="commerce_payment_option_product_number_default_text_shadow_dy" type="dimen" format="float">4.0</item>
   <item name="commerce_payment_option_product_number_default_text_shadow_radius" type="dimen" format="float">10.0</item>
+
   <item name="commerce_payment_option_product_owner_name_default_text_letter_spacing" type="dimen" format="float">0.07</item> <!-- letter_spacing_em = letter_spacing_sp / text_size_sp -->
+
   <item name="commerce_payment_option_ready_text_letter_spacing" type="dimen" format="float">0.083</item> <!-- letter_spacing_em = letter_spacing_sp / text_size_sp -->
+
+  <dimen name="commerce_payment_indicator_default_width">70dp</dimen>
+  <dimen name="commerce_payment_indicator_default_height">70dp</dimen>
+  <dimen name="commerce_payment_indicator_default_margin_top">76dp</dimen>
+
+  <dimen name="commerce_payment_message_default_margin_horizontal">80dp</dimen>
+  <dimen name="commerce_payment_message_default_margin_top">30dp</dimen>
+  <dimen name="commerce_payment_message_text_size">10sp</dimen>
+  <dimen name="commerce_payment_message_text_default_line_extra_spacing">5sp</dimen>
+  <item name="commerce_payment_message_text_default_letter_spacing" type="dimen" format="float">0.083</item> <!-- letter_spacing_em = letter_spacing_sp / text_size_sp -->
 
   <!-- TODO: Apply standards from these point downward -->
 

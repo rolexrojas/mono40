@@ -3,7 +3,6 @@ package com.gbh.movil.ui.view.widget;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -72,9 +71,8 @@ public class FullScreenRefreshIndicator implements LoadIndicator {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
-      setStyle(DialogFragment.STYLE_NO_FRAME, R.style.FullScreenRefreshIndicatorTheme);
+    protected int getCustomTheme() {
+      return R.style.FullScreenRefreshIndicatorTheme;
     }
 
     @Nullable
