@@ -18,7 +18,7 @@ import com.gbh.movil.data.res.AssetProvider;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.ui.ChildFragment;
-import com.gbh.movil.ui.UiUtils;
+import com.gbh.movil.ui.misc.UiUtils;
 import com.gbh.movil.ui.main.PinConfirmationDialogFragment;
 import com.gbh.movil.ui.main.transactions.PaymentOptionAdapter;
 import com.gbh.movil.ui.main.transactions.TransactionCreationContainer;

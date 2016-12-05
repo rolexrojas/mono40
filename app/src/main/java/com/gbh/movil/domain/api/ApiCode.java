@@ -3,7 +3,7 @@ package com.gbh.movil.domain.api;
 import android.support.annotation.Nullable;
 
 /**
- * API code enumeration.
+ * {@link ApiBridge API}'s code enumeration.
  *
  * @author hecvasro
  */

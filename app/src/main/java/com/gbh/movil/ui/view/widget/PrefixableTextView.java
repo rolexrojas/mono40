@@ -19,7 +19,7 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 import com.gbh.movil.R;
-import com.gbh.movil.ui.utils.Truss;
+import com.gbh.movil.ui.misc.Truss;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
 import uk.co.chrisjenx.calligraphy.TypefaceUtils;

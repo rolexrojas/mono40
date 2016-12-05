@@ -16,7 +16,7 @@ import com.gbh.movil.misc.Utils;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.ui.ChildFragment;
 import com.gbh.movil.ui.SwitchableContainerActivity;
-import com.gbh.movil.ui.UiUtils;
+import com.gbh.movil.ui.misc.UiUtils;
 import com.gbh.movil.ui.main.purchase.PurchaseFragment;
 import com.gbh.movil.ui.main.products.ProductsFragment;
 import com.gbh.movil.ui.main.payments.PaymentsFragment;

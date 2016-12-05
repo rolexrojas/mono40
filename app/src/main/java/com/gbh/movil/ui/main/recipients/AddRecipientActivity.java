@@ -16,7 +16,7 @@ import com.gbh.movil.misc.Utils;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.ui.ActivityModule;
 import com.gbh.movil.ui.SwitchableContainerActivity;
-import com.gbh.movil.ui.UiUtils;
+import com.gbh.movil.ui.misc.UiUtils;
 import com.gbh.movil.ui.view.widget.FullScreenRefreshIndicator;
 import com.gbh.movil.ui.view.widget.LoadIndicator;
 

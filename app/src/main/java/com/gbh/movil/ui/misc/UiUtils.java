@@ -1,4 +1,4 @@
-package com.gbh.movil.ui;
+package com.gbh.movil.ui.misc;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gbh.movil.misc.Utils;
+import com.gbh.movil.ui.Refreshable;
 import com.gbh.movil.ui.view.widget.LoadIndicator;
 
 import uk.co.chrisjenx.calligraphy.TypefaceUtils;

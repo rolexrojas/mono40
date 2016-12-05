@@ -17,7 +17,7 @@ import android.widget.Button;
 import com.gbh.movil.misc.Utils;
 import com.gbh.movil.data.res.AssetProvider;
 import com.gbh.movil.data.util.BinderFactory;
-import com.gbh.movil.ui.UiUtils;
+import com.gbh.movil.ui.misc.UiUtils;
 import com.gbh.movil.ui.main.MainContainer;
 import com.gbh.movil.ui.main.list.ListItemAdapter;
 import com.gbh.movil.ui.main.list.ListItemHolderCreatorFactory;

@@ -8,7 +8,7 @@ import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.Transaction;
 import com.gbh.movil.domain.TransactionProvider;
 import com.gbh.movil.ui.Presenter;
-import com.gbh.movil.ui.UiUtils;
+import com.gbh.movil.ui.misc.UiUtils;
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.utils;
+package com.gbh.movil.ui.misc;
 
 import android.support.annotation.NonNull;
 import android.text.SpannableStringBuilder;

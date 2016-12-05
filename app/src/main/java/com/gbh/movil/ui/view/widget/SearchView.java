@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 
 import com.gbh.movil.R;
 import com.gbh.movil.misc.rx.RxUtils;
-import com.gbh.movil.ui.UiUtils;
+import com.gbh.movil.ui.misc.UiUtils;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 

@@ -23,7 +23,7 @@ import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.data.util.BinderFactory;
 import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.Recipient;
-import com.gbh.movil.ui.UiUtils;
+import com.gbh.movil.ui.misc.UiUtils;
 import com.gbh.movil.ui.main.MainContainer;
 import com.gbh.movil.ui.main.list.ListItemAdapter;
 import com.gbh.movil.ui.main.list.ListItemHolder;
