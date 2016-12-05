@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.main.payments.commerce;
+package com.gbh.movil.ui.main.payments.purchase;
 
 import android.content.Context;
 
@@ -17,7 +17,7 @@ import dagger.Provides;
  * @author hecvasro
  */
 @Module
-class CommercePaymentsModule {
+class PurchaseModule {
   /**
    * TODO
    *
@@ -42,8 +42,8 @@ class CommercePaymentsModule {
    */
   @Provides
   @FragmentScope
-  CommercePaymentsPresenter providePresenter(SchedulerProvider schedulerProvider,
+  PurchasePresenter providePresenter(SchedulerProvider schedulerProvider,
     ProductManager productManager) {
-    return new CommercePaymentsPresenter(schedulerProvider, productManager);
+    return new PurchasePresenter(schedulerProvider, productManager);
   }
 }

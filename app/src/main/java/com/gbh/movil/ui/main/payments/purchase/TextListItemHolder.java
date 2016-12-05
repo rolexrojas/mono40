@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.main.payments.commerce;
+package com.gbh.movil.ui.main.payments.purchase;
 
 import android.support.annotation.NonNull;
 import android.view.View;

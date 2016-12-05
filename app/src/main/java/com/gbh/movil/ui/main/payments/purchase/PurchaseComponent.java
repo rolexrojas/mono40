@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.main.payments.commerce;
+package com.gbh.movil.ui.main.payments.purchase;
 
 import com.gbh.movil.ui.FragmentScope;
 import com.gbh.movil.ui.main.MainComponent;
@@ -11,15 +11,15 @@ import dagger.Component;
  * @author hecvasro
  */
 @FragmentScope
-@Component(dependencies = MainComponent.class, modules = CommercePaymentsModule.class)
-interface CommercePaymentsComponent {
+@Component(dependencies = MainComponent.class, modules = PurchaseModule.class)
+interface PurchaseComponent {
   /**
    * TODO
    *
    * @param screen
    *   TODO
    */
-  void inject(CommercePaymentsFragment screen);
+  void inject(PurchaseFragment screen);
 
   /**
    * TODO

@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.main.payments.commerce;
+package com.gbh.movil.ui.main.payments.purchase;
 
 import android.support.annotation.NonNull;
 
@@ -21,7 +21,7 @@ import timber.log.Timber;
  *
  * @author hecvasro
  */
-class CommercePaymentsPresenter extends Presenter<CommercePaymentsScreen> {
+class PurchasePresenter extends Presenter<PurchaseScreen> {
   /**
    * TODO
    */
@@ -35,7 +35,7 @@ class CommercePaymentsPresenter extends Presenter<CommercePaymentsScreen> {
    */
   private Product selectedProduct;
 
-  CommercePaymentsPresenter(@NonNull SchedulerProvider schedulerProvider,
+  PurchasePresenter(@NonNull SchedulerProvider schedulerProvider,
     @NonNull ProductManager productManager) {
     this.schedulerProvider = schedulerProvider;
     this.productManager = productManager;

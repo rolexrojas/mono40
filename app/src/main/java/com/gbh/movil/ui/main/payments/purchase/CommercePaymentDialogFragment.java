@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.main.payments.commerce;
+package com.gbh.movil.ui.main.payments.purchase;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -76,7 +76,7 @@ public class CommercePaymentDialogFragment extends FullScreenDialogFragment {
       paymentOption = (Product) bundle.getSerializable(EXTRA_PAYMENT_OPTION);
       // Injects all the dependencies.
       // TODO: Modify Container and SubFragment interfaces in order to allow containers be fragments.
-      ((CommercePaymentsFragment) getParentFragment()).component.inject(this);
+      ((PurchaseFragment) getParentFragment()).component.inject(this);
     }
   }
 

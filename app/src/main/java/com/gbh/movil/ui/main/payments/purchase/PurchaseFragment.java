@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.main.payments.commerce;
+package com.gbh.movil.ui.main.payments.purchase;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -33,15 +33,15 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class CommercePaymentsFragment extends SubFragment<MainContainer>
-  implements CommercePaymentsScreen, ListItemHolder.OnClickListener,
+public class PurchaseFragment extends SubFragment<MainContainer>
+  implements PurchaseScreen, ListItemHolder.OnClickListener,
   SelectedItemDecoration.Provider {
   /**
    * TODO
    */
   private static final String TAG_PAYMENT_SCREEN = "paymentScreen";
 
-  CommercePaymentsComponent component;
+  PurchaseComponent component;
 
   private Unbinder unbinder;
   private ListItemAdapter adapter;
@@ -49,7 +49,7 @@ public class CommercePaymentsFragment extends SubFragment<MainContainer>
   @Inject
   CommercePaymentOptionBinder paymentOptionBinder;
   @Inject
-  CommercePaymentsPresenter presenter;
+  PurchasePresenter presenter;
 
   @BindString(R.string.commerce_payment_option_ready_text_value)
   String readyMessage;
@@ -63,15 +63,15 @@ public class CommercePaymentsFragment extends SubFragment<MainContainer>
    * @return TODO
    */
   @NonNull
-  public static CommercePaymentsFragment newInstance() {
-    return new CommercePaymentsFragment();
+  public static PurchaseFragment newInstance() {
+    return new PurchaseFragment();
   }
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // Injects all the annotated dependencies.
-    component = DaggerCommercePaymentsComponent.builder()
+    component = DaggerPurchaseComponent.builder()
       .mainComponent(container.getComponent())
       .build();
     component.inject(this);

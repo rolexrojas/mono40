@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.main.payments.commerce;
+package com.gbh.movil.ui.main.payments.purchase;
 
 import android.support.annotation.NonNull;
 
@@ -10,7 +10,7 @@ import com.gbh.movil.ui.Screen;
  *
  * @author hecvasro
  */
-interface CommercePaymentsScreen extends Screen {
+interface PurchaseScreen extends Screen {
   /**
    * TODO
    */
