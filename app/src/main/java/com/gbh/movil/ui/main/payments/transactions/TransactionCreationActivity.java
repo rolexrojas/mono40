@@ -16,8 +16,8 @@ import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.PhoneNumberRecipient;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.RecipientType;
-import com.gbh.movil.ui.ContainerActivity;
-import com.gbh.movil.ui.SubFragment;
+import com.gbh.movil.ui.ChildFragment;
+import com.gbh.movil.ui.SwitchableContainerActivity;
 import com.gbh.movil.ui.main.payments.transactions.contacts.PhoneNumberTransactionCreationFragment;
 
 import javax.inject.Inject;
@@ -31,7 +31,8 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class TransactionCreationActivity extends ContainerActivity<TransactionCreationComponent>
+public class TransactionCreationActivity
+  extends SwitchableContainerActivity<TransactionCreationComponent>
   implements TransactionCreationContainer {
   /**
    * TODO
@@ -45,7 +46,7 @@ public class TransactionCreationActivity extends ContainerActivity<TransactionCr
 
   private Unbinder unbinder;
 
-  @BindView(R.id.container_app_bar_toolbar)
+  @BindView(R.id.toolbar)
   Toolbar toolbar;
 
   /**
@@ -154,7 +155,7 @@ public class TransactionCreationActivity extends ContainerActivity<TransactionCr
       }
       // Resolves the initial sub-screen.
       final RecipientType type = recipient.getType();
-      final SubFragment<TransactionCreationContainer> fragment;
+      final ChildFragment<TransactionCreationContainer> fragment;
       switch (type) {
         case PHONE_NUMBER:
           fragment = PhoneNumberTransactionCreationFragment.newInstance();
@@ -165,7 +166,7 @@ public class TransactionCreationActivity extends ContainerActivity<TransactionCr
         default:
           throw new UnsupportedOperationException("Transaction type '" + type + "' not supported");
       }
-      setSubScreen(fragment);
+      setChildFragment(fragment, false, false);
     }
   }
 

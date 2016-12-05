@@ -29,7 +29,7 @@ import com.gbh.movil.R;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Balance;
-import com.gbh.movil.ui.SubFragment;
+import com.gbh.movil.ui.ChildFragment;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import javax.inject.Inject;
@@ -45,7 +45,7 @@ import timber.log.Timber;
  *
  * @author hecvasro
  */
-public class ProductsFragment extends SubFragment<MainContainer> implements ProductsScreen,
+public class ProductsFragment extends ChildFragment<MainContainer> implements ProductsScreen,
   ProductListItemHolder.OnQueryActionButtonClickedListener,
   ShowRecentTransactionsListItemHolder.OnShowRecentTransactionsButtonClickedListener {
   private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
@@ -106,7 +106,7 @@ public class ProductsFragment extends SubFragment<MainContainer> implements Prod
    */
   @OnClick(R.id.button_add_another_account)
   void onAddAnotherAccountButtonClicked() {
-    container.setSubScreen(AddAnotherProductFragment.newInstance());
+    getContainer().setChildFragment(AddAnotherProductFragment.newInstance(), true, true);
   }
 
   @Override
@@ -114,7 +114,7 @@ public class ProductsFragment extends SubFragment<MainContainer> implements Prod
     super.onCreate(savedInstanceState);
     // Injects all the annotated dependencies.
     final ProductsComponent component = DaggerProductsComponent.builder()
-      .mainComponent(container.getComponent())
+      .mainComponent(getContainer().getComponent())
       .build();
     component.inject(this);
   }
@@ -183,7 +183,7 @@ public class ProductsFragment extends SubFragment<MainContainer> implements Prod
   public void onStart() {
     super.onStart();
     // Sets the title.
-    container.setTitle(stringHelper.accounts());
+    getContainer().setTitle(stringHelper.accounts());
     // Starts the presenter.
     presenter.start();
   }
@@ -212,7 +212,6 @@ public class ProductsFragment extends SubFragment<MainContainer> implements Prod
   @Override
   public void add(@NonNull Object item) {
     adapter.add(item);
-    adapter.notifyItemInserted(adapter.getItemCount());
   }
 
   @Override

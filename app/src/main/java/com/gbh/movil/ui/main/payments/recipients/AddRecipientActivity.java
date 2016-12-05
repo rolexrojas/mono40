@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -17,9 +15,7 @@ import com.gbh.movil.R;
 import com.gbh.movil.Utils;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.ui.ActivityModule;
-import com.gbh.movil.ui.BaseActivity;
-import com.gbh.movil.ui.Container;
-import com.gbh.movil.ui.SubFragment;
+import com.gbh.movil.ui.SwitchableContainerActivity;
 import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.view.widget.FullScreenRefreshIndicator;
 import com.gbh.movil.ui.view.widget.LoadIndicator;
@@ -35,8 +31,8 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class AddRecipientActivity extends BaseActivity implements AddRecipientContainer,
-  AddRecipientScreen {
+public class AddRecipientActivity extends SwitchableContainerActivity<AddRecipientComponent>
+  implements AddRecipientContainer, AddRecipientScreen {
   /**
    * TODO
    */
@@ -101,31 +97,6 @@ public class AddRecipientActivity extends BaseActivity implements AddRecipientCo
     }
   }
 
-  /**
-   * TODO
-   *
-   * @param fragment
-   *   TODO
-   * @param addToBackStack
-   *   TODO
-   * @param animate
-   *   TODO
-   */
-  private void replaceFragment(@NonNull Fragment fragment, boolean addToBackStack,
-    boolean animate) {
-    final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-    if (animate) {
-      transaction.setCustomAnimations(R.anim.fragment_transition_enter_sibling,
-        R.anim.fragment_transition_exit_sibling, R.anim.fragment_transition_enter_sibling,
-        R.anim.fragment_transition_exit_sibling);
-    }
-    transaction.replace(R.id.container, fragment);
-    if (addToBackStack) {
-      transaction.addToBackStack(null);
-    }
-    transaction.commit();
-  }
-
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -148,7 +119,7 @@ public class AddRecipientActivity extends BaseActivity implements AddRecipientCo
       actionBar.setTitle(R.string.add_recipient_title);
     }
     // Sets the initial screen.
-    replaceFragment(SearchOrChooseRecipientFragment.newInstance(), false, false);
+    setChildFragment(SearchOrChooseRecipientFragment.newInstance(), false, false);
     // Attaches the presenter to the fragment.
     presenter.attachScreen(this);
   }
@@ -186,12 +157,6 @@ public class AddRecipientActivity extends BaseActivity implements AddRecipientCo
   }
 
   @Override
-  public void setSubScreen(
-    @NonNull SubFragment<? extends Container<AddRecipientComponent>> fragment) {
-    replaceFragment(fragment, true, true);
-  }
-
-  @Override
   public void onContactClicked(@NonNull Contact contact) {
     presenter.add(contact);
   }
@@ -213,7 +178,7 @@ public class AddRecipientActivity extends BaseActivity implements AddRecipientCo
   @Override
   public void showNotSupportedOperationMessage() {
     UiUtils.createDialog(this, getString(R.string.sorry),
-      getString(R.string.info_not_available_unaffiliated_contact_recipient_addition), getString(R.string.ok),
-      null, null, null).show();
+      getString(R.string.info_not_available_unaffiliated_contact_recipient_addition),
+      getString(R.string.ok), null, null, null).show();
   }
 }

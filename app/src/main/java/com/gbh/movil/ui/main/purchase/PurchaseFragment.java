@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import com.gbh.movil.R;
 import com.gbh.movil.data.util.BinderFactory;
 import com.gbh.movil.domain.Product;
-import com.gbh.movil.ui.SubFragment;
+import com.gbh.movil.ui.ChildFragment;
 import com.gbh.movil.ui.main.MainContainer;
 import com.gbh.movil.ui.main.list.ListItemAdapter;
 import com.gbh.movil.ui.main.list.ListItemHolder;
@@ -33,7 +33,7 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class PurchaseFragment extends SubFragment<MainContainer>
+public class PurchaseFragment extends ChildFragment<MainContainer>
   implements PurchaseScreen, ListItemHolder.OnClickListener,
   SelectedItemDecoration.Provider {
   /**
@@ -72,7 +72,7 @@ public class PurchaseFragment extends SubFragment<MainContainer>
     super.onCreate(savedInstanceState);
     // Injects all the annotated dependencies.
     component = DaggerPurchaseComponent.builder()
-      .mainComponent(container.getComponent())
+      .mainComponent(getContainer().getComponent())
       .build();
     component.inject(this);
   }
@@ -125,7 +125,7 @@ public class PurchaseFragment extends SubFragment<MainContainer>
   public void onStart() {
     super.onStart();
     // Sets the title.
-    container.setTitle(getString(R.string.screen_payments_commerce_title));
+    getContainer().setTitle(getString(R.string.screen_payments_commerce_title));
     // Starts the presenter.
     presenter.start();
   }

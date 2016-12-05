@@ -36,7 +36,7 @@ import com.gbh.movil.ui.main.payments.recipients.AddRecipientActivity;
 import com.gbh.movil.ui.main.payments.transactions.TransactionCreationActivity;
 import com.gbh.movil.ui.view.widget.FullScreenRefreshIndicator;
 import com.gbh.movil.ui.view.widget.LoadIndicator;
-import com.gbh.movil.ui.SubFragment;
+import com.gbh.movil.ui.ChildFragment;
 import com.gbh.movil.ui.view.widget.SearchView;
 import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -49,12 +49,12 @@ import butterknife.Unbinder;
 import rx.Observable;
 
 /**
- * {@link PaymentsScreen Screen} implementation that uses a {@link SubFragment fragment} as
+ * {@link PaymentsScreen Screen} implementation that uses a {@link ChildFragment fragment} as
  * container.
  *
  * @author hecvasro
  */
-public class PaymentsFragment extends SubFragment<MainContainer>
+public class PaymentsFragment extends ChildFragment<MainContainer>
   implements PaymentsScreen, ListItemHolder.OnClickListener,
   ConfirmationDialogFragment.OnSaveButtonClickedListener {
   /**
@@ -104,7 +104,7 @@ public class PaymentsFragment extends SubFragment<MainContainer>
     setHasOptionsMenu(true);
     // Injects all the annotated dependencies.
     final PaymentsComponent component = DaggerPaymentsComponent.builder()
-      .mainComponent(container.getComponent())
+      .mainComponent(getContainer().getComponent())
       .build();
     component.inject(this);
   }
@@ -155,7 +155,7 @@ public class PaymentsFragment extends SubFragment<MainContainer>
   public void onStart() {
     super.onStart();
     // Sets the title.
-    container.setTitle(getString(R.string.payments_title));
+    getContainer().setTitle(getString(R.string.payments_title));
     // Starts the presenter.
     presenter.start();
   }
@@ -277,17 +277,11 @@ public class PaymentsFragment extends SubFragment<MainContainer>
   @Override
   public void add(@NonNull Object item) {
     adapter.add(item);
-    adapter.notifyItemInserted(adapter.getItemCount());
   }
 
   @Override
   public void update(@NonNull Object item) {
-    final int index = adapter.indexOf(item);
-    if (index >= 0) {
-      adapter.notifyItemChanged(index);
-    } else {
-      add(item);
-    }
+    adapter.updateOrAdd(item);
   }
 
   @Override

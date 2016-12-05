@@ -8,14 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.gbh.movil.R;
-import com.gbh.movil.ui.SubFragment;
+import com.gbh.movil.ui.ChildFragment;
 
 /**
  * TODO
  *
  * @author hecvasro
  */
-public class AddAnotherProductFragment extends SubFragment<MainContainer> {
+public class AddAnotherProductFragment extends ChildFragment<MainContainer> {
   /**
    * TODO
    *

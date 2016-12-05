@@ -17,7 +17,7 @@ import com.gbh.movil.data.Formatter;
 import com.gbh.movil.data.res.AssetProvider;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Recipient;
-import com.gbh.movil.ui.SubFragment;
+import com.gbh.movil.ui.ChildFragment;
 import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.main.PinConfirmationDialogFragment;
 import com.gbh.movil.ui.main.payments.transactions.PaymentOptionAdapter;
@@ -44,7 +44,7 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 public class PhoneNumberTransactionCreationFragment
-  extends SubFragment<TransactionCreationContainer> implements PhoneNumberTransactionCreationScreen,
+  extends ChildFragment<TransactionCreationContainer> implements PhoneNumberTransactionCreationScreen,
   Spinner.OnItemSelectedListener, NumPad.OnDigitClickedListener, NumPad.OnDotClickedListener,
   NumPad.OnDeleteClickedListener, PinConfirmationDialogFragment.OnDismissListener {
   /**
@@ -154,7 +154,7 @@ public class PhoneNumberTransactionCreationFragment
     // Injects all the annotated dependencies.
     final PhoneNumberTransactionCreationComponent component = DaggerPhoneNumberTransactionCreationComponent
       .builder()
-      .transactionCreationComponent(container.getComponent())
+      .transactionCreationComponent(getContainer().getComponent())
       .build();
     component.inject(this);
   }
@@ -298,7 +298,7 @@ public class PhoneNumberTransactionCreationFragment
   @Override
   public void onDismiss(boolean succeeded) {
     if (succeeded) {
-      container.finish(true);
+      getContainer().finish(true);
     }
   }
 }

@@ -3,7 +3,7 @@ package com.gbh.movil.ui.main.payments.recipients;
 import android.support.annotation.NonNull;
 
 import com.gbh.movil.data.SchedulerProvider;
-import com.gbh.movil.ui.Screen;
+import com.gbh.movil.ui.Container;
 
 import rx.Observable;
 
@@ -12,7 +12,15 @@ import rx.Observable;
  *
  * @author hecvasro
  */
-interface SearchOrChooseRecipientScreen extends Screen {
+public interface SearchOrChooseRecipientContainer extends Container<AddRecipientComponent> {
+  /**
+   * TODO
+   *
+   * @param contact
+   *   TODO
+   */
+  void onContactClicked(@NonNull Contact contact);
+
   /**
    * Creates an {@link Observable observable} that emits all query change events.
    * <p>

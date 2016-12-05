@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.gbh.movil.R;
-import com.gbh.movil.ui.SubFragment;
+import com.gbh.movil.ui.ChildFragment;
 import com.gbh.movil.ui.main.payments.recipients.contacts.ContactListFragment;
 import com.gbh.movil.ui.view.widget.SearchView;
 
@@ -27,8 +27,8 @@ import rx.Observable;
  *
  * @author hecvasro
  */
-public class SearchOrChooseRecipientFragment extends SubFragment<AddRecipientContainer>
-  implements SearchOrChooseRecipientScreen {
+public class SearchOrChooseRecipientFragment extends ChildFragment<AddRecipientContainer>
+  implements SearchOrChooseRecipientContainer {
   private Unbinder unbinder;
 
   @BindView(R.id.search_view)
@@ -71,6 +71,17 @@ public class SearchOrChooseRecipientFragment extends SubFragment<AddRecipientCon
     super.onDestroyView();
     // Unbinds all the annotated views and methods.
     unbinder.unbind();
+  }
+
+  @Nullable
+  @Override
+  public AddRecipientComponent getComponent() {
+    return getContainer().getComponent();
+  }
+
+  @Override
+  public void onContactClicked(@NonNull Contact contact) {
+    getContainer().onContactClicked(contact);
   }
 
   @NonNull

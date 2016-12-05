@@ -22,7 +22,7 @@ public class ContactListFragment extends RecipientCandidateListFragment<ContactL
     super.onCreate(savedInstanceState);
     // Injects all the annotated dependencies.
     final ContactListComponent component = DaggerContactListComponent.builder()
-      .addRecipientComponent(container.getComponent())
+      .addRecipientComponent(getContainer().getComponent())
       .build();
     component.inject(this);
   }

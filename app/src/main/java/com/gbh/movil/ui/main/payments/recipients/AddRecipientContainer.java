@@ -2,14 +2,14 @@ package com.gbh.movil.ui.main.payments.recipients;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.ui.Container;
+import com.gbh.movil.ui.SwitchableContainer;
 
 /**
  * TODO
  *
  * @author hecvasro
  */
-public interface AddRecipientContainer extends Container<AddRecipientComponent> {
+public interface AddRecipientContainer extends SwitchableContainer<AddRecipientComponent> {
   /**
    * TODO
    *

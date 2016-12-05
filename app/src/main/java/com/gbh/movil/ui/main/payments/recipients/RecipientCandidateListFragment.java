@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +14,7 @@ import android.view.ViewGroup;
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
 import com.gbh.movil.data.util.BinderFactory;
-import com.gbh.movil.ui.SubFragment;
+import com.gbh.movil.ui.ChildFragment;
 import com.gbh.movil.ui.main.list.ListItemHolder;
 import com.gbh.movil.ui.main.list.ListItemAdapter;
 import com.gbh.movil.ui.main.list.ListItemHolderCreatorFactory;
@@ -40,9 +39,8 @@ import rx.Observable;
  * @author hecvasro
  */
 public abstract class RecipientCandidateListFragment<P extends RecipientCandidateListPresenter>
-  extends SubFragment<AddRecipientContainer> implements RecipientCandidateListScreen,
+  extends ChildFragment<SearchOrChooseRecipientContainer> implements RecipientCandidateListScreen,
   ListItemHolder.OnClickListener {
-  private SearchOrChooseRecipientScreen parentScreen;
   private Unbinder unbinder;
   private LoadIndicator loadIndicator;
   private ListItemAdapter adapter;
@@ -70,20 +68,6 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
    */
   @NonNull
   protected abstract BinderFactory.Builder createHolderBinderFactoryBuilder();
-
-  @Override
-  public void onAttach(Context context) {
-    super.onAttach(context);
-    // Attaches the direct parent to the fragment.
-    final Fragment fragment = getParentFragment();
-    if (Utils.isNull(fragment)) {
-      throw new NullPointerException("Parent fragment is missing");
-    } else if (!(fragment instanceof SearchOrChooseRecipientScreen)) {
-      throw new ClassCastException("Parent fragment must implement the 'SearchOrChooseRecipientScreen' interface");
-    } else {
-      parentScreen = (SearchOrChooseRecipientScreen) fragment;
-    }
-  }
 
   @Nullable
   @Override
@@ -145,13 +129,6 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
   }
 
   @Override
-  public void onDetach() {
-    super.onDetach();
-    // Detaches the direct parent from the fragment.
-    parentScreen = null;
-  }
-
-  @Override
   public void clear() {
     adapter.clear();
   }
@@ -159,7 +136,6 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
   @Override
   public void add(@NonNull Object item) {
     adapter.add(item);
-    adapter.notifyItemInserted(adapter.getItemCount());
   }
 
   @Nullable
@@ -173,14 +149,14 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
   @NonNull
   @Override
   public Observable<String> onQueryChanged() {
-    return parentScreen.onQueryChanged();
+    return getContainer().onQueryChanged();
   }
 
   @Override
   public void onClick(int position) {
     final Object item = adapter.get(position);
     if (item instanceof Contact) {
-      container.onContactClicked((Contact) item);
+      getContainer().onContactClicked((Contact) item);
     }
   }
 }
