@@ -1,4 +1,8 @@
 <resources>
+  <string name="bring_device_closer_to_the_terminal">Acercar celular a terminal tocar y pagar</string>
+  <string name="cannot_process_your_request_at_the_moment">No podemos procesar tu solicitud en este momento</string>
+  <string name="no_internet_connection">Sin conexión a Internet</string>
+
   <string name="commerce_payment_option_product_identifier_text_font">@string/font_gotham_rounded_book</string>
   <string name="commerce_payment_option_product_number_text_font">@string/font_roboto_medium</string>
   
@@ -8,7 +12,6 @@
   <string name="commerce_payment_option_ready_text_value">Listo para tocar y pagar</string>
 
   <string name="commerce_payment_message_text_font">@string/font_gotham_rounded_book</string>
-  <string name="commerce_payment_message_step_1">Acercar celular a terminal tocar y pagar</string>
 
   <!-- TODO: Apply standards from these point downward -->
   <!-- General strings -->
@@ -78,7 +81,6 @@
   <string name="logo">Logo</string>
   <string name="my_profile">Mi perfil</string>
   <string name="nick_name">Apodo</string>
-  <string name="no_internet_connection">Sin conexión a Internet.</string>
   <string name="ok">Ok</string>
   <string name="pay_screen_search_hint">Nombre, número o facturador</string>
   <string name="payments.action.phone_number.add">Agregar \'%1$s\'</string>

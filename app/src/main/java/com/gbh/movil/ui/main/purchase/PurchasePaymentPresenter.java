@@ -26,8 +26,10 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
    */
   void start() {
     assertScreen();
-    // TODO: Enable NFC detection.
+    screen.setMessage(stringHelper.bringDeviceCloserToTerminal());
     screen.setPaymentOption(paymentOption);
+    // TODO: Listen for network status changes.
+    // TODO: Enable NFC detection.
   }
 
   /**

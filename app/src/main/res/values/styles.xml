@@ -89,7 +89,6 @@
     <item name="android:layout_marginStart">@dimen/commerce_payment_message_default_margin_horizontal</item>
     <item name="android:layout_marginTop">@dimen/commerce_payment_message_default_margin_top</item>
     <item name="android:layout_width">match_parent</item>
-    <item name="android:text">@string/commerce_payment_message_step_1</item>
     <item name="android:textAppearance">@style/App.Text.CommercePaymentMessage</item>
   </style>
 

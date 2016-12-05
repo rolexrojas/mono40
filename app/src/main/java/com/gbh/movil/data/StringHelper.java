@@ -42,6 +42,22 @@ public final class StringHelper {
   }
 
   @NonNull
+  public final String bringDeviceCloserToTerminal() {
+    return getString(R.string.bring_device_closer_to_the_terminal);
+  }
+
+  @NonNull
+  public final String noInternetConnection() {
+    return getString(R.string.no_internet_connection);
+  }
+
+  @NonNull
+  public final String cannotProcessYourRequestAtTheMoment() {
+    return getString(R.string.cannot_process_your_request_at_the_moment);
+  }
+
+  // TODO: Apply standards from these point downward.
+  @NonNull
   public final String recipientAdditionConfirmationTitle(@NonNull Recipient recipient) {
     switch (recipient.getType()) {
       case CONTACT:
@@ -93,7 +109,6 @@ public final class StringHelper {
     return String.format(format, productNumber(product));
   }
 
-  // TODO: Apply standards from these point downward.
   @NonNull
   public final String noResults(@NonNull String query) {
     return String.format(getString(R.string.list_no_results), query);
@@ -118,11 +133,6 @@ public final class StringHelper {
   @NonNull
   public final String goToAccounts() {
     return getString(R.string.go_to_accounts);
-  }
-
-  @NonNull
-  public final String noInternetConnection() {
-    return getString(R.string.no_internet_connection);
   }
 
   @NonNull
