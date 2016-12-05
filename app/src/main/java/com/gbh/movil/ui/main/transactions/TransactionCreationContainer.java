@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.main.payments.transactions;
+package com.gbh.movil.ui.main.transactions;
 
 import com.gbh.movil.ui.Container;
 

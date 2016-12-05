@@ -1,7 +1,7 @@
-package com.gbh.movil.ui.main.payments.transactions.contacts;
+package com.gbh.movil.ui.main.transactions.contacts;
 
 import com.gbh.movil.ui.FragmentScope;
-import com.gbh.movil.ui.main.payments.transactions.TransactionCreationComponent;
+import com.gbh.movil.ui.main.transactions.TransactionCreationComponent;
 
 import dagger.Component;
 

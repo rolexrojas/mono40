@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.main.payments.transactions.contacts;
+package com.gbh.movil.ui.main.transactions.contacts;
 
 import android.support.annotation.NonNull;
 

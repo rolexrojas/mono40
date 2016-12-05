@@ -31,7 +31,7 @@
       android:name=".ui.main.payments.recipients.AddRecipientActivity"
       android:screenOrientation="portrait"/>
     <activity
-      android:name=".ui.main.payments.transactions.TransactionCreationActivity"
+      android:name=".ui.main.transactions.TransactionCreationActivity"
       android:screenOrientation="portrait"/>
     <activity
       android:name=".ui.main.products.transactions.RecentTransactionsActivity"

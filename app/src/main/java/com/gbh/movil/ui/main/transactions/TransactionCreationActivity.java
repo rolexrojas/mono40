@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.main.payments.transactions;
+package com.gbh.movil.ui.main.transactions;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +18,7 @@ import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.RecipientType;
 import com.gbh.movil.ui.ChildFragment;
 import com.gbh.movil.ui.SwitchableContainerActivity;
-import com.gbh.movil.ui.main.payments.transactions.contacts.PhoneNumberTransactionCreationFragment;
+import com.gbh.movil.ui.main.transactions.contacts.PhoneNumberTransactionCreationFragment;
 
 import javax.inject.Inject;
 

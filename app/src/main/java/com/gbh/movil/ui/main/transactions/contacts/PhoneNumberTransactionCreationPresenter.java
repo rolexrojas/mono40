@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.main.payments.transactions.contacts;
+package com.gbh.movil.ui.main.transactions.contacts;
 
 import android.support.annotation.NonNull;
 
@@ -13,7 +13,6 @@ import com.gbh.movil.ui.Presenter;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 
 import rx.Subscription;
 import rx.functions.Action1;

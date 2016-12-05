@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.main.payments.transactions.contacts;
+package com.gbh.movil.ui.main.transactions.contacts;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,8 +20,8 @@ import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.ui.ChildFragment;
 import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.main.PinConfirmationDialogFragment;
-import com.gbh.movil.ui.main.payments.transactions.PaymentOptionAdapter;
-import com.gbh.movil.ui.main.payments.transactions.TransactionCreationContainer;
+import com.gbh.movil.ui.main.transactions.PaymentOptionAdapter;
+import com.gbh.movil.ui.main.transactions.TransactionCreationContainer;
 import com.gbh.movil.ui.view.widget.pad.Digit;
 import com.gbh.movil.ui.view.widget.pad.Dot;
 import com.gbh.movil.ui.view.widget.pad.NumPad;

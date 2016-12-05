@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.main.payments.transactions;
+package com.gbh.movil.ui.main.transactions;
 
 import android.support.annotation.NonNull;
 

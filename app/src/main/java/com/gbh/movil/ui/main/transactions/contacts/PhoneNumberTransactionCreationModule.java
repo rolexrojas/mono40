@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.main.payments.transactions.contacts;
+package com.gbh.movil.ui.main.transactions.contacts;
 
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.ProductManager;
