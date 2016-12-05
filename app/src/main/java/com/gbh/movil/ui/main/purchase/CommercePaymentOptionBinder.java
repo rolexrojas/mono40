@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.main.payments.purchase;
+package com.gbh.movil.ui.main.purchase;
 
 import android.content.Context;
 import android.graphics.PorterDuff;

@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.main.payments.purchase;
+package com.gbh.movil.ui.main.purchase;
 
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;

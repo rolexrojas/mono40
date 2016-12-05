@@ -20,7 +20,7 @@ import com.gbh.movil.ui.BaseActivity;
 import com.gbh.movil.ui.Container;
 import com.gbh.movil.ui.SubFragment;
 import com.gbh.movil.ui.UiUtils;
-import com.gbh.movil.ui.main.payments.purchase.PurchaseFragment;
+import com.gbh.movil.ui.main.purchase.PurchaseFragment;
 import com.gbh.movil.ui.main.products.ProductsFragment;
 import com.gbh.movil.ui.main.payments.PaymentsFragment;
 import com.gbh.movil.ui.view.widget.SlidingPaneLayout;
