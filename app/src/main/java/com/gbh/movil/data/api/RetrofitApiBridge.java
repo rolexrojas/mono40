@@ -2,7 +2,7 @@ package com.gbh.movil.data.api;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.domain.Balance;
 import com.gbh.movil.domain.Bank;
 import com.gbh.movil.domain.InitialData;

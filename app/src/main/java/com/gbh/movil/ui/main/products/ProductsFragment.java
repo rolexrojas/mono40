@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.data.res.AssetProvider;
 import com.gbh.movil.data.util.BinderFactory;
 import com.gbh.movil.ui.UiUtils;

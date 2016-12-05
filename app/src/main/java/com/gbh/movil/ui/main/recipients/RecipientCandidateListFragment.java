@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.gbh.movil.R;
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.data.util.BinderFactory;
 import com.gbh.movil.ui.ChildFragment;
 import com.gbh.movil.ui.main.list.ListItemHolder;

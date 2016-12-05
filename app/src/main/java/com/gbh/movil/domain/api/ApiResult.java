@@ -3,7 +3,7 @@ package com.gbh.movil.domain.api;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.gbh.movil.util.Result;
+import com.gbh.movil.misc.Result;
 
 /**
  * {@link ApiBridge API}'s result representation.

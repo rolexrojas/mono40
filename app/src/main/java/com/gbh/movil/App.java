@@ -4,6 +4,7 @@ import android.app.Application;
 import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
+import com.gbh.movil.misc.Utils;
 
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;

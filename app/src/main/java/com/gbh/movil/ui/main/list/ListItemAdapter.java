@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.data.util.Binder;
 import com.gbh.movil.data.util.BinderFactory;
 import com.gbh.movil.data.util.Holder;

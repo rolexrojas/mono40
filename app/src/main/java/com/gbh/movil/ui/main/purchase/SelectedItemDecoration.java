@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 
 /**
  * TODO

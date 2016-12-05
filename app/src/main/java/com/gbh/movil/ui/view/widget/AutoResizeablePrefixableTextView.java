@@ -11,7 +11,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 
 import com.gbh.movil.R;
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 
 /**
  * TODO

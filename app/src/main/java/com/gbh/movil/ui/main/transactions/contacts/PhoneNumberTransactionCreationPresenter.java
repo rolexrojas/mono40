@@ -2,13 +2,13 @@ package com.gbh.movil.ui.main.transactions.contacts;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.ProductManager;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.TransactionManager;
-import com.gbh.movil.rx.RxUtils;
+import com.gbh.movil.misc.rx.RxUtils;
 import com.gbh.movil.ui.Presenter;
 
 import java.math.BigDecimal;

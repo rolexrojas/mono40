@@ -2,7 +2,7 @@ package com.gbh.movil.ui.main.list;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 
 /**
  * TODO

@@ -3,8 +3,8 @@ package com.gbh.movil.ui.main;
 import android.support.annotation.NonNull;
 
 import com.gbh.movil.data.StringHelper;
-import com.gbh.movil.rx.RxUtils;
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.rx.RxUtils;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.domain.BalanceManager;
 import com.gbh.movil.domain.util.Event;
 import com.gbh.movil.domain.util.EventBus;

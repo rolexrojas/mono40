@@ -1,4 +1,4 @@
-package com.gbh.movil.util;
+package com.gbh.movil.misc;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

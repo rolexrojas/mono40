@@ -6,7 +6,7 @@ import android.support.v4.util.Pair;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.RecipientManager;
-import com.gbh.movil.rx.RxUtils;
+import com.gbh.movil.misc.rx.RxUtils;
 import com.gbh.movil.ui.Presenter;
 import com.gbh.movil.ui.UiUtils;
 

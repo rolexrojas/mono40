@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.View;
 
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.ui.main.list.ListItemHolderBinder;
 

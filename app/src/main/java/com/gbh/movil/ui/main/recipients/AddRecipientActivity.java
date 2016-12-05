@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
 
 import com.gbh.movil.App;
 import com.gbh.movil.R;
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.ui.ActivityModule;
 import com.gbh.movil.ui.SwitchableContainerActivity;

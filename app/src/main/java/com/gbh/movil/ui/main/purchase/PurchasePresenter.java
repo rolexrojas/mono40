@@ -2,11 +2,11 @@ package com.gbh.movil.ui.main.purchase;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.ProductManager;
-import com.gbh.movil.rx.RxUtils;
+import com.gbh.movil.misc.rx.RxUtils;
 import com.gbh.movil.ui.Presenter;
 
 import java.util.List;

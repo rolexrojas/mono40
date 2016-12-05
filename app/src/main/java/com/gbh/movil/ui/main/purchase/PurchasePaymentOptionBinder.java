@@ -6,7 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.widget.TextView;
 
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.data.res.AssetProvider;
 import com.gbh.movil.data.util.Binder;

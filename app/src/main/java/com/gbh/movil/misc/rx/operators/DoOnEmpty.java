@@ -1,4 +1,4 @@
-package com.gbh.movil.rx.operators;
+package com.gbh.movil.misc.rx.operators;
 
 import android.support.annotation.NonNull;
 

@@ -19,7 +19,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.ui.view.widget.LoadIndicator;
 
 import uk.co.chrisjenx.calligraphy.TypefaceUtils;

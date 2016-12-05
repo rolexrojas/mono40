@@ -3,7 +3,7 @@ package com.gbh.movil.domain.api;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 
 import rx.Observable;
 import rx.functions.Func1;

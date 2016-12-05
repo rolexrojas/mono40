@@ -3,17 +3,14 @@ package com.gbh.movil.domain;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
-import com.gbh.movil.domain.util.EventBus;
-import com.gbh.movil.rx.RxUtils;
+import com.gbh.movil.misc.rx.RxUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
-import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func2;
-import timber.log.Timber;
 
 /**
  * TODO
@@ -21,11 +18,9 @@ import timber.log.Timber;
  * @author hecvasro
  */
 public final class ProductManager implements ProductProvider {
-  private final EventBus eventBus;
   private final ProductRepo productRepo;
 
-  public ProductManager(@NonNull EventBus eventBus, @NonNull ProductRepo productRepo) {
-    this.eventBus = eventBus;
+  public ProductManager(@NonNull ProductRepo productRepo) {
     this.productRepo = productRepo;
   }
 
@@ -34,14 +29,11 @@ public final class ProductManager implements ProductProvider {
    *
    * @param products
    *   TODO
-   * @param mustEmitAdditionAndRemovalNotifications
-   *   TODO
    *
    * @return TODO
    */
   @NonNull
-  private Observable<List<Product>> syncAccounts(@NonNull List<Product> products,
-    final boolean mustEmitAdditionAndRemovalNotifications) {
+  final Observable<List<Product>> syncProducts(@NonNull List<Product> products) {
     return productRepo.getAll()
       .zipWith(Observable.just(products), new Func2<List<Product>, List<Product>,
         List<Pair<Action, Product>>>() {
@@ -65,21 +57,6 @@ public final class ProductManager implements ProductProvider {
         }
       })
       .compose(RxUtils.<Pair<Action, Product>>fromCollection())
-      .doOnNext(new Action1<Pair<Action, Product>>() {
-        @Override
-        public void call(Pair<Action, Product> pair) {
-          if (mustEmitAdditionAndRemovalNotifications) {
-            final Action action = pair.first;
-            final Product product = pair.second;
-            if (action == Action.ADD) {
-              eventBus.dispatch(new ProductAdditionEvent());
-            } else if (action == Action.REMOVE) {
-              eventBus.dispatch(new ProductRemovalEvent());
-            }
-            Timber.d("%1$s %2$s", product, action);
-          }
-        }
-      })
       .flatMap(new Func1<Pair<Action, Product>, Observable<Product>>() {
         @Override
         public Observable<Product> call(Pair<Action, Product> pair) {
@@ -95,19 +72,6 @@ public final class ProductManager implements ProductProvider {
         }
       })
       .toList();
-  }
-
-  /**
-   * TODO
-   *
-   * @param products
-   *   TODO
-   *
-   * @return TODO
-   */
-  @NonNull
-  final Observable<List<Product>> syncAccounts(@NonNull List<Product> products) {
-    return syncAccounts(products, true);
   }
 
   /**

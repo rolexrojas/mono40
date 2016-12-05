@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.gbh.movil.data.SchedulerProvider;
-import com.gbh.movil.rx.RxUtils;
+import com.gbh.movil.misc.rx.RxUtils;
 import com.gbh.movil.ui.Presenter;
 import com.gbh.movil.ui.UiUtils;
 import com.gbh.movil.ui.main.list.NoResultsListItemItem;

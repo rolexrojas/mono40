@@ -3,13 +3,12 @@ package com.gbh.movil.data.repo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.gbh.movil.rx.RxUtils;
+import com.gbh.movil.misc.rx.RxUtils;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.RecipientRepo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import rx.Observable;
 import rx.functions.Action1;

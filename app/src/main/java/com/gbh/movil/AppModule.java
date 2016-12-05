@@ -49,8 +49,8 @@ final class AppModule {
 
   @Provides
   @Singleton
-  ProductManager provideProductManager(EventBus eventBus, ProductRepo productRepo) {
-    return new ProductManager(eventBus, productRepo);
+  ProductManager provideProductManager(ProductRepo productRepo) {
+    return new ProductManager(productRepo);
   }
 
   @Provides

@@ -11,7 +11,7 @@ import android.view.MenuItem;
 
 import com.gbh.movil.App;
 import com.gbh.movil.R;
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.PhoneNumberRecipient;
 import com.gbh.movil.domain.Recipient;

@@ -12,7 +12,7 @@ import android.view.View;
 
 import com.gbh.movil.App;
 import com.gbh.movil.R;
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.ui.ChildFragment;
 import com.gbh.movil.ui.SwitchableContainerActivity;
