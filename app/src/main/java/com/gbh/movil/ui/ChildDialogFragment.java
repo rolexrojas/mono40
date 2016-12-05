@@ -2,14 +2,14 @@ package com.gbh.movil.ui;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.DialogFragment;
 
 /**
  * TODO
  *
  * @author hecvasro
  */
-public abstract class ChildFragment<T extends Container<?>> extends Fragment
+public abstract class ChildDialogFragment<T extends Container<?>> extends DialogFragment
   implements ContainerChild<T> {
   private ChildFragmentHelper<T> helper;
 

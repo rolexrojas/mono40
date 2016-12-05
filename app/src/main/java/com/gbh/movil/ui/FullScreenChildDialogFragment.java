@@ -6,14 +6,10 @@ import android.support.annotation.StyleRes;
 import android.support.v4.app.DialogFragment;
 
 /**
- * TODO
- * <p>
- * Instead use {@link FullScreenChildDialogFragment}
- *
  * @author hecvasro
  */
-@Deprecated
-public abstract class FullScreenDialogFragment extends DialogFragment {
+public abstract class FullScreenChildDialogFragment<T extends Container<?>>
+  extends ChildDialogFragment<T> {
   /**
    * TODO
    *

@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
  *
  * @author hecvasro
  */
-class CommercePaymentOptionItemHolder implements CommercePaymentOptionHolder {
+class PurchasePaymentOptionItemHolder implements PurchasePaymentOptionHolder {
   /**
    * TODO
    */
@@ -50,7 +50,7 @@ class CommercePaymentOptionItemHolder implements CommercePaymentOptionHolder {
    * @param rootView
    *   TODO
    */
-  CommercePaymentOptionItemHolder(@NonNull View rootView) {
+  PurchasePaymentOptionItemHolder(@NonNull View rootView) {
     this.rootView = rootView;
     ButterKnife.bind(this, this.rootView);
   }

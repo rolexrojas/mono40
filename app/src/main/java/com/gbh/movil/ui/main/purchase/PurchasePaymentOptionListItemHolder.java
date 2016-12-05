@@ -14,12 +14,12 @@ import com.gbh.movil.ui.main.list.ListItemHolder;
  *
  * @author hecvasro
  */
-class CommercePaymentOptionListItemHolder extends ListItemHolder implements CommercePaymentOptionHolder {
-  private final CommercePaymentOptionItemHolder holder;
+class PurchasePaymentOptionListItemHolder extends ListItemHolder implements PurchasePaymentOptionHolder {
+  private final PurchasePaymentOptionItemHolder holder;
 
-  CommercePaymentOptionListItemHolder(@NonNull View rootView, @NonNull OnClickListener onClickListener) {
+  PurchasePaymentOptionListItemHolder(@NonNull View rootView, @NonNull OnClickListener onClickListener) {
     super(rootView, onClickListener);
-    this.holder = new CommercePaymentOptionItemHolder(this.rootView);
+    this.holder = new PurchasePaymentOptionItemHolder(this.rootView);
   }
 
   @Nullable

@@ -34,7 +34,7 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 public class PurchaseFragment extends ChildFragment<MainContainer>
-  implements PurchaseScreen, ListItemHolder.OnClickListener,
+  implements PurchaseContainer, PurchaseScreen, ListItemHolder.OnClickListener,
   SelectedItemDecoration.Provider {
   /**
    * TODO
@@ -47,7 +47,7 @@ public class PurchaseFragment extends ChildFragment<MainContainer>
   private ListItemAdapter adapter;
 
   @Inject
-  CommercePaymentOptionBinder paymentOptionBinder;
+  PurchasePaymentOptionBinder paymentOptionBinder;
   @Inject
   PurchasePresenter presenter;
 
@@ -94,11 +94,11 @@ public class PurchaseFragment extends ChildFragment<MainContainer>
     // Prepares the payment options list.
     final ListItemHolderCreatorFactory holderCreatorFactory = new ListItemHolderCreatorFactory
       .Builder()
-      .addCreator(Product.class, new CommercePaymentOptionListItemHolderCreator(this))
+      .addCreator(Product.class, new PurchasePaymentOptionListItemHolderCreator(this))
       .addCreator(String.class, new TextListItemHolderCreator())
       .build();
     final BinderFactory holderBinderFactory = new BinderFactory.Builder()
-      .addBinder(Product.class, CommercePaymentOptionHolder.class, paymentOptionBinder)
+      .addBinder(Product.class, PurchasePaymentOptionHolder.class, paymentOptionBinder)
       .addBinder(String.class, TextListItemHolder.class, new TextListItemBinder())
       .build();
     adapter = new ListItemAdapter(holderCreatorFactory, holderBinderFactory);
@@ -146,19 +146,20 @@ public class PurchaseFragment extends ChildFragment<MainContainer>
     unbinder.unbind();
   }
 
+  @Nullable
+  @Override
+  public PurchaseComponent getComponent() {
+    return component;
+  }
+
   @Override
   public void clearPaymentOptions() {
-    final int count = adapter.getItemCount();
-    if (count > 0) {
-      adapter.clear();
-      adapter.notifyItemRangeRemoved(0, count);
-    }
+    adapter.clear();
   }
 
   @Override
   public void addPaymentOption(@NonNull Product product) {
     adapter.add(product);
-    adapter.notifyItemInserted(adapter.getItemCount());
   }
 
   @Override
@@ -166,17 +167,14 @@ public class PurchaseFragment extends ChildFragment<MainContainer>
     int index = adapter.indexOf(readyMessage);
     if (index >= 0) {
       adapter.remove(index);
-      adapter.notifyItemRemoved(index);
     }
     index = adapter.indexOf(product);
     adapter.add(index + 1, readyMessage);
-    adapter.notifyItemChanged(index);
-    adapter.notifyItemInserted(index + 1);
   }
 
   @Override
   public void openPaymentScreen(@NonNull Product paymentOption) {
-    CommercePaymentDialogFragment.newInstance(paymentOption)
+    PurchasePaymentDialogFragment.newInstance(paymentOption)
       .show(getChildFragmentManager(), TAG_PAYMENT_SCREEN);
   }
 

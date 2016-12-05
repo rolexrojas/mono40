@@ -13,8 +13,8 @@ import com.gbh.movil.ui.main.list.ListItemHolderCreator;
  *
  * @author hecvasro
  */
-class CommercePaymentOptionListItemHolderCreator
-  implements ListItemHolderCreator<CommercePaymentOptionListItemHolder> {
+class PurchasePaymentOptionListItemHolderCreator
+  implements ListItemHolderCreator<PurchasePaymentOptionListItemHolder> {
   private final ListItemHolder.OnClickListener onClickListener;
 
   /**
@@ -23,14 +23,14 @@ class CommercePaymentOptionListItemHolderCreator
    * @param onClickListener
    *   TODO
    */
-  CommercePaymentOptionListItemHolderCreator(@NonNull ListItemHolder.OnClickListener onClickListener) {
+  PurchasePaymentOptionListItemHolderCreator(@NonNull ListItemHolder.OnClickListener onClickListener) {
     this.onClickListener = onClickListener;
   }
 
   @NonNull
   @Override
-  public CommercePaymentOptionListItemHolder create(@NonNull ViewGroup parent) {
-    return new CommercePaymentOptionListItemHolder(LayoutInflater.from(parent.getContext()).inflate(
+  public PurchasePaymentOptionListItemHolder create(@NonNull ViewGroup parent) {
+    return new PurchasePaymentOptionListItemHolder(LayoutInflater.from(parent.getContext()).inflate(
       R.layout.commerce_payment_option, parent, false), onClickListener);
   }
 }

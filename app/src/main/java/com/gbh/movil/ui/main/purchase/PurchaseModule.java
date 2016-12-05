@@ -30,9 +30,9 @@ class PurchaseModule {
    */
   @Provides
   @FragmentScope
-  CommercePaymentOptionBinder providePaymentOptionBinder(Context context, StringHelper stringHelper,
+  PurchasePaymentOptionBinder providePaymentOptionBinder(Context context, StringHelper stringHelper,
     AssetProvider assetProvider) {
-    return new CommercePaymentOptionBinder(context, stringHelper, assetProvider);
+    return new PurchasePaymentOptionBinder(context, stringHelper, assetProvider);
   }
 
   /**

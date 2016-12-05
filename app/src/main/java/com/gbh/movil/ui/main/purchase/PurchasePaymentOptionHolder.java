@@ -13,7 +13,7 @@ import com.gbh.movil.data.util.Holder;
  *
  * @author hecvasro
  */
-interface CommercePaymentOptionHolder extends Holder {
+interface PurchasePaymentOptionHolder extends Holder {
   /**
    * TODO
    *

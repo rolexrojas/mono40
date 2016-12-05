@@ -6,11 +6,12 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.gbh.movil.R;
 import com.gbh.movil.Utils;
 import com.gbh.movil.domain.Product;
-import com.gbh.movil.ui.FullScreenDialogFragment;
+import com.gbh.movil.ui.FullScreenChildDialogFragment;
 
 import javax.inject.Inject;
 
@@ -23,24 +24,26 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class CommercePaymentDialogFragment extends FullScreenDialogFragment {
+public class PurchasePaymentDialogFragment
+  extends FullScreenChildDialogFragment<PurchaseContainer> implements PurchasePaymentScreen {
   /**
    * TODO
    */
   private static final String EXTRA_PAYMENT_OPTION = "paymentOption";
 
-  /**
-   * TODO
-   */
-  private Product paymentOption;
-
   private Unbinder unbinder;
 
+  private PurchasePaymentOptionHolder paymentOptionHolder;
+
   @Inject
-  CommercePaymentOptionBinder paymentOptionBinder;
+  PurchasePaymentOptionBinder paymentOptionBinder;
+  @Inject
+  PurchasePaymentPresenter presenter;
 
   @BindView(R.id.commerce_payment_option)
   View paymentOptionContainerView;
+  @BindView(R.id.commerce_payment_message)
+  TextView commercePaymentMessageTextView;
 
   /**
    * TODO
@@ -51,10 +54,10 @@ public class CommercePaymentDialogFragment extends FullScreenDialogFragment {
    * @return TODO
    */
   @NonNull
-  public static CommercePaymentDialogFragment newInstance(@NonNull Product paymentOption) {
+  public static PurchasePaymentDialogFragment newInstance(@NonNull Product paymentOption) {
     final Bundle bundle = new Bundle();
     bundle.putSerializable(EXTRA_PAYMENT_OPTION, paymentOption);
-    final CommercePaymentDialogFragment fragment = new CommercePaymentDialogFragment();
+    final PurchasePaymentDialogFragment fragment = new PurchasePaymentDialogFragment();
     fragment.setArguments(bundle);
     return fragment;
   }
@@ -73,10 +76,13 @@ public class CommercePaymentDialogFragment extends FullScreenDialogFragment {
       throw new NullPointerException("Argument " + EXTRA_PAYMENT_OPTION + " is missing");
     } else {
       // Retrieves the payment option from the arguments.
-      paymentOption = (Product) bundle.getSerializable(EXTRA_PAYMENT_OPTION);
+      final Product paymentOption = (Product) bundle.getSerializable(EXTRA_PAYMENT_OPTION);
       // Injects all the dependencies.
-      // TODO: Modify Container and SubFragment interfaces in order to allow containers be fragments.
-      ((PurchaseFragment) getParentFragment()).component.inject(this);
+      final PurchasePaymentComponent component = DaggerPurchasePaymentComponent.builder()
+        .purchaseComponent(getContainer().getComponent())
+        .purchasePaymentModule(new PurchasePaymentModule(paymentOption))
+        .build();
+      component.inject(this);
     }
   }
 
@@ -84,7 +90,7 @@ public class CommercePaymentDialogFragment extends FullScreenDialogFragment {
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.dialog_fragment_commerce_payment, container, false);
+    return inflater.inflate(R.layout.dialog_fragment_purchase_payment, container, false);
   }
 
   @Override
@@ -92,15 +98,42 @@ public class CommercePaymentDialogFragment extends FullScreenDialogFragment {
     super.onViewCreated(view, savedInstanceState);
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
-    // Binds the selected payment option to its container.
-    paymentOptionBinder.bind(paymentOption, new CommercePaymentOptionItemHolder(
-      paymentOptionContainerView));
+    // Creates the payment option representation.
+    paymentOptionHolder = new PurchasePaymentOptionItemHolder(paymentOptionContainerView);
+    // Attaches the screen to the presenter.
+    presenter.attachScreen(this);
+  }
+
+  @Override
+  public void onStart() {
+    super.onStart();
+    // Starts the presenter.
+    presenter.start();
+  }
+
+  @Override
+  public void onStop() {
+    super.onStop();
+    // Stops the presenter.
+    presenter.stop();
   }
 
   @Override
   public void onDestroyView() {
     super.onDestroyView();
+    // Detaches the screen from the presenter.
+    presenter.detachScreen();
     // Unbinds all the annotated views and methods.
     unbinder.unbind();
+  }
+
+  @Override
+  public void setMessage(@NonNull String message) {
+    commercePaymentMessageTextView.setText(message);
+  }
+
+  @Override
+  public void setPaymentOption(@NonNull Product paymentOption) {
+    paymentOptionBinder.bind(paymentOption, paymentOptionHolder);
   }
 }
