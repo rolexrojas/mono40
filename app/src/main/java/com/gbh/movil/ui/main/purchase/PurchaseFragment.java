@@ -2,21 +2,28 @@ package com.gbh.movil.ui.main.purchase;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.gbh.movil.R;
+import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.data.util.BinderFactory;
 import com.gbh.movil.domain.Product;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.ui.ChildFragment;
 import com.gbh.movil.ui.main.MainContainer;
+import com.gbh.movil.ui.main.PinConfirmationDialogFragment;
 import com.gbh.movil.ui.main.list.ListItemAdapter;
 import com.gbh.movil.ui.main.list.ListItemHolder;
 import com.gbh.movil.ui.main.list.ListItemHolderCreatorFactory;
@@ -36,16 +43,22 @@ import butterknife.Unbinder;
 public class PurchaseFragment extends ChildFragment<MainContainer>
   implements PurchaseContainer, PurchaseScreen, ListItemHolder.OnClickListener,
   SelectedItemDecoration.Provider {
+  private static final String TAG_PAYMENT_SCREEN = "paymentScreen";
+  private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
+
   /**
    * TODO
    */
-  private static final String TAG_PAYMENT_SCREEN = "paymentScreen";
+  private static final String KEY_ACTIVATE_AUTOMATICALLY = "activeAutomatically";
 
   PurchaseComponent component;
 
   private Unbinder unbinder;
   private ListItemAdapter adapter;
+  private boolean activateAutomatically;
 
+  @Inject
+  StringHelper stringHelper;
   @Inject
   PurchasePaymentOptionBinder paymentOptionBinder;
   @Inject
@@ -57,14 +70,18 @@ public class PurchaseFragment extends ChildFragment<MainContainer>
   @BindView(R.id.recycler_view)
   RecyclerView recyclerView;
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
+  @NonNull
+  public static PurchaseFragment newInstance(boolean activeAutomatically) {
+    final Bundle bundle = new Bundle();
+    bundle.putBoolean(KEY_ACTIVATE_AUTOMATICALLY, activeAutomatically);
+    final PurchaseFragment fragment = new PurchaseFragment();
+    fragment.setArguments(bundle);
+    return fragment;
+  }
+
   @NonNull
   public static PurchaseFragment newInstance() {
-    return new PurchaseFragment();
+    return newInstance(false);
   }
 
   @Override
@@ -75,6 +92,12 @@ public class PurchaseFragment extends ChildFragment<MainContainer>
       .mainComponent(getContainer().getComponent())
       .build();
     component.inject(this);
+    final Bundle bundle = Utils.isNotNull(savedInstanceState) ? savedInstanceState : getArguments();
+    if (Utils.isNotNull(bundle)) {
+      activateAutomatically = bundle.getBoolean(KEY_ACTIVATE_AUTOMATICALLY, false);
+    } else  {
+      activateAutomatically = false;
+    }
   }
 
   @Nullable
@@ -128,6 +151,10 @@ public class PurchaseFragment extends ChildFragment<MainContainer>
     getContainer().setTitle(getString(R.string.screen_payments_commerce_title));
     // Starts the presenter.
     presenter.start();
+    if (activateAutomatically) {
+      requestPin();
+      activateAutomatically = false;
+    }
   }
 
   @Override
@@ -176,6 +203,34 @@ public class PurchaseFragment extends ChildFragment<MainContainer>
   public void openPaymentScreen(@NonNull Product paymentOption) {
     PurchasePaymentDialogFragment.newInstance(paymentOption)
       .show(getChildFragmentManager(), TAG_PAYMENT_SCREEN);
+  }
+
+  @Override
+  public void requestPin() {
+    final FragmentManager manager = getChildFragmentManager();
+    final Fragment fragment = manager.findFragmentByTag(TAG_PIN_CONFIRMATION);
+    if (Utils.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
+      ((PinConfirmationDialogFragment) fragment).dismiss();
+    }
+    final Display display = getActivity().getWindowManager().getDefaultDisplay();
+    final Point size = new Point();
+    display.getSize(size);
+    PinConfirmationDialogFragment.newInstance((size.x / 2), (size.y / 2),
+      "Activar cuenta para comprar", new PinConfirmationDialogFragment.Callback() {
+        @Override
+        public void confirm(@NonNull String pin) {
+          presenter.activeCards(pin);
+        }
+      })
+      .show(manager, TAG_PIN_CONFIRMATION);
+  }
+
+  @Override
+  public void onActivationFinished(boolean succeeded) {
+    final Fragment fragment = getChildFragmentManager().findFragmentByTag(TAG_PIN_CONFIRMATION);
+    if (Utils.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
+      ((PinConfirmationDialogFragment) fragment).resolve(succeeded);
+    }
   }
 
   @Override

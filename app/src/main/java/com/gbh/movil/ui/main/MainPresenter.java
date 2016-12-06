@@ -56,26 +56,24 @@ final class MainPresenter extends Presenter<MainScreen> {
       .subscribe(new Action1<Event>() {
         @Override
         public void call(final Event event) {
-          if (event.getType().equals(EventType.PRODUCT_ADDITION)) {
-            screenDialogCreator.create(stringHelper.dialogProductAdditionTitle())
-              .message(stringHelper.dialogProductAdditionMessage())
-              .positiveAction(stringHelper.dialogProductAdditionPositiveAction(),
-                new ScreenDialog.OnActionClickedListener() {
-                  @Override
-                  public void onActionClicked(@NonNull ScreenDialog.Action action) {
-                    eventBus.release(event);
-                    // TODO
-                  }
-                })
-              .negativeAction(stringHelper.dialogProductAdditionNegativeAction())
-              .build()
-              .show();
-          }
+          screenDialogCreator.create(stringHelper.dialogProductAdditionTitle())
+            .message(stringHelper.dialogProductAdditionMessage())
+            .positiveAction(stringHelper.dialogProductAdditionPositiveAction(),
+              new ScreenDialog.OnActionClickedListener() {
+                @Override
+                public void onActionClicked(@NonNull ScreenDialog.Action action) {
+                  eventBus.release(event);
+                  screen.openPurchaseScreen();
+                }
+              })
+            .negativeAction(stringHelper.dialogProductAdditionNegativeAction())
+            .build()
+            .show();
         }
       }, new Action1<Throwable>() {
         @Override
         public void call(Throwable throwable) {
-          Timber.e(throwable, "Listening to account addition and removal events");
+          Timber.e(throwable, "Listening to product addition events");
         }
       });
   }

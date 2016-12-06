@@ -1,8 +1,9 @@
 package com.gbh.movil.ui;
 
-import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 
+import com.gbh.movil.ui.main.PinConfirmator;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import dagger.Module;
@@ -13,9 +14,9 @@ import dagger.Provides;
  */
 @Module
 public class ActivityModule {
-  private final Activity activity;
+  private final AppCompatActivity activity;
 
-  public ActivityModule(@NonNull Activity activity) {
+  public ActivityModule(@NonNull AppCompatActivity activity) {
     this.activity = activity;
   }
 
@@ -29,5 +30,11 @@ public class ActivityModule {
   @ActivityScope
   RxPermissions providePermissionManager() {
     return new RxPermissions(activity);
+  }
+
+  @Provides
+  @ActivityScope
+  PinConfirmator providePinConfirmator() {
+    return new PinConfirmator(activity.getSupportFragmentManager());
   }
 }

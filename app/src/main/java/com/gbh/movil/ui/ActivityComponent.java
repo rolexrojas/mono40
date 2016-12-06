@@ -1,6 +1,7 @@
 package com.gbh.movil.ui;
 
 import com.gbh.movil.AppComponent;
+import com.gbh.movil.ui.main.PinConfirmator;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import dagger.Component;
@@ -16,4 +17,6 @@ public interface ActivityComponent {
   ScreenDialog.Creator provideScreenDialogCreator();
 
   RxPermissions providePermissionManager();
+
+  PinConfirmator providePinConfirmator();
 }

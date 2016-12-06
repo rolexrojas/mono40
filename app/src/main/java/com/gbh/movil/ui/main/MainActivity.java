@@ -177,4 +177,9 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
       actionBar.setTitle(title);
     }
   }
+
+  @Override
+  public void openPurchaseScreen() {
+    setChildFragment(PurchaseFragment.newInstance(true), true, true);
+  }
 }

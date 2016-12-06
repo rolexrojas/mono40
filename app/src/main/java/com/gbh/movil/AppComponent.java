@@ -13,7 +13,6 @@ import com.gbh.movil.domain.TransactionManager;
 import com.gbh.movil.domain.pos.PosBridge;
 import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.domain.RecipientManager;
-import com.gbh.movil.domain.SessionManager;
 import com.gbh.movil.domain.TransactionRepo;
 import com.gbh.movil.domain.api.ApiBridge;
 
@@ -38,8 +37,6 @@ public interface AppComponent {
   AssetProvider provideResourceProvider();
 
   EventBus provideEventBus();
-
-  SessionManager provideSessionManager();
 
   ApiBridge provideApiBridge();
 

@@ -6,7 +6,9 @@ import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.data.res.AssetProvider;
 import com.gbh.movil.domain.ProductManager;
+import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.ui.FragmentScope;
+import com.gbh.movil.ui.ScreenDialog;
 
 import dagger.Module;
 import dagger.Provides;
@@ -42,8 +44,9 @@ class PurchaseModule {
    */
   @Provides
   @FragmentScope
-  PurchasePresenter providePresenter(SchedulerProvider schedulerProvider,
-    ProductManager productManager) {
-    return new PurchasePresenter(schedulerProvider, productManager);
+  PurchasePresenter providePresenter(StringHelper stringHelper, SchedulerProvider schedulerProvider,
+    ProductManager productManager, EventBus eventBus, ScreenDialog.Creator screenDialogCreator) {
+    return new PurchasePresenter(stringHelper, schedulerProvider, productManager,
+      eventBus, screenDialogCreator);
   }
 }

@@ -39,4 +39,8 @@ interface PurchaseScreen extends Screen {
    *   TODO
    */
   void openPaymentScreen(@NonNull Product paymentOption);
+
+  void requestPin();
+
+  void onActivationFinished(boolean succeeded);
 }

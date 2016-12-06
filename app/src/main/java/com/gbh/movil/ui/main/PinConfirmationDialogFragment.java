@@ -40,6 +40,7 @@ import io.codetail.animation.ViewAnimationUtils;
  *
  * @author hecvasro
  */
+@Deprecated
 public class PinConfirmationDialogFragment extends FullScreenDialogFragment
   implements DialogInterface.OnShowListener, PinView.Listener, NumPad.OnDigitClickedListener,
   NumPad.OnDeleteClickedListener {

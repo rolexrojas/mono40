@@ -11,7 +11,6 @@ import com.gbh.movil.domain.pos.PosBridge;
 import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.domain.RecipientManager;
 import com.gbh.movil.domain.RecipientRepo;
-import com.gbh.movil.domain.SessionManager;
 import com.gbh.movil.domain.api.ApiBridge;
 
 import javax.inject.Singleton;
@@ -40,12 +39,6 @@ final class AppModule {
   @Singleton
   EventBus provideEventBus() {
     return new EventBus();
-  }
-
-  @Provides
-  @Singleton
-  SessionManager provideSessionManager() {
-    return new SessionManager();
   }
 
   @Provides

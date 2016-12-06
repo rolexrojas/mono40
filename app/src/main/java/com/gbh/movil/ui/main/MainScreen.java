@@ -8,4 +8,8 @@ import com.gbh.movil.ui.Screen;
  * @author hecvasro
  */
 interface MainScreen extends Screen {
+  /**
+   * TODO
+   */
+  void openPurchaseScreen();
 }

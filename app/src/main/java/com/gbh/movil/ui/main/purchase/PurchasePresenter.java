@@ -2,16 +2,22 @@ package com.gbh.movil.ui.main.purchase;
 
 import android.support.annotation.NonNull;
 
+import com.gbh.movil.data.StringHelper;
+import com.gbh.movil.domain.util.Event;
+import com.gbh.movil.domain.util.EventBus;
+import com.gbh.movil.domain.util.EventType;
 import com.gbh.movil.misc.Utils;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.ProductManager;
 import com.gbh.movil.misc.rx.RxUtils;
 import com.gbh.movil.ui.Presenter;
+import com.gbh.movil.ui.ScreenDialog;
 
 import java.util.List;
 
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
@@ -22,23 +28,29 @@ import timber.log.Timber;
  * @author hecvasro
  */
 class PurchasePresenter extends Presenter<PurchaseScreen> {
-  /**
-   * TODO
-   */
-  private Subscription subscription = Subscriptions.unsubscribed();
-
+  private final StringHelper stringHelper;
   private final SchedulerProvider schedulerProvider;
   private final ProductManager productManager;
+  private final EventBus eventBus;
+  private final ScreenDialog.Creator screenDialogCreator;
+
+  private Subscription productAdditionEventSubscription = Subscriptions.unsubscribed();
+  private Subscription paymentOptionsSubscription = Subscriptions.unsubscribed();
+  private Subscription activationSubscription = Subscriptions.unsubscribed();
 
   /**
    * TODO
    */
   private Product selectedProduct;
 
-  PurchasePresenter(@NonNull SchedulerProvider schedulerProvider,
-    @NonNull ProductManager productManager) {
+  PurchasePresenter(@NonNull StringHelper stringHelper,
+    @NonNull SchedulerProvider schedulerProvider, @NonNull ProductManager productManager,
+    @NonNull EventBus eventBus, @NonNull ScreenDialog.Creator screenDialogCreator) {
+    this.stringHelper = stringHelper;
     this.schedulerProvider = schedulerProvider;
     this.productManager = productManager;
+    this.eventBus = eventBus;
+    this.screenDialogCreator = screenDialogCreator;
   }
 
   /**
@@ -46,7 +58,32 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
    */
   void start() {
     assertScreen();
-    subscription = productManager.getAllPaymentOptions()
+    productAdditionEventSubscription = eventBus.onEventDispatched(EventType.PRODUCT_ADDITION)
+      .observeOn(AndroidSchedulers.mainThread())
+      .subscribe(new Action1<Event>() {
+        @Override
+        public void call(final Event event) {
+          screenDialogCreator.create(stringHelper.dialogProductAdditionTitle())
+            .message(stringHelper.dialogProductAdditionMessage())
+            .positiveAction(stringHelper.dialogProductAdditionPositiveAction(),
+              new ScreenDialog.OnActionClickedListener() {
+                @Override
+                public void onActionClicked(@NonNull ScreenDialog.Action action) {
+                  eventBus.release(event);
+                  screen.requestPin();
+                }
+              })
+            .negativeAction(stringHelper.dialogProductAdditionNegativeAction())
+            .build()
+            .show();
+        }
+      }, new Action1<Throwable>() {
+        @Override
+        public void call(Throwable throwable) {
+          Timber.e(throwable, "Listening to product addition events");
+        }
+      });
+    paymentOptionsSubscription = productManager.getAllPaymentOptions()
       .subscribeOn(schedulerProvider.io())
       .observeOn(schedulerProvider.ui())
       .doOnNext(new Action1<List<Product>>() {
@@ -79,7 +116,8 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
    */
   void stop() {
     assertScreen();
-    RxUtils.unsubscribe(subscription);
+    RxUtils.unsubscribe(paymentOptionsSubscription);
+    RxUtils.unsubscribe(productAdditionEventSubscription);
   }
 
   /**
@@ -106,5 +144,25 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
       selectedProduct = product;
       screen.markAsSelected(selectedProduct);
     }
+  }
+
+  void activeCards(@NonNull String pin) {
+    assertScreen();
+    RxUtils.unsubscribe(activationSubscription);
+    activationSubscription = productManager.activateAllProducts(pin)
+      .subscribeOn(schedulerProvider.io())
+      .observeOn(schedulerProvider.ui())
+      .subscribe(new Action1<Object>() {
+        @Override
+        public void call(Object object) {
+          screen.onActivationFinished(true);
+        }
+      }, new Action1<Throwable>() {
+        @Override
+        public void call(Throwable throwable) {
+          Timber.e(throwable, "Activating all products");
+          screen.onActivationFinished(false);
+        }
+      });
   }
 }

@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
 import com.gbh.movil.domain.pos.PosBridge;
+import com.gbh.movil.domain.pos.PosResult;
 import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.misc.rx.RxUtils;
 
@@ -109,6 +110,26 @@ public final class ProductManager implements ProductProvider {
       })
       // TODO: Change order in a way that the primary payment option is the first one.
       .toList();
+  }
+
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  public final Observable<Object> activateAllProducts(@NonNull final String pin) {
+    return getAllPaymentOptions()
+      .compose(RxUtils.<Product>fromCollection())
+      .flatMap(new Func1<Product, Observable<PosResult<String>>>() {
+        @Override
+        public Observable<PosResult<String>> call(Product product) {
+          return posBridge.addCard(SessionManager.getInstance().getPhoneNumber(), pin,
+            product.getAlias());
+        }
+      })
+      .toList()
+      .cast(Object.class);
   }
 
   @NonNull
