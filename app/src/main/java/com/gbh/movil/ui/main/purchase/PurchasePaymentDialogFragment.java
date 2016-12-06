@@ -136,4 +136,9 @@ public class PurchasePaymentDialogFragment
   public void setPaymentOption(@NonNull Product paymentOption) {
     paymentOptionBinder.bind(paymentOption, paymentOptionHolder);
   }
+
+  @Override
+  public void animateAndTerminate() {
+    dismiss(); // TODO: Animate before terminating.
+  }
 }

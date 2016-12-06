@@ -1,5 +1,7 @@
 package com.gbh.movil.data.pos;
 
+import android.content.Context;
+
 import com.gbh.movil.domain.pos.PosBridge;
 
 import javax.inject.Singleton;
@@ -16,7 +18,7 @@ import dagger.Provides;
 public class PosModule {
   @Provides
   @Singleton
-  PosBridge providePosBridge() {
-    return new FakePosBridge();
+  PosBridge providePosBridge(Context context) {
+    return new CubePosBridge(context);
   }
 }

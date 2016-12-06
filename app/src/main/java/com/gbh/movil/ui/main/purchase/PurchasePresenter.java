@@ -6,7 +6,6 @@ import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.domain.util.Event;
 import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.domain.util.EventType;
-import com.gbh.movil.misc.Utils;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.ProductManager;
@@ -97,7 +96,7 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
         @Override
         public void call(Product product) {
           screen.addPaymentOption(product);
-          if (Utils.isNull(selectedProduct) && Product.isDefaultPaymentOption(product)) {
+          if (Product.isDefaultPaymentOption(product)) {
             selectedProduct = product;
             screen.markAsSelected(selectedProduct);
           }

@@ -1,1 +1,1 @@
-include ':app', ':CubeSdk'
+include ':app'

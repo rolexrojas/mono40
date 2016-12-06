@@ -16,7 +16,7 @@ android {
     applicationId "com.gbh.movil"
     minSdkVersion 19
     targetSdkVersion 24
-    versionCode 4
+    versionCode 5
     versionName "2.0.0"
   }
 
@@ -40,10 +40,14 @@ android {
     }
 
     release {
-      buildConfigField TYPE_INTEGER, TIME_OUT_CONNECTION, "30" // TODO
-      buildConfigField TYPE_INTEGER, TIME_OUT_READ, "30" // TODO
-      buildConfigField TYPE_INTEGER, TIME_OUT_WRITE, "30" // TODO
-      buildConfigField TYPE_STRING, API_URL, "\"http://172.19.1.103:8081/api/neo/\"" // TODO
+      // TODO
+      buildConfigField TYPE_INTEGER, TIME_OUT_CONNECTION, "30"
+      // TODO
+      buildConfigField TYPE_INTEGER, TIME_OUT_READ, "30"
+      // TODO
+      buildConfigField TYPE_INTEGER, TIME_OUT_WRITE, "30"
+      // TODO
+      buildConfigField TYPE_STRING, API_URL, "\"http://172.19.1.103:8081/api/neo/\""
 
       minifyEnabled false
       proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
@@ -54,6 +58,9 @@ android {
 repositories {
   maven { url "https://maven.fabric.io/public" }
   maven { url "https://jitpack.io" }
+  flatDir {
+    dirs "libs"
+  }
 }
 
 dependencies {
@@ -63,8 +70,6 @@ dependencies {
   def circularRevealVersion = "2.0.1"
   def crashlyticsVersion = "2.6.5"
   def daggerVersion = "2.7"
-  def dividersVersion = "1.0.1"
-  def halariousVersion = "0.14"
   def jUnitVersion = "4.12"
   def jsr250Version = "1.0"
   def libPhoneNumberVersion = "7.7.4"
@@ -94,7 +99,6 @@ dependencies {
   compile "com.jakewharton.rxbinding:rxbinding:${rxBindingVersion}"
   compile "com.jakewharton.timber:timber:${timberVersion}"
   compile "com.jakewharton:butterknife:${butterKnifeVersion}"
-  compile "com.karumi:dividers:${dividersVersion}"
   compile "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}"
   compile "com.squareup.okhttp3:okhttp:${okHttpVersion}"
   compile "com.squareup.picasso:picasso:${picassoVersion}"
@@ -108,7 +112,7 @@ dependencies {
   compile "io.reactivex:rxjava:${rxJavaVersion}"
   compile "uk.co.chrisjenx:calligraphy:${calligraphyVersion}"
   compile fileTree(include: ['*.jar'], dir: 'libs')
-  compile project(':CubeSdk')
+  compile(name: "CubeSdk", ext: "aar")
   provided "javax.annotation:jsr250-api:${jsr250Version}"
   testCompile "junit:junit:${jUnitVersion}"
 }

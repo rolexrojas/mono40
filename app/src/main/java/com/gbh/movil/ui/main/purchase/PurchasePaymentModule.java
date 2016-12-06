@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.domain.Product;
+import com.gbh.movil.domain.pos.PosBridge;
 import com.gbh.movil.ui.ChildFragmentScope;
 
 import dagger.Module;
@@ -22,7 +23,7 @@ class PurchasePaymentModule {
 
   @Provides
   @ChildFragmentScope
-  PurchasePaymentPresenter providePresenter(StringHelper stringHelper) {
-    return new PurchasePaymentPresenter(stringHelper, paymentOption);
+  PurchasePaymentPresenter providePresenter(StringHelper stringHelper, PosBridge posBridge) {
+    return new PurchasePaymentPresenter(stringHelper, paymentOption, posBridge);
   }
 }

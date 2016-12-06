@@ -26,4 +26,9 @@ interface PurchasePaymentScreen extends Screen {
    *   TODO
    */
   void setPaymentOption(@NonNull Product paymentOption);
+
+  /**
+   * TODO
+   */
+  void animateAndTerminate();
 }

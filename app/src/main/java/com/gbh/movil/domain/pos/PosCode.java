@@ -1,6 +1,6 @@
 package com.gbh.movil.domain.pos;
 
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 
 /**
  * {@link PosBridge POS}'s code enumeration.
@@ -12,6 +12,7 @@ public enum PosCode {
   EXPIRED_AUTH_CODE(1000),
   INCORRECT_AUTH_CODE(1001),
   INCORRECT_ALIAS(1002),
+  UNREGISTERED_PRODUCT(1003),
   UNEXPECTED(5000);
 
   private final int value;
@@ -28,7 +29,7 @@ public enum PosCode {
    *
    * @return TODO
    */
-  @Nullable
+  @NonNull
   public static PosCode fromValue(int value) {
     for (PosCode apiCode : PosCode.values()) {
       if (value == apiCode.value) {
