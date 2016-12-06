@@ -15,21 +15,16 @@ import dagger.Provides;
 public class ActivityModule {
   private final Activity activity;
 
-  /**
-   * TODO
-   *
-   * @param activity
-   *   TODO
-   */
   public ActivityModule(@NonNull Activity activity) {
     this.activity = activity;
   }
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
+  @Provides
+  @ActivityScope
+  ScreenDialog.Creator provideScreenDialogCreator() {
+    return new ScreenDialog.Creator(activity);
+  }
+
   @Provides
   @ActivityScope
   RxPermissions providePermissionManager() {

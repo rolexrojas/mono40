@@ -17,12 +17,21 @@ public final class PosResult<D> extends Result<PosCode, D> {
    * @param code
    *   Result's code.
    */
-  private PosResult(@NonNull PosCode code, @Nullable D data) {
+  public PosResult(@NonNull PosCode code, @Nullable D data) {
     super(code, data);
   }
 
-  @Override
+  /**
+   * TODO
+   *
+   * @param code
+   *   TODO
+   */
+  public PosResult(@NonNull PosCode code) {
+    super(code);
+  }
+
   public boolean isSuccessful() {
-    return false;
+    return getCode().equals(PosCode.OK);
   }
 }

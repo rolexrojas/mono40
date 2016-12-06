@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.main.payments.recipients.contacts;
+package com.gbh.movil.ui.main.recipients.contacts;
 
 import android.Manifest;
 import android.support.annotation.NonNull;
@@ -6,8 +6,8 @@ import android.support.annotation.Nullable;
 
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.misc.rx.RxUtils;
-import com.gbh.movil.ui.main.payments.recipients.Contact;
-import com.gbh.movil.ui.main.payments.recipients.RecipientCandidateListPresenter;
+import com.gbh.movil.ui.main.recipients.Contact;
+import com.gbh.movil.ui.main.recipients.RecipientCandidateListPresenter;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import rx.Observable;

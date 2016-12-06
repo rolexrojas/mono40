@@ -3,6 +3,11 @@
   <string name="cannot_process_your_request_at_the_moment">No podemos procesar tu solicitud en este momento</string>
   <string name="no_internet_connection">Sin conexión a Internet</string>
 
+  <string name="dialog_product_addition_title">¡Listo para activar!</string>
+  <string name="dialog_product_addition_message">Tu cuenta ya se agregó a %1$s. Actívala para tocar y pagar en tiendas y comercios.</string>
+  <string name="dialog_product_addition_positive_action">Activar</string>
+  <string name="dialog_product_addition_negative_action">Más tarde</string>
+
   <string name="commerce_payment_option_product_identifier_text_font">@string/font_gotham_rounded_book</string>
   <string name="commerce_payment_option_product_number_text_font">@string/font_roboto_medium</string>
   

@@ -5,7 +5,13 @@
   android:layout_height="match_parent">
   <FrameLayout
     android:id="@+id/commerce_payment_indicator"
-    style="@style/App.Widget.CommercePaymentIndicator"/>
+    style="@style/App.Widget.CommercePaymentIndicator">
+    <ImageView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:src="@drawable/app_glyph"/>
+  </FrameLayout>
   <TextView
     android:id="@+id/commerce_payment_message"
     style="@style/App.Widget.CommercePaymentMessage"

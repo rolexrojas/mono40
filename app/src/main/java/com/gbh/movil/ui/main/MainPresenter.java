@@ -4,12 +4,12 @@ import android.support.annotation.NonNull;
 
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.misc.rx.RxUtils;
-import com.gbh.movil.misc.Utils;
 import com.gbh.movil.domain.BalanceManager;
 import com.gbh.movil.domain.util.Event;
 import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.domain.util.EventType;
 import com.gbh.movil.ui.Presenter;
+import com.gbh.movil.ui.ScreenDialog;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -26,14 +26,16 @@ final class MainPresenter extends Presenter<MainScreen> {
   private final StringHelper stringHelper;
   private final EventBus eventBus;
   private final BalanceManager balanceManager;
+  private final ScreenDialog.Creator screenDialogCreator;
 
   private Subscription subscription = Subscriptions.unsubscribed();
 
   MainPresenter(@NonNull StringHelper stringHelper, @NonNull EventBus eventBus,
-    @NonNull BalanceManager balanceManager) {
+    @NonNull BalanceManager balanceManager, @NonNull ScreenDialog.Creator screenDialogCreator) {
     this.stringHelper = stringHelper;
     this.eventBus = eventBus;
     this.balanceManager = balanceManager;
+    this.screenDialogCreator = screenDialogCreator;
   }
 
   /**
@@ -49,20 +51,25 @@ final class MainPresenter extends Presenter<MainScreen> {
    */
   final void start() {
     assertScreen();
-    subscription = eventBus.onEventDispatched(EventType.PRODUCT_ADDITION, EventType.PRODUCT_REMOVAL)
+    subscription = eventBus.onEventDispatched(EventType.PRODUCT_ADDITION)
       .observeOn(AndroidSchedulers.mainThread())
       .subscribe(new Action1<Event>() {
         @Override
-        public void call(Event event) {
-          String message = null;
+        public void call(final Event event) {
           if (event.getType().equals(EventType.PRODUCT_ADDITION)) {
-            message = stringHelper.yourAccountHaveBeenAdded();
-          } else if (event.getType().equals(EventType.PRODUCT_REMOVAL)) {
-            message = stringHelper.yourAccountHaveBeenRemoved();
-          }
-          eventBus.release(event);
-          if (Utils.isNotNull(message)) {
-            screen.showAccountAdditionOrRemovalNotification(message);
+            screenDialogCreator.create(stringHelper.dialogProductAdditionTitle())
+              .message(stringHelper.dialogProductAdditionMessage())
+              .positiveAction(stringHelper.dialogProductAdditionPositiveAction(),
+                new ScreenDialog.OnActionClickedListener() {
+                  @Override
+                  public void onActionClicked(@NonNull ScreenDialog.Action action) {
+                    eventBus.release(event);
+                    // TODO
+                  }
+                })
+              .negativeAction(stringHelper.dialogProductAdditionNegativeAction())
+              .build()
+              .show();
           }
         }
       }, new Action1<Throwable>() {

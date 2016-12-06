@@ -32,6 +32,23 @@ public abstract class Result<C, D> {
   }
 
   /**
+   * TODO
+   *
+   * @param code
+   *   TODO
+   */
+  protected Result(@NonNull C code) {
+    this(code, null);
+  }
+
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
+  public abstract boolean isSuccessful();
+
+  /**
    * Gets the code of the result.
    *
    * @return Result's code.
@@ -50,13 +67,6 @@ public abstract class Result<C, D> {
   public final D getData() {
     return data;
   }
-
-  /**
-   * Indicates if is successful result or not.
-   *
-   * @return True if it is successful result, false otherwise.
-   */
-  public abstract boolean isSuccessful();
 
   @Override
   public String toString() {

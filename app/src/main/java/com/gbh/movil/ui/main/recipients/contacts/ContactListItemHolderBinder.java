@@ -1,9 +1,9 @@
-package com.gbh.movil.ui.main.payments.recipients.contacts;
+package com.gbh.movil.ui.main.recipients.contacts;
 
 import android.support.annotation.NonNull;
 
 import com.gbh.movil.ui.main.list.ListItemHolderBinder;
-import com.gbh.movil.ui.main.payments.recipients.Contact;
+import com.gbh.movil.ui.main.recipients.Contact;
 
 /**
  * TODO

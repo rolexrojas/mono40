@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.main.payments.recipients.contacts;
+package com.gbh.movil.ui.main.recipients.contacts;
 
 import android.support.annotation.NonNull;
 import android.view.View;

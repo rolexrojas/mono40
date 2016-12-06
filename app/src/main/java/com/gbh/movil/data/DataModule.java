@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.gbh.movil.data.api.ApiModule;
 import com.gbh.movil.data.net.NetModule;
+import com.gbh.movil.data.pos.PosModule;
 import com.gbh.movil.data.repo.RepoModule;
 import com.gbh.movil.data.res.AssetProvider;
 import com.gbh.movil.data.res.LocalAssetProvider;
@@ -16,7 +17,7 @@ import dagger.Provides;
 /**
  * @author hecvasro
  */
-@Module(includes = { NetModule.class, ApiModule.class, RepoModule.class })
+@Module(includes = { NetModule.class, ApiModule.class, PosModule.class, RepoModule.class })
 public final class DataModule {
   @Provides
   @Singleton

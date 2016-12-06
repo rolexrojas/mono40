@@ -4,6 +4,7 @@ import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.domain.BalanceManager;
 import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.ui.ActivityScope;
+import com.gbh.movil.ui.ScreenDialog;
 
 import dagger.Module;
 import dagger.Provides;
@@ -18,7 +19,7 @@ class MainModule {
   @Provides
   @ActivityScope
   MainPresenter provideMainPresenter(StringHelper stringHelper, EventBus eventBus,
-    BalanceManager balanceManager) {
-    return new MainPresenter(stringHelper, eventBus, balanceManager);
+    BalanceManager balanceManager, ScreenDialog.Creator screenDialogCreator) {
+    return new MainPresenter(stringHelper, eventBus, balanceManager, screenDialogCreator);
   }
 }

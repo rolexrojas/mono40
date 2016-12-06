@@ -32,7 +32,7 @@ import com.gbh.movil.ui.main.list.NoResultsListItemItem;
 import com.gbh.movil.ui.main.list.NoResultsListItemHolder;
 import com.gbh.movil.ui.main.list.NoResultsListItemHolderBinder;
 import com.gbh.movil.ui.main.list.NoResultsListItemHolderCreator;
-import com.gbh.movil.ui.main.payments.recipients.AddRecipientActivity;
+import com.gbh.movil.ui.main.recipients.AddRecipientActivity;
 import com.gbh.movil.ui.main.transactions.TransactionCreationActivity;
 import com.gbh.movil.ui.view.widget.FullScreenRefreshIndicator;
 import com.gbh.movil.ui.view.widget.LoadIndicator;

@@ -38,7 +38,6 @@ public final class InitialDataLoader {
         @Override
         public Observable<Object> call(InitialData data) {
           return productManager.syncProducts(data.getProducts())
-            .cast(Object.class)
             .concatWith(recipientManager.syncRecipients(data.getRecipients()))
             .last();
         }

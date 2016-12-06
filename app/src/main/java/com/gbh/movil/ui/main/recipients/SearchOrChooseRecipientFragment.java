@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.main.payments.recipients;
+package com.gbh.movil.ui.main.recipients;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 
 import com.gbh.movil.R;
 import com.gbh.movil.ui.ChildFragment;
-import com.gbh.movil.ui.main.payments.recipients.contacts.ContactListFragment;
+import com.gbh.movil.ui.main.recipients.contacts.ContactListFragment;
 import com.gbh.movil.ui.view.widget.SearchView;
 
 import butterknife.BindView;

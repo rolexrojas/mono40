@@ -3,12 +3,15 @@ package com.gbh.movil.domain;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
+import com.gbh.movil.domain.pos.PosBridge;
+import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.misc.rx.RxUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func2;
 
@@ -19,9 +22,14 @@ import rx.functions.Func2;
  */
 public final class ProductManager implements ProductProvider {
   private final ProductRepo productRepo;
+  private final PosBridge posBridge;
+  private final EventBus eventBus;
 
-  public ProductManager(@NonNull ProductRepo productRepo) {
+  public ProductManager(@NonNull ProductRepo productRepo, @NonNull PosBridge posBridge,
+    @NonNull EventBus eventBus) {
     this.productRepo = productRepo;
+    this.posBridge = posBridge;
+    this.eventBus = eventBus;
   }
 
   /**
@@ -33,23 +41,21 @@ public final class ProductManager implements ProductProvider {
    * @return TODO
    */
   @NonNull
-  final Observable<List<Product>> syncProducts(@NonNull List<Product> products) {
-    return productRepo.getAll()
-      .zipWith(Observable.just(products), new Func2<List<Product>, List<Product>,
-        List<Pair<Action, Product>>>() {
+  final Observable<Object> syncProducts(@NonNull List<Product> products) {
+    return getAll().zipWith(Observable.just(products),
+      new Func2<List<Product>, List<Product>, List<Pair<Action, Product>>>() {
         @Override
-        public List<Pair<Action, Product>> call(List<Product> localProducts,
-          List<Product> remoteProducts) {
+        public List<Pair<Action, Product>> call(List<Product> local, List<Product> remote) {
           final List<Pair<Action, Product>> actions = new ArrayList<>();
-          for (Product product : remoteProducts) {
-            if (!localProducts.contains(product)) {
+          for (Product product : remote) {
+            if (!local.contains(product)) {
               actions.add(Pair.create(Action.ADD, product));
             } else {
               actions.add(Pair.create(Action.UPDATE, product));
             }
           }
-          for (Product product : localProducts) {
-            if (!remoteProducts.contains(product)) {
+          for (Product product : local) {
+            if (!remote.contains(product)) {
               actions.add(Pair.create(Action.REMOVE, product));
             }
           }
@@ -57,21 +63,33 @@ public final class ProductManager implements ProductProvider {
         }
       })
       .compose(RxUtils.<Pair<Action, Product>>fromCollection())
-      .flatMap(new Func1<Pair<Action, Product>, Observable<Product>>() {
+      .doOnNext(new Action1<Pair<Action, Product>>() {
         @Override
-        public Observable<Product> call(Pair<Action, Product> pair) {
+        public void call(Pair<Action, Product> pair) {
+          final Action action = pair.first;
+          if (action == Action.ADD) {
+            eventBus.dispatch(new ProductAdditionEvent());
+          } else if (action == Action.REMOVE) {
+            eventBus.dispatch(new ProductRemovalEvent());
+          }
+        }
+      })
+      .flatMap(new Func1<Pair<Action, Product>, Observable<Object>>() {
+        @Override
+        public Observable<Object> call(Pair<Action, Product> pair) {
           final Action action = pair.first;
           final Product product = pair.second;
-          final Observable<Product> observable;
+          final Observable<Object> observable;
           if (action == Action.ADD || action == Action.UPDATE) {
-            observable = productRepo.save(product);
+            observable = productRepo.save(product).cast(Object.class);
           } else {
-            observable = productRepo.remove(product);
+            observable = Observable.concat(productRepo.remove(product),
+              posBridge.removeCard(product.getAlias()));
           }
           return observable;
         }
       })
-      .toList();
+      .last();
   }
 
   /**

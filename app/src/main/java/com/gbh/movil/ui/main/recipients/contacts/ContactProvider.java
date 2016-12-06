@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.main.payments.recipients.contacts;
+package com.gbh.movil.ui.main.recipients.contacts;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
@@ -10,7 +10,7 @@ import android.support.annotation.Nullable;
 import com.gbh.movil.misc.Utils;
 import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.misc.rx.RxUtils;
-import com.gbh.movil.ui.main.payments.recipients.Contact;
+import com.gbh.movil.ui.main.recipients.Contact;
 import com.google.i18n.phonenumbers.NumberParseException;
 
 import java.util.ArrayList;

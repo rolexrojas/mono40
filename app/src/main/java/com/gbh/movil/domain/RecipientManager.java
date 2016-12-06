@@ -6,7 +6,7 @@ import android.support.v4.util.Pair;
 
 import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.domain.api.ApiUtils;
-import com.gbh.movil.ui.main.payments.recipients.Contact;
+import com.gbh.movil.ui.main.recipients.Contact;
 
 import java.util.List;
 

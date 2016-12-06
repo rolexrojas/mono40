@@ -42,6 +42,26 @@ public final class StringHelper {
   }
 
   @NonNull
+  public final String dialogProductAdditionTitle() {
+    return getString(R.string.dialog_product_addition_title);
+  }
+
+  @NonNull
+  public final String dialogProductAdditionMessage() {
+    return format(R.string.dialog_product_addition_message, appName());
+  }
+
+  @NonNull
+  public final String dialogProductAdditionPositiveAction() {
+    return getString(R.string.dialog_product_addition_positive_action);
+  }
+
+  @NonNull
+  public final String dialogProductAdditionNegativeAction() {
+    return getString(R.string.dialog_product_addition_negative_action);
+  }
+
+  @NonNull
   public final String bringDeviceCloserToTerminal() {
     return getString(R.string.bring_device_closer_to_the_terminal);
   }

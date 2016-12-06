@@ -57,6 +57,6 @@ public final class ApiResult<D> extends Result<ApiCode, D> {
 
   @Override
   public boolean isSuccessful() {
-    return getCode() == ApiCode.OK;
+    return getCode().equals(ApiCode.OK);
   }
 }

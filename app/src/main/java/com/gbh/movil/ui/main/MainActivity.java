@@ -1,7 +1,6 @@
 package com.gbh.movil.ui.main;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,9 +13,9 @@ import com.gbh.movil.App;
 import com.gbh.movil.R;
 import com.gbh.movil.misc.Utils;
 import com.gbh.movil.data.StringHelper;
+import com.gbh.movil.ui.ActivityModule;
 import com.gbh.movil.ui.ChildFragment;
 import com.gbh.movil.ui.SwitchableContainerActivity;
-import com.gbh.movil.ui.misc.UiUtils;
 import com.gbh.movil.ui.main.purchase.PurchaseFragment;
 import com.gbh.movil.ui.main.products.ProductsFragment;
 import com.gbh.movil.ui.main.payments.PaymentsFragment;
@@ -60,6 +59,7 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
     // Injects all the annotated dependencies.
     component = DaggerMainComponent.builder()
       .appComponent(((App) getApplication()).getComponent())
+      .activityModule(new ActivityModule(this))
       .build();
     component.inject(this);
     // Sets the content layout identifier.
@@ -176,17 +176,5 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
     if (Utils.isNotNull(actionBar)) {
       actionBar.setTitle(title);
     }
-  }
-
-  @Override
-  public void showAccountAdditionOrRemovalNotification(@NonNull String message) {
-    UiUtils.createDialog(this, stringHelper.doneWithExclamationMark(),
-      message, stringHelper.ok(), null, stringHelper.goToAccounts(),
-      new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-          setChildFragment(ProductsFragment.newInstance(), true, true);
-        }
-      }).show();
   }
 }

@@ -1,7 +1,7 @@
-package com.gbh.movil.ui.main.payments.recipients.contacts;
+package com.gbh.movil.ui.main.recipients.contacts;
 
 import com.gbh.movil.ui.FragmentScope;
-import com.gbh.movil.ui.main.payments.recipients.AddRecipientComponent;
+import com.gbh.movil.ui.main.recipients.AddRecipientComponent;
 
 import dagger.Component;
 

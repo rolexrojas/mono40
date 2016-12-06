@@ -1,6 +1,6 @@
-package com.gbh.movil.ui.main.payments.recipients.contacts;
+package com.gbh.movil.ui.main.recipients.contacts;
 
-import com.gbh.movil.ui.main.payments.recipients.RecipientCandidateListScreen;
+import com.gbh.movil.ui.main.recipients.RecipientCandidateListScreen;
 
 /**
  * TODO
