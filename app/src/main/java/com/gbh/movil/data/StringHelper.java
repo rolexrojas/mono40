@@ -62,6 +62,26 @@ public final class StringHelper {
   }
 
   @NonNull
+  public final String dialogNfcDefaultAssignationTitle() {
+    return format(R.string.dialog_nfc_default_assignation_title, appName());
+  }
+
+  @NonNull
+  public final String dialogNfcDefaultAssignationMessage() {
+    return format(R.string.dialog_nfc_default_assignation_message, appName());
+  }
+
+  @NonNull
+  public final String dialogNfcDefaultAssignationPositiveAction() {
+    return getString(R.string.dialog_nfc_default_assignation_positive_action);
+  }
+
+  @NonNull
+  public final String dialogNfcDefaultAssignationNegativeAction() {
+    return getString(R.string.dialog_nfc_default_assignation_negative_action);
+  }
+
+  @NonNull
   public final String bringDeviceCloserToTerminal() {
     return getString(R.string.bring_device_closer_to_the_terminal);
   }

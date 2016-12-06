@@ -3,6 +3,7 @@ package com.gbh.movil.ui.main.purchase;
 import android.support.annotation.NonNull;
 
 import com.gbh.movil.data.StringHelper;
+import com.gbh.movil.domain.pos.PosBridge;
 import com.gbh.movil.domain.util.Event;
 import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.domain.util.EventType;
@@ -10,8 +11,8 @@ import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.ProductManager;
 import com.gbh.movil.misc.rx.RxUtils;
+import com.gbh.movil.ui.AppDialog;
 import com.gbh.movil.ui.Presenter;
-import com.gbh.movil.ui.ScreenDialog;
 
 import java.util.List;
 
@@ -31,7 +32,8 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
   private final SchedulerProvider schedulerProvider;
   private final ProductManager productManager;
   private final EventBus eventBus;
-  private final ScreenDialog.Creator screenDialogCreator;
+  private final AppDialog.Creator screenDialogCreator;
+  private final PosBridge posBridge;
 
   private Subscription productAdditionEventSubscription = Subscriptions.unsubscribed();
   private Subscription paymentOptionsSubscription = Subscriptions.unsubscribed();
@@ -44,12 +46,14 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
 
   PurchasePresenter(@NonNull StringHelper stringHelper,
     @NonNull SchedulerProvider schedulerProvider, @NonNull ProductManager productManager,
-    @NonNull EventBus eventBus, @NonNull ScreenDialog.Creator screenDialogCreator) {
+    @NonNull EventBus eventBus, @NonNull AppDialog.Creator screenDialogCreator,
+    @NonNull PosBridge posBridge) {
     this.stringHelper = stringHelper;
     this.schedulerProvider = schedulerProvider;
     this.productManager = productManager;
     this.eventBus = eventBus;
     this.screenDialogCreator = screenDialogCreator;
+    this.posBridge = posBridge;
   }
 
   /**
@@ -65,9 +69,9 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
           screenDialogCreator.create(stringHelper.dialogProductAdditionTitle())
             .message(stringHelper.dialogProductAdditionMessage())
             .positiveAction(stringHelper.dialogProductAdditionPositiveAction(),
-              new ScreenDialog.OnActionClickedListener() {
+              new AppDialog.OnActionClickedListener() {
                 @Override
-                public void onActionClicked(@NonNull ScreenDialog.Action action) {
+                public void onActionClicked(@NonNull AppDialog.Action action) {
                   eventBus.release(event);
                   screen.requestPin();
                 }
@@ -155,6 +159,20 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
         @Override
         public void call(Object object) {
           screen.onActivationFinished(true);
+//          if (!posBridge.isDefault()) {
+//            screenDialogCreator.create(stringHelper.dialogNfcDefaultAssignationTitle())
+//              .message(stringHelper.dialogNfcDefaultAssignationMessage())
+//              .positiveAction(stringHelper.dialogNfcDefaultAssignationPositiveAction(),
+//                new AppDialog.OnActionClickedListener() {
+//                  @Override
+//                  public void onActionClicked(@NonNull AppDialog.Action action) {
+//                    screen.startActivity(posBridge.requestToMakeDefault());
+//                  }
+//                })
+//              .negativeAction(stringHelper.dialogNfcDefaultAssignationNegativeAction())
+//              .build()
+//              .show();
+//          }
         }
       }, new Action1<Throwable>() {
         @Override

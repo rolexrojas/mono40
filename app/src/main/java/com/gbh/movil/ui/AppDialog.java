@@ -14,10 +14,10 @@ import com.gbh.movil.misc.Utils;
  *
  * @author hecvasro
  */
-public final class ScreenDialog {
+public final class AppDialog {
   private final AlertDialog alertDialog;
 
-  private ScreenDialog(@NonNull final Context context, @NonNull final String title,
+  private AppDialog(@NonNull final Context context, @NonNull final String title,
     @Nullable final String message, @Nullable final String positiveActionText,
     @Nullable final OnActionClickedListener positiveActionListener,
     @Nullable final String negativeActionText,
@@ -130,8 +130,8 @@ public final class ScreenDialog {
      * @return TODO
      */
     @NonNull
-    public final ScreenDialog build() {
-      return new ScreenDialog(context, title, message, positiveActionText, positiveActionListener,
+    public final AppDialog build() {
+      return new AppDialog(context, title, message, positiveActionText, positiveActionListener,
         negativeActionText, negativeActionListener);
     }
   }

@@ -1,5 +1,6 @@
 package com.gbh.movil.domain.pos;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import com.gbh.movil.domain.PhoneNumber;
@@ -14,6 +15,20 @@ import rx.Observable;
  * @author hecvasro
  */
 public interface PosBridge {
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
+  boolean isDefault();
+
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
+  Intent requestToMakeDefault();
+
   /**
    * TODO
    *

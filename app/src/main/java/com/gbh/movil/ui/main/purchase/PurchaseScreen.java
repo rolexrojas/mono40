@@ -1,5 +1,6 @@
 package com.gbh.movil.ui.main.purchase;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import com.gbh.movil.domain.Product;
@@ -43,4 +44,12 @@ interface PurchaseScreen extends Screen {
   void requestPin();
 
   void onActivationFinished(boolean succeeded);
+
+  /**
+   * TODO
+   *
+   * @param intent
+   *   TODO
+   */
+  void startActivity(@NonNull Intent intent);
 }

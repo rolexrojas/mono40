@@ -1,6 +1,10 @@
 package com.gbh.movil.data.pos;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.nfc.NfcAdapter;
+import android.nfc.cardemulation.CardEmulation;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -33,7 +37,9 @@ class CubePosBridge implements PosBridge {
   private static final String DEFAULT_ALIAS = "alias";
   private static final String DEFAULT_PIN = "123456";
 
+  private final Context context;
   private final CubeSdkImpl cubeSdk;
+  private final ComponentName componentName;
 
   /**
    * TODO
@@ -42,7 +48,9 @@ class CubePosBridge implements PosBridge {
    *   TODO
    */
   CubePosBridge(@NonNull Context context) {
-    cubeSdk = new CubeSdkImpl(context);
+    this.context = context;
+    this.cubeSdk = new CubeSdkImpl(this.context);
+    this.componentName = new ComponentName("com.cube.sdk.hce", "TestHostApduService");
   }
 
   /**
@@ -75,6 +83,21 @@ class CubePosBridge implements PosBridge {
     Timber.d("(%1$d) %2$s - %3$s", code, error.getErrorMessage(), error.getErrorDetails());
     subscriber.onNext(new PosResult<T>(PosCode.fromValue(code)));
     subscriber.onCompleted();
+  }
+
+  @Override
+  public boolean isDefault() {
+    return CardEmulation.getInstance(NfcAdapter.getDefaultAdapter(context))
+      .isDefaultServiceForAid(componentName, CardEmulation.CATEGORY_PAYMENT);
+  }
+
+  @Override
+  public Intent requestToMakeDefault() {
+    final Intent intent = new Intent();
+    intent.setAction(CardEmulation.ACTION_CHANGE_DEFAULT);
+    intent.putExtra(CardEmulation.EXTRA_SERVICE_COMPONENT, componentName);
+    intent.putExtra(CardEmulation.EXTRA_CATEGORY, CardEmulation.CATEGORY_PAYMENT);
+    return intent;
   }
 
   @NonNull

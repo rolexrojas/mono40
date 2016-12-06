@@ -22,8 +22,8 @@ public class ActivityModule {
 
   @Provides
   @ActivityScope
-  ScreenDialog.Creator provideScreenDialogCreator() {
-    return new ScreenDialog.Creator(activity);
+  AppDialog.Creator provideScreenDialogCreator() {
+    return new AppDialog.Creator(activity);
   }
 
   @Provides

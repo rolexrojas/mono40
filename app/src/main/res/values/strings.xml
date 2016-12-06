@@ -3,6 +3,11 @@
   <string name="cannot_process_your_request_at_the_moment">No podemos procesar tu solicitud en este momento</string>
   <string name="no_internet_connection">Sin conexión a Internet</string>
 
+  <string name="dialog_nfc_default_assignation_title">¿Asignar %1$s?</string>
+  <string name="dialog_nfc_default_assignation_message">Al acercar tu celular a una terminal tocar y pagar, %1$s se iniciará automáticamente.</string>
+  <string name="dialog_nfc_default_assignation_positive_action">Asignar</string>
+  <string name="dialog_nfc_default_assignation_negative_action">Más tarde</string>
+
   <string name="dialog_product_addition_title">¡Listo para activar!</string>
   <string name="dialog_product_addition_message">Tu cuenta ya se agregó a %1$s. Actívala para tocar y pagar en tiendas y comercios.</string>
   <string name="dialog_product_addition_positive_action">Activar</string>

@@ -14,7 +14,7 @@ import dagger.Component;
 public interface ActivityComponent {
   void inject(BaseActivity activity);
 
-  ScreenDialog.Creator provideScreenDialogCreator();
+  AppDialog.Creator provideScreenDialogCreator();
 
   RxPermissions providePermissionManager();
 

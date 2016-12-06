@@ -177,8 +177,12 @@
     name="App.Theme"
     parent="Base.Theme"/>
 
+  <style name="PurchasePaymentAnimation">
+    <item name="android:windowEnterAnimation">@anim/fade_in</item>
+    <item name="android:windowExitAnimation">@anim/fade_out</item>
+  </style>
   <style
-    name="CommercePaymentTheme"
+    name="PurchasePaymentTheme"
     parent="App.Theme">
     <item name="android:windowBackground">@color/commerce_payment_window_default_background</item>
     <item name="colorPrimaryDark">@color/commerce_payment_status_bar_default_background</item>

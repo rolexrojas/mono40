@@ -64,7 +64,7 @@ public class PurchasePaymentDialogFragment
 
   @Override
   protected int getCustomTheme() {
-    return R.style.CommercePaymentTheme;
+    return R.style.PurchasePaymentTheme;
   }
 
   @Override
@@ -107,6 +107,7 @@ public class PurchasePaymentDialogFragment
   @Override
   public void onStart() {
     super.onStart();
+    getDialog().getWindow().setWindowAnimations(R.style.PurchasePaymentAnimation);
     // Starts the presenter.
     presenter.start();
   }

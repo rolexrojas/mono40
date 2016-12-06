@@ -8,8 +8,8 @@ import com.gbh.movil.domain.BalanceManager;
 import com.gbh.movil.domain.util.Event;
 import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.domain.util.EventType;
+import com.gbh.movil.ui.AppDialog;
 import com.gbh.movil.ui.Presenter;
-import com.gbh.movil.ui.ScreenDialog;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -26,12 +26,12 @@ final class MainPresenter extends Presenter<MainScreen> {
   private final StringHelper stringHelper;
   private final EventBus eventBus;
   private final BalanceManager balanceManager;
-  private final ScreenDialog.Creator screenDialogCreator;
+  private final AppDialog.Creator screenDialogCreator;
 
   private Subscription subscription = Subscriptions.unsubscribed();
 
   MainPresenter(@NonNull StringHelper stringHelper, @NonNull EventBus eventBus,
-    @NonNull BalanceManager balanceManager, @NonNull ScreenDialog.Creator screenDialogCreator) {
+    @NonNull BalanceManager balanceManager, @NonNull AppDialog.Creator screenDialogCreator) {
     this.stringHelper = stringHelper;
     this.eventBus = eventBus;
     this.balanceManager = balanceManager;
@@ -59,9 +59,9 @@ final class MainPresenter extends Presenter<MainScreen> {
           screenDialogCreator.create(stringHelper.dialogProductAdditionTitle())
             .message(stringHelper.dialogProductAdditionMessage())
             .positiveAction(stringHelper.dialogProductAdditionPositiveAction(),
-              new ScreenDialog.OnActionClickedListener() {
+              new AppDialog.OnActionClickedListener() {
                 @Override
-                public void onActionClicked(@NonNull ScreenDialog.Action action) {
+                public void onActionClicked(@NonNull AppDialog.Action action) {
                   eventBus.release(event);
                   screen.openPurchaseScreen();
                 }

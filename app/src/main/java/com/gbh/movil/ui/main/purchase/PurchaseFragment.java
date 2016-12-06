@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -201,8 +202,10 @@ public class PurchaseFragment extends ChildFragment<MainContainer>
 
   @Override
   public void openPaymentScreen(@NonNull Product paymentOption) {
+    final FragmentTransaction transaction = getChildFragmentManager().beginTransaction()
+      .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
     PurchasePaymentDialogFragment.newInstance(paymentOption)
-      .show(getChildFragmentManager(), TAG_PAYMENT_SCREEN);
+      .show(transaction, TAG_PAYMENT_SCREEN);
   }
 
   @Override
