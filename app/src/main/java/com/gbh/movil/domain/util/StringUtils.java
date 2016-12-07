@@ -3,13 +3,17 @@ package com.gbh.movil.domain.util;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.gbh.movil.domain.text.TextHelper;
 import com.gbh.movil.misc.Utils;
 
 /**
  * TODO
+ * <p>
+ * {@link TextHelper} must be used instead.
  *
  * @author hecvasro
  */
+@Deprecated
 public final class StringUtils {
   private StringUtils() {
   }

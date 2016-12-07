@@ -1,4 +1,4 @@
-package com.gbh.movil.domain;
+package com.gbh.movil.domain.session;
 
 import android.support.annotation.NonNull;
 
@@ -8,10 +8,6 @@ import android.support.annotation.NonNull;
  * @author hecvasro
  */
 public final class Session {
-  /**
-   * User's {@link PhoneNumber phone number}.
-   */
-  private final PhoneNumber phoneNumber;
   /**
    * User's name.
    */
@@ -24,28 +20,14 @@ public final class Session {
   /**
    * Constructs a new session.
    *
-   * @param phoneNumber
-   *   User's {@link PhoneNumber phone number}.
    * @param name
    *   User's name.
    * @param authToken
    *   Session's authentication token.
    */
-  public Session(@NonNull PhoneNumber phoneNumber, @NonNull String name,
-    @NonNull String authToken) {
-    this.phoneNumber = phoneNumber;
+  Session(@NonNull String name, @NonNull String authToken) {
     this.name = name;
     this.authToken = authToken;
-  }
-
-  /**
-   * Gets the {@link PhoneNumber phone number} of the user.
-   *
-   * @return User's {@link PhoneNumber phone number}.
-   */
-  @NonNull
-  public final PhoneNumber getPhoneNumber() {
-    return phoneNumber;
   }
 
   /**

@@ -4,8 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 
 import com.gbh.movil.BuildConfig;
-import com.gbh.movil.misc.Utils;
 import com.gbh.movil.domain.SessionManager;
+import com.gbh.movil.misc.Utils;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;

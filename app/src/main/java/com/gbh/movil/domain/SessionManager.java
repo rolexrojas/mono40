@@ -11,6 +11,7 @@ import com.google.i18n.phonenumbers.NumberParseException;
  *
  * @author hecvasro
  */
+@Deprecated
 public final class SessionManager {
   private static SessionManager INSTANCE;
 

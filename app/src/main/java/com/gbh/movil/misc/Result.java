@@ -1,7 +1,6 @@
 package com.gbh.movil.misc;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 /**
  * Result representation.
@@ -26,7 +25,7 @@ public abstract class Result<C, D> {
    * @param data
    *   Result's data.
    */
-  protected Result(@NonNull C code, @Nullable D data) {
+  protected Result(@NonNull C code, D data) {
     this.code = code;
     this.data = data;
   }
@@ -63,7 +62,6 @@ public abstract class Result<C, D> {
    *
    * @return Result's data.
    */
-  @Nullable
   public final D getData() {
     return data;
   }
