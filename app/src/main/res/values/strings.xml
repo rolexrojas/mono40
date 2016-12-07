@@ -26,12 +26,12 @@
   <!-- TODO: Apply standards from these point downward -->
   <!-- General strings -->
   <string name="bank_logo">Logo</string>
-  <string name="font_gotham_rounded_bold">fonts/GothamRounded/GothamRounded-Bold.otf</string>
-  <string name="font_gotham_rounded_book">fonts/GothamRounded/GothamRounded-Book.otf</string>
-  <string name="font_gotham_rounded_light">fonts/GothamRounded/GothamRounded-Light.otf</string>
-  <string name="font_gotham_rounded_medium">fonts/GothamRounded/GothamRounded-Medium.otf</string>
-  <string name="font_roboto_medium">fonts/Roboto/Roboto-Medium.ttf</string>
-  <string name="font_roboto_regular">fonts/Roboto/Roboto-Regular.ttf</string>
+  <string name="font_gotham_rounded_bold">fonts/gotham-rounded/GothamRounded-Bold.otf</string>
+  <string name="font_gotham_rounded_book">fonts/gotham-rounded/GothamRounded-Book.otf</string>
+  <string name="font_gotham_rounded_light">fonts/gotham-rounded/GothamRounded-Light.otf</string>
+  <string name="font_gotham_rounded_medium">fonts/gotham-rounded/GothamRounded-Medium.otf</string>
+  <string name="font_roboto_medium">fonts/roboto/Roboto-Medium.ttf</string>
+  <string name="font_roboto_regular">fonts/roboto/Roboto-Regular.ttf</string>
   <string name="format_credit_card_number_masked">•••• •••• •••• %1$s</string>
   <string name="format_product_number_masked">•••• •••• %1$s</string>
   <string name="format_recipient_addition_message_contact">¿Le gustaría dar un apodo a %1$s para reconocerlo más fácil en tu lista de pagos?</string>
