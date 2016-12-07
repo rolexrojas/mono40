@@ -133,6 +133,18 @@ public final class ProductManager implements ProductProvider {
   }
 
   @NonNull
+  public final Observable<Product> getDefaultPaymentOption() {
+    return getAllPaymentOptions()
+      .compose(RxUtils.<Product>fromCollection())
+      .filter(new Func1<Product, Boolean>() {
+        @Override
+        public Boolean call(Product product) {
+          return Product.isDefaultPaymentOption(product);
+        }
+      });
+  }
+
+  @NonNull
   @Override
   public Observable<List<Product>> getAll() {
     return productRepo.getAll();

@@ -33,14 +33,17 @@ public final class ProductCreator {
   @NonNull
   public static Product create(@NonNull ProductType identifier, @NonNull String alias,
     @NonNull String number, @NonNull Bank bank, @NonNull String currency,
-    @NonNull BigDecimal queryFee, boolean paymentOption) {
+    @NonNull BigDecimal queryFee, boolean paymentOption, boolean isDefault) {
     if (identifier.equals(ProductType.LOAN)) {
-      return new Loan(identifier, alias, number, bank, currency, queryFee, paymentOption);
+      return new Loan(identifier, alias, number, bank, currency, queryFee, paymentOption,
+        isDefault);
     } else if (identifier.equals(ProductType.AMEX) || identifier.equals(ProductType.CC)
       || identifier.equals(ProductType.TBD)) {
-      return new CreditCard(identifier, alias, number, bank, currency, queryFee, paymentOption);
+      return new CreditCard(identifier, alias, number, bank, currency, queryFee, paymentOption,
+        isDefault);
     } else {
-      return new Account(identifier, alias, number, bank, currency, queryFee, paymentOption);
+      return new Account(identifier, alias, number, bank, currency, queryFee, paymentOption,
+        isDefault);
     }
   }
 }

@@ -8,6 +8,7 @@ import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.data.res.AssetProvider;
 import com.gbh.movil.domain.ProductManager;
 import com.gbh.movil.domain.BalanceManager;
+import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.domain.pos.PosBridge;
 import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.domain.RecipientManager;
@@ -27,6 +28,7 @@ import dagger.Component;
 public interface MainComponent extends ActivityComponent {
   void inject(MainActivity activity);
 
+  ApiBridge provideApiBridge();
   AssetProvider provideResourceProvider();
   BalanceManager provideBalanceManager();
   Context provideContext();

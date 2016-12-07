@@ -81,7 +81,7 @@ class FakeApiBridge implements ApiBridge {
       alias = Integer.toString((i + 1) * 1000);
       product = ProductCreator.create(identifiers[random.nextInt(identifiers.length)], alias,
         alias, bank, currencies[random.nextInt(currencies.length)],
-        BigDecimal.valueOf(random.nextInt(11)), random.nextBoolean());
+        BigDecimal.valueOf(random.nextInt(11)), (i == 0 || random.nextBoolean()), i == 0);
       products.add(product);
       a = BigDecimal.valueOf(random.nextInt(1000001));
       b = BigDecimal.valueOf(random.nextInt(1000001));
@@ -202,5 +202,11 @@ class FakeApiBridge implements ApiBridge {
         }
       })
       .compose(FakeApiBridge.<ApiResult<Boolean>>delay());
+  }
+
+  @NonNull
+  @Override
+  public Observable<Product> setDefaultPaymentOption(@NonNull Product product) {
+    return Observable.just(product);
   }
 }

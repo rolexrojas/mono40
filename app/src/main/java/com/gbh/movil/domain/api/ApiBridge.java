@@ -108,4 +108,15 @@ public interface ApiBridge {
   @NonNull
   Observable<ApiResult<Boolean>> transferTo(@NonNull Product product, @NonNull Recipient recipient,
     @NonNull BigDecimal amount, @NonNull String pin);
+
+  /**
+   * TODO
+   *
+   * @param product
+   *   TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  Observable<Product> setDefaultPaymentOption(@NonNull Product product);
 }

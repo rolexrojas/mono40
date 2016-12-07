@@ -157,4 +157,10 @@ class RetrofitApiBridge implements ApiBridge {
         }
       });
   }
+
+  @NonNull
+  @Override
+  public Observable<Product> setDefaultPaymentOption(@NonNull Product product) {
+    return Observable.error(new UnsupportedOperationException());
+  }
 }

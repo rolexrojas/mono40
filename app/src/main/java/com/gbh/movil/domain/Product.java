@@ -42,6 +42,11 @@ public abstract class Product implements Serializable {
    */
   private final boolean paymentOption;
   /**
+   * Indicates whether is the default payment option or not.
+   */
+  private boolean isDefault;
+
+  /**
    * Cost of querying the balance.
    */
   private BigDecimal queryFee;
@@ -68,7 +73,7 @@ public abstract class Product implements Serializable {
    */
   Product(@NonNull ProductCategory category, @NonNull ProductType type, @NonNull String alias,
     @NonNull String number, @NonNull Bank bank, @NonNull String currency,
-    @NonNull BigDecimal queryFee, boolean paymentOption) {
+    @NonNull BigDecimal queryFee, boolean paymentOption, boolean isDefault) {
     this.category = category;
     this.type = type;
     this.alias = alias;
@@ -77,6 +82,7 @@ public abstract class Product implements Serializable {
     this.currency = currency;
     this.queryFee = queryFee;
     this.paymentOption = paymentOption;
+    this.isDefault = isDefault;
   }
 
   /**
@@ -101,7 +107,7 @@ public abstract class Product implements Serializable {
    * @return TODO
    */
   public static boolean isDefaultPaymentOption(@NonNull Product product) {
-    return isPaymentOption(product);
+    return isPaymentOption(product) && product.isDefault;
   }
 
   /**

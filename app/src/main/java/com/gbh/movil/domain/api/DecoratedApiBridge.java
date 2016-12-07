@@ -107,4 +107,10 @@ public class DecoratedApiBridge implements ApiBridge {
     return apiBridge.transferTo(product, recipient, amount, pin)
       .compose(this.<Boolean>assertAuthorization());
   }
+
+  @NonNull
+  @Override
+  public Observable<Product> setDefaultPaymentOption(@NonNull Product product) {
+    return apiBridge.setDefaultPaymentOption(product);
+  }
 }
