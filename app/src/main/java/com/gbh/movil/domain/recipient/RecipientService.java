@@ -3,8 +3,7 @@ package com.gbh.movil.domain.recipient;
 import android.support.annotation.NonNull;
 
 import com.gbh.movil.domain.PhoneNumber;
-import com.gbh.movil.domain.api.ApiCode;
-import com.gbh.movil.misc.Result;
+import com.gbh.movil.domain.api.ApiResult;
 
 import rx.Observable;
 
@@ -24,6 +23,6 @@ public interface RecipientService {
    *
    * @return TODO
    */
-  Observable<Result<ApiCode, String>> getName(@NonNull String authToken,
+  Observable<ApiResult<String>> getName(@NonNull String authToken,
     @NonNull PhoneNumber phoneNumber);
 }

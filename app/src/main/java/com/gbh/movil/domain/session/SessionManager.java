@@ -3,11 +3,10 @@ package com.gbh.movil.domain.session;
 import android.support.annotation.NonNull;
 
 import com.gbh.movil.domain.DeviceManager;
-import com.gbh.movil.domain.api.ApiCode;
+import com.gbh.movil.domain.api.ApiResult;
 import com.gbh.movil.domain.recipient.RecipientService;
 import com.gbh.movil.domain.text.PatternHelper;
 import com.gbh.movil.domain.Pin;
-import com.gbh.movil.misc.Result;
 import com.gbh.movil.misc.Utils;
 
 import rx.Observable;
@@ -47,17 +46,17 @@ public final class SessionManager {
    * @return TODO
    */
   @NonNull
-  private Observable.Transformer<Result<ApiCode, String>, Session> sign() {
-    return new Observable.Transformer<Result<ApiCode, String>, Session>() {
+  private Observable.Transformer<ApiResult<String>, Session> sign() {
+    return new Observable.Transformer<ApiResult<String>, Session>() {
       @Override
-      public Observable<Session> call(final Observable<Result<ApiCode, String>> observable) {
+      public Observable<Session> call(final Observable<ApiResult<String>> observable) {
         if (sessionRepo.hasSession()) {
           return Observable.just(null);
         } else {
           return observable
-            .map(new Func1<Result<ApiCode, String>, String>() {
+            .map(new Func1<ApiResult<String>, String>() {
               @Override
-              public String call(Result<ApiCode, String> result) {
+              public String call(ApiResult<String> result) {
                 return result.isSuccessful() ? result.getData() : null;
               }
             })
@@ -66,9 +65,9 @@ public final class SessionManager {
               public Observable<Session> call(String token) {
                 return Observable.zip(Observable.just(token),
                   recipientService.getName(token, deviceManager.getPhoneNumber()),
-                  new Func2<String, Result<ApiCode, String>, Session>() {
+                  new Func2<String, ApiResult<String>, Session>() {
                     @Override
-                    public Session call(String token, Result<ApiCode, String> result) {
+                    public Session call(String token, ApiResult<String> result) {
                       return result.isSuccessful() ? new Session(token, result.getData()) : null;
                     }
                   });

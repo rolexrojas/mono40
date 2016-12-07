@@ -3,8 +3,7 @@ package com.gbh.movil.domain.session;
 import android.support.annotation.NonNull;
 
 import com.gbh.movil.domain.PhoneNumber;
-import com.gbh.movil.domain.api.ApiCode;
-import com.gbh.movil.misc.Result;
+import com.gbh.movil.domain.api.ApiResult;
 
 import rx.Observable;
 
@@ -29,7 +28,7 @@ public interface SessionService {
    * @return TODO
    */
   @NonNull
-  Observable<Result<ApiCode, String>> signIn(@NonNull PhoneNumber phoneNumber,
+  Observable<ApiResult<String>> signIn(@NonNull PhoneNumber phoneNumber,
     @NonNull String email, @NonNull String password, @NonNull String deviceId);
 
   /**
@@ -49,6 +48,6 @@ public interface SessionService {
    * @return TODO
    */
   @NonNull
-  Observable<Result<ApiCode, String>> signUp(@NonNull PhoneNumber phoneNumber,
+  Observable<ApiResult<String>> signUp(@NonNull PhoneNumber phoneNumber,
     @NonNull String email, @NonNull String password, @NonNull String deviceId, @NonNull String pin);
 }
