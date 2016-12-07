@@ -11,6 +11,12 @@
       android:layout_height="wrap_content"
       android:layout_gravity="center"
       android:src="@drawable/app_glyph"/>
+    <ImageView
+      android:id="@+id/purchase_payment_indicator_confirmation"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:alpha="0.0"
+      android:src="@drawable/purchase_payment_option_foreground"/>
   </FrameLayout>
   <TextView
     android:id="@+id/commerce_payment_message"

@@ -1,20 +1,25 @@
 package com.gbh.movil.ui.main.purchase;
 
+import android.animation.Animator;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gbh.movil.R;
 import com.gbh.movil.misc.Utils;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.ui.FullScreenChildDialogFragment;
+import com.gbh.movil.ui.view.BaseAnimatorListener;
 
 import javax.inject.Inject;
 
+import butterknife.BindDimen;
+import butterknife.BindInt;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -40,10 +45,15 @@ public class PurchasePaymentDialogFragment
   @Inject
   PurchasePaymentPresenter presenter;
 
+  @BindInt(android.R.integer.config_shortAnimTime)
+  int terminateDuration;
+
   @BindView(R.id.commerce_payment_option)
   View paymentOptionContainerView;
   @BindView(R.id.commerce_payment_message)
   TextView commercePaymentMessageTextView;
+  @BindView(R.id.purchase_payment_indicator_confirmation)
+  ImageView purchasePaymentIndicatorConfirmationImageView;
 
   /**
    * TODO
@@ -140,6 +150,15 @@ public class PurchasePaymentDialogFragment
 
   @Override
   public void animateAndTerminate() {
-    dismiss(); // TODO: Animate before terminating.
+    purchasePaymentIndicatorConfirmationImageView.animate()
+      .alpha(1F)
+      .setDuration(terminateDuration)
+      .setListener(new BaseAnimatorListener() {
+        @Override
+        public void onAnimationEnd(Animator animator) {
+          dismiss();
+        }
+      })
+      .start();
   }
 }

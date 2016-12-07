@@ -39,7 +39,7 @@
     parent="android:Widget"/>
 
   <style name="Base.Widget.CommercePaymentOption">
-    <item name="android:background">@drawable/commerce_payment_option_background</item>
+    <item name="android:background">@drawable/purchase_payment_option_background</item>
     <item name="android:layout_height">@dimen/commerce_payment_option_height</item>
     <item name="android:layout_width">match_parent</item>
     <item name="android:padding">@dimen/commerce_payment_option_padding</item>
@@ -74,7 +74,7 @@
   </style>
 
   <style name="Base.Widget.CommercePaymentIndicator">
-    <item name="android:background">@drawable/commerce_payment_indicator_default_background</item>
+    <item name="android:background">@drawable/purchase_payment_indicator_background</item>
     <item name="android:layout_centerHorizontal">true</item>
     <item name="android:layout_height">@dimen/commerce_payment_indicator_default_height</item>
     <item name="android:layout_marginTop">@dimen/commerce_payment_indicator_default_margin_top</item>
