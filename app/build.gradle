@@ -14,9 +14,9 @@ android {
 
   defaultConfig {
     applicationId "com.gbh.movil"
-    minSdkVersion 18
+    minSdkVersion 19
     targetSdkVersion 24
-    versionCode 4
+    versionCode 5
     versionName "2.0.0"
   }
 
@@ -40,10 +40,14 @@ android {
     }
 
     release {
-      buildConfigField TYPE_INTEGER, TIME_OUT_CONNECTION, "30" // TODO
-      buildConfigField TYPE_INTEGER, TIME_OUT_READ, "30" // TODO
-      buildConfigField TYPE_INTEGER, TIME_OUT_WRITE, "30" // TODO
-      buildConfigField TYPE_STRING, API_URL, "\"http://172.19.1.103:8081/api/neo/\"" // TODO
+      // TODO
+      buildConfigField TYPE_INTEGER, TIME_OUT_CONNECTION, "30"
+      // TODO
+      buildConfigField TYPE_INTEGER, TIME_OUT_READ, "30"
+      // TODO
+      buildConfigField TYPE_INTEGER, TIME_OUT_WRITE, "30"
+      // TODO
+      buildConfigField TYPE_STRING, API_URL, "\"http://172.19.1.103:8081/api/neo/\""
 
       minifyEnabled false
       proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
@@ -54,6 +58,9 @@ android {
 repositories {
   maven { url "https://maven.fabric.io/public" }
   maven { url "https://jitpack.io" }
+  flatDir {
+    dirs "libs"
+  }
 }
 
 dependencies {
@@ -63,7 +70,6 @@ dependencies {
   def circularRevealVersion = "2.0.1"
   def crashlyticsVersion = "2.6.5"
   def daggerVersion = "2.7"
-  def halariousVersion = "0.14"
   def jUnitVersion = "4.12"
   def jsr250Version = "1.0"
   def libPhoneNumberVersion = "7.7.4"
@@ -81,7 +87,6 @@ dependencies {
 
   apt "com.google.dagger:dagger-compiler:${daggerVersion}"
   apt "com.jakewharton:butterknife-compiler:${butterKnifeVersion}"
-  compile "ch.halarious:halarious-core:${halariousVersion}"
   compile "com.android.support:appcompat-v7:${supportLibraryVersion}"
   compile "com.android.support:design:${supportLibraryVersion}"
   compile "com.android.support:percent:${supportLibraryVersion}"
@@ -106,7 +111,8 @@ dependencies {
   compile "io.reactivex:rxandroid:${rxAndroidVersion}"
   compile "io.reactivex:rxjava:${rxJavaVersion}"
   compile "uk.co.chrisjenx:calligraphy:${calligraphyVersion}"
-  compile fileTree(dir: "libs", include: ["*.jar"])
+  compile fileTree(include: ['*.jar'], dir: 'libs')
+  compile(name: "CubeSdk", ext: "aar")
   provided "javax.annotation:jsr250-api:${jsr250Version}"
   testCompile "junit:junit:${jUnitVersion}"
 }

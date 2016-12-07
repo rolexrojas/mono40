@@ -25,7 +25,7 @@
     android:orientation="vertical">
     <TextView
       android:id="@+id/recipient.label"
-      fontPath="@string/font.gotham_rounded.medium"
+      fontPath="@string/font_gotham_rounded_medium"
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:layout_weight="1"
@@ -36,7 +36,7 @@
       android:textSize="16sp"/>
     <TextView
       android:id="@+id/recipient.extra"
-      fontPath="@string/font.gotham_rounded.book"
+      fontPath="@string/font_gotham_rounded_book"
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:layout_weight="1"

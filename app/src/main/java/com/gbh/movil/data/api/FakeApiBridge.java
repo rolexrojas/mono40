@@ -14,7 +14,7 @@ import com.gbh.movil.domain.LoanBalance;
 import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.ProductCreator;
-import com.gbh.movil.domain.ProductIdentifier;
+import com.gbh.movil.domain.ProductType;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.Transaction;
 import com.gbh.movil.domain.api.ApiBridge;
@@ -25,11 +25,9 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
@@ -42,10 +40,10 @@ import timber.log.Timber;
  * @author hecvasro
  */
 class FakeApiBridge implements ApiBridge {
-  private final Set<Bank> banks;
-  private final Set<Product> products;
+  private final List<Bank> banks;
+  private final List<Product> products;
   private final Map<Product, Balance> balances;
-  private final Set<Recipient> recipients;
+  private final List<Recipient> recipients;
   private final List<Transaction> transactions;
 
   private static int getLastDigit(@NonNull String s) {
@@ -57,7 +55,7 @@ class FakeApiBridge implements ApiBridge {
   }
 
   FakeApiBridge() {
-    banks = new HashSet<>();
+    banks = new ArrayList<>();
     banks.add(new Bank(38, "ADEMI", "Banco Ademi"));
     banks.add(new Bank(44, "ADOPEM", "Banco Adopem"));
     banks.add(new Bank(35, "ALAVER", "Banco Alaver"));
@@ -74,16 +72,16 @@ class FakeApiBridge implements ApiBridge {
     String alias;
     Product product;
     Balance balance;
-    products = new HashSet<>();
+    products = new ArrayList<>();
     balances = new HashMap<>();
     final Random random = new Random();
     final String[] currencies = new String[] { "DOP", "USD" };
-    final ProductIdentifier[] identifiers = ProductIdentifier.values();
+    final ProductType[] identifiers = ProductType.values();
     for (Bank bank : banks) {
       alias = Integer.toString((i + 1) * 1000);
       product = ProductCreator.create(identifiers[random.nextInt(identifiers.length)], alias,
         alias, bank, currencies[random.nextInt(currencies.length)],
-        BigDecimal.valueOf(random.nextInt(11)), random.nextBoolean());
+        BigDecimal.valueOf(random.nextInt(11)), (i == 0 || random.nextBoolean()), i == 0);
       products.add(product);
       a = BigDecimal.valueOf(random.nextInt(1000001));
       b = BigDecimal.valueOf(random.nextInt(1000001));
@@ -98,7 +96,7 @@ class FakeApiBridge implements ApiBridge {
       i++;
     }
 
-    recipients = new HashSet<>();
+    recipients = new ArrayList<>();
     try {
       recipients.add(new ContactRecipient(new PhoneNumber("8098829887"), "Hector Vasquez"));
       recipients.add(new ContactRecipient(new PhoneNumber("8092817621"), "Luis Miguel Ruiz"));
@@ -123,9 +121,9 @@ class FakeApiBridge implements ApiBridge {
 
   @NonNull
   @Override
-  public Observable<ApiResult<Set<Bank>>> banks() {
+  public Observable<ApiResult<List<Bank>>> banks() {
     return Observable.just(ApiResult.create(banks))
-      .compose(FakeApiBridge.<ApiResult<Set<Bank>>>delay());
+      .compose(FakeApiBridge.<ApiResult<List<Bank>>>delay());
   }
 
   @NonNull
@@ -166,9 +164,9 @@ class FakeApiBridge implements ApiBridge {
 
   @NonNull
   @Override
-  public Observable<ApiResult<Set<Recipient>>> recipients() {
+  public Observable<ApiResult<List<Recipient>>> recipients() {
     return Observable.just(ApiResult.create(recipients))
-      .compose(FakeApiBridge.<ApiResult<Set<Recipient>>>delay());
+      .compose(FakeApiBridge.<ApiResult<List<Recipient>>>delay());
   }
 
   @NonNull
@@ -204,5 +202,11 @@ class FakeApiBridge implements ApiBridge {
         }
       })
       .compose(FakeApiBridge.<ApiResult<Boolean>>delay());
+  }
+
+  @NonNull
+  @Override
+  public Observable<Product> setDefaultPaymentOption(@NonNull Product product) {
+    return Observable.just(product);
   }
 }

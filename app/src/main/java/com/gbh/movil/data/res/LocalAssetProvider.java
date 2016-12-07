@@ -63,13 +63,13 @@ public final class LocalAssetProvider implements AssetProvider {
         color = Color.parseColor("#515251");
         break;
       case BANK_LOPEZ_DE_HARO:
-        color = Color.parseColor("#26335d");
+        color = Color.parseColor("#26335D");
         break;
       case BANK_POPULAR:
-        color = Color.parseColor("#26335d");
+        color = Color.parseColor("#004990");
         break;
       case BANK_PROGRESO:
-        color = Color.parseColor("#004990");
+        color = Color.parseColor("#0097D7");
         break;
       case BANK_RESERVAS:
         color = Color.parseColor("#294661");

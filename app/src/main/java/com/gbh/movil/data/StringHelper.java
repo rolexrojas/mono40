@@ -7,8 +7,9 @@ import android.support.annotation.StringRes;
 
 import com.gbh.movil.R;
 import com.gbh.movil.domain.PhoneNumber;
+import com.gbh.movil.domain.Product;
+import com.gbh.movil.domain.ProductCategory;
 import com.gbh.movil.domain.Recipient;
-import com.gbh.movil.domain.RecipientType;
 
 import java.math.BigDecimal;
 import java.util.Locale;
@@ -41,6 +42,62 @@ public final class StringHelper {
   }
 
   @NonNull
+  public final String dialogProductAdditionTitle() {
+    return getString(R.string.dialog_product_addition_title);
+  }
+
+  @NonNull
+  public final String dialogProductAdditionMessage() {
+    return format(R.string.dialog_product_addition_message, appName());
+  }
+
+  @NonNull
+  public final String dialogProductAdditionPositiveAction() {
+    return getString(R.string.dialog_product_addition_positive_action);
+  }
+
+  @NonNull
+  public final String dialogProductAdditionNegativeAction() {
+    return getString(R.string.dialog_product_addition_negative_action);
+  }
+
+  @NonNull
+  public final String dialogNfcDefaultAssignationTitle() {
+    return format(R.string.dialog_nfc_default_assignation_title, appName());
+  }
+
+  @NonNull
+  public final String dialogNfcDefaultAssignationMessage() {
+    return format(R.string.dialog_nfc_default_assignation_message, appName());
+  }
+
+  @NonNull
+  public final String dialogNfcDefaultAssignationPositiveAction() {
+    return getString(R.string.dialog_nfc_default_assignation_positive_action);
+  }
+
+  @NonNull
+  public final String dialogNfcDefaultAssignationNegativeAction() {
+    return getString(R.string.dialog_nfc_default_assignation_negative_action);
+  }
+
+  @NonNull
+  public final String bringDeviceCloserToTerminal() {
+    return getString(R.string.bring_device_closer_to_the_terminal);
+  }
+
+  @NonNull
+  public final String noInternetConnection() {
+    return getString(R.string.no_internet_connection);
+  }
+
+  @NonNull
+  public final String cannotProcessYourRequestAtTheMoment() {
+    return getString(R.string.cannot_process_your_request_at_the_moment);
+  }
+
+  // TODO: Apply standards from these point downward.
+  @NonNull
   public final String recipientAdditionConfirmationTitle(@NonNull Recipient recipient) {
     switch (recipient.getType()) {
       case CONTACT:
@@ -54,7 +111,7 @@ public final class StringHelper {
   public final String recipientAdditionConfirmationMessage(@NonNull Recipient recipient) {
     switch (recipient.getType()) {
       case CONTACT:
-        return format(R.string.recipient_addition_message_contact, recipient.getIdentifier());
+        return format(R.string.format_recipient_addition_message_contact, recipient.getIdentifier());
       default:
         return null;
     }
@@ -69,11 +126,27 @@ public final class StringHelper {
   public final String transactionCreationConfirmationMessage(@NonNull Recipient recipient) {
     switch (recipient.getType()) {
       case PHONE_NUMBER:
-        return format(R.string.transaction_confirmation_message_phone_number,
+        return format(R.string.format_transaction_confirmation_message_phone_number,
           recipient.getIdentifier());
       default:
         return null;
     }
+  }
+
+  @NonNull
+  public final String productNumber(@NonNull Product product) {
+    return product.getNumber().replaceAll("[^\\d]", "");
+  }
+
+  @NonNull
+  public final String maskedProductNumber(@NonNull Product product) {
+    final String format;
+    if (product.getCategory().equals(ProductCategory.CREDIT_CARD)) {
+      format = getString(R.string.format_credit_card_number_masked);
+    } else {
+      format = getString(R.string.format_product_number_masked);
+    }
+    return String.format(format, productNumber(product));
   }
 
   @NonNull
@@ -100,11 +173,6 @@ public final class StringHelper {
   @NonNull
   public final String goToAccounts() {
     return getString(R.string.go_to_accounts);
-  }
-
-  @NonNull
-  public final String noInternetConnection() {
-    return getString(R.string.no_internet_connection);
   }
 
   @NonNull

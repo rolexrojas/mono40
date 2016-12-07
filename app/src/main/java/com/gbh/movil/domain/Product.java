@@ -2,8 +2,9 @@ package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -11,15 +12,15 @@ import java.math.BigDecimal;
  *
  * @author hecvasro
  */
-public abstract class Product {
+public abstract class Product implements Serializable {
   /**
    * Product's {@link ProductCategory category}.
    */
   private final ProductCategory category;
   /**
-   * Product's {@link ProductIdentifier identifier}.
+   * Product's {@link ProductType type}.
    */
-  private final ProductIdentifier identifier;
+  private final ProductType type;
   /**
    * Product's alias.
    */
@@ -41,6 +42,11 @@ public abstract class Product {
    */
   private final boolean paymentOption;
   /**
+   * Indicates whether is the default payment option or not.
+   */
+  private boolean isDefault;
+
+  /**
    * Cost of querying the balance.
    */
   private BigDecimal queryFee;
@@ -50,10 +56,10 @@ public abstract class Product {
    *
    * @param category
    *   Product's {@link ProductCategory category}.
-   * @param identifier
-   *   Product's {@link ProductIdentifier identifier}.
+   * @param type
+   *   Product's {@link ProductType type}.
    * @param alias
-   *   Product's identifier.
+   *   Product's type.
    * @param number
    *   Product's number.
    * @param currency
@@ -65,17 +71,18 @@ public abstract class Product {
    * @param paymentOption
    *   Indicates whether can be used as a payment option or not.
    */
-  Product(@NonNull ProductCategory category, @NonNull ProductIdentifier identifier,
-    @NonNull String alias, @NonNull String number, @NonNull Bank bank, @NonNull String currency,
-    @NonNull BigDecimal queryFee, boolean paymentOption) {
+  Product(@NonNull ProductCategory category, @NonNull ProductType type, @NonNull String alias,
+    @NonNull String number, @NonNull Bank bank, @NonNull String currency,
+    @NonNull BigDecimal queryFee, boolean paymentOption, boolean isDefault) {
     this.category = category;
-    this.identifier = identifier;
+    this.type = type;
     this.alias = alias;
     this.number = number;
     this.bank = bank;
     this.currency = currency;
     this.queryFee = queryFee;
     this.paymentOption = paymentOption;
+    this.isDefault = isDefault;
   }
 
   /**
@@ -86,9 +93,21 @@ public abstract class Product {
    *
    * @return True if it can be used as a payment option, false otherwise.
    */
-  public static boolean checkPaymentOption(@NonNull Product product) {
+  public static boolean isPaymentOption(@NonNull Product product) {
     return (product.category.equals(ProductCategory.ACCOUNT)
       || product.category.equals(ProductCategory.CREDIT_CARD)) && product.paymentOption;
+  }
+
+  /**
+   * TODO
+   *
+   * @param product
+   *   TODO
+   *
+   * @return TODO
+   */
+  public static boolean isDefaultPaymentOption(@NonNull Product product) {
+    return isPaymentOption(product) && product.isDefault;
   }
 
   /**
@@ -102,17 +121,17 @@ public abstract class Product {
   }
 
   /**
-   * Gets the {@link ProductIdentifier identifier} of the product.
+   * Gets the {@link ProductType type} of the product.
    *
-   * @return Product's {@link ProductIdentifier identifier}.
+   * @return Product's {@link ProductType type}.
    */
   @NonNull
-  public final ProductIdentifier getIdentifier() {
-    return identifier;
+  public final ProductType getType() {
+    return type;
   }
 
   /**
-   * Gets the identifier of the product.
+   * Gets the type of the product.
    *
    * @return Product's alias.
    */
@@ -152,6 +171,16 @@ public abstract class Product {
   }
 
   /**
+   * TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  public final String getIdentifier() {
+    return String.format("%1$s %2$s", bank.getName(), type);
+  }
+
+  /**
    * Gets the cost of querying the balance of the product.
    *
    * @return Cost of querying the balance.
@@ -177,19 +206,20 @@ public abstract class Product {
   @Override
   public boolean equals(Object object) {
     return super.equals(object) || (Utils.isNotNull(object) && object instanceof Product
-      && ((Product) object).category.equals(category) && ((Product) object).identifier.equals(identifier)
-      && ((Product) object).alias.equals(alias)) && ((Product) object).bank.equals(bank);
+      && ((Product) object).category.equals(category)
+      && ((Product) object).type.equals(type) && ((Product) object).alias.equals(alias))
+      && ((Product) object).bank.equals(bank);
   }
 
   @Override
   public int hashCode() {
-    return Utils.hashCode(category, identifier, alias, bank);
+    return Utils.hashCode(category, type, alias, bank);
   }
 
   @Override
   public String toString() {
-    return Product.class.getSimpleName() + ":{category='" + category + "', identifier='"
-      + identifier + "',alias='" + alias + "',number='" + number + "',currency='" + currency
+    return Product.class.getSimpleName() + ":{category='" + category + "', type='"
+      + type + "',alias='" + alias + "',number='" + number + "',currency='" + currency
       + "',bank=" + bank + ",queryFee=" + queryFee + "}";
   }
 }

@@ -3,7 +3,7 @@ package com.gbh.movil.data;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 
 /**
  * TODO

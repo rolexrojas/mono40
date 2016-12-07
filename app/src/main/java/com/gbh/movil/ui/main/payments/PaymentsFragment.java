@@ -18,25 +18,25 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.gbh.movil.R;
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.data.StringHelper;
+import com.gbh.movil.data.util.BinderFactory;
 import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.Recipient;
-import com.gbh.movil.ui.UiUtils;
+import com.gbh.movil.ui.misc.UiUtils;
 import com.gbh.movil.ui.main.MainContainer;
-import com.gbh.movil.ui.main.list.Adapter;
-import com.gbh.movil.ui.main.list.Holder;
-import com.gbh.movil.ui.main.list.HolderBinderFactory;
-import com.gbh.movil.ui.main.list.HolderCreatorFactory;
-import com.gbh.movil.ui.main.list.NoResultsItem;
-import com.gbh.movil.ui.main.list.NoResultsHolder;
-import com.gbh.movil.ui.main.list.NoResultsHolderBinder;
-import com.gbh.movil.ui.main.list.NoResultsHolderCreator;
-import com.gbh.movil.ui.main.payments.recipients.AddRecipientActivity;
-import com.gbh.movil.ui.main.payments.transactions.TransactionCreationActivity;
+import com.gbh.movil.ui.main.list.ListItemAdapter;
+import com.gbh.movil.ui.main.list.ListItemHolder;
+import com.gbh.movil.ui.main.list.ListItemHolderCreatorFactory;
+import com.gbh.movil.ui.main.list.NoResultsListItemItem;
+import com.gbh.movil.ui.main.list.NoResultsListItemHolder;
+import com.gbh.movil.ui.main.list.NoResultsListItemHolderBinder;
+import com.gbh.movil.ui.main.list.NoResultsListItemHolderCreator;
+import com.gbh.movil.ui.main.recipients.AddRecipientActivity;
+import com.gbh.movil.ui.main.transactions.TransactionCreationActivity;
 import com.gbh.movil.ui.view.widget.FullScreenRefreshIndicator;
 import com.gbh.movil.ui.view.widget.LoadIndicator;
-import com.gbh.movil.ui.SubFragment;
+import com.gbh.movil.ui.ChildFragment;
 import com.gbh.movil.ui.view.widget.SearchView;
 import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -49,13 +49,13 @@ import butterknife.Unbinder;
 import rx.Observable;
 
 /**
- * {@link PaymentsScreen Screen} implementation that uses a {@link SubFragment fragment} as
+ * {@link PaymentsScreen Screen} implementation that uses a {@link ChildFragment fragment} as
  * container.
  *
  * @author hecvasro
  */
-public class PaymentsFragment extends SubFragment<MainContainer>
-  implements PaymentsScreen, Holder.OnClickListener,
+public class PaymentsFragment extends ChildFragment<MainContainer>
+  implements PaymentsScreen, ListItemHolder.OnClickListener,
   ConfirmationDialogFragment.OnSaveButtonClickedListener {
   /**
    * TODO
@@ -67,7 +67,7 @@ public class PaymentsFragment extends SubFragment<MainContainer>
   private static final int REQUEST_CODE_TRANSACTION_CREATION = 1;
 
   private Unbinder unbinder;
-  private Adapter adapter;
+  private ListItemAdapter adapter;
 
   private LoadIndicator loadIndicator;
   private LoadIndicator fullScreenLoadIndicator;
@@ -104,7 +104,7 @@ public class PaymentsFragment extends SubFragment<MainContainer>
     setHasOptionsMenu(true);
     // Injects all the annotated dependencies.
     final PaymentsComponent component = DaggerPaymentsComponent.builder()
-      .mainComponent(container.getComponent())
+      .mainComponent(getContainer().getComponent())
       .build();
     component.inject(this);
   }
@@ -122,18 +122,21 @@ public class PaymentsFragment extends SubFragment<MainContainer>
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
     // Prepares the actions and recipients list.
-    final HolderCreatorFactory holderCreatorFactory = new HolderCreatorFactory.Builder()
-      .addCreator(Recipient.class, new RecipientHolderCreator(this))
-      .addCreator(Action.class, new ActionHolderCreator(this))
-      .addCreator(NoResultsItem.class, new NoResultsHolderCreator())
+    final ListItemHolderCreatorFactory holderCreatorFactory = new ListItemHolderCreatorFactory.Builder()
+      .addCreator(Recipient.class, new RecipientListItemHolderCreator(this))
+      .addCreator(Action.class, new ActionListItemHolderCreator(this))
+      .addCreator(NoResultsListItemItem.class, new NoResultsListItemHolderCreator())
       .build();
     final Context context = getContext();
-    final HolderBinderFactory binderFactory = new HolderBinderFactory.Builder()
-      .addBinder(Recipient.class, RecipientHolder.class, new RecipientHolderBinder())
-      .addBinder(Action.class, ActionHolder.class, new ActionHolderBinder(stringHelper))
-      .addBinder(NoResultsItem.class, NoResultsHolder.class, new NoResultsHolderBinder(context))
+    final BinderFactory binderFactory = new BinderFactory.Builder()
+      .addBinder(Recipient.class, RecipientListItemHolder.class,
+        new RecipientListItemHolderBinder())
+      .addBinder(Action.class, ActionListItemHolder.class,
+        new ActionListItemHolderBinder(stringHelper))
+      .addBinder(NoResultsListItemItem.class, NoResultsListItemHolder.class,
+        new NoResultsListItemHolderBinder(context))
       .build();
-    adapter = new Adapter(holderCreatorFactory, binderFactory);
+    adapter = new ListItemAdapter(holderCreatorFactory, binderFactory);
     recyclerView.setAdapter(adapter);
     recyclerView.setHasFixedSize(true);
     recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL,
@@ -152,7 +155,7 @@ public class PaymentsFragment extends SubFragment<MainContainer>
   public void onStart() {
     super.onStart();
     // Sets the title.
-    container.setTitle(getString(R.string.payments_title));
+    getContainer().setTitle(getString(R.string.payments_title));
     // Starts the presenter.
     presenter.start();
   }
@@ -278,12 +281,7 @@ public class PaymentsFragment extends SubFragment<MainContainer>
 
   @Override
   public void update(@NonNull Object item) {
-    final int index = adapter.indexOf(item);
-    if (index >= 0) {
-      adapter.notifyItemChanged(index);
-    } else {
-      add(item);
-    }
+    adapter.updateOrAdd(item);
   }
 
   @Override

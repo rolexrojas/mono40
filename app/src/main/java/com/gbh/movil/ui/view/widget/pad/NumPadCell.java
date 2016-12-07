@@ -2,7 +2,7 @@ package com.gbh.movil.ui.view.widget.pad;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 
 /**
  * Num pad's cell representation.

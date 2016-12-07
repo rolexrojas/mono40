@@ -1,19 +1,53 @@
 <resources>
-  <string name="recipient_addition_message_contact">¿Le gustaría dar un apodo a %1$s para reconocerlo más fácil en tu lista de pagos?</string>
-  <string name="recipient_addition_title_contact">¡Contacto agregado!</string>
-  <string name="transaction_confirmation_message_phone_number">¿Le gustaría guardar y apodar a %1$s para usarlo más fácil en el futuro?</string>
-  <string name="transaction_confirmation_title">¡Transacción exitosa!</string>
+  <string name="bring_device_closer_to_the_terminal">Acercar celular a terminal tocar y pagar</string>
+  <string name="cannot_process_your_request_at_the_moment">No podemos procesar tu solicitud en este momento</string>
+  <string name="no_internet_connection">Sin conexión a Internet</string>
+
+  <string name="dialog_nfc_default_assignation_title">¿Asignar %1$s?</string>
+  <string name="dialog_nfc_default_assignation_message">Al acercar tu celular a una terminal tocar y pagar, %1$s se iniciará automáticamente.</string>
+  <string name="dialog_nfc_default_assignation_positive_action">Asignar</string>
+  <string name="dialog_nfc_default_assignation_negative_action">Más tarde</string>
+
+  <string name="dialog_product_addition_title">¡Listo para activar!</string>
+  <string name="dialog_product_addition_message">Tu cuenta ya se agregó a %1$s. Actívala para tocar y pagar en tiendas y comercios.</string>
+  <string name="dialog_product_addition_positive_action">Activar</string>
+  <string name="dialog_product_addition_negative_action">Más tarde</string>
+
+  <string name="commerce_payment_option_product_identifier_text_font">@string/font_gotham_rounded_book</string>
+  <string name="commerce_payment_option_product_number_text_font">@string/font_roboto_medium</string>
+  
+  <string name="commerce_payment_option_product_owner_name_text_font">@string/font_roboto_regular</string>
+  
+  <string name="commerce_payment_option_ready_text_font">@string/font_gotham_rounded_book</string>
+  <string name="commerce_payment_option_ready_text_value">Listo para tocar y pagar</string>
+
+  <string name="commerce_payment_message_text_font">@string/font_gotham_rounded_book</string>
 
   <!-- TODO: Apply standards from these point downward -->
-  <!-- App's strings -->
-  <string name="app_text_widget_prefixable_text_view_font">@string/font.gotham_rounded.book</string>
-  <string name="app_text_widget_num_pad_cell_font">@string/font.gotham_rounded.medium</string>
+  <!-- General strings -->
+  <string name="bank_logo">Logo</string>
+  <string name="font_gotham_rounded_bold">fonts/GothamRounded/GothamRounded-Bold.otf</string>
+  <string name="font_gotham_rounded_book">fonts/GothamRounded/GothamRounded-Book.otf</string>
+  <string name="font_gotham_rounded_light">fonts/GothamRounded/GothamRounded-Light.otf</string>
+  <string name="font_gotham_rounded_medium">fonts/GothamRounded/GothamRounded-Medium.otf</string>
+  <string name="font_roboto_medium">fonts/Roboto/Roboto-Medium.ttf</string>
+  <string name="font_roboto_regular">fonts/Roboto/Roboto-Regular.ttf</string>
+  <string name="format_credit_card_number_masked">•••• •••• •••• %1$s</string>
+  <string name="format_product_number_masked">•••• •••• %1$s</string>
+  <string name="format_recipient_addition_message_contact">¿Le gustaría dar un apodo a %1$s para reconocerlo más fácil en tu lista de pagos?</string>
+  <string name="format_transaction_confirmation_message_phone_number">¿Le gustaría guardar y apodar a %1$s para usarlo más fácil en el futuro?</string>
+  <string name="recipient_addition_title_contact">¡Contacto agregado!</string>
+  <string name="transaction_confirmation_title">¡Transacción exitosa!</string>
+
+  <!-- App's text and widget strings -->
+  <string name="app_text_widget_prefixable_text_view_font">@string/font_gotham_rounded_book</string>
+  <string name="app_text_widget_num_pad_cell_font">@string/font_gotham_rounded_medium</string>
 
   <!-- Screen's strings -->
-  <string name="screen_products_text_widget_amount_value_font">@string/font.gotham_rounded.medium</string>
-
-  <string name="transaction_creation.text.widget.amount.value.font">@string/font.gotham_rounded.light</string>
-  <string name="transaction_creation.text.widget.amount.currency.font">@string/font.gotham_rounded.light</string>
+  <string name="screen_payments_commerce_title">Comprar</string>
+  <string name="screen_products_text_widget_amount_value_font">@string/font_gotham_rounded_medium</string>
+  <string name="transaction_creation.text.widget.amount.value.font">@string/font_gotham_rounded_light</string>
+  <string name="transaction_creation.text.widget.amount.currency.font">@string/font_gotham_rounded_light</string>
 
   <string name="about">Acerca de</string>
   <string name="accounts">Cuentas</string>
@@ -29,7 +63,6 @@
   <string name="add_recipient.title">Agregar recipiente</string>
   <string name="app_name">tPago</string>
   <string name="balance">Saldo</string>
-  <string name="bank.logo">Logo</string>
   <string name="buy">Comprar</string>
   <string name="contact.picture">Imagen del contacto</string>
   <string name="contacts">Contactos</string>
@@ -37,10 +70,6 @@
   <string name="done_with_exclamation_mark">¡Listo!</string>
   <string name="dot">Punto</string>
   <string name="fee_for_transaction">Cargo por transacción %1$s</string>
-  <string name="font.gotham_rounded.bold">fonts/GothamRounded-Bold.otf</string>
-  <string name="font.gotham_rounded.book">fonts/GothamRounded-Book.otf</string>
-  <string name="font.gotham_rounded.light">fonts/GothamRounded-Light.otf</string>
-  <string name="font.gotham_rounded.medium">fonts/GothamRounded-Medium.otf</string>
   <string name="format_transfer_to">Transferir %1$s a %2$s</string>
   <string name="go_to_accounts">Ver cuentas</string>
   <string name="help">Ayuda</string>
@@ -62,7 +91,6 @@
   <string name="logo">Logo</string>
   <string name="my_profile">Mi perfil</string>
   <string name="nick_name">Apodo</string>
-  <string name="no_internet_connection">Sin conexión a Internet.</string>
   <string name="ok">Ok</string>
   <string name="pay_screen_search_hint">Nombre, número o facturador</string>
   <string name="payments.action.phone_number.add">Agregar \'%1$s\'</string>

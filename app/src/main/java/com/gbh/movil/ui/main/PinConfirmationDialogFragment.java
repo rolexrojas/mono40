@@ -20,7 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gbh.movil.R;
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.ui.FullScreenDialogFragment;
 import com.gbh.movil.ui.view.BaseAnimatorListener;
 import com.gbh.movil.ui.view.widget.pad.Digit;
@@ -40,6 +40,7 @@ import io.codetail.animation.ViewAnimationUtils;
  *
  * @author hecvasro
  */
+@Deprecated
 public class PinConfirmationDialogFragment extends FullScreenDialogFragment
   implements DialogInterface.OnShowListener, PinView.Listener, NumPad.OnDigitClickedListener,
   NumPad.OnDeleteClickedListener {
@@ -121,6 +122,11 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
       // Starts the background animator.
       animator.start();
     }
+  }
+
+  @Override
+  protected int getCustomTheme() {
+    return R.style.FullScreenDialogTheme;
   }
 
   /**

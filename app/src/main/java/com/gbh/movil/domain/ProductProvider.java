@@ -2,7 +2,7 @@ package com.gbh.movil.domain;
 
 import android.support.annotation.NonNull;
 
-import java.util.Set;
+import java.util.List;
 
 import rx.Observable;
 
@@ -13,10 +13,12 @@ import rx.Observable;
  */
 public interface ProductProvider {
   /**
-   * TODO
+   * Gets all the {@link Product products} registered in the provider.
+   * <p>
+   * By default the resulting {@link List list} is ordered in the order that they were registered.
    *
-   * @return TODO
+   * @return All the {@link Product products} registered in the provider.
    */
   @NonNull
-  Observable<Set<Product>> getAll();
+  Observable<List<Product>> getAll();
 }

@@ -3,8 +3,8 @@ package com.gbh.movil.ui.main.products;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
-import com.gbh.movil.Utils;
-import com.gbh.movil.rx.RxUtils;
+import com.gbh.movil.misc.Utils;
+import com.gbh.movil.misc.rx.RxUtils;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.BalanceExpirationEvent;
@@ -15,9 +15,9 @@ import com.gbh.movil.domain.util.Event;
 import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.domain.util.EventType;
 import com.gbh.movil.ui.Presenter;
-import com.gbh.movil.ui.UiUtils;
+import com.gbh.movil.ui.misc.UiUtils;
 
-import java.util.Set;
+import java.util.List;
 
 import rx.Subscription;
 import rx.functions.Action0;
@@ -78,9 +78,9 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
           UiUtils.showRefreshIndicator(screen);
         }
       })
-      .doOnNext(new Action1<Set<Product>>() {
+      .doOnNext(new Action1<List<Product>>() {
         @Override
-        public void call(Set<Product> products) {
+        public void call(List<Product> products) {
           screen.clear();
         }
       })

@@ -1,6 +1,6 @@
 package com.gbh.movil.domain;
 
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.domain.util.Event;
 import com.gbh.movil.domain.util.EventType;
 

@@ -1,25 +1,22 @@
 package com.gbh.movil.ui.main;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.gbh.movil.App;
 import com.gbh.movil.R;
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.data.StringHelper;
-import com.gbh.movil.ui.BaseActivity;
-import com.gbh.movil.ui.Container;
-import com.gbh.movil.ui.SubFragment;
-import com.gbh.movil.ui.UiUtils;
+import com.gbh.movil.ui.ActivityModule;
+import com.gbh.movil.ui.ChildFragment;
+import com.gbh.movil.ui.SwitchableContainerActivity;
+import com.gbh.movil.ui.main.purchase.PurchaseFragment;
 import com.gbh.movil.ui.main.products.ProductsFragment;
 import com.gbh.movil.ui.main.payments.PaymentsFragment;
 import com.gbh.movil.ui.view.widget.SlidingPaneLayout;
@@ -36,7 +33,8 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class MainActivity extends BaseActivity implements MainContainer, MainScreen {
+public class MainActivity extends SwitchableContainerActivity<MainComponent>
+  implements MainContainer, MainScreen {
   private Unbinder unbinder;
   private MainComponent component;
 
@@ -61,6 +59,7 @@ public class MainActivity extends BaseActivity implements MainContainer, MainScr
     // Injects all the annotated dependencies.
     component = DaggerMainComponent.builder()
       .appComponent(((App) getApplication()).getComponent())
+      .activityModule(new ActivityModule(this))
       .build();
     component.inject(this);
     // Sets the content layout identifier.
@@ -87,7 +86,7 @@ public class MainActivity extends BaseActivity implements MainContainer, MainScr
     });
     // Sets the startup screen.
     getSupportFragmentManager().beginTransaction()
-      .replace(R.id.fragment_container, PaymentsFragment.newInstance())
+      .replace(R.id.container, PaymentsFragment.newInstance())
       .commit();
     // Attaches the screen to the presenter.
     presenter.attachScreen(this);
@@ -133,28 +132,26 @@ public class MainActivity extends BaseActivity implements MainContainer, MainScr
     if (slidingPaneLayout.isOpen()) {
       slidingPaneLayout.closePane();
     }
-    final SubFragment<MainContainer> subFragment;
+    final ChildFragment<MainContainer> childFragment;
     switch (view.getId()) {
       case R.id.text_view_payments:
-        subFragment = PaymentsFragment.newInstance();
+        childFragment = PaymentsFragment.newInstance();
         break;
       case R.id.text_view_commerce:
-        subFragment = null; // TODO
-        UiUtils.createDialog(this, getString(R.string.sorry), getString(R.string.info_not_available_buy),
-          getString(R.string.ok), null, null, null).show();
+        childFragment = PurchaseFragment.newInstance();
         break;
       case R.id.text_view_accounts:
-        subFragment = ProductsFragment.newInstance();
+        childFragment = ProductsFragment.newInstance();
         break;
       case R.id.text_view_add_another_account:
-        subFragment = AddAnotherProductFragment.newInstance();
+        childFragment = AddAnotherProductFragment.newInstance();
         break;
       default:
-        subFragment = null;
+        childFragment = null;
         break;
     }
-    if (Utils.isNotNull(subFragment)) {
-      setSubScreen(subFragment);
+    if (Utils.isNotNull(childFragment)) {
+      setChildFragment(childFragment, true, true);
     }
   }
 
@@ -174,21 +171,6 @@ public class MainActivity extends BaseActivity implements MainContainer, MainScr
   }
 
   @Override
-  public void setSubScreen(@NonNull SubFragment<? extends Container<MainComponent>> fragment) {
-    final FragmentManager manager = getSupportFragmentManager();
-    final Fragment currentFragment = manager.findFragmentById(R.id.fragment_container);
-    if (Utils.isNull(currentFragment) || currentFragment.getClass() != fragment.getClass()) {
-      manager.beginTransaction()
-        .setCustomAnimations(R.anim.fragment_transition_enter_sibling,
-          R.anim.fragment_transition_exit_sibling, R.anim.fragment_transition_enter_sibling,
-          R.anim.fragment_transition_exit_sibling)
-        .replace(R.id.fragment_container, fragment)
-        .addToBackStack(null)
-        .commit();
-    }
-  }
-
-  @Override
   public void setTitle(@Nullable String title) {
     final ActionBar actionBar = getSupportActionBar();
     if (Utils.isNotNull(actionBar)) {
@@ -197,14 +179,7 @@ public class MainActivity extends BaseActivity implements MainContainer, MainScr
   }
 
   @Override
-  public void showAccountAdditionOrRemovalNotification(@NonNull String message) {
-    UiUtils.createDialog(this, stringHelper.doneWithExclamationMark(),
-      message, stringHelper.ok(), null, stringHelper.goToAccounts(),
-      new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-          setSubScreen(ProductsFragment.newInstance());
-        }
-      }).show();
+  public void openPurchaseScreen() {
+    setChildFragment(PurchaseFragment.newInstance(true), true, true);
   }
 }

@@ -10,9 +10,9 @@ import com.gbh.movil.domain.ProductManager;
 import com.gbh.movil.domain.BalanceManager;
 import com.gbh.movil.data.net.NetworkHelper;
 import com.gbh.movil.domain.TransactionManager;
+import com.gbh.movil.domain.pos.PosBridge;
 import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.domain.RecipientManager;
-import com.gbh.movil.domain.SessionManager;
 import com.gbh.movil.domain.TransactionRepo;
 import com.gbh.movil.domain.api.ApiBridge;
 
@@ -38,9 +38,9 @@ public interface AppComponent {
 
   EventBus provideEventBus();
 
-  SessionManager provideSessionManager();
-
   ApiBridge provideApiBridge();
+
+  PosBridge providePosBridge();
 
   TransactionRepo provideTransactionRepo();
 

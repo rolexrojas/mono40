@@ -3,14 +3,16 @@ package com.gbh.movil.domain;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
+
+import java.io.Serializable;
 
 /**
  * Bank representation.
  *
  * @author hecvasro
  */
-public class Bank {
+public class Bank implements Serializable {
   /**
    * Bank's code.
    */

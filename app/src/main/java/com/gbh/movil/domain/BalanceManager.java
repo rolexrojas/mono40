@@ -7,8 +7,8 @@ import android.support.v4.util.Pair;
 import com.gbh.movil.domain.api.ApiCode;
 import com.gbh.movil.domain.api.ApiUtils;
 import com.gbh.movil.domain.util.EventBus;
-import com.gbh.movil.rx.RxUtils;
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.rx.RxUtils;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.domain.api.ApiBridge;
 
 import java.util.HashMap;

@@ -6,9 +6,9 @@ import android.support.v4.util.Pair;
 
 import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.domain.api.ApiUtils;
-import com.gbh.movil.ui.main.payments.recipients.Contact;
+import com.gbh.movil.ui.main.recipients.Contact;
 
-import java.util.Set;
+import java.util.List;
 
 import rx.Observable;
 import rx.functions.Func1;
@@ -36,7 +36,7 @@ public final class RecipientManager implements RecipientProvider {
    * @return TODO
    */
   @NonNull
-  final Observable<Set<Recipient>> syncRecipients(@NonNull Set<Recipient> recipients) {
+  final Observable<List<Recipient>> syncRecipients(@NonNull List<Recipient> recipients) {
     return recipientRepo.saveAll(recipients);
   }
 
@@ -130,16 +130,16 @@ public final class RecipientManager implements RecipientProvider {
    */
   @NonNull
   @Override
-  public Observable<Set<Recipient>> getAll(@Nullable final String query) {
+  public Observable<List<Recipient>> getAll(@Nullable final String query) {
     return apiBridge.recipients()
-      .compose(ApiUtils.<Set<Recipient>>handleApiResult(true))
-      .flatMap(new Func1<Set<Recipient>, Observable<Set<Recipient>>>() {
+      .compose(ApiUtils.<List<Recipient>>handleApiResult(true))
+      .flatMap(new Func1<List<Recipient>, Observable<List<Recipient>>>() {
         @Override
-        public Observable<Set<Recipient>> call(Set<Recipient> recipients) {
+        public Observable<List<Recipient>> call(List<Recipient> recipients) {
           return syncRecipients(recipients)
-            .flatMap(new Func1<Set<Recipient>, Observable<Set<Recipient>>>() {
+            .flatMap(new Func1<List<Recipient>, Observable<List<Recipient>>>() {
               @Override
-              public Observable<Set<Recipient>> call(Set<Recipient> recipients) {
+              public Observable<List<Recipient>> call(List<Recipient> recipients) {
                 return recipientRepo.getAll(query);
               }
             });

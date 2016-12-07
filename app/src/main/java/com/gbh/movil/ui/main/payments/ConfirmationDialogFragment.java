@@ -17,7 +17,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.gbh.movil.R;
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.RecipientType;
 
@@ -44,10 +44,10 @@ public class ConfirmationDialogFragment extends DialogFragment {
   private Unbinder unbinder;
 
   @Nullable
-  @BindView(R.id.recipient_identifier_label)
+  @BindView(R.id.recipient_alias_label)
   TextInputLayout identifierTextInputLayout;
   @Nullable
-  @BindView(R.id.recipient_identifier)
+  @BindView(R.id.recipient_alias)
   EditText identifierEditText;
 
   /**

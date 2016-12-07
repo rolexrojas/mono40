@@ -3,12 +3,12 @@ package com.gbh.movil.data.repo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.gbh.movil.rx.RxUtils;
+import com.gbh.movil.misc.rx.RxUtils;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.RecipientRepo;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import rx.Observable;
 import rx.functions.Action1;
@@ -20,7 +20,7 @@ import rx.functions.Func1;
  * @author hecvasro
  */
 class InMemoryRecipientRepo implements RecipientRepo {
-  private final Set<Recipient> recipients = new HashSet<>();
+  private final List<Recipient> recipients = new ArrayList<>();
 
   InMemoryRecipientRepo() {
   }
@@ -30,7 +30,7 @@ class InMemoryRecipientRepo implements RecipientRepo {
    */
   @NonNull
   @Override
-  public Observable<Set<Recipient>> getAll(@Nullable final String query) {
+  public Observable<List<Recipient>> getAll(@Nullable final String query) {
     return Observable.just(recipients)
       .compose(RxUtils.<Recipient>fromCollection())
       .filter(new Func1<Recipient, Boolean>() {
@@ -39,7 +39,7 @@ class InMemoryRecipientRepo implements RecipientRepo {
           return recipient.matches(query);
         }
       })
-      .compose(RxUtils.<Recipient>toSet());
+      .compose(Recipient.toSortedListByIdentifier());
   }
 
   /**
@@ -65,7 +65,7 @@ class InMemoryRecipientRepo implements RecipientRepo {
    */
   @NonNull
   @Override
-  public Observable<Set<Recipient>> saveAll(@NonNull Set<Recipient> recipients) {
+  public Observable<List<Recipient>> saveAll(@NonNull List<Recipient> recipients) {
     return Observable.from(recipients)
       .flatMap(new Func1<Recipient, Observable<Recipient>>() {
         @Override
@@ -73,6 +73,6 @@ class InMemoryRecipientRepo implements RecipientRepo {
           return save(recipient);
         }
       })
-      .compose(RxUtils.<Recipient>toSet());
+      .compose(Recipient.toSortedListByIdentifier());
   }
 }

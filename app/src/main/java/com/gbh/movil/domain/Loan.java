@@ -10,10 +10,11 @@ import java.math.BigDecimal;
  * @author hecvasro
  */
 public class Loan extends Product {
-  Loan(@NonNull ProductIdentifier type, @NonNull String alias, @NonNull String number,
-    @NonNull Bank bank, @NonNull String currency, @NonNull BigDecimal queryFee,
-    boolean paymentOption) {
-    super(ProductCategory.LOAN, type, alias, number, bank, currency, queryFee, paymentOption);
+  Loan(@NonNull ProductType type, @NonNull String alias, @NonNull String number, @NonNull Bank bank,
+    @NonNull String currency, @NonNull BigDecimal queryFee, boolean paymentOption,
+    boolean isDefault) {
+    super(ProductCategory.LOAN, type, alias, number, bank, currency, queryFee, paymentOption,
+      isDefault);
   }
 
   @Override

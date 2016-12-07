@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 
 import com.gbh.movil.BuildConfig;
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.domain.SessionManager;
 
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class NetModule {
 
   @Provides
   @Singleton
-  OkHttpClient provideOkHttpClient(final SessionManager sessionManager) {
+  OkHttpClient provideOkHttpClient() {
     final OkHttpClient.Builder builder = new OkHttpClient.Builder()
       .connectTimeout(BuildConfig.TIME_OUT_CONNECT, TimeUnit.SECONDS)
       .readTimeout(BuildConfig.TIME_OUT_READ, TimeUnit.SECONDS)
@@ -47,6 +47,7 @@ public class NetModule {
         public Response intercept(Chain chain) throws IOException {
           final Request.Builder builder = chain.request().newBuilder()
             .addHeader(HEADER_USER_AGENT, System.getProperty("http.agent"));
+          final SessionManager sessionManager = SessionManager.getInstance();
           if (sessionManager.isActive() && Utils.isNotNull(sessionManager.getAuthToken())) {
             builder.addHeader(HEADER_AUTHORIZATION, sessionManager.getAuthToken());
           }

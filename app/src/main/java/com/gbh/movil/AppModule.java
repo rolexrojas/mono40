@@ -7,10 +7,10 @@ import com.gbh.movil.domain.ProductManager;
 import com.gbh.movil.domain.ProductRepo;
 import com.gbh.movil.domain.BalanceManager;
 import com.gbh.movil.domain.TransactionManager;
+import com.gbh.movil.domain.pos.PosBridge;
 import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.domain.RecipientManager;
 import com.gbh.movil.domain.RecipientRepo;
-import com.gbh.movil.domain.SessionManager;
 import com.gbh.movil.domain.api.ApiBridge;
 
 import javax.inject.Singleton;
@@ -43,14 +43,9 @@ final class AppModule {
 
   @Provides
   @Singleton
-  SessionManager provideSessionManager() {
-    return new SessionManager();
-  }
-
-  @Provides
-  @Singleton
-  ProductManager provideProductManager(EventBus eventBus, ProductRepo productRepo) {
-    return new ProductManager(eventBus, productRepo);
+  ProductManager provideProductManager(ProductRepo productRepo, PosBridge posBridge,
+    EventBus eventBus) {
+    return new ProductManager(productRepo, posBridge, eventBus);
   }
 
   @Provides

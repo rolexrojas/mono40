@@ -4,5 +4,5 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:layout_marginEnd="@dimen/space.horizontal.large"
-  android:layout_marginStart="@dimen/space.horizontal.large"/>
+  android:layout_marginEnd="@dimen/space_horizontal_large"
+  android:layout_marginStart="@dimen/space_horizontal_large"/>

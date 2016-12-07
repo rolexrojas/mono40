@@ -19,7 +19,7 @@ class BalanceQueryRequest {
   private final String pin;
 
   BalanceQueryRequest(@NonNull Product product, @NonNull String pin) {
-    this.accountType = product.getIdentifier().name();
+    this.accountType = product.getType().name();
     this.accountAlias = product.getAlias();
     this.accountNumber = product.getNumber();
     this.bank = product.getBank();

@@ -14,13 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.data.res.AssetProvider;
-import com.gbh.movil.ui.UiUtils;
+import com.gbh.movil.data.util.BinderFactory;
+import com.gbh.movil.ui.misc.UiUtils;
 import com.gbh.movil.ui.main.MainContainer;
-import com.gbh.movil.ui.main.list.Adapter;
-import com.gbh.movil.ui.main.list.HolderBinderFactory;
-import com.gbh.movil.ui.main.list.HolderCreatorFactory;
+import com.gbh.movil.ui.main.list.ListItemAdapter;
+import com.gbh.movil.ui.main.list.ListItemHolderCreatorFactory;
 import com.gbh.movil.ui.view.widget.LoadIndicator;
 import com.gbh.movil.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.gbh.movil.ui.main.AddAnotherProductFragment;
@@ -29,7 +29,7 @@ import com.gbh.movil.R;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Balance;
-import com.gbh.movil.ui.SubFragment;
+import com.gbh.movil.ui.ChildFragment;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import javax.inject.Inject;
@@ -45,13 +45,13 @@ import timber.log.Timber;
  *
  * @author hecvasro
  */
-public class ProductsFragment extends SubFragment<MainContainer> implements ProductsScreen,
-  ProductHolder.OnQueryActionButtonClickedListener,
-  ShowRecentTransactionsHolder.OnShowRecentTransactionsButtonClickedListener {
+public class ProductsFragment extends ChildFragment<MainContainer> implements ProductsScreen,
+  ProductListItemHolder.OnQueryActionButtonClickedListener,
+  ShowRecentTransactionsListItemHolder.OnShowRecentTransactionsButtonClickedListener {
   private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
 
   private Unbinder unbinder;
-  private Adapter adapter;
+  private ListItemAdapter adapter;
   private LoadIndicator loadIndicator;
 
   @Inject
@@ -106,7 +106,7 @@ public class ProductsFragment extends SubFragment<MainContainer> implements Prod
    */
   @OnClick(R.id.button_add_another_account)
   void onAddAnotherAccountButtonClicked() {
-    container.setSubScreen(AddAnotherProductFragment.newInstance());
+    getContainer().setChildFragment(AddAnotherProductFragment.newInstance(), true, true);
   }
 
   @Override
@@ -114,7 +114,7 @@ public class ProductsFragment extends SubFragment<MainContainer> implements Prod
     super.onCreate(savedInstanceState);
     // Injects all the annotated dependencies.
     final ProductsComponent component = DaggerProductsComponent.builder()
-      .mainComponent(container.getComponent())
+      .mainComponent(getContainer().getComponent())
       .build();
     component.inject(this);
   }
@@ -132,15 +132,16 @@ public class ProductsFragment extends SubFragment<MainContainer> implements Prod
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
     // Prepares the recycler view.
-    final HolderCreatorFactory holderCreatorFactory = new HolderCreatorFactory.Builder()
+    final ListItemHolderCreatorFactory holderCreatorFactory = new ListItemHolderCreatorFactory.Builder()
       .addCreator(ShowRecentTransactionsItem.class,
-        new ShowRecentTransactionsHolderCreator(this))
-      .addCreator(ProductItem.class, new ProductHolderCreator(this))
+        new ShowRecentTransactionsListItemHolderCreator(this))
+      .addCreator(ProductItem.class, new ProductListItemHolderCreator(this))
       .build();
-    final HolderBinderFactory holderBinderFactory = new HolderBinderFactory.Builder()
-      .addBinder(ProductItem.class, ProductHolder.class, new ProductHolderBinder(assetProvider))
+    final BinderFactory holderBinderFactory = new BinderFactory.Builder()
+      .addBinder(ProductItem.class, ProductListItemHolder.class,
+        new ProductListItemHolderBinder(stringHelper, assetProvider))
       .build();
-    adapter = new Adapter(holderCreatorFactory, holderBinderFactory);
+    adapter = new ListItemAdapter(holderCreatorFactory, holderBinderFactory);
     recyclerView.setAdapter(adapter);
     recyclerView.setHasFixedSize(true);
     recyclerView.setItemAnimator(null);
@@ -182,7 +183,7 @@ public class ProductsFragment extends SubFragment<MainContainer> implements Prod
   public void onStart() {
     super.onStart();
     // Sets the title.
-    container.setTitle(stringHelper.accounts());
+    getContainer().setTitle(stringHelper.accounts());
     // Starts the presenter.
     presenter.start();
   }

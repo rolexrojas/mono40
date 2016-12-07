@@ -12,7 +12,6 @@ import com.gbh.movil.domain.Transaction;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 
 import rx.Observable;
 
@@ -48,9 +47,9 @@ public class DecoratedApiBridge implements ApiBridge {
    */
   @NonNull
   @Override
-  public Observable<ApiResult<Set<Bank>>> banks() {
+  public Observable<ApiResult<List<Bank>>> banks() {
     return apiBridge.banks()
-      .compose(this.<Set<Bank>>assertAuthorization());
+      .compose(this.<List<Bank>>assertAuthorization());
   }
 
   /**
@@ -89,9 +88,9 @@ public class DecoratedApiBridge implements ApiBridge {
    */
   @NonNull
   @Override
-  public Observable<ApiResult<Set<Recipient>>> recipients() {
+  public Observable<ApiResult<List<Recipient>>> recipients() {
     return apiBridge.recipients()
-      .compose(this.<Set<Recipient>>assertAuthorization());
+      .compose(this.<List<Recipient>>assertAuthorization());
   }
 
   @NonNull
@@ -107,5 +106,11 @@ public class DecoratedApiBridge implements ApiBridge {
     @NonNull Recipient recipient, @NonNull BigDecimal amount, @NonNull String pin) {
     return apiBridge.transferTo(product, recipient, amount, pin)
       .compose(this.<Boolean>assertAuthorization());
+  }
+
+  @NonNull
+  @Override
+  public Observable<Product> setDefaultPaymentOption(@NonNull Product product) {
+    return apiBridge.setDefaultPaymentOption(product);
   }
 }

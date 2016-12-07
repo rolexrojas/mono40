@@ -17,7 +17,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.gbh.movil.R;
-import com.gbh.movil.Utils;
+import com.gbh.movil.misc.Utils;
 
 import java.util.List;
 

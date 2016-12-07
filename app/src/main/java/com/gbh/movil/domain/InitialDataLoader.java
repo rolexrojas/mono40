@@ -37,8 +37,7 @@ public final class InitialDataLoader {
       .flatMap(new Func1<InitialData, Observable<Object>>() {
         @Override
         public Observable<Object> call(InitialData data) {
-          return productManager.syncAccounts(data.getProducts())
-            .cast(Object.class)
+          return productManager.syncProducts(data.getProducts())
             .concatWith(recipientManager.syncRecipients(data.getRecipients()))
             .last();
         }
