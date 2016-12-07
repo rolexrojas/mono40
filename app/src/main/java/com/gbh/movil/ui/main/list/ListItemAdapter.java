@@ -118,16 +118,8 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemHolder> {
    *   TODO
    */
   public void set(int position, @NonNull Object item) {
-    if (items.contains(item)) {
-      final int index = items.indexOf(item);
-      if (index != position) {
-        remove(index);
-        add(position, item);
-      }
-    } else {
-      items.set(position, item);
-      notifyItemChanged(position);
-    }
+    items.set(position, item);
+    notifyItemChanged(position);
   }
 
   /**
