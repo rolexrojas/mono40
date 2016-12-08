@@ -3,16 +3,18 @@ package com.gbh.movil.domain.session;
 import android.support.annotation.NonNull;
 
 import com.gbh.movil.domain.DeviceManager;
-import com.gbh.movil.domain.api.ApiResult;
-import com.gbh.movil.domain.recipient.RecipientService;
-import com.gbh.movil.domain.text.PatternHelper;
+import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.Pin;
-import com.gbh.movil.misc.Utils;
+import com.gbh.movil.domain.api.ApiResult;
+import com.gbh.movil.domain.text.PatternHelper;
+import com.gbh.movil.domain.text.TextHelper;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import rx.Observable;
-import rx.functions.Action1;
+import rx.functions.Func0;
 import rx.functions.Func1;
-import rx.functions.Func2;
 
 /**
  * TODO
@@ -21,7 +23,6 @@ import rx.functions.Func2;
  */
 public final class SessionManager {
   private final DeviceManager deviceManager;
-  private final RecipientService recipientService;
   private final SessionRepo sessionRepo;
   private final SessionService sessionService;
 
@@ -31,59 +32,11 @@ public final class SessionManager {
    * @param sessionRepo
    *   TODO
    */
-  public SessionManager(@NonNull DeviceManager deviceManager,
-    @NonNull RecipientService recipientService, @NonNull SessionRepo sessionRepo,
+  public SessionManager(@NonNull DeviceManager deviceManager, @NonNull SessionRepo sessionRepo,
     @NonNull SessionService sessionService) {
     this.deviceManager = deviceManager;
-    this.recipientService = recipientService;
     this.sessionRepo = sessionRepo;
     this.sessionService = sessionService;
-  }
-
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
-  @NonNull
-  private Observable.Transformer<ApiResult<String>, Session> sign() {
-    return new Observable.Transformer<ApiResult<String>, Session>() {
-      @Override
-      public Observable<Session> call(final Observable<ApiResult<String>> observable) {
-        if (sessionRepo.hasSession()) {
-          return Observable.just(null);
-        } else {
-          return observable
-            .map(new Func1<ApiResult<String>, String>() {
-              @Override
-              public String call(ApiResult<String> result) {
-                return result.isSuccessful() ? result.getData() : null;
-              }
-            })
-            .flatMap(new Func1<String, Observable<Session>>() {
-              @Override
-              public Observable<Session> call(String token) {
-                return Observable.zip(Observable.just(token),
-                  recipientService.getName(token, deviceManager.getPhoneNumber()),
-                  new Func2<String, ApiResult<String>, Session>() {
-                    @Override
-                    public Session call(String token, ApiResult<String> result) {
-                      return result.isSuccessful() ? new Session(token, result.getData()) : null;
-                    }
-                  });
-              }
-            })
-            .doOnNext(new Action1<Session>() {
-              @Override
-              public void call(Session session) {
-                if (Utils.isNotNull(session)) {
-                  sessionRepo.setSession(session);
-                }
-              }
-            });
-        }
-      }
-    };
   }
 
   /**
@@ -97,14 +50,49 @@ public final class SessionManager {
    * @return TODO
    */
   @NonNull
-  public final Observable<Session> signIn(@NonNull String email, @NonNull String password) {
-    if (!PatternHelper.isValidEmail(email) && !PatternHelper.isValidPassword(password)) {
-      return Observable.just(null);
-    } else {
-      return sessionService.signIn(deviceManager.getPhoneNumber(), email, password,
-        deviceManager.getId())
-        .compose(sign());
-    }
+  public final Observable<Session> signIn(@NonNull final PhoneNumber phoneNumber,
+    @NonNull final String email, @NonNull final String password) {
+    return Observable.defer(new Func0<Observable<Session>>() {
+      @Override
+      public Observable<Session> call() {
+        final Map<Object, String> errors = new HashMap<>();
+        if (TextHelper.isEmpty(email)) {
+          errors.put(email, "Is required"); // TODO: Retrieve messages using the StringFactory.
+        }
+        if (!PatternHelper.isValidEmail(email)) {
+          errors.put(email, "Incorrect format"); // TODO: Retrieve messages using the StringFactory.
+        }
+        if (TextHelper.isEmpty(password)) {
+          errors.put(password, "Is required"); // TODO: Retrieve messages using the StringFactory.
+        }
+        if (sessionRepo.hasSession()) {
+          final Session session = sessionRepo.getSession();
+          if (!phoneNumber.equals(session.getPhoneNumber())) {
+            errors.put(phoneNumber, "Not a match"); // TODO: Retrieve messages using the StringFactory.
+          }
+          if (!email.equals(session.getEmail())) {
+            errors.put(email, "Not a match"); // TODO: Retrieve messages using the StringFactory.
+          }
+        }
+        if (!errors.isEmpty()) {
+          return Observable.just(null); // TODO: Propagate errors to the caller.
+        } else {
+          return sessionService.signIn(phoneNumber, email, password, deviceManager.getId())
+            .map(new Func1<ApiResult<String>, Session>() {
+              @Override
+              public Session call(ApiResult<String> result) {
+                if (result.isSuccessful()) {
+                  final Session session = new Session(phoneNumber, email, result.getData());
+                  sessionRepo.setSession(session);
+                  return session;
+                } else {
+                  return null; // TODO: Propagate errors to the caller.
+                }
+              }
+            });
+        }
+      }
+    });
   }
 
   /**
@@ -120,16 +108,50 @@ public final class SessionManager {
    * @return TODO
    */
   @NonNull
-  public final Observable<Session> signUp(@NonNull String email, @NonNull String password,
-    @NonNull String pin) {
-    if (!PatternHelper.isValidEmail(email) && !PatternHelper.isValidPassword(password)
-      && !Pin.isValid(pin)) {
-      return Observable.just(null);
-    } else {
-      return sessionService.signUp(deviceManager.getPhoneNumber(), email, password,
-        deviceManager.getId(), pin)
-        .compose(sign());
-    }
+  public final Observable<Session> signUp(@NonNull final PhoneNumber phoneNumber,
+    @NonNull final String email, @NonNull final String password, @NonNull final String pin) {
+    return Observable.defer(new Func0<Observable<Session>>() {
+      @Override
+      public Observable<Session> call() {
+        final Map<Object, String> errors = new HashMap<>();
+        if (TextHelper.isEmpty(email)) {
+          errors.put(email, "Is required"); // TODO: Retrieve messages using the StringFactory.
+        }
+        if (!PatternHelper.isValidEmail(email)) {
+          errors.put(email, "Incorrect format"); // TODO: Retrieve messages using the StringFactory.
+        }
+        if (TextHelper.isEmpty(password)) {
+          errors.put(password, "Is required"); // TODO: Retrieve messages using the StringFactory.
+        }
+        if (!PatternHelper.isValidPassword(password)) {
+          errors.put(password, "Incorrect format"); // TODO: Retrieve messages using the StringFactory.
+        }
+        if (TextHelper.isEmpty(pin)) {
+          errors.put(pin, "Is required"); // TODO: Retrieve messages using the StringFactory.
+        }
+        if (!Pin.isValid(pin)) {
+          errors.put(pin, "Incorrect format"); // TODO: Retrieve messages using the StringFactory.
+        }
+        // TODO: Validate the existent of a session.
+        if (!errors.isEmpty()) {
+          return Observable.just(null); // TODO: Propagate errors to the caller.
+        } else {
+          return sessionService.signUp(phoneNumber, email, password, deviceManager.getId(), pin)
+            .map(new Func1<ApiResult<String>, Session>() {
+              @Override
+              public Session call(ApiResult<String> result) {
+                if (result.isSuccessful()) {
+                  final Session session = new Session(phoneNumber, email, result.getData());
+                  sessionRepo.setSession(session);
+                  return session;
+                } else {
+                  return null; // TODO: Propagate errors to the caller.
+                }
+              }
+            });
+        }
+      }
+    });
   }
 
   /**

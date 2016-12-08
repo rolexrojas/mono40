@@ -2,6 +2,8 @@ package com.gbh.movil.domain.session;
 
 import android.support.annotation.NonNull;
 
+import com.gbh.movil.domain.PhoneNumber;
+
 /**
  * Session representation.
  *
@@ -9,9 +11,13 @@ import android.support.annotation.NonNull;
  */
 public final class Session {
   /**
-   * User's name.
+   * User's {@link PhoneNumber phone number}.
    */
-  private final String name;
+  private final PhoneNumber phoneNumber;
+  /**
+   * User's email address.
+   */
+  private final String email;
   /**
    * Session's authentication token.
    */
@@ -20,24 +26,38 @@ public final class Session {
   /**
    * Constructs a new session.
    *
-   * @param name
-   *   User's name.
+   * @param phoneNumber
+   *   User's {@link PhoneNumber phone number}.
+   * @param email
+   *   User's email address.
    * @param authToken
    *   Session's authentication token.
    */
-  public Session(@NonNull String name, @NonNull String authToken) {
-    this.name = name;
+  public Session(@NonNull PhoneNumber phoneNumber, @NonNull String email,
+    @NonNull String authToken) {
+    this.phoneNumber = phoneNumber;
+    this.email = email;
     this.authToken = authToken;
   }
 
   /**
-   * Gets the name of the user.
+   * Gets the {@link PhoneNumber phone number} of the user.
    *
-   * @return User's name.
+   * @return User's {@link PhoneNumber phone number}.
    */
   @NonNull
-  public final String getName() {
-    return name;
+  public final PhoneNumber getPhoneNumber() {
+    return phoneNumber;
+  }
+
+  /**
+   * Gets the email address of the user.
+   *
+   * @return User's email address.
+   */
+  @NonNull
+  public final String getEmail() {
+    return email;
   }
 
   /**

@@ -5,10 +5,12 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.session.Session;
 import com.gbh.movil.domain.session.SessionRepo;
 import com.gbh.movil.domain.text.TextHelper;
 import com.gbh.movil.misc.Utils;
+import com.google.i18n.phonenumbers.NumberParseException;
 
 /**
  * TODO
@@ -25,7 +27,11 @@ class SharedPreferencesSessionRepo implements SessionRepo {
   /**
    * TODO
    */
-  private static final String KEY_NAME = "name";
+  private static final String KEY_PHONE_NUMBER = "phoneNumber";
+  /**
+   * TODO
+   */
+  private static final String KEY_EMAIL = "email";
   /**
    * TODO
    */
@@ -52,10 +58,17 @@ class SharedPreferencesSessionRepo implements SessionRepo {
   @Override
   public Session getSession() {
     if (Utils.isNull(session) && hasSession()) {
-      final String name = sharedPreferences.getString(KEY_NAME, null);
+      PhoneNumber phoneNumber = null;
+      try {
+        phoneNumber = new PhoneNumber(sharedPreferences.getString(KEY_PHONE_NUMBER, ""));
+      } catch (NumberParseException exception) {
+        // Ignored.
+      }
+      final String email = sharedPreferences.getString(KEY_EMAIL, null);
       final String authToken = sharedPreferences.getString(KEY_AUTH_TOKEN, null);
-      if (TextHelper.isNotEmpty(name) && TextHelper.isNotEmpty(authToken)) {
-        session = new Session(name, authToken);
+      if (Utils.isNotNull(phoneNumber) && TextHelper.isNotEmpty(email)
+        && TextHelper.isNotEmpty(authToken)) {
+        session = new Session(phoneNumber, email, authToken);
       } else {
         clearSession();
       }
@@ -65,7 +78,7 @@ class SharedPreferencesSessionRepo implements SessionRepo {
 
   @Override
   public boolean hasSession() {
-    return sharedPreferences.contains(KEY_NAME) && sharedPreferences.contains(KEY_AUTH_TOKEN);
+    return sharedPreferences.contains(KEY_EMAIL) && sharedPreferences.contains(KEY_AUTH_TOKEN);
   }
 
   @Override
@@ -79,7 +92,8 @@ class SharedPreferencesSessionRepo implements SessionRepo {
   public void setSession(@NonNull Session session) {
     this.session = session;
     this.sharedPreferences.edit()
-      .putString(KEY_NAME, session.getName())
+      .putString(KEY_PHONE_NUMBER, session.getPhoneNumber().toString())
+      .putString(KEY_EMAIL, session.getEmail())
       .putString(KEY_AUTH_TOKEN, session.getAuthToken())
       .apply();
   }
