@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <style name="App.Widget.Button.ColoredRounded" parent="Base.Widget.Button.ColoredRounded">
+    <item name="android:background">@drawable/button_colored_rounded</item>
+  </style>
+
+  <!-- TODO: Apply standards from these point downward -->
   <style
     name="App.Text.CommercePaymentMessage"
     parent="Base.Text.CommercePaymentMessage">
@@ -24,7 +29,6 @@
     <item name="android:letterSpacing">@dimen/commerce_payment_option_ready_text_letter_spacing</item>
   </style>
 
-  <!-- TODO: Apply standards from these point downward -->
   <style
     name="App.Text.Widget.Toolbar.Subtitle"
     parent="Base.Text.Widget.Toolbar.Subtitle">

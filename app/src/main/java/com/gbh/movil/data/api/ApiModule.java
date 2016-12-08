@@ -33,6 +33,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiModule {
   @Provides
   @Singleton
+  Retrofit provideRetrofit(OkHttpClient okHttpClient) {
+    return new Retrofit.Builder()
+      .addConverterFactory(GsonConverterFactory.create())
+      .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+      .baseUrl(Api.URL)
+      .client(okHttpClient)
+      .build();
+  }
+
+  @Provides
+  @Singleton
   ApiBridge provideApiBridge(OkHttpClient okHttpClient) {
     final Gson gson = new GsonBuilder()
       .registerTypeAdapter(Bank.class, new BankTypeAdapter())
@@ -53,6 +64,6 @@ public class ApiModule {
       .baseUrl(BuildConfig.API_URL)
       .client(okHttpClient)
       .build();
-    return new DecoratedApiBridge(new FakeApiBridge());//new RetrofitApiBridge(retrofit.create(ApiService.class)));
+    return new DecoratedApiBridge(new FakeApiBridge());
   }
 }

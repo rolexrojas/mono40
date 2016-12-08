@@ -2,6 +2,7 @@ package com.gbh.movil.data.api;
 
 import android.support.annotation.NonNull;
 
+import com.gbh.movil.BuildConfig;
 import com.gbh.movil.domain.api.ApiCode;
 import com.gbh.movil.domain.api.ApiResult;
 import com.gbh.movil.misc.Mapper;
@@ -16,11 +17,14 @@ import rx.functions.Func1;
  * @author hecvasro
  */
 public final class Api {
+  public static final String URL = BuildConfig.API_URL;
+
   /**
    * TODO
    */
   public static final class Header {
     public static final String AUTHORIZATION = "Authorization";
+    public static final String USER_AGENT = "User-Agent";
   }
 
   /**

@@ -4,8 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 
 import com.gbh.movil.BuildConfig;
-import com.gbh.movil.domain.SessionManager;
-import com.gbh.movil.misc.Utils;
+import com.gbh.movil.data.api.Api;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -25,9 +24,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
  */
 @Module
 public class NetModule {
-  private static final String HEADER_AUTHORIZATION = "Authorization";
-  private static final String HEADER_USER_AGENT = "User-Agent";
-
   @Provides
   @Singleton
   NetworkHelper provideNetworkHelper(Context context) {
@@ -46,11 +42,7 @@ public class NetModule {
         @Override
         public Response intercept(Chain chain) throws IOException {
           final Request.Builder builder = chain.request().newBuilder()
-            .addHeader(HEADER_USER_AGENT, System.getProperty("http.agent"));
-          final SessionManager sessionManager = SessionManager.getInstance();
-          if (sessionManager.isActive() && Utils.isNotNull(sessionManager.getAuthToken())) {
-            builder.addHeader(HEADER_AUTHORIZATION, sessionManager.getAuthToken());
-          }
+            .addHeader(Api.Header.USER_AGENT, System.getProperty("http.agent"));
           return chain.proceed(builder.build());
         }
       });

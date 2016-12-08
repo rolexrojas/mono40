@@ -5,6 +5,7 @@
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.READ_CONTACTS"/>
+  <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
   <application
     android:name="com.gbh.movil.App"
     android:allowBackup="true"
@@ -16,18 +17,22 @@
     <meta-data
       android:name="io.fabric.ApiKey"
       android:value="fa97cc2f5c3339e67fe12a40ce7ae391909b4e9d"/>
-
     <activity
-      android:name=".ui.splash.SplashActivity"
+      android:name=".ui.index.IndexActivity"
       android:screenOrientation="portrait"
-      android:theme="@style/SplashTheme">
+      android:theme="@style/Screen.Theme.Index">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
-
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
+    <activity
+      android:name=".ui.auth.AuthIndexActivity"
+      android:screenOrientation="portrait"/>
+    <activity
+      android:name=".ui.auth.SignInActivity"
+      android:screenOrientation="portrait"/>
     <activity
       android:name=".ui.main.MainActivity"
       android:screenOrientation="portrait"/>
