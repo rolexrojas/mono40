@@ -25,7 +25,7 @@ public final class Session {
    * @param authToken
    *   Session's authentication token.
    */
-  Session(@NonNull String name, @NonNull String authToken) {
+  public Session(@NonNull String name, @NonNull String authToken) {
     this.name = name;
     this.authToken = authToken;
   }
