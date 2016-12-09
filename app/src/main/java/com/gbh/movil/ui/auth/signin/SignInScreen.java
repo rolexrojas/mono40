@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.auth;
+package com.gbh.movil.ui.auth.signin;
 
 import com.gbh.movil.ui.Screen;
 

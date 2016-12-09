@@ -3,13 +3,11 @@
   xmlns:android="http://schemas.android.com/apk/res/android">
   <item>
     <shape android:shape="rectangle">
-      <corners android:radius="@dimen/button_rounded_radius_size"/>
-      <solid android:color="@color/white_alpha_90"/>
+      <solid android:color="@color/button_colored_solid"/>
     </shape>
   </item>
   <item>
     <shape android:shape="rectangle">
-      <corners android:radius="@dimen/button_rounded_radius_size"/>
       <gradient
         android:angle="0"
         android:endColor="@color/button_colored_gradient_end"

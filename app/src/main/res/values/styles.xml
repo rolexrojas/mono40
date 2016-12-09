@@ -18,7 +18,10 @@
     <item name="android:gravity">center</item>
     <item name="android:textAppearance">@style/App.Text.Widget.Button</item>
   </style>
-  <style name="Base.Widget.Button.ColoredRounded">
+  <style name="Base.Widget.Button.Colored">
+    <item name="android:background">@drawable/button_colored_shape</item>
+  </style>
+  <style name="Base.Widget.Button.Colored.Rounded">
     <item name="android:background">@drawable/button_colored_rounded_shape</item>
   </style>
 
@@ -31,9 +34,8 @@
 
   <style name="App.Widget" parent="Base.Widget"/>
   <style name="App.Widget.Button" parent="Base.Widget.Button"/>
-  <style name="App.Widget.Button.ColoredRounded" parent="Base.Widget.Button.ColoredRounded"/>
-
-  <style name="Screen" parent="App"/>
+  <style name="App.Widget.Button.Colored" parent="Base.Widget.Button.Colored"/>
+  <style name="App.Widget.Button.Colored.Rounded" parent="Base.Widget.Button.Colored.Rounded"/>
 
   <!-- Styles of the auth index screen -->
   <style name="AuthIndex"/>
@@ -51,7 +53,17 @@
     <item name="android:textSize">15sp</item>
     <item name="fontPath">@string/font_gotham_rounded_book</item>
   </style>
-  <style name="Screen.AuthIndex.Widget.Button" parent="App.Widget.Button.ColoredRounded"/>
+  <style name="Screen.AuthIndex.Widget.Button" parent="App.Widget.Button.Colored.Rounded"/>
+
+  <!-- Styles of the sign in screen -->
+  <style name="SignIn"/>
+  <style name="SignIn.Widget"/>
+  <style name="SignIn.Widget.Label">
+    <item name="android:lineSpacingExtra">5sp</item>
+    <item name="android:textColor">@color/white_alpha_50</item>
+    <item name="android:textSize">15sp</item>
+  </style>
+  <style name="SignIn.Widget.Button" parent="App.Widget.Button.Colored"/>
 
   <!-- TODO: Apply standards from these point downward -->
   <style name="Base.Text.CommercePaymentOption">
@@ -423,6 +435,7 @@
     parent="Base.Theme.AppBar"/>
 
   <!-- Screen's styles -->
+  <style name="Screen" parent="App"/>
   <style name="Screen.Products"/>
   <style
     name="Screen.Products.Text.Widget.Amount.Content"

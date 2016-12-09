@@ -39,7 +39,7 @@
     app:layout_marginEndPercent="17%"
     app:layout_marginStartPercent="17%"
     app:layout_marginTopPercent="12%"/>
-  <Button
+  <com.gbh.movil.ui.view.widget.AppButton
     android:id="@+id/button_sign_in"
     style="@style/Screen.AuthIndex.Widget.Button"
     android:layout_gravity="center_horizontal"
@@ -55,7 +55,7 @@
     app:layout_marginEndPercent="17%"
     app:layout_marginStartPercent="17%"
     app:layout_marginTopPercent="8%"/>
-  <Button
+  <com.gbh.movil.ui.view.widget.AppButton
     android:id="@+id/button_sign_up"
     style="@style/Screen.AuthIndex.Widget.Button"
     android:layout_gravity="center_horizontal"

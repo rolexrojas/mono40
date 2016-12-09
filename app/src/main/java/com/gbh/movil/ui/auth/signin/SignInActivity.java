@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.auth;
+package com.gbh.movil.ui.auth.signin;
 
 import android.content.Context;
 import android.content.Intent;

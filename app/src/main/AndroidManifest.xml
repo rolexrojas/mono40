@@ -31,7 +31,7 @@
       android:name=".ui.auth.AuthIndexActivity"
       android:screenOrientation="portrait"/>
     <activity
-      android:name=".ui.auth.SignInActivity"
+      android:name=".ui.auth.signin.SignInActivity"
       android:screenOrientation="portrait"/>
     <activity
       android:name=".ui.main.MainActivity"

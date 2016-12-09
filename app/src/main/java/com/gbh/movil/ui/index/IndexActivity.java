@@ -7,7 +7,7 @@ import com.gbh.movil.App;
 import com.gbh.movil.ui.ActivityModule;
 import com.gbh.movil.ui.BaseActivity;
 import com.gbh.movil.ui.auth.AuthIndexActivity;
-import com.gbh.movil.ui.auth.SignInActivity;
+import com.gbh.movil.ui.auth.signin.SignInActivity;
 
 import javax.inject.Inject;
 

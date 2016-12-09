@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <style name="App.Widget.Button.ColoredRounded" parent="Base.Widget.Button.ColoredRounded">
+  <style name="App.Widget.Button.Colored" parent="Base.Widget.Button.Colored">
+    <item name="android:background">@drawable/button_colored</item>
+  </style>
+  <style name="App.Widget.Button.Colored.Rounded" parent="Base.Widget.Button.Colored.Rounded">
     <item name="android:background">@drawable/button_colored_rounded</item>
   </style>
 

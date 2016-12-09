@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="button_colored_start">#0C9C188F</color>
-  <color name="button_colored_end">#33821477</color>
+  <color name="button_colored_solid">@color/white_alpha_90</color>
+  <color name="button_colored_gradient_start">#0C9C188F</color>
+  <color name="button_colored_gradient_end">#33821477</color>
+  <color name="button_colored_solid_disabled">@color/white_alpha_40</color>
+
+  <color name="edit_text_background_inactive_and_empty">#7FCCCCCC</color>
 
   <!-- TODO: Apply standards from these point downward -->
   <color name="window_background_default">#EFEFEF</color>
@@ -46,6 +50,7 @@
   <color name="transparent">@android:color/transparent</color>
   <color name="white">#FFF</color>
   <color name="white_alpha_20">#33FFFFFF</color>
+  <color name="white_alpha_40">#66FFFFFF</color>
   <color name="white_alpha_50">#7FFFFFFF</color>
   <color name="white_alpha_90">#E5FFFFFF</color>
   <!-- Search view colors -->
