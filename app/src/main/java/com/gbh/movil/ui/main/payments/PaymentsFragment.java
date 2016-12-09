@@ -34,7 +34,7 @@ import com.gbh.movil.ui.main.list.NoResultsListItemHolderBinder;
 import com.gbh.movil.ui.main.list.NoResultsListItemHolderCreator;
 import com.gbh.movil.ui.main.recipients.AddRecipientActivity;
 import com.gbh.movil.ui.main.transactions.TransactionCreationActivity;
-import com.gbh.movil.ui.view.widget.FullScreenRefreshIndicator;
+import com.gbh.movil.ui.view.widget.FullScreenLoadIndicator;
 import com.gbh.movil.ui.view.widget.LoadIndicator;
 import com.gbh.movil.ui.ChildFragment;
 import com.gbh.movil.ui.view.widget.SearchView;
@@ -249,7 +249,7 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
   public void showLoadIndicator(boolean fullscreen) {
     if (fullscreen) {
       if (Utils.isNull(fullScreenLoadIndicator)) {
-        fullScreenLoadIndicator = new FullScreenRefreshIndicator(getChildFragmentManager());
+        fullScreenLoadIndicator = new FullScreenLoadIndicator(getChildFragmentManager());
       }
       currentLoadIndicator = fullScreenLoadIndicator;
     } else {

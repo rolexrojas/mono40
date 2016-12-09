@@ -57,6 +57,14 @@
 
   <style name="App.Theme" parent="Base.Theme"/>
 
+  <!-- Styles of the full screen load indicator -->
+  <style name="FullScreenLoadIndicator"/>
+
+  <style name="FullScreenLoadIndicator.Theme">
+    <item name="colorPrimaryDark">#AC78A7</item>
+    <item name="android:windowBackground">@color/white_alpha_50</item>
+  </style>
+
   <!-- Styles of the auth index screen -->
   <style name="AuthIndex"/>
   <style name="AuthIndex.Widget"/>
@@ -82,7 +90,13 @@
     <item name="android:background">@drawable/container_background_dark</item>
   </style>
   <style name="SignIn.Widget.Button" parent="App.Widget.Button.Colored"/>
-  <style name="SignIn.Widget.EditText" parent="App.Widget.EditText"/>
+  <style name="SignIn.Widget.EditText" parent="App.Widget.EditText">
+    <item name="android:maxLines">1</item>
+  </style>
+  <style name="SignIn.Widget.EditText.PhoneNumber">
+    <item name="android:digits">0123456789</item>
+    <item name="android:inputType">numberPassword</item>
+  </style>
   <style name="SignIn.Widget.Label">
     <item name="android:lineSpacingExtra">5sp</item>
     <item name="android:textColor">@color/white_alpha_50</item>

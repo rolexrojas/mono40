@@ -17,7 +17,7 @@ import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.ui.ActivityModule;
 import com.gbh.movil.ui.SwitchableContainerActivity;
 import com.gbh.movil.ui.misc.UiUtils;
-import com.gbh.movil.ui.view.widget.FullScreenRefreshIndicator;
+import com.gbh.movil.ui.view.widget.FullScreenLoadIndicator;
 import com.gbh.movil.ui.view.widget.LoadIndicator;
 
 import javax.inject.Inject;
@@ -164,7 +164,7 @@ public class AddRecipientActivity extends SwitchableContainerActivity<AddRecipie
   @Nullable
   public LoadIndicator getRefreshIndicator() {
     if (Utils.isNull(loadIndicator)) {
-      loadIndicator = new FullScreenRefreshIndicator(getSupportFragmentManager());
+      loadIndicator = new FullScreenLoadIndicator(getSupportFragmentManager());
     }
     return loadIndicator;
   }

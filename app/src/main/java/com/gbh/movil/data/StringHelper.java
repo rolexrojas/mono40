@@ -42,6 +42,16 @@ public final class StringHelper {
   }
 
   @NonNull
+  public final String incorrectFormat() {
+    return getString(R.string.incorrect_format);
+  }
+
+  @NonNull
+  public final String isRequired() {
+    return getString(R.string.is_required);
+  }
+
+  @NonNull
   public final String dialogProductAdditionTitle() {
     return getString(R.string.dialog_product_addition_title);
   }

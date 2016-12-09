@@ -9,11 +9,6 @@ import android.util.Patterns;
  * @author hecvasro
  */
 public final class PatternHelper {
-  /**
-   * TODO
-   */
-  private static final int PIN_LENGTH = 4;
-
   private PatternHelper() {
   }
 
