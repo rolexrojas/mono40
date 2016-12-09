@@ -1,4 +1,13 @@
 <resources>
+  <string name="font_gotham_rounded_bold">fonts/gotham-rounded/GothamRounded-Bold.otf</string>
+  <string name="font_gotham_rounded_book">fonts/gotham-rounded/GothamRounded-Book.otf</string>
+  <string name="font_gotham_rounded_light">fonts/gotham-rounded/GothamRounded-Light.otf</string>
+  <string name="font_gotham_rounded_medium">fonts/gotham-rounded/GothamRounded-Medium.otf</string>
+  <string name="font_roboto_medium">fonts/roboto/Roboto-Medium.ttf</string>
+  <string name="font_roboto_regular">fonts/roboto/Roboto-Regular.ttf</string>
+
+  <string name="edit_text_content_font">@string/font_gotham_rounded_book</string>
+
   <string name="bring_device_closer_to_the_terminal">Acercar celular a terminal tocar y pagar</string>
   <string name="cannot_process_your_request_at_the_moment">No podemos procesar tu solicitud en este momento</string>
   <string name="no_internet_connection">Sin conexión a Internet</string>
@@ -26,12 +35,6 @@
   <!-- TODO: Apply standards from these point downward -->
   <!-- General strings -->
   <string name="bank_logo">Logo</string>
-  <string name="font_gotham_rounded_bold">fonts/gotham-rounded/GothamRounded-Bold.otf</string>
-  <string name="font_gotham_rounded_book">fonts/gotham-rounded/GothamRounded-Book.otf</string>
-  <string name="font_gotham_rounded_light">fonts/gotham-rounded/GothamRounded-Light.otf</string>
-  <string name="font_gotham_rounded_medium">fonts/gotham-rounded/GothamRounded-Medium.otf</string>
-  <string name="font_roboto_medium">fonts/roboto/Roboto-Medium.ttf</string>
-  <string name="font_roboto_regular">fonts/roboto/Roboto-Regular.ttf</string>
   <string name="format_credit_card_number_masked">•••• •••• •••• %1$s</string>
   <string name="format_product_number_masked">•••• •••• %1$s</string>
   <string name="format_recipient_addition_message_contact">¿Le gustaría dar un apodo a %1$s para reconocerlo más fácil en tu lista de pagos?</string>

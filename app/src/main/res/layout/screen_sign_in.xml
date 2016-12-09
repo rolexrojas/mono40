@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.percent.PercentRelativeLayout
+  style="@style/SignIn.Widget.Container"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:background="@drawable/container_background_dark">
+  android:layout_height="match_parent">
   <com.gbh.movil.ui.view.widget.AppButton
     android:id="@+id/button_text"
     style="@style/SignIn.Widget.Button"
@@ -36,27 +36,34 @@
       app:layout_marginTopPercent="2%"/>
     <EditText
       android:id="@+id/edit_text_phone_number"
+      style="@style/SignIn.Widget.EditText"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:hint="Número de teléfono"
       android:inputType="phone"
+      android:nextFocusDown="@+id/edit_text_email"
+      android:text="+1 (809) 882-9887"
       app:layout_marginEndPercent="17%"
       app:layout_marginStartPercent="17%"
       app:layout_marginTopPercent="8%"/>
     <EditText
       android:id="@+id/edit_text_email"
+      style="@style/SignIn.Widget.EditText"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:hint="Correo electrónico"
       android:inputType="textEmailAddress"
+      android:nextFocusDown="@+id/edit_text_password"
       app:layout_marginEndPercent="17%"
       app:layout_marginStartPercent="17%"
       app:layout_marginTopPercent="4%"/>
     <EditText
       android:id="@+id/edit_text_password"
+      style="@style/SignIn.Widget.EditText"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:hint="Contraseña"
+      android:imeOptions="actionDone"
       android:inputType="textPassword"
       app:layout_marginEndPercent="17%"
       app:layout_marginStartPercent="17%"

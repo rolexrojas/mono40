@@ -8,15 +8,13 @@
     <item name="android:textSize">14sp</item>
     <item name="fontPath">@string/font_gotham_rounded_bold</item>
   </style>
-  <style name="Base.Text.Widget"/>
-  <style name="Base.Text.Widget.Button" parent="App.Text.Label"/>
 
   <style name="Base.Widget"/>
   <style name="Base.Widget.Button">
     <item name="android:background">?attr/selectableItemBackground</item>
     <item name="android:clickable">true</item>
     <item name="android:gravity">center</item>
-    <item name="android:textAppearance">@style/App.Text.Widget.Button</item>
+    <item name="android:textAppearance">@style/App.Text.Label</item>
   </style>
   <style name="Base.Widget.Button.Colored">
     <item name="android:background">@drawable/button_colored_shape</item>
@@ -24,18 +22,40 @@
   <style name="Base.Widget.Button.Colored.Rounded">
     <item name="android:background">@drawable/button_colored_rounded_shape</item>
   </style>
+  <style name="Base.Widget.EditText">
+    <item name="android:background">@drawable/edit_text_background</item>
+    <item name="android:textColor">@color/edit_text_content</item>
+    <item name="android:textColorHint">@color/edit_text_hint</item>
+    <item name="android:textCursorDrawable">@drawable/edit_text_cursor</item>
+    <item name="android:textSize">@dimen/edit_text_content_size</item>
+    <item name="fontPath">@string/edit_text_content_font</item>
+  </style>
+
+  <style name="Base.Theme" parent="Theme.AppCompat.Light.NoActionBar">
+    <!--<item name="android:buttonStyle">@style/App.Widget.Button</item>-->
+    <!--<item name="android:editTextStyle">@style/App.Widget.EditText</item>-->
+    <item name="android:windowBackground">@color/window_background_default</item>
+    <item name="autoResizeablePrefixableTextViewStyle">@style/App.Widget.AutoResizeablePrefixableTextView</item>
+    <item name="colorAccent">@color/accent</item>
+    <item name="colorPrimary">@color/primary</item>
+    <item name="colorPrimaryDark">@color/primary_dark</item>
+    <item name="numPadStyle">@style/App.Widget.NumPad</item>
+    <item name="prefixableTextViewStyle">@style/App.Widget.PrefixableTextView</item>
+    <item name="searchViewStyle">@style/App.Widget.SearchView</item>
+  </style>
 
   <style name="App" parent="Base"/>
 
   <style name="App.Text" parent="Base.Text"/>
   <style name="App.Text.Label" parent="Base.Text.Label"/>
-  <style name="App.Text.Widget" parent="Base.Text.Widget"/>
-  <style name="App.Text.Widget.Button" parent="Base.Text.Widget.Button"/>
 
   <style name="App.Widget" parent="Base.Widget"/>
   <style name="App.Widget.Button" parent="Base.Widget.Button"/>
   <style name="App.Widget.Button.Colored" parent="Base.Widget.Button.Colored"/>
   <style name="App.Widget.Button.Colored.Rounded" parent="Base.Widget.Button.Colored.Rounded"/>
+  <style name="App.Widget.EditText" parent="Base.Widget.EditText"/>
+
+  <style name="App.Theme" parent="Base.Theme"/>
 
   <!-- Styles of the auth index screen -->
   <style name="AuthIndex"/>
@@ -58,12 +78,17 @@
   <!-- Styles of the sign in screen -->
   <style name="SignIn"/>
   <style name="SignIn.Widget"/>
+  <style name="SignIn.Widget.Container">
+    <item name="android:background">@drawable/container_background_dark</item>
+  </style>
+  <style name="SignIn.Widget.Button" parent="App.Widget.Button.Colored"/>
+  <style name="SignIn.Widget.EditText" parent="App.Widget.EditText"/>
   <style name="SignIn.Widget.Label">
     <item name="android:lineSpacingExtra">5sp</item>
     <item name="android:textColor">@color/white_alpha_50</item>
     <item name="android:textSize">15sp</item>
+    <item name="fontPath">@string/font_gotham_rounded_book</item>
   </style>
-  <style name="SignIn.Widget.Button" parent="App.Widget.Button.Colored"/>
 
   <!-- TODO: Apply standards from these point downward -->
   <style name="Base.Text.CommercePaymentOption">
@@ -169,22 +194,6 @@
   </style>
 
   <style
-    name="Base.Theme"
-    parent="Theme.AppCompat.Light.NoActionBar">
-    <item name="android:windowBackground">@color/window_background_default</item>
-    <item name="colorAccent">@color/accent</item>
-    <item name="colorPrimary">@color/primary</item>
-    <item name="colorPrimaryDark">@color/primary_dark</item>
-    <item name="android:buttonStyle">@style/App.Widget.Button</item>
-    <item name="prefixableTextViewStyle">@style/App.Widget.PrefixableTextView</item>
-    <item name="autoResizeablePrefixableTextViewStyle">
-      @style/App.Widget.AutoResizeablePrefixableTextView
-    </item>
-    <item name="numPadStyle">@style/App.Widget.NumPad</item>
-    <item name="searchViewStyle">@style/App.Widget.SearchView</item>
-  </style>
-
-  <style
     name="App.Text.CommercePaymentOption"
     parent="Base.Text.CommercePaymentOption"/>
   <style
@@ -242,10 +251,6 @@
     parent="Base.Widget.CommercePaymentMessage"/>
 
   <style
-    name="App.Theme"
-    parent="Base.Theme"/>
-
-  <style
     name="Screen.Theme.Index"
     parent="App.Theme">
     <item name="android:background">@drawable/background_screen_index</item>
@@ -261,6 +266,7 @@
     <item name="android:windowBackground">@color/commerce_payment_window_default_background</item>
     <item name="colorPrimaryDark">@color/commerce_payment_status_bar_default_background</item>
   </style>
+  <style name="Base.Text.Widget"/>
   <style name="Base.Text.Widget.Toolbar">
     <item name="android:textColor">@color/white</item>
     <item name="fontPath">@string/font_gotham_rounded_book</item>
@@ -542,6 +548,7 @@
     parent="App.Text.Contact.BasePhoneNumber"/>
 
   <!-- Search view styles -->
+  <style name="App.Text.Widget"/>
   <style name="App.Text.Widget.SearchView"/>
   <style name="App.Text.Widget.SearchView.Query">
     <item name="android:textColor">@color/search_view_text</item>
