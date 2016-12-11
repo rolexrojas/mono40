@@ -10,6 +10,8 @@ import com.gbh.movil.domain.text.PatternHelper;
 import com.gbh.movil.domain.text.TextHelper;
 import com.gbh.movil.misc.Utils;
 import com.gbh.movil.misc.rx.RxUtils;
+import com.gbh.movil.misc.rx.operators.WaitUntilOperator;
+import com.gbh.movil.ui.MessageDispatcher;
 import com.gbh.movil.ui.Presenter;
 import com.gbh.movil.ui.view.widget.LoadIndicator;
 import com.google.i18n.phonenumbers.NumberParseException;
@@ -20,7 +22,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func3;
-import rx.functions.Func4;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
@@ -32,17 +33,14 @@ import timber.log.Timber;
  */
 final class SignInPresenter extends Presenter<SignInScreen> {
   private final StringHelper stringHelper;
+  private final MessageDispatcher messageDispatcher;
   private final LoadIndicator loadIndicator;
   private final SessionManager sessionManager;
 
   /**
    * TODO
    */
-  private Subscription validationSubscription = Subscriptions.unsubscribed();
-  /**
-   * TODO
-   */
-  private Subscription submissionSubscription = Subscriptions.unsubscribed();
+  private Subscription subscription = Subscriptions.unsubscribed();
 
   /**
    * TODO
@@ -50,9 +48,10 @@ final class SignInPresenter extends Presenter<SignInScreen> {
    * @param sessionManager
    *   TODO
    */
-  SignInPresenter(@NonNull StringHelper stringHelper,
+  SignInPresenter(@NonNull StringHelper stringHelper, @NonNull MessageDispatcher messageDispatcher,
     @NonNull LoadIndicator loadIndicator, @NonNull SessionManager sessionManager) {
     this.stringHelper = stringHelper;
+    this.messageDispatcher = messageDispatcher;
     this.loadIndicator = loadIndicator;
     this.sessionManager = sessionManager;
   }
@@ -61,75 +60,44 @@ final class SignInPresenter extends Presenter<SignInScreen> {
    * TODO
    */
   final void start() {
-    final Observable<String> phoneNumberObservable = screen.afterPhoneNumberChanged();
-    final Observable<String> emailObservable = screen.afterEmailChanged();
-    final Observable<String> passwordObservable = screen.afterPasswordChanged();
-    validationSubscription = Observable.combineLatest(phoneNumberObservable, emailObservable,
-      passwordObservable, new Func3<String, String, String, Boolean>() {
+    subscription = Observable.combineLatest(
+      screen.afterPhoneNumberChanged(),
+      screen.afterEmailChanged(),
+      screen.afterPasswordChanged(),
+      new Func3<String, String, String, InputData>() {
         @Override
-        public Boolean call(String phoneNumber, String email, String password) {
-          boolean flag;
-          String error;
-          if (TextHelper.isEmpty(phoneNumber)) {
-            error = stringHelper.isRequired();
-          } else if (!PhoneNumber.isValid(phoneNumber)) {
-            error = stringHelper.incorrectFormat();
-          } else {
-            error = null;
-          }
-          flag = Utils.isNull(error);
-          screen.setPhoneNumberError(error);
-          if (TextHelper.isEmpty(email)) {
-            error = stringHelper.isRequired();
-          } else if (!PatternHelper.isValidEmail(email)) {
-            error = stringHelper.incorrectFormat();
-          } else {
-            error = null;
-          }
-          flag &= Utils.isNull(error);
-          screen.setEmailError(error);
-          if (TextHelper.isEmpty(password)) {
-            error = stringHelper.isRequired();
-          } else {
-            error = null;
-          }
-          flag &= Utils.isNull(error);
-          screen.setPasswordError(error);
-          return flag;
+        public InputData call(String phoneNumber, String email, String password) {
+          return new InputData(stringHelper, phoneNumber, email, password);
         }
       })
       .subscribeOn(AndroidSchedulers.mainThread())
-      .subscribe(new Action1<Boolean>() {
+      .doOnNext(new Action1<InputData>() {
         @Override
-        public void call(Boolean flag) {
-          screen.setSignInButtonEnabled(flag);
-        }
-      });
-    submissionSubscription = Observable.combineLatest(phoneNumberObservable, emailObservable,
-      passwordObservable, screen.onSignInButtonClicked(),
-      new Func4<String, String, String, Void, Observable<Session>>() {
-        @Override
-        public Observable<Session> call(String phoneNumber, String email, String password,
-          Void notification) {
-          try {
-            return sessionManager.signIn(new PhoneNumber(phoneNumber), email, password);
-          } catch (NumberParseException exception) { // Not supposed to happen.
-            return Observable.error(exception);
-          }
+        public void call(InputData data) {
+          screen.setPhoneNumberError(data.getPhoneNumberError());
+          screen.setEmailError(data.getEmailError());
+          screen.setPasswordError(data.getPasswordError());
+          screen.setSignInButtonEnabled(data.isValid());
         }
       })
-      .subscribeOn(AndroidSchedulers.mainThread())
-      .doOnNext(new Action1<Observable<Session>>() {
+      .doOnNext(new Action1<InputData>() {
         @Override
-        public void call(Observable<Session> observable) {
+        public void call(InputData data) {
+          Timber.d(data.toString());
+        }
+      })
+      .lift(new WaitUntilOperator<InputData, Void>(screen.onSignInButtonClicked()))
+      .doOnNext(new Action1<InputData>() {
+        @Override
+        public void call(InputData data) {
           loadIndicator.show();
         }
       })
       .observeOn(Schedulers.io())
-      .flatMap(new Func1<Observable<Session>, Observable<Session>>() {
+      .flatMap(new Func1<InputData, Observable<Session>>() {
         @Override
-        public Observable<Session> call(Observable<Session> observable) {
-          return observable;
+        public Observable<Session> call(InputData data) {
+          return sessionManager.signIn(data.getPhoneNumber(), data.getEmail(), data.getPassword());
         }
       })
       .observeOn(AndroidSchedulers.mainThread())
@@ -137,13 +105,17 @@ final class SignInPresenter extends Presenter<SignInScreen> {
         @Override
         public void call(Session session) {
           loadIndicator.hide();
-          Timber.d("Session -> %1$s", session);
+          if (Utils.isNull(session)) {
+            messageDispatcher.dispatch(stringHelper.cannotProcessYourRequestAtTheMoment());
+          } else {
+          }
         }
       }, new Action1<Throwable>() {
         @Override
         public void call(Throwable throwable) {
-          Timber.e(throwable, "Signing in an user");
+          Timber.e(throwable, "Signing in");
           loadIndicator.hide();
+          messageDispatcher.dispatch(stringHelper.cannotProcessYourRequestAtTheMoment());
         }
       });
   }
@@ -152,7 +124,90 @@ final class SignInPresenter extends Presenter<SignInScreen> {
    * TODO
    */
   final void stop() {
-    RxUtils.unsubscribe(submissionSubscription);
-    RxUtils.unsubscribe(validationSubscription);
+    RxUtils.unsubscribe(subscription);
+  }
+
+  private static final class InputData {
+    private PhoneNumber phoneNumber;
+    private final String phoneNumberError;
+    private final String email;
+    private final String emailError;
+    private final String password;
+    private final String passwordError;
+
+    InputData(@NonNull StringHelper stringHelper, String phoneNumber, String email,
+      String password) {
+      if (TextHelper.isEmpty(phoneNumber)) {
+        this.phoneNumberError = stringHelper.isRequired();
+      } else if (!PhoneNumber.isValid(phoneNumber)) {
+        this.phoneNumberError = stringHelper.incorrectFormat();
+      } else {
+        this.phoneNumberError = null;
+      }
+      if (Utils.isNull(phoneNumberError)) {
+        try {
+          this.phoneNumber = new PhoneNumber(phoneNumber);
+        } catch (NumberParseException exception) {
+          this.phoneNumber = null;
+        }
+      } else {
+        this.phoneNumber = null;
+      }
+      if (TextHelper.isEmpty(email)) {
+        this.emailError = stringHelper.isRequired();
+      } else if (!PatternHelper.isValidEmail(email)) {
+        this.emailError = stringHelper.incorrectFormat();
+      } else {
+        this.emailError = null;
+      }
+      this.email = email;
+      if (TextHelper.isEmpty(password)) {
+        this.passwordError = stringHelper.isRequired();
+      } else {
+        this.passwordError = null;
+      }
+      this.password = password;
+    }
+
+    /**
+     * TODO
+     *
+     * @return TODO
+     */
+    final boolean isValid() {
+      return Utils.isNull(phoneNumberError) && Utils.isNull(emailError)
+        && Utils.isNull(passwordError);
+    }
+
+    final PhoneNumber getPhoneNumber() {
+      return phoneNumber;
+    }
+
+    final String getPhoneNumberError() {
+      return phoneNumberError;
+    }
+
+    final String getEmail() {
+      return email;
+    }
+
+    final String getEmailError() {
+      return emailError;
+    }
+
+    final String getPassword() {
+      return password;
+    }
+
+    final String getPasswordError() {
+      return passwordError;
+    }
+
+    @Override
+    public String toString() {
+      return String.format("%1$s:{phoneNumber='%2$s',phoneNumberError='%3$s',email='%4$s',"
+          + "emailError='%5$s',password='%6$s',passwordError='%7$s'", InputData.class.getSimpleName(),
+        phoneNumber, phoneNumberError, email, emailError, password, passwordError);
+    }
   }
 }

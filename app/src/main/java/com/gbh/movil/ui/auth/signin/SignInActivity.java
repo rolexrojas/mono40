@@ -122,17 +122,17 @@ public class SignInActivity extends BaseActivity implements SignInScreen {
 
   @Override
   public void setPhoneNumberError(@Nullable String error) {
-    Timber.d("PhoneNumber -> %1$s", error); // TODO
+    // TODO
   }
 
   @Override
   public void setEmailError(@Nullable String error) {
-    Timber.d("Email -> %1$s", error); // TODO
+    // TODO
   }
 
   @Override
   public void setPasswordError(@Nullable String error) {
-    Timber.d("Password -> %1$s", error); // TODO
+    // TODO
   }
 
   @Override

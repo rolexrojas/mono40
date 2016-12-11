@@ -37,6 +37,17 @@ public class ActivityModule {
    */
   @Provides
   @ActivityScope
+  MessageDispatcher provideMessageShower() {
+    return new ToastMessageDispatcher(activity);
+  }
+
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
+  @Provides
+  @ActivityScope
   LoadIndicator provideLoadIndicator() {
     return new FullScreenLoadIndicator(activity.getSupportFragmentManager());
   }

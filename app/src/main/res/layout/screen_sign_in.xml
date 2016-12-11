@@ -36,13 +36,12 @@
       app:layout_marginTopPercent="2%"/>
     <EditText
       android:id="@+id/edit_text_phone_number"
-      style="@style/SignIn.Widget.EditText.PhoneNumber"
+      style="@style/SignIn.Widget.EditText"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:hint="Número de teléfono"
       android:inputType="phone"
       android:nextFocusDown="@+id/edit_text_email"
-      android:text="+1 (809) 882-9887"
       app:layout_marginEndPercent="17%"
       app:layout_marginStartPercent="17%"
       app:layout_marginTopPercent="8%"/>
@@ -54,7 +53,6 @@
       android:hint="Correo electrónico"
       android:inputType="textEmailAddress"
       android:nextFocusDown="@+id/edit_text_password"
-      android:text="hecvasro@gmail.com"
       app:layout_marginEndPercent="17%"
       app:layout_marginStartPercent="17%"
       app:layout_marginTopPercent="4%"/>
@@ -66,7 +64,6 @@
       android:hint="Contraseña"
       android:imeOptions="actionDone"
       android:inputType="textPassword"
-      android:text="123456789"
       app:layout_marginEndPercent="17%"
       app:layout_marginStartPercent="17%"
       app:layout_marginTopPercent="4%"/>

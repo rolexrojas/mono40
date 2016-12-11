@@ -171,7 +171,7 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
 //                })
 //              .negativeAction(stringHelper.dialogNfcDefaultAssignationNegativeAction())
 //              .build()
-//              .show();
+//              .dispatch();
 //          }
         }
       }, new Action1<Throwable>() {
