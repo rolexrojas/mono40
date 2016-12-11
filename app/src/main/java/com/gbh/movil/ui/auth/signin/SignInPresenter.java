@@ -108,6 +108,7 @@ final class SignInPresenter extends Presenter<SignInScreen> {
           if (Utils.isNull(session)) {
             messageDispatcher.dispatch(stringHelper.cannotProcessYourRequestAtTheMoment());
           } else {
+            // TODO: Redirect user to the home screen.
           }
         }
       }, new Action1<Throwable>() {
@@ -206,8 +207,9 @@ final class SignInPresenter extends Presenter<SignInScreen> {
     @Override
     public String toString() {
       return String.format("%1$s:{phoneNumber='%2$s',phoneNumberError='%3$s',email='%4$s',"
-          + "emailError='%5$s',password='%6$s',passwordError='%7$s'", InputData.class.getSimpleName(),
-        phoneNumber, phoneNumberError, email, emailError, password, passwordError);
+          + "emailError='%5$s',password='%6$s',passwordError='%7$s'",
+        InputData.class.getSimpleName(), phoneNumber, phoneNumberError, email, emailError, password,
+        passwordError);
     }
   }
 }

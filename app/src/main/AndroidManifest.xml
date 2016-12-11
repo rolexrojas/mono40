@@ -45,5 +45,6 @@
     <activity
       android:name=".ui.main.products.transactions.RecentTransactionsActivity"
       android:screenOrientation="portrait"/>
+    <activity android:name=".ui.auth.signup.SignUpActivity"/>
   </application>
 </manifest>

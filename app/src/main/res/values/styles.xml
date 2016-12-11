@@ -100,6 +100,27 @@
     <item name="fontPath">@string/font_gotham_rounded_book</item>
   </style>
 
+  <!-- Styles of the sign up screen -->
+  <style name="SignUp"/>
+  <style name="SignUp.Widget"/>
+  <style name="SignUp.Widget.Container">
+    <item name="android:background">@drawable/container_background_dark</item>
+  </style>
+  <style name="SignUp.Widget.Button" parent="App.Widget.Button.Colored"/>
+  <style name="SignUp.Widget.Label">
+    <item name="android:textColor">@color/white</item>
+    <item name="android:gravity">center_horizontal</item>
+  </style>
+  <style name="SignUp.Widget.Label.Primary">
+    <item name="android:textSize">20sp</item>
+    <item name="fontPath">@string/font_gotham_rounded_medium</item>
+  </style>
+  <style name="SignUp.Widget.Label.Secondary">
+    <item name="android:lineSpacingExtra">5sp</item>
+    <item name="android:textSize">15sp</item>
+    <item name="fontPath">@string/font_gotham_rounded_book</item>
+  </style>
+
   <!-- TODO: Apply standards from these point downward -->
   <style name="Base.Text.CommercePaymentOption">
     <item name="android:textColor">@color/commerce_payment_option_text_default</item>

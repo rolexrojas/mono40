@@ -40,7 +40,7 @@
     app:layout_marginStartPercent="17%"
     app:layout_marginTopPercent="12%"/>
   <com.gbh.movil.ui.view.widget.AppButton
-    android:id="@+id/button_sign_in"
+    android:id="@+id/button_continue"
     style="@style/Screen.AuthIndex.Widget.Button"
     android:layout_gravity="center_horizontal"
     android:text="Iniciar sesión"

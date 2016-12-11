@@ -21,7 +21,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import rx.Observable;
-import timber.log.Timber;
 
 /**
  * TODO
@@ -40,7 +39,7 @@ public class SignInActivity extends BaseActivity implements SignInScreen {
   EditText emailEditText;
   @BindView(R.id.edit_text_password)
   EditText passwordEditText;
-  @BindView(R.id.button_sign_in)
+  @BindView(R.id.button_continue)
   Button signInButton;
 
   /**

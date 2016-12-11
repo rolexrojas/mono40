@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.auth;
+package com.gbh.movil.ui.auth.signup;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,13 +6,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.gbh.movil.App;
 import com.gbh.movil.R;
-import com.gbh.movil.ui.BaseActivity;
-import com.gbh.movil.ui.auth.signin.SignInActivity;
-import com.gbh.movil.ui.auth.signup.SignUpActivity;
+import com.gbh.movil.ui.ActivityModule;
+import com.gbh.movil.ui.SwitchableContainerActivity;
 
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -20,7 +19,10 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class AuthIndexActivity extends BaseActivity {
+public class SignUpActivity extends SwitchableContainerActivity<SignUpComponent>
+  implements SignUpContainer {
+  private SignUpComponent component;
+
   private Unbinder unbinder;
 
   /**
@@ -33,16 +35,24 @@ public class AuthIndexActivity extends BaseActivity {
    */
   @NonNull
   public static Intent getLaunchIntent(@NonNull Context context) {
-    return new Intent(context, AuthIndexActivity.class);
+    return new Intent(context, SignUpActivity.class);
   }
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    // Injects all the annotated dependencies.
+    component = DaggerSignUpComponent.builder()
+      .appComponent(((App) getApplication()).getComponent())
+      .activityModule(new ActivityModule(this))
+      .build();
+    component.inject(this);
     // Sets the content layout identifier.
-    setContentView(R.layout.screen_auth_index);
+    setContentView(R.layout.screen_sign_in);
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this);
+    // Sets the startup screen.
+    setChildFragment(StepOneFragment.newInstance(), false, false);
   }
 
   @Override
@@ -52,13 +62,9 @@ public class AuthIndexActivity extends BaseActivity {
     unbinder.unbind();
   }
 
-  @OnClick(R.id.button_continue)
-  void onSignInButtonClicked() {
-    startActivity(SignInActivity.getLaunchIntent(this));
-  }
-
-  @OnClick(R.id.button_sign_up)
-  void onSignUpButtonClicked() {
-    startActivity(SignUpActivity.getLaunchIntent(this));
+  @Nullable
+  @Override
+  public SignUpComponent getComponent() {
+    return component;
   }
 }
