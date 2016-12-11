@@ -2,6 +2,8 @@ package com.gbh.movil.domain.session;
 
 import android.support.annotation.NonNull;
 
+import com.gbh.movil.misc.Utils;
+
 /**
  * Session representation.
  *
@@ -64,5 +66,23 @@ public final class Session {
    */
   public String getAuthToken() {
     return authToken;
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    return super.equals(object) || (Utils.isNotNull(object) && object instanceof Session
+      && ((Session) object).phoneNumber.equals(phoneNumber)
+      && ((Session) object).email.equals(email));
+  }
+
+  @Override
+  public int hashCode() {
+    return Utils.hashCode(phoneNumber, email);
+  }
+
+  @Override
+  public String toString() {
+    return String.format("%1$s:{phoneNumber='%2$s',email='%3$s',authToken='%4$s'",
+      Session.class.getSimpleName(), phoneNumber, email, authToken);
   }
 }

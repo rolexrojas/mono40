@@ -79,12 +79,6 @@ final class SignInPresenter extends Presenter<SignInScreen> {
           screen.setSubmitButtonEnabled(data.isValid());
         }
       })
-      .doOnNext(new Action1<InputData>() {
-        @Override
-        public void call(InputData data) {
-          Timber.d(data.toString());
-        }
-      })
       .lift(new WaitUntilOperator<InputData, Void>(screen.submitButtonClicks()))
       .doOnNext(new Action1<InputData>() {
         @Override
@@ -92,11 +86,11 @@ final class SignInPresenter extends Presenter<SignInScreen> {
           loadIndicator.show();
         }
       })
-      .observeOn(Schedulers.io())
       .flatMap(new Func1<InputData, Observable<Session>>() {
         @Override
         public Observable<Session> call(InputData data) {
-          return sessionManager.signIn(data.phoneNumber, data.email, data.password);
+          return sessionManager.signIn(data.phoneNumber, data.email, data.password)
+            .subscribeOn(Schedulers.io());
         }
       })
       .observeOn(AndroidSchedulers.mainThread())

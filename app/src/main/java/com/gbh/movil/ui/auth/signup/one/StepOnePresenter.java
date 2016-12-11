@@ -61,7 +61,6 @@ final class StepOnePresenter extends Presenter<StepOneScreen> {
       .doOnNext(new Action1<InputData>() {
         @Override
         public void call(InputData data) {
-          Timber.d(data.toString());
           screen.setPhoneNumberError(data.phoneNumberError);
           screen.setEmailError(data.emailError);
           screen.setConfirmationError(data.confirmationError);

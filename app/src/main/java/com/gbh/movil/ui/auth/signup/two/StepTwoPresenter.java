@@ -72,7 +72,6 @@ final class StepTwoPresenter extends Presenter<StepTwoScreen> {
       .doOnNext(new Action1<InputData>() {
         @Override
         public void call(InputData data) {
-          Timber.d(data.toString());
           screen.setPasswordError(data.passwordError);
           screen.setPasswordConfirmationError(data.confirmationError);
           screen.setSubmitButtonEnabled(data.isValid());
@@ -85,11 +84,11 @@ final class StepTwoPresenter extends Presenter<StepTwoScreen> {
           loadIndicator.show();
         }
       })
-      .observeOn(Schedulers.io())
       .flatMap(new Func1<InputData, Observable<Session>>() {
         @Override
         public Observable<Session> call(InputData data) {
-          return sessionManager.signUp(phoneNumber, email, data.password, "2016");
+          return sessionManager.signUp(phoneNumber, email, data.password, "2016")
+            .subscribeOn(Schedulers.io());
         }
       })
       .observeOn(AndroidSchedulers.mainThread())
