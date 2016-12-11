@@ -2,6 +2,7 @@ package com.gbh.movil.data.api;
 
 import android.support.annotation.NonNull;
 
+import com.gbh.movil.data.Delayer;
 import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.AccountBalance;
 import com.gbh.movil.domain.Balance;
@@ -28,7 +29,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.functions.Func1;
@@ -39,7 +39,7 @@ import timber.log.Timber;
  *
  * @author hecvasro
  */
-class FakeApiBridge implements ApiBridge {
+class MockApiBridge implements ApiBridge {
   private final List<Bank> banks;
   private final List<Product> products;
   private final Map<Product, Balance> balances;
@@ -54,7 +54,7 @@ class FakeApiBridge implements ApiBridge {
     return getLastDigit(s) % 2 == 0;
   }
 
-  FakeApiBridge() {
+  MockApiBridge() {
     banks = new ArrayList<>();
     banks.add(new Bank(38, "ADEMI", "Banco Ademi"));
     banks.add(new Bank(44, "ADOPEM", "Banco Adopem"));
@@ -110,27 +110,17 @@ class FakeApiBridge implements ApiBridge {
   }
 
   @NonNull
-  private static <T> Observable.Transformer<T, T> delay() {
-    return new Observable.Transformer<T, T>() {
-      @Override
-      public Observable<T> call(Observable<T> observable) {
-        return observable.delay(1500L, TimeUnit.MILLISECONDS);
-      }
-    };
-  }
-
-  @NonNull
   @Override
   public Observable<ApiResult<List<Bank>>> banks() {
     return Observable.just(ApiResult.create(banks))
-      .compose(FakeApiBridge.<ApiResult<List<Bank>>>delay());
+      .compose(Delayer.<ApiResult<List<Bank>>>apply());
   }
 
   @NonNull
   @Override
   public Observable<ApiResult<InitialData>> initialLoad() {
     return Observable.just(ApiResult.create(new InitialData(products, recipients)))
-      .compose(FakeApiBridge.<ApiResult<InitialData>>delay());
+      .compose(Delayer.<ApiResult<InitialData>>apply());
   }
 
   @NonNull
@@ -152,21 +142,21 @@ class FakeApiBridge implements ApiBridge {
           }
         }
       })
-      .compose(FakeApiBridge.<ApiResult<Balance>>delay());
+      .compose(Delayer.<ApiResult<Balance>>apply());
   }
 
   @NonNull
   @Override
   public Observable<ApiResult<List<Transaction>>> recentTransactions() {
     return Observable.just(ApiResult.create(transactions))
-      .compose(FakeApiBridge.<ApiResult<List<Transaction>>>delay());
+      .compose(Delayer.<ApiResult<List<Transaction>>>apply());
   }
 
   @NonNull
   @Override
   public Observable<ApiResult<List<Recipient>>> recipients() {
     return Observable.just(ApiResult.create(recipients))
-      .compose(FakeApiBridge.<ApiResult<List<Recipient>>>delay());
+      .compose(Delayer.<ApiResult<List<Recipient>>>apply());
   }
 
   @NonNull
@@ -179,7 +169,7 @@ class FakeApiBridge implements ApiBridge {
           return ApiResult.create(flag);
         }
       })
-      .compose(FakeApiBridge.<ApiResult<Boolean>>delay());
+      .compose(Delayer.<ApiResult<Boolean>>apply());
   }
 
   @NonNull
@@ -201,12 +191,13 @@ class FakeApiBridge implements ApiBridge {
           }
         }
       })
-      .compose(FakeApiBridge.<ApiResult<Boolean>>delay());
+      .compose(Delayer.<ApiResult<Boolean>>apply());
   }
 
   @NonNull
   @Override
   public Observable<Product> setDefaultPaymentOption(@NonNull Product product) {
-    return Observable.just(product);
+    return Observable.just(product)
+      .compose(Delayer.<Product>apply());
   }
 }

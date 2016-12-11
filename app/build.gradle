@@ -21,36 +21,30 @@ android {
   }
 
   buildTypes {
-    def TYPE_INTEGER = "Integer"
-    def TYPE_STRING = "String"
-
-    def TIME_OUT_CONNECTION = "TIME_OUT_CONNECT"
-    def TIME_OUT_READ = "TIME_OUT_READ"
-    def TIME_OUT_WRITE = "TIME_OUT_WRITE"
-
-    def API_URL = "API_URL"
-
     debug {
-      buildConfigField TYPE_INTEGER, TIME_OUT_CONNECTION, "30"
-      buildConfigField TYPE_INTEGER, TIME_OUT_READ, "30"
-      buildConfigField TYPE_INTEGER, TIME_OUT_WRITE, "30"
-      buildConfigField TYPE_STRING, API_URL, "\"http://172.19.1.103:8081/api/neo/\""
-
       signingConfig signingConfigs.debug
     }
 
     release {
-      // TODO
-      buildConfigField TYPE_INTEGER, TIME_OUT_CONNECTION, "30"
-      // TODO
-      buildConfigField TYPE_INTEGER, TIME_OUT_READ, "30"
-      // TODO
-      buildConfigField TYPE_INTEGER, TIME_OUT_WRITE, "30"
-      // TODO
-      buildConfigField TYPE_STRING, API_URL, "\"http://172.19.1.103:8081/api/neo/\""
-
       minifyEnabled false
       proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+    }
+  }
+
+  productFlavors {
+    mock {
+      applicationIdSuffix ".mock"
+      versionNameSuffix "-mock"
+    }
+
+    staging {
+      applicationIdSuffix ".staging"
+      versionNameSuffix "-staging"
+    }
+
+    production {
+      applicationIdSuffix ".production"
+      versionNameSuffix "-production"
     }
   }
 }

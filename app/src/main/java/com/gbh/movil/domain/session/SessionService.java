@@ -2,7 +2,6 @@ package com.gbh.movil.domain.session;
 
 import android.support.annotation.NonNull;
 
-import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.api.ApiResult;
 
 import rx.Observable;

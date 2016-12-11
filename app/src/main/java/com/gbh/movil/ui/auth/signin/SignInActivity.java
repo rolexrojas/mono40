@@ -121,8 +121,28 @@ public class SignInActivity extends BaseActivity implements SignInScreen {
   }
 
   @Override
+  public void setPhoneNumber(@Nullable String phoneNumber) {
+    phoneNumberEditText.setText(phoneNumber);
+  }
+
+  @Override
+  public void setPhoneNumberEnabled(boolean enabled) {
+    phoneNumberEditText.setEnabled(enabled);
+  }
+
+  @Override
   public void setPhoneNumberError(@Nullable String error) {
     // TODO
+  }
+
+  @Override
+  public void setEmail(@Nullable String email) {
+    emailEditText.setText(email);
+  }
+
+  @Override
+  public void setEmailEnabled(boolean enabled) {
+    emailEditText.setEnabled(enabled);
   }
 
   @Override

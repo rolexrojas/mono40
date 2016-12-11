@@ -112,6 +112,18 @@ final class SignInPresenter extends Presenter<SignInScreen> {
           messageDispatcher.dispatch(stringHelper.cannotProcessYourRequestAtTheMoment());
         }
       });
+    if (sessionManager.isActive()) {
+      final Session session = sessionManager.getSession();
+      if (Utils.isNotNull(session)) {
+        screen.setPhoneNumber(session.getPhoneNumber());
+        screen.setPhoneNumberEnabled(false);
+        screen.setEmail(session.getEmail());
+        screen.setEmailEnabled(false);
+      }
+    } else {
+      screen.setPhoneNumberEnabled(true);
+      screen.setEmailEnabled(true);
+    }
   }
 
   /**

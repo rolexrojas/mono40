@@ -17,21 +17,16 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
-@Module(includes = { NetModule.class, ApiModule.class, SessionModule.class, PosModule.class,
-  RepoModule.class })
+@Module(includes = {
+  NetModule.class,
+  SessionModule.class,
+  ApiModule.class,
+  PosModule.class,
+  RepoModule.class
+})
 public final class DataModule {
-  /**
-   * TODO
-   *
-   * @param context
-   *   TODO
-   *
-   * @return TODO
-   */
   @Provides
   @Singleton
   DeviceManager provideDeviceManager(Context context) {

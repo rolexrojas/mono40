@@ -7,11 +7,15 @@ import android.telephony.TelephonyManager;
 import com.gbh.movil.domain.DeviceManager;
 import com.gbh.movil.domain.text.TextHelper;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * TODO
  *
  * @author hecvasro
  */
+@Singleton
 final class AndroidDeviceManager implements DeviceManager {
   private final TelephonyManager telephonyManager;
 
@@ -26,6 +30,7 @@ final class AndroidDeviceManager implements DeviceManager {
    * @param context
    *   TODO
    */
+  @Inject
   AndroidDeviceManager(@NonNull Context context) {
     telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
   }

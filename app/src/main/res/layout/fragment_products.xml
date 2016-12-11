@@ -19,6 +19,7 @@
     android:id="@+id/button_add_another_account"
     style="@style/App.Widget.Button"
     android:layout_width="match_parent"
+    android:layout_height="50dp"
     android:layout_gravity="bottom"
     android:layout_marginBottom="10dp"
     android:text="@string/add_another_account"/>

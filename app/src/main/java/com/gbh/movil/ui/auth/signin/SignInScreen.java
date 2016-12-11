@@ -48,10 +48,42 @@ interface SignInScreen extends Screen {
   /**
    * TODO
    *
+   * @param phoneNumber
+   *   TODO
+   */
+  void setPhoneNumber(@Nullable String phoneNumber);
+
+  /**
+   * TODO
+   *
+   * @param enabled
+   *   TODO
+   */
+  void setPhoneNumberEnabled(boolean enabled);
+
+  /**
+   * TODO
+   *
    * @param error
    *   TODO
    */
   void setPhoneNumberError(@Nullable String error);
+
+  /**
+   * TODO
+   *
+   * @param email
+   *   TODO
+   */
+  void setEmail(@Nullable String email);
+
+  /**
+   * TODO
+   *
+   * @param enabled
+   *   TODO
+   */
+  void setEmailEnabled(boolean enabled);
 
   /**
    * TODO

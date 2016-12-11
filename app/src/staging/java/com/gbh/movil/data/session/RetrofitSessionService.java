@@ -8,6 +8,9 @@ import com.gbh.movil.domain.api.ApiResult;
 import com.gbh.movil.domain.session.SessionService;
 import com.gbh.movil.misc.Mapper;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.http.Body;
@@ -19,6 +22,7 @@ import rx.Observable;
  *
  * @author hecvasro
  */
+@Singleton
 class RetrofitSessionService implements SessionService {
   private final Service service;
   private final Mapper<Token, String> mapper;
@@ -29,6 +33,7 @@ class RetrofitSessionService implements SessionService {
    * @param retrofit
    *   TODO
    */
+  @Inject
   RetrofitSessionService(@NonNull Retrofit retrofit) {
     service = retrofit.create(Service.class);
     mapper = new Mapper<Token, String>() {
@@ -38,19 +43,6 @@ class RetrofitSessionService implements SessionService {
         return token.token;
       }
     };
-  }
-
-  /**
-   * TODO
-   *
-   * @param observable
-   *   TODO
-   *
-   * @return TODO
-   */
-  @NonNull
-  private Observable<ApiResult<String>> sign(@NonNull Observable<Response<Token>> observable) {
-    return observable.map(Api.mapToApiResponse(mapper));
   }
 
   @NonNull
