@@ -10,6 +10,7 @@
 
   <string name="incorrect_format">Formato incorrecto</string>
   <string name="is_required">Es requerido</string>
+  <string name="does_not_match">No concuerda</string>
 
   <string name="bring_device_closer_to_the_terminal">Acercar celular a terminal tocar y pagar</string>
   <string name="cannot_process_your_request_at_the_moment">No podemos procesar tu solicitud en este momento</string>

@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 
 import com.gbh.movil.data.api.Api;
 import com.gbh.movil.data.api.ApiRequestBody;
-import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.api.ApiResult;
 import com.gbh.movil.domain.session.SessionService;
 import com.gbh.movil.misc.Mapper;
@@ -56,10 +55,10 @@ class RetrofitSessionService implements SessionService {
 
   @NonNull
   @Override
-  public Observable<ApiResult<String>> signIn(@NonNull PhoneNumber phoneNumber,
-    @NonNull String email, @NonNull String password, @NonNull String deviceId) {
+  public Observable<ApiResult<String>> signIn(@NonNull String phoneNumber, @NonNull String email,
+    @NonNull String password, @NonNull String deviceId) {
     final ApiRequestBody body = new ApiRequestBody.Builder()
-      .putProperty(Api.Property.PHONE_NUMBER, phoneNumber.toString())
+      .putProperty(Api.Property.PHONE_NUMBER, phoneNumber)
       .putProperty(Api.Property.EMAIL, email)
       .putProperty(Api.Property.USERNAME, email)
       .putProperty(Api.Property.PASSWORD, password)
@@ -70,11 +69,10 @@ class RetrofitSessionService implements SessionService {
 
   @NonNull
   @Override
-  public Observable<ApiResult<String>> signUp(@NonNull PhoneNumber phoneNumber,
-    @NonNull String email, @NonNull String password, @NonNull String deviceId,
-    @NonNull String pin) {
+  public Observable<ApiResult<String>> signUp(@NonNull String phoneNumber, @NonNull String email,
+    @NonNull String password, @NonNull String deviceId, @NonNull String pin) {
     final ApiRequestBody body = new ApiRequestBody.Builder()
-      .putProperty(Api.Property.PHONE_NUMBER, phoneNumber.toString())
+      .putProperty(Api.Property.PHONE_NUMBER, phoneNumber)
       .putProperty(Api.Property.EMAIL, email)
       .putProperty(Api.Property.USERNAME, email)
       .putProperty(Api.Property.PASSWORD, password)

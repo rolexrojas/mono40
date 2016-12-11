@@ -28,8 +28,8 @@ public interface SessionService {
    * @return TODO
    */
   @NonNull
-  Observable<ApiResult<String>> signIn(@NonNull PhoneNumber phoneNumber,
-    @NonNull String email, @NonNull String password, @NonNull String deviceId);
+  Observable<ApiResult<String>> signIn(@NonNull String phoneNumber, @NonNull String email,
+    @NonNull String password, @NonNull String deviceId);
 
   /**
    * TODO
@@ -48,6 +48,6 @@ public interface SessionService {
    * @return TODO
    */
   @NonNull
-  Observable<ApiResult<String>> signUp(@NonNull PhoneNumber phoneNumber,
-    @NonNull String email, @NonNull String password, @NonNull String deviceId, @NonNull String pin);
+  Observable<ApiResult<String>> signUp(@NonNull String phoneNumber, @NonNull String email,
+    @NonNull String password, @NonNull String deviceId, @NonNull String pin);
 }

@@ -52,6 +52,11 @@ public final class StringHelper {
   }
 
   @NonNull
+  public final String doesNotMatch() {
+    return getString(R.string.does_not_match);
+  }
+
+  @NonNull
   public final String dialogProductAdditionTitle() {
     return getString(R.string.dialog_product_addition_title);
   }

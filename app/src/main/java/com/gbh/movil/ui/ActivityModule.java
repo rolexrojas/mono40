@@ -37,7 +37,7 @@ public class ActivityModule {
    */
   @Provides
   @ActivityScope
-  MessageDispatcher provideMessageShower() {
+  MessageDispatcher provideMessageDispatcher() {
     return new ToastMessageDispatcher(activity);
   }
 

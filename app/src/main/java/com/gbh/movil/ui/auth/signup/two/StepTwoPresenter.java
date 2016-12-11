@@ -1,9 +1,9 @@
-package com.gbh.movil.ui.auth.signin;
+package com.gbh.movil.ui.auth.signup.two;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.gbh.movil.data.StringHelper;
-import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.session.Session;
 import com.gbh.movil.domain.session.SessionManager;
 import com.gbh.movil.domain.text.PatternHelper;
@@ -20,7 +20,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.functions.Func3;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
@@ -30,29 +30,29 @@ import timber.log.Timber;
  *
  * @author hecvasro
  */
-final class SignInPresenter extends Presenter<SignInScreen> {
+final class StepTwoPresenter extends Presenter<StepTwoScreen> {
   private final StringHelper stringHelper;
   private final MessageDispatcher messageDispatcher;
   private final LoadIndicator loadIndicator;
   private final SessionManager sessionManager;
+
+  private final String phoneNumber;
+  private final String email;
 
   /**
    * TODO
    */
   private Subscription subscription = Subscriptions.unsubscribed();
 
-  /**
-   * TODO
-   *
-   * @param sessionManager
-   *   TODO
-   */
-  SignInPresenter(@NonNull StringHelper stringHelper, @NonNull MessageDispatcher messageDispatcher,
-    @NonNull LoadIndicator loadIndicator, @NonNull SessionManager sessionManager) {
+  StepTwoPresenter(@NonNull StringHelper stringHelper, @NonNull MessageDispatcher messageDispatcher,
+    @NonNull LoadIndicator loadIndicator, @NonNull SessionManager sessionManager,
+    @NonNull String phoneNumber, @NonNull String email) {
     this.stringHelper = stringHelper;
     this.messageDispatcher = messageDispatcher;
     this.loadIndicator = loadIndicator;
     this.sessionManager = sessionManager;
+    this.phoneNumber = phoneNumber;
+    this.email = email;
   }
 
   /**
@@ -60,29 +60,22 @@ final class SignInPresenter extends Presenter<SignInScreen> {
    */
   final void start() {
     subscription = Observable.combineLatest(
-      screen.phoneNumberChanges(),
-      screen.emailChanges(),
       screen.passwordChanges(),
-      new Func3<String, String, String, InputData>() {
+      screen.passwordConfirmationChanges(),
+      new Func2<String, String, InputData>() {
         @Override
-        public InputData call(String phoneNumber, String email, String password) {
-          return new InputData(stringHelper, phoneNumber, email, password);
+        public InputData call(String password, String confirmation) {
+          return new InputData(stringHelper, password, confirmation);
         }
       })
       .subscribeOn(AndroidSchedulers.mainThread())
       .doOnNext(new Action1<InputData>() {
         @Override
         public void call(InputData data) {
-          screen.setPhoneNumberError(data.phoneNumberError);
-          screen.setEmailError(data.emailError);
-          screen.setPasswordError(data.passwordError);
-          screen.setSubmitButtonEnabled(data.isValid());
-        }
-      })
-      .doOnNext(new Action1<InputData>() {
-        @Override
-        public void call(InputData data) {
           Timber.d(data.toString());
+          screen.setPasswordError(data.passwordError);
+          screen.setPasswordConfirmationError(data.confirmationError);
+          screen.setSubmitButtonEnabled(data.isValid());
         }
       })
       .lift(new WaitUntilOperator<InputData, Void>(screen.submitButtonClicks()))
@@ -96,7 +89,7 @@ final class SignInPresenter extends Presenter<SignInScreen> {
       .flatMap(new Func1<InputData, Observable<Session>>() {
         @Override
         public Observable<Session> call(InputData data) {
-          return sessionManager.signIn(data.phoneNumber, data.email, data.password);
+          return sessionManager.signUp(phoneNumber, email, data.password, "2016");
         }
       })
       .observeOn(AndroidSchedulers.mainThread())
@@ -113,7 +106,7 @@ final class SignInPresenter extends Presenter<SignInScreen> {
       }, new Action1<Throwable>() {
         @Override
         public void call(Throwable throwable) {
-          Timber.e(throwable, "Signing in");
+          Timber.e(throwable, "Signing up");
           loadIndicator.hide();
           messageDispatcher.dispatch(stringHelper.cannotProcessYourRequestAtTheMoment());
         }
@@ -128,55 +121,40 @@ final class SignInPresenter extends Presenter<SignInScreen> {
   }
 
   private static final class InputData {
-    final String phoneNumber;
-    final String phoneNumberError;
-    final String email;
-    final String emailError;
     final String password;
     final String passwordError;
+    final String confirmation;
+    final String confirmationError;
 
-    InputData(@NonNull StringHelper stringHelper, String phoneNumber, String email,
-      String password) {
-      if (TextHelper.isEmpty(phoneNumber)) {
-        this.phoneNumberError = stringHelper.isRequired();
-      } else if (!PhoneNumber.isValid(phoneNumber)) {
-        this.phoneNumberError = stringHelper.incorrectFormat();
-      } else {
-        this.phoneNumberError = null;
-      }
-      this.phoneNumber = phoneNumber;
-      if (TextHelper.isEmpty(email)) {
-        this.emailError = stringHelper.isRequired();
-      } else if (!PatternHelper.isValidEmail(email)) {
-        this.emailError = stringHelper.incorrectFormat();
-      } else {
-        this.emailError = null;
-      }
-      this.email = email;
+    InputData(@NonNull StringHelper stringHelper, @Nullable String password,
+      @Nullable String confirmation) {
       if (TextHelper.isEmpty(password)) {
         this.passwordError = stringHelper.isRequired();
+      } else if (!PatternHelper.isValidPassword(password)) {
+        this.passwordError = stringHelper.incorrectFormat();
       } else {
         this.passwordError = null;
       }
       this.password = password;
+      if (TextHelper.isEmpty(confirmation)) {
+        this.confirmationError = stringHelper.isRequired();
+      } else if (!confirmation.equals(this.password)) {
+        this.confirmationError = stringHelper.doesNotMatch();
+      } else {
+        this.confirmationError = null;
+      }
+      this.confirmation = confirmation;
     }
 
-    /**
-     * TODO
-     *
-     * @return TODO
-     */
     final boolean isValid() {
-      return Utils.isNull(phoneNumberError) && Utils.isNull(emailError)
-        && Utils.isNull(passwordError);
+      return Utils.isNull(passwordError) && Utils.isNull(confirmationError);
     }
 
     @Override
     public String toString() {
-      return String.format("%1$s:{phoneNumber='%2$s',phoneNumberError='%3$s',email='%4$s',"
-          + "emailError='%5$s',password='%6$s',passwordError='%7$s'}",
-        InputData.class.getSimpleName(), phoneNumber, phoneNumberError, email, emailError, password,
-        passwordError);
+      return String.format("%1$s:{password='%2$s',passwordError='%3$s',confirmation='%4$s'" +
+          ",confirmationError='%5$s'}", InputData.class.getSimpleName(), password, passwordError,
+        confirmation, confirmationError);
     }
   }
 }

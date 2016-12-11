@@ -1,4 +1,4 @@
-package com.gbh.movil.ui.auth.signin;
+package com.gbh.movil.ui.auth.signup.two;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,23 +12,7 @@ import rx.Observable;
  *
  * @author hecvasro
  */
-interface SignInScreen extends Screen {
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
-  @NonNull
-  Observable<String> phoneNumberChanges();
-
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
-  @NonNull
-  Observable<String> emailChanges();
-
+interface StepTwoScreen extends Screen {
   /**
    * TODO
    *
@@ -43,31 +27,31 @@ interface SignInScreen extends Screen {
    * @return TODO
    */
   @NonNull
+  Observable<String> passwordConfirmationChanges();
+
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
+  @NonNull
   Observable<Void> submitButtonClicks();
 
   /**
    * TODO
    *
-   * @param error
+   * @param message
    *   TODO
    */
-  void setPhoneNumberError(@Nullable String error);
+  void setPasswordError(@Nullable String message);
 
   /**
    * TODO
    *
-   * @param error
+   * @param message
    *   TODO
    */
-  void setEmailError(@Nullable String error);
-
-  /**
-   * TODO
-   *
-   * @param error
-   *   TODO
-   */
-  void setPasswordError(@Nullable String error);
+  void setPasswordConfirmationError(@Nullable String message);
 
   /**
    * TODO

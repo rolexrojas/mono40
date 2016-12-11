@@ -5,12 +5,10 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.session.Session;
 import com.gbh.movil.domain.session.SessionRepo;
 import com.gbh.movil.domain.text.TextHelper;
 import com.gbh.movil.misc.Utils;
-import com.google.i18n.phonenumbers.NumberParseException;
 
 /**
  * TODO
@@ -58,19 +56,14 @@ class SharedPreferencesSessionRepo implements SessionRepo {
   @Override
   public Session getSession() {
     if (Utils.isNull(session) && hasSession()) {
-      PhoneNumber phoneNumber = null;
-      try {
-        phoneNumber = new PhoneNumber(sharedPreferences.getString(KEY_PHONE_NUMBER, ""));
-      } catch (NumberParseException exception) {
-        // Ignored.
-      }
+      final String phoneNumber = sharedPreferences.getString(KEY_PHONE_NUMBER, null);
       final String email = sharedPreferences.getString(KEY_EMAIL, null);
       final String authToken = sharedPreferences.getString(KEY_AUTH_TOKEN, null);
-      if (Utils.isNotNull(phoneNumber) && TextHelper.isNotEmpty(email)
-        && TextHelper.isNotEmpty(authToken)) {
-        session = new Session(phoneNumber, email, authToken);
-      } else {
+      if (TextHelper.isEmpty(phoneNumber) && TextHelper.isEmpty(email)
+        && TextHelper.isEmpty(authToken)) {
         clearSession();
+      } else {
+        session = new Session(phoneNumber, email, authToken);
       }
     }
     return session;
@@ -92,7 +85,7 @@ class SharedPreferencesSessionRepo implements SessionRepo {
   public void setSession(@NonNull Session session) {
     this.session = session;
     this.sharedPreferences.edit()
-      .putString(KEY_PHONE_NUMBER, session.getPhoneNumber().toString())
+      .putString(KEY_PHONE_NUMBER, session.getPhoneNumber())
       .putString(KEY_EMAIL, session.getEmail())
       .putString(KEY_AUTH_TOKEN, session.getAuthToken())
       .apply();

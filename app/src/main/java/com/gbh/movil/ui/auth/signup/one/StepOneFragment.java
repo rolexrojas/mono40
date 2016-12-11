@@ -1,18 +1,18 @@
-package com.gbh.movil.ui.auth.signin;
+package com.gbh.movil.ui.auth.signup.one;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.gbh.movil.App;
 import com.gbh.movil.R;
-import com.gbh.movil.ui.ActivityModule;
-import com.gbh.movil.ui.BaseActivity;
-import com.gbh.movil.ui.main.MainActivity;
+import com.gbh.movil.ui.ChildFragment;
+import com.gbh.movil.ui.auth.signup.SignUpContainer;
+import com.gbh.movil.ui.auth.signup.two.StepTwoFragment;
 import com.gbh.movil.ui.text.UiTextHelper;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -28,68 +28,74 @@ import rx.Observable;
  *
  * @author hecvasro
  */
-public class SignInActivity extends BaseActivity implements SignInScreen {
+public class StepOneFragment extends ChildFragment<SignUpContainer> implements StepOneScreen {
   private Unbinder unbinder;
 
   @Inject
-  SignInPresenter presenter;
+  StepOnePresenter presenter;
 
   @BindView(R.id.edit_text_phone_number)
   EditText phoneNumberEditText;
   @BindView(R.id.edit_text_email)
   EditText emailEditText;
-  @BindView(R.id.edit_text_password)
-  EditText passwordEditText;
+  @BindView(R.id.edit_text_email_confirmation)
+  EditText emailConfirmationEditText;
   @BindView(R.id.button_continue)
-  Button signInButton;
+  Button submitButton;
 
   /**
    * TODO
    *
-   * @param context
-   *   TODO
-   *
    * @return TODO
    */
   @NonNull
-  public static Intent getLaunchIntent(@NonNull Context context) {
-    return new Intent(context, SignInActivity.class);
+  public static StepOneFragment newInstance() {
+    return new StepOneFragment();
   }
 
   @Override
-  protected void onCreate(@Nullable Bundle savedInstanceState) {
+  public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // Injects all the annotated dependencies.
-    final SignInComponent component = DaggerSignInComponent.builder()
-      .appComponent(((App) getApplication()).getComponent())
-      .activityModule(new ActivityModule(this))
+    final StepOneComponent component = DaggerStepOneComponent.builder()
+      .signUpComponent(getContainer().getComponent())
       .build();
     component.inject(this);
-    // Sets the content layout identifier.
-    setContentView(R.layout.screen_sign_in);
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+    @Nullable Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.screen_sign_up_step_one, container, false);
+  }
+
+  @Override
+  public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
     // Binds all the annotated views and methods.
-    unbinder = ButterKnife.bind(this);
+    unbinder = ButterKnife.bind(this, view);
     // Attaches the screen to the presenter.
     presenter.attachScreen(this);
   }
 
   @Override
-  protected void onStart() {
+  public void onStart() {
     super.onStart();
     // Starts the presenter.
     presenter.start();
   }
 
   @Override
-  protected void onStop() {
+  public void onStop() {
     super.onStop();
     // Stops the presenter.
     presenter.stop();
   }
 
   @Override
-  protected void onDestroy() {
-    super.onDestroy();
+  public void onDestroyView() {
+    super.onDestroyView();
     // Detaches the screen from the presenter.
     presenter.detachScreen();
     // Unbinds all the annotated views and methods.
@@ -110,39 +116,38 @@ public class SignInActivity extends BaseActivity implements SignInScreen {
 
   @NonNull
   @Override
-  public Observable<String> passwordChanges() {
-    return UiTextHelper.textChanges(passwordEditText);
+  public Observable<String> emailConfirmationChanges() {
+    return UiTextHelper.textChanges(emailConfirmationEditText);
   }
 
   @NonNull
   @Override
   public Observable<Void> submitButtonClicks() {
-    return RxView.clicks(signInButton);
+    return RxView.clicks(submitButton);
   }
 
   @Override
-  public void setPhoneNumberError(@Nullable String error) {
+  public void setPhoneNumberError(@Nullable String message) {
     // TODO
   }
 
   @Override
-  public void setEmailError(@Nullable String error) {
+  public void setEmailError(@Nullable String message) {
     // TODO
   }
 
   @Override
-  public void setPasswordError(@Nullable String error) {
+  public void setConfirmationError(@Nullable String message) {
     // TODO
   }
 
   @Override
   public void setSubmitButtonEnabled(boolean enabled) {
-    signInButton.setEnabled(enabled);
+    submitButton.setEnabled(enabled);
   }
 
   @Override
-  public void submit() {
-    startActivity(MainActivity.getLaunchIntent(this));
-    finish();
+  public void submit(@NonNull String phoneNumber, @NonNull String email) {
+    getContainer().setChildFragment(StepTwoFragment.newInstance(phoneNumber, email), true, true);
   }
 }

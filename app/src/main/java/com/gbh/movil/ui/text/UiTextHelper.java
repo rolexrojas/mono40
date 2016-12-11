@@ -21,6 +21,26 @@ public final class UiTextHelper {
   /**
    * TODO
    *
+   * @param view
+   *   TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  public static Observable<String> textChanges(@NonNull TextView view) {
+    return RxTextView.textChanges(view)
+      // Creates a copy in order for it to be safe to cache or delay reading.
+      .map(new Func1<CharSequence, String>() {
+        @Override
+        public String call(CharSequence charSequence) {
+          return charSequence.toString();
+        }
+      });
+  }
+
+  /**
+   * TODO
+   *
    * @param textView
    *   TODO
    *

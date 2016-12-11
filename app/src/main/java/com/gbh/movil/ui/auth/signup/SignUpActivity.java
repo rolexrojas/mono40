@@ -10,6 +10,7 @@ import com.gbh.movil.App;
 import com.gbh.movil.R;
 import com.gbh.movil.ui.ActivityModule;
 import com.gbh.movil.ui.SwitchableContainerActivity;
+import com.gbh.movil.ui.auth.signup.one.StepOneFragment;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -48,7 +49,7 @@ public class SignUpActivity extends SwitchableContainerActivity<SignUpComponent>
       .build();
     component.inject(this);
     // Sets the content layout identifier.
-    setContentView(R.layout.screen_sign_in);
+    setContentView(R.layout.screen_sign_up);
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this);
     // Sets the startup screen.

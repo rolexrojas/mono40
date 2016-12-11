@@ -7,5 +7,5 @@ import com.gbh.movil.ui.SwitchableContainer;
  *
  * @author hecvasro
  */
-interface SignUpContainer extends SwitchableContainer<SignUpComponent> {
+public interface SignUpContainer extends SwitchableContainer<SignUpComponent> {
 }

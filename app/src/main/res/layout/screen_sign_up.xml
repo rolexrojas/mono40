@@ -14,7 +14,7 @@
     android:src="@drawable/logo_white"
     app:layout_marginTopPercent="5%"/>
   <FrameLayout
-    android:id="@+id/container_child_screen"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"/>
 </com.gbh.movil.ui.view.widget.PercentLinearLayout>
