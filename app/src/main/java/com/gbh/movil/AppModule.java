@@ -3,6 +3,7 @@ package com.gbh.movil;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.gbh.movil.domain.InitialDataLoader;
 import com.gbh.movil.domain.ProductManager;
 import com.gbh.movil.domain.ProductRepo;
 import com.gbh.movil.domain.BalanceManager;
@@ -33,6 +34,13 @@ final class AppModule {
   @Singleton
   Context provideContext() {
     return app;
+  }
+
+  @Provides
+  @Singleton
+  InitialDataLoader provideInitialDataLoader(ApiBridge apiBridge, ProductManager productManager,
+    RecipientManager recipientManager) {
+    return new InitialDataLoader(apiBridge, productManager, recipientManager);
   }
 
   @Provides

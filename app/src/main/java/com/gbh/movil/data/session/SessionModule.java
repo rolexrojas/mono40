@@ -3,6 +3,7 @@ package com.gbh.movil.data.session;
 import android.content.Context;
 
 import com.gbh.movil.domain.DeviceManager;
+import com.gbh.movil.domain.InitialDataLoader;
 import com.gbh.movil.domain.session.SessionManager;
 import com.gbh.movil.domain.session.SessionRepo;
 import com.gbh.movil.domain.session.SessionService;
@@ -26,7 +27,7 @@ public class SessionModule {
   @Provides
   @Singleton
   SessionManager provideSessionManager(DeviceManager deviceManager, SessionRepo sessionRepo,
-    SessionService sessionService) {
-    return new SessionManager(deviceManager, sessionRepo, sessionService);
+    SessionService sessionService, InitialDataLoader initialDataLoader) {
+    return new SessionManager(deviceManager, sessionRepo, sessionService, initialDataLoader);
   }
 }
