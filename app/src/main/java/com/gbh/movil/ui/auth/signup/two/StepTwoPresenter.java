@@ -100,13 +100,13 @@ final class StepTwoPresenter extends Presenter<StepTwoScreen> {
       .doOnSubscribe(new Action0() {
         @Override
         public void call() {
-          loadIndicator.show();
+//          loadIndicator.show();
         }
       })
       .doOnUnsubscribe(new Action0() {
         @Override
         public void call() {
-          loadIndicator.hide();
+//          loadIndicator.hide();
         }
       })
       .subscribe(new Action1<Session>() {

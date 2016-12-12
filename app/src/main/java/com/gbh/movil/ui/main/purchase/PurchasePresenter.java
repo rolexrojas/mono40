@@ -10,6 +10,7 @@ import com.gbh.movil.domain.util.EventType;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.ProductManager;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.misc.rx.RxUtils;
 import com.gbh.movil.ui.AppDialog;
 import com.gbh.movil.ui.Presenter;
@@ -141,7 +142,7 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
    */
   void onPaymentOptionSelected(@NonNull Product product) {
     assertScreen();
-    if (selectedProduct.equals(product)) {
+    if (Utils.isNotNull(selectedProduct) && selectedProduct.equals(product)) {
       screen.openPaymentScreen(selectedProduct);
     } else {
       selectedProduct = product;
@@ -155,10 +156,10 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
     activationSubscription = productManager.activateAllProducts(pin)
       .subscribeOn(schedulerProvider.io())
       .observeOn(schedulerProvider.ui())
-      .subscribe(new Action1<Object>() {
+      .subscribe(new Action1<Boolean>() {
         @Override
-        public void call(Object object) {
-          screen.onActivationFinished(true);
+        public void call(Boolean flag) {
+          screen.onActivationFinished(flag);
 //          if (!posBridge.isDefault()) {
 //            screenDialogCreator.create(stringHelper.dialogNfcDefaultAssignationTitle())
 //              .message(stringHelper.dialogNfcDefaultAssignationMessage())
