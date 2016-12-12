@@ -7,12 +7,14 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.gbh.movil.R;
 import com.gbh.movil.ui.ChildFragment;
 import com.gbh.movil.ui.auth.signup.SignUpContainer;
 import com.gbh.movil.ui.main.MainActivity;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
@@ -24,6 +26,9 @@ import butterknife.Unbinder;
  */
 public class StepThreeFragment extends ChildFragment<SignUpContainer> {
   private Unbinder unbinder;
+
+  @BindView(R.id.text_view_emoji)
+  TextView emojiTextView;
 
   /**
    * TODO
@@ -54,6 +59,8 @@ public class StepThreeFragment extends ChildFragment<SignUpContainer> {
     super.onViewCreated(view, savedInstanceState);
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
+    // Sets the emoji of the screen.
+    emojiTextView.setText(new String(Character.toChars(0x1F44D)));
   }
 
   @Override

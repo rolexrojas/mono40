@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.gbh.movil.R;
 import com.gbh.movil.ui.ChildFragment;
@@ -34,6 +35,8 @@ public class StepOneFragment extends ChildFragment<SignUpContainer> implements S
   @Inject
   StepOnePresenter presenter;
 
+  @BindView(R.id.text_view_emoji)
+  TextView emojiTextView;
   @BindView(R.id.edit_text_phone_number)
   EditText phoneNumberEditText;
   @BindView(R.id.edit_text_email)
@@ -75,6 +78,8 @@ public class StepOneFragment extends ChildFragment<SignUpContainer> implements S
     super.onViewCreated(view, savedInstanceState);
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
+    // Sets the emoji of the screen.
+    emojiTextView.setText(new String(Character.toChars(0x1F60E)));
     // Attaches the screen to the presenter.
     presenter.attachScreen(this);
   }
