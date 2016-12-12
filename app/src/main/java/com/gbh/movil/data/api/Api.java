@@ -17,6 +17,8 @@ import rx.functions.Func1;
  * @author hecvasro
  */
 public final class Api {
+  public static final String URL = BuildConfig.API_URL;
+
   /**
    * TODO
    */

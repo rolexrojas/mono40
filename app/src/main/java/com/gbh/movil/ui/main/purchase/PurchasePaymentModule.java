@@ -10,6 +10,7 @@ import com.gbh.movil.domain.pos.PosBridge;
 import com.gbh.movil.domain.session.SessionManager;
 import com.gbh.movil.ui.ChildFragmentScope;
 
+import dagger.Lazy;
 import dagger.Module;
 import dagger.Provides;
 
@@ -27,7 +28,7 @@ class PurchasePaymentModule {
   @Provides
   @ChildFragmentScope
   PurchasePaymentPresenter providePresenter(StringHelper stringHelper,
-    ProductManager productManager, PosBridge posBridge, ApiBridge apiBridge,
+    ProductManager productManager, Lazy<PosBridge> posBridge, ApiBridge apiBridge,
     SessionManager sessionManager) {
     return new PurchasePaymentPresenter(stringHelper, paymentOption, productManager, posBridge,
       apiBridge, sessionManager);

@@ -11,6 +11,7 @@ import com.gbh.movil.misc.rx.RxUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import dagger.Lazy;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -23,14 +24,17 @@ import rx.functions.Func2;
  */
 public final class ProductManager implements ProductProvider {
   private final ProductRepo productRepo;
-  private final PosBridge posBridge;
+  private final Lazy<PosBridge> posBridge;
   private final EventBus eventBus;
+  private final com.gbh.movil.domain.session.SessionManager sessionManager;
 
-  public ProductManager(@NonNull ProductRepo productRepo, @NonNull PosBridge posBridge,
-    @NonNull EventBus eventBus) {
+  public ProductManager(@NonNull ProductRepo productRepo, @NonNull Lazy<PosBridge> posBridge,
+    @NonNull EventBus eventBus,
+    @NonNull com.gbh.movil.domain.session.SessionManager sessionManager) {
     this.productRepo = productRepo;
     this.posBridge = posBridge;
     this.eventBus = eventBus;
+    this.sessionManager = sessionManager;
   }
 
   /**
@@ -85,7 +89,7 @@ public final class ProductManager implements ProductProvider {
             observable = productRepo.save(product).cast(Object.class);
           } else {
             observable = Observable.concat(productRepo.remove(product),
-              posBridge.removeCard(product.getAlias()));
+              posBridge.get().removeCard(product.getAlias()));
           }
           return observable;
         }
@@ -124,7 +128,7 @@ public final class ProductManager implements ProductProvider {
       .flatMap(new Func1<Product, Observable<PosResult<String>>>() {
         @Override
         public Observable<PosResult<String>> call(Product product) {
-          return posBridge.addCard(SessionManager.getInstance().getPhoneNumber(), pin,
+          return posBridge.get().addCard(sessionManager.getSession().getPhoneNumber(), pin,
             product.getAlias());
         }
       })

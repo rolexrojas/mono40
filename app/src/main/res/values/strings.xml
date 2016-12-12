@@ -1,4 +1,5 @@
 <resources>
+  <string name="app_name">tPago</string>
   <string name="font_gotham_rounded_bold">fonts/gotham-rounded/GothamRounded-Bold.otf</string>
   <string name="font_gotham_rounded_book">fonts/gotham-rounded/GothamRounded-Book.otf</string>
   <string name="font_gotham_rounded_light">fonts/gotham-rounded/GothamRounded-Light.otf</string>
@@ -68,7 +69,6 @@
   <string name="add_another_account">Agregar otra cuenta</string>
   <string name="add_recipient.search.hint">Seleccione o busque el recipiente</string>
   <string name="add_recipient.title">Agregar recipiente</string>
-  <string name="app_name">tPago</string>
   <string name="balance">Saldo</string>
   <string name="buy">Comprar</string>
   <string name="contact.picture">Imagen del contacto</string>

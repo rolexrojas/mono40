@@ -21,6 +21,7 @@ import timber.log.Timber;
  */
 final class IndexPresenter extends Presenter<IndexScreen> {
   private static final String PERMISSION_READ_PHONE_STATE = Manifest.permission.READ_PHONE_STATE;
+  private static final String PERMISSION_READ_SMS = Manifest.permission.READ_SMS;
 
   private final RxPermissions permissionManager;
   private final SessionManager sessionManager;
@@ -40,7 +41,8 @@ final class IndexPresenter extends Presenter<IndexScreen> {
    * TODO
    */
   final void create() {
-    permissionRequestSubscription = permissionManager.request(PERMISSION_READ_PHONE_STATE)
+    permissionRequestSubscription = permissionManager.request(PERMISSION_READ_PHONE_STATE,
+      PERMISSION_READ_SMS)
       .observeOn(AndroidSchedulers.mainThread())
       .subscribe(new Action1<Boolean>() {
         @Override
@@ -59,7 +61,8 @@ final class IndexPresenter extends Presenter<IndexScreen> {
       }, new Action1<Throwable>() {
         @Override
         public void call(Throwable throwable) {
-          Timber.e(throwable, "Requesting %1$s permission", PERMISSION_READ_PHONE_STATE);
+          Timber.e(throwable, "Requesting '%1$s' and '%2$s' permissions",
+            PERMISSION_READ_PHONE_STATE, PERMISSION_READ_SMS);
         }
       });
   }

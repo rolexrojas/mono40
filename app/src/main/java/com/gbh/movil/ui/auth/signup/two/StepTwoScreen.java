@@ -32,14 +32,6 @@ interface StepTwoScreen extends Screen {
   /**
    * TODO
    *
-   * @return TODO
-   */
-  @NonNull
-  Observable<Void> submitButtonClicks();
-
-  /**
-   * TODO
-   *
    * @param message
    *   TODO
    */
@@ -64,5 +56,5 @@ interface StepTwoScreen extends Screen {
   /**
    * TODO
    */
-  void submit();
+  void submit(boolean succeeded);
 }

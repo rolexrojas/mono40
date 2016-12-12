@@ -36,11 +36,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 @Module
 public class ApiModule {
-  /**
-   * TODO
-   */
-  private static final String URL = "http://172.19.1.103:8081/api/neo/";
-
   @Provides
   @Singleton
   OkHttpClient provideOkHttpClient() {
@@ -80,7 +75,7 @@ public class ApiModule {
     return new Retrofit.Builder()
       .addConverterFactory(GsonConverterFactory.create(gson))
       .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-      .baseUrl(URL)
+      .baseUrl(Api.URL)
       .client(okHttpClient)
       .build();
   }

@@ -34,8 +34,8 @@ interface ApiService {
   Observable<Response<Set<Account>>> accounts();
 
   @POST("query/accounts/balance")
-  Observable<Response<AccountBalance>> accountBalance(@Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body BalanceQueryRequest body);
+  Observable<Response<AccountBalance>> accountBalance(
+    @Header(Api.Header.AUTHORIZATION) String authToken, @Body BalanceQueryRequest body);
 
   @GET("query/credit-cards")
   Observable<Response<Set<CreditCard>>> creditCards();

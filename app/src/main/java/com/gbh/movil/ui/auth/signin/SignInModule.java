@@ -1,6 +1,7 @@
 package com.gbh.movil.ui.auth.signin;
 
 import com.gbh.movil.data.StringHelper;
+import com.gbh.movil.domain.InitialDataLoader;
 import com.gbh.movil.domain.session.SessionManager;
 import com.gbh.movil.ui.ActivityScope;
 import com.gbh.movil.ui.MessageDispatcher;
@@ -27,7 +28,9 @@ class SignInModule {
   @Provides
   @ActivityScope
   SignInPresenter providePresenter(StringHelper stringHelper, MessageDispatcher messageDispatcher,
-    LoadIndicator loadIndicator, SessionManager sessionManager) {
-    return new SignInPresenter(stringHelper, messageDispatcher, loadIndicator, sessionManager);
+    LoadIndicator loadIndicator, SessionManager sessionManager,
+    InitialDataLoader initialDataLoader) {
+    return new SignInPresenter(stringHelper, messageDispatcher, loadIndicator, sessionManager,
+      initialDataLoader);
   }
 }

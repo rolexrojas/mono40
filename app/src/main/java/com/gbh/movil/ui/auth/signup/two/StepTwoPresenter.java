@@ -10,7 +10,6 @@ import com.gbh.movil.domain.text.PatternHelper;
 import com.gbh.movil.domain.text.TextHelper;
 import com.gbh.movil.misc.Utils;
 import com.gbh.movil.misc.rx.RxUtils;
-import com.gbh.movil.misc.rx.operators.WaitUntilOperator;
 import com.gbh.movil.ui.MessageDispatcher;
 import com.gbh.movil.ui.Presenter;
 import com.gbh.movil.ui.view.widget.LoadIndicator;
@@ -18,8 +17,8 @@ import com.gbh.movil.ui.view.widget.LoadIndicator;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
@@ -39,10 +38,10 @@ final class StepTwoPresenter extends Presenter<StepTwoScreen> {
   private final String phoneNumber;
   private final String email;
 
-  /**
-   * TODO
-   */
-  private Subscription subscription = Subscriptions.unsubscribed();
+  private String password;
+
+  private Subscription validationSubscription = Subscriptions.unsubscribed();
+  private Subscription submissionSubscription = Subscriptions.unsubscribed();
 
   StepTwoPresenter(@NonNull StringHelper stringHelper, @NonNull MessageDispatcher messageDispatcher,
     @NonNull LoadIndicator loadIndicator, @NonNull SessionManager sessionManager,
@@ -59,7 +58,7 @@ final class StepTwoPresenter extends Presenter<StepTwoScreen> {
    * TODO
    */
   final void start() {
-    subscription = Observable.combineLatest(
+    validationSubscription = Observable.combineLatest(
       screen.passwordChanges(),
       screen.passwordConfirmationChanges(),
       new Func2<String, String, InputData>() {
@@ -69,45 +68,18 @@ final class StepTwoPresenter extends Presenter<StepTwoScreen> {
         }
       })
       .subscribeOn(AndroidSchedulers.mainThread())
-      .doOnNext(new Action1<InputData>() {
+      .subscribe(new Action1<InputData>() {
         @Override
         public void call(InputData data) {
+          password = data.password;
           screen.setPasswordError(data.passwordError);
           screen.setPasswordConfirmationError(data.confirmationError);
           screen.setSubmitButtonEnabled(data.isValid());
         }
-      })
-      .lift(new WaitUntilOperator<InputData, Void>(screen.submitButtonClicks()))
-      .doOnNext(new Action1<InputData>() {
-        @Override
-        public void call(InputData data) {
-          loadIndicator.show();
-        }
-      })
-      .flatMap(new Func1<InputData, Observable<Session>>() {
-        @Override
-        public Observable<Session> call(InputData data) {
-          return sessionManager.signUp(phoneNumber, email, data.password, "2016")
-            .subscribeOn(Schedulers.io());
-        }
-      })
-      .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(new Action1<Session>() {
-        @Override
-        public void call(Session session) {
-          loadIndicator.hide();
-          if (Utils.isNull(session)) {
-            messageDispatcher.dispatch(stringHelper.cannotProcessYourRequestAtTheMoment());
-          } else {
-            screen.submit();
-          }
-        }
       }, new Action1<Throwable>() {
         @Override
         public void call(Throwable throwable) {
-          Timber.e(throwable, "Signing up");
-          loadIndicator.hide();
-          messageDispatcher.dispatch(stringHelper.cannotProcessYourRequestAtTheMoment());
+          Timber.e(throwable, "Validating input data");
         }
       });
   }
@@ -116,7 +88,43 @@ final class StepTwoPresenter extends Presenter<StepTwoScreen> {
    * TODO
    */
   final void stop() {
-    RxUtils.unsubscribe(subscription);
+    RxUtils.unsubscribe(submissionSubscription);
+    RxUtils.unsubscribe(validationSubscription);
+  }
+
+  final void onSubmitButtonClicked(@NonNull String pin) {
+    RxUtils.unsubscribe(submissionSubscription);
+    submissionSubscription = sessionManager.signUp(phoneNumber, email, password, pin)
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread())
+      .doOnSubscribe(new Action0() {
+        @Override
+        public void call() {
+          loadIndicator.show();
+        }
+      })
+      .doOnUnsubscribe(new Action0() {
+        @Override
+        public void call() {
+          loadIndicator.hide();
+        }
+      })
+      .subscribe(new Action1<Session>() {
+        @Override
+        public void call(Session session) {
+          if (Utils.isNull(session)) {
+            screen.submit(false);
+          } else {
+            screen.submit(true);
+          }
+        }
+      }, new Action1<Throwable>() {
+        @Override
+        public void call(Throwable throwable) {
+          Timber.e(throwable, "Signing up");
+          screen.submit(false);
+        }
+      });
   }
 
   private static final class InputData {

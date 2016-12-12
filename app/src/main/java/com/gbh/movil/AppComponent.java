@@ -6,6 +6,7 @@ import com.gbh.movil.data.DataModule;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.data.res.AssetProvider;
+import com.gbh.movil.domain.InitialDataLoader;
 import com.gbh.movil.domain.ProductManager;
 import com.gbh.movil.domain.BalanceManager;
 import com.gbh.movil.domain.TransactionManager;
@@ -33,6 +34,7 @@ public interface AppComponent {
   BalanceManager provideBalanceManager();
   Context provideContext();
   EventBus provideEventBus();
+  InitialDataLoader provideInitialDataLoader();
   PosBridge providePosBridge();
   ProductManager provideProductManager();
   RecipientManager provideRecipientManager();

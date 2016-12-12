@@ -10,13 +10,13 @@ import android.support.annotation.Nullable;
 
 import com.cube.sdk.Interfaces.CubeSdkCallback;
 import com.cube.sdk.altpan.CubeSdkImpl;
+import com.cube.sdk.hce.TorreHostApduService;
 import com.cube.sdk.storage.operation.AddCardParams;
 import com.cube.sdk.storage.operation.Card;
 import com.cube.sdk.storage.operation.CubeError;
 import com.cube.sdk.storage.operation.ListCards;
 import com.cube.sdk.storage.operation.PaymentInfo;
 import com.cube.sdk.storage.operation.SelectCardParams;
-import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.pos.PosBridge;
 import com.gbh.movil.domain.pos.PosCode;
 import com.gbh.movil.domain.pos.PosResult;
@@ -34,9 +34,6 @@ import timber.log.Timber;
  * @author hecvasro
  */
 class CubePosBridge implements PosBridge {
-  private static final String DEFAULT_ALIAS = "alias";
-  private static final String DEFAULT_PIN = "123456";
-
   private final Context context;
   private final CubeSdkImpl cubeSdk;
   private final ComponentName componentName;
@@ -50,7 +47,9 @@ class CubePosBridge implements PosBridge {
   CubePosBridge(@NonNull Context context) {
     this.context = context;
     this.cubeSdk = new CubeSdkImpl(this.context);
-    this.componentName = new ComponentName("com.cube.sdk.hce", "TestHostApduService");
+    final Class<TorreHostApduService> serviceClass = TorreHostApduService.class;
+    this.componentName = new ComponentName(serviceClass.getPackage().getName(),
+      serviceClass.getSimpleName());
   }
 
   /**
@@ -127,15 +126,15 @@ class CubePosBridge implements PosBridge {
 
   @NonNull
   @Override
-  public Observable<PosResult<String>> addCard(@NonNull final PhoneNumber phoneNumber,
+  public Observable<PosResult<String>> addCard(@NonNull final String phoneNumber,
     @NonNull final String pin, @NonNull final String alias) {
     return Observable.create(new Observable.OnSubscribe<PosResult<String>>() {
       @Override
       public void call(final Subscriber<? super PosResult<String>> subscriber) {
         final AddCardParams params = new AddCardParams();
-        params.setMsisdn(phoneNumber.toString());
-        params.setOtp(DEFAULT_PIN);
-        params.setAlias(DEFAULT_ALIAS);
+        params.setMsisdn(phoneNumber);
+        params.setOtp(pin);
+        params.setAlias(alias);
         cubeSdk.AddCard(params, new CubeSdkCallback<String, CubeError>() {
           @Override
           public void success(String message) {
@@ -158,7 +157,7 @@ class CubePosBridge implements PosBridge {
       @Override
       public void call(final Subscriber<? super PosResult<Void>> subscriber) {
         final SelectCardParams params = new SelectCardParams();
-        params.setAlias(DEFAULT_ALIAS);
+        params.setAlias(alias);
         cubeSdk.SelectCard(params, new CubeSdkCallback<PaymentInfo, CubeError>() {
           @Override
           public void success(PaymentInfo paymentInfo) {
@@ -187,7 +186,7 @@ class CubePosBridge implements PosBridge {
       @Override
       public void call(final Subscriber<? super PosResult<String>> subscriber) {
         final SelectCardParams params = new SelectCardParams();
-        params.setAlias(DEFAULT_ALIAS);
+        params.setAlias(alias);
         cubeSdk.DeleteCard(params, new CubeSdkCallback<String, CubeError>() {
           @Override
           public void success(String message) {

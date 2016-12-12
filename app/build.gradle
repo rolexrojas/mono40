@@ -32,19 +32,26 @@ android {
   }
 
   productFlavors {
-    mock {
-      applicationIdSuffix ".mock"
-      versionNameSuffix "-mock"
-    }
+    def TYPE_STRING = "String"
+    def FIELD_API_URL = "API_URL"
 
-    staging {
-      applicationIdSuffix ".staging"
-      versionNameSuffix "-staging"
-    }
+    alpha {
+      applicationIdSuffix ".alpha"
+      versionNameSuffix "-alpha"
 
+      buildConfigField TYPE_STRING, FIELD_API_URL, "\"http://172.19.1.103:8081/api/neo/\""
+    }
+    beta {
+      applicationIdSuffix ".beta"
+      versionNameSuffix "-beta"
+
+      buildConfigField TYPE_STRING, FIELD_API_URL, "\"https://demo.gcs-systems.com/api/neo\""
+    }
     production {
       applicationIdSuffix ".production"
       versionNameSuffix "-production"
+
+      buildConfigField TYPE_STRING, FIELD_API_URL, "\"https://demo.gcs-systems.com/api/neo\""
     }
   }
 }

@@ -14,6 +14,7 @@ import com.gbh.movil.domain.session.SessionManager;
 import com.gbh.movil.misc.rx.RxUtils;
 import com.gbh.movil.ui.Presenter;
 
+import dagger.Lazy;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -33,14 +34,14 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
   private final StringHelper stringHelper;
   private final Product paymentOption;
   private final ProductManager productManager;
-  private final PosBridge posBridge;
+  private final Lazy<PosBridge> posBridge;
   private final ApiBridge apiBridge;
   private final SessionManager sessionManager;
 
   private Subscription subscription = Subscriptions.unsubscribed();
 
   PurchasePaymentPresenter(@NonNull StringHelper stringHelper, @NonNull Product paymentOption,
-    @NonNull ProductManager productManager, @NonNull PosBridge posBridge,
+    @NonNull ProductManager productManager, @NonNull Lazy<PosBridge> posBridge,
     @NonNull ApiBridge apiBridge, @NonNull SessionManager sessionManager) {
     this.stringHelper = stringHelper;
     this.paymentOption = paymentOption;
@@ -71,7 +72,7 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
           final Product po = pair.first;
           final Product cdpo = pair.second;
           if (po.equals(cdpo)) {
-            return posBridge.selectCard(po.getAlias())
+            return posBridge.get().selectCard(po.getAlias())
               .map(new Func1<PosResult<Void>, Boolean>() {
                 @Override
                 public Boolean call(PosResult<Void> result) {
@@ -84,7 +85,7 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
                 @Override
                 public Observable<PosResult<Void>> call(ApiResult<Void> result) {
                   // TODO: Propagate errors to the caller.
-                  return posBridge.selectCard(po.getAlias());
+                  return posBridge.get().selectCard(po.getAlias());
                 }
               })
               .map(new Func1<PosResult<Void>, Boolean>() {

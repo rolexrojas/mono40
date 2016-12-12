@@ -3,6 +3,7 @@ package com.gbh.movil.ui.auth.signin;
 import android.support.annotation.NonNull;
 
 import com.gbh.movil.data.StringHelper;
+import com.gbh.movil.domain.InitialDataLoader;
 import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.session.Session;
 import com.gbh.movil.domain.session.SessionManager;
@@ -35,6 +36,7 @@ final class SignInPresenter extends Presenter<SignInScreen> {
   private final MessageDispatcher messageDispatcher;
   private final LoadIndicator loadIndicator;
   private final SessionManager sessionManager;
+  private final InitialDataLoader initialDataLoader;
 
   /**
    * TODO
@@ -48,11 +50,13 @@ final class SignInPresenter extends Presenter<SignInScreen> {
    *   TODO
    */
   SignInPresenter(@NonNull StringHelper stringHelper, @NonNull MessageDispatcher messageDispatcher,
-    @NonNull LoadIndicator loadIndicator, @NonNull SessionManager sessionManager) {
+    @NonNull LoadIndicator loadIndicator, @NonNull SessionManager sessionManager,
+    @NonNull InitialDataLoader initialDataLoader) {
     this.stringHelper = stringHelper;
     this.messageDispatcher = messageDispatcher;
     this.loadIndicator = loadIndicator;
     this.sessionManager = sessionManager;
+    this.initialDataLoader = initialDataLoader;
   }
 
   /**
@@ -90,6 +94,22 @@ final class SignInPresenter extends Presenter<SignInScreen> {
         @Override
         public Observable<Session> call(InputData data) {
           return sessionManager.signIn(data.phoneNumber, data.email, data.password)
+            .flatMap(new Func1<Session, Observable<Session>>() {
+              @Override
+              public Observable<Session> call(final Session session) {
+                if (Utils.isNull(session)) {
+                  return Observable.just(null);
+                } else {
+                  return initialDataLoader.load()
+                    .map(new Func1<Object, Session>() {
+                      @Override
+                      public Session call(Object object) {
+                        return session;
+                      }
+                    });
+                }
+              }
+            })
             .subscribeOn(Schedulers.io());
         }
       })

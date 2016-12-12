@@ -3,24 +3,28 @@ package com.gbh.movil.ui.auth.signup.two;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.gbh.movil.R;
 import com.gbh.movil.misc.Utils;
 import com.gbh.movil.ui.ChildFragment;
 import com.gbh.movil.ui.auth.signup.SignUpContainer;
 import com.gbh.movil.ui.auth.signup.three.StepThreeFragment;
+import com.gbh.movil.ui.main.PinConfirmationDialogFragment;
 import com.gbh.movil.ui.text.UiTextHelper;
-import com.jakewharton.rxbinding.view.RxView;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import rx.Observable;
 
@@ -29,14 +33,11 @@ import rx.Observable;
  *
  * @author hecvasro
  */
-public class StepTwoFragment extends ChildFragment<SignUpContainer> implements StepTwoScreen {
-  /**
-   * TODO
-   */
+public class StepTwoFragment extends ChildFragment<SignUpContainer> implements StepTwoScreen,
+  PinConfirmationDialogFragment.OnDismissListener {
+  private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
+
   private static final String ARG_PHONE_NUMBER = "phoneNumber";
-  /**
-   * TODO
-   */
   private static final String ARG_EMAIL = "email";
 
   private Unbinder unbinder;
@@ -69,6 +70,27 @@ public class StepTwoFragment extends ChildFragment<SignUpContainer> implements S
     final StepTwoFragment fragment = new StepTwoFragment();
     fragment.setArguments(bundle);
     return fragment;
+  }
+
+  @OnClick(R.id.button_continue)
+  void onSubmitButtonClicked() {
+    final FragmentManager manager = getChildFragmentManager();
+    final Fragment fragment = manager.findFragmentByTag(TAG_PIN_CONFIRMATION);
+    if (Utils.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
+      ((PinConfirmationDialogFragment) fragment).dismiss();
+    }
+    final int[] location = new int[2];
+    submitButton.getLocationOnScreen(location);
+    final int x = location[0] + (submitButton.getWidth() / 2);
+    final int y = location[1];
+    PinConfirmationDialogFragment.newInstance(x, y, "Creación del perfil tPago 2.0",
+      new PinConfirmationDialogFragment.Callback() {
+        @Override
+        public void confirm(@NonNull String pin) {
+          presenter.onSubmitButtonClicked(pin);
+        }
+      })
+      .show(manager, TAG_PIN_CONFIRMATION);
   }
 
   @Override
@@ -144,12 +166,6 @@ public class StepTwoFragment extends ChildFragment<SignUpContainer> implements S
     return UiTextHelper.textChanges(confirmationEditText);
   }
 
-  @NonNull
-  @Override
-  public Observable<Void> submitButtonClicks() {
-    return RxView.clicks(submitButton);
-  }
-
   @Override
   public void setPasswordError(@Nullable String message) {
     // TODO
@@ -166,7 +182,17 @@ public class StepTwoFragment extends ChildFragment<SignUpContainer> implements S
   }
 
   @Override
-  public void submit() {
-    getContainer().setChildFragment(StepThreeFragment.newInstance(), true, true);
+  public void submit(boolean succeeded) {
+    final Fragment fragment = getChildFragmentManager().findFragmentByTag(TAG_PIN_CONFIRMATION);
+    if (Utils.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
+      ((PinConfirmationDialogFragment) fragment).resolve(succeeded);
+    }
+  }
+
+  @Override
+  public void onDismiss(boolean succeeded) {
+    if (succeeded) {
+      getContainer().setChildFragment(StepThreeFragment.newInstance(), true, true);
+    }
   }
 }

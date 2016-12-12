@@ -17,6 +17,7 @@ import com.gbh.movil.domain.api.ApiBridge;
 
 import javax.inject.Singleton;
 
+import dagger.Lazy;
 import dagger.Module;
 import dagger.Provides;
 
@@ -52,9 +53,9 @@ final class AppModule {
 
   @Provides
   @Singleton
-  ProductManager provideProductManager(ProductRepo productRepo, PosBridge posBridge,
-    EventBus eventBus) {
-    return new ProductManager(productRepo, posBridge, eventBus);
+  ProductManager provideProductManager(ProductRepo productRepo, Lazy<PosBridge> posBridge,
+    EventBus eventBus, SessionManager sessionManager) {
+    return new ProductManager(productRepo, posBridge, eventBus, sessionManager);
   }
 
   @Provides
