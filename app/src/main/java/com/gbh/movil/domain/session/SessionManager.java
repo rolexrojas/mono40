@@ -3,9 +3,7 @@ package com.gbh.movil.domain.session;
 import android.support.annotation.NonNull;
 
 import com.gbh.movil.domain.DeviceManager;
-import com.gbh.movil.domain.InitialDataLoader;
 import com.gbh.movil.domain.api.ApiResult;
-import com.gbh.movil.misc.Utils;
 
 import rx.Observable;
 import rx.functions.Func1;
@@ -19,7 +17,6 @@ public final class SessionManager {
   private final DeviceManager deviceManager;
   private final SessionRepo sessionRepo;
   private final SessionService sessionService;
-  private final InitialDataLoader initialDataLoader;
 
   /**
    * TODO
@@ -28,11 +25,10 @@ public final class SessionManager {
    *   TODO
    */
   public SessionManager(@NonNull DeviceManager deviceManager, @NonNull SessionRepo sessionRepo,
-    @NonNull SessionService sessionService, @NonNull InitialDataLoader initialDataLoader) {
+    @NonNull SessionService sessionService) {
     this.deviceManager = deviceManager;
     this.sessionRepo = sessionRepo;
     this.sessionService = sessionService;
-    this.initialDataLoader = initialDataLoader;
   }
 
   /**
@@ -59,22 +55,6 @@ public final class SessionManager {
             return session;
           } else {
             return null; // TODO: Propagate errors to the caller.
-          }
-        }
-      })
-      .flatMap(new Func1<Session, Observable<Session>>() {
-        @Override
-        public Observable<Session> call(final Session session) {
-          if (Utils.isNull(session)) {
-            return Observable.just(null);
-          } else {
-            return initialDataLoader.load()
-              .flatMap(new Func1<Object, Observable<Session>>() {
-                @Override
-                public Observable<Session> call(Object object) {
-                  return Observable.just(session);
-                }
-              });
           }
         }
       });

@@ -7,6 +7,7 @@ import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.ProductManager;
 import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.domain.pos.PosBridge;
+import com.gbh.movil.domain.session.SessionManager;
 import com.gbh.movil.ui.ChildFragmentScope;
 
 import dagger.Module;
@@ -26,8 +27,9 @@ class PurchasePaymentModule {
   @Provides
   @ChildFragmentScope
   PurchasePaymentPresenter providePresenter(StringHelper stringHelper,
-    ProductManager productManager, PosBridge posBridge, ApiBridge apiBridge) {
+    ProductManager productManager, PosBridge posBridge, ApiBridge apiBridge,
+    SessionManager sessionManager) {
     return new PurchasePaymentPresenter(stringHelper, paymentOption, productManager, posBridge,
-      apiBridge);
+      apiBridge, sessionManager);
   }
 }

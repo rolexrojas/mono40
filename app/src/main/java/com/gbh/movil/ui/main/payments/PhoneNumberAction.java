@@ -3,21 +3,20 @@ package com.gbh.movil.ui.main.payments;
 import android.support.annotation.NonNull;
 
 import com.gbh.movil.misc.Utils;
-import com.gbh.movil.domain.PhoneNumber;
 
 /**
  * @author hecvasro
  */
 abstract class PhoneNumberAction extends Action {
-  private final PhoneNumber phoneNumber;
+  private final String phoneNumber;
 
-  PhoneNumberAction(@ActionType int type, @NonNull PhoneNumber phoneNumber) {
+  PhoneNumberAction(@ActionType int type, @NonNull String phoneNumber) {
     super(type);
     this.phoneNumber = phoneNumber;
   }
 
   @NonNull
-  final PhoneNumber getPhoneNumber() {
+  final String getPhoneNumber() {
     return phoneNumber;
   }
 

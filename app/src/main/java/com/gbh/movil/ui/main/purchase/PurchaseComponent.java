@@ -4,6 +4,7 @@ import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.domain.ProductManager;
 import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.domain.pos.PosBridge;
+import com.gbh.movil.domain.session.SessionManager;
 import com.gbh.movil.ui.FragmentScope;
 import com.gbh.movil.ui.main.MainComponent;
 
@@ -21,5 +22,6 @@ interface PurchaseComponent {
   PosBridge providePosBridge();
   ProductManager provideProductManager();
   PurchasePaymentOptionBinder providePaymentOptionBinder();
+  SessionManager provideSessionManager();
   StringHelper provideStringHelper();
 }

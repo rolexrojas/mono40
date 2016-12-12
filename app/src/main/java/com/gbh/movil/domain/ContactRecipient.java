@@ -3,6 +3,7 @@ package com.gbh.movil.domain;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.gbh.movil.domain.util.StringUtils;
 import com.gbh.movil.misc.Utils;
 
 /**
@@ -11,14 +12,14 @@ import com.gbh.movil.misc.Utils;
  * @author hecvasro
  */
 public class ContactRecipient extends Recipient {
-  private final PhoneNumber phoneNumber;
+  private final String phoneNumber;
 
-  public ContactRecipient(@NonNull PhoneNumber phoneNumber, @Nullable String label) {
+  public ContactRecipient(@NonNull String phoneNumber, @Nullable String label) {
     super(RecipientType.CONTACT, label);
     this.phoneNumber = phoneNumber;
   }
 
-  public ContactRecipient(@NonNull PhoneNumber phoneNumber) {
+  public ContactRecipient(@NonNull String phoneNumber) {
     super(RecipientType.CONTACT);
     this.phoneNumber = phoneNumber;
   }
@@ -26,7 +27,7 @@ public class ContactRecipient extends Recipient {
   @NonNull
   @Override
   public String getIdentifier() {
-    return phoneNumber.toString();
+    return phoneNumber;
   }
 
   @Override
@@ -53,6 +54,6 @@ public class ContactRecipient extends Recipient {
    */
   @Override
   public boolean matches(@Nullable String query) {
-    return super.matches(query) || phoneNumber.matches(query);
+    return super.matches(query) || StringUtils.matches(phoneNumber, query);
   }
 }

@@ -8,7 +8,7 @@ import com.gbh.movil.domain.PhoneNumber;
  * @author hecvasro
  */
 class TransactionWithPhoneNumberAction extends PhoneNumberAction {
-  TransactionWithPhoneNumberAction(@NonNull PhoneNumber phoneNumber) {
+  TransactionWithPhoneNumberAction(@NonNull String phoneNumber) {
     super(ActionType.TRANSACTION_WITH_PHONE_NUMBER, phoneNumber);
   }
 

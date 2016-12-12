@@ -13,7 +13,6 @@ import com.gbh.movil.domain.LoanBalance;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Transaction;
 import com.gbh.movil.domain.api.ApiBridge;
-import com.gbh.movil.domain.api.DecoratedApiBridge;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -89,6 +88,6 @@ public class ApiModule {
   @Provides
   @Singleton
   ApiBridge provideApiBridge(Retrofit retrofit) {
-    return new DecoratedApiBridge(new RetrofitApiBridge(retrofit.create(ApiService.class)));
+    return new RetrofitApiBridge(retrofit.create(ApiService.class));
   }
 }

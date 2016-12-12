@@ -105,7 +105,7 @@ public class TransactionCreationActivity
    * @return TODO
    */
   @NonNull
-  public static Intent getLaunchIntent(@NonNull Context context, @NonNull PhoneNumber phoneNumber) {
+  public static Intent getLaunchIntent(@NonNull Context context, @NonNull String phoneNumber) {
     return getLaunchIntent(context, new PhoneNumberRecipient(phoneNumber));
   }
 

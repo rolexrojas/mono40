@@ -6,6 +6,7 @@ import android.support.v4.util.Pair;
 
 import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.domain.api.ApiUtils;
+import com.gbh.movil.domain.session.SessionManager;
 import com.gbh.movil.ui.main.recipients.Contact;
 
 import java.util.List;
@@ -21,10 +22,13 @@ import rx.functions.Func1;
 public final class RecipientManager implements RecipientProvider {
   private final RecipientRepo recipientRepo;
   private final ApiBridge apiBridge;
+  private final com.gbh.movil.domain.session.SessionManager sessionManager;
 
-  public RecipientManager(@NonNull RecipientRepo recipientRepo, @NonNull ApiBridge apiBridge) {
+  public RecipientManager(@NonNull RecipientRepo recipientRepo, @NonNull ApiBridge apiBridge,
+    @NonNull SessionManager sessionManager) {
     this.recipientRepo = recipientRepo;
     this.apiBridge = apiBridge;
+    this.sessionManager = sessionManager;
   }
 
   /**
@@ -49,8 +53,8 @@ public final class RecipientManager implements RecipientProvider {
    * @return TODO
    */
   @NonNull
-  public final Observable<Boolean> checkIfAffiliated(@NonNull PhoneNumber phoneNumber) {
-    return apiBridge.checkIfAffiliated(phoneNumber)
+  public final Observable<Boolean> checkIfAffiliated(@NonNull String phoneNumber) {
+    return apiBridge.checkIfAffiliated(sessionManager.getSession().getAuthToken(), phoneNumber)
       .compose(ApiUtils.<Boolean>handleApiResult(true));
   }
 
@@ -66,7 +70,7 @@ public final class RecipientManager implements RecipientProvider {
    */
   @NonNull
   public final Observable<Pair<Boolean, Recipient>> addRecipient(
-    @NonNull final PhoneNumber phoneNumber, @Nullable final String label) {
+    @NonNull final String phoneNumber, @Nullable final String label) {
     return checkIfAffiliated(phoneNumber)
       .flatMap(new Func1<Boolean, Observable<Pair<Boolean, Recipient>>>() {
         @Override
@@ -95,7 +99,7 @@ public final class RecipientManager implements RecipientProvider {
    * @return TODO
    */
   @NonNull
-  public final Observable<Pair<Boolean, Recipient>> addRecipient(@NonNull PhoneNumber phoneNumber) {
+  public final Observable<Pair<Boolean, Recipient>> addRecipient(@NonNull String phoneNumber) {
     return addRecipient(phoneNumber, null);
   }
 
@@ -131,7 +135,7 @@ public final class RecipientManager implements RecipientProvider {
   @NonNull
   @Override
   public Observable<List<Recipient>> getAll(@Nullable final String query) {
-    return apiBridge.recipients()
+    return apiBridge.recipients(sessionManager.getSession().getAuthToken())
       .compose(ApiUtils.<List<Recipient>>handleApiResult(true))
       .flatMap(new Func1<List<Recipient>, Observable<List<Recipient>>>() {
         @Override

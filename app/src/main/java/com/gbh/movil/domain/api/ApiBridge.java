@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import com.gbh.movil.domain.Balance;
 import com.gbh.movil.domain.Bank;
 import com.gbh.movil.domain.InitialData;
-import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.Transaction;
@@ -35,15 +34,18 @@ public interface ApiBridge {
   /**
    * TODO
    *
+   * @param authToken
+   *   TODO
+   *
    * @return TODO
    */
   @NonNull
-  Observable<ApiResult<InitialData>> initialLoad();
+  Observable<ApiResult<InitialData>> initialLoad(@NonNull String authToken);
 
   /**
    * Query the {@link Balance balance} of a {@link Product product} from the API.
    * <p>
-   * <em>Note:</em> By default {@link #queryBalance(Product, String)} does not operates on a
+   * <em>Note:</em> By default {@link #queryBalance(String, Product, String)} does not operates on a
    * particular {@link rx.Scheduler}.
    *
    * @param product
@@ -54,44 +56,48 @@ public interface ApiBridge {
    * @return {@link Balance balance} of a {@link Product product} from the API.
    */
   @NonNull
-  Observable<ApiResult<Balance>> queryBalance(@NonNull Product product, @NonNull String pin);
+  Observable<ApiResult<Balance>> queryBalance(@NonNull String authToken, @NonNull Product product,
+    @NonNull String pin);
 
   /**
    * Creates an {@link Observable observable} that emits the latest {@link Transaction transactions}
    * that were made.
    * <p>
-   * <em>Note:</em> By default {@link #recentTransactions()} does not operates on a particular
+   * <em>Note:</em> By default {@link #recentTransactions(String)} does not operates on a particular
    * {@link rx.Scheduler}.
    *
    * @return An {@link Observable observable} that emits the latest {@link Transaction transactions}
    * that were made.
    */
   @NonNull
-  Observable<ApiResult<List<Transaction>>> recentTransactions();
+  Observable<ApiResult<List<Transaction>>> recentTransactions(@NonNull String authToken);
 
   /**
    * Creates an {@link Observable observable} that emits all the registered {@link Recipient
    * recipients}.
    * <p>
-   * <em>Note:</em> By default {@link #recipients()} does not operates on a particular {@link
+   * <em>Note:</em> By default {@link #recipients(String)} does not operates on a particular {@link
    * rx.Scheduler}.
    *
    * @return An {@link Observable observable} that emits all the registered {@link Recipient
    * recipients}.
    */
   @NonNull
-  Observable<ApiResult<List<Recipient>>> recipients();
+  Observable<ApiResult<List<Recipient>>> recipients(@NonNull String authToken);
 
   /**
    * TODO
    *
+   * @param authToken
+   *   TODO
    * @param phoneNumber
    *   TODO
    *
    * @return TODO
    */
   @NonNull
-  Observable<ApiResult<Boolean>> checkIfAffiliated(@NonNull PhoneNumber phoneNumber);
+  Observable<ApiResult<Boolean>> checkIfAffiliated(@NonNull String authToken,
+    @NonNull String phoneNumber);
 
   /**
    * TODO
@@ -106,8 +112,8 @@ public interface ApiBridge {
    * @return TODO
    */
   @NonNull
-  Observable<ApiResult<Boolean>> transferTo(@NonNull Product product, @NonNull Recipient recipient,
-    @NonNull BigDecimal amount, @NonNull String pin);
+  Observable<ApiResult<Boolean>> transferTo(@NonNull String authToken, @NonNull Product product,
+    @NonNull Recipient recipient, @NonNull BigDecimal amount, @NonNull String pin);
 
   /**
    * TODO
@@ -118,5 +124,6 @@ public interface ApiBridge {
    * @return TODO
    */
   @NonNull
-  Observable<Product> setDefaultPaymentOption(@NonNull Product product);
+  Observable<ApiResult<Void>> setDefaultPaymentOption(@NonNull String authToken,
+    @NonNull Product product);
 }

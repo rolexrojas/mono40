@@ -17,12 +17,15 @@ public final class InitialDataLoader {
   private final ApiBridge apiBridge;
   private final ProductManager productManager;
   private final RecipientManager recipientManager;
+  private final com.gbh.movil.domain.session.SessionManager sessionManager;
 
   public InitialDataLoader(@NonNull ApiBridge apiBridge, @NonNull ProductManager productManager,
-    @NonNull RecipientManager recipientManager) {
+    @NonNull RecipientManager recipientManager,
+    @NonNull com.gbh.movil.domain.session.SessionManager sessionManager) {
     this.apiBridge = apiBridge;
     this.productManager = productManager;
     this.recipientManager = recipientManager;
+    this.sessionManager = sessionManager;
   }
 
   /**
@@ -32,7 +35,7 @@ public final class InitialDataLoader {
    */
   @NonNull
   public final Observable<Object> load() {
-    return apiBridge.initialLoad()
+    return apiBridge.initialLoad(sessionManager.getSession().getAuthToken())
       .compose(ApiUtils.<InitialData>handleApiResult(true))
       .flatMap(new Func1<InitialData, Observable<Object>>() {
         @Override

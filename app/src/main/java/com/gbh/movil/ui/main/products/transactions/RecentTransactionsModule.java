@@ -5,6 +5,7 @@ import com.gbh.movil.domain.DecoratedTransactionProvider;
 import com.gbh.movil.domain.TransactionProvider;
 import com.gbh.movil.domain.TransactionRepo;
 import com.gbh.movil.domain.api.ApiBridge;
+import com.gbh.movil.domain.session.SessionManager;
 import com.gbh.movil.ui.FragmentScope;
 
 import dagger.Module;
@@ -21,8 +22,8 @@ class RecentTransactionsModule {
   @Provides
   @FragmentScope
   TransactionProvider provideTransactionManager(TransactionRepo transactionRepo,
-    ApiBridge apiBridge) {
-    return new DecoratedTransactionProvider(transactionRepo, apiBridge);
+    ApiBridge apiBridge, SessionManager sessionManager) {
+    return new DecoratedTransactionProvider(transactionRepo, apiBridge, sessionManager);
   }
 
   @Provides
