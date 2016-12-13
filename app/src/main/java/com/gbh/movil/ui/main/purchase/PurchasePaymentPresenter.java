@@ -73,24 +73,24 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
           final Product cdpo = pair.second;
           if (po.equals(cdpo)) {
             return posBridge.get().selectCard(po.getAlias())
-              .map(new Func1<PosResult<Void>, Boolean>() {
+              .map(new Func1<PosResult<String>, Boolean>() {
                 @Override
-                public Boolean call(PosResult<Void> result) {
+                public Boolean call(PosResult<String> result) {
                   return result.isSuccessful();
                 }
               });
           } else {
             return apiBridge.setDefaultPaymentOption(sessionManager.getSession().getAuthToken(), po)
-              .flatMap(new Func1<ApiResult<Void>, Observable<PosResult<Void>>>() {
+              .flatMap(new Func1<ApiResult<Void>, Observable<PosResult<String>>>() {
                 @Override
-                public Observable<PosResult<Void>> call(ApiResult<Void> result) {
+                public Observable<PosResult<String>> call(ApiResult<Void> result) {
                   // TODO: Propagate errors to the caller.
                   return posBridge.get().selectCard(po.getAlias());
                 }
               })
-              .map(new Func1<PosResult<Void>, Boolean>() {
+              .map(new Func1<PosResult<String>, Boolean>() {
                 @Override
-                public Boolean call(PosResult<Void> result) {
+                public Boolean call(PosResult<String> result) {
                   return result.isSuccessful();
                 }
               })

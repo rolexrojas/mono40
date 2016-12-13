@@ -3,7 +3,6 @@ package com.gbh.movil.ui.main.purchase;
 import android.support.annotation.NonNull;
 
 import com.gbh.movil.data.StringHelper;
-import com.gbh.movil.domain.pos.PosBridge;
 import com.gbh.movil.domain.util.Event;
 import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.domain.util.EventType;
@@ -34,7 +33,6 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
   private final ProductManager productManager;
   private final EventBus eventBus;
   private final AppDialog.Creator screenDialogCreator;
-  private final PosBridge posBridge;
 
   private Subscription productAdditionEventSubscription = Subscriptions.unsubscribed();
   private Subscription paymentOptionsSubscription = Subscriptions.unsubscribed();
@@ -47,14 +45,12 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
 
   PurchasePresenter(@NonNull StringHelper stringHelper,
     @NonNull SchedulerProvider schedulerProvider, @NonNull ProductManager productManager,
-    @NonNull EventBus eventBus, @NonNull AppDialog.Creator screenDialogCreator,
-    @NonNull PosBridge posBridge) {
+    @NonNull EventBus eventBus, @NonNull AppDialog.Creator screenDialogCreator) {
     this.stringHelper = stringHelper;
     this.schedulerProvider = schedulerProvider;
     this.productManager = productManager;
     this.eventBus = eventBus;
     this.screenDialogCreator = screenDialogCreator;
-    this.posBridge = posBridge;
   }
 
   /**
@@ -160,20 +156,6 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
         @Override
         public void call(Boolean flag) {
           screen.onActivationFinished(flag);
-//          if (!posBridge.isDefault()) {
-//            screenDialogCreator.create(stringHelper.dialogNfcDefaultAssignationTitle())
-//              .message(stringHelper.dialogNfcDefaultAssignationMessage())
-//              .positiveAction(stringHelper.dialogNfcDefaultAssignationPositiveAction(),
-//                new AppDialog.OnActionClickedListener() {
-//                  @Override
-//                  public void onActionClicked(@NonNull AppDialog.Action action) {
-//                    screen.startActivity(posBridge.requestToMakeDefault());
-//                  }
-//                })
-//              .negativeAction(stringHelper.dialogNfcDefaultAssignationNegativeAction())
-//              .build()
-//              .dispatch();
-//          }
         }
       }, new Action1<Throwable>() {
         @Override

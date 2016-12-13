@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
 import com.gbh.movil.domain.pos.PosBridge;
-import com.gbh.movil.domain.pos.PosCode;
 import com.gbh.movil.domain.pos.PosResult;
 import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.misc.rx.RxUtils;
@@ -128,7 +127,7 @@ public final class ProductManager implements ProductProvider {
       .compose(RxUtils.<Product>fromCollection())
       .flatMap(new Func1<Product, Observable<PosResult<String>>>() {
         @Override
-        public Observable<PosResult<String>> call(Product product) {
+        public Observable<PosResult<String>> call(final Product product) {
           return posBridge.get().addCard(sessionManager.getSession().getPhoneNumber(), pin,
             product.getAlias());
         }
@@ -136,8 +135,7 @@ public final class ProductManager implements ProductProvider {
       .reduce(true, new Func2<Boolean, PosResult<String>, Boolean>() {
         @Override
         public Boolean call(Boolean flag, PosResult<String> result) {
-          return flag && (result.isSuccessful()
-            || result.getCode().equals(PosCode.ALREADY_ACTIVATED_PRODUCT));
+          return flag && result.isSuccessful();
         }
       });
   }
