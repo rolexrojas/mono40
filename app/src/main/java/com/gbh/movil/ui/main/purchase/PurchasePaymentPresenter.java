@@ -11,6 +11,7 @@ import com.gbh.movil.domain.api.ApiResult;
 import com.gbh.movil.domain.pos.PosBridge;
 import com.gbh.movil.domain.pos.PosResult;
 import com.gbh.movil.domain.session.SessionManager;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.misc.rx.RxUtils;
 import com.gbh.movil.ui.Presenter;
 
@@ -68,9 +69,9 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
       })
       .flatMap(new Func1<Pair<Product, Product>, Observable<Boolean>>() {
         @Override
-        public Observable<Boolean> call(Pair<Product, Product> pair) {
-          final Product po = pair.first;
-          final Product cdpo = pair.second;
+        public Observable<Boolean> call(final Pair<Product, Product> pair) {
+          final Product po = pair.first; // Payment option
+          final Product cdpo = pair.second; // Current default payment option
           if (po.equals(cdpo)) {
             return posBridge.get().selectCard(po.getAlias())
               .map(new Func1<PosResult<String>, Boolean>() {
@@ -98,14 +99,18 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
                 @Override
                 public Observable<Boolean> call(final Boolean flag) {
                   // TODO: This must be added to a persistent queue.
-                  return apiBridge.setDefaultPaymentOption(
-                    sessionManager.getSession().getAuthToken(), cdpo)
-                    .map(new Func1<ApiResult<Void>, Boolean>() {
-                      @Override
-                      public Boolean call(ApiResult<Void> result) {
-                        return flag;
-                      }
-                    });
+                  if (Utils.isNull(cdpo)) {
+                    return Observable.just(flag);
+                  } else {
+                    return apiBridge.setDefaultPaymentOption(
+                      sessionManager.getSession().getAuthToken(), cdpo)
+                      .map(new Func1<ApiResult<Void>, Boolean>() {
+                        @Override
+                        public Boolean call(ApiResult<Void> result) {
+                          return flag;
+                        }
+                      });
+                  }
                 }
               });
           }
