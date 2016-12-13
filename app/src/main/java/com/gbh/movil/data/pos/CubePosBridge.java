@@ -105,7 +105,6 @@ class CubePosBridge implements PosBridge {
           public void success(ListCards listCards) {
             String altPan = null;
             for (Card card : listCards.getCards()) {
-              Timber.d("Registered: '%1$s' -> '%2$s'", card.getAlias(), card.getAltpan());
               if (card.getAlias().equals(alias)) {
                 altPan = card.getAltpan();
                 break;
@@ -136,41 +135,29 @@ class CubePosBridge implements PosBridge {
         @Override
         public Observable<PosResult<String>> call(final PosResult<String> result) {
           final boolean flag = result.isSuccessful();
-          final Observable<PosResult<String>> additionObservable
-            = Observable.create(new Observable.OnSubscribe<PosResult<String>>() {
-            @Override
-            public void call(final Subscriber<? super PosResult<String>> subscriber) {
-              final AddCardParams params = new AddCardParams();
-              params.setMsisdn(phoneNumber);
-              params.setOtp(pin);
-              params.setAlias(alias);
-              cubeSdk.AddCard(params, new CubeSdkCallback<String, CubeError>() {
-                @Override
-                public void success(String message) {
-                  handleSuccessResult(subscriber, message);
-                }
-
-                @Override
-                public void failure(CubeError error) {
-                  handleErrorResult(subscriber, error);
-                }
-              });
-            }
-          });
           if (flag) {
-            return removeCard(alias)
-              .flatMap(new Func1<PosResult<String>, Observable<PosResult<String>>>() {
-                @Override
-                public Observable<PosResult<String>> call(PosResult<String> result) {
-                  if (!result.isSuccessful()) {
-                    return Observable.just(result);
-                  } else {
-                    return additionObservable;
-                  }
-                }
-              });
+            return Observable.just(result);
           } else {
-            return additionObservable;
+            return Observable.create(new Observable.OnSubscribe<PosResult<String>>() {
+              @Override
+              public void call(final Subscriber<? super PosResult<String>> subscriber) {
+                final AddCardParams params = new AddCardParams();
+                params.setMsisdn(phoneNumber);
+                params.setOtp(pin);
+                params.setAlias(alias);
+                cubeSdk.AddCard(params, new CubeSdkCallback<String, CubeError>() {
+                  @Override
+                  public void success(String message) {
+                    handleSuccessResult(subscriber, message);
+                  }
+
+                  @Override
+                  public void failure(CubeError error) {
+                    handleErrorResult(subscriber, error);
+                  }
+                });
+              }
+            });
           }
         }
       });
@@ -183,9 +170,7 @@ class CubePosBridge implements PosBridge {
       .flatMap(new Func1<PosResult<String>, Observable<PosResult<String>>>() {
         @Override
         public Observable<PosResult<String>> call(final PosResult<String> result) {
-          if (!result.isSuccessful()) {
-            return Observable.just(result);
-          } else {
+          if (result.isSuccessful()) {
             return Observable.create(new Observable.OnSubscribe<PosResult<String>>() {
               @Override
               public void call(final Subscriber<? super PosResult<String>> subscriber) {
@@ -211,6 +196,8 @@ class CubePosBridge implements PosBridge {
                 });
               }
             });
+          } else {
+            return Observable.just(result);
           }
         }
       });
@@ -223,9 +210,7 @@ class CubePosBridge implements PosBridge {
       .flatMap(new Func1<PosResult<String>, Observable<PosResult<String>>>() {
         @Override
         public Observable<PosResult<String>> call(final PosResult<String> result) {
-          if (!result.isSuccessful()) {
-            return Observable.just(result);
-          } else {
+          if (result.isSuccessful()) {
             return Observable.create(new Observable.OnSubscribe<PosResult<String>>() {
               @Override
               public void call(final Subscriber<? super PosResult<String>> subscriber) {
@@ -245,6 +230,8 @@ class CubePosBridge implements PosBridge {
                 });
               }
             });
+          } else {
+            return Observable.just(result);
           }
         }
       });
