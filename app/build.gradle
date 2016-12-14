@@ -16,7 +16,7 @@ android {
     applicationId "com.gbh.movil"
     minSdkVersion 19
     targetSdkVersion 24
-    versionCode 7
+    versionCode 8
     versionName "2.0.0"
   }
 
