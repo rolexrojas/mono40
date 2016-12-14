@@ -57,6 +57,15 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
    */
   void start() {
     assertScreen();
+//    productManager.getAllPaymentOptions()
+//      .compose(RxUtils.<Product>fromCollection())
+//      .flatMap(new Func1<Product, Observable<PosResult<String>>>() {
+//        @Override
+//        public Observable<PosResult<String>> call(Product product) {
+//          return posBridge.get().removeCard(product.getAlias());
+//        }
+//      })
+//      .subscribe();
     screen.setMessage(stringHelper.bringDeviceCloserToTerminal());
     screen.setPaymentOption(paymentOption);
     subscription = Observable.just(paymentOption)

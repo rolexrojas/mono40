@@ -26,9 +26,6 @@ final class IndexPresenter extends Presenter<IndexScreen> {
   private final RxPermissions permissionManager;
   private final SessionManager sessionManager;
 
-  /**
-   * TODO
-   */
   private Subscription permissionRequestSubscription = Subscriptions.unsubscribed();
 
   IndexPresenter(@NonNull RxPermissions permissionManager,
