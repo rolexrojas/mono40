@@ -149,7 +149,8 @@ public final class ProductManager implements ProductProvider {
         public Boolean call(Product product) {
           return Product.isDefaultPaymentOption(product);
         }
-      });
+      })
+      .switchIfEmpty(Observable.just((Product) null));
   }
 
   @NonNull
