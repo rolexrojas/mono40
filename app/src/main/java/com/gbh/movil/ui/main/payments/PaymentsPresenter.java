@@ -6,6 +6,7 @@ import android.support.v4.util.Pair;
 
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.domain.PhoneNumber;
+import com.gbh.movil.domain.session.SessionManager;
 import com.gbh.movil.misc.rx.RxUtils;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.Recipient;
@@ -39,6 +40,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   private final StringHelper stringHelper;
   private final SchedulerProvider schedulerProvider;
   private final RecipientManager recipientManager;
+  private final SessionManager sessionManager;
 
   /**
    * TODO
@@ -54,10 +56,12 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   private Subscription searchSubscription = Subscriptions.unsubscribed();
 
   PaymentsPresenter(@NonNull StringHelper stringHelper,
-    @NonNull SchedulerProvider schedulerProvider, @NonNull RecipientManager recipientManager) {
+    @NonNull SchedulerProvider schedulerProvider, @NonNull RecipientManager recipientManager,
+    @NonNull SessionManager sessionManager) {
     this.stringHelper = stringHelper;
     this.schedulerProvider = schedulerProvider;
     this.recipientManager = recipientManager;
+    this.sessionManager = sessionManager;
   }
 
   /**
@@ -85,14 +89,9 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
               @Override
               public Observable<Object> call() {
                 if (PhoneNumber.isValid(query)) {
-                  try {
-                    final PhoneNumber phoneNumber = new PhoneNumber(query);
-                    return Observable.just(new TransactionWithPhoneNumberAction(phoneNumber),
-                      new AddPhoneNumberAction(phoneNumber))
-                      .cast(Object.class);
-                  } catch (NumberParseException exception) {
-                    return Observable.error(exception);
-                  }
+                  return Observable.just(new TransactionWithPhoneNumberAction(query),
+                    new AddPhoneNumberAction(query))
+                    .cast(Object.class);
                 } else {
                   return Observable.empty();
                 }
@@ -168,7 +167,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
    * @param phoneNumber
    *   TODO
    */
-  void addRecipient(@NonNull PhoneNumber phoneNumber) {
+  void addRecipient(@NonNull String phoneNumber) {
     assertScreen();
     if (subscription.isUnsubscribed()) {
       subscription = recipientManager.addRecipient(phoneNumber)
@@ -251,7 +250,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
    * @param phoneNumber
    *   TODO
    */
-  void startTransfer(@NonNull final PhoneNumber phoneNumber) {
+  void startTransfer(@NonNull final String phoneNumber) {
     assertScreen();
     if (subscription.isUnsubscribed()) {
       subscription = recipientManager.checkIfAffiliated(phoneNumber)
@@ -295,5 +294,11 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
     screen.clearQuery();
     screen.showConfirmationDialog(recipient, stringHelper.transactionCreationConfirmationTitle(),
       stringHelper.transactionCreationConfirmationMessage(recipient));
+  }
+
+  final void signOut() {
+    sessionManager.deactivate();
+    screen.openIndexScreen();
+    screen.finish();
   }
 }

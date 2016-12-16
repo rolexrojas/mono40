@@ -2,6 +2,8 @@ package com.gbh.movil.misc.rx;
 
 import android.support.annotation.NonNull;
 
+import com.gbh.movil.misc.Mapper;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -74,6 +76,28 @@ public final class RxUtils {
             set.add(item);
           }
         });
+      }
+    };
+  }
+
+  /**
+   * TODO
+   *
+   * @param mapper
+   *   TODO
+   * @param <A>
+   *   TODO
+   * @param <B>
+   *   TODO
+   *
+   * @return TODO
+   */
+  @NonNull
+  public static <A, B> Func1<A, B> mapperFunc(@NonNull final Mapper<A, B> mapper) {
+    return new Func1<A, B>() {
+      @Override
+      public B call(A a) {
+        return mapper.map(a);
       }
     };
   }

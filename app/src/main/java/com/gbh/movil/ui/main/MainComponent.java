@@ -10,6 +10,8 @@ import com.gbh.movil.domain.ProductManager;
 import com.gbh.movil.domain.BalanceManager;
 import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.domain.pos.PosBridge;
+import com.gbh.movil.domain.session.Session;
+import com.gbh.movil.domain.session.SessionManager;
 import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.domain.RecipientManager;
 import com.gbh.movil.ui.ActivityComponent;
@@ -27,6 +29,8 @@ import dagger.Component;
 @Component(dependencies = AppComponent.class, modules = { ActivityModule.class, MainModule.class })
 public interface MainComponent extends ActivityComponent {
   void inject(MainActivity activity);
+
+  SessionManager provideSessionManager();
 
   ApiBridge provideApiBridge();
   AssetProvider provideResourceProvider();

@@ -3,13 +3,13 @@ package com.gbh.movil.ui.main.purchase;
 import android.support.annotation.NonNull;
 
 import com.gbh.movil.data.StringHelper;
-import com.gbh.movil.domain.pos.PosBridge;
 import com.gbh.movil.domain.util.Event;
 import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.domain.util.EventType;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.ProductManager;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.misc.rx.RxUtils;
 import com.gbh.movil.ui.AppDialog;
 import com.gbh.movil.ui.Presenter;
@@ -33,7 +33,6 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
   private final ProductManager productManager;
   private final EventBus eventBus;
   private final AppDialog.Creator screenDialogCreator;
-  private final PosBridge posBridge;
 
   private Subscription productAdditionEventSubscription = Subscriptions.unsubscribed();
   private Subscription paymentOptionsSubscription = Subscriptions.unsubscribed();
@@ -46,14 +45,12 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
 
   PurchasePresenter(@NonNull StringHelper stringHelper,
     @NonNull SchedulerProvider schedulerProvider, @NonNull ProductManager productManager,
-    @NonNull EventBus eventBus, @NonNull AppDialog.Creator screenDialogCreator,
-    @NonNull PosBridge posBridge) {
+    @NonNull EventBus eventBus, @NonNull AppDialog.Creator screenDialogCreator) {
     this.stringHelper = stringHelper;
     this.schedulerProvider = schedulerProvider;
     this.productManager = productManager;
     this.eventBus = eventBus;
     this.screenDialogCreator = screenDialogCreator;
-    this.posBridge = posBridge;
   }
 
   /**
@@ -141,7 +138,7 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
    */
   void onPaymentOptionSelected(@NonNull Product product) {
     assertScreen();
-    if (selectedProduct.equals(product)) {
+    if (Utils.isNotNull(selectedProduct) && selectedProduct.equals(product)) {
       screen.openPaymentScreen(selectedProduct);
     } else {
       selectedProduct = product;
@@ -155,24 +152,10 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
     activationSubscription = productManager.activateAllProducts(pin)
       .subscribeOn(schedulerProvider.io())
       .observeOn(schedulerProvider.ui())
-      .subscribe(new Action1<Object>() {
+      .subscribe(new Action1<Boolean>() {
         @Override
-        public void call(Object object) {
-          screen.onActivationFinished(true);
-//          if (!posBridge.isDefault()) {
-//            screenDialogCreator.create(stringHelper.dialogNfcDefaultAssignationTitle())
-//              .message(stringHelper.dialogNfcDefaultAssignationMessage())
-//              .positiveAction(stringHelper.dialogNfcDefaultAssignationPositiveAction(),
-//                new AppDialog.OnActionClickedListener() {
-//                  @Override
-//                  public void onActionClicked(@NonNull AppDialog.Action action) {
-//                    screen.startActivity(posBridge.requestToMakeDefault());
-//                  }
-//                })
-//              .negativeAction(stringHelper.dialogNfcDefaultAssignationNegativeAction())
-//              .build()
-//              .show();
-//          }
+        public void call(Boolean flag) {
+          screen.onActivationFinished(flag);
         }
       }, new Action1<Throwable>() {
         @Override

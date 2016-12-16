@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <color name="button_colored_solid">@color/white_alpha_90</color>
+  <color name="button_colored_gradient_start">#0C9C188F</color>
+  <color name="button_colored_gradient_end">#33821477</color>
+  <color name="button_colored_solid_disabled">@color/white_alpha_40</color>
+
+  <color name="edit_text_background_disabled">#7FCCCCCC</color>
+  <color name="edit_text_background_enabled">#CCCCCC</color>
+  <color name="edit_text_content_disabled">@color/white_alpha_50</color>
+  <color name="edit_text_content_enabled">@color/white</color>
+  <color name="edit_text_cursor">@color/white</color>
+  <color name="edit_text_hint">@color/white_alpha_50</color>
+
+  <!-- TODO: Apply standards from these point downward -->
   <color name="window_background_default">#EFEFEF</color>
 
   <color name="commerce_payment_option_background">#D8D8D8</color>
@@ -19,7 +32,6 @@
 
   <color name="commerce_payment_message_text_color">#FFFFFF</color>
 
-  <!-- TODO: Apply standards from these point downward -->
   <!-- App's colors -->
   <color name="app_text_widget_prefixable_text_view_content">#333333</color>
   <color name="app_text_widget_prefixable_text_view_prefix">#7F333333</color>
@@ -43,7 +55,9 @@
   <color name="transparent">@android:color/transparent</color>
   <color name="white">#FFF</color>
   <color name="white_alpha_20">#33FFFFFF</color>
+  <color name="white_alpha_40">#66FFFFFF</color>
   <color name="white_alpha_50">#7FFFFFFF</color>
+  <color name="white_alpha_90">#E5FFFFFF</color>
   <!-- Search view colors -->
   <color name="search_view_drawable">#999</color>
   <color name="search_view_hint">#999</color>

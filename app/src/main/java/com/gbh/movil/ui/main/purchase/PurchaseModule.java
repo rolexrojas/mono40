@@ -6,7 +6,6 @@ import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.data.res.AssetProvider;
 import com.gbh.movil.domain.ProductManager;
-import com.gbh.movil.domain.pos.PosBridge;
 import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.ui.FragmentScope;
 import com.gbh.movil.ui.AppDialog;
@@ -46,9 +45,8 @@ class PurchaseModule {
   @Provides
   @FragmentScope
   PurchasePresenter providePresenter(StringHelper stringHelper, SchedulerProvider schedulerProvider,
-    ProductManager productManager, EventBus eventBus, AppDialog.Creator screenDialogCreator,
-    PosBridge posBridge) {
+    ProductManager productManager, EventBus eventBus, AppDialog.Creator screenDialogCreator) {
     return new PurchasePresenter(stringHelper, schedulerProvider, productManager,
-      eventBus, screenDialogCreator, posBridge);
+      eventBus, screenDialogCreator);
   }
 }

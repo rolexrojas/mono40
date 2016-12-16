@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import com.gbh.movil.domain.api.ApiBridge;
 import com.gbh.movil.domain.api.ApiCode;
 import com.gbh.movil.domain.api.ApiUtils;
+import com.gbh.movil.domain.session.*;
+import com.gbh.movil.domain.session.SessionManager;
 
 import java.math.BigDecimal;
 
@@ -18,9 +20,11 @@ import rx.functions.Func1;
  */
 public final class TransactionManager {
   private final ApiBridge apiBridge;
+  private final com.gbh.movil.domain.session.SessionManager sessionManager;
 
-  public TransactionManager(@NonNull ApiBridge apiBridge) {
+  public TransactionManager(@NonNull ApiBridge apiBridge, @NonNull SessionManager sessionManager) {
     this.apiBridge = apiBridge;
+    this.sessionManager = sessionManager;
   }
 
   /**
@@ -38,7 +42,8 @@ public final class TransactionManager {
   @NonNull
   public final Observable<Boolean> transferTo(@NonNull Product product,
     @NonNull Recipient recipient, @NonNull BigDecimal amount, @NonNull String pin) {
-    return apiBridge.transferTo(product, recipient, amount, pin)
+    return apiBridge.transferTo(sessionManager.getSession().getAuthToken(), product, recipient,
+      amount, pin)
       .compose(ApiUtils.handleApiResult(true, new Func1<ApiCode, Observable<Boolean>>() {
         @Override
         public Observable<Boolean> call(ApiCode code) {

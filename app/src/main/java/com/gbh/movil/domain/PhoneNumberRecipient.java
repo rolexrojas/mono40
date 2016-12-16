@@ -3,41 +3,42 @@ package com.gbh.movil.domain;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.gbh.movil.domain.util.StringUtils;
 import com.gbh.movil.misc.Utils;
 
 /**
- * {@link PhoneNumber Phone number} recipient representation.
+ * Phone number recipient representation.
  *
  * @author hecvasro
  */
 public class PhoneNumberRecipient extends Recipient {
-  private final PhoneNumber phoneNumber;
+  private final String phoneNumber;
 
   /**
-   * Constructs a new {@link PhoneNumber phone number} recipient.
+   * Constructs a new phone number recipient.
    */
-  public PhoneNumberRecipient(@NonNull PhoneNumber phoneNumber, @Nullable String label) {
+  public PhoneNumberRecipient(@NonNull String phoneNumber, @Nullable String label) {
     super(RecipientType.PHONE_NUMBER, label);
     this.phoneNumber = phoneNumber;
   }
 
   /**
-   * Constructs a new {@link PhoneNumber Phone number} recipient.
+   * Constructs a new phone number recipient.
    */
-  public PhoneNumberRecipient(@NonNull PhoneNumber phoneNumber) {
+  public PhoneNumberRecipient(@NonNull String phoneNumber) {
     super(RecipientType.PHONE_NUMBER);
     this.phoneNumber = phoneNumber;
   }
 
   @NonNull
-  public final PhoneNumber getPhoneNumber() {
+  public final String getPhoneNumber() {
     return phoneNumber;
   }
 
   @NonNull
   @Override
   public String getIdentifier() {
-    return phoneNumber.toString();
+    return phoneNumber;
   }
 
   @Override
@@ -64,6 +65,6 @@ public class PhoneNumberRecipient extends Recipient {
    */
   @Override
   public boolean matches(@Nullable String query) {
-    return super.matches(query) || phoneNumber.matches(query);
+    return super.matches(query) || StringUtils.matches(phoneNumber, query);
   }
 }

@@ -10,4 +10,8 @@
     android:id="@+id/payments.menu.option.remove_recipient"
     android:title="@string/payments.menu.option.remove_recipient"
     app:showAsAction="never"/>
+  <item
+    android:id="@+id/menu_item_sign_out"
+    android:title="Cerrar sesión"
+    app:showAsAction="never"/>
 </menu>

@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import com.gbh.movil.R;
-import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.ProductCategory;
 import com.gbh.movil.domain.Recipient;
@@ -39,6 +38,21 @@ public final class StringHelper {
   @NonNull
   public final String appName() {
     return getString(R.string.app_name);
+  }
+
+  @NonNull
+  public final String incorrectFormat() {
+    return getString(R.string.incorrect_format);
+  }
+
+  @NonNull
+  public final String isRequired() {
+    return getString(R.string.is_required);
+  }
+
+  @NonNull
+  public final String doesNotMatch() {
+    return getString(R.string.does_not_match);
   }
 
   @NonNull
@@ -186,7 +200,7 @@ public final class StringHelper {
   }
 
   @NonNull
-  public final String transactionWith(@NonNull PhoneNumber phoneNumber) {
+  public final String transactionWith(@NonNull String phoneNumber) {
     return String.format(Locale.getDefault(),
       getString(R.string.payments_action_phone_number_transaction), phoneNumber);
   }
@@ -207,7 +221,7 @@ public final class StringHelper {
   }
 
   @NonNull
-  public final String add(@NonNull PhoneNumber phoneNumber) {
+  public final String add(@NonNull String phoneNumber) {
     return String.format(getString(R.string.payments_action_phone_number_add), phoneNumber);
   }
 }

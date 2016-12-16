@@ -3,7 +3,6 @@ package com.gbh.movil.ui.main.payments;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.ui.Screen;
 
@@ -96,5 +95,8 @@ interface PaymentsScreen extends Screen {
    * @param phoneNumber
    *   TODO
    */
-  void startTransfer(@NonNull PhoneNumber phoneNumber);
+  void startTransfer(@NonNull String phoneNumber);
+
+  void openIndexScreen();
+  void finish();
 }

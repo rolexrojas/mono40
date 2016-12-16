@@ -40,6 +40,7 @@
       android:id="@+id/action.recharge"
       style="@style/App.Widget.Button.Blurred"
       android:layout_width="0dp"
+      android:layout_height="50dp"
       android:layout_weight="1"
       android:text="@string/action.recharge"/>
     <View
@@ -49,6 +50,7 @@
       android:id="@+id/action.transfer"
       style="@style/App.Widget.Button.Blurred"
       android:layout_width="0dp"
+      android:layout_height="50dp"
       android:layout_weight="1"
       android:text="@string/action.transfer"/>
   </LinearLayout>

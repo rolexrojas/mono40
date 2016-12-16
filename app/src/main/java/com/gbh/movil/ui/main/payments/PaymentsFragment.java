@@ -23,6 +23,7 @@ import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.data.util.BinderFactory;
 import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.Recipient;
+import com.gbh.movil.ui.index.IndexActivity;
 import com.gbh.movil.ui.misc.UiUtils;
 import com.gbh.movil.ui.main.MainContainer;
 import com.gbh.movil.ui.main.list.ListItemAdapter;
@@ -34,7 +35,7 @@ import com.gbh.movil.ui.main.list.NoResultsListItemHolderBinder;
 import com.gbh.movil.ui.main.list.NoResultsListItemHolderCreator;
 import com.gbh.movil.ui.main.recipients.AddRecipientActivity;
 import com.gbh.movil.ui.main.transactions.TransactionCreationActivity;
-import com.gbh.movil.ui.view.widget.FullScreenRefreshIndicator;
+import com.gbh.movil.ui.view.widget.FullScreenLoadIndicator;
 import com.gbh.movil.ui.view.widget.LoadIndicator;
 import com.gbh.movil.ui.ChildFragment;
 import com.gbh.movil.ui.view.widget.SearchView;
@@ -193,6 +194,9 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
           getString(R.string.info_not_available_remove_recipients), getString(R.string.ok), null,
           null, null).show();
         return true;
+      case R.id.menu_item_sign_out:
+        presenter.signOut();
+        return true;
       default:
         return super.onOptionsItemSelected(item);
     }
@@ -249,7 +253,7 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
   public void showLoadIndicator(boolean fullscreen) {
     if (fullscreen) {
       if (Utils.isNull(fullScreenLoadIndicator)) {
-        fullScreenLoadIndicator = new FullScreenRefreshIndicator(getChildFragmentManager());
+        fullScreenLoadIndicator = new FullScreenLoadIndicator(getChildFragmentManager());
       }
       currentLoadIndicator = fullScreenLoadIndicator;
     } else {
@@ -306,9 +310,19 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
   }
 
   @Override
-  public void startTransfer(@NonNull PhoneNumber phoneNumber) {
+  public void startTransfer(@NonNull String phoneNumber) {
     startActivityForResult(TransactionCreationActivity.getLaunchIntent(getContext(), phoneNumber),
       REQUEST_CODE_TRANSACTION_CREATION);
+  }
+
+  @Override
+  public void openIndexScreen() {
+    startActivity(IndexActivity.getLaunchIntent(getContext()));
+  }
+
+  @Override
+  public void finish() {
+    getActivity().finish();
   }
 
   @Override

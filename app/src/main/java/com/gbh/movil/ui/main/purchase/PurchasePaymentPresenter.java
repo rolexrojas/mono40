@@ -7,11 +7,15 @@ import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.ProductManager;
 import com.gbh.movil.domain.api.ApiBridge;
+import com.gbh.movil.domain.api.ApiResult;
 import com.gbh.movil.domain.pos.PosBridge;
 import com.gbh.movil.domain.pos.PosResult;
+import com.gbh.movil.domain.session.SessionManager;
+import com.gbh.movil.misc.Utils;
 import com.gbh.movil.misc.rx.RxUtils;
 import com.gbh.movil.ui.Presenter;
 
+import dagger.Lazy;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -31,19 +35,21 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
   private final StringHelper stringHelper;
   private final Product paymentOption;
   private final ProductManager productManager;
-  private final PosBridge posBridge;
+  private final Lazy<PosBridge> posBridge;
   private final ApiBridge apiBridge;
+  private final SessionManager sessionManager;
 
   private Subscription subscription = Subscriptions.unsubscribed();
 
   PurchasePaymentPresenter(@NonNull StringHelper stringHelper, @NonNull Product paymentOption,
-    @NonNull ProductManager productManager, @NonNull PosBridge posBridge,
-    @NonNull ApiBridge apiBridge) {
+    @NonNull ProductManager productManager, @NonNull Lazy<PosBridge> posBridge,
+    @NonNull ApiBridge apiBridge, @NonNull SessionManager sessionManager) {
     this.stringHelper = stringHelper;
     this.paymentOption = paymentOption;
     this.productManager = productManager;
     this.posBridge = posBridge;
     this.apiBridge = apiBridge;
+    this.sessionManager = sessionManager;
   }
 
   /**
@@ -51,6 +57,15 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
    */
   void start() {
     assertScreen();
+//    productManager.getAllPaymentOptions()
+//      .compose(RxUtils.<Product>fromCollection())
+//      .flatMap(new Func1<Product, Observable<PosResult<String>>>() {
+//        @Override
+//        public Observable<PosResult<String>> call(Product product) {
+//          return posBridge.get().removeCard(product.getAlias());
+//        }
+//      })
+//      .subscribe();
     screen.setMessage(stringHelper.bringDeviceCloserToTerminal());
     screen.setPaymentOption(paymentOption);
     subscription = Observable.just(paymentOption)
@@ -63,42 +78,48 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
       })
       .flatMap(new Func1<Pair<Product, Product>, Observable<Boolean>>() {
         @Override
-        public Observable<Boolean> call(Pair<Product, Product> pair) {
-          final Product po = pair.first;
-          final Product cdpo = pair.second;
+        public Observable<Boolean> call(final Pair<Product, Product> pair) {
+          final Product po = pair.first; // Payment option
+          final Product cdpo = pair.second; // Current default payment option
           if (po.equals(cdpo)) {
-            return posBridge.selectCard(po.getAlias())
-              .map(new Func1<PosResult<Void>, Boolean>() {
+            return posBridge.get().selectCard(po.getAlias())
+              .map(new Func1<PosResult<String>, Boolean>() {
                 @Override
-                public Boolean call(PosResult<Void> result) {
+                public Boolean call(PosResult<String> result) {
                   return result.isSuccessful();
                 }
               });
           } else {
-            return apiBridge.setDefaultPaymentOption(po)
-              .flatMap(new Func1<Product, Observable<PosResult<Void>>>() {
+            return apiBridge.setDefaultPaymentOption(sessionManager.getSession().getAuthToken(), po)
+              .flatMap(new Func1<ApiResult<Void>, Observable<PosResult<String>>>() {
                 @Override
-                public Observable<PosResult<Void>> call(Product product) {
-                  return posBridge.selectCard(product.getAlias());
+                public Observable<PosResult<String>> call(ApiResult<Void> result) {
+                  // TODO: Propagate errors to the caller.
+                  return posBridge.get().selectCard(po.getAlias());
                 }
               })
-              .map(new Func1<PosResult<Void>, Boolean>() {
+              .map(new Func1<PosResult<String>, Boolean>() {
                 @Override
-                public Boolean call(PosResult<Void> result) {
+                public Boolean call(PosResult<String> result) {
                   return result.isSuccessful();
                 }
               })
               .flatMap(new Func1<Boolean, Observable<Boolean>>() {
                 @Override
-                public Observable<Boolean> call(final Boolean result) {
+                public Observable<Boolean> call(final Boolean flag) {
                   // TODO: This must be added to a persistent queue.
-                  return apiBridge.setDefaultPaymentOption(cdpo)
-                    .map(new Func1<Product, Boolean>() {
-                      @Override
-                      public Boolean call(Product product) {
-                        return result;
-                      }
-                    });
+                  if (Utils.isNull(cdpo)) {
+                    return Observable.just(flag);
+                  } else {
+                    return apiBridge.setDefaultPaymentOption(
+                      sessionManager.getSession().getAuthToken(), cdpo)
+                      .map(new Func1<ApiResult<Void>, Boolean>() {
+                        @Override
+                        public Boolean call(ApiResult<Void> result) {
+                          return flag;
+                        }
+                      });
+                  }
                 }
               });
           }

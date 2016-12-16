@@ -1,11 +1,6 @@
 package com.gbh.movil.domain.pos;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
-
-import com.gbh.movil.domain.PhoneNumber;
-
-import java.util.List;
 
 import rx.Observable;
 
@@ -15,28 +10,6 @@ import rx.Observable;
  * @author hecvasro
  */
 public interface PosBridge {
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
-  boolean isDefault();
-
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
-  Intent requestToMakeDefault();
-
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
-  @NonNull
-  Observable<PosResult<List<String>>> getCards();
-
   /**
    * TODO
    *
@@ -50,7 +23,7 @@ public interface PosBridge {
    * @return TODO
    */
   @NonNull
-  Observable<PosResult<String>> addCard(@NonNull PhoneNumber phoneNumber, @NonNull String pin,
+  Observable<PosResult<String>> addCard(@NonNull String phoneNumber, @NonNull String pin,
     @NonNull String alias);
 
   /**
@@ -62,7 +35,7 @@ public interface PosBridge {
    * @return TODO
    */
   @NonNull
-  Observable<PosResult<Void>> selectCard(@NonNull String alias);
+  Observable<PosResult<String>> selectCard(@NonNull String alias);
 
   /**
    * TODO

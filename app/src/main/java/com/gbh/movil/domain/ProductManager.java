@@ -11,6 +11,7 @@ import com.gbh.movil.misc.rx.RxUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import dagger.Lazy;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -23,14 +24,17 @@ import rx.functions.Func2;
  */
 public final class ProductManager implements ProductProvider {
   private final ProductRepo productRepo;
-  private final PosBridge posBridge;
+  private final Lazy<PosBridge> posBridge;
   private final EventBus eventBus;
+  private final com.gbh.movil.domain.session.SessionManager sessionManager;
 
-  public ProductManager(@NonNull ProductRepo productRepo, @NonNull PosBridge posBridge,
-    @NonNull EventBus eventBus) {
+  public ProductManager(@NonNull ProductRepo productRepo, @NonNull Lazy<PosBridge> posBridge,
+    @NonNull EventBus eventBus,
+    @NonNull com.gbh.movil.domain.session.SessionManager sessionManager) {
     this.productRepo = productRepo;
     this.posBridge = posBridge;
     this.eventBus = eventBus;
+    this.sessionManager = sessionManager;
   }
 
   /**
@@ -85,7 +89,7 @@ public final class ProductManager implements ProductProvider {
             observable = productRepo.save(product).cast(Object.class);
           } else {
             observable = Observable.concat(productRepo.remove(product),
-              posBridge.removeCard(product.getAlias()));
+              posBridge.get().removeCard(product.getAlias()));
           }
           return observable;
         }
@@ -118,18 +122,22 @@ public final class ProductManager implements ProductProvider {
    * @return TODO
    */
   @NonNull
-  public final Observable<Object> activateAllProducts(@NonNull final String pin) {
+  public final Observable<Boolean> activateAllProducts(@NonNull final String pin) {
     return getAllPaymentOptions()
       .compose(RxUtils.<Product>fromCollection())
       .flatMap(new Func1<Product, Observable<PosResult<String>>>() {
         @Override
-        public Observable<PosResult<String>> call(Product product) {
-          return posBridge.addCard(SessionManager.getInstance().getPhoneNumber(), pin,
+        public Observable<PosResult<String>> call(final Product product) {
+          return posBridge.get().addCard(sessionManager.getSession().getPhoneNumber(), pin,
             product.getAlias());
         }
       })
-      .toList()
-      .cast(Object.class);
+      .reduce(true, new Func2<Boolean, PosResult<String>, Boolean>() {
+        @Override
+        public Boolean call(Boolean flag, PosResult<String> result) {
+          return flag && result.isSuccessful();
+        }
+      });
   }
 
   @NonNull
@@ -141,7 +149,8 @@ public final class ProductManager implements ProductProvider {
         public Boolean call(Product product) {
           return Product.isDefaultPaymentOption(product);
         }
-      });
+      })
+      .switchIfEmpty(Observable.just((Product) null));
   }
 
   @NonNull

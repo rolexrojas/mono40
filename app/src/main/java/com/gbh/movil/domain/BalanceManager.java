@@ -39,6 +39,7 @@ public final class BalanceManager {
 
   private final EventBus eventBus;
   private final ApiBridge apiBridge;
+  private final com.gbh.movil.domain.session.SessionManager sessionManager;
 
   /**
    * Key-value structured used to store the last queried {@link Balance balance} of a {@link Product
@@ -48,10 +49,12 @@ public final class BalanceManager {
 
   private Subscription subscription = Subscriptions.unsubscribed();
 
-  public BalanceManager(@NonNull EventBus eventBus, @NonNull ApiBridge apiBridge) {
+  public BalanceManager(@NonNull EventBus eventBus, @NonNull ApiBridge apiBridge,
+    @NonNull com.gbh.movil.domain.session.SessionManager sessionManager) {
     this.eventBus = eventBus;
     this.apiBridge = apiBridge;
     this.balances = new HashMap<>();
+    this.sessionManager = sessionManager;
   }
 
   public final void start() {
@@ -134,7 +137,7 @@ public final class BalanceManager {
   @NonNull
   public final Observable<Pair<Boolean, Balance>> queryBalance(
     @NonNull final Product product, @NonNull String pin) {
-    return apiBridge.queryBalance(product, pin)
+    return apiBridge.queryBalance(sessionManager.getSession().getAuthToken(), product, pin)
       .compose(ApiUtils.handleApiResult(true, new Func1<ApiCode, Observable<Balance>>() {
         @Override
         public Observable<Balance> call(ApiCode code) {

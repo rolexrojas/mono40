@@ -8,7 +8,7 @@ import com.gbh.movil.domain.PhoneNumber;
  * @author hecvasro
  */
 class AddPhoneNumberAction extends PhoneNumberAction {
-  AddPhoneNumberAction(@NonNull PhoneNumber phoneNumber) {
+  AddPhoneNumberAction(@NonNull String phoneNumber) {
     super(ActionType.ADD_PHONE_NUMBER, phoneNumber);
   }
 
