@@ -8,5 +8,6 @@ package com.gbh.movil.domain.util;
 public enum EventType {
   PRODUCT_ADDITION,
   PRODUCT_REMOVAL,
-  PRODUCT_BALANCE_EXPIRATION
+  PRODUCT_BALANCE_EXPIRATION,
+  SESSION_RESETTING
 }

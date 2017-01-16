@@ -6,6 +6,7 @@ import com.gbh.movil.domain.DeviceManager;
 import com.gbh.movil.domain.session.SessionManager;
 import com.gbh.movil.domain.session.SessionRepo;
 import com.gbh.movil.domain.session.SessionService;
+import com.gbh.movil.domain.util.EventBus;
 
 import javax.inject.Singleton;
 
@@ -33,7 +34,7 @@ public class SessionModule {
   @Provides
   @Singleton
   SessionManager provideSessionManager(DeviceManager deviceManager, SessionRepo sessionRepo,
-    SessionService sessionService) {
-    return new SessionManager(deviceManager, sessionRepo, sessionService);
+    SessionService sessionService, EventBus eventBus) {
+    return new SessionManager(deviceManager, sessionRepo, sessionService, eventBus);
   }
 }

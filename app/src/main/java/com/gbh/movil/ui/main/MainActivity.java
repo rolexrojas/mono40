@@ -7,15 +7,21 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.gbh.movil.App;
 import com.gbh.movil.R;
+import com.gbh.movil.domain.ResetEvent;
+import com.gbh.movil.domain.session.SessionManager;
+import com.gbh.movil.domain.util.EventBus;
 import com.gbh.movil.misc.Utils;
 import com.gbh.movil.data.StringHelper;
+import com.gbh.movil.misc.rx.RxUtils;
 import com.gbh.movil.ui.ActivityModule;
 import com.gbh.movil.ui.ChildFragment;
 import com.gbh.movil.ui.SwitchableContainerActivity;
+import com.gbh.movil.ui.index.IndexActivity;
 import com.gbh.movil.ui.main.purchase.PurchaseFragment;
 import com.gbh.movil.ui.main.products.ProductsFragment;
 import com.gbh.movil.ui.main.payments.PaymentsFragment;
@@ -27,6 +33,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.subscriptions.Subscriptions;
 
 /**
  * TODO
@@ -38,10 +48,16 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
   private Unbinder unbinder;
   private MainComponent component;
 
+  private Subscription expirationSubscription = Subscriptions.unsubscribed();
+
   @Inject
   StringHelper stringHelper;
   @Inject
   MainPresenter presenter;
+  @Inject
+  SessionManager sessionManager;
+  @Inject
+  EventBus eventBus;
 
   @BindView(R.id.sliding_pane_layout)
   SlidingPaneLayout slidingPaneLayout;
@@ -54,6 +70,12 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
   }
 
   @Override
+  public boolean dispatchTouchEvent(MotionEvent ev) {
+    eventBus.dispatch(new ResetEvent());
+    return super.dispatchTouchEvent(ev);
+  }
+
+  @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // Injects all the annotated dependencies.
@@ -62,6 +84,17 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
       .activityModule(new ActivityModule(this))
       .build();
     component.inject(this);
+    // Starts listening session expiration events.
+    expirationSubscription = sessionManager.expiration()
+      .observeOn(AndroidSchedulers.mainThread())
+      .subscribe(new Action1<Object>() {
+        @Override
+        public void call(Object notification) {
+          final Intent intent = IndexActivity.getLaunchIntent(MainActivity.this);
+          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+          startActivity(intent);
+        }
+      });
     // Sets the content layout identifier.
     setContentView(R.layout.activity_main);
     // Binds all the annotated views and methods.
@@ -97,6 +130,15 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
   @Override
   protected void onStart() {
     super.onStart();
+    expirationSubscription = sessionManager.expiration()
+      .doOnNext(new Action1<Object>() {
+        @Override
+        public void call(Object notification) {
+          startActivity(IndexActivity.getLaunchIntent(MainActivity.this));
+          finish();
+        }
+      })
+      .subscribe();
     // Starts the presenter.
     presenter.start();
   }
@@ -117,6 +159,8 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
     presenter.detachScreen();
     // Unbinds all the annotated views and methods.
     unbinder.unbind();
+    // Stops listening session expiration events.
+    RxUtils.unsubscribe(expirationSubscription);
   }
 
   /**
