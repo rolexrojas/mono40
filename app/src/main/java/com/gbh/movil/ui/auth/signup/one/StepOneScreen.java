@@ -43,7 +43,7 @@ interface StepOneScreen extends Screen {
    * @return TODO
    */
   @NonNull
-  Observable<Void> submitButtonClicks();
+  Observable<Object> submitButtonClicks();
 
   /**
    * TODO

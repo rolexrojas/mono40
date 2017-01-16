@@ -83,7 +83,7 @@ final class SignInPresenter extends Presenter<SignInScreen> {
           screen.setSubmitButtonEnabled(data.isValid());
         }
       })
-      .lift(new WaitUntilOperator<InputData, Void>(screen.submitButtonClicks()))
+      .lift(new WaitUntilOperator<InputData, Object>(screen.submitButtonClicks()))
       .doOnNext(new Action1<InputData>() {
         @Override
         public void call(InputData data) {

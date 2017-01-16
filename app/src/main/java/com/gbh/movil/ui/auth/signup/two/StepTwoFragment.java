@@ -5,12 +5,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.gbh.movil.R;
 import com.gbh.movil.misc.Utils;
@@ -127,6 +129,15 @@ public class StepTwoFragment extends ChildFragment<SignUpContainer> implements S
     super.onViewCreated(view, savedInstanceState);
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
+    confirmationEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+      @Override
+      public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+          onSubmitButtonClicked();
+        }
+        return false;
+      }
+    });
     // Attaches the screen to the presenter.
     presenter.attachScreen(this);
   }

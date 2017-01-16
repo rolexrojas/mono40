@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.gbh.movil.App;
 import com.gbh.movil.R;
@@ -14,14 +17,15 @@ import com.gbh.movil.ui.ActivityModule;
 import com.gbh.movil.ui.BaseActivity;
 import com.gbh.movil.ui.main.MainActivity;
 import com.gbh.movil.ui.text.UiTextHelper;
-import com.jakewharton.rxbinding.view.RxView;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import rx.Observable;
+import rx.subjects.PublishSubject;
 
 /**
  * TODO
@@ -29,6 +33,10 @@ import rx.Observable;
  * @author hecvasro
  */
 public class SignInActivity extends BaseActivity implements SignInScreen {
+  private static final Object NOTIFICATION = new Object();
+
+  private PublishSubject<Object> subject = PublishSubject.create();
+
   private Unbinder unbinder;
 
   @Inject
@@ -69,6 +77,15 @@ public class SignInActivity extends BaseActivity implements SignInScreen {
     setContentView(R.layout.screen_sign_in);
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this);
+    passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+      @Override
+      public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+          subject.onNext(NOTIFICATION);
+        }
+        return false;
+      }
+    });
     // Attaches the screen to the presenter.
     presenter.attachScreen(this);
   }
@@ -96,6 +113,11 @@ public class SignInActivity extends BaseActivity implements SignInScreen {
     unbinder.unbind();
   }
 
+  @OnClick(R.id.button_continue)
+  void onSubmitButtonClicked() {
+    subject.onNext(NOTIFICATION);
+  }
+
   @NonNull
   @Override
   public Observable<String> phoneNumberChanges() {
@@ -116,8 +138,8 @@ public class SignInActivity extends BaseActivity implements SignInScreen {
 
   @NonNull
   @Override
-  public Observable<Void> submitButtonClicks() {
-    return RxView.clicks(signInButton);
+  public Observable<Object> submitButtonClicks() {
+    return subject.asObservable();
   }
 
   @Override

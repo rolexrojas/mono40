@@ -3,9 +3,11 @@ package com.gbh.movil.ui.auth.signup.one;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -15,14 +17,15 @@ import com.gbh.movil.ui.ChildFragment;
 import com.gbh.movil.ui.auth.signup.SignUpContainer;
 import com.gbh.movil.ui.auth.signup.two.StepTwoFragment;
 import com.gbh.movil.ui.text.UiTextHelper;
-import com.jakewharton.rxbinding.view.RxView;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import rx.Observable;
+import rx.subjects.PublishSubject;
 
 /**
  * TODO
@@ -30,6 +33,10 @@ import rx.Observable;
  * @author hecvasro
  */
 public class StepOneFragment extends ChildFragment<SignUpContainer> implements StepOneScreen {
+  private static final Object NOTIFICATION = new Object();
+
+  private PublishSubject<Object> subject = PublishSubject.create();
+
   private Unbinder unbinder;
 
   @Inject
@@ -56,6 +63,11 @@ public class StepOneFragment extends ChildFragment<SignUpContainer> implements S
     return new StepOneFragment();
   }
 
+  @OnClick(R.id.button_continue)
+  void onSubmitButtonClicked() {
+    subject.onNext(NOTIFICATION);
+  }
+
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -78,6 +90,15 @@ public class StepOneFragment extends ChildFragment<SignUpContainer> implements S
     super.onViewCreated(view, savedInstanceState);
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
+    emailConfirmationEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+      @Override
+      public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+          subject.onNext(NOTIFICATION);
+        }
+        return false;
+      }
+    });
     // Sets the emoji of the screen.
     emojiTextView.setText(new String(Character.toChars(0x1F60E)));
     // Attaches the screen to the presenter.
@@ -127,8 +148,8 @@ public class StepOneFragment extends ChildFragment<SignUpContainer> implements S
 
   @NonNull
   @Override
-  public Observable<Void> submitButtonClicks() {
-    return RxView.clicks(submitButton);
+  public Observable<Object> submitButtonClicks() {
+    return subject.asObservable();
   }
 
   @Override

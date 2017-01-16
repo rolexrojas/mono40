@@ -67,7 +67,7 @@ final class StepOnePresenter extends Presenter<StepOneScreen> {
           screen.setSubmitButtonEnabled(data.isValid());
         }
       })
-      .lift(new WaitUntilOperator<InputData, Void>(screen.submitButtonClicks()))
+      .lift(new WaitUntilOperator<InputData, Object>(screen.submitButtonClicks()))
       .subscribe(new Action1<InputData>() {
         @Override
         public void call(InputData data) {
