@@ -19,7 +19,7 @@ public class Contact implements Matchable {
   /**
    * Contact's phone number.
    */
-  private final String phoneNumber;
+  private final PhoneNumber phoneNumber;
   /**
    * Contact's name.
    */
@@ -39,7 +39,7 @@ public class Contact implements Matchable {
    * @param pictureUri
    *   Contact's picture {@link Uri uri}.
    */
-  public Contact(@NonNull String phoneNumber, @NonNull String name, @Nullable Uri pictureUri) {
+  public Contact(@NonNull PhoneNumber phoneNumber, @NonNull String name, @Nullable Uri pictureUri) {
     this.phoneNumber = phoneNumber;
     this.name = name;
     this.pictureUri = UriUtils.getUriOrEmpty(pictureUri);
@@ -51,7 +51,7 @@ public class Contact implements Matchable {
    * @return Contact's {@link PhoneNumber phone number}.
    */
   @NonNull
-  public final String getPhoneNumber() {
+  public final PhoneNumber getPhoneNumber() {
     return phoneNumber;
   }
 
@@ -94,6 +94,6 @@ public class Contact implements Matchable {
 
   @Override
   public boolean matches(@Nullable String query) {
-    return StringUtils.matches(phoneNumber, query) || StringUtils.matches(name, query);
+    return phoneNumber.matches(query) || StringUtils.matches(name, query);
   }
 }

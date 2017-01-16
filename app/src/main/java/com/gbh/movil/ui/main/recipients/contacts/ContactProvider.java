@@ -11,6 +11,7 @@ import com.gbh.movil.misc.Utils;
 import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.misc.rx.RxUtils;
 import com.gbh.movil.ui.main.recipients.Contact;
+import com.google.i18n.phonenumbers.NumberParseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,9 +77,13 @@ final class ContactProvider {
               name = cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_NAME));
               phoneNumber = cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_PHONE_NUMBER));
               if (PhoneNumber.isValid(phoneNumber)) {
-                currentContact = new Contact(phoneNumber, name, null);
-                if (!contactList.contains(currentContact)) {
-                  contactList.add(currentContact);
+                try {
+                  currentContact = new Contact(new PhoneNumber(phoneNumber), name, null);
+                  if (!contactList.contains(currentContact)) {
+                    contactList.add(currentContact);
+                  }
+                } catch (NumberParseException exception) {
+                  // Ignored, is been validated before creation.
                 }
               }
             }

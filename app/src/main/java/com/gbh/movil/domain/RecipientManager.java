@@ -113,7 +113,7 @@ public final class RecipientManager implements RecipientProvider {
    */
   @NonNull
   public final Observable<Pair<Boolean, Recipient>> addRecipient(@NonNull Contact contact) {
-    return addRecipient(contact.getPhoneNumber(), contact.getName());
+    return addRecipient(contact.getPhoneNumber().toString(), contact.getName());
   }
 
   /**
