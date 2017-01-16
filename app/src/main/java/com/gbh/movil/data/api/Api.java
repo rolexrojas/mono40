@@ -33,6 +33,7 @@ public final class Api {
   public static final class Property {
     public static final String DEVICE_ID = "imei";
     public static final String EMAIL = "email";
+    public static final String NEW_DEVICE_ID = "newImei";
     public static final String PASSWORD = "password";
     public static final String PHONE_NUMBER = "msisdn";
     public static final String PIN = "pin";
@@ -59,7 +60,7 @@ public final class Api {
       public ApiResult<B> call(Response<A> response) {
         final ApiCode code = ApiCode.fromValue(response.code());
         final B data = Utils.isNotNull(response.body()) ? mapper.map(response.body()) : null;
-        return ApiResult.create(code, data);
+        return new ApiResult<>(code, data);
       }
     };
   }

@@ -49,8 +49,7 @@ class RetrofitApiBridge implements ApiBridge {
           .flatMap(new Func1<Response<T>, Observable<ApiResult<T>>>() {
             @Override
             public Observable<ApiResult<T>> call(Response<T> response) {
-              return Observable.just(ApiResult.create(ApiCode.fromValue(response.code()),
-                response.body()));
+              return Observable.just(new ApiResult<>(ApiCode.fromValue(response.code()), response.body()));
             }
           });
       }
@@ -87,8 +86,7 @@ class RetrofitApiBridge implements ApiBridge {
       = new Func1<Response<? extends Balance>, Observable<ApiResult<Balance>>>() {
       @Override
       public Observable<ApiResult<Balance>> call(Response<? extends Balance> response) {
-        return Observable.just(ApiResult.create(ApiCode.fromValue(response.code()),
-          (Balance) response.body()));
+        return Observable.just(new ApiResult<Balance>(ApiCode.fromValue(response.code()), response.body()));
       }
     };
     final ProductCategory category = product.getCategory();
@@ -118,7 +116,7 @@ class RetrofitApiBridge implements ApiBridge {
   @NonNull
   @Override
   public Observable<ApiResult<List<Recipient>>> recipients(@NonNull String authToken) {
-    return Observable.just(ApiResult.<List<Recipient>>create(new ArrayList<Recipient>()));
+    return Observable.just(new ApiResult<List<Recipient>>(ApiCode.OK, new ArrayList<Recipient>()));
   }
 
   @NonNull
@@ -129,7 +127,8 @@ class RetrofitApiBridge implements ApiBridge {
       .flatMap(new Func1<Response<Void>, Observable<ApiResult<Boolean>>>() {
         @Override
         public Observable<ApiResult<Boolean>> call(Response<Void> response) {
-          return Observable.just(ApiResult.create(response.isSuccessful()));
+          final ApiCode code = ApiCode.fromValue(response.code());
+          return Observable.just(new ApiResult<>(code, code.equals(ApiCode.OK)));
         }
       });
   }
@@ -143,7 +142,8 @@ class RetrofitApiBridge implements ApiBridge {
       .flatMap(new Func1<Response<Void>, Observable<ApiResult<Boolean>>>() {
         @Override
         public Observable<ApiResult<Boolean>> call(Response<Void> response) {
-          return Observable.just(ApiResult.create(response.isSuccessful()));
+          final ApiCode code = ApiCode.fromValue(response.code());
+          return Observable.just(new ApiResult<>(code, code.equals(ApiCode.OK)));
         }
       });
   }

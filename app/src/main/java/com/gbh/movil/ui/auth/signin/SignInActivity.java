@@ -1,10 +1,12 @@
 package com.gbh.movil.ui.auth.signin;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -186,5 +188,30 @@ public class SignInActivity extends BaseActivity implements SignInScreen {
   public void submit() {
     startActivity(MainActivity.getLaunchIntent(this));
     finish();
+  }
+
+  @Override
+  public void showAlreadyAssociatedDialog() {
+    new AlertDialog.Builder(this)
+      .setTitle(R.string.dialog_title_already_associated_device)
+      .setMessage(R.string.dialog_message_already_associated_device)
+      .setNegativeButton(R.string.dialog_negative_text_already_associated_device, new Listener(false))
+      .setPositiveButton(R.string.dialog_positive_text_already_associated_device, new Listener(true))
+      .create()
+      .show();
+  }
+
+  private class Listener implements DialogInterface.OnClickListener {
+    private final boolean mustForce;
+
+     Listener(boolean mustForce) {
+       this.mustForce = mustForce;
+     }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+      presenter.setMustForce(mustForce);
+      subject.onNext(NOTIFICATION);
+    }
   }
 }

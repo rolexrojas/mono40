@@ -68,7 +68,7 @@ class CubePosBridge implements PosBridge {
     @NonNull CubeError error) {
     final int code = Integer.parseInt(error.getErrorCode().trim().replaceAll("[\\D]", ""));
     Timber.d("(%1$d) %2$s - %3$s", code, error.getErrorMessage(), error.getErrorDetails());
-    subscriber.onNext(new PosResult<T>(PosCode.fromValue(code)));
+    subscriber.onNext(new PosResult<T>(PosCode.fromValue(code), null));
     subscriber.onCompleted();
   }
 

@@ -28,13 +28,18 @@
 
   <string name="commerce_payment_option_product_identifier_text_font">@string/font_gotham_rounded_book</string>
   <string name="commerce_payment_option_product_number_text_font">@string/font_roboto_medium</string>
-  
+
   <string name="commerce_payment_option_product_owner_name_text_font">@string/font_roboto_regular</string>
-  
+
   <string name="commerce_payment_option_ready_text_font">@string/font_gotham_rounded_book</string>
   <string name="commerce_payment_option_ready_text_value">Listo para tocar y pagar</string>
 
   <string name="commerce_payment_message_text_font">@string/font_gotham_rounded_book</string>
+
+  <string name="dialog_title_already_associated_device">Cuenta vinculada a otro celular</string>
+  <string name="dialog_message_already_associated_device">Solo puedes vincular un celular a la vez. ¿Deseas usar este y no el último?</string>
+  <string name="dialog_positive_text_already_associated_device">Continuar</string>
+  <string name="dialog_negative_text_already_associated_device">Cancelar</string>
 
   <!-- TODO: Apply standards from these point downward -->
   <!-- General strings -->

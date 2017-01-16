@@ -1,58 +1,38 @@
 package com.gbh.movil.misc;
 
-import android.support.annotation.NonNull;
-
 /**
  * Result representation.
  *
  * @author hecvasro
  */
 public abstract class Result<C, D> {
-  /**
-   * Result's code.
-   */
+  private final boolean successful;
   private final C code;
-  /**
-   * Result's data.
-   */
   private final D data;
 
   /**
    * Constructs a new result.
-   *
-   * @param code
-   *   Result's code.
-   * @param data
-   *   Result's data.
    */
-  protected Result(@NonNull C code, D data) {
+  public Result(boolean successful, C code, D data) {
+    this.successful = successful;
     this.code = code;
     this.data = data;
   }
 
   /**
-   * TODO
+   * Checks whether it's successful or not.
    *
-   * @param code
-   *   TODO
+   * @return True if it's successful, false otherwise.
    */
-  protected Result(@NonNull C code) {
-    this(code, null);
+  public final boolean isSuccessful() {
+    return successful;
   }
-
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
-  public abstract boolean isSuccessful();
 
   /**
    * Gets the code of the result.
    *
-   * @return Result's code.
+   * @return Result code.
    */
-  @NonNull
   public final C getCode() {
     return code;
   }
@@ -60,7 +40,7 @@ public abstract class Result<C, D> {
   /**
    * Gets the data of the result.
    *
-   * @return Result's data.
+   * @return Result data.
    */
   public final D getData() {
     return data;
@@ -68,6 +48,6 @@ public abstract class Result<C, D> {
 
   @Override
   public String toString() {
-    return String.format("(%1$s) %2$s", code, data);
+    return String.format("%1$s - (%2$s) %3$s", successful, code, data);
   }
 }

@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.gbh.movil.data.StringHelper;
-import com.gbh.movil.domain.session.Session;
+import com.gbh.movil.domain.session.AuthResult;
 import com.gbh.movil.domain.session.SessionManager;
 import com.gbh.movil.domain.text.PatternHelper;
 import com.gbh.movil.domain.text.TextHelper;
@@ -109,13 +109,14 @@ final class StepTwoPresenter extends Presenter<StepTwoScreen> {
 //          loadIndicator.hide();
         }
       })
-      .subscribe(new Action1<Session>() {
+      .subscribe(new Action1<AuthResult>() {
         @Override
-        public void call(Session session) {
-          if (Utils.isNull(session)) {
-            screen.submit(false);
-          } else {
+        public void call(AuthResult result) {
+          if (result.isSuccessful()) {
             screen.submit(true);
+          } else {
+            // TODO: Show error message.
+            screen.submit(false);
           }
         }
       }, new Action1<Throwable>() {

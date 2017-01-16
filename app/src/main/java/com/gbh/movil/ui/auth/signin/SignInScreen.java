@@ -113,4 +113,6 @@ interface SignInScreen extends Screen {
    * TODO
    */
   void submit();
+
+  void showAlreadyAssociatedDialog();
 }

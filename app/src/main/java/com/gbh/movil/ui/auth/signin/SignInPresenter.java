@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.domain.InitialDataLoader;
 import com.gbh.movil.domain.PhoneNumber;
+import com.gbh.movil.domain.session.AuthCode;
+import com.gbh.movil.domain.session.AuthResult;
 import com.gbh.movil.domain.session.Session;
 import com.gbh.movil.domain.session.SessionManager;
 import com.gbh.movil.domain.text.PatternHelper;
@@ -15,6 +17,8 @@ import com.gbh.movil.misc.rx.operators.WaitUntilOperator;
 import com.gbh.movil.ui.MessageDispatcher;
 import com.gbh.movil.ui.Presenter;
 import com.gbh.movil.ui.view.widget.LoadIndicator;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import rx.Observable;
 import rx.Subscription;
@@ -37,6 +41,8 @@ final class SignInPresenter extends Presenter<SignInScreen> {
   private final LoadIndicator loadIndicator;
   private final SessionManager sessionManager;
   private final InitialDataLoader initialDataLoader;
+
+  private final AtomicBoolean mustForce = new AtomicBoolean(false);
 
   /**
    * TODO
@@ -90,23 +96,23 @@ final class SignInPresenter extends Presenter<SignInScreen> {
           loadIndicator.show();
         }
       })
-      .flatMap(new Func1<InputData, Observable<Session>>() {
+      .flatMap(new Func1<InputData, Observable<AuthResult>>() {
         @Override
-        public Observable<Session> call(InputData data) {
-          return sessionManager.signIn(data.phoneNumber, data.email, data.password)
-            .flatMap(new Func1<Session, Observable<Session>>() {
+        public Observable<AuthResult> call(InputData data) {
+          return sessionManager.signIn(data.phoneNumber, data.email, data.password, mustForce.get())
+            .flatMap(new Func1<AuthResult, Observable<AuthResult>>() {
               @Override
-              public Observable<Session> call(final Session session) {
-                if (Utils.isNull(session)) {
-                  return Observable.just(null);
-                } else {
+              public Observable<AuthResult> call(final AuthResult result) {
+                if (result.isSuccessful()) {
                   return initialDataLoader.load()
-                    .map(new Func1<Object, Session>() {
+                    .map(new Func1<Object, AuthResult>() {
                       @Override
-                      public Session call(Object object) {
-                        return session;
+                      public AuthResult call(Object o) {
+                        return result;
                       }
                     });
+                } else {
+                  return Observable.just(result);
                 }
               }
             })
@@ -114,14 +120,16 @@ final class SignInPresenter extends Presenter<SignInScreen> {
         }
       })
       .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(new Action1<Session>() {
+      .subscribe(new Action1<AuthResult>() {
         @Override
-        public void call(Session session) {
+        public void call(AuthResult result) {
           loadIndicator.hide();
-          if (Utils.isNull(session)) {
-            messageDispatcher.dispatch(stringHelper.cannotProcessYourRequestAtTheMoment());
-          } else {
+          if (result.isSuccessful()) {
             screen.submit();
+          } else if (result.getCode().equals(AuthCode.FAILED_ALREADY_ASSOCIATED_DEVICE)) {
+            screen.showAlreadyAssociatedDialog();
+          } else {
+            messageDispatcher.dispatch(stringHelper.cannotProcessYourRequestAtTheMoment());
           }
         }
       }, new Action1<Throwable>() {
@@ -151,6 +159,10 @@ final class SignInPresenter extends Presenter<SignInScreen> {
    */
   final void stop() {
     RxUtils.unsubscribe(subscription);
+  }
+
+  final void setMustForce(boolean mustForce) {
+    this.mustForce.set(mustForce);
   }
 
   private static final class InputData {

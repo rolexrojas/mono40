@@ -28,7 +28,7 @@ public interface SessionService {
    */
   @NonNull
   Observable<ApiResult<String>> signIn(@NonNull String phoneNumber, @NonNull String email,
-    @NonNull String password, @NonNull String deviceId);
+    @NonNull String password, @NonNull String deviceId, boolean force);
 
   /**
    * TODO

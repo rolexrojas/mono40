@@ -18,8 +18,6 @@ import retrofit2.http.POST;
 import rx.Observable;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 @Singleton
@@ -27,12 +25,6 @@ class RetrofitSessionService implements SessionService {
   private final Service service;
   private final Mapper<Token, String> mapper;
 
-  /**
-   * TODO
-   *
-   * @param retrofit
-   *   TODO
-   */
   @Inject
   RetrofitSessionService(@NonNull Retrofit retrofit) {
     service = retrofit.create(Service.class);
@@ -47,16 +39,26 @@ class RetrofitSessionService implements SessionService {
 
   @NonNull
   @Override
-  public Observable<ApiResult<String>> signIn(@NonNull String phoneNumber, @NonNull String email,
-    @NonNull String password, @NonNull String deviceId) {
-    final ApiRequestBody body = new ApiRequestBody.Builder()
+  public Observable<ApiResult<String>> signIn(
+    @NonNull String phoneNumber,
+    @NonNull String email,
+    @NonNull String password,
+    @NonNull String deviceId,
+    boolean force) {
+    final Observable<Response<Token>> observable;
+    final ApiRequestBody.Builder builder = new ApiRequestBody.Builder()
       .putProperty(Api.Property.PHONE_NUMBER, phoneNumber)
       .putProperty(Api.Property.EMAIL, email)
       .putProperty(Api.Property.USERNAME, email)
-      .putProperty(Api.Property.PASSWORD, password)
-      .putProperty(Api.Property.DEVICE_ID, deviceId)
-      .build();
-    return service.signIn(body).map(Api.mapToApiResponse(mapper));
+      .putProperty(Api.Property.PASSWORD, password);
+    if (force) {
+      builder.putProperty(Api.Property.NEW_DEVICE_ID, deviceId);
+      observable = service.associate(builder.build());
+    } else {
+      builder.putProperty(Api.Property.DEVICE_ID, deviceId);
+      observable = service.signIn(builder.build());
+    }
+    return observable.map(Api.mapToApiResponse(mapper));
   }
 
   @NonNull
@@ -74,37 +76,18 @@ class RetrofitSessionService implements SessionService {
     return service.signUp(body).map(Api.mapToApiResponse(mapper));
   }
 
-  /**
-   * TODO
-   */
   private class Token {
     String token;
   }
 
-  /**
-   * TODO
-   */
   private interface Service {
-    /**
-     * TODO
-     *
-     * @param body
-     *   TODO
-     *
-     * @return TODO
-     */
     @POST("signin")
     Observable<Response<Token>> signIn(@Body ApiRequestBody body);
 
-    /**
-     * TODO
-     *
-     * @param body
-     *   TODO
-     *
-     * @return TODO
-     */
     @POST("signup")
     Observable<Response<Token>> signUp(@Body ApiRequestBody body);
+
+    @POST("associate")
+    Observable<Response<Token>> associate(@Body ApiRequestBody body);
   }
 }

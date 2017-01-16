@@ -31,6 +31,24 @@ public final class SessionManager {
     this.sessionService = sessionService;
   }
 
+  private Func1<ApiResult<String>, AuthResult> authResultMapper(
+    final String phoneNumber,
+    final String email,
+    final AuthCodeMapper codeMapper
+  ) {
+    return new Func1<ApiResult<String>, AuthResult>() {
+      @Override
+      public AuthResult call(ApiResult<String> result) {
+        Session session = null;
+        if (result.isSuccessful()) {
+          session = new Session(phoneNumber, email, result.getData());
+          sessionRepo.setSession(session);
+        }
+        return new AuthResult(codeMapper.map(result.getCode()), session);
+      }
+    };
+  }
+
   /**
    * TODO
    *
@@ -42,22 +60,13 @@ public final class SessionManager {
    * @return TODO
    */
   @NonNull
-  public final Observable<Session> signIn(final String phoneNumber, final String email,
-    final String password) {
-    // TODO: Validate the phone number, email and password.
-    return sessionService.signIn(phoneNumber, email, password, deviceManager.getId())
-      .map(new Func1<ApiResult<String>, Session>() {
-        @Override
-        public Session call(ApiResult<String> result) {
-          if (result.isSuccessful()) {
-            final Session session = new Session(phoneNumber, email, result.getData());
-            sessionRepo.setSession(session);
-            return session;
-          } else {
-            return null; // TODO: Propagate errors to the caller.
-          }
-        }
-      });
+  public final Observable<AuthResult> signIn(
+    final String phoneNumber,
+    final String email,
+    final String password,
+    final boolean force) {
+    return sessionService.signIn(phoneNumber, email, password, deviceManager.getId(), force)
+      .map(authResultMapper(phoneNumber, email, new SignInCodeMapper()));
   }
 
   /**
@@ -73,22 +82,10 @@ public final class SessionManager {
    * @return TODO
    */
   @NonNull
-  public final Observable<Session> signUp(final String phoneNumber, final String email,
+  public final Observable<AuthResult> signUp(final String phoneNumber, final String email,
     final String password, final String pin) {
-    // TODO: Validate the phone number, email, password and pin.
     return sessionService.signUp(phoneNumber, email, password, deviceManager.getId(), pin)
-      .map(new Func1<ApiResult<String>, Session>() {
-        @Override
-        public Session call(ApiResult<String> result) {
-          if (result.isSuccessful()) {
-            final Session session = new Session(phoneNumber, email, result.getData());
-            sessionRepo.setSession(session);
-            return session;
-          } else {
-            return null; // TODO: Propagate errors to the caller.
-          }
-        }
-      });
+      .map(authResultMapper(phoneNumber, email, new SignUpCodeMapper()));
   }
 
   /**
