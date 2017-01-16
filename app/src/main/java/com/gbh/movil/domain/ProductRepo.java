@@ -31,4 +31,6 @@ public interface ProductRepo extends ProductProvider {
    */
   @NonNull
   Observable<Product> remove(@NonNull Product product);
+
+  void clear();
 }

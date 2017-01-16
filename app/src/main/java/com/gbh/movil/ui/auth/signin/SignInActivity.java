@@ -186,7 +186,11 @@ public class SignInActivity extends BaseActivity implements SignInScreen {
 
   @Override
   public void submit() {
-    startActivity(MainActivity.getLaunchIntent(this));
+    if (getCallingActivity() == null) {
+      startActivity(MainActivity.getLaunchIntent(this));
+    } else {
+      setResult(RESULT_OK);
+    }
     finish();
   }
 
@@ -204,9 +208,9 @@ public class SignInActivity extends BaseActivity implements SignInScreen {
   private class Listener implements DialogInterface.OnClickListener {
     private final boolean mustForce;
 
-     Listener(boolean mustForce) {
-       this.mustForce = mustForce;
-     }
+    Listener(boolean mustForce) {
+      this.mustForce = mustForce;
+    }
 
     @Override
     public void onClick(DialogInterface dialog, int which) {

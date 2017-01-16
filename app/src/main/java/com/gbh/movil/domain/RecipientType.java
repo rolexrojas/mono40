@@ -6,12 +6,7 @@ package com.gbh.movil.domain;
  * @author hecvasro
  */
 public enum RecipientType {
-  /**
-   * TODO
-   */
   PHONE_NUMBER,
-  /**
-   * TODO
-   */
-  CONTACT
+  CONTACT;
+
 }

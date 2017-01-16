@@ -1,14 +1,16 @@
 package com.gbh.movil.data.repo;
 
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.gbh.movil.misc.rx.RxUtils;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.RecipientRepo;
+import com.google.gson.Gson;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import rx.Observable;
 import rx.functions.Action1;
@@ -19,10 +21,22 @@ import rx.functions.Func1;
  *
  * @author hecvasro
  */
-class InMemoryRecipientRepo implements RecipientRepo {
-  private final List<Recipient> recipients = new ArrayList<>();
+class SharedPreferencesRecipientRepo implements RecipientRepo {
+  private static final String KEY_INDEX = "index";
 
-  InMemoryRecipientRepo() {
+  private final SharedPreferences sharedPreferences;
+  private final Gson gson;
+
+  private final Set<String> indexSet;
+
+  SharedPreferencesRecipientRepo(SharedPreferences sharedPreferences, Gson gson) {
+    this.sharedPreferences = sharedPreferences;
+    this.gson = gson;
+    this.indexSet = this.sharedPreferences.getStringSet(KEY_INDEX, new HashSet<String>());
+  }
+
+  private static String getRecipientKey(Recipient recipient) {
+    return Integer.toString(recipient.hashCode());
   }
 
   /**
@@ -31,8 +45,13 @@ class InMemoryRecipientRepo implements RecipientRepo {
   @NonNull
   @Override
   public Observable<List<Recipient>> getAll(@Nullable final String query) {
-    return Observable.just(recipients)
-      .compose(RxUtils.<Recipient>fromCollection())
+    return Observable.from(indexSet)
+      .map(new Func1<String, Recipient>() {
+        @Override
+        public Recipient call(String recipientKey) {
+          return gson.fromJson(sharedPreferences.getString(recipientKey, null), Recipient.class);
+        }
+      })
       .filter(new Func1<Recipient, Boolean>() {
         @Override
         public Boolean call(Recipient recipient) {
@@ -52,10 +71,14 @@ class InMemoryRecipientRepo implements RecipientRepo {
       .doOnNext(new Action1<Recipient>() {
         @Override
         public void call(Recipient recipient) {
-          if (recipients.contains(recipient)) {
-            recipients.remove(recipient);
+          final String recipientKey = getRecipientKey(recipient);
+          if (!indexSet.contains(recipientKey)) {
+            indexSet.add(recipientKey);
           }
-          recipients.add(recipient);
+          sharedPreferences.edit()
+            .putStringSet(KEY_INDEX, indexSet)
+            .putString(recipientKey, gson.toJson(recipient))
+            .apply();
         }
       });
   }
@@ -74,5 +97,13 @@ class InMemoryRecipientRepo implements RecipientRepo {
         }
       })
       .compose(Recipient.toSortedListByIdentifier());
+  }
+
+  @Override
+  public void clear() {
+    indexSet.clear();
+    sharedPreferences.edit()
+      .clear()
+      .apply();
   }
 }

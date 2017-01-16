@@ -11,7 +11,9 @@ import com.gbh.movil.ui.ActivityModule;
 import com.gbh.movil.ui.BaseActivity;
 import com.gbh.movil.ui.auth.AuthIndexActivity;
 import com.gbh.movil.ui.auth.signin.SignInActivity;
+
 import javax.inject.Inject;
+
 /**
  * {@link IndexScreen Screen} implementation that uses an {@link BaseActivity activity} as
  * container.

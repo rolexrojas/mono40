@@ -5,12 +5,15 @@ import com.gbh.movil.domain.Account;
 import com.gbh.movil.domain.AccountBalance;
 import com.gbh.movil.domain.Balance;
 import com.gbh.movil.domain.Bank;
+import com.gbh.movil.domain.ContactRecipient;
 import com.gbh.movil.domain.CreditCard;
 import com.gbh.movil.domain.CreditCardBalance;
 import com.gbh.movil.domain.InitialData;
 import com.gbh.movil.domain.Loan;
 import com.gbh.movil.domain.LoanBalance;
+import com.gbh.movil.domain.PhoneNumberRecipient;
 import com.gbh.movil.domain.Product;
+import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.Transaction;
 import com.gbh.movil.domain.api.ApiBridge;
 import com.google.gson.Gson;
@@ -58,8 +61,8 @@ public class ApiModule {
 
   @Provides
   @Singleton
-  Retrofit provideRetrofit(OkHttpClient okHttpClient) {
-    final Gson gson = new GsonBuilder()
+  Gson provideGson() {
+    return new GsonBuilder()
       .registerTypeAdapter(Bank.class, new BankTypeAdapter())
       .registerTypeAdapter(Transaction.class, new TransactionJsonDeserializer())
       .registerTypeAdapter(InitialData.class, new InitialDataDeserializer())
@@ -71,7 +74,15 @@ public class ApiModule {
       .registerTypeAdapter(AccountBalance.class, new BalanceTypeAdapter())
       .registerTypeAdapter(CreditCardBalance.class, new BalanceTypeAdapter())
       .registerTypeAdapter(LoanBalance.class, new BalanceTypeAdapter())
+      .registerTypeAdapter(Recipient.class, new RecipientTypeAdapter())
+      .registerTypeAdapter(PhoneNumberRecipient.class, new RecipientTypeAdapter())
+      .registerTypeAdapter(ContactRecipient.class, new RecipientTypeAdapter())
       .create();
+  }
+
+  @Provides
+  @Singleton
+  Retrofit provideRetrofit(Gson gson, OkHttpClient okHttpClient) {
     return new Retrofit.Builder()
       .addConverterFactory(GsonConverterFactory.create(gson))
       .addCallAdapterFactory(RxJavaCallAdapterFactory.create())

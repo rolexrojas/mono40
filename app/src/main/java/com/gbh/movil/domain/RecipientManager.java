@@ -151,4 +151,8 @@ public final class RecipientManager implements RecipientProvider {
       })
       .onErrorResumeNext(recipientRepo.getAll(query));
   }
+
+  public void clear() {
+    recipientRepo.clear();
+  }
 }

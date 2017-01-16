@@ -54,4 +54,6 @@ public interface BankRepo {
    */
   @NonNull
   Observable<Bank> getById(@NonNull String id);
+
+  void clear();
 }

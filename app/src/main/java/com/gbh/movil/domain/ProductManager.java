@@ -159,6 +159,10 @@ public final class ProductManager implements ProductProvider {
     return productRepo.getAll();
   }
 
+  public void clear() {
+    productRepo.clear();
+  }
+
   /**
    * TODO
    */

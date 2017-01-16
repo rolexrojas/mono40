@@ -33,4 +33,6 @@ public interface RecipientRepo extends RecipientProvider {
    */
   @NonNull
   Observable<List<Recipient>> saveAll(@NonNull List<Recipient> recipients);
+
+  void clear();
 }

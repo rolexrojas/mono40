@@ -26,4 +26,6 @@ public interface TransactionRepo extends TransactionProvider {
    */
   @NonNull
   Observable<List<Transaction>> saveAll(@NonNull List<Transaction> transactions);
+
+  void clear();
 }

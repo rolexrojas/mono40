@@ -10,6 +10,7 @@ import com.gbh.movil.R;
 import com.gbh.movil.ui.BaseActivity;
 import com.gbh.movil.ui.auth.signin.SignInActivity;
 import com.gbh.movil.ui.auth.signup.SignUpActivity;
+import com.gbh.movil.ui.main.MainActivity;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -21,6 +22,9 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 public class AuthIndexActivity extends BaseActivity {
+  private static final int REQUEST_CODE_SIGN_IN = 1;
+  private static final int REQUEST_CODE_SIGN_UP = 2;
+
   private Unbinder unbinder;
 
   /**
@@ -46,6 +50,17 @@ public class AuthIndexActivity extends BaseActivity {
   }
 
   @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == REQUEST_CODE_SIGN_IN || requestCode == REQUEST_CODE_SIGN_UP) {
+      if (resultCode == RESULT_OK) {
+        startActivity(MainActivity.getLaunchIntent(this));
+        finish();
+      }
+    }
+  }
+
+  @Override
   protected void onDestroy() {
     super.onDestroy();
     // Unbinds all the annotated views and methods.
@@ -54,11 +69,11 @@ public class AuthIndexActivity extends BaseActivity {
 
   @OnClick(R.id.button_continue)
   void onSignInButtonClicked() {
-    startActivity(SignInActivity.getLaunchIntent(this));
+    startActivityForResult(SignInActivity.getLaunchIntent(this), REQUEST_CODE_SIGN_IN);
   }
 
   @OnClick(R.id.button_sign_up)
   void onSignUpButtonClicked() {
-    startActivity(SignUpActivity.getLaunchIntent(this));
+    startActivityForResult(SignUpActivity.getLaunchIntent(this), REQUEST_CODE_SIGN_UP);
   }
 }

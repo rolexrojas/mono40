@@ -71,6 +71,8 @@ class ProductTypeAdapter implements JsonDeserializer<Product>, JsonSerializer<Pr
     jsonObject.add(PROPERTY_BANK, context.serialize(src.getBank(), Bank.class));
     jsonObject.addProperty(PROPERTY_CURRENCY, src.getCurrency());
     jsonObject.addProperty(PROPERTY_QUERY_FEE, src.getQueryFee());
+    jsonObject.addProperty(PROPERTY_PAYMENT_OPTION, Product.isPaymentOption(src));
+    jsonObject.addProperty(PROPERTY_IS_DEFAULT, Product.isDefaultPaymentOption(src));
     return jsonObject;
   }
 }

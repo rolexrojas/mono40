@@ -43,7 +43,11 @@ public class StepThreeFragment extends ChildFragment<SignUpContainer> {
   @OnClick(R.id.button_later)
   void onLaterButtonClicked() {
     final Activity activity = getActivity();
-    startActivity(MainActivity.getLaunchIntent(activity));
+    if (activity.getCallingActivity() == null) {
+      startActivity(MainActivity.getLaunchIntent(activity));
+    } else {
+      activity.setResult(Activity.RESULT_OK);
+    }
     activity.finish();
   }
 

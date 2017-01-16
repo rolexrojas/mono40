@@ -6,6 +6,7 @@ import android.support.v4.util.Pair;
 
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.domain.PhoneNumber;
+import com.gbh.movil.domain.ProductManager;
 import com.gbh.movil.domain.session.SessionManager;
 import com.gbh.movil.misc.rx.RxUtils;
 import com.gbh.movil.data.SchedulerProvider;
@@ -13,7 +14,6 @@ import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.RecipientManager;
 import com.gbh.movil.ui.Presenter;
 import com.gbh.movil.ui.main.list.NoResultsListItemItem;
-import com.google.i18n.phonenumbers.NumberParseException;
 
 import java.util.concurrent.TimeUnit;
 
@@ -41,6 +41,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   private final SchedulerProvider schedulerProvider;
   private final RecipientManager recipientManager;
   private final SessionManager sessionManager;
+  private final ProductManager productManager;
 
   /**
    * TODO
@@ -57,11 +58,12 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
 
   PaymentsPresenter(@NonNull StringHelper stringHelper,
     @NonNull SchedulerProvider schedulerProvider, @NonNull RecipientManager recipientManager,
-    @NonNull SessionManager sessionManager) {
+    @NonNull SessionManager sessionManager, @NonNull ProductManager productManager) {
     this.stringHelper = stringHelper;
     this.schedulerProvider = schedulerProvider;
     this.recipientManager = recipientManager;
     this.sessionManager = sessionManager;
+    this.productManager = productManager;
   }
 
   /**
@@ -298,6 +300,8 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
 
   final void signOut() {
     sessionManager.deactivate();
+    productManager.clear();
+    recipientManager.clear();
     screen.openIndexScreen();
     screen.finish();
   }
