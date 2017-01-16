@@ -1,5 +1,4 @@
 <resources>
-  <string name="app_name">tPago</string>
   <string name="font_gotham_rounded_bold">fonts/gotham-rounded/GothamRounded-Bold.otf</string>
   <string name="font_gotham_rounded_book">fonts/gotham-rounded/GothamRounded-Book.otf</string>
   <string name="font_gotham_rounded_light">fonts/gotham-rounded/GothamRounded-Light.otf</string>

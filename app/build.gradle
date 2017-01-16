@@ -5,7 +5,7 @@ apply plugin: "com.neenbedankt.android-apt"
 android {
   signingConfigs {
     debug {
-      storeFile rootProject.file("keystores/debug.keystore")
+      storeFile rootProject.file("keystores/debug.jks")
     }
   }
 
@@ -18,13 +18,15 @@ android {
     targetSdkVersion 24
     versionCode 10
     versionName "2.0.0"
+
+    resValue RES_TYPE_STRING, RES_KEY_APP_NAME, RES_VALUE_APP_NAME
   }
 
   buildTypes {
     debug {
+      applicationIdSuffix ".debug"
       signingConfig signingConfigs.debug
     }
-
     release {
       minifyEnabled false
       proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
@@ -32,87 +34,82 @@ android {
   }
 
   productFlavors {
-    def TYPE_STRING = "String"
-    def FIELD_API_URL = "API_URL"
-
-    alpha {
-      applicationIdSuffix ".alpha"
-      versionNameSuffix "-alpha"
-
-      buildConfigField TYPE_STRING, FIELD_API_URL, "\"http://172.19.1.103:8081/api/neo/\""
+    dev {
+      applicationIdSuffix ".dev"
+      versionNameSuffix "-dev"
+      resValue RES_TYPE_STRING, RES_KEY_APP_NAME, (RES_VALUE_APP_NAME + "-dev")
+      buildConfigField BUILD_FIELD_STRING, BUILD_FIELD_API_URL, "\"http://172.19.1.103:8081/api/neo/\""
     }
-
-    beta {
-      applicationIdSuffix ".beta"
-      versionNameSuffix "-beta"
-
-      buildConfigField TYPE_STRING, FIELD_API_URL, "\"https://demo.gcs-systems.com/api/neo/\""
+    stag {
+      applicationIdSuffix ".stag"
+      versionNameSuffix "-stag"
+      resValue RES_TYPE_STRING, RES_KEY_APP_NAME, (RES_VALUE_APP_NAME + "-stag")
+      buildConfigField BUILD_FIELD_STRING, BUILD_FIELD_API_URL, "\"http://172.19.1.103:8081/api/neo/\""
     }
-    
-    production {
-      buildConfigField TYPE_STRING, FIELD_API_URL, "\"https://demo.gcs-systems.com/api/neo/\""
+    prod {
+      buildConfigField BUILD_FIELD_STRING, BUILD_FIELD_API_URL, "\"http://172.19.1.103:8081/api/neo/\""
     }
   }
 }
 
 repositories {
-  maven { url "https://maven.fabric.io/public" }
+  flatDir { dirs "libs" }
+  jcenter()
   maven { url "https://jitpack.io" }
-  flatDir {
-    dirs "libs"
-  }
+  maven { url "https://maven.fabric.io/public" }
 }
 
 dependencies {
-  def butterKnifeVersion = "8.4.0"
-  def calligraphyVersion = "2.2.0"
-  def circleImageViewVersion = "2.1.0"
-  def circularRevealVersion = "2.0.1"
-  def crashlyticsVersion = "2.6.5"
-  def daggerVersion = "2.7"
-  def jUnitVersion = "4.12"
-  def jsr250Version = "1.0"
-  def libPhoneNumberVersion = "7.7.4"
-  def okHttpVersion = "3.4.2"
-  def picassoOkHttpDownloaderVersion = "1.0.2"
-  def picassoVersion = "2.5.2"
-  def recyclerViewFlexibleDivider = "1.4.0"
-  def retrofitVersion = "2.1.0"
-  def rxAndroidVersion = "1.2.1"
-  def rxBindingVersion = "0.4.0"
-  def rxJavaVersion = "1.2.2"
-  def rxPermissionsVersion = "0.9.0"
-  def supportLibraryVersion = "24.2.1"
-  def timberVersion = "4.3.1"
+  compile 'com.jakewharton.timber:timber:4.3.1'
 
+  provided 'javax.annotation:jsr250-api:1.0'
+
+  def daggerVersion = "2.7"
   apt "com.google.dagger:dagger-compiler:${daggerVersion}"
-  apt "com.jakewharton:butterknife-compiler:${butterKnifeVersion}"
+  compile "com.google.dagger:dagger:${daggerVersion}"
+
+  compile "io.reactivex:rxjava:1.2.2"
+  compile "io.reactivex:rxandroid:1.2.1"
+
+  def okHttpVersion = "3.4.2"
+  compile "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}"
+  compile "com.squareup.okhttp3:okhttp:${okHttpVersion}"
+
+  def retrofitVersion = "2.1.0"
+  compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"
+  compile "com.squareup.retrofit2:adapter-rxjava:${retrofitVersion}"
+  compile "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
+
+  testCompile "junit:junit:4.12"
+
+  def supportLibraryVersion = "24.2.1"
   compile "com.android.support:appcompat-v7:${supportLibraryVersion}"
   compile "com.android.support:design:${supportLibraryVersion}"
   compile "com.android.support:percent:${supportLibraryVersion}"
   compile "com.android.support:recyclerview-v7:${supportLibraryVersion}"
-  compile "com.crashlytics.sdk.android:crashlytics:${crashlyticsVersion}"
-  compile "com.github.ozodrukh:CircularReveal:${circularRevealVersion}"
-  compile "com.google.dagger:dagger:${daggerVersion}"
-  compile "com.googlecode.libphonenumber:libphonenumber:${libPhoneNumberVersion}"
-  compile "com.jakewharton.picasso:picasso2-okhttp3-downloader:${picassoOkHttpDownloaderVersion}"
-  compile "com.jakewharton.rxbinding:rxbinding:${rxBindingVersion}"
-  compile "com.jakewharton.timber:timber:${timberVersion}"
+
+  def butterKnifeVersion = "8.4.0"
+  apt "com.jakewharton:butterknife-compiler:${butterKnifeVersion}"
   compile "com.jakewharton:butterknife:${butterKnifeVersion}"
-  compile "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}"
-  compile "com.squareup.okhttp3:okhttp:${okHttpVersion}"
-  compile "com.squareup.picasso:picasso:${picassoVersion}"
-  compile "com.squareup.retrofit2:adapter-rxjava:${retrofitVersion}"
-  compile "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
-  compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"
-  compile "com.tbruyelle.rxpermissions:rxpermissions:${rxPermissionsVersion}"
-  compile "com.yqritc:recyclerview-flexibledivider:${recyclerViewFlexibleDivider}"
-  compile "de.hdodenhof:circleimageview:${circleImageViewVersion}"
-  compile "io.reactivex:rxandroid:${rxAndroidVersion}"
-  compile "io.reactivex:rxjava:${rxJavaVersion}"
-  compile "uk.co.chrisjenx:calligraphy:${calligraphyVersion}"
+
+  compile "com.jakewharton.rxbinding:rxbinding:0.4.0"
+
+  compile "com.tbruyelle.rxpermissions:rxpermissions:0.9.0"
+
+  compile "com.squareup.picasso:picasso:2.5.2"
+  compile "com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2"
+
+  compile "uk.co.chrisjenx:calligraphy:2.2.0"
+
+  compile "de.hdodenhof:circleimageview:2.1.0"
+  compile "com.github.ozodrukh:CircularReveal:2.0.1"
+
+  compile "com.yqritc:recyclerview-flexibledivider:1.4.0"
+
+  compile "com.crashlytics.sdk.android:crashlytics:2.6.5"
+
   compile fileTree(include: ['*.jar'], dir: 'libs')
   compile(name: "CubeSdk", ext: "aar")
-  provided "javax.annotation:jsr250-api:${jsr250Version}"
-  testCompile "junit:junit:${jUnitVersion}"
+
+  compile "com.googlecode.libphonenumber:libphonenumber:8.0.1"
 }
