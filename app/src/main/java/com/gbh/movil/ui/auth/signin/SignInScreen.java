@@ -40,14 +40,6 @@ interface SignInScreen extends Screen {
   /**
    * TODO
    *
-   * @return TODO
-   */
-  @NonNull
-  Observable<Object> submitButtonClicks();
-
-  /**
-   * TODO
-   *
    * @param phoneNumber
    *   TODO
    */

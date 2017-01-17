@@ -13,7 +13,6 @@ import com.gbh.movil.domain.text.PatternHelper;
 import com.gbh.movil.domain.text.TextHelper;
 import com.gbh.movil.misc.Utils;
 import com.gbh.movil.misc.rx.RxUtils;
-import com.gbh.movil.misc.rx.operators.WaitUntilOperator;
 import com.gbh.movil.ui.MessageDispatcher;
 import com.gbh.movil.ui.Presenter;
 import com.gbh.movil.ui.view.widget.LoadIndicator;
@@ -44,10 +43,10 @@ final class SignInPresenter extends Presenter<SignInScreen> {
 
   private final AtomicBoolean mustForce = new AtomicBoolean(false);
 
-  /**
-   * TODO
-   */
-  private Subscription subscription = Subscriptions.unsubscribed();
+  private InputData submissionData;
+
+  private Subscription inputDataSubscription = Subscriptions.unsubscribed();
+  private Subscription submissionSubscription = Subscriptions.unsubscribed();
 
   /**
    * TODO
@@ -69,7 +68,7 @@ final class SignInPresenter extends Presenter<SignInScreen> {
    * TODO
    */
   final void start() {
-    subscription = Observable.combineLatest(
+    inputDataSubscription = Observable.combineLatest(
       screen.phoneNumberChanges(),
       screen.emailChanges(),
       screen.passwordChanges(),
@@ -80,64 +79,14 @@ final class SignInPresenter extends Presenter<SignInScreen> {
         }
       })
       .subscribeOn(AndroidSchedulers.mainThread())
-      .doOnNext(new Action1<InputData>() {
+      .subscribe(new Action1<InputData>() {
         @Override
         public void call(InputData data) {
-          screen.setPhoneNumberError(data.phoneNumberError);
-          screen.setEmailError(data.emailError);
-          screen.setPasswordError(data.passwordError);
-          screen.setSubmitButtonEnabled(data.isValid());
-        }
-      })
-      .lift(new WaitUntilOperator<InputData, Object>(screen.submitButtonClicks()))
-      .doOnNext(new Action1<InputData>() {
-        @Override
-        public void call(InputData data) {
-          loadIndicator.show();
-        }
-      })
-      .flatMap(new Func1<InputData, Observable<AuthResult>>() {
-        @Override
-        public Observable<AuthResult> call(InputData data) {
-          return sessionManager.signIn(data.phoneNumber, data.email, data.password, mustForce.get())
-            .flatMap(new Func1<AuthResult, Observable<AuthResult>>() {
-              @Override
-              public Observable<AuthResult> call(final AuthResult result) {
-                if (result.isSuccessful()) {
-                  return initialDataLoader.load()
-                    .map(new Func1<Object, AuthResult>() {
-                      @Override
-                      public AuthResult call(Object o) {
-                        return result;
-                      }
-                    });
-                } else {
-                  return Observable.just(result);
-                }
-              }
-            })
-            .subscribeOn(Schedulers.io());
-        }
-      })
-      .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(new Action1<AuthResult>() {
-        @Override
-        public void call(AuthResult result) {
-          loadIndicator.hide();
-          if (result.isSuccessful()) {
-            screen.submit();
-          } else if (result.getCode().equals(AuthCode.FAILED_ALREADY_ASSOCIATED_DEVICE)) {
-            screen.showAlreadyAssociatedDialog();
-          } else {
-            messageDispatcher.dispatch(stringHelper.cannotProcessYourRequestAtTheMoment());
-          }
-        }
-      }, new Action1<Throwable>() {
-        @Override
-        public void call(Throwable throwable) {
-          Timber.e(throwable, "Signing in");
-          loadIndicator.hide();
-          messageDispatcher.dispatch(stringHelper.cannotProcessYourRequestAtTheMoment());
+          submissionData = data;
+          screen.setPhoneNumberError(submissionData.phoneNumberError);
+          screen.setEmailError(submissionData.emailError);
+          screen.setPasswordError(submissionData.passwordError);
+          screen.setSubmitButtonEnabled(submissionData.isValid());
         }
       });
     if (sessionManager.isActive()) {
@@ -158,11 +107,59 @@ final class SignInPresenter extends Presenter<SignInScreen> {
    * TODO
    */
   final void stop() {
-    RxUtils.unsubscribe(subscription);
+    RxUtils.unsubscribe(inputDataSubscription);
   }
 
   final void setMustForce(boolean mustForce) {
     this.mustForce.set(mustForce);
+  }
+
+  final void submit() {
+    if (submissionSubscription.isUnsubscribed()) {
+      submissionSubscription = sessionManager.signIn(
+        submissionData.phoneNumber,
+        submissionData.email,
+        submissionData.password,
+        mustForce.get())
+        .flatMap(new Func1<AuthResult, Observable<AuthResult>>() {
+          @Override
+          public Observable<AuthResult> call(final AuthResult result) {
+            if (result.isSuccessful()) {
+              return initialDataLoader.load()
+                .map(new Func1<Object, AuthResult>() {
+                  @Override
+                  public AuthResult call(Object o) {
+                    return result;
+                  }
+                });
+            } else {
+              return Observable.just(result);
+            }
+          }
+        })
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Action1<AuthResult>() {
+          @Override
+          public void call(AuthResult result) {
+            loadIndicator.hide();
+            if (result.isSuccessful()) {
+              screen.submit();
+            } else if (result.getCode().equals(AuthCode.FAILED_ALREADY_ASSOCIATED_DEVICE)) {
+              screen.showAlreadyAssociatedDialog();
+            } else {
+              messageDispatcher.dispatch(stringHelper.cannotProcessYourRequestAtTheMoment());
+            }
+          }
+        }, new Action1<Throwable>() {
+          @Override
+          public void call(Throwable throwable) {
+            Timber.e(throwable, "Signing in");
+            loadIndicator.hide();
+            messageDispatcher.dispatch(stringHelper.cannotProcessYourRequestAtTheMoment());
+          }
+        });
+    }
   }
 
   private static final class InputData {

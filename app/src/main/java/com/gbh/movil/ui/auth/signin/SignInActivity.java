@@ -27,7 +27,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import rx.Observable;
-import rx.subjects.PublishSubject;
 
 /**
  * TODO
@@ -35,10 +34,6 @@ import rx.subjects.PublishSubject;
  * @author hecvasro
  */
 public class SignInActivity extends BaseActivity implements SignInScreen {
-  private static final Object NOTIFICATION = new Object();
-
-  private PublishSubject<Object> subject = PublishSubject.create();
-
   private Unbinder unbinder;
 
   @Inject
@@ -83,7 +78,7 @@ public class SignInActivity extends BaseActivity implements SignInScreen {
       @Override
       public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
-          subject.onNext(NOTIFICATION);
+          presenter.submit();
         }
         return false;
       }
@@ -117,7 +112,7 @@ public class SignInActivity extends BaseActivity implements SignInScreen {
 
   @OnClick(R.id.button_continue)
   void onSubmitButtonClicked() {
-    subject.onNext(NOTIFICATION);
+    presenter.submit();
   }
 
   @NonNull
@@ -136,12 +131,6 @@ public class SignInActivity extends BaseActivity implements SignInScreen {
   @Override
   public Observable<String> passwordChanges() {
     return UiTextHelper.textChanges(passwordEditText);
-  }
-
-  @NonNull
-  @Override
-  public Observable<Object> submitButtonClicks() {
-    return subject.asObservable();
   }
 
   @Override
@@ -215,7 +204,7 @@ public class SignInActivity extends BaseActivity implements SignInScreen {
     @Override
     public void onClick(DialogInterface dialog, int which) {
       presenter.setMustForce(mustForce);
-      subject.onNext(NOTIFICATION);
+      presenter.submit();
     }
   }
 }
