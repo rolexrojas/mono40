@@ -17,7 +17,7 @@ import android.widget.Button;
 import com.gbh.movil.misc.Utils;
 import com.gbh.movil.data.res.AssetProvider;
 import com.gbh.movil.data.util.BinderFactory;
-import com.gbh.movil.ui.misc.UiUtils;
+import com.gbh.movil.ui.DialogCreator;
 import com.gbh.movil.ui.main.MainContainer;
 import com.gbh.movil.ui.main.list.ListItemAdapter;
 import com.gbh.movil.ui.main.list.ListItemHolderCreatorFactory;
@@ -250,9 +250,6 @@ public class ProductsFragment extends ChildFragment<MainContainer> implements Pr
 
   @Override
   public void onShowRecentTransactionsButtonClicked() {
-//    startActivity(RecentTransactionsActivity.getLaunchIntent(getContext()));
-    UiUtils.createDialog(getContext(), getString(R.string.sorry),
-      getString(R.string.info_not_available_recent_transactions), getString(R.string.ok), null, null,
-      null).show();
+    DialogCreator.featureNotAvailable(getActivity()).show();
   }
 }

@@ -9,9 +9,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import com.gbh.movil.App;
 import com.gbh.movil.R;
+import com.gbh.movil.data.NfcHandler;
 import com.gbh.movil.domain.ResetEvent;
 import com.gbh.movil.domain.session.SessionManager;
 import com.gbh.movil.domain.util.EventBus;
@@ -20,6 +22,7 @@ import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.misc.rx.RxUtils;
 import com.gbh.movil.ui.ActivityModule;
 import com.gbh.movil.ui.ChildFragment;
+import com.gbh.movil.ui.DialogCreator;
 import com.gbh.movil.ui.SwitchableContainerActivity;
 import com.gbh.movil.ui.index.IndexActivity;
 import com.gbh.movil.ui.main.purchase.PurchaseFragment;
@@ -58,11 +61,15 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
   SessionManager sessionManager;
   @Inject
   EventBus eventBus;
+  @Inject
+  NfcHandler nfcHandler;
 
   @BindView(R.id.sliding_pane_layout)
   SlidingPaneLayout slidingPaneLayout;
   @BindView(R.id.toolbar)
   Toolbar toolbar;
+  @BindView(R.id.text_view_commerce)
+  TextView commerceTextView;
 
   @NonNull
   public static Intent getLaunchIntent(@NonNull Context context) {
@@ -117,6 +124,9 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
         }
       }
     });
+    final boolean enabled = nfcHandler.isAvailable();
+    commerceTextView.setEnabled(enabled);
+    commerceTextView.setAlpha(enabled ? 1F : 0.3F);
     // Sets the startup screen.
     getSupportFragmentManager().beginTransaction()
       .replace(R.id.container, PaymentsFragment.newInstance())
@@ -196,6 +206,9 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
     }
     if (Utils.isNotNull(childFragment)) {
       setChildFragment(childFragment, true, true);
+    } else {
+      DialogCreator.featureNotAvailable(this)
+        .show();
     }
   }
 

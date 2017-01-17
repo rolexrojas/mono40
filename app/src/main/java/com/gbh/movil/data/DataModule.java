@@ -29,6 +29,12 @@ import dagger.Provides;
 public final class DataModule {
   @Provides
   @Singleton
+  NfcHandler provideNfcHandler(Context context) {
+    return new NfcHandler(context);
+  }
+
+  @Provides
+  @Singleton
   DeviceManager provideDeviceManager(Context context) {
     return new AndroidDeviceManager(context);
   }

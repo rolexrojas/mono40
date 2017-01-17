@@ -3,6 +3,7 @@ package com.gbh.movil;
 import android.content.Context;
 
 import com.gbh.movil.data.DataModule;
+import com.gbh.movil.data.NfcHandler;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.data.SchedulerProvider;
 import com.gbh.movil.data.res.AssetProvider;
@@ -42,4 +43,5 @@ public interface AppComponent {
   StringHelper provideStringHelper();
   TransactionManager provideTransactionManager();
   TransactionRepo provideTransactionRepo();
+  NfcHandler provideNfcHandler();
 }

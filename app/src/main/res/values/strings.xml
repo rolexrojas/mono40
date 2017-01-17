@@ -1,4 +1,11 @@
 <resources>
+  <string name="ok">Ok</string>
+  <string name="we_are_sorry">¡Lo sentimos!</string>
+
+  <string name="dialog_title_feature_not_available">@string/we_are_sorry</string>
+  <string name="dialog_message_feature_not_available">Tu selección no está disponible en esta versión.</string>
+  <string name="dialog_positive_text_feature_not_available">@string/ok</string>
+
   <string name="font_gotham_rounded_bold">fonts/gotham-rounded/GothamRounded-Bold.otf</string>
   <string name="font_gotham_rounded_book">fonts/gotham-rounded/GothamRounded-Book.otf</string>
   <string name="font_gotham_rounded_light">fonts/gotham-rounded/GothamRounded-Light.otf</string>
@@ -102,7 +109,6 @@
   <string name="logo">Logo</string>
   <string name="my_profile">Mi perfil</string>
   <string name="nick_name">Apodo</string>
-  <string name="ok">Ok</string>
   <string name="pay_screen_search_hint">Nombre, número o facturador</string>
   <string name="payments.action.phone_number.add">Agregar \'%1$s\'</string>
   <string name="payments.action.phone_number.transaction">Transacción con \'%1$s\'</string>

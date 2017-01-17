@@ -18,7 +18,7 @@ import com.gbh.movil.data.res.AssetProvider;
 import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.ui.ChildFragment;
-import com.gbh.movil.ui.misc.UiUtils;
+import com.gbh.movil.ui.DialogCreator;
 import com.gbh.movil.ui.main.PinConfirmationDialogFragment;
 import com.gbh.movil.ui.main.transactions.PaymentOptionAdapter;
 import com.gbh.movil.ui.main.transactions.TransactionCreationContainer;
@@ -122,8 +122,7 @@ public class PhoneNumberTransactionCreationFragment
 
   @OnClick(R.id.action_recharge)
   void onRechargeButtonClicked() {
-    UiUtils.createDialog(getContext(), getString(R.string.sorry),
-      getString(R.string.info_not_available_recharge), getString(R.string.ok), null, null, null)
+    DialogCreator.featureNotAvailable(getActivity())
       .show();
   }
 

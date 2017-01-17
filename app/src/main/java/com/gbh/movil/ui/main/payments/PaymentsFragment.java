@@ -21,8 +21,8 @@ import com.gbh.movil.R;
 import com.gbh.movil.misc.Utils;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.data.util.BinderFactory;
-import com.gbh.movil.domain.PhoneNumber;
 import com.gbh.movil.domain.Recipient;
+import com.gbh.movil.ui.DialogCreator;
 import com.gbh.movil.ui.index.IndexActivity;
 import com.gbh.movil.ui.misc.UiUtils;
 import com.gbh.movil.ui.main.MainContainer;
@@ -190,9 +190,7 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
         startActivity(AddRecipientActivity.getLaunchIntent(getContext()));
         return true;
       case R.id.payments_menu_option_remove_recipient:
-        UiUtils.createDialog(getContext(), getString(R.string.sorry),
-          getString(R.string.info_not_available_remove_recipients), getString(R.string.ok), null,
-          null, null).show();
+        DialogCreator.featureNotAvailable(getActivity()).show();
         return true;
       case R.id.menu_item_sign_out:
         presenter.signOut();
