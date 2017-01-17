@@ -28,6 +28,8 @@ public abstract class Recipient implements Serializable, Matchable {
    */
   private String label;
 
+  private boolean selected = false;
+
   /**
    * Constructs a new recipient.
    *
@@ -108,6 +110,14 @@ public abstract class Recipient implements Serializable, Matchable {
    */
   public void setLabel(@Nullable String label) {
     this.label = label;
+  }
+
+  public boolean isSelected() {
+    return selected;
+  }
+
+  public void setSelected(boolean selected) {
+    this.selected = selected;
   }
 
   @Override

@@ -9,6 +9,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gbh.movil.App;
@@ -70,6 +72,12 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
   Toolbar toolbar;
   @BindView(R.id.text_view_commerce)
   TextView commerceTextView;
+  @BindView(R.id.linear_layout_delete)
+  LinearLayout deleteLinearLayout;
+  @BindView(R.id.image_button_cancel)
+  ImageButton cancelImageButton;
+  @BindView(R.id.image_button_delete)
+  ImageButton deleteImageButton;
 
   @NonNull
   public static Intent getLaunchIntent(@NonNull Context context) {
@@ -238,5 +246,28 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
   @Override
   public void openPurchaseScreen() {
     setChildFragment(PurchaseFragment.newInstance(true), true, true);
+  }
+
+  public void showDeleteLinearLayout() {
+    deleteLinearLayout.setVisibility(View.VISIBLE);
+    toolbar.setVisibility(View.GONE);
+  }
+
+  public void setOnCancelButtonClickedListener(View.OnClickListener listener) {
+    cancelImageButton.setOnClickListener(listener);
+  }
+
+  public void setDeleteButtonEnabled(boolean enabled) {
+    deleteImageButton.setEnabled(enabled);
+    deleteImageButton.setAlpha(enabled ? 1F : 0.5F);
+  }
+
+  public void setOnDeleteButtonClickListener(View.OnClickListener listener) {
+    deleteImageButton.setOnClickListener(listener);
+  }
+
+  public void hideDeleteLinearLayout() {
+    toolbar.setVisibility(View.VISIBLE);
+    deleteLinearLayout.setVisibility(View.GONE);
   }
 }

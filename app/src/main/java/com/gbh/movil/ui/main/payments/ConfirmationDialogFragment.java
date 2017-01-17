@@ -19,7 +19,6 @@ import android.widget.EditText;
 import com.gbh.movil.R;
 import com.gbh.movil.misc.Utils;
 import com.gbh.movil.domain.Recipient;
-import com.gbh.movil.domain.RecipientType;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -118,33 +117,23 @@ public class ConfirmationDialogFragment extends DialogFragment {
   @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
     final Activity activity = getActivity();
-    final boolean isPhoneNumber = recipient.getType().equals(RecipientType.PHONE_NUMBER);
     final AlertDialog.Builder builder = new AlertDialog.Builder(activity)
       .setTitle(title)
-      .setMessage(message);
-    if (isPhoneNumber) {
-      builder.setNegativeButton(R.string.action_skip, null)
-        .setPositiveButton(R.string.action_save, new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            parent.onSaveButtonClicked(recipient, identifierEditText.getText().toString().trim());
-          }
-        });
-      // Inflates the custom view of the dialog.
-      final View view = LayoutInflater.from(activity)
-        .inflate(R.layout.dialog_recipient_addition_confirmation, null);
-      // Binds all the annotated views and methods.
-      unbinder = ButterKnife.bind(this, view);
-      // Prepares the custom view of the dialog.
-      final String label = recipient.getLabel();
-      if (Utils.isNotNull(label)) {
-        identifierEditText.setText(label);
-      }
-      builder.setView(view);
-    } else {
-      builder.setPositiveButton(R.string.ok, null);
+      .setMessage(message)
+      .setNegativeButton(R.string.action_skip, null)
+      .setPositiveButton(R.string.action_save, new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+          parent.onSaveButtonClicked(recipient, identifierEditText.getText().toString().trim());
+        }
+      });
+    final View view = LayoutInflater.from(activity)
+      .inflate(R.layout.dialog_recipient_addition_confirmation, null);
+    unbinder = ButterKnife.bind(this, view);
+    if (identifierEditText != null) {
+      identifierEditText.setText(recipient.getLabel());
     }
-    // Creates the dialog of the fragment.
+    builder.setView(view);
     return builder.create();
   }
 

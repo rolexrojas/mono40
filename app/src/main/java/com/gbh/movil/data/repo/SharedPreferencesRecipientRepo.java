@@ -100,6 +100,24 @@ class SharedPreferencesRecipientRepo implements RecipientRepo {
   }
 
   @Override
+  public Observable<Recipient> remove(Recipient recipient) {
+    return Observable.just(recipient)
+      .doOnNext(new Action1<Recipient>() {
+        @Override
+        public void call(Recipient recipient) {
+          final String recipientKey = getRecipientKey(recipient);
+          if (indexSet.contains(recipientKey)) {
+            indexSet.remove(recipientKey);
+          }
+          sharedPreferences.edit()
+            .putStringSet(KEY_INDEX, indexSet)
+            .remove(recipientKey)
+            .apply();
+        }
+      });
+  }
+
+  @Override
   public void clear() {
     indexSet.clear();
     sharedPreferences.edit()

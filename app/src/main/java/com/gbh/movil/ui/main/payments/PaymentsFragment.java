@@ -16,14 +16,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.gbh.movil.R;
 import com.gbh.movil.misc.Utils;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.data.util.BinderFactory;
 import com.gbh.movil.domain.Recipient;
-import com.gbh.movil.ui.DialogCreator;
 import com.gbh.movil.ui.index.IndexActivity;
+import com.gbh.movil.ui.main.MainActivity;
 import com.gbh.movil.ui.misc.UiUtils;
 import com.gbh.movil.ui.main.MainContainer;
 import com.gbh.movil.ui.main.list.ListItemAdapter;
@@ -75,6 +76,8 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
   private LoadIndicator currentLoadIndicator;
 
   private Pair<Integer, Recipient> requestResult;
+
+  private RecipientListItemHolderBinder recipientBinder;
 
   @BindView(R.id.search_view)
   SearchView searchView;
@@ -129,9 +132,9 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
       .addCreator(NoResultsListItemItem.class, new NoResultsListItemHolderCreator())
       .build();
     final Context context = getContext();
+    recipientBinder = new RecipientListItemHolderBinder();
     final BinderFactory binderFactory = new BinderFactory.Builder()
-      .addBinder(Recipient.class, RecipientListItemHolder.class,
-        new RecipientListItemHolderBinder())
+      .addBinder(Recipient.class, RecipientListItemHolder.class, recipientBinder)
       .addBinder(Action.class, ActionListItemHolder.class,
         new ActionListItemHolderBinder(stringHelper))
       .addBinder(NoResultsListItemItem.class, NoResultsListItemHolder.class,
@@ -140,8 +143,7 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
     adapter = new ListItemAdapter(holderCreatorFactory, binderFactory);
     recyclerView.setAdapter(adapter);
     recyclerView.setHasFixedSize(true);
-    recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL,
-      false));
+    recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
       .drawable(R.drawable.divider)
       .marginResId(R.dimen.space_horizontal_normal)
@@ -190,7 +192,9 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
         startActivity(AddRecipientActivity.getLaunchIntent(getContext()));
         return true;
       case R.id.payments_menu_option_remove_recipient:
-        DialogCreator.featureNotAvailable(getActivity()).show();
+        presenter.startDeleting();
+        recipientBinder.setDeleting(true);
+        adapter.notifyDataSetChanged();
         return true;
       case R.id.menu_item_sign_out:
         presenter.signOut();
@@ -324,12 +328,58 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
   }
 
   @Override
+  public void setDeleting(boolean deleting) {
+    final MainActivity activity = (MainActivity) getActivity();
+    if (deleting) {
+      recipientBinder.setDeleting(true);
+      activity.showDeleteLinearLayout();
+      activity.setDeleteButtonEnabled(false);
+      activity.setOnDeleteButtonClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          presenter.deleteSelectedRecipients();
+        }
+      });
+      activity.setOnCancelButtonClickedListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          presenter.stopDeleting();
+        }
+      });
+    } else {
+      recipientBinder.setDeleting(false);
+      activity.hideDeleteLinearLayout();
+      activity.setDeleteButtonEnabled(false);
+      activity.setOnDeleteButtonClickListener(null);
+      activity.setOnCancelButtonClickedListener(null);
+    }
+  }
+
+  @Override
+  public void startTransfer(Recipient recipient) {
+    startActivityForResult(TransactionCreationActivity.getLaunchIntent(getActivity(), recipient), REQUEST_CODE_TRANSACTION_CREATION);
+  }
+
+  @Override
+  public void showMessage(String message) {
+    Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+  }
+
+  @Override
+  public void remove(Object item) {
+    adapter.remove(item);
+  }
+
+  @Override
+  public void setDeleteButtonEnabled(boolean enabled) {
+    ((MainActivity) getActivity()).setDeleteButtonEnabled(enabled);
+  }
+
+  @Override
   public void onClick(int position) {
-    final Context context = getContext();
     final Object item = adapter.get(position);
     if (item instanceof Recipient) {
-      startActivityForResult(TransactionCreationActivity.getLaunchIntent(context, (Recipient) item),
-        REQUEST_CODE_TRANSACTION_CREATION);
+      presenter.resolve((Recipient) item);
     } else if (item instanceof Action) {
       switch (((Action) item).getType()) {
         case ActionType.ADD_PHONE_NUMBER:

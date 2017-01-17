@@ -99,4 +99,9 @@ interface PaymentsScreen extends Screen {
 
   void openIndexScreen();
   void finish();
+  void setDeleting(boolean deleting);
+  void startTransfer(Recipient recipient);
+  void showMessage(String message);
+  void remove(Object item);
+  void setDeleteButtonEnabled(boolean enabled);
 }

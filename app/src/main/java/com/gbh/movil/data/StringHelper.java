@@ -110,25 +110,9 @@ public final class StringHelper {
     return getString(R.string.cannot_process_your_request_at_the_moment);
   }
 
-  // TODO: Apply standards from these point downward.
-  @NonNull
-  public final String recipientAdditionConfirmationTitle(@NonNull Recipient recipient) {
-    switch (recipient.getType()) {
-      case CONTACT:
-        return getString(R.string.recipient_addition_title_contact);
-      default:
-        return doneWithExclamationMark();
-    }
-  }
-
   @Nullable
   public final String recipientAdditionConfirmationMessage(@NonNull Recipient recipient) {
-    switch (recipient.getType()) {
-      case CONTACT:
-        return format(R.string.format_recipient_addition_message_contact, recipient.getIdentifier());
-      default:
-        return null;
-    }
+    return format(R.string.format_recipient_addition_message_contact, recipient.getIdentifier());
   }
 
   @NonNull

@@ -15,14 +15,18 @@ import com.gbh.movil.domain.RecipientManager;
 import com.gbh.movil.ui.Presenter;
 import com.gbh.movil.ui.main.list.NoResultsListItemItem;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func0;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
@@ -43,18 +47,13 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   private final SessionManager sessionManager;
   private final ProductManager productManager;
 
-  /**
-   * TODO
-   */
+  private boolean deleting = false;
+  private List<Recipient> selectedRecipients = new ArrayList<>();
+
   private Subscription subscription = Subscriptions.unsubscribed();
-  /**
-   * TODO
-   */
   private Subscription querySubscription = Subscriptions.unsubscribed();
-  /**
-   * TODO
-   */
   private Subscription searchSubscription = Subscriptions.unsubscribed();
+  private Subscription deleteSubscription = Subscriptions.unsubscribed();
 
   PaymentsPresenter(@NonNull StringHelper stringHelper,
     @NonNull SchedulerProvider schedulerProvider, @NonNull RecipientManager recipientManager,
@@ -99,10 +98,12 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
                 }
               }
             });
-          searchSubscription = recipientsObservable
-            .subscribeOn(schedulerProvider.io())
-            .switchIfEmpty(actionsObservable)
-            .switchIfEmpty(Observable.just(new NoResultsListItemItem(query)))
+          Observable<Object> observable = recipientsObservable
+            .subscribeOn(Schedulers.io());
+          if (!deleting) {
+            observable = observable.switchIfEmpty(actionsObservable);
+          }
+          observable.switchIfEmpty(Observable.just(new NoResultsListItemItem(query)))
             .observeOn(schedulerProvider.ui())
             .doOnSubscribe(new Action0() {
               @Override
@@ -147,6 +148,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
     RxUtils.unsubscribe(subscription);
     RxUtils.unsubscribe(searchSubscription);
     RxUtils.unsubscribe(querySubscription);
+    RxUtils.unsubscribe(deleteSubscription);
   }
 
   /**
@@ -159,7 +161,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
     assertScreen();
     screen.clearQuery();
     screen.showConfirmationDialog(recipient,
-      stringHelper.recipientAdditionConfirmationTitle(recipient),
+      stringHelper.doneWithExclamationMark(),
       stringHelper.recipientAdditionConfirmationMessage(recipient));
   }
 
@@ -294,7 +296,9 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   void showTransactionConfirmation(@NonNull final Recipient recipient) {
     assertScreen();
     screen.clearQuery();
-    screen.showConfirmationDialog(recipient, stringHelper.transactionCreationConfirmationTitle(),
+    screen.showConfirmationDialog(
+      recipient,
+      stringHelper.transactionCreationConfirmationTitle(),
       stringHelper.transactionCreationConfirmationMessage(recipient));
   }
 
@@ -304,5 +308,75 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
     recipientManager.clear();
     screen.openIndexScreen();
     screen.finish();
+  }
+
+  final void startDeleting() {
+    if (!deleting) {
+      deleting = true;
+      screen.setDeleting(true);
+      screen.clearQuery();
+    }
+  }
+
+  final void stopDeleting() {
+    if (deleting) {
+      selectedRecipients.clear();
+      deleting = false;
+      screen.setDeleting(false);
+    }
+  }
+
+  final void resolve(Recipient recipient) {
+    if (deleting) {
+      if (!selectedRecipients.contains(recipient)) {
+        recipient.setSelected(true);
+        selectedRecipients.add(recipient);
+      } else {
+        recipient.setSelected(false);
+        selectedRecipients.remove(recipient);
+      }
+      screen.update(recipient);
+      screen.setDeleteButtonEnabled(!selectedRecipients.isEmpty());
+    } else {
+      screen.startTransfer(recipient);
+    }
+  }
+
+  final void deleteSelectedRecipients() {
+    if (deleting && deleteSubscription.isUnsubscribed()) {
+      deleteSubscription = recipientManager.remove(selectedRecipients)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnSubscribe(new Action0() {
+          @Override
+          public void call() {
+            screen.showLoadIndicator(true);
+          }
+        })
+        .doOnUnsubscribe(new Action0() {
+          @Override
+          public void call() {
+            screen.hideLoadIndicator();
+          }
+        })
+        .compose(RxUtils.<Recipient>fromCollection())
+        .subscribe(new Action1<Recipient>() {
+          @Override
+          public void call(Recipient recipient) {
+            screen.remove(recipient);
+          }
+        }, new Action1<Throwable>() {
+          @Override
+          public void call(Throwable throwable) {
+            Timber.e(throwable, "Removing one or more recipients");
+            screen.showMessage(stringHelper.cannotProcessYourRequestAtTheMoment());
+          }
+        }, new Action0() {
+          @Override
+          public void call() {
+            stopDeleting();
+          }
+        });
+    }
   }
 }

@@ -76,7 +76,7 @@ public final class RecipientManager implements RecipientProvider {
         @Override
         public Observable<Pair<Boolean, Recipient>> call(Boolean affiliated) {
           if (affiliated) {
-            return recipientRepo.save(new ContactRecipient(phoneNumber, label))
+            return recipientRepo.save(new PhoneNumberRecipient(phoneNumber, label))
               .map(new Func1<Recipient, Pair<Boolean, Recipient>>() {
                 @Override
                 public Pair<Boolean, Recipient> call(Recipient recipient) {
@@ -150,6 +150,17 @@ public final class RecipientManager implements RecipientProvider {
         }
       })
       .onErrorResumeNext(recipientRepo.getAll(query));
+  }
+
+  public final Observable<List<Recipient>> remove(List<Recipient> recipients) {
+    return Observable.from(recipients)
+      .flatMap(new Func1<Recipient, Observable<Recipient>>() {
+        @Override
+        public Observable<Recipient> call(Recipient recipient) {
+          return recipientRepo.remove(recipient);
+        }
+      })
+      .toList();
   }
 
   public void clear() {

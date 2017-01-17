@@ -14,6 +14,16 @@ import com.gbh.movil.ui.main.list.ListItemHolderBinder;
  * @author hecvasro
  */
 class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, RecipientListItemHolder> {
+  private boolean deleting = false;
+
+  boolean isDeleting() {
+    return deleting;
+  }
+
+  void setDeleting(boolean deleting) {
+    this.deleting = deleting;
+  }
+
   @Override
   public void bind(@NonNull Recipient item, @NonNull RecipientListItemHolder holder) {
     final String label = item.getLabel();
@@ -29,6 +39,15 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
       holder.recipientLabelTextView.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
       holder.recipientExtraTextView.setText(null);
       holder.recipientExtraTextView.setVisibility(View.GONE);
+    }
+    if (isDeleting()) {
+      holder.deleteCheckbox.setVisibility(View.VISIBLE);
+      holder.deleteCheckbox.setChecked(item.isSelected());
+      holder.proceedActionView.setVisibility(View.GONE);
+    } else {
+      holder.deleteCheckbox.setVisibility(View.GONE);
+      holder.deleteCheckbox.setChecked(false);
+      holder.proceedActionView.setVisibility(View.VISIBLE);
     }
   }
 }

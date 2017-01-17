@@ -22,6 +22,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func3;
@@ -139,6 +140,12 @@ final class SignInPresenter extends Presenter<SignInScreen> {
         })
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
+        .doOnSubscribe(new Action0() {
+          @Override
+          public void call() {
+            loadIndicator.show();
+          }
+        })
         .subscribe(new Action1<AuthResult>() {
           @Override
           public void call(AuthResult result) {
