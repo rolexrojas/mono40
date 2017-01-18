@@ -15,5 +15,5 @@
     android:layout_height="match_parent"
     android:layout_toEndOf="@+id/bank_logo"
     android:gravity="center_vertical"
-    android:textAppearance="@style/App.Text.Bank.Name"/>
+    android:textAppearance="@style/App.Text.Bank.Name.Bold"/>
 </RelativeLayout>
