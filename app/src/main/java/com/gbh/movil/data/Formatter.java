@@ -57,7 +57,7 @@ public final class Formatter {
    */
   @NonNull
   public static String amount(@NonNull String currencyCode, @NonNull BigDecimal value) {
-    return String.format(LOCALE_EN, "%1$s$%2$s", currencyCode, amount(value));
+    return String.format(LOCALE_EN, "%1$s%2$s", currencyCode, amount(value));
   }
 
   /**

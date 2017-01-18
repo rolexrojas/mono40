@@ -34,6 +34,9 @@ public final class ProductCreator {
   public static Product create(@NonNull ProductType identifier, @NonNull String alias,
     @NonNull String number, @NonNull Bank bank, @NonNull String currency,
     @NonNull BigDecimal queryFee, boolean paymentOption, boolean isDefault) {
+    if (currency.equals("DOP")) {
+      currency = "RD$";
+    }
     if (identifier.equals(ProductType.LOAN)) {
       return new Loan(identifier, alias, number, bank, currency, queryFee, paymentOption,
         isDefault);
