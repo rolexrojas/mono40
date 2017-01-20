@@ -4,7 +4,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.gbh.movil.data.StringHelper;
-import com.gbh.movil.domain.session.AuthResult;
+import com.gbh.movil.domain.api.ApiError;
+import com.gbh.movil.domain.api.ApiResult;
 import com.gbh.movil.domain.session.SessionManager;
 import com.gbh.movil.domain.text.PatternHelper;
 import com.gbh.movil.domain.text.TextHelper;
@@ -12,12 +13,10 @@ import com.gbh.movil.misc.Utils;
 import com.gbh.movil.misc.rx.RxUtils;
 import com.gbh.movil.ui.MessageDispatcher;
 import com.gbh.movil.ui.Presenter;
-import com.gbh.movil.ui.view.widget.LoadIndicator;
 
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func2;
 import rx.schedulers.Schedulers;
@@ -32,7 +31,6 @@ import timber.log.Timber;
 final class StepTwoPresenter extends Presenter<StepTwoScreen> {
   private final StringHelper stringHelper;
   private final MessageDispatcher messageDispatcher;
-  private final LoadIndicator loadIndicator;
   private final SessionManager sessionManager;
 
   private final String phoneNumber;
@@ -44,11 +42,10 @@ final class StepTwoPresenter extends Presenter<StepTwoScreen> {
   private Subscription submissionSubscription = Subscriptions.unsubscribed();
 
   StepTwoPresenter(@NonNull StringHelper stringHelper, @NonNull MessageDispatcher messageDispatcher,
-    @NonNull LoadIndicator loadIndicator, @NonNull SessionManager sessionManager,
+    @NonNull SessionManager sessionManager,
     @NonNull String phoneNumber, @NonNull String email) {
     this.stringHelper = stringHelper;
     this.messageDispatcher = messageDispatcher;
-    this.loadIndicator = loadIndicator;
     this.sessionManager = sessionManager;
     this.phoneNumber = phoneNumber;
     this.email = email;
@@ -97,25 +94,16 @@ final class StepTwoPresenter extends Presenter<StepTwoScreen> {
     submissionSubscription = sessionManager.signUp(phoneNumber, email, password, pin)
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
-      .doOnSubscribe(new Action0() {
+      .subscribe(new Action1<ApiResult<String>>() {
         @Override
-        public void call() {
-//          loadIndicator.show();
-        }
-      })
-      .doOnUnsubscribe(new Action0() {
-        @Override
-        public void call() {
-//          loadIndicator.hide();
-        }
-      })
-      .subscribe(new Action1<AuthResult>() {
-        @Override
-        public void call(AuthResult result) {
+        public void call(ApiResult<String> result) {
           if (result.isSuccessful()) {
             screen.submit(true);
           } else {
-            // TODO: Show error message.
+            final ApiError error = result.getError();
+            if (error != null) {
+              messageDispatcher.dispatch(error.getDescription());
+            }
             screen.submit(false);
           }
         }

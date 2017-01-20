@@ -16,10 +16,12 @@ import com.gbh.movil.domain.Product;
 import com.gbh.movil.domain.Recipient;
 import com.gbh.movil.domain.Transaction;
 import com.gbh.movil.domain.api.ApiBridge;
+import com.gbh.movil.domain.api.ApiError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 
 import javax.inject.Singleton;
 
@@ -63,6 +65,7 @@ public class ApiModule {
   @Singleton
   Gson provideGson() {
     return new GsonBuilder()
+      .registerTypeAdapter(ApiError.class, new ApiErrorTypeAdapter())
       .registerTypeAdapter(Bank.class, new BankTypeAdapter())
       .registerTypeAdapter(Transaction.class, new TransactionJsonDeserializer())
       .registerTypeAdapter(InitialData.class, new InitialDataDeserializer())
@@ -94,6 +97,8 @@ public class ApiModule {
   @Provides
   @Singleton
   ApiBridge provideApiBridge(Retrofit retrofit) {
-    return new RetrofitApiBridge(retrofit.create(ApiService.class));
+    return new RetrofitApiBridge(
+      retrofit.create(ApiService.class),
+      retrofit.<ApiError>responseBodyConverter(ApiError.class, new Annotation[0]));
   }
 }

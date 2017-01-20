@@ -4,13 +4,18 @@ import android.support.annotation.NonNull;
 
 import com.gbh.movil.data.api.Api;
 import com.gbh.movil.data.api.ApiRequestBody;
+import com.gbh.movil.domain.api.ApiError;
 import com.gbh.movil.domain.api.ApiResult;
 import com.gbh.movil.domain.session.SessionService;
 import com.gbh.movil.misc.Mapper;
 
+import java.lang.annotation.Annotation;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import okhttp3.ResponseBody;
+import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.http.Body;
@@ -23,11 +28,13 @@ import rx.Observable;
 @Singleton
 class RetrofitSessionService implements SessionService {
   private final Service service;
+  private final Converter<ResponseBody, ApiError> errorConverter;
   private final Mapper<Token, String> mapper;
 
   @Inject
   RetrofitSessionService(@NonNull Retrofit retrofit) {
     service = retrofit.create(Service.class);
+    errorConverter = retrofit.responseBodyConverter(ApiError.class, new Annotation[0]);
     mapper = new Mapper<Token, String>() {
       @NonNull
       @Override
@@ -58,7 +65,8 @@ class RetrofitSessionService implements SessionService {
       builder.putProperty(Api.Property.DEVICE_ID, deviceId);
       observable = service.signIn(builder.build());
     }
-    return observable.map(Api.mapToApiResponse(mapper));
+    return observable
+      .compose(Api.transformToApiResponse(mapper, errorConverter));
   }
 
   @NonNull
@@ -73,7 +81,8 @@ class RetrofitSessionService implements SessionService {
       .putProperty(Api.Property.DEVICE_ID, deviceId)
       .putProperty(Api.Property.PIN, pin)
       .build();
-    return service.signUp(body).map(Api.mapToApiResponse(mapper));
+    return service.signUp(body)
+      .compose(Api.transformToApiResponse(mapper, errorConverter));
   }
 
   private class Token {

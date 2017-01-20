@@ -5,8 +5,8 @@ import android.support.annotation.NonNull;
 import com.gbh.movil.data.StringHelper;
 import com.gbh.movil.domain.InitialDataLoader;
 import com.gbh.movil.domain.PhoneNumber;
-import com.gbh.movil.domain.session.AuthCode;
-import com.gbh.movil.domain.session.AuthResult;
+import com.gbh.movil.domain.api.ApiError;
+import com.gbh.movil.domain.api.ApiResult;
 import com.gbh.movil.domain.session.Session;
 import com.gbh.movil.domain.session.SessionManager;
 import com.gbh.movil.domain.text.PatternHelper;
@@ -122,14 +122,14 @@ final class SignInPresenter extends Presenter<SignInScreen> {
         submissionData.email,
         submissionData.password,
         mustForce.get())
-        .flatMap(new Func1<AuthResult, Observable<AuthResult>>() {
+        .flatMap(new Func1<ApiResult<String>, Observable<ApiResult<String>>>() {
           @Override
-          public Observable<AuthResult> call(final AuthResult result) {
+          public Observable<ApiResult<String>> call(final ApiResult<String> result) {
             if (result.isSuccessful()) {
               return initialDataLoader.load()
-                .map(new Func1<Object, AuthResult>() {
+                .map(new Func1<Object, ApiResult<String>>() {
                   @Override
-                  public AuthResult call(Object o) {
+                  public ApiResult<String> call(Object o) {
                     return result;
                   }
                 });
@@ -146,16 +146,23 @@ final class SignInPresenter extends Presenter<SignInScreen> {
             loadIndicator.show();
           }
         })
-        .subscribe(new Action1<AuthResult>() {
+        .subscribe(new Action1<ApiResult<String>>() {
           @Override
-          public void call(AuthResult result) {
+          public void call(ApiResult<String> result) {
             loadIndicator.hide();
             if (result.isSuccessful()) {
               screen.submit();
-            } else if (result.getCode().equals(AuthCode.FAILED_ALREADY_ASSOCIATED_DEVICE)) {
-              screen.showAlreadyAssociatedDialog();
             } else {
-              messageDispatcher.dispatch(stringHelper.cannotProcessYourRequestAtTheMoment());
+              final ApiError error = result.getError();
+              if (error != null) {
+                if (error.getCode().equals(ApiError.Code.ALREADY_ASSOCIATED_PROFILE)) {
+                  screen.showAlreadyAssociatedDialog();
+                } else {
+                  messageDispatcher.dispatch(result.getError().getDescription());
+                }
+              } else {
+                messageDispatcher.dispatch(stringHelper.cannotProcessYourRequestAtTheMoment());
+              }
             }
           }
         }, new Action1<Throwable>() {

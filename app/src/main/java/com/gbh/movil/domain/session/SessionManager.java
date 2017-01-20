@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.Subscriptions;
 
@@ -31,6 +30,8 @@ public final class SessionManager {
   private final SessionRepo sessionRepo;
   private final SessionService sessionService;
   private final EventBus eventBus;
+
+  private final Action1<ApiResult<String>> authAction1;
 
   private final Object expirationNotification = new Object();
   private final PublishSubject<Object> expirationSubject = PublishSubject.create();
@@ -49,19 +50,20 @@ public final class SessionManager {
     this.sessionRepo = sessionRepo;
     this.sessionService = sessionService;
     this.eventBus = eventBus;
+    this.authAction1 = new Action1<ApiResult<String>>() {
+      @Override
+      public void call(ApiResult<String> result) {
+
+      }
+    };
   }
 
-  private Func1<ApiResult<String>, AuthResult> authResultMapper(
-    final String phoneNumber,
-    final String email,
-    final AuthCodeMapper codeMapper
-  ) {
-    return new Func1<ApiResult<String>, AuthResult>() {
+  private Action1<ApiResult<String>> authAction1(final String phoneNumber, final String email) {
+    return new Action1<ApiResult<String>>() {
       @Override
-      public AuthResult call(ApiResult<String> result) {
-        Session session = null;
+      public void call(ApiResult<String> result) {
         if (result.isSuccessful()) {
-          session = new Session(phoneNumber, email, result.getData());
+          final Session session = new Session(phoneNumber, email, result.getData());
           sessionRepo.setSession(session);
           resettingSubscription = eventBus.onEventDispatched(EventType.SESSION_RESETTING)
             .subscribe(new Action1<Event>() {
@@ -72,7 +74,6 @@ public final class SessionManager {
             });
           eventBus.dispatch(new ResetEvent());
         }
-        return new AuthResult(codeMapper.map(result.getCode()), session);
       }
     };
   }
@@ -88,13 +89,13 @@ public final class SessionManager {
    * @return TODO
    */
   @NonNull
-  public final Observable<AuthResult> signIn(
+  public final Observable<ApiResult<String>> signIn(
     final String phoneNumber,
     final String email,
     final String password,
     final boolean force) {
     return sessionService.signIn(phoneNumber, email, password, deviceManager.getId(), force)
-      .map(authResultMapper(phoneNumber, email, new SignInCodeMapper()));
+      .doOnNext(authAction1);
   }
 
   /**
@@ -110,10 +111,10 @@ public final class SessionManager {
    * @return TODO
    */
   @NonNull
-  public final Observable<AuthResult> signUp(final String phoneNumber, final String email,
+  public final Observable<ApiResult<String>> signUp(final String phoneNumber, final String email,
     final String password, final String pin) {
     return sessionService.signUp(phoneNumber, email, password, deviceManager.getId(), pin)
-      .map(authResultMapper(phoneNumber, email, new SignUpCodeMapper()));
+      .doOnNext(authAction1);
   }
 
   /**
@@ -138,7 +139,7 @@ public final class SessionManager {
     return expirationSubject.asObservable();
   }
 
-  public final void reset() {
+  final void reset() {
     RxUtils.unsubscribe(expirationSubscription);
     expirationSubscription = Observable.just(expirationNotification)
       .delay(MAX_IDLE_TIME, TimeUnit.MILLISECONDS)

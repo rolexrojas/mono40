@@ -44,7 +44,7 @@ android {
       applicationIdSuffix ".stag"
       versionNameSuffix "-stag"
       resValue RES_TYPE_STRING, RES_KEY_APP_NAME, (RES_VALUE_APP_NAME + "-stag")
-      buildConfigField BUILD_FIELD_STRING, BUILD_FIELD_API_URL, "\"http://172.19.1.103:8081/api/neo/\""
+      buildConfigField BUILD_FIELD_STRING, BUILD_FIELD_API_URL, "\"https://demo.gcs-systems.com/api/neo/\""
     }
     prod {
       buildConfigField BUILD_FIELD_STRING, BUILD_FIELD_API_URL, "\"http://172.19.1.103:8081/api/neo/\""

@@ -27,8 +27,7 @@ class StepTwoModule {
   @Provides
   @FragmentScope
   StepTwoPresenter providePresenter(StringHelper stringHelper, MessageDispatcher messageDispatcher,
-    LoadIndicator loadIndicator, SessionManager sessionManager) {
-    return new StepTwoPresenter(stringHelper, messageDispatcher, loadIndicator, sessionManager,
-      phoneNumber, email);
+    SessionManager sessionManager) {
+    return new StepTwoPresenter(stringHelper, messageDispatcher, sessionManager, phoneNumber, email);
   }
 }
