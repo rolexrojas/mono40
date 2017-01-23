@@ -10,6 +10,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -117,6 +120,7 @@ public class ProductsFragment extends ChildFragment<MainContainer> implements Pr
       .mainComponent(getContainer().getComponent())
       .build();
     component.inject(this);
+    setHasOptionsMenu(true);
   }
 
   @Nullable
@@ -186,6 +190,22 @@ public class ProductsFragment extends ChildFragment<MainContainer> implements Pr
     getContainer().setTitle(stringHelper.accounts());
     // Starts the presenter.
     presenter.start();
+  }
+
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.products, menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.menu_item_add_another_account) {
+      onAddAnotherAccountButtonClicked();
+      return true;
+    } else {
+      return super.onOptionsItemSelected(item);
+    }
   }
 
   @Override
