@@ -155,7 +155,7 @@ final class SignInPresenter extends Presenter<SignInScreen> {
             } else {
               final ApiError error = result.getError();
               if (error != null) {
-                if (error.getCode().equals(ApiError.Code.ALREADY_ASSOCIATED_PROFILE)) {
+                if (error.getCode().equals(ApiError.Code.ALREADY_ASSOCIATED_DEVICE)) {
                   screen.showAlreadyAssociatedDialog();
                 } else {
                   messageDispatcher.dispatch(result.getError().getDescription());

@@ -31,8 +31,6 @@ public final class SessionManager {
   private final SessionService sessionService;
   private final EventBus eventBus;
 
-  private final Action1<ApiResult<String>> authAction1;
-
   private final Object expirationNotification = new Object();
   private final PublishSubject<Object> expirationSubject = PublishSubject.create();
   private Subscription expirationSubscription = Subscriptions.unsubscribed();
@@ -50,12 +48,6 @@ public final class SessionManager {
     this.sessionRepo = sessionRepo;
     this.sessionService = sessionService;
     this.eventBus = eventBus;
-    this.authAction1 = new Action1<ApiResult<String>>() {
-      @Override
-      public void call(ApiResult<String> result) {
-
-      }
-    };
   }
 
   private Action1<ApiResult<String>> authAction1(final String phoneNumber, final String email) {
@@ -95,7 +87,7 @@ public final class SessionManager {
     final String password,
     final boolean force) {
     return sessionService.signIn(phoneNumber, email, password, deviceManager.getId(), force)
-      .doOnNext(authAction1);
+      .doOnNext(authAction1(phoneNumber, email));
   }
 
   /**
@@ -114,7 +106,7 @@ public final class SessionManager {
   public final Observable<ApiResult<String>> signUp(final String phoneNumber, final String email,
     final String password, final String pin) {
     return sessionService.signUp(phoneNumber, email, password, deviceManager.getId(), pin)
-      .doOnNext(authAction1);
+      .doOnNext(authAction1(phoneNumber, email));
   }
 
   /**
