@@ -106,7 +106,9 @@ dependencies {
 
   compile "com.yqritc:recyclerview-flexibledivider:1.4.0"
 
-  compile "com.crashlytics.sdk.android:crashlytics:2.6.5"
+  compile("com.crashlytics.sdk.android:crashlytics:2.6.6@aar") {
+    transitive = true
+  }
 
   compile fileTree(include: ['*.jar'], dir: 'libs')
   compile(name: "CubeSdk", ext: "aar")
