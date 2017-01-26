@@ -4,7 +4,7 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent">
 
-  <com.gbh.movil.ui.view.widget.AmountView
+  <com.tpago.movil.ui.view.widget.AmountView
     android:id="@+id/view_amount"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

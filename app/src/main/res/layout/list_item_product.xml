@@ -32,7 +32,7 @@
       style="@style/ListItemButton"
       android:layout_gravity="center"
       android:text="@string/balance"/>
-    <com.gbh.movil.ui.view.widget.PrefixableTextView
+    <com.tpago.movil.ui.view.widget.PrefixableTextView
       android:id="@+id/product.balance"
       style="@style/Screen.Products.Text.Widget.Amount.Content"
       android:layout_width="wrap_content"

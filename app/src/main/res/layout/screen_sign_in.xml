@@ -5,14 +5,14 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
-  <com.gbh.movil.ui.view.widget.AppButton
+  <com.tpago.movil.ui.view.widget.AppButton
     android:id="@+id/button_continue"
     style="@style/SignIn.Widget.Button"
     android:layout_alignParentBottom="true"
     android:text="Desbloquear"
     app:layout_heightPercent="8%"
     app:layout_widthPercent="100%"/>
-  <com.gbh.movil.ui.view.widget.PercentLinearLayout
+  <com.tpago.movil.ui.view.widget.PercentLinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_alignParentStart="true"
@@ -70,5 +70,5 @@
       app:layout_marginEndPercent="17%"
       app:layout_marginStartPercent="17%"
       app:layout_marginTopPercent="4%"/>
-  </com.gbh.movil.ui.view.widget.PercentLinearLayout>
+  </com.tpago.movil.ui.view.widget.PercentLinearLayout>
 </android.support.percent.PercentRelativeLayout>

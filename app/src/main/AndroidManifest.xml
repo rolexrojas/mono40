@@ -1,5 +1,5 @@
 <manifest
-  package="com.gbh.movil"
+  package="com.tpago.movil"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools">
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -8,7 +8,7 @@
   <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
   <uses-permission android:name="android.permission.READ_SMS"/>
   <application
-    android:name="com.gbh.movil.App"
+    android:name="com.tpago.movil.App"
     android:allowBackup="true"
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
@@ -19,7 +19,7 @@
       android:name="io.fabric.ApiKey"
       android:value="1222b6a0c933aee641154a066ae9daaa93d7d2d8"/>
     <activity
-      android:name=".ui.index.IndexActivity"
+      android:name="com.tpago.movil.ui.index.IndexActivity"
       android:screenOrientation="portrait"
       android:theme="@style/Screen.Theme.Index">
       <intent-filter>
@@ -29,27 +29,27 @@
       </intent-filter>
     </activity>
     <activity
-      android:name=".ui.auth.AuthIndexActivity"
+      android:name="com.tpago.movil.ui.auth.AuthIndexActivity"
       android:screenOrientation="portrait"/>
     <activity
-      android:name=".ui.auth.signin.SignInActivity"
+      android:name="com.tpago.movil.ui.auth.signin.SignInActivity"
       android:screenOrientation="portrait"
       android:windowSoftInputMode="adjustPan"/>
     <activity
-      android:name=".ui.auth.signup.SignUpActivity"
+      android:name="com.tpago.movil.ui.auth.signup.SignUpActivity"
       android:screenOrientation="portrait"
       android:windowSoftInputMode="adjustPan"/>
     <activity
-      android:name=".ui.main.MainActivity"
+      android:name="com.tpago.movil.ui.main.MainActivity"
       android:screenOrientation="portrait"/>
     <activity
-      android:name=".ui.main.recipients.AddRecipientActivity"
+      android:name="com.tpago.movil.ui.main.recipients.AddRecipientActivity"
       android:screenOrientation="portrait"/>
     <activity
-      android:name=".ui.main.transactions.TransactionCreationActivity"
+      android:name="com.tpago.movil.ui.main.transactions.TransactionCreationActivity"
       android:screenOrientation="portrait"/>
     <activity
-      android:name=".ui.main.products.transactions.RecentTransactionsActivity"
+      android:name="com.tpago.movil.ui.main.products.transactions.RecentTransactionsActivity"
       android:screenOrientation="portrait"/>
   </application>
 </manifest>
