@@ -299,9 +299,15 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
 
   @Override
   public void showUnaffiliatedRecipientAdditionNotAvailableMessage() {
-    UiUtils.createDialog(getContext(), getString(R.string.sorry),
+    UiUtils.createDialog(
+      getContext(),
+      getString(R.string.sorry),
       getString(R.string.info_not_available_unaffiliated_contact_recipient_addition),
-      getString(R.string.ok), null, null, null).show();
+      getString(R.string.ok),
+      null,
+      null,
+      null)
+      .show();
   }
 
   @Override

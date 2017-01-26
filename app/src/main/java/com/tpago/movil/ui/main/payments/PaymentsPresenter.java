@@ -200,7 +200,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
           public void call(Throwable throwable) {
             Timber.e(throwable, "Adding a phone number recipient");
             screen.hideLoadIndicator();
-            // TODO: Let the user know that adding a phone number recipient failed.
+            screen.showMessage(stringHelper.cannotProcessYourRequestAtTheMoment());
           }
         });
     }
@@ -242,7 +242,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
           @Override
           public void call(Throwable throwable) {
             Timber.e(throwable, "Updating a recipient");
-            // TODO: Let the user know that updating a recipient failed.
+            screen.showMessage(stringHelper.cannotProcessYourRequestAtTheMoment());
           }
         });
     }
@@ -281,7 +281,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
           public void call(Throwable throwable) {
             Timber.e(throwable, "Checking if a recipient is affiliated");
             screen.hideLoadIndicator();
-            // TODO: Let the user know that checking if a recipient is affiliated failed.
+            screen.showMessage(stringHelper.cannotProcessYourRequestAtTheMoment());
           }
         });
     }

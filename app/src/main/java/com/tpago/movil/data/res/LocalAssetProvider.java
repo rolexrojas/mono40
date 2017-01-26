@@ -48,37 +48,40 @@ public final class LocalAssetProvider implements AssetProvider {
   @ColorInt
   @Override
   public int getPrimaryColor(@NonNull Bank bank) {
-    @ColorInt int color = 0;
+    final String hex;
     switch (bank.getCode()) {
       case BANK_ADEMI:
-        color = Color.parseColor("#008286");
+        hex = "#008286";
         break;
       case BANK_ADOPEM:
-        color = Color.parseColor("#df4f2a");
+        hex = "#DF4F2A";
         break;
       case BANK_ALAVER:
-        color = Color.parseColor("#1d5898");
+        hex = "#1D5898";
         break;
       case BANK_BDI:
-        color = Color.parseColor("#515251");
+        hex = "#515251";
         break;
       case BANK_LOPEZ_DE_HARO:
-        color = Color.parseColor("#26335D");
+        hex = "#26335D";
         break;
       case BANK_POPULAR:
-        color = Color.parseColor("#004990");
+        hex = "#004990";
         break;
       case BANK_PROGRESO:
-        color = Color.parseColor("#0097D7");
+        hex = "#0097D7";
         break;
       case BANK_RESERVAS:
-        color = Color.parseColor("#294661");
+        hex = "#294661";
         break;
       case BANK_UNION:
-        color = Color.parseColor("#FD4F57");
+        hex = "#FD4F57";
+        break;
+      default:
+        hex = "#D8D8D8";
         break;
     }
-    return color;
+    return Color.parseColor(hex);
   }
 
   @ColorInt
