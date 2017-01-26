@@ -22,7 +22,7 @@ public final class ApiError {
 
   @Override
   public String toString() {
-    return String.format("{code:%1$d,description:'%2$s'", code, description);
+    return String.format("{code:%1$s,description:'%2$s'}", code, description);
   }
 
   public enum Code {

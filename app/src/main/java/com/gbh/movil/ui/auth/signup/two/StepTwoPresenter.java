@@ -102,7 +102,7 @@ final class StepTwoPresenter extends Presenter<StepTwoScreen> {
           } else {
             final ApiError error = result.getError();
             if (error != null) {
-              messageDispatcher.dispatch(error.getDescription());
+              Timber.d(error.toString());
             }
             screen.submit(false);
           }
