@@ -13,7 +13,7 @@ android {
   buildToolsVersion "24.0.2"
 
   defaultConfig {
-    applicationId "com.gbh.movil"
+    applicationId "com.tpago.movil"
     minSdkVersion 19
     targetSdkVersion 24
     versionCode 10
