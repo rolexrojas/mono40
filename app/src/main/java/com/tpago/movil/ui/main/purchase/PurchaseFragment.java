@@ -35,6 +35,7 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import timber.log.Timber;
 
 /**
  * TODO
@@ -222,6 +223,7 @@ public class PurchaseFragment extends ChildFragment<MainContainer>
       "Activar cuenta para comprar", new PinConfirmationDialogFragment.Callback() {
         @Override
         public void confirm(@NonNull String pin) {
+          Timber.d("Confirming PIN -> %1$s", pin);
           presenter.activeCards(pin);
         }
       })

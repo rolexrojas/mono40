@@ -142,7 +142,6 @@ class CubePosBridge implements PosBridge {
         @Override
         public Observable<PosResult<String>> call(final PosResult<String> result) {
           final boolean flag = result.isSuccessful();
-          Timber.d("addCard:flag = %1$s", flag);
           if (flag) {
             return Observable.just(result);
           } else {

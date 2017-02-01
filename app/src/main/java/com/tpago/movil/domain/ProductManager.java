@@ -16,6 +16,7 @@ import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func2;
+import timber.log.Timber;
 
 /**
  * TODO
@@ -125,6 +126,12 @@ public final class ProductManager implements ProductProvider {
   public final Observable<Boolean> activateAllProducts(@NonNull final String pin) {
     return getAllPaymentOptions()
       .compose(RxUtils.<Product>fromCollection())
+      .doOnNext(new Action1<Product>() {
+        @Override
+        public void call(Product product) {
+          Timber.d("Activating -> %1$s", product.toString());
+        }
+      })
       .flatMap(new Func1<Product, Observable<PosResult<String>>>() {
         @Override
         public Observable<PosResult<String>> call(final Product product) {
