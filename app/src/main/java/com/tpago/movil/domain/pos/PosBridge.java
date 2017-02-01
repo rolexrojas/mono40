@@ -47,4 +47,6 @@ public interface PosBridge {
    */
   @NonNull
   Observable<PosResult<String>> removeCard(@NonNull String alias);
+
+  Observable<PosResult<String>> reset(@NonNull String phoneNumber);
 }

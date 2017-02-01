@@ -128,8 +128,8 @@ public final class ProductManager implements ProductProvider {
       .flatMap(new Func1<Product, Observable<PosResult<String>>>() {
         @Override
         public Observable<PosResult<String>> call(final Product product) {
-          return posBridge.get().addCard(sessionManager.getSession().getPhoneNumber(), pin,
-            product.getAlias());
+          return posBridge.get()
+            .addCard(sessionManager.getSession().getPhoneNumber(), pin, product.getAlias());
         }
       })
       .reduce(true, new Func2<Boolean, PosResult<String>, Boolean>() {

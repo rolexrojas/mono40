@@ -6,7 +6,6 @@ import com.tpago.movil.data.StringHelper;
 import com.tpago.movil.domain.util.Event;
 import com.tpago.movil.domain.util.EventBus;
 import com.tpago.movil.domain.util.EventType;
-import com.tpago.movil.data.SchedulerProvider;
 import com.tpago.movil.domain.Product;
 import com.tpago.movil.domain.ProductManager;
 import com.tpago.movil.misc.Utils;
@@ -19,6 +18,7 @@ import java.util.List;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
@@ -29,7 +29,6 @@ import timber.log.Timber;
  */
 class PurchasePresenter extends Presenter<PurchaseScreen> {
   private final StringHelper stringHelper;
-  private final SchedulerProvider schedulerProvider;
   private final ProductManager productManager;
   private final EventBus eventBus;
   private final AppDialog.Creator screenDialogCreator;
@@ -44,10 +43,9 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
   private Product selectedProduct;
 
   PurchasePresenter(@NonNull StringHelper stringHelper,
-    @NonNull SchedulerProvider schedulerProvider, @NonNull ProductManager productManager,
+    @NonNull ProductManager productManager,
     @NonNull EventBus eventBus, @NonNull AppDialog.Creator screenDialogCreator) {
     this.stringHelper = stringHelper;
-    this.schedulerProvider = schedulerProvider;
     this.productManager = productManager;
     this.eventBus = eventBus;
     this.screenDialogCreator = screenDialogCreator;
@@ -84,8 +82,8 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
         }
       });
     paymentOptionsSubscription = productManager.getAllPaymentOptions()
-      .subscribeOn(schedulerProvider.io())
-      .observeOn(schedulerProvider.ui())
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread())
       .doOnNext(new Action1<List<Product>>() {
         @Override
         public void call(List<Product> products) {
@@ -150,8 +148,8 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
     assertScreen();
     RxUtils.unsubscribe(activationSubscription);
     activationSubscription = productManager.activateAllProducts(pin)
-      .subscribeOn(schedulerProvider.io())
-      .observeOn(schedulerProvider.ui())
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread())
       .subscribe(new Action1<Boolean>() {
         @Override
         public void call(Boolean flag) {

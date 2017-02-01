@@ -7,6 +7,8 @@ import android.support.v4.util.Pair;
 import com.tpago.movil.data.StringHelper;
 import com.tpago.movil.domain.PhoneNumber;
 import com.tpago.movil.domain.ProductManager;
+import com.tpago.movil.domain.pos.PosBridge;
+import com.tpago.movil.domain.pos.PosResult;
 import com.tpago.movil.domain.session.SessionManager;
 import com.tpago.movil.misc.rx.RxUtils;
 import com.tpago.movil.data.SchedulerProvider;
@@ -46,6 +48,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   private final RecipientManager recipientManager;
   private final SessionManager sessionManager;
   private final ProductManager productManager;
+  private final PosBridge posBridge;
 
   private boolean deleting = false;
   private List<Recipient> selectedRecipients = new ArrayList<>();
@@ -54,15 +57,18 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   private Subscription querySubscription = Subscriptions.unsubscribed();
   private Subscription searchSubscription = Subscriptions.unsubscribed();
   private Subscription deleteSubscription = Subscriptions.unsubscribed();
+  private Subscription signOutSubscription = Subscriptions.unsubscribed();
 
   PaymentsPresenter(@NonNull StringHelper stringHelper,
     @NonNull SchedulerProvider schedulerProvider, @NonNull RecipientManager recipientManager,
-    @NonNull SessionManager sessionManager, @NonNull ProductManager productManager) {
+    @NonNull SessionManager sessionManager, @NonNull ProductManager productManager,
+    PosBridge posBridge) {
     this.stringHelper = stringHelper;
     this.schedulerProvider = schedulerProvider;
     this.recipientManager = recipientManager;
     this.sessionManager = sessionManager;
     this.productManager = productManager;
+    this.posBridge = posBridge;
   }
 
   /**
@@ -149,6 +155,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
     RxUtils.unsubscribe(searchSubscription);
     RxUtils.unsubscribe(querySubscription);
     RxUtils.unsubscribe(deleteSubscription);
+    RxUtils.unsubscribe(signOutSubscription);
   }
 
   /**
@@ -303,11 +310,37 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   }
 
   final void signOut() {
-    sessionManager.deactivate();
-    productManager.clear();
-    recipientManager.clear();
-    screen.openIndexScreen();
-    screen.finish();
+    posBridge.reset(sessionManager.getSession().getPhoneNumber())
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread())
+      .doOnSubscribe(new Action0() {
+        @Override
+        public void call() {
+          screen.showLoadIndicator(true);
+        }
+      })
+      .subscribe(new Action1<PosResult<String>>() {
+        @Override
+        public void call(PosResult<String> result) {
+          screen.hideLoadIndicator();
+          if (result.isSuccessful()) {
+            sessionManager.deactivate();
+            productManager.clear();
+            recipientManager.clear();
+            screen.openIndexScreen();
+            screen.finish();
+          } else {
+            screen.showMessage(result.getData());
+          }
+        }
+      }, new Action1<Throwable>() {
+        @Override
+        public void call(Throwable throwable) {
+          Timber.e(throwable, "Signing out");
+          screen.hideLoadIndicator();
+          screen.showMessage(stringHelper.cannotProcessYourRequestAtTheMoment());
+        }
+      });
   }
 
   final void startDeleting() {

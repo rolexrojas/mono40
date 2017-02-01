@@ -2,7 +2,6 @@ package com.tpago.movil.ui.main.purchase;
 
 import android.content.Context;
 
-import com.tpago.movil.data.SchedulerProvider;
 import com.tpago.movil.data.StringHelper;
 import com.tpago.movil.data.res.AssetProvider;
 import com.tpago.movil.domain.ProductManager;
@@ -44,9 +43,9 @@ class PurchaseModule {
    */
   @Provides
   @FragmentScope
-  PurchasePresenter providePresenter(StringHelper stringHelper, SchedulerProvider schedulerProvider,
+  PurchasePresenter providePresenter(StringHelper stringHelper,
     ProductManager productManager, EventBus eventBus, AppDialog.Creator screenDialogCreator) {
-    return new PurchasePresenter(stringHelper, schedulerProvider, productManager,
+    return new PurchasePresenter(stringHelper, productManager,
       eventBus, screenDialogCreator);
   }
 }
