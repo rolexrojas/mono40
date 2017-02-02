@@ -3,6 +3,7 @@ package com.tpago.movil.ui.main.purchase;
 import android.support.annotation.NonNull;
 
 import com.tpago.movil.data.StringHelper;
+import com.tpago.movil.domain.pos.PosBridge;
 import com.tpago.movil.domain.util.Event;
 import com.tpago.movil.domain.util.EventBus;
 import com.tpago.movil.domain.util.EventType;
@@ -18,6 +19,7 @@ import java.util.List;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
@@ -30,6 +32,7 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
   private final ProductManager productManager;
   private final EventBus eventBus;
   private final AppDialog.Creator screenDialogCreator;
+  private final PosBridge posBridge;
 
   private Subscription productAdditionEventSubscription = Subscriptions.unsubscribed();
   private Subscription paymentOptionsSubscription = Subscriptions.unsubscribed();
@@ -37,13 +40,52 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
 
   private Product selectedProduct;
 
-  PurchasePresenter(@NonNull StringHelper stringHelper,
-    @NonNull ProductManager productManager,
-    @NonNull EventBus eventBus, @NonNull AppDialog.Creator screenDialogCreator) {
+  PurchasePresenter(
+    StringHelper stringHelper,
+    ProductManager productManager,
+    EventBus eventBus,
+    AppDialog.Creator screenDialogCreator,
+    PosBridge posBridge) {
     this.stringHelper = stringHelper;
     this.productManager = productManager;
     this.eventBus = eventBus;
     this.screenDialogCreator = screenDialogCreator;
+    this.posBridge = posBridge;
+  }
+
+  private void loadPaymentOptions() {
+    paymentOptionsSubscription = productManager.getAllPaymentOptions()
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread())
+      .doOnNext(new Action1<List<Product>>() {
+        @Override
+        public void call(List<Product> products) {
+          screen.clearPaymentOptions();
+        }
+      })
+      .compose(RxUtils.<Product>fromCollection())
+      .filter(new Func1<Product, Boolean>() {
+        @Override
+        public Boolean call(Product product) {
+          return posBridge.isActive(product.getAlias());
+        }
+      })
+      .subscribe(new Action1<Product>() {
+        @Override
+        public void call(Product product) {
+          screen.addPaymentOption(product);
+          if (Product.isDefaultPaymentOption(product)) {
+            selectedProduct = product;
+            screen.markAsSelected(selectedProduct);
+          }
+        }
+      }, new Action1<Throwable>() {
+        @Override
+        public void call(Throwable throwable) {
+          Timber.e(throwable, "Loading all the payment options");
+          // TODO: Let the user know that loading all the payment options failed.
+        }
+      });
   }
 
   void start() {
@@ -73,32 +115,7 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
           Timber.e(throwable, "Listening to product addition events");
         }
       });
-    paymentOptionsSubscription = productManager.getAllPaymentOptions()
-      .subscribeOn(Schedulers.io())
-      .observeOn(AndroidSchedulers.mainThread())
-      .doOnNext(new Action1<List<Product>>() {
-        @Override
-        public void call(List<Product> products) {
-          screen.clearPaymentOptions();
-        }
-      })
-      .compose(RxUtils.<Product>fromCollection())
-      .subscribe(new Action1<Product>() {
-        @Override
-        public void call(Product product) {
-          screen.addPaymentOption(product);
-          if (Product.isDefaultPaymentOption(product)) {
-            selectedProduct = product;
-            screen.markAsSelected(selectedProduct);
-          }
-        }
-      }, new Action1<Throwable>() {
-        @Override
-        public void call(Throwable throwable) {
-          Timber.e(throwable, "Loading all the payment options");
-          // TODO: Let the user know that loading all the payment options failed.
-        }
-      });
+    loadPaymentOptions();
   }
 
   void stop() {
@@ -124,21 +141,23 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
 
   void activeCards(@NonNull String pin) {
     assertScreen();
-    RxUtils.unsubscribe(activationSubscription);
-    activationSubscription = productManager.activateAllProducts(pin)
-      .subscribeOn(Schedulers.io())
-      .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(new Action1<Boolean>() {
-        @Override
-        public void call(Boolean flag) {
-          screen.onActivationFinished(flag);
-        }
-      }, new Action1<Throwable>() {
-        @Override
-        public void call(Throwable throwable) {
-          Timber.e(throwable, "Activating all products");
-          screen.onActivationFinished(false);
-        }
-      });
+    if (activationSubscription.isUnsubscribed()) {
+      activationSubscription = productManager.activateAllProducts(pin)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Action1<Boolean>() {
+          @Override
+          public void call(Boolean flag) {
+            screen.onActivationFinished(flag);
+            loadPaymentOptions();
+          }
+        }, new Action1<Throwable>() {
+          @Override
+          public void call(Throwable throwable) {
+            Timber.e(throwable, "Activating all products");
+            screen.onActivationFinished(false);
+          }
+        });
+    }
   }
 }

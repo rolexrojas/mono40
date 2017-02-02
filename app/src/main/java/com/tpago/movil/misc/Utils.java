@@ -1,11 +1,14 @@
 package com.tpago.movil.misc;
 
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+
+import timber.log.Timber;
 
 /**
  * TODO
@@ -44,5 +47,12 @@ public final class Utils {
   @NonNull
   public static Date getTime(long milliseconds) {
     return getTime(milliseconds, false);
+  }
+
+  public static void checkIfMainThread(final String methodName) {
+    Timber.d(
+      "methodName: %1$s, isMainThread: %2$s",
+      methodName,
+      Looper.getMainLooper().getThread().equals(Thread.currentThread()));
   }
 }

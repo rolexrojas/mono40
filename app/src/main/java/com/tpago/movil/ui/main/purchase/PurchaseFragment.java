@@ -35,6 +35,7 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import timber.log.Timber;
 
 /**
  * TODO
@@ -206,6 +207,7 @@ public class PurchaseFragment extends ChildFragment<MainContainer>
 
   @Override
   public void requestPin() {
+    Timber.d("requestPin()");
     final FragmentManager manager = getChildFragmentManager();
     final Fragment fragment = manager.findFragmentByTag(TAG_PIN_CONFIRMATION);
     if (Utils.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {

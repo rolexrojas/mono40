@@ -57,18 +57,10 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
    */
   void start() {
     assertScreen();
-//    productManager.getAllPaymentOptions()
-//      .compose(RxUtils.<Product>fromCollection())
-//      .flatMap(new Func1<Product, Observable<PosResult<String>>>() {
-//        @Override
-//        public Observable<PosResult<String>> call(Product product) {
-//          return posBridge.get().removeCard(product.getAlias());
-//        }
-//      })
-//      .subscribe();
     screen.setMessage(stringHelper.bringDeviceCloserToTerminal());
     screen.setPaymentOption(paymentOption);
     subscription = Observable.just(paymentOption)
+      .subscribeOn(Schedulers.io())
       .zipWith(productManager.getDefaultPaymentOption(), new Func2<Product, Product,
         Pair<Product, Product>>() {
         @Override
@@ -83,6 +75,7 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
           final Product cdpo = pair.second; // Current default payment option
           if (po.equals(cdpo)) {
             return posBridge.get().selectCard(po.getAlias())
+              .subscribeOn(Schedulers.io())
               .map(new Func1<PosResult<String>, Boolean>() {
                 @Override
                 public Boolean call(PosResult<String> result) {
@@ -91,11 +84,13 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
               });
           } else {
             return apiBridge.setDefaultPaymentOption(sessionManager.getSession().getAuthToken(), po)
+              .subscribeOn(Schedulers.io())
               .flatMap(new Func1<ApiResult<Void>, Observable<PosResult<String>>>() {
                 @Override
                 public Observable<PosResult<String>> call(ApiResult<Void> result) {
                   // TODO: Propagate errors to the caller.
-                  return posBridge.get().selectCard(po.getAlias());
+                  return posBridge.get().selectCard(po.getAlias())
+                    .subscribeOn(Schedulers.io());
                 }
               })
               .map(new Func1<PosResult<String>, Boolean>() {
@@ -113,6 +108,7 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
                   } else {
                     return apiBridge.setDefaultPaymentOption(
                       sessionManager.getSession().getAuthToken(), cdpo)
+                      .subscribeOn(Schedulers.io())
                       .map(new Func1<ApiResult<Void>, Boolean>() {
                         @Override
                         public Boolean call(ApiResult<Void> result) {
@@ -125,7 +121,6 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
           }
         }
       })
-      .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
       .subscribe(new Action1<Boolean>() {
         @Override

@@ -26,8 +26,6 @@ import butterknife.ButterKnife;
 import timber.log.Timber;
 
 /**
- * TODO: Find a better name for this class.
- *
  * @author hecvasro
  */
 public class PinView extends LinearLayout {
@@ -68,18 +66,10 @@ public class PinView extends LinearLayout {
     LayoutInflater.from(context).inflate(R.layout.pin_view, this);
   }
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
   private boolean isCursorVisible() {
     return cursor.getVisibility() == View.VISIBLE;
   }
 
-  /**
-   * TODO
-   */
   private void showCursor() {
     if (!isCursorVisible()) {
       if (Utils.isNull(cursorAnimator)) {
@@ -93,9 +83,6 @@ public class PinView extends LinearLayout {
     }
   }
 
-  /**
-   * TODO
-   */
   private void hideCursor() {
     if (isCursorVisible()) {
       cursor.setVisibility(View.GONE);
@@ -105,18 +92,10 @@ public class PinView extends LinearLayout {
     }
   }
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
   private boolean isLoading() {
     return Utils.isNotNull(loadAnimator) && loadAnimator.isRunning();
   }
 
-  /**
-   * TODO
-   */
   private void startLoading() {
     if (!isLoading() && !isResolving()) {
       mustRestartLoading = true;
@@ -173,9 +152,6 @@ public class PinView extends LinearLayout {
     }
   }
 
-  /**
-   * TODO
-   */
   private void stopLoading(boolean cancel) {
     if (isLoading() && !isResolving()) {
       mustRestartLoading = false;
@@ -185,9 +161,6 @@ public class PinView extends LinearLayout {
     }
   }
 
-  /**
-   * TODO
-   */
   private void initializeSuccessResolveAnimator() {
     if (successResolveAnimator == null) {
       View dot;
@@ -241,9 +214,6 @@ public class PinView extends LinearLayout {
     }
   }
 
-  /**
-   * TODO
-   */
   private void initializeFailureResolveAnimator() {
     if (Utils.isNull(failureResolveAnimator)) {
       int i;
@@ -292,23 +262,10 @@ public class PinView extends LinearLayout {
     }
   }
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
   private boolean isResolving() {
     return Utils.isNotNull(resolveAnimator) && resolveAnimator.isRunning();
   }
 
-  /**
-   * TODO
-   *
-   * @param dot
-   *   TODO
-   * @param visible
-   *   TODO
-   */
   private void setDotVisibility(@NonNull final View dot, final boolean visible) {
     dot.postDelayed(new Runnable() {
       @Override
@@ -340,22 +297,10 @@ public class PinView extends LinearLayout {
     showCursor();
   }
 
-  /**
-   * TODO
-   *
-   * @param listener
-   *   TODO
-   */
   public void setListener(@Nullable Listener listener) {
     this.listener = listener;
   }
 
-  /**
-   * TODO
-   *
-   * @param digit
-   *   TODO
-   */
   public void push(final int digit) {
     if (!isLoading() && !isResolving()) {
       if (digit >= 0 && digit <= 9 && digits.size() < DEFAULT_MAX_LENGTH) {
@@ -370,9 +315,6 @@ public class PinView extends LinearLayout {
     }
   }
 
-  /**
-   * TODO
-   */
   public void pop() {
     if (!isLoading() && !isResolving()) {
       final int last = digits.size() - 1;
@@ -388,9 +330,6 @@ public class PinView extends LinearLayout {
     }
   }
 
-  /**
-   * TODO
-   */
   public void resolve(final boolean succeeded) {
     if (isLoading() && !isResolving()) {
       if (Utils.isNotNull(resolveAnimator)) {
@@ -423,24 +362,9 @@ public class PinView extends LinearLayout {
     }
   }
 
-  /**
-   * TODO
-   */
   public interface Listener {
-    /**
-     * TODO
-     *
-     * @param pin
-     *   TODO
-     */
     void onConfirmationStarted(@NonNull String pin);
 
-    /**
-     * TODO
-     *
-     * @param succeeded
-     *   TODO
-     */
     void onConfirmationFinished(boolean succeeded);
   }
 }

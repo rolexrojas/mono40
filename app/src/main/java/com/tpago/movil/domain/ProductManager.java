@@ -5,7 +5,6 @@ import android.support.v4.util.Pair;
 
 import com.tpago.movil.domain.pos.PosBridge;
 import com.tpago.movil.domain.pos.PosResult;
-import com.tpago.movil.domain.session.Session;
 import com.tpago.movil.domain.util.EventBus;
 import com.tpago.movil.misc.rx.RxUtils;
 
@@ -77,10 +76,11 @@ public final class ProductManager implements ProductProvider {
           final Product product = pair.second;
           final Observable<Object> observable;
           if (action == Action.ADD || action == Action.UPDATE) {
-            observable = productRepo.save(product).cast(Object.class);
+            observable = productRepo.save(product)
+              .cast(Object.class);
           } else {
-            observable = Observable.concat(productRepo.remove(product),
-              posBridge.get().removeCard(product.getAlias()));
+            observable = Observable
+              .concat(productRepo.remove(product), posBridge.get().removeCard(product.getAlias()));
           }
           return observable;
         }
@@ -90,6 +90,7 @@ public final class ProductManager implements ProductProvider {
 
   @NonNull
   public final Observable<List<Product>> getAllPaymentOptions() {
+    // TODO: Change order in a way that the primary payment option is the first one.
     return getAll()
       .compose(RxUtils.<Product>fromCollection())
       .filter(new Func1<Product, Boolean>() {
@@ -98,40 +99,35 @@ public final class ProductManager implements ProductProvider {
           return Product.isPaymentOption(product);
         }
       })
-      // TODO: Change order in a way that the primary payment option is the first one.
       .toList();
   }
 
-  @NonNull
-  public final Observable<Boolean> activateAllProducts(@NonNull final String pin) {
+  public final Observable<Boolean> activateAllProducts(final String pin) {
     return getAllPaymentOptions()
-      .flatMap(new Func1<List<Product>, Observable<Boolean>>() {
+      .compose(RxUtils.<Product>fromCollection())
+      .filter(new Func1<Product, Boolean>() {
         @Override
-        public Observable<Boolean> call(final List<Product> products) {
-          final Session session = sessionManager.getSession();
-          if (session == null) {
-            return Observable.error(new NullPointerException("session == null"));
-          } else {
-            final PosBridge bridge = posBridge.get();
-            final String phoneNumber = session.getPhoneNumber();
-            final Func1<PosResult<String>, Boolean> mapFunc1 = new Func1<PosResult<String>, Boolean>() {
-              @Override
-              public Boolean call(PosResult<String> result) {
-                return result.isSuccessful();
-              }
-            };
-            final List<Observable<Boolean>> observables = new ArrayList<>();
-            for (Product product : products) {
-              observables.add(bridge.addCard(phoneNumber, pin, product.getAlias()).map(mapFunc1));
-            }
-            return Observable.concat(observables);
-          }
+        public Boolean call(Product product) {
+          return !posBridge.get().isActive(product.getAlias());
         }
       })
-      .reduce(true, new Func2<Boolean, Boolean, Boolean>() {
+      .concatMap(new Func1<Product, Observable<PosResult<String>>>() {
+        @Override
+        public Observable<PosResult<String>> call(Product product) {
+          return posBridge.get()
+            .addCard(sessionManager.getSession().getPhoneNumber(), pin, product.getAlias());
+        }
+      })
+      .map(new Func1<PosResult<String>, Boolean>() {
+        @Override
+        public Boolean call(PosResult<String> result) {
+          return result.isSuccessful();
+        }
+      })
+      .reduce(false, new Func2<Boolean, Boolean, Boolean>() {
         @Override
         public Boolean call(Boolean flag, Boolean result) {
-          return flag && result;
+          return flag || result;
         }
       });
   }

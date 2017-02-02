@@ -1,6 +1,7 @@
 package com.tpago.movil.data.pos;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import com.cube.sdk.Interfaces.CubeSdkCallback;
@@ -15,6 +16,7 @@ import com.tpago.movil.domain.pos.PosBridge;
 import com.tpago.movil.domain.pos.PosCode;
 import com.tpago.movil.domain.pos.PosResult;
 import com.tpago.movil.domain.text.TextHelper;
+import com.tpago.movil.misc.Utils;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -26,16 +28,19 @@ import timber.log.Timber;
  */
 class CubePosBridge implements PosBridge {
   private final CubeSdkImpl cubeSdk;
+  private final SharedPreferences sharedPreferences;
 
   CubePosBridge(Context context) {
     cubeSdk = new CubeSdkImpl(context);
+    sharedPreferences = context
+      .getSharedPreferences(PosBridge.class.getCanonicalName(), Context.MODE_PRIVATE);
   }
 
   private static <T> void handleSuccessResult(
     String method,
     Subscriber<? super PosResult<T>> subscriber,
     T data) {
-    Timber.d("method: %1$s, data: %2$s", method, data);
+    Timber.d("methodName: %1$s, data: %2$s", method, data);
     subscriber.onNext(new PosResult<>(PosCode.OK, data));
     subscriber.onCompleted();
   }
@@ -46,7 +51,7 @@ class CubePosBridge implements PosBridge {
     CubeError error) {
     final int code = Integer.parseInt(error.getErrorCode().trim().replaceAll("[\\D]", ""));
     Timber.d(
-      "method: %1$s, error: {code: %2$d, message: %3$s, details: %4$s}",
+      "methodName: %1$s, error: {code: %2$d, message: %3$s, details: %4$s}",
       method,
       code,
       error.getErrorMessage(),
@@ -70,6 +75,7 @@ class CubePosBridge implements PosBridge {
       @Override
       public void call(final Subscriber<? super PosResult<String>> subscriber) {
         final String methodName = "getAllPan";
+        Utils.checkIfMainThread(methodName);
         Timber.d("%1$s(%2$s)", methodName, alias);
         cubeSdk.ListCard(new CubeSdkCallback<ListCards, CubeError>() {
           @Override
@@ -111,11 +117,12 @@ class CubePosBridge implements PosBridge {
           if (flag) {
             return Observable.just(result);
           } else {
-            final String methodName = "addCard";
-            Timber.d("%1$s(%2$s,%3$s,%4$s)", methodName, phoneNumber, pin, alias);
             return Observable.create(new Observable.OnSubscribe<PosResult<String>>() {
               @Override
               public void call(final Subscriber<? super PosResult<String>> subscriber) {
+                final String methodName = "addCard";
+                Timber.d("%1$s(%2$s,%3$s,%4$s)", methodName, phoneNumber, pin, alias);
+                Utils.checkIfMainThread(methodName);
                 final AddCardParams params = new AddCardParams();
                 params.setMsisdn(phoneNumber);
                 params.setOtp(pin);
@@ -123,6 +130,9 @@ class CubePosBridge implements PosBridge {
                 cubeSdk.AddCard(params, new CubeSdkCallback<String, CubeError>() {
                   @Override
                   public void success(String message) {
+                    sharedPreferences.edit()
+                      .putBoolean(alias, true)
+                      .apply();
                     handleSuccessResult(methodName, subscriber, message);
                   }
 
@@ -146,11 +156,12 @@ class CubePosBridge implements PosBridge {
         @Override
         public Observable<PosResult<String>> call(final PosResult<String> result) {
           if (result.isSuccessful()) {
-            final String methodName = "selectCard";
-            Timber.d("%1$s(%2$s)", methodName, alias);
             return Observable.create(new Observable.OnSubscribe<PosResult<String>>() {
               @Override
               public void call(final Subscriber<? super PosResult<String>> subscriber) {
+                final String methodName = "selectCard";
+                Utils.checkIfMainThread(methodName);
+                Timber.d("%1$s(%2$s)", methodName, alias);
                 final SelectCardParams params = new SelectCardParams();
                 params.setAlias(alias);
                 params.setAltpan(result.getData());
@@ -188,17 +199,21 @@ class CubePosBridge implements PosBridge {
         @Override
         public Observable<PosResult<String>> call(final PosResult<String> result) {
           if (result.isSuccessful()) {
-            final String methodName = "removeCard";
-            Timber.d("%1$s(%2$s)", methodName, alias);
             return Observable.create(new Observable.OnSubscribe<PosResult<String>>() {
               @Override
               public void call(final Subscriber<? super PosResult<String>> subscriber) {
+                final String methodName = "removeCard";
+                Utils.checkIfMainThread(methodName);
+                Timber.d("%1$s(%2$s)", methodName, alias);
                 final SelectCardParams params = new SelectCardParams();
                 params.setAlias(alias);
                 params.setAltpan(result.getData());
                 cubeSdk.DeleteCard(params, new CubeSdkCallback<String, CubeError>() {
                   @Override
                   public void success(String message) {
+                    sharedPreferences.edit()
+                      .remove(alias)
+                      .apply();
                     handleSuccessResult(methodName, subscriber, message);
                   }
 
@@ -222,6 +237,7 @@ class CubePosBridge implements PosBridge {
       @Override
       public void call(final Subscriber<? super PosResult<String>> subscriber) {
         final String methodName = "reset";
+        Utils.checkIfMainThread(methodName);
         Timber.d("%1$s(%2$s)", methodName, phoneNumber);
         cubeSdk.Unregister(phoneNumber, new CubeSdkCallback<String, CubeError>() {
           @Override
@@ -236,6 +252,11 @@ class CubePosBridge implements PosBridge {
         });
       }
     });
+  }
+
+  @Override
+  public boolean isActive(String alias) {
+    return sharedPreferences.getBoolean(alias, false);
   }
 }
 

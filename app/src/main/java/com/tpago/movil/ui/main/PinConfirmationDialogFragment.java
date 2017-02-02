@@ -37,8 +37,6 @@ import io.codetail.animation.ViewAnimationUtils;
 import timber.log.Timber;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 @Deprecated
@@ -114,7 +112,6 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
   }
 
   public final void resolve(boolean succeeded) {
-    Timber.d("resolve(%1$s)", succeeded);
     this.succeeded = succeeded;
     this.pinView.resolve(this.succeeded);
   }
@@ -250,13 +247,11 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
 
   @Override
   public void onDigitClicked(@NonNull Digit digit) {
-    Timber.d("onDigitClicked(%1$s)", digit);
     pinView.push(digit.getValue());
   }
 
   @Override
   public void onDeleteClicked() {
-    Timber.d("onDeleteClicked()");
     pinView.pop();
   }
 

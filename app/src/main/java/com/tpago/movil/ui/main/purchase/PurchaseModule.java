@@ -5,6 +5,7 @@ import android.content.Context;
 import com.tpago.movil.data.StringHelper;
 import com.tpago.movil.data.res.AssetProvider;
 import com.tpago.movil.domain.ProductManager;
+import com.tpago.movil.domain.pos.PosBridge;
 import com.tpago.movil.domain.util.EventBus;
 import com.tpago.movil.ui.FragmentScope;
 import com.tpago.movil.ui.AppDialog;
@@ -44,8 +45,8 @@ class PurchaseModule {
   @Provides
   @FragmentScope
   PurchasePresenter providePresenter(StringHelper stringHelper,
-    ProductManager productManager, EventBus eventBus, AppDialog.Creator screenDialogCreator) {
-    return new PurchasePresenter(stringHelper, productManager,
-      eventBus, screenDialogCreator);
+    ProductManager productManager, EventBus eventBus, AppDialog.Creator screenDialogCreator,
+    PosBridge posBridge) {
+    return new PurchasePresenter(stringHelper, productManager, eventBus, screenDialogCreator, posBridge);
   }
 }
