@@ -2,6 +2,7 @@ package com.tpago.movil.ui.auth.signup;
 
 import com.tpago.movil.AppComponent;
 import com.tpago.movil.data.StringHelper;
+import com.tpago.movil.domain.InitialDataLoader;
 import com.tpago.movil.domain.session.SessionManager;
 import com.tpago.movil.ui.ActivityComponent;
 import com.tpago.movil.ui.ActivityModule;
@@ -23,4 +24,5 @@ public interface SignUpComponent extends ActivityComponent {
   MessageDispatcher provideMessageDispatcher();
   SessionManager provideSessionManager();
   StringHelper provideStringHelper();
+  InitialDataLoader provideInitialDataLoader();
 }

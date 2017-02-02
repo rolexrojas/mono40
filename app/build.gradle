@@ -16,7 +16,7 @@ android {
     applicationId "com.tpago.movil"
     minSdkVersion 19
     targetSdkVersion 24
-    versionCode 10
+    versionCode 11
     versionName "2.0.0"
 
     resValue RES_TYPE_STRING, RES_KEY_APP_NAME, RES_VALUE_APP_NAME

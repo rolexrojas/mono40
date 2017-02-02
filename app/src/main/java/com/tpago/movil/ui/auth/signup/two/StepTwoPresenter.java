@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.tpago.movil.data.StringHelper;
+import com.tpago.movil.domain.InitialDataLoader;
 import com.tpago.movil.domain.api.ApiError;
 import com.tpago.movil.domain.api.ApiResult;
 import com.tpago.movil.domain.session.SessionManager;
@@ -18,6 +19,7 @@ import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
@@ -30,8 +32,8 @@ import timber.log.Timber;
  */
 final class StepTwoPresenter extends Presenter<StepTwoScreen> {
   private final StringHelper stringHelper;
-  private final MessageDispatcher messageDispatcher;
   private final SessionManager sessionManager;
+  private final InitialDataLoader initialDataLoader;
 
   private final String phoneNumber;
   private final String email;
@@ -41,12 +43,16 @@ final class StepTwoPresenter extends Presenter<StepTwoScreen> {
   private Subscription validationSubscription = Subscriptions.unsubscribed();
   private Subscription submissionSubscription = Subscriptions.unsubscribed();
 
-  StepTwoPresenter(@NonNull StringHelper stringHelper, @NonNull MessageDispatcher messageDispatcher,
-    @NonNull SessionManager sessionManager,
-    @NonNull String phoneNumber, @NonNull String email) {
+  StepTwoPresenter(
+    StringHelper stringHelper,
+    MessageDispatcher messageDispatcher,
+    SessionManager sessionManager,
+    String phoneNumber,
+    String email,
+    InitialDataLoader initialDataLoader) {
     this.stringHelper = stringHelper;
-    this.messageDispatcher = messageDispatcher;
     this.sessionManager = sessionManager;
+    this.initialDataLoader = initialDataLoader;
     this.phoneNumber = phoneNumber;
     this.email = email;
   }
@@ -93,6 +99,22 @@ final class StepTwoPresenter extends Presenter<StepTwoScreen> {
     RxUtils.unsubscribe(submissionSubscription);
     submissionSubscription = sessionManager.signUp(phoneNumber, email, password, pin)
       .subscribeOn(Schedulers.io())
+      .flatMap(new Func1<ApiResult<String>, Observable<ApiResult<String>>>() {
+        @Override
+        public Observable<ApiResult<String>> call(final ApiResult<String> result) {
+          if (result.isSuccessful()) {
+            return initialDataLoader.load()
+              .map(new Func1<Object, ApiResult<String>>() {
+                @Override
+                public ApiResult<String> call(Object o) {
+                  return result;
+                }
+              });
+          } else {
+            return Observable.just(result);
+          }
+        }
+      })
       .observeOn(AndroidSchedulers.mainThread())
       .subscribe(new Action1<ApiResult<String>>() {
         @Override
