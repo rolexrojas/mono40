@@ -163,7 +163,6 @@ public class PinView extends LinearLayout {
         loadAnimator.addListener(new BaseAnimatorListener() {
           @Override
           public void onAnimationStart(Animator animator) {
-            Timber.d("PIN confirmation started");
             if (Utils.isNotNull(listener)) {
               listener.onConfirmationStarted(TextUtils.join("", digits));
             }
@@ -410,7 +409,6 @@ public class PinView extends LinearLayout {
       resolveAnimator.addListener(new BaseAnimatorListener() {
         @Override
         public void onAnimationEnd(Animator animator) {
-          Timber.d("PIN confirmation finished");
           digits.clear();
           if (Utils.isNotNull(listener)) {
             listener.onConfirmationFinished(succeeded);

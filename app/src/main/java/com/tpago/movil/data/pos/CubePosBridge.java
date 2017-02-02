@@ -31,16 +31,6 @@ class CubePosBridge implements PosBridge {
     cubeSdk = new CubeSdkImpl(context);
   }
 
-  /**
-   * TODO
-   *
-   * @param subscriber
-   *   TODO
-   * @param data
-   *   TODO
-   * @param <T>
-   *   TODO
-   */
   private static <T> void handleSuccessResult(
     String method,
     Subscriber<? super PosResult<T>> subscriber,
@@ -50,14 +40,6 @@ class CubePosBridge implements PosBridge {
     subscriber.onCompleted();
   }
 
-  /**
-   * TODO
-   *
-   * @param subscriber
-   *   TODo
-   * @param <T>
-   *   TODO
-   */
   private static <T> void handleErrorResult(
     String method,
     Subscriber<? super PosResult<T>> subscriber,
@@ -73,14 +55,6 @@ class CubePosBridge implements PosBridge {
     subscriber.onCompleted();
   }
 
-  /**
-   * TODO
-   *
-   * @param subscriber
-   *   TODO
-   * @param <T>
-   *   TODO
-   */
   private static <T> void handleErrorResult(
     String method,
     Subscriber<? super PosResult<T>> subscriber,
@@ -90,20 +64,13 @@ class CubePosBridge implements PosBridge {
     handleErrorResult(method, subscriber, error);
   }
 
-  /**
-   * TODO
-   *
-   * @param alias
-   *   TODO
-   *
-   * @return TODO
-   */
   @NonNull
   private Observable<PosResult<String>> getAllPan(final String alias) {
-    final String methodName = "getAllPan";
     return Observable.create(new Observable.OnSubscribe<PosResult<String>>() {
       @Override
       public void call(final Subscriber<? super PosResult<String>> subscriber) {
+        final String methodName = "getAllPan";
+        Timber.d("%1$s(%2$s)", methodName, alias);
         cubeSdk.ListCard(new CubeSdkCallback<ListCards, CubeError>() {
           @Override
           public void success(ListCards listCards) {
@@ -136,7 +103,6 @@ class CubePosBridge implements PosBridge {
     final String phoneNumber,
     final String pin,
     final String alias) {
-    final String methodName = "addCard";
     return getAllPan(alias)
       .flatMap(new Func1<PosResult<String>, Observable<PosResult<String>>>() {
         @Override
@@ -145,6 +111,8 @@ class CubePosBridge implements PosBridge {
           if (flag) {
             return Observable.just(result);
           } else {
+            final String methodName = "addCard";
+            Timber.d("%1$s(%2$s,%3$s,%4$s)", methodName, phoneNumber, pin, alias);
             return Observable.create(new Observable.OnSubscribe<PosResult<String>>() {
               @Override
               public void call(final Subscriber<? super PosResult<String>> subscriber) {
@@ -173,12 +141,13 @@ class CubePosBridge implements PosBridge {
   @NonNull
   @Override
   public Observable<PosResult<String>> selectCard(@NonNull final String alias) {
-    final String methodName = "selectCard";
     return getAllPan(alias)
       .flatMap(new Func1<PosResult<String>, Observable<PosResult<String>>>() {
         @Override
         public Observable<PosResult<String>> call(final PosResult<String> result) {
           if (result.isSuccessful()) {
+            final String methodName = "selectCard";
+            Timber.d("%1$s(%2$s)", methodName, alias);
             return Observable.create(new Observable.OnSubscribe<PosResult<String>>() {
               @Override
               public void call(final Subscriber<? super PosResult<String>> subscriber) {
@@ -214,12 +183,13 @@ class CubePosBridge implements PosBridge {
   @NonNull
   @Override
   public Observable<PosResult<String>> removeCard(@NonNull final String alias) {
-    final String methodName = "removeCard";
     return getAllPan(alias)
       .flatMap(new Func1<PosResult<String>, Observable<PosResult<String>>>() {
         @Override
         public Observable<PosResult<String>> call(final PosResult<String> result) {
           if (result.isSuccessful()) {
+            final String methodName = "removeCard";
+            Timber.d("%1$s(%2$s)", methodName, alias);
             return Observable.create(new Observable.OnSubscribe<PosResult<String>>() {
               @Override
               public void call(final Subscriber<? super PosResult<String>> subscriber) {
@@ -248,10 +218,11 @@ class CubePosBridge implements PosBridge {
 
   @Override
   public Observable<PosResult<String>> reset(@NonNull final String phoneNumber) {
-    final String methodName = "reset";
     return Observable.create(new Observable.OnSubscribe<PosResult<String>>() {
       @Override
       public void call(final Subscriber<? super PosResult<String>> subscriber) {
+        final String methodName = "reset";
+        Timber.d("%1$s(%2$s)", methodName, phoneNumber);
         cubeSdk.Unregister(phoneNumber, new CubeSdkCallback<String, CubeError>() {
           @Override
           public void success(String message) {

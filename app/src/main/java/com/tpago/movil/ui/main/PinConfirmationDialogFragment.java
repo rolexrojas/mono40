@@ -34,6 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.codetail.animation.ViewAnimationUtils;
+import timber.log.Timber;
 
 /**
  * TODO
@@ -76,20 +77,6 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
   @BindView(R.id.num_pad)
   NumPad numPad;
 
-  /**
-   * TODO
-   *
-   * @param centerX
-   *   TODO
-   * @param centerY
-   *   TODO
-   * @param actionDescription
-   *   TODO
-   * @param callback
-   *   TODO
-   *
-   * @return TODO
-   */
   public static PinConfirmationDialogFragment newInstance(int centerX, int centerY,
     @NonNull String actionDescription, @NonNull Callback callback) {
     final Bundle bundle = new Bundle();
@@ -102,9 +89,6 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
     return fragment;
   }
 
-  /**
-   * TODO
-   */
   private void finish() {
     if (Utils.isNotNull(containerFrameLayout)) {
       // Prepares the background animator.
@@ -129,13 +113,8 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
     return R.style.FullScreenDialogTheme;
   }
 
-  /**
-   * TODO
-   *
-   * @param succeeded
-   *   TODO
-   */
   public final void resolve(boolean succeeded) {
+    Timber.d("resolve(%1$s)", succeeded);
     this.succeeded = succeeded;
     this.pinView.resolve(this.succeeded);
   }
@@ -271,46 +250,35 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
 
   @Override
   public void onDigitClicked(@NonNull Digit digit) {
+    Timber.d("onDigitClicked(%1$s)", digit);
     pinView.push(digit.getValue());
   }
 
   @Override
   public void onDeleteClicked() {
+    Timber.d("onDeleteClicked()");
     pinView.pop();
   }
 
   @Override
   public void onConfirmationStarted(@NonNull String pin) {
+    Timber.d("onConfirmationStarted(%1$s)", pin);
     callback.confirm(pin);
   }
 
   @Override
   public void onConfirmationFinished(boolean succeeded) {
+    Timber.d("onConfirmationFinished(%1$s)", succeeded);
     if (succeeded) {
       finish();
     }
   }
 
-  /**
-   * TODO
-   */
   public interface Callback extends Serializable {
-    /**
-     * TODO
-     *
-     * @param pin
-     *   TODO
-     */
     void confirm(@NonNull String pin);
   }
 
-  /**
-   * TODO
-   */
   public interface OnDismissListener {
-    /**
-     * TODO
-     */
     void onDismiss(boolean succeeded);
   }
 }

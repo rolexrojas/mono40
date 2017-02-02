@@ -35,7 +35,6 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import timber.log.Timber;
 
 /**
  * TODO
@@ -95,11 +94,7 @@ public class PurchaseFragment extends ChildFragment<MainContainer>
       .build();
     component.inject(this);
     final Bundle bundle = Utils.isNotNull(savedInstanceState) ? savedInstanceState : getArguments();
-    if (Utils.isNotNull(bundle)) {
-      activateAutomatically = bundle.getBoolean(KEY_ACTIVATE_AUTOMATICALLY, false);
-    } else  {
-      activateAutomatically = false;
-    }
+    activateAutomatically = Utils.isNotNull(bundle) && bundle.getBoolean(KEY_ACTIVATE_AUTOMATICALLY, false);
   }
 
   @Nullable
@@ -223,7 +218,6 @@ public class PurchaseFragment extends ChildFragment<MainContainer>
       "Activar cuenta para comprar", new PinConfirmationDialogFragment.Callback() {
         @Override
         public void confirm(@NonNull String pin) {
-          Timber.d("Confirming PIN -> %1$s", pin);
           presenter.activeCards(pin);
         }
       })

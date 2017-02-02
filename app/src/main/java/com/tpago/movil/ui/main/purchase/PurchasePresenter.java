@@ -23,8 +23,6 @@ import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 class PurchasePresenter extends Presenter<PurchaseScreen> {
@@ -37,9 +35,6 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
   private Subscription paymentOptionsSubscription = Subscriptions.unsubscribed();
   private Subscription activationSubscription = Subscriptions.unsubscribed();
 
-  /**
-   * TODO
-   */
   private Product selectedProduct;
 
   PurchasePresenter(@NonNull StringHelper stringHelper,
@@ -51,9 +46,6 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
     this.screenDialogCreator = screenDialogCreator;
   }
 
-  /**
-   * TODO
-   */
   void start() {
     assertScreen();
     productAdditionEventSubscription = eventBus.onEventDispatched(EventType.PRODUCT_ADDITION)
@@ -109,31 +101,17 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
       });
   }
 
-  /**
-   * TODO
-   */
   void stop() {
     assertScreen();
     RxUtils.unsubscribe(paymentOptionsSubscription);
     RxUtils.unsubscribe(productAdditionEventSubscription);
   }
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
   @NonNull
   Product getSelectedPaymentOption() {
     return selectedProduct;
   }
 
-  /**
-   * TODO
-   *
-   * @param product
-   *   TODO
-   */
   void onPaymentOptionSelected(@NonNull Product product) {
     assertScreen();
     if (Utils.isNotNull(selectedProduct) && selectedProduct.equals(product)) {

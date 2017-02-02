@@ -5,6 +5,7 @@ import android.support.v4.util.Pair;
 
 import com.tpago.movil.domain.pos.PosBridge;
 import com.tpago.movil.domain.pos.PosResult;
+import com.tpago.movil.domain.session.Session;
 import com.tpago.movil.domain.util.EventBus;
 import com.tpago.movil.misc.rx.RxUtils;
 
@@ -16,11 +17,8 @@ import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func2;
-import timber.log.Timber;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 public final class ProductManager implements ProductProvider {
@@ -38,14 +36,6 @@ public final class ProductManager implements ProductProvider {
     this.sessionManager = sessionManager;
   }
 
-  /**
-   * TODO
-   *
-   * @param products
-   *   TODO
-   *
-   * @return TODO
-   */
   @NonNull
   final Observable<Object> syncProducts(@NonNull List<Product> products) {
     return getAll().zipWith(Observable.just(products),
@@ -98,11 +88,6 @@ public final class ProductManager implements ProductProvider {
       .last();
   }
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
   @NonNull
   public final Observable<List<Product>> getAllPaymentOptions() {
     return getAll()
@@ -117,32 +102,36 @@ public final class ProductManager implements ProductProvider {
       .toList();
   }
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
   @NonNull
   public final Observable<Boolean> activateAllProducts(@NonNull final String pin) {
     return getAllPaymentOptions()
-      .compose(RxUtils.<Product>fromCollection())
-      .doOnNext(new Action1<Product>() {
+      .flatMap(new Func1<List<Product>, Observable<Boolean>>() {
         @Override
-        public void call(Product product) {
-          Timber.d("Activating -> %1$s", product.toString());
+        public Observable<Boolean> call(final List<Product> products) {
+          final Session session = sessionManager.getSession();
+          if (session == null) {
+            return Observable.error(new NullPointerException("session == null"));
+          } else {
+            final PosBridge bridge = posBridge.get();
+            final String phoneNumber = session.getPhoneNumber();
+            final Func1<PosResult<String>, Boolean> mapFunc1 = new Func1<PosResult<String>, Boolean>() {
+              @Override
+              public Boolean call(PosResult<String> result) {
+                return result.isSuccessful();
+              }
+            };
+            final List<Observable<Boolean>> observables = new ArrayList<>();
+            for (Product product : products) {
+              observables.add(bridge.addCard(phoneNumber, pin, product.getAlias()).map(mapFunc1));
+            }
+            return Observable.concat(observables);
+          }
         }
       })
-      .flatMap(new Func1<Product, Observable<PosResult<String>>>() {
+      .reduce(true, new Func2<Boolean, Boolean, Boolean>() {
         @Override
-        public Observable<PosResult<String>> call(final Product product) {
-          return posBridge.get()
-            .addCard(sessionManager.getSession().getPhoneNumber(), pin, product.getAlias());
-        }
-      })
-      .reduce(true, new Func2<Boolean, PosResult<String>, Boolean>() {
-        @Override
-        public Boolean call(Boolean flag, PosResult<String> result) {
-          return flag && result.isSuccessful();
+        public Boolean call(Boolean flag, Boolean result) {
+          return flag && result;
         }
       });
   }
@@ -170,9 +159,6 @@ public final class ProductManager implements ProductProvider {
     productRepo.clear();
   }
 
-  /**
-   * TODO
-   */
   private enum Action {
     ADD,
     UPDATE,
