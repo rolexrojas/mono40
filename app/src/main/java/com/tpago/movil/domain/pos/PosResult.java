@@ -5,8 +5,8 @@ import com.tpago.movil.misc.Result;
 /**
  * @author hecvasro
  */
-public final class PosResult<D> extends Result<PosCode, D> {
-  public PosResult(PosCode code, D data) {
+public final class PosResult extends Result<PosCode, String> {
+  public PosResult(PosCode code, String data) {
     super(code.equals(PosCode.OK), code, data);
   }
 }

@@ -6,13 +6,13 @@ import rx.Observable;
  * @author hecvasro
  */
 public interface PosBridge {
-  Observable<PosResult<String>> addCard(String phoneNumber, String pin, String alias);
+  boolean isRegistered(String alias);
 
-  Observable<PosResult<String>> selectCard(String alias);
+  Observable<PosResult> addCard(String phoneNumber, String pin, String alias);
 
-  Observable<PosResult<String>> removeCard(String alias);
+  Observable<PosResult> selectCard(String alias);
 
-  Observable<PosResult<String>> reset(String phoneNumber);
+  Observable<PosResult> removeCard(String alias);
 
-  boolean isActive(String alias);
+  Observable<PosResult> reset(String phoneNumber);
 }

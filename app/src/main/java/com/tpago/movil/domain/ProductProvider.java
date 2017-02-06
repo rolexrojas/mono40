@@ -7,8 +7,6 @@ import java.util.List;
 import rx.Observable;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 public interface ProductProvider {

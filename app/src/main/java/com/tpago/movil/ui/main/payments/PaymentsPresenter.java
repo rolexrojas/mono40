@@ -319,9 +319,9 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
           screen.showLoadIndicator(true);
         }
       })
-      .subscribe(new Action1<PosResult<String>>() {
+      .subscribe(new Action1<PosResult>() {
         @Override
-        public void call(PosResult<String> result) {
+        public void call(PosResult result) {
           screen.hideLoadIndicator();
           if (result.isSuccessful()) {
             sessionManager.deactivate();

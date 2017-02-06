@@ -27,8 +27,6 @@ import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
@@ -52,9 +50,6 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
     this.sessionManager = sessionManager;
   }
 
-  /**
-   * TODO
-   */
   void start() {
     assertScreen();
     screen.setMessage(stringHelper.bringDeviceCloserToTerminal());
@@ -76,26 +71,26 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
           if (po.equals(cdpo)) {
             return posBridge.get().selectCard(po.getAlias())
               .subscribeOn(Schedulers.io())
-              .map(new Func1<PosResult<String>, Boolean>() {
+              .map(new Func1<PosResult, Boolean>() {
                 @Override
-                public Boolean call(PosResult<String> result) {
+                public Boolean call(PosResult result) {
                   return result.isSuccessful();
                 }
               });
           } else {
             return apiBridge.setDefaultPaymentOption(sessionManager.getSession().getAuthToken(), po)
               .subscribeOn(Schedulers.io())
-              .flatMap(new Func1<ApiResult<Void>, Observable<PosResult<String>>>() {
+              .flatMap(new Func1<ApiResult<Void>, Observable<PosResult>>() {
                 @Override
-                public Observable<PosResult<String>> call(ApiResult<Void> result) {
+                public Observable<PosResult> call(ApiResult<Void> result) {
                   // TODO: Propagate errors to the caller.
                   return posBridge.get().selectCard(po.getAlias())
                     .subscribeOn(Schedulers.io());
                 }
               })
-              .map(new Func1<PosResult<String>, Boolean>() {
+              .map(new Func1<PosResult, Boolean>() {
                 @Override
-                public Boolean call(PosResult<String> result) {
+                public Boolean call(PosResult result) {
                   return result.isSuccessful();
                 }
               })
@@ -140,9 +135,6 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
       });
   }
 
-  /**
-   * TODO
-   */
   void stop() {
     assertScreen();
     RxUtils.unsubscribe(subscription);

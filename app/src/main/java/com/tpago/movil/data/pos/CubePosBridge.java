@@ -2,7 +2,7 @@ package com.tpago.movil.data.pos;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.cube.sdk.Interfaces.CubeSdkCallback;
 import com.cube.sdk.altpan.CubeSdkImpl;
@@ -15,248 +15,260 @@ import com.cube.sdk.storage.operation.SelectCardParams;
 import com.tpago.movil.domain.pos.PosBridge;
 import com.tpago.movil.domain.pos.PosCode;
 import com.tpago.movil.domain.pos.PosResult;
-import com.tpago.movil.domain.text.TextHelper;
-import com.tpago.movil.misc.Utils;
 
 import rx.Observable;
 import rx.Subscriber;
-import rx.functions.Func1;
+import rx.functions.Action1;
 import timber.log.Timber;
 
 /**
  * @author hecvasro
  */
 class CubePosBridge implements PosBridge {
+  private static final String FILE_NAME = PosBridge.class.getCanonicalName();
+
+  private static final String KEY_COUNT = "count";
+
   private final CubeSdkImpl cubeSdk;
   private final SharedPreferences sharedPreferences;
 
   CubePosBridge(Context context) {
     cubeSdk = new CubeSdkImpl(context);
-    sharedPreferences = context
-      .getSharedPreferences(PosBridge.class.getCanonicalName(), Context.MODE_PRIVATE);
+    sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
   }
 
-  private static <T> void handleSuccessResult(
-    String method,
-    Subscriber<? super PosResult<T>> subscriber,
-    T data) {
-    Timber.d("methodName: %1$s, data: %2$s", method, data);
-    subscriber.onNext(new PosResult<>(PosCode.OK, data));
-    subscriber.onCompleted();
+  private static AddCardParams createAddCardParams(String phoneNumber, String pin, String alias) {
+    final AddCardParams params = new AddCardParams();
+    params.setMsisdn(phoneNumber);
+    params.setOtp(pin);
+    params.setAlias(alias);
+    return params;
   }
 
-  private static <T> void handleErrorResult(
-    String method,
-    Subscriber<? super PosResult<T>> subscriber,
-    CubeError error) {
-    final int code = Integer.parseInt(error.getErrorCode().trim().replaceAll("[\\D]", ""));
-    Timber.d(
-      "methodName: %1$s, error: {code: %2$d, message: %3$s, details: %4$s}",
-      method,
-      code,
+  private static SelectCardParams createSelectCardParams(String alias, String altPan) {
+    final SelectCardParams params = new SelectCardParams();
+    params.setAlias(alias);
+    params.setAltpan(altPan);
+    return params;
+  }
+
+  private static String stringify(Object... parameters) {
+    return TextUtils.join(",", parameters);
+  }
+
+  private static String stringify(String methodName, Object... parameters) {
+    return String.format("%1$s(%2$s)", methodName, stringify(parameters));
+  }
+
+  private static String stringify(CubeError error) {
+    return String.format(
+      "{code:'%1$s',message:'%2$s',details:'%3$s'}",
+      error.getErrorCode(),
       error.getErrorMessage(),
       error.getErrorDetails());
-    subscriber.onNext(new PosResult<T>(PosCode.fromValue(code), null));
-    subscriber.onCompleted();
   }
 
-  private static <T> void handleErrorResult(
-    String method,
-    Subscriber<? super PosResult<T>> subscriber,
-    PosCode code) {
+  private static PosResult createResult(String message) {
+    return new PosResult(PosCode.OK, message);
+  }
+
+  private static PosResult createResult(CubeError error) {
+    return new PosResult(
+      PosCode.fromValue(Integer.parseInt(error.getErrorCode().trim().replaceAll("[\\D]", ""))),
+      stringify(error));
+  }
+
+  private static PosResult createResult(String methodName, Object... arguments) {
     final CubeError error = new CubeError();
-    error.setErrorCode(Integer.toString(code.getValue()));
-    handleErrorResult(method, subscriber, error);
+    error.setErrorCode(Integer.toString(PosCode.UNEXPECTED.getValue()));
+    error.setErrorMessage(methodName);
+    error.setErrorDetails(stringify(arguments));
+    return createResult(error);
   }
 
-  @NonNull
-  private Observable<PosResult<String>> getAllPan(final String alias) {
-    return Observable.create(new Observable.OnSubscribe<PosResult<String>>() {
-      @Override
-      public void call(final Subscriber<? super PosResult<String>> subscriber) {
-        final String methodName = "getAllPan";
-        Utils.checkIfMainThread(methodName);
-        Timber.d("%1$s(%2$s)", methodName, alias);
-        cubeSdk.ListCard(new CubeSdkCallback<ListCards, CubeError>() {
-          @Override
-          public void success(ListCards listCards) {
-            String altPan = null;
-            for (Card card : listCards.getCards()) {
-              if (card.getAlias().equals(alias)) {
-                altPan = card.getAltpan();
-                break;
-              }
-            }
-            if (TextHelper.isEmpty(altPan)) {
-              handleErrorResult(methodName, subscriber, PosCode.UNREGISTERED_PRODUCT);
-            } else {
-              handleSuccessResult(methodName, subscriber, altPan);
-            }
-          }
-
-          @Override
-          public void failure(CubeError error) {
-            handleErrorResult(methodName, subscriber, error);
-          }
-        });
-      }
-    });
+  private String getAltPan(String alias) {
+    return sharedPreferences.getString(alias, null);
   }
 
-  @NonNull
   @Override
-  public Observable<PosResult<String>> addCard(
+  public boolean isRegistered(String alias) {
+    return sharedPreferences.contains(alias);
+  }
+
+  @Override
+  public Observable<PosResult> addCard(
     final String phoneNumber,
     final String pin,
     final String alias) {
-    return getAllPan(alias)
-      .flatMap(new Func1<PosResult<String>, Observable<PosResult<String>>>() {
+    final Observable<PosResult> observable;
+    if (isRegistered(alias)) {
+      observable = Observable.just(new PosResult(PosCode.OK, getAltPan(alias)));
+    } else {
+      observable = Observable.create(new Observable.OnSubscribe<PosResult>() {
         @Override
-        public Observable<PosResult<String>> call(final PosResult<String> result) {
-          final boolean flag = result.isSuccessful();
-          if (flag) {
-            return Observable.just(result);
-          } else {
-            return Observable.create(new Observable.OnSubscribe<PosResult<String>>() {
+        public void call(final Subscriber<? super PosResult> subscriber) {
+          cubeSdk.AddCard(
+            createAddCardParams(phoneNumber, pin, alias),
+            new CubeSdkCallback<String, CubeError>() {
               @Override
-              public void call(final Subscriber<? super PosResult<String>> subscriber) {
-                final String methodName = "addCard";
-                Timber.d("%1$s(%2$s,%3$s,%4$s)", methodName, phoneNumber, pin, alias);
-                Utils.checkIfMainThread(methodName);
-                final AddCardParams params = new AddCardParams();
-                params.setMsisdn(phoneNumber);
-                params.setOtp(pin);
-                params.setAlias(alias);
-                cubeSdk.AddCard(params, new CubeSdkCallback<String, CubeError>() {
+              public void success(String message) {
+                cubeSdk.ListCard(new CubeSdkCallback<ListCards, CubeError>() {
                   @Override
-                  public void success(String message) {
-                    sharedPreferences.edit()
-                      .putBoolean(alias, true)
-                      .apply();
-                    handleSuccessResult(methodName, subscriber, message);
+                  public void success(ListCards data) {
+                    String altPan = null;
+                    for (Card card : data.getCards()) {
+                      if (card.getAlias().equals(alias)) {
+                        altPan = card.getAltpan();
+                      }
+                    }
+                    final PosResult result;
+                    if (altPan == null) {
+                      result = createResult("addCard", phoneNumber, pin, alias);
+                    } else {
+                      sharedPreferences.edit()
+                        .putString(alias, altPan)
+                        .putInt(KEY_COUNT, sharedPreferences.getInt(KEY_COUNT, 0) + 1)
+                        .apply();
+                      result = createResult(altPan);
+                    }
+                    subscriber.onNext(result);
+                    subscriber.onCompleted();
                   }
 
                   @Override
                   public void failure(CubeError error) {
-                    handleErrorResult(methodName, subscriber, error);
+                    subscriber.onNext(createResult(error));
+                    subscriber.onCompleted();
                   }
                 });
               }
-            });
-          }
-        }
-      });
-  }
 
-  @NonNull
-  @Override
-  public Observable<PosResult<String>> selectCard(@NonNull final String alias) {
-    return getAllPan(alias)
-      .flatMap(new Func1<PosResult<String>, Observable<PosResult<String>>>() {
-        @Override
-        public Observable<PosResult<String>> call(final PosResult<String> result) {
-          if (result.isSuccessful()) {
-            return Observable.create(new Observable.OnSubscribe<PosResult<String>>() {
               @Override
-              public void call(final Subscriber<? super PosResult<String>> subscriber) {
-                final String methodName = "selectCard";
-                Utils.checkIfMainThread(methodName);
-                Timber.d("%1$s(%2$s)", methodName, alias);
-                final SelectCardParams params = new SelectCardParams();
-                params.setAlias(alias);
-                params.setAltpan(result.getData());
-                cubeSdk.SelectCard(params, new CubeSdkCallback<PaymentInfo, CubeError>() {
-                  @Override
-                  public void success(PaymentInfo paymentInfo) {
-                    Timber.d("value = %1$s", paymentInfo.getValue());
-                    Timber.d("date = %1$s", paymentInfo.getDate());
-                    Timber.d("reference = %1$s", paymentInfo.getReference());
-                    Timber.d("time = %1$s", paymentInfo.getTime());
-                    Timber.d("crypto = %1$s", paymentInfo.getCrypto());
-                    Timber.d("atc = %1$s", paymentInfo.getAtc());
-                    handleSuccessResult(methodName, subscriber, paymentInfo.getAtc());
-                  }
-
-                  @Override
-                  public void failure(CubeError error) {
-                    handleErrorResult(methodName, subscriber, error);
-                  }
-                });
+              public void failure(CubeError error) {
+                subscriber.onNext(createResult(error));
+                subscriber.onCompleted();
               }
             });
-          } else {
-            return Observable.just(result);
-          }
         }
       });
+    }
+    return observable.doOnNext(new LogAction1("addCard", phoneNumber, pin, alias));
   }
 
-  @NonNull
   @Override
-  public Observable<PosResult<String>> removeCard(@NonNull final String alias) {
-    return getAllPan(alias)
-      .flatMap(new Func1<PosResult<String>, Observable<PosResult<String>>>() {
+  public Observable<PosResult> selectCard(final String alias) {
+    final Observable<PosResult> observable;
+    if (isRegistered(alias)) {
+      observable = Observable.create(new Observable.OnSubscribe<PosResult>() {
         @Override
-        public Observable<PosResult<String>> call(final PosResult<String> result) {
-          if (result.isSuccessful()) {
-            return Observable.create(new Observable.OnSubscribe<PosResult<String>>() {
+        public void call(final Subscriber<? super PosResult> subscriber) {
+          cubeSdk.SelectCard(
+            createSelectCardParams(alias, getAltPan(alias)),
+            new CubeSdkCallback<PaymentInfo, CubeError>() {
               @Override
-              public void call(final Subscriber<? super PosResult<String>> subscriber) {
-                final String methodName = "removeCard";
-                Utils.checkIfMainThread(methodName);
-                Timber.d("%1$s(%2$s)", methodName, alias);
-                final SelectCardParams params = new SelectCardParams();
-                params.setAlias(alias);
-                params.setAltpan(result.getData());
-                cubeSdk.DeleteCard(params, new CubeSdkCallback<String, CubeError>() {
-                  @Override
-                  public void success(String message) {
-                    sharedPreferences.edit()
-                      .remove(alias)
-                      .apply();
-                    handleSuccessResult(methodName, subscriber, message);
-                  }
-
-                  @Override
-                  public void failure(CubeError error) {
-                    handleErrorResult(methodName, subscriber, error);
-                  }
-                });
+              public void success(PaymentInfo data) {
+                subscriber.onNext(createResult(stringify(
+                  data.getValue(),
+                  data.getDate(),
+                  data.getReference(),
+                  data.getTime(),
+                  data.getCrypto(),
+                  data.getAtc()
+                )));
+                subscriber.onCompleted();
               }
-            });
-          } else {
-            return Observable.just(result);
-          }
+
+              @Override
+              public void failure(CubeError error) {
+                subscriber.onNext(createResult(error));
+                subscriber.onCompleted();
+              }
+            }
+          );
         }
       });
+    } else {
+      observable = Observable.just(createResult("selectCard", alias));
+    }
+    return observable.doOnNext(new LogAction1("selectCard", alias));
   }
 
   @Override
-  public Observable<PosResult<String>> reset(@NonNull final String phoneNumber) {
-    return Observable.create(new Observable.OnSubscribe<PosResult<String>>() {
-      @Override
-      public void call(final Subscriber<? super PosResult<String>> subscriber) {
-        final String methodName = "reset";
-        Utils.checkIfMainThread(methodName);
-        Timber.d("%1$s(%2$s)", methodName, phoneNumber);
-        cubeSdk.Unregister(phoneNumber, new CubeSdkCallback<String, CubeError>() {
-          @Override
-          public void success(String message) {
-            handleSuccessResult(methodName, subscriber, message);
-          }
+  public Observable<PosResult> removeCard(final String alias) {
+    final Observable<PosResult> observable;
+    if (isRegistered(alias)) {
+      observable = Observable.create(new Observable.OnSubscribe<PosResult>() {
+        @Override
+        public void call(final Subscriber<? super PosResult> subscriber) {
+          cubeSdk.DeleteCard(
+            createSelectCardParams(alias, getAltPan(alias)),
+            new CubeSdkCallback<String, CubeError>() {
+              @Override
+              public void success(String message) {
+                sharedPreferences.edit()
+                  .remove(alias)
+                  .putInt(KEY_COUNT, sharedPreferences.getInt(KEY_COUNT, 0) - 1)
+                  .apply();
+                subscriber.onNext(createResult(message));
+                subscriber.onCompleted();
+              }
 
-          @Override
-          public void failure(CubeError error) {
-            handleErrorResult(methodName, subscriber, error);
-          }
-        });
-      }
-    });
+              @Override
+              public void failure(CubeError error) {
+                subscriber.onNext(createResult(error));
+                subscriber.onCompleted();
+              }
+            });
+        }
+      });
+    } else {
+      observable = Observable.just(createResult(alias));
+    }
+    return observable.doOnNext(new LogAction1("removeCard", alias));
   }
 
   @Override
-  public boolean isActive(String alias) {
-    return sharedPreferences.getBoolean(alias, false);
+  public Observable<PosResult> reset(final String phoneNumber) {
+    final Observable<PosResult> observable;
+    if (sharedPreferences.getInt(KEY_COUNT, 0) == 0) {
+      observable = Observable.just(createResult(phoneNumber));
+    } else {
+      observable = Observable.create(new Observable.OnSubscribe<PosResult>() {
+        @Override
+        public void call(final Subscriber<? super PosResult> subscriber) {
+          cubeSdk.Unregister(phoneNumber, new CubeSdkCallback<String, CubeError>() {
+            @Override
+            public void success(String message) {
+              sharedPreferences.edit()
+                .clear()
+                .apply();
+              subscriber.onNext(createResult(message));
+              subscriber.onCompleted();
+            }
+
+            @Override
+            public void failure(CubeError error) {
+              subscriber.onNext(createResult(error));
+              subscriber.onCompleted();
+            }
+          });
+        }
+      });
+    }
+    return observable.doOnNext(new LogAction1("reset", phoneNumber));
+  }
+
+  private class LogAction1 implements Action1<PosResult> {
+    private final String operation;
+
+    LogAction1(String methodName, Object... parameters) {
+      operation = stringify(methodName, parameters);
+    }
+
+    @Override
+    public void call(PosResult result) {
+      Timber.d("%1$s -> %2$s", operation, result);
+    }
   }
 }
 

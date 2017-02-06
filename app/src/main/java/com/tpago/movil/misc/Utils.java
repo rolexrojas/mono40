@@ -1,6 +1,5 @@
 package com.tpago.movil.misc;
 
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -8,11 +7,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
-import timber.log.Timber;
-
 /**
- * TODO
- *
  * @author hecvasro
  */
 public final class Utils {
@@ -42,17 +37,5 @@ public final class Utils {
       calendar.set(Calendar.MILLISECOND, 0);
     }
     return calendar.getTime();
-  }
-
-  @NonNull
-  public static Date getTime(long milliseconds) {
-    return getTime(milliseconds, false);
-  }
-
-  public static void checkIfMainThread(final String methodName) {
-    Timber.d(
-      "methodName: %1$s, isMainThread: %2$s",
-      methodName,
-      Looper.getMainLooper().getThread().equals(Thread.currentThread()));
   }
 }

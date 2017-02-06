@@ -88,7 +88,6 @@ public final class ProductManager implements ProductProvider {
       .last();
   }
 
-  @NonNull
   public final Observable<List<Product>> getAllPaymentOptions() {
     // TODO: Change order in a way that the primary payment option is the first one.
     return getAll()
@@ -103,24 +102,25 @@ public final class ProductManager implements ProductProvider {
   }
 
   public final Observable<Boolean> activateAllProducts(final String pin) {
-    return getAllPaymentOptions()
+    return productRepo.getAll()
       .compose(RxUtils.<Product>fromCollection())
       .filter(new Func1<Product, Boolean>() {
         @Override
         public Boolean call(Product product) {
-          return !posBridge.get().isActive(product.getAlias());
+          return Product.isPaymentOption(product)
+            && !posBridge.get().isRegistered(product.getAlias());
         }
       })
-      .concatMap(new Func1<Product, Observable<PosResult<String>>>() {
+      .concatMap(new Func1<Product, Observable<PosResult>>() {
         @Override
-        public Observable<PosResult<String>> call(Product product) {
+        public Observable<PosResult> call(Product product) {
           return posBridge.get()
             .addCard(sessionManager.getSession().getPhoneNumber(), pin, product.getAlias());
         }
       })
-      .map(new Func1<PosResult<String>, Boolean>() {
+      .map(new Func1<PosResult, Boolean>() {
         @Override
-        public Boolean call(PosResult<String> result) {
+        public Boolean call(PosResult result) {
           return result.isSuccessful();
         }
       })
@@ -145,7 +145,6 @@ public final class ProductManager implements ProductProvider {
       .switchIfEmpty(Observable.just((Product) null));
   }
 
-  @NonNull
   @Override
   public Observable<List<Product>> getAll() {
     return productRepo.getAll();

@@ -220,7 +220,7 @@ public class PurchaseFragment extends ChildFragment<MainContainer>
       "Activar cuenta para comprar", new PinConfirmationDialogFragment.Callback() {
         @Override
         public void confirm(@NonNull String pin) {
-          presenter.activeCards(pin);
+          presenter.activateCards(pin);
         }
       })
       .show(manager, TAG_PIN_CONFIRMATION);

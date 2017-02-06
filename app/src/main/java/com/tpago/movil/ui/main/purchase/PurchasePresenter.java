@@ -67,7 +67,7 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
       .filter(new Func1<Product, Boolean>() {
         @Override
         public Boolean call(Product product) {
-          return posBridge.isActive(product.getAlias());
+          return posBridge.isRegistered(product.getAlias());
         }
       })
       .subscribe(new Action1<Product>() {
@@ -139,7 +139,7 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
     }
   }
 
-  void activeCards(@NonNull String pin) {
+  void activateCards(@NonNull String pin) {
     assertScreen();
     if (activationSubscription.isUnsubscribed()) {
       activationSubscription = productManager.activateAllProducts(pin)
@@ -149,12 +149,14 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
           @Override
           public void call(Boolean flag) {
             screen.onActivationFinished(flag);
-            loadPaymentOptions();
+            if (flag) {
+              loadPaymentOptions();
+            }
           }
         }, new Action1<Throwable>() {
           @Override
           public void call(Throwable throwable) {
-            Timber.e(throwable, "Activating all products");
+            Timber.e(throwable, "Activating all payment options");
             screen.onActivationFinished(false);
           }
         });

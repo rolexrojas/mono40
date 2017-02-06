@@ -48,6 +48,6 @@ public abstract class Result<C, D> {
 
   @Override
   public String toString() {
-    return String.format("%1$s - (%2$s) %4$s", successful, code, data);
+    return String.format("%1$s - (%2$s) %3$s", successful, code, data);
   }
 }
