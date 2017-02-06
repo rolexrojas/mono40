@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"/>
 
-      <com.gbh.movil.ui.view.widget.PinView
+      <com.tpago.movil.ui.view.widget.PinView
         android:id="@+id/pin_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
         android:layout_marginStart="60dp"
         android:layout_marginTop="16dp"/>
 
-      <com.gbh.movil.ui.view.widget.pad.NumPad
+      <com.tpago.movil.ui.view.widget.pad.NumPad
         android:id="@+id/num_pad"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

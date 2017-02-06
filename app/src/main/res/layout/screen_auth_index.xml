@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.gbh.movil.ui.view.widget.PercentLinearLayout
+<com.tpago.movil.ui.view.widget.PercentLinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
@@ -39,7 +39,7 @@
     app:layout_marginEndPercent="17%"
     app:layout_marginStartPercent="17%"
     app:layout_marginTopPercent="12%"/>
-  <com.gbh.movil.ui.view.widget.AppButton
+  <com.tpago.movil.ui.view.widget.AppButton
     android:id="@+id/button_continue"
     style="@style/Screen.AuthIndex.Widget.Button"
     android:layout_gravity="center_horizontal"
@@ -55,7 +55,7 @@
     app:layout_marginEndPercent="17%"
     app:layout_marginStartPercent="17%"
     app:layout_marginTopPercent="8%"/>
-  <com.gbh.movil.ui.view.widget.AppButton
+  <com.tpago.movil.ui.view.widget.AppButton
     android:id="@+id/button_sign_up"
     style="@style/Screen.AuthIndex.Widget.Button"
     android:layout_gravity="center_horizontal"
@@ -63,4 +63,4 @@
     app:layout_heightPercent="6%"
     app:layout_marginTopPercent="3%"
     app:layout_widthPercent="42%"/>
-</com.gbh.movil.ui.view.widget.PercentLinearLayout>
+</com.tpago.movil.ui.view.widget.PercentLinearLayout>

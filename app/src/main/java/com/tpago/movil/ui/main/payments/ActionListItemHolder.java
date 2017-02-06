@@ -1,0 +1,32 @@
+package com.tpago.movil.ui.main.payments;
+
+import android.support.annotation.NonNull;
+import android.view.View;
+import android.widget.TextView;
+
+import com.tpago.movil.R;
+import com.tpago.movil.ui.main.list.ListItemHolder;
+
+import butterknife.BindView;
+
+/**
+ * TODO
+ *
+ * @author hecvasro
+ */
+class ActionListItemHolder extends ListItemHolder {
+  @BindView(R.id.action_text)
+  TextView actionTextView;
+
+  /**
+   * TODO
+   *
+   * @param rootView
+   *   TODO
+   * @param onClickListener
+   *   TODO
+   */
+  ActionListItemHolder(@NonNull View rootView, @NonNull OnClickListener onClickListener) {
+    super(rootView, onClickListener);
+  }
+}

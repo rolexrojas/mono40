@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
   style="@style/ListItem.Large"
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto">
+  xmlns:android="http://schemas.android.com/apk/res/android">
   <LinearLayout
     android:id="@+id/linear_layout_anchor"
     android:layout_width="wrap_content"
@@ -33,7 +32,7 @@
       style="@style/ListItemButton"
       android:layout_gravity="center"
       android:text="@string/balance"/>
-    <com.gbh.movil.ui.view.widget.PrefixableTextView
+    <com.tpago.movil.ui.view.widget.PrefixableTextView
       android:id="@+id/product.balance"
       style="@style/Screen.Products.Text.Widget.Amount.Content"
       android:layout_width="wrap_content"
