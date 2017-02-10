@@ -8,7 +8,7 @@
     android:id="@+id/action.proceed"
     layout="@layout/action_proceed"/>
   <TextView
-    android:id="@+id/action.text"
+    android:id="@+id/action.title"
     fontPath="@string/font_gotham_rounded_book"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
