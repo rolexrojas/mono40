@@ -39,26 +39,26 @@ android {
     ]
     def build = [
       type: [boolean: 'Boolean', string: 'String'],
-      field: [apiUrl: 'API_URL', report: 'REPORT'],
+      field: [apiUrl: 'API_URL', crashlytics: 'CRASHLYTICS'],
       value: [true: 'true', false: 'false']
     ]
     development {
       def flavorId = 'dev'
       applicationIdSuffix ".${flavorId}"
       resValue res.type.string, res.key.appName, "${appName}-${flavorId}"
-      buildConfigField build.type.boolean, build.field.report, build.value.false
+      buildConfigField build.type.boolean, build.field.crashlytics, build.value.false
       buildConfigField build.type.string, build.field.apiUrl, '"http://172.19.1.103:8081/api/neo/"'
     }
     staging {
       def flavorId = 'stag'
       applicationIdSuffix ".${flavorId}"
       resValue res.type.string, res.key.appName, "${appName}-${flavorId}"
-      buildConfigField build.type.boolean, build.field.report, build.value.true
+      buildConfigField build.type.boolean, build.field.crashlytics, build.value.true
       buildConfigField build.type.string, build.field.apiUrl, '"https://demo.gcs-systems.com/api/neo/"'
     }
     production {
       resValue res.type.string, res.key.appName, appName
-      buildConfigField build.type.boolean, build.field.report, build.value.true
+      buildConfigField build.type.boolean, build.field.crashlytics, build.value.true
       buildConfigField build.type.string, build.field.apiUrl, 'null'
     }
   }
