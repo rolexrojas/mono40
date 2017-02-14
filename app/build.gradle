@@ -14,11 +14,13 @@ android {
   defaultConfig {
     applicationId 'com.tpago.movil'
 
+    versionCode 0
+    versionName '2.0.0-beta.0'
+
     minSdkVersion 19
     targetSdkVersion 24
 
-    versionCode 0
-    versionName '2.0.0-beta.0'
+    vectorDrawables.useSupportLibrary = true
   }
 
   buildTypes {
@@ -82,7 +84,6 @@ dependencies {
 
   compile 'com.googlecode.libphonenumber:libphonenumber:8.0.1'
 
-  compile 'io.reactivex:rxjava:1.2.6'
   compile 'io.reactivex.rxjava2:rxjava:2.0.5'
 
   compile 'com.jakewharton.timber:timber:4.3.1'
@@ -93,8 +94,9 @@ dependencies {
 
   def retrofitVersion = '2.1.0'
   compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"
-  compile "com.squareup.retrofit2:adapter-rxjava:${retrofitVersion}"
   compile "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
+//  compile "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}"
+  compile 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
 
   testCompile 'junit:junit:4.12'
 
@@ -118,18 +120,10 @@ dependencies {
   compile "com.jakewharton:butterknife:${butterKnifeVersion}"
   annotationProcessor "com.jakewharton:butterknife-compiler:${butterKnifeVersion}"
 
-  compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
-
-  compile 'de.hdodenhof:circleimageview:2.1.0'
-  compile 'com.github.ozodrukh:CircularReveal:2.0.1'
-
   compile 'com.squareup.picasso:picasso:2.5.2'
   compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2'
 
   compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-  
-  compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
-  compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.0'
 
   compile fileTree(include: ['*.jar'], dir: 'libs')
   compile(name: 'CubeSdk', ext: 'aar')

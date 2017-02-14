@@ -18,5 +18,14 @@
     <meta-data
       android:name="io.fabric.ApiKey"
       android:value="1222b6a0c933aee641154a066ae9daaa93d7d2d8"/>
+    <activity
+      android:name=".ui.onboarding.OnboardingActivity"
+      android:screenOrientation="portrait">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+    </activity>
   </application>
 </manifest>
