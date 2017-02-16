@@ -82,6 +82,8 @@ dependencies {
   provided "com.jakewharton.auto.value:auto-value-annotations:${autoValueVersion}"
   annotationProcessor "com.google.auto.value:auto-value:${autoValueVersion}"
 
+  annotationProcessor 'com.squareup.auto.value:auto-value-redacted:1.0.0'
+
   compile 'com.googlecode.libphonenumber:libphonenumber:8.0.1'
 
   compile 'io.reactivex.rxjava2:rxjava:2.0.5'
@@ -124,6 +126,8 @@ dependencies {
   compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2'
 
   compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+
+  compile 'com.daimajia.easing:library:2.0@aar'
 
   compile fileTree(include: ['*.jar'], dir: 'libs')
   compile(name: 'CubeSdk', ext: 'aar')

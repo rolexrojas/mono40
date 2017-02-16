@@ -16,6 +16,12 @@ public final class Objects {
     return !isNull(reference);
   }
 
+  public static <T> void checkNotNull(T reference, String message) {
+    if (isNull(reference)) {
+      throw new NullPointerException(message);
+    }
+  }
+
   public static <T> T defaultIfNull(T reference, T defaultValue) {
     return isNotNull(reference) ? reference : defaultValue;
   }
