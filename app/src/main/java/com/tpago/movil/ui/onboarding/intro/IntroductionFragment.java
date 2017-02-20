@@ -1,4 +1,4 @@
-package com.tpago.movil.ui.onboarding;
+package com.tpago.movil.ui.onboarding.intro;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

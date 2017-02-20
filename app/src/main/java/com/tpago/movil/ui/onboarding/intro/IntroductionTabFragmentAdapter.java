@@ -1,4 +1,4 @@
-package com.tpago.movil.ui.onboarding;
+package com.tpago.movil.ui.onboarding.intro;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
