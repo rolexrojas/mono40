@@ -5,4 +5,8 @@
   <color name="background_dark_colored_start">@color/primary</color>
   <color name="primary">#9C188F</color>
   <color name="primary_dark">#6D1764</color>
+  <color name="tab_indicator_dot_default">@color/white_alpha_50</color>
+  <color name="tab_indicator_dot_selected">@color/white</color>
+  <color name="white">#FFFFFF</color>
+  <color name="white_alpha_50">#7FFFFFFF</color>
 </resources>

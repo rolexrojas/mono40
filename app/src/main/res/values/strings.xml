@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="font_gotham_round_bold">fonts/GothamRounded/Bold.otf</string>
+  <string name="font_gotham_round_book">fonts/GothamRounded/Book.otf</string>
+  <string name="font_gotham_round_medium">fonts/GothamRounded/Medium.otf</string>
+  <string name="introduction_tab_description_money">Transfiere a tu amigo el serrucho del almuerzo o paga tu factura de luz en segundos.</string>
+  <string name="introduction_tab_description_purchase">Cuando estés de compras, al pagar solo toca tu celular y listo.</string>
+  <string name="introduction_tab_description_welcome">Con tPago puedes pagar, comprar y enviar dinero de manera rápida y segura.</string>
+  <string name="introduction_tab_title_money">Dinero al momento</string>
+  <string name="introduction_tab_title_purchase">Tocar y pagar</string>
+  <string name="introduction_tab_title_welcome">¡Bienvenidos!</string>
+</resources>

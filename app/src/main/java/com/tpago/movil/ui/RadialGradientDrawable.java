@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 
 import com.tpago.movil.util.Objects;
+import com.tpago.movil.util.Preconditions;
 
 /**
  * @author hecvasro
@@ -14,7 +15,7 @@ public final class RadialGradientDrawable extends GradientDrawable {
   private static final float DEFAULT_CENTER_Y = 0.97F;
 
   public static void createAndSet(final View view, final int startColor, final int endColor) {
-    Objects.checkNotNull(view, "Null view");
+    Preconditions.checkNotNull(view, "Null view");
     final ViewTreeObserver observer = view.getViewTreeObserver();
     if (observer.isAlive()) {
       observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {

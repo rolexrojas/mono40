@@ -33,7 +33,7 @@ import io.reactivex.functions.Consumer;
 /**
  * @author hecvasro
  */
-public final class AnimatedLogo extends FrameLayout {
+public final class Logo extends FrameLayout {
   private static final long FRAME_DURATION = 2000L;
 
   private static final long FRAME_DURATION_CROSS = Math.round(FRAME_DURATION * 0.33F);
@@ -41,17 +41,17 @@ public final class AnimatedLogo extends FrameLayout {
 
   private FrameSwitcher frameSwitcher;
 
-  public AnimatedLogo(Context context) {
+  public Logo(Context context) {
     super(context);
     initializeAnimatedLogo();
   }
 
-  public AnimatedLogo(Context context, AttributeSet attrs) {
+  public Logo(Context context, AttributeSet attrs) {
     super(context, attrs);
     initializeAnimatedLogo();
   }
 
-  public AnimatedLogo(Context context, AttributeSet attrs, int defStyleAttr) {
+  public Logo(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     initializeAnimatedLogo();
   }
@@ -105,7 +105,7 @@ public final class AnimatedLogo extends FrameLayout {
   @AutoValue
   static abstract class Frame {
     static Frame create(Drawable drawable) {
-      return new AutoValue_AnimatedLogo_Frame(drawable);
+      return new AutoValue_Logo_Frame(drawable);
     }
 
     static Frame create(Context context, @DrawableRes int drawableId) {

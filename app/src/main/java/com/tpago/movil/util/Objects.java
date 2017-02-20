@@ -4,9 +4,7 @@ package com.tpago.movil.util;
  * @author hecvasro
  */
 public final class Objects {
-  private Objects() {
-    throw new AssertionError("Cannot be instantiated");
-  }
+  private static final Object NOTIFICATION = new Object();
 
   public static <T> boolean isNull(T reference) {
     return reference == null;
@@ -16,13 +14,15 @@ public final class Objects {
     return !isNull(reference);
   }
 
-  public static <T> void checkNotNull(T reference, String message) {
-    if (isNull(reference)) {
-      throw new NullPointerException(message);
-    }
-  }
-
   public static <T> T defaultIfNull(T reference, T defaultValue) {
     return isNotNull(reference) ? reference : defaultValue;
+  }
+
+  public static Object notification() {
+    return NOTIFICATION;
+  }
+
+  private Objects() {
+    throw new AssertionError("Cannot be instantiated");
   }
 }

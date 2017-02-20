@@ -5,7 +5,7 @@ import android.animation.Animator;
 /**
  * @author hecvasro
  */
-public class BaseAnimatorListener implements Animator.AnimatorListener {
+public abstract class BaseAnimatorListener implements Animator.AnimatorListener {
   @Override
   public void onAnimationStart(Animator animation) {
   }

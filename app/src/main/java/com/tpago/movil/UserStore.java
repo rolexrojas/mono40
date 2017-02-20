@@ -4,6 +4,8 @@ import android.content.SharedPreferences;
 
 import com.tpago.movil.util.Objects;
 
+import timber.log.Timber;
+
 /**
  * @author hecvasro
  */
@@ -37,6 +39,7 @@ public final class UserStore {
     user.setOnNameChangedListener(new User.OnNameChangedListener() {
       @Override
       public void onNameChanged(String firstName, String lastName) {
+        Timber.d("onNameChanged('%1$s','%2$s')", firstName, lastName);
         sharedPreferences.edit()
           .putString(KEY_FIRST_NAME, firstName)
           .putString(KEY_LAST_NAME, lastName)
@@ -46,6 +49,7 @@ public final class UserStore {
     user.setOnAvatarPathChangedListener(new User.OnAvatarPathChangedListener() {
       @Override
       public void onAvatarChanged(String avatarPath) {
+        Timber.d("onAvatarChanged('%1$s')", avatarPath);
         sharedPreferences.edit()
           .putString(KEY_AVATAR_PATH, avatarPath)
           .apply();
