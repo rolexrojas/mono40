@@ -8,7 +8,7 @@ import android.widget.FrameLayout;
 import com.tpago.movil.R;
 import com.tpago.movil.ui.BaseActivity;
 import com.tpago.movil.ui.RadialGradientDrawable;
-import com.tpago.movil.ui.onboarding.intro.IntroductionFragment;
+import com.tpago.movil.ui.onboarding.intro.IntroFragment;
 
 import butterknife.BindColor;
 import butterknife.BindView;
@@ -42,7 +42,7 @@ public final class OnboardingActivity extends BaseActivity {
     RadialGradientDrawable.createAndSet(rootView, backgroundStartColor, backgroundEndColor);
 
     getSupportFragmentManager().beginTransaction()
-      .replace(R.id.frame_layout_container, IntroductionFragment.create())
+      .replace(R.id.frame_layout_container, IntroFragment.create())
       .commit();
   }
 

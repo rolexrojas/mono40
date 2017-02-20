@@ -1,6 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <style name="Base"/>
+
+  <style name="Base.Text" parent="TextAppearance.AppCompat"/>
+  <style name="Base.Text.Dark">
+    <item name="android:textColor">@color/white</item>
+    <item name="android:gravity">center</item>
+  </style>
+  <style name="Base.Text.Dark.Primary">
+    <item name="android:textSize">20sp</item>
+    <item name="fontPath">@string/font_gotham_round_medium</item>
+  </style>
+  <style name="Base.Text.Dark.Secondary">
+    <item name="android:textSize">15sp</item>
+    <item name="android:lineSpacingExtra">10sp</item>
+    <item name="fontPath">@string/font_gotham_round_book</item>
+  </style>
+
+  <style name="Base.Widget"/>
+  <style name="Base.Widget.Button">
+    <item name="android:background">?attr/selectableItemBackground</item>
+    <item name="android:clickable">true</item>
+    <item name="android:gravity">center</item>
+    <item name="android:textColor">@color/primary</item>
+    <item name="android:textSize">14sp</item>
+    <item name="fontPath">@string/font_gotham_round_bold</item>
+  </style>
+  <style name="Base.Widget.Button.WhiteRounded">
+    <item name="android:background">@drawable/app_widget_button_white_rounded_shape</item>
+  </style>
+
   <style name="Base.Theme" parent="Theme.AppCompat.Light.NoActionBar">
     <item name="colorAccent">@color/accent</item>
     <item name="colorPrimary">@color/primary</item>
@@ -8,4 +37,9 @@
   </style>
 
   <style name="App.Theme" parent="Base.Theme"/>
+
+  <style name="App.Text.Dark.Primary" parent="Base.Text.Dark.Primary"/>
+  <style name="App.Text.Dark.Secondary" parent="Base.Text.Dark.Secondary"/>
+
+  <style name="App.Widget.Button.WhiteRounded" parent="Base.Widget.Button.WhiteRounded"/>
 </resources>

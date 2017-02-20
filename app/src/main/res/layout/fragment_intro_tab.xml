@@ -8,28 +8,22 @@
   tools:ignore="MissingPrefix">
   <TextView
     android:id="@+id/text_view_description"
-    fontPath="@string/font_gotham_round_book"
+    style="@style/App.Text.Dark.Secondary"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:layout_marginEnd="60dp"
     android:layout_marginStart="60dp"
-    android:gravity="center"
-    android:lineSpacingExtra="10sp"
-    android:textColor="@color/white"
-    android:textSize="15sp"/>
+    android:gravity="center"/>
   <TextView
     android:id="@+id/text_view_title"
-    fontPath="@string/font_gotham_round_medium"
+    style="@style/App.Text.Dark.Primary"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_above="@+id/text_view_description"
     android:layout_marginBottom="8dp"
     android:layout_marginEnd="60dp"
-    android:layout_marginStart="60dp"
-    android:gravity="center"
-    android:textColor="@color/white"
-    android:textSize="20sp"/>
+    android:layout_marginStart="60dp"/>
   <FrameLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

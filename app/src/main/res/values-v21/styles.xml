@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <style name="App.Widget.Button.WhiteRounded" parent="Base.Widget.Button.WhiteRounded">
+    <item name="android:background">@drawable/app_widget_button_rounded_white</item>
+  </style>
+</resources>

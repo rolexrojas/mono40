@@ -20,7 +20,7 @@ import butterknife.Unbinder;
 /**
  * @author hecvasro
  */
-public final class IntroductionFragment extends Fragment {
+public final class IntroFragment extends Fragment {
   private Unbinder unbinder;
 
   private AutoTabSwitcher autoTabSwitcher;
@@ -30,8 +30,8 @@ public final class IntroductionFragment extends Fragment {
   @BindView(R.id.tab_layout)
   TabLayout tabLayout;
 
-  static IntroductionFragment create() {
-    return new IntroductionFragment();
+  public static IntroFragment create() {
+    return new IntroFragment();
   }
 
   @Nullable
@@ -40,7 +40,7 @@ public final class IntroductionFragment extends Fragment {
     LayoutInflater inflater,
     @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_introduction, container, false);
+    return inflater.inflate(R.layout.fragment_intro, container, false);
   }
 
   @Override
@@ -49,7 +49,7 @@ public final class IntroductionFragment extends Fragment {
     // Binds all annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
     // Initializes the view pager and the tab layout.
-    viewPager.setAdapter(IntroductionTabFragmentAdapter.create(getChildFragmentManager()));
+    viewPager.setAdapter(IntroTabFragmentAdapter.create(getChildFragmentManager()));
     tabLayout.setupWithViewPager(viewPager);
     // Creates the auto tab switcher.
     autoTabSwitcher = new AutoTabSwitcher(viewPager);
