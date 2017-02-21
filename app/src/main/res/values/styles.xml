@@ -18,6 +18,7 @@
   </style>
 
   <style name="Base.Widget"/>
+
   <style name="Base.Widget.Button">
     <item name="android:background">?attr/selectableItemBackground</item>
     <item name="android:clickable">true</item>
@@ -27,7 +28,36 @@
     <item name="fontPath">@string/font_gotham_round_bold</item>
   </style>
   <style name="Base.Widget.Button.WhiteRounded">
-    <item name="android:background">@drawable/app_widget_button_white_rounded_shape</item>
+    <item name="android:background">@drawable/widget_button_white_rounded_shape</item>
+  </style>
+
+  <style name="Base.Widget.NumPadRow">
+    <item name="android:layout_height">0dp</item>
+    <item name="android:layout_weight">1</item>
+    <item name="android:layout_width">match_parent</item>
+  </style>
+  <style name="Base.Widget.NumPadCell">
+    <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+    <item name="android:clickable">true</item>
+    <item name="android:layout_height">match_parent</item>
+    <item name="android:layout_weight">1</item>
+    <item name="android:layout_width">0dp</item>
+  </style>
+  <style name="Base.Widget.NumPadCell.Text">
+    <item name="android:gravity">center</item>
+    <item name="android:lineSpacingExtra">2sp</item>
+    <item name="android:textSize">24sp</item>
+    <item name="fontPath">@string/font_gotham_round_medium</item>
+  </style>
+  <style name="Base.Widget.NumPad">
+    <item name="shouldShowDot">false</item>
+    <item name="deleteDrawable">@drawable/ic_backspace_black_24dp</item>
+  </style>
+  <style name="Base.Widget.NumPad.Dark">
+    <item name="color">@color/widget_num_pad_dark_color</item>
+  </style>
+  <style name="Base.Widget.NumPad.Light">
+    <item name="color">@color/widget_num_pad_light_color</item>
   </style>
 
   <style name="Base.Theme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -36,10 +66,19 @@
     <item name="colorPrimaryDark">@color/primary_dark</item>
   </style>
 
-  <style name="App.Theme" parent="Base.Theme"/>
-
   <style name="App.Text.Dark.Primary" parent="Base.Text.Dark.Primary"/>
   <style name="App.Text.Dark.Secondary" parent="Base.Text.Dark.Secondary"/>
 
   <style name="App.Widget.Button.WhiteRounded" parent="Base.Widget.Button.WhiteRounded"/>
+
+  <style name="App.Widget.NumPadRow" parent="Base.Widget.NumPadRow"/>
+  <style name="App.Widget.NumPadCell" parent="Base.Widget.NumPadCell"/>
+  <style name="App.Widget.NumPadCell.Text" parent="Base.Widget.NumPadCell.Text"/>
+  <style name="App.Widget.NumPad" parent="Base.Widget.NumPad"/>
+  <style name="App.Widget.NumPad.Dark" parent="Base.Widget.NumPad.Dark"/>
+  <style name="App.Widget.NumPad.Light" parent="Base.Widget.NumPad.Light"/>
+
+  <style name="App.Theme" parent="Base.Theme">
+    <item name="numPadStyle">@style/App.Widget.NumPad</item>
+  </style>
 </resources>

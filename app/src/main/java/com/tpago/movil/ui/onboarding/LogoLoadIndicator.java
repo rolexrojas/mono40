@@ -7,19 +7,19 @@ import com.tpago.movil.util.Preconditions;
  * @author hecvasro
  */
 class LogoLoadIndicator implements LoadIndicator {
-  private final LogoView logoView;
+  private final Logo logo;
 
-  LogoLoadIndicator(LogoView logoView) {
-    this.logoView = Preconditions.checkNotNull(logoView, "logo == null");
+  LogoLoadIndicator(Logo logo) {
+    this.logo = Preconditions.checkNotNull(logo, "logo == null");
   }
 
   @Override
   public void start() {
-    logoView.start();
+    logo.start();
   }
 
   @Override
   public void stop() {
-    logoView.stop();
+    logo.stop();
   }
 }

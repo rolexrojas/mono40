@@ -35,8 +35,8 @@ public final class OnboardingActivity extends BaseActivity implements Onboarding
   View placeholderView;
   @BindView(R.id.view_screen_container)
   View screenContainerView;
-  @BindView(R.id.logo_view)
-  LogoView logoView;
+  @BindView(R.id.logo)
+  Logo logo;
 
   private OnboardingComponent component;
 

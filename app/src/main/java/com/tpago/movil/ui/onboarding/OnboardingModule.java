@@ -20,9 +20,9 @@ final class OnboardingModule {
 
   @Provides
   @ActivityScope
-  LogoViewAnimator provideLogoView() {
-    return new LogoViewAnimator(
-      activity.logoView,
+  LogoAnimator provideLogoView() {
+    return new LogoAnimator(
+      activity.logo,
       activity.placeholderView,
       activity.getResources().getInteger(R.integer.anim_duration_test));
   }

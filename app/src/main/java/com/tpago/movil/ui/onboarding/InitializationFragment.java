@@ -17,7 +17,7 @@ public final class InitializationFragment extends OnboardingFragment {
   UserStore userStore;
 
   @Inject
-  LogoViewAnimator logoViewAnimator;
+  LogoAnimator logoAnimator;
   @Inject
   OnboardingNavigator onboardingNavigator;
 
@@ -35,14 +35,14 @@ public final class InitializationFragment extends OnboardingFragment {
   @Override
   public void onResume() {
     super.onResume();
-    logoViewAnimator.reset();
+    logoAnimator.reset();
     Timber.d("Starting the initialization process");
     if (userStore.isSet()) {
       // TODO: Start the authentication process.
       Timber.d("Starting the authentication process");
     } else {
       // TODO: Request permissions
-      logoViewAnimator.moveAndScale();
+      logoAnimator.moveAndScale();
       onboardingNavigator.startIntroduction();
     }
   }

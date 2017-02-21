@@ -31,7 +31,7 @@ import io.reactivex.functions.Consumer;
 /**
  * @author hecvasro
  */
-public final class LogoView extends FrameLayout {
+public final class Logo extends FrameLayout {
   private static final long FRAME_DURATION = 2000L;
 
   private static final long FRAME_DURATION_CROSS = Math.round(FRAME_DURATION * 0.33F);
@@ -39,23 +39,23 @@ public final class LogoView extends FrameLayout {
 
   private DrawableSwitcher drawableSwitcher;
 
-  public LogoView(Context context) {
+  public Logo(Context context) {
     super(context);
     initializeAnimatedLogo();
   }
 
-  public LogoView(Context context, AttributeSet attrs) {
+  public Logo(Context context, AttributeSet attrs) {
     super(context, attrs);
     initializeAnimatedLogo();
   }
 
-  public LogoView(Context context, AttributeSet attrs, int defStyleAttr) {
+  public Logo(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     initializeAnimatedLogo();
   }
 
   private void initializeAnimatedLogo() {
-    LayoutInflater.from(getContext()).inflate(R.layout.animated_logo, this);
+    LayoutInflater.from(getContext()).inflate(R.layout.widget_logo, this);
   }
 
   @Override
