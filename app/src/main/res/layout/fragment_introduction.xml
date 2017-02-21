@@ -11,6 +11,7 @@
     android:layout_alignParentBottom="true"
     android:layout_centerHorizontal="true"
     android:layout_marginBottom="32dp"
+    android:clickable="false"
     app:tabBackground="@drawable/tab_indicator_dot"
     app:tabGravity="center"
     app:tabIndicatorHeight="0dp"/>
@@ -22,7 +23,7 @@
     android:layout_above="@+id/tab_layout"
     android:layout_centerHorizontal="true"
     android:layout_marginBottom="32dp"
-    android:text="@string/intro_button_start"/>
+    android:text="@string/introduction_button_start"/>
   <android.support.v4.view.ViewPager
     android:id="@+id/view_pager"
     android:layout_width="match_parent"

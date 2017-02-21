@@ -1,4 +1,4 @@
-package com.tpago.movil.ui.onboarding.intro;
+package com.tpago.movil.ui.onboarding.introduction;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,7 +19,7 @@ import butterknife.Unbinder;
 /**
  * @author hecvasro
  */
-public final class IntroTabFragment extends Fragment {
+public final class IntroductionTabFragment extends Fragment {
   private static final String KEY_ART_ID = "artId";
   private static final String KEY_TITLE_ID = "titleId";
   private static final String KEY_DESCRIPTION_ID = "descriptionId";
@@ -33,12 +33,12 @@ public final class IntroTabFragment extends Fragment {
   @BindView(R.id.text_view_description)
   TextView descriptionTextView;
 
-  static IntroTabFragment create(int artId, int titleId, int descriptionId) {
+  static IntroductionTabFragment create(int artId, int titleId, int descriptionId) {
     final Bundle args = new Bundle();
     args.putInt(KEY_ART_ID, artId);
     args.putInt(KEY_TITLE_ID, titleId);
     args.putInt(KEY_DESCRIPTION_ID, descriptionId);
-    final IntroTabFragment fragment = new IntroTabFragment();
+    final IntroductionTabFragment fragment = new IntroductionTabFragment();
     fragment.setArguments(args);
     return fragment;
   }
@@ -49,7 +49,7 @@ public final class IntroTabFragment extends Fragment {
     LayoutInflater inflater,
     @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_intro_tab, container, false);
+    return inflater.inflate(R.layout.fragment_introduction_tab, container, false);
   }
 
   @Override
