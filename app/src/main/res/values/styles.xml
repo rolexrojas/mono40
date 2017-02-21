@@ -31,6 +31,17 @@
     <item name="android:background">@drawable/widget_button_white_rounded_shape</item>
   </style>
 
+  <style name="Base.Widget.TextInput" parent="Widget.AppCompat.EditText">
+    <item name="android:textCursorDrawable">@drawable/widget_text_input_light_cursor</item>
+    <item name="android:textSize">16sp</item>
+    <item name="fontPath">@string/font_gotham_round_book</item>
+  </style>
+  <style name="Base.Widget.TextInput.Light">
+    <item name="android:background">@drawable/widget_text_input_light</item>
+    <item name="android:textColor">@color/widget_text_input_light</item>
+    <item name="android:textColorHint">@color/widget_text_input_light_text_enabled_alpha_50</item>
+  </style>
+
   <style name="Base.Widget.NumPadRow">
     <item name="android:layout_height">0dp</item>
     <item name="android:layout_weight">1</item>
@@ -60,6 +71,21 @@
     <item name="color">@color/widget_num_pad_light_color</item>
   </style>
 
+  <style name="Base.Widget.NumPadTextInput" parent="Widget.AppCompat.EditText">
+    <item name="android:focusable">false</item>
+    <item name="android:focusableInTouchMode">false</item>
+    <item name="android:gravity">center</item>
+    <item name="android:maxLines">1</item>
+    <item name="android:textCursorDrawable">@drawable/widget_num_pad_text_input_light_cursor</item>
+    <item name="android:textSize">34sp</item>
+    <item name="fontPath">@string/font_gotham_round_light</item>
+  </style>
+  <style name="Base.Widget.NumPadTextInput.Light">
+    <item name="android:background">@drawable/widget_num_pad_text_input_light</item>
+    <item name="android:textColor">@color/widget_num_pad_text_input_light</item>
+    <item name="android:textColorHint">@color/widget_text_input_light_text_enabled_alpha_50</item>
+  </style>
+
   <style name="Base.Theme" parent="Theme.AppCompat.Light.NoActionBar">
     <item name="colorAccent">@color/accent</item>
     <item name="colorPrimary">@color/primary</item>
@@ -71,14 +97,20 @@
 
   <style name="App.Widget.Button.WhiteRounded" parent="Base.Widget.Button.WhiteRounded"/>
 
+  <style name="App.Widget.TextInput.Light" parent="Base.Widget.TextInput.Light"/>
+
   <style name="App.Widget.NumPadRow" parent="Base.Widget.NumPadRow"/>
   <style name="App.Widget.NumPadCell" parent="Base.Widget.NumPadCell"/>
   <style name="App.Widget.NumPadCell.Text" parent="Base.Widget.NumPadCell.Text"/>
-  <style name="App.Widget.NumPad" parent="Base.Widget.NumPad"/>
   <style name="App.Widget.NumPad.Dark" parent="Base.Widget.NumPad.Dark"/>
   <style name="App.Widget.NumPad.Light" parent="Base.Widget.NumPad.Light"/>
 
+  <style name="App.Widget.NumPadTextInput.Light" parent="Base.Widget.NumPadTextInput.Light"/>
+
   <style name="App.Theme" parent="Base.Theme">
-    <item name="numPadStyle">@style/App.Widget.NumPad</item>
+    <item name="android:editTextStyle">@style/App.Widget.TextInput.Light</item>
+    <item name="textInputStyle">@style/App.Widget.TextInput.Light</item>
+    <item name="numPadStyle">@style/App.Widget.NumPad.Light</item>
+    <item name="numPadTextInputStyle">@style/App.Widget.NumPadTextInput.Light</item>
   </style>
 </resources>

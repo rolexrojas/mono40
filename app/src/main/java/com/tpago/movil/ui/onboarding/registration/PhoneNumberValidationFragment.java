@@ -8,11 +8,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tpago.movil.R;
+import com.tpago.movil.ui.widget.TextInput;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * @author hecvasro
  */
 public final class PhoneNumberValidationFragment extends Fragment {
+  private Unbinder unbinder;
+
+  @BindView(R.id.text_input_phone_number)
+  TextInput phoneNumberTextInput;
+
   public static PhoneNumberValidationFragment create() {
     return new PhoneNumberValidationFragment();
   }
@@ -24,5 +34,19 @@ public final class PhoneNumberValidationFragment extends Fragment {
     @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_phone_number_validation, container, false);
+  }
+
+  @Override
+  public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    // Binds all annotated views, resources and methods.
+    unbinder = ButterKnife.bind(this, view);
+  }
+
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    // Binds all annotated views, resources and methods.
+    unbinder.unbind();
   }
 }

@@ -2,6 +2,7 @@
 <resources>
   <string name="font_gotham_round_bold">fonts/GothamRounded/Bold.otf</string>
   <string name="font_gotham_round_book">fonts/GothamRounded/Book.otf</string>
+  <string name="font_gotham_round_light">fonts/GothamRounded/Light.otf</string>
   <string name="font_gotham_round_medium">fonts/GothamRounded/Medium.otf</string>
   <string name="introduction_button_start">@string/start</string>
   <string name="introduction_tab_description_money">Transfiere a tu amigo el serrucho del almuerzo o paga tu factura de luz en segundos.</string>

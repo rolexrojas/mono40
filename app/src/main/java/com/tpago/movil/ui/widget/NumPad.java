@@ -76,9 +76,9 @@ public final class NumPad extends LinearLayout {
       attrs,
       R.styleable.NumPad,
       defStyleAttr,
-      R.style.App_Widget_NumPad);
+      R.style.App_Widget_NumPad_Light);
     try {
-      color = a.getColor(R.styleable.NumPad_color, ContextCompat.getColor(c, R.color.black));
+      color = a.getColor(R.styleable.NumPad_color, ContextCompat.getColor(c, R.color.white));
       shouldShowDot = a.getBoolean(R.styleable.NumPad_shouldShowDot, false);
     } finally {
       a.recycle();

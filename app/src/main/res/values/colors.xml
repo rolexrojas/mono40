@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="accent">#9C188F</color>
-  <color name="background_dark_colored_end">#691060</color>
-  <color name="background_dark_colored_start">@color/primary</color>
   <color name="black">#000</color>
-  <color name="primary">#9C188F</color>
-  <color name="primary_dark">#6D1764</color>
-  <color name="tab_indicator_dot_default">@color/white_alpha_50</color>
-  <color name="tab_indicator_dot_selected">@color/white</color>
   <color name="transparent">@android:color/transparent</color>
   <color name="white">#FFF</color>
   <color name="white_alpha_50">#7FFFFFFF</color>
+
+  <color name="accent">#9C188F</color>
+  <color name="primary">#9C188F</color>
+  <color name="primary_dark">#6D1764</color>
+
+  <color name="background_dark_colored_end">#691060</color>
+  <color name="background_dark_colored_start">@color/primary</color>
+
+  <color name="tab_indicator_dot_default">@color/white_alpha_50</color>
+  <color name="tab_indicator_dot_selected">@color/white</color>
+
+  <color name="widget_text_input_light_background_enabled">#CCC</color>
+  <color name="widget_text_input_light_background_enabled_alpha_50">#7FCCCCCC</color>
+  <color name="widget_text_input_light_error">#F8E81C</color>
+  <color name="widget_text_input_light_error_alpha_50">#7FF8E81C</color>
+  <color name="widget_text_input_light_text_enabled">@color/white</color>
+  <color name="widget_text_input_light_text_enabled_alpha_50">@color/white_alpha_50</color>
+
   <color name="widget_num_pad_dark_color">#333</color>
   <color name="widget_num_pad_light_color">@color/white</color>
 </resources>
