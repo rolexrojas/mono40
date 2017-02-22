@@ -20,8 +20,8 @@ import butterknife.Unbinder;
 public final class PhoneNumberValidationFragment extends Fragment {
   private Unbinder unbinder;
 
-  @BindView(R.id.text_input_phone_number)
-  TextInput phoneNumberTextInput;
+  @BindView(R.id.num_pad_text_input)
+  TextInput numPadTextInput;
 
   public static PhoneNumberValidationFragment create() {
     return new PhoneNumberValidationFragment();
@@ -41,6 +41,13 @@ public final class PhoneNumberValidationFragment extends Fragment {
     super.onViewCreated(view, savedInstanceState);
     // Binds all annotated views, resources and methods.
     unbinder = ButterKnife.bind(this, view);
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    // Sets focus on the num pad text input.
+    numPadTextInput.requestFocus();
   }
 
   @Override

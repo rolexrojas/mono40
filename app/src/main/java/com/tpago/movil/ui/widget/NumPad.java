@@ -55,6 +55,7 @@ public final class NumPad extends LinearLayout {
 
   public NumPad(Context context) {
     super(context);
+    initializeNumPad(context, null, 0);
   }
 
   public NumPad(Context context, AttributeSet attrs) {
