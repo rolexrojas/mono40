@@ -4,7 +4,7 @@
     <shape android:shape="rectangle">
       <corners android:radius="@dimen/widget_text_input_background_shape_radius"/>
       <size android:height="@dimen/widget_text_input_background_shape_height"/>
-      <solid android:color="@color/widget_text_input_light_background_enabled_alpha_50"/>
+      <solid android:color="@color/widget_text_input_dark_background"/>
     </shape>
   </item>
   <item>

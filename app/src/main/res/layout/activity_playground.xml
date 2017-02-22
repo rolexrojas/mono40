@@ -7,7 +7,7 @@
   android:orientation="vertical">
   <com.tpago.movil.ui.widget.TextInput
     android:id="@+id/text_input"
-    style="@style/App.Widget.TextInput.Light"
+    style="@style/App.Widget.TextInput.Dark"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginEnd="32dp"
@@ -16,7 +16,7 @@
     android:hint="Phone number"/>
   <com.tpago.movil.ui.widget.NumPadTextInput
     android:id="@+id/num_pad_text_input"
-    style="@style/App.Widget.NumPadTextInput.Light"
+    style="@style/App.Widget.NumPadTextInput.Dark"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginEnd="32dp"
@@ -45,5 +45,5 @@
     android:layout_marginEnd="32dp"
     android:layout_marginStart="32dp"
     android:layout_marginTop="64dp"
-    android:text="Toggle error"/>
+    android:text="Toggle error state"/>
 </LinearLayout>

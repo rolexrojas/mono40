@@ -2,6 +2,8 @@
 <resources>
   <dimen name="tab_indicator_dot_thickness">4dp</dimen>
   <dimen name="toolbar_height">64dp</dimen>
+
+  <!-- Text input dimensions -->
   <dimen name="widget_text_input_background_padding">12dp</dimen>
   <dimen name="widget_text_input_background_shape_height">1dp</dimen>
   <dimen name="widget_text_input_background_shape_radius">11dp</dimen>
