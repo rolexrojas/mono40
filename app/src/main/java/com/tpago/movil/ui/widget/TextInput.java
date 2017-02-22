@@ -10,9 +10,9 @@ import com.tpago.movil.R;
  * @author hecvasro
  */
 public class TextInput extends EditText {
-  private static final int[] STATE_ERROR = new int[] { R.attr.state_error };
+  private static final int[] STATE_ERRATIC = new int[] { R.attr.state_erratic };
 
-  private boolean errorStateEnabled = false;
+  private boolean erraticStateEnabled = false;
 
   public TextInput(Context context) {
     super(context);
@@ -29,18 +29,18 @@ public class TextInput extends EditText {
   @Override
   protected int[] onCreateDrawableState(int extraSpace) {
     int[] state = super.onCreateDrawableState(extraSpace + 1);
-    if (errorStateEnabled) {
-      mergeDrawableStates(state, STATE_ERROR);
+    if (erraticStateEnabled) {
+      mergeDrawableStates(state, STATE_ERRATIC);
     }
     return state;
   }
 
-  public boolean isErrorStateEnabled() {
-    return errorStateEnabled;
+  public boolean isErraticStateEnabled() {
+    return erraticStateEnabled;
   }
 
-  public void setErrorStateEnabled(boolean errorStateEnabled) {
-    this.errorStateEnabled = errorStateEnabled;
+  public void setErraticStateEnabled(boolean erraticStateEnabled) {
+    this.erraticStateEnabled = erraticStateEnabled;
     this.refreshDrawableState();
   }
 }

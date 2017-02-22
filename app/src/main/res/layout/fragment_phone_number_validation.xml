@@ -19,6 +19,7 @@
     android:text="@string/phone_number_validation_description"/>
   <com.tpago.movil.ui.widget.NumPadTextInput
     android:id="@+id/text_input_phone_number"
+    style="@style/App.Widget.NumPadTextInput.Dark"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginEnd="60dp"
@@ -26,6 +27,7 @@
     android:layout_marginTop="32dp"/>
   <com.tpago.movil.ui.widget.NumPad
     android:id="@+id/num_pad"
+    style="@style/App.Widget.NumPad.Dark"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="32dp"

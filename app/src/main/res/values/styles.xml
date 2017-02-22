@@ -76,10 +76,11 @@
     <item name="deleteDrawable">@drawable/ic_backspace_black_24dp</item>
   </style>
   <style name="Base.Widget.NumPad.Dark">
-    <item name="android:color">@color/white</item>
+    <item name="color">@color/widget_num_pad_dark_color</item>
+    <item name="android:theme">@style/App.ThemeOverlay.Dark</item>
   </style>
   <style name="Base.Widget.NumPad.Light">
-    <item name="color">#333</item>
+    <item name="color">@color/widget_num_pad_light_color</item>
   </style>
 
   <style name="App.Widget.NumPadRow" parent="Base.Widget.NumPadRow"/>
@@ -105,11 +106,7 @@
     <item name="colorPrimaryDark">@color/primary_dark</item>
   </style>
 
-  <style name="App.Theme" parent="Base.Theme">
-    <item name="textInputStyle">@style/App.Widget.TextInput.Dark</item>
-    <item name="numPadStyle">@style/App.Widget.NumPad.Light</item>
-    <item name="numPadTextInputStyle">@style/App.Widget.NumPadTextInput.Dark</item>
-  </style>
+  <style name="App.Theme" parent="Base.Theme"/>
 
   <style name="Base.ThemeOverlay.Dark" parent="ThemeOverlay.AppCompat.Dark">
     <item name="colorAccent">@color/white</item>

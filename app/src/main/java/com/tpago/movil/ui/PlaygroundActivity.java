@@ -36,8 +36,8 @@ public final class PlaygroundActivity extends AppCompatActivity {
 
   @OnClick(R.id.button_error)
   void onErrorButtonClicked() {
-    textInput.setErrorStateEnabled(!textInput.isErrorStateEnabled());
-    numPadTextInput.setErrorStateEnabled(!numPadTextInput.isErrorStateEnabled());
+    textInput.setErraticStateEnabled(!textInput.isErraticStateEnabled());
+    numPadTextInput.setErraticStateEnabled(!numPadTextInput.isErraticStateEnabled());
   }
 
   @Override

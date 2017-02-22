@@ -29,6 +29,6 @@
   <color name="widget_text_input_dark_text_alpha_50">@color/white_alpha_50</color>
 
   <!-- Num pad colors -->
-  <color name="widget_num_pad_dark_color">#333</color>
-  <color name="widget_num_pad_light_color">@color/white</color>
+  <color name="widget_num_pad_dark_color">@color/white</color>
+  <color name="widget_num_pad_light_color">#333</color>
 </resources>

@@ -55,12 +55,11 @@ public final class NumPad extends LinearLayout {
 
   public NumPad(Context context) {
     super(context);
-    initializeNumPad(context, null, R.attr.numPadStyle);
   }
 
   public NumPad(Context context, AttributeSet attrs) {
     super(context, attrs);
-    initializeNumPad(context, attrs, R.attr.numPadStyle);
+    initializeNumPad(context, attrs, 0);
   }
 
   public NumPad(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -72,11 +71,7 @@ public final class NumPad extends LinearLayout {
     // Sets the orientation.
     setOrientation(VERTICAL);
     // Initializes the attributes from the given set or from the default one.
-    final TypedArray a = c.obtainStyledAttributes(
-      attrs,
-      R.styleable.NumPad,
-      defStyleAttr,
-      R.style.App_Widget_NumPad_Light);
+    final TypedArray a = c.obtainStyledAttributes(attrs, R.styleable.NumPad, defStyleAttr, 0);
     try {
       color = a.getColor(R.styleable.NumPad_color, ContextCompat.getColor(c, R.color.white));
       shouldShowDot = a.getBoolean(R.styleable.NumPad_shouldShowDot, false);

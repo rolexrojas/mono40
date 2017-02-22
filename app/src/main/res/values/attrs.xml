@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <declare-styleable name="ErrorState">
-    <attr name="state_error" format="boolean"/>
+  <declare-styleable name="ErraticState">
+    <attr name="state_erratic" format="boolean"/>
   </declare-styleable>
 
   <declare-styleable name="NumPad">
     <attr name="color"/>
     <attr name="shouldShowDot" format="boolean"/>
     <attr name="deleteDrawable" format="reference"/>
-  </declare-styleable>
-
-  <declare-styleable name="Theme">
-    <attr name="textInputStyle" format="reference"/>
-    <attr name="numPadStyle" format="reference"/>
-    <attr name="numPadTextInputStyle" format="reference"/>
   </declare-styleable>
 </resources>

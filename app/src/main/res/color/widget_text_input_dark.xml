@@ -7,8 +7,8 @@
     android:state_enabled="false"/>
   <item
     android:color="@color/widget_text_input_dark_erratic"
-    app:state_error="true"/>
+    app:state_erratic="true"/>
   <item
     android:color="@color/widget_text_input_dark_text"
-    app:state_error="false"/>
+    app:state_erratic="false"/>
 </selector>
