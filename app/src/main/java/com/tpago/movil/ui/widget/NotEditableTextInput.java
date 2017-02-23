@@ -10,23 +10,23 @@ import com.tpago.movil.text.BaseTextWatcher;
 /**
  * @author hecvasro
  */
-public class NumPadTextInput extends TextInput {
-  public NumPadTextInput(Context context) {
+public class NotEditableTextInput extends TextInput {
+  public NotEditableTextInput(Context context) {
     super(context);
-    initializeNumPadTextInput(context, null, 0);
+    initializeNotEditableTextInput(context, null, 0);
   }
 
-  public NumPadTextInput(Context context, AttributeSet attrs) {
+  public NotEditableTextInput(Context context, AttributeSet attrs) {
     super(context, attrs);
-    initializeNumPadTextInput(context, attrs, 0);
+    initializeNotEditableTextInput(context, attrs, 0);
   }
 
-  public NumPadTextInput(Context context, AttributeSet attrs, int defStyleAttr) {
+  public NotEditableTextInput(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    initializeNumPadTextInput(context, attrs, defStyleAttr);
+    initializeNotEditableTextInput(context, attrs, defStyleAttr);
   }
 
-  private void initializeNumPadTextInput(Context c, AttributeSet attrs, int defStyleAttr) {
+  private void initializeNotEditableTextInput(Context c, AttributeSet attrs, int defStyleAttr) {
     // Sets the input type.
     setInputType(InputType.TYPE_NULL);
     setRawInputType(InputType.TYPE_CLASS_TEXT);
