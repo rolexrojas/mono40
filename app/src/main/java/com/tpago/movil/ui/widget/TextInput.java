@@ -35,6 +35,11 @@ public class TextInput extends EditText {
     return state;
   }
 
+  @Override
+  protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
+    super.onTextChanged(text, start, lengthBefore, lengthAfter);
+  }
+
   public boolean isErraticStateEnabled() {
     return erraticStateEnabled;
   }

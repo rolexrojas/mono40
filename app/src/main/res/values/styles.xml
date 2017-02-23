@@ -72,7 +72,7 @@
     <item name="fontPath">@string/font_gotham_round_medium</item>
   </style>
   <style name="Base.Widget.NumPad">
-    <item name="shouldShowDot">false</item>
+    <item name="dotEnabled">false</item>
     <item name="deleteDrawable">@drawable/ic_backspace_black_24dp</item>
   </style>
   <style name="Base.Widget.NumPad.Dark">

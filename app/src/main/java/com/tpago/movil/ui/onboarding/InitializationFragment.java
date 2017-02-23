@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.tpago.movil.UserStore;
+import com.tpago.movil.ui.Fragments;
+import com.tpago.movil.ui.onboarding.introduction.IntroductionFragment;
 
 import javax.inject.Inject;
 
@@ -18,8 +20,6 @@ public final class InitializationFragment extends OnboardingFragment {
 
   @Inject
   LogoAnimator logoAnimator;
-  @Inject
-  OnboardingNavigator onboardingNavigator;
 
   public static InitializationFragment create() {
     return new InitializationFragment();
@@ -29,7 +29,7 @@ public final class InitializationFragment extends OnboardingFragment {
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // Injects all annotated dependencies.
-    getParentComponent().inject(this);
+    getOnboardingComponent().inject(this);
   }
 
   @Override
@@ -43,7 +43,11 @@ public final class InitializationFragment extends OnboardingFragment {
     } else {
       // TODO: Request permissions
       logoAnimator.moveAndScale();
-      onboardingNavigator.startIntroduction();
+      Fragments.replace(
+        getFragmentManager(),
+        IntroductionFragment.create(),
+        Fragments.Transition.SRFO,
+        false);
     }
   }
 }

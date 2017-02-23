@@ -6,7 +6,7 @@
 
   <declare-styleable name="NumPad">
     <attr name="color"/>
-    <attr name="shouldShowDot" format="boolean"/>
+    <attr name="dotEnabled" format="boolean"/>
     <attr name="deleteDrawable" format="reference"/>
   </declare-styleable>
 </resources>

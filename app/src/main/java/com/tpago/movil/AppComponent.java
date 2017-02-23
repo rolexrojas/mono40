@@ -1,5 +1,8 @@
 package com.tpago.movil;
 
+import com.tpago.movil.ui.onboarding.OnboardingComponent;
+import com.tpago.movil.ui.onboarding.OnboardingModule;
+
 import javax.inject.Singleton;
 
 import dagger.Component;
@@ -10,5 +13,5 @@ import dagger.Component;
 @Singleton
 @Component(modules = AppModule.class)
 public interface AppComponent {
-  UserStore provideUserStore();
+  OnboardingComponent plus(OnboardingModule module);
 }

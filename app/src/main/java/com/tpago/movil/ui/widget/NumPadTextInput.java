@@ -1,8 +1,11 @@
 package com.tpago.movil.ui.widget;
 
 import android.content.Context;
+import android.text.Editable;
 import android.text.InputType;
 import android.util.AttributeSet;
+
+import com.tpago.movil.text.BaseTextWatcher;
 
 /**
  * @author hecvasro
@@ -29,5 +32,12 @@ public class NumPadTextInput extends TextInput {
     setRawInputType(InputType.TYPE_CLASS_TEXT);
     // Makes the text selectable.
     setTextIsSelectable(true);
+    // Adds a listener that gets notified each time the text changes.
+    addTextChangedListener(new BaseTextWatcher() {
+      @Override
+      public void afterTextChanged(Editable s) {
+        setSelection(s.length());
+      }
+    });
   }
 }

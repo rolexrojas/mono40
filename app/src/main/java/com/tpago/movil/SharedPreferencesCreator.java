@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.tpago.movil.util.Objects;
-import com.tpago.movil.util.Strings;
+import com.tpago.movil.text.Texts;
 
 /**
  * @author hecvasro
@@ -23,7 +23,7 @@ public final class SharedPreferencesCreator {
     if (Objects.isNull(fileName)) {
       throw new NullPointerException("Null fileName");
     }
-    if (Strings.isEmpty(fileName)) {
+    if (Texts.isEmpty(fileName)) {
       throw new IllegalArgumentException("Invalid fileName");
     }
     return context.getSharedPreferences(fileName, Context.MODE_PRIVATE);

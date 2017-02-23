@@ -1,4 +1,4 @@
-package com.tpago.movil.ui;
+package com.tpago.movil.ui.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;

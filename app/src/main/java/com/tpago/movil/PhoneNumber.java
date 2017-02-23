@@ -2,8 +2,10 @@ package com.tpago.movil;
 
 import com.google.auto.value.AutoValue;
 import com.tpago.movil.util.Objects;
-import com.tpago.movil.util.Strings;
+import com.tpago.movil.text.Texts;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -24,7 +26,23 @@ public abstract class PhoneNumber {
   }
 
   public static boolean isValid(String phoneNumber) {
-    return Strings.isNotEmpty(phoneNumber) && isValid(phoneNumber, true);
+    return Texts.isNotEmpty(phoneNumber) && isValid(phoneNumber, true);
+  }
+
+  public static String format(String phoneNumber) {
+    if (Texts.isEmpty(phoneNumber)) {
+      return phoneNumber;
+    } else {
+      final String sanitizedPhoneNumber = sanitize(phoneNumber);
+      final StringBuilder phoneNumberBuilder = new StringBuilder();
+      for (int i = 0; i < sanitizedPhoneNumber.length(); i++) {
+        if (i == 3 || i == 6) {
+          phoneNumberBuilder.append('-');
+        }
+        phoneNumberBuilder.append(sanitizedPhoneNumber.charAt(i));
+      }
+      return phoneNumberBuilder.toString();
+    }
   }
 
   public static PhoneNumber create(String value) {
@@ -39,4 +57,10 @@ public abstract class PhoneNumber {
   }
 
   public abstract String getValue();
+
+  public enum State {
+    NONE,
+    AFFILIATED,
+    REGISTERED
+  }
 }

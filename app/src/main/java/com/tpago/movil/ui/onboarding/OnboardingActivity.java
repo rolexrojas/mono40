@@ -8,10 +8,9 @@ import android.view.ViewTreeObserver;
 import com.tpago.movil.App;
 import com.tpago.movil.R;
 import com.tpago.movil.ui.BaseActivity;
+import com.tpago.movil.ui.Fragments;
 import com.tpago.movil.ui.RadialGradientDrawable;
 import com.tpago.movil.util.Objects;
-
-import javax.inject.Inject;
 
 import butterknife.BindColor;
 import butterknife.BindView;
@@ -33,15 +32,12 @@ public final class OnboardingActivity extends BaseActivity implements Onboarding
   View rootView;
   @BindView(R.id.view_placeholder)
   View placeholderView;
-  @BindView(R.id.view_screen_container)
+  @BindView(R.id.view_container)
   View screenContainerView;
   @BindView(R.id.logo)
   Logo logo;
 
   private OnboardingComponent component;
-
-  @Inject
-  OnboardingNavigator navigator;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,12 +47,8 @@ public final class OnboardingActivity extends BaseActivity implements Onboarding
     // Binds all annotated views and methods.
     unbinder = ButterKnife.bind(this);
     // Initializes the dependency injector.
-    component = DaggerOnboardingComponent.builder()
-      .appComponent(((App) getApplication()).getComponent())
-      .onboardingModule(new OnboardingModule(this))
-      .build();
-    // Injects all annotated dependencies.
-    component.inject(this);
+    component = App.get(this).getAppComponent()
+      .plus(new OnboardingModule(this));
     // Adds a listener that gets notified when all the views has been laid out.
     final ViewTreeObserver observer = rootView.getViewTreeObserver();
     if (observer.isAlive()) {
@@ -75,7 +67,7 @@ public final class OnboardingActivity extends BaseActivity implements Onboarding
               backgroundEndColor,
               rootView.getHeight()));
           // Initializes the application.
-          navigator.startInitialization();
+          Fragments.replace(getSupportFragmentManager(), InitializationFragment.create());
         }
       });
     }
@@ -89,7 +81,7 @@ public final class OnboardingActivity extends BaseActivity implements Onboarding
   }
 
   @Override
-  public OnboardingComponent getComponent() {
+  public OnboardingComponent getOnboardingComponent() {
     return component;
   }
 }

@@ -4,7 +4,7 @@ import android.util.Patterns;
 
 import com.google.auto.value.AutoValue;
 import com.tpago.movil.util.Objects;
-import com.tpago.movil.util.Strings;
+import com.tpago.movil.text.Texts;
 
 import java.util.regex.Pattern;
 
@@ -26,7 +26,7 @@ public abstract class Email {
   }
 
   public static boolean isValid(String email) {
-    return Strings.isNotEmpty(email) && isValid(email, true);
+    return Texts.isNotEmpty(email) && isValid(email, true);
   }
 
   public static Email create(String value) {

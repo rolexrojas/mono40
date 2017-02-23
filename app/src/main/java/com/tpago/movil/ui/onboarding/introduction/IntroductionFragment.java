@@ -9,10 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tpago.movil.R;
+import com.tpago.movil.ui.Fragments;
 import com.tpago.movil.ui.onboarding.OnboardingFragment;
-import com.tpago.movil.ui.onboarding.OnboardingNavigator;
-
-import javax.inject.Inject;
+import com.tpago.movil.ui.onboarding.registration.RegistrationFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,16 +31,17 @@ public final class IntroductionFragment extends OnboardingFragment {
   @BindView(R.id.tab_layout)
   TabLayout tabLayout;
 
-  @Inject
-  OnboardingNavigator onboardingNavigator;
-
   public static IntroductionFragment create() {
     return new IntroductionFragment();
   }
 
   @OnClick(R.id.button_start)
   void onStartButtonClicked() {
-    onboardingNavigator.startRegistration();
+    Fragments.replace(
+      getFragmentManager(),
+      RegistrationFragment.create(),
+      Fragments.Transition.SRFO,
+      true);
   }
 
   @Nullable
@@ -63,8 +63,6 @@ public final class IntroductionFragment extends OnboardingFragment {
     tabLayout.setupWithViewPager(viewPager);
     // Creates the automatic tab switcher.
     autoTabSwitcher = new AutoTabSwitcher(viewPager);
-    // Injects all annotated dependencies.
-    getParentComponent().inject(this);
   }
 
   @Override

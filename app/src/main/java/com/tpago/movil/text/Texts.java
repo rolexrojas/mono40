@@ -1,13 +1,11 @@
-package com.tpago.movil.util;
+package com.tpago.movil.text;
+
+import com.tpago.movil.util.Objects;
 
 /**
  * @author hecvasro
  */
-public final class Strings {
-  private Strings() {
-    throw new AssertionError("Cannot be instantiated");
-  }
-
+public final class Texts {
   public static boolean isEmpty(CharSequence s) {
     return Objects.isNull(s) || s.length() == 0;
   }
@@ -17,7 +15,7 @@ public final class Strings {
   }
 
   public static String nullIfEmpty(String s) {
-    return isEmpty(s) ? null : s;
+    return isNotEmpty(s) ? s : null;
   }
 
   public static String join(String delimiter, Object... tokens) {
@@ -32,5 +30,9 @@ public final class Strings {
       builder.append(token.toString());
     }
     return builder.toString();
+  }
+
+  private Texts() {
+    throw new AssertionError("Cannot be instantiated");
   }
 }

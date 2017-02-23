@@ -1,8 +1,10 @@
 package com.tpago.movil;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.tpago.movil.util.Objects;
+import com.tpago.movil.util.Preconditions;
 
 import timber.log.Timber;
 
@@ -12,7 +14,12 @@ import timber.log.Timber;
 public final class App extends Application {
   private AppComponent component;
 
-  public final AppComponent getComponent() {
+  public static App get(Context context) {
+    return (App) Preconditions.checkNotNull(context, "context == null")
+      .getApplicationContext();
+  }
+
+  public final AppComponent getAppComponent() {
     if (Objects.isNull(component)) {
       component = DaggerAppComponent.builder()
         .appModule(new AppModule(this))

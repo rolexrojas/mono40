@@ -10,8 +10,8 @@ import android.support.v4.app.Fragment;
 public abstract class OnboardingFragment extends Fragment {
   private OnboardingScreen parentScreen;
 
-  protected final OnboardingComponent getParentComponent() {
-    return parentScreen.getComponent();
+  protected final OnboardingComponent getOnboardingComponent() {
+    return parentScreen.getOnboardingComponent();
   }
 
   @Override

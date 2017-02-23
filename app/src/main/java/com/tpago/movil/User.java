@@ -2,7 +2,7 @@ package com.tpago.movil;
 
 import com.google.auto.value.AutoValue;
 import com.tpago.movil.util.Objects;
-import com.tpago.movil.util.Strings;
+import com.tpago.movil.text.Texts;
 
 /**
  * @author hecvasro
@@ -49,12 +49,12 @@ public abstract class User {
   }
 
   public final String getName() {
-    return Strings.join(" ", firstName, lastName);
+    return Texts.join(" ", firstName, lastName);
   }
 
   public final void setName(String firstName, String lastName) {
-    this.firstName = Strings.nullIfEmpty(firstName);
-    this.lastName = Strings.nullIfEmpty(lastName);
+    this.firstName = Texts.nullIfEmpty(firstName);
+    this.lastName = Texts.nullIfEmpty(lastName);
     if (Objects.isNotNull(this.onNameChangedListener)) {
       this.onNameChangedListener.onNameChanged(this.firstName, this.lastName);
     }
@@ -65,7 +65,7 @@ public abstract class User {
   }
 
   public final void setAvatarPath(String avatarPath) {
-    this.avatarPath = Strings.nullIfEmpty(avatarPath);
+    this.avatarPath = Texts.nullIfEmpty(avatarPath);
     if (Objects.isNotNull(this.onAvatarPathChangedListener)) {
       this.onAvatarPathChangedListener.onAvatarChanged(this.avatarPath);
     }

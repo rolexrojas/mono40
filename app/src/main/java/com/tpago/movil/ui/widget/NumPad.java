@@ -22,17 +22,16 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import timber.log.Timber;
 
 /**
  * @author hecvasro
  */
 public final class NumPad extends LinearLayout {
   private int color;
-  private boolean shouldShowDot;
+  private boolean dotEnabled;
 
-  private OnDigitClickedListener digitListener;
   private OnDotClickedListener dotListener;
+  private OnDigitClickedListener digitListener;
   private OnDeleteClickedListener deleteListener;
 
   @BindViews({
@@ -75,7 +74,7 @@ public final class NumPad extends LinearLayout {
     final TypedArray a = c.obtainStyledAttributes(attrs, R.styleable.NumPad, defStyleAttr, 0);
     try {
       color = a.getColor(R.styleable.NumPad_color, ContextCompat.getColor(c, R.color.white));
-      shouldShowDot = a.getBoolean(R.styleable.NumPad_shouldShowDot, false);
+      dotEnabled = a.getBoolean(R.styleable.NumPad_dotEnabled, false);
     } finally {
       a.recycle();
     }
@@ -97,7 +96,6 @@ public final class NumPad extends LinearLayout {
   })
   void onDigitClicked(Button button) {
     final Digit digit = Digit.find(Integer.parseInt(button.getText().toString()));
-    Timber.d("onDigitClicked(%1$s)", digit);
     if (Objects.isNotNull(digitListener)) {
       digitListener.onDigitClicked(digit);
     }
@@ -105,7 +103,6 @@ public final class NumPad extends LinearLayout {
 
   @OnClick(R.id.num_pad_cell_dot)
   void onDotClicked() {
-    Timber.d("onDotClicked()");
     if (Objects.isNotNull(dotListener)) {
       dotListener.onDotClicked();
     }
@@ -113,7 +110,6 @@ public final class NumPad extends LinearLayout {
 
   @OnClick(R.id.num_pad_cell_delete)
   void onDeleteClicked() {
-    Timber.d("onDeleteClicked()");
     if (Objects.isNotNull(deleteListener)) {
       deleteListener.onDeleteClicked();
     }
@@ -131,8 +127,8 @@ public final class NumPad extends LinearLayout {
     // Sets the color of the dot button.
     dotButton.setTextColor(color);
     // Sets the visibility of the dot button.
-    dotButton.setClickable(shouldShowDot);
-    dotButton.setVisibility(shouldShowDot ? View.VISIBLE : View.INVISIBLE);
+    dotButton.setClickable(dotEnabled);
+    dotButton.setVisibility(dotEnabled ? View.VISIBLE : View.INVISIBLE);
     // Sets the color of the delete button.
     final Drawable drawable = deleteButton.getDrawable();
     if (Objects.isNotNull(drawable)) {
@@ -141,24 +137,24 @@ public final class NumPad extends LinearLayout {
     deleteButton.setImageDrawable(drawable);
   }
 
-  public void setDigitListener(OnDigitClickedListener digitListener) {
+  public void setOnDotClickedListener(OnDotClickedListener dotListener) {
+    this.dotListener = this.dotEnabled ? dotListener : null;
+  }
+
+  public void setOnDigitClickedListener(OnDigitClickedListener digitListener) {
     this.digitListener = digitListener;
   }
 
-  public void setDotListener(OnDotClickedListener dotListener) {
-    this.dotListener = dotListener;
-  }
-
-  public void setDeleteListener(OnDeleteClickedListener deleteListener) {
+  public void setOnDeleteClickedListener(OnDeleteClickedListener deleteListener) {
     this.deleteListener = deleteListener;
-  }
-
-  public interface OnDigitClickedListener {
-    void onDigitClicked(Digit digit);
   }
 
   public interface OnDotClickedListener {
     void onDotClicked();
+  }
+
+  public interface OnDigitClickedListener {
+    void onDigitClicked(Digit digit);
   }
 
   public interface OnDeleteClickedListener {
