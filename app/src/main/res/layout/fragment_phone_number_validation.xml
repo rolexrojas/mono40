@@ -8,7 +8,7 @@
     style="@style/App.Text.Dark.Primary"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="@string/phone_number_validation_title"/>
+    android:text="@string/phone_number_validation_label_title"/>
   <TextView
     style="@style/App.Text.Dark.Secondary"
     android:layout_width="match_parent"
@@ -16,22 +16,29 @@
     android:layout_marginEnd="60dp"
     android:layout_marginStart="60dp"
     android:layout_marginTop="10dp"
-    android:text="@string/phone_number_validation_description"/>
-  <com.tpago.movil.ui.widget.NotEditableTextInput
+    android:text="@string/phone_number_validation_label_description"/>
+  <com.tpago.movil.widget.NotEditableTextInput
     android:id="@+id/text_input"
-    style="@style/App.Widget.NumPadTextInput.Dark"
+    style="@style/App.Widget.NotEditableTextInput.Dark"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginEnd="60dp"
     android:layout_marginStart="60dp"
-    android:layout_marginTop="32dp"/>
-  <com.tpago.movil.ui.widget.NumPad
+    android:layout_marginTop="16dp"/>
+  <com.tpago.movil.widget.NumPad
     android:id="@+id/num_pad"
     style="@style/App.Widget.NumPad.Dark"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginBottom="32dp"
+    android:layout_height="0dp"
+    android:layout_marginBottom="16dp"
     android:layout_marginEnd="32dp"
     android:layout_marginStart="32dp"
-    android:layout_marginTop="32dp"/>
+    android:layout_marginTop="16dp"
+    android:layout_weight="1"/>
+  <com.tpago.movil.widget.AppButton
+    android:id="@+id/button_next"
+    style="@style/App.Widget.Button.Gradient.Dark"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:text="@string/phone_number_validation_button_next"/>
 </LinearLayout>

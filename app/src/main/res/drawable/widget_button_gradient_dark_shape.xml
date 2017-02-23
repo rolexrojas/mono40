@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:drawable="@color/white"/>
+  <item>
+    <shape android:shape="rectangle">
+      <solid android:color="@color/widget_button_dark_shape_gradient_background"/>
+      <gradient
+        android:endColor="@color/widget_button_dark_shape_gradient_background_end"
+        android:startColor="@color/widget_button_dark_shape_gradient_background_start"/>
+    </shape>
+  </item>
+</layer-list>

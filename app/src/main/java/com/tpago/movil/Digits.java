@@ -20,10 +20,10 @@ public final class Digits {
 
   public static List<Digit> getDigits(PhoneNumber phoneNumber) {
     Preconditions.checkNotNull(phoneNumber, "phoneNumber == null");
-    final String[] array = phoneNumber.getValue().split("");
+    final String phoneNumberValue = phoneNumber.getValue();
     final List<Digit> list = new ArrayList<>();
-    for (String s : array) {
-      list.add(Digit.find(Integer.parseInt(s)));
+    for (int i = 0; i < phoneNumberValue.length(); i++) {
+      list.add(Digit.find(Integer.parseInt(String.valueOf(phoneNumberValue.charAt(i)))));
     }
     return list;
   }

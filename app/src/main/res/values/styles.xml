@@ -31,11 +31,17 @@
     <item name="android:textSize">14sp</item>
     <item name="fontPath">@string/font_gotham_round_bold</item>
   </style>
-  <style name="Base.Widget.Button.WhiteRounded">
-    <item name="android:background">@drawable/widget_button_white_rounded_shape</item>
+  <style name="Base.Widget.Button.Solid"/>
+  <style name="Base.Widget.Button.Solid.Dark"/>
+  <style name="Base.Widget.Button.Solid.Dark.Rounded">
+    <item name="android:background">@drawable/widget_button_solid_dark_rounded_shape</item>
+  </style>
+  <style name="Base.Widget.Button.Gradient"/>
+  <style name="Base.Widget.Button.Gradient.Dark">
   </style>
 
-  <style name="App.Widget.Button.WhiteRounded" parent="Base.Widget.Button.WhiteRounded"/>
+  <style name="App.Widget.Button.Solid.Dark.Rounded" parent="Base.Widget.Button.Solid.Dark.Rounded"/>
+  <style name="App.Widget.Button.Gradient.Dark" parent="Base.Widget.Button.Gradient.Dark"/>
 
   <!-- Text input styles -->
   <style name="Base.Widget.TextInput" parent="Widget.AppCompat.EditText">
@@ -90,14 +96,14 @@
   <style name="App.Widget.NumPad.Light" parent="Base.Widget.NumPad.Light"/>
 
   <!-- Num pad text input styles -->
-  <style name="Base.Widget.NumPadTextInput.Dark" parent="Base.Widget.TextInput.Dark">
+  <style name="Base.Widget.NotEditableTextInput.Dark" parent="Base.Widget.TextInput.Dark">
     <item name="android:gravity">center</item>
     <item name="android:maxLines">1</item>
     <item name="android:textSize">34sp</item>
     <item name="fontPath">@string/font_gotham_round_light</item>
   </style>
 
-  <style name="App.Widget.NumPadTextInput.Dark" parent="Base.Widget.NumPadTextInput.Dark"/>
+  <style name="App.Widget.NotEditableTextInput.Dark" parent="Base.Widget.NotEditableTextInput.Dark"/>
 
   <!-- Themes -->
   <style name="Base.Theme" parent="Theme.AppCompat.Light.NoActionBar">

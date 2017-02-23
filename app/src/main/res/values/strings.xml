@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <!-- Common strings -->
+  <string name="error_message">En estos momentos no podemos procesar esta solicitud. Favor intentar nuevamente.</string>
+  <string name="error_positive_button_text">@string/ok</string>
+  <string name="error_title">¡Lo sentimos!</string>
+  <string name="next">Continuar</string>
+  <string name="ok">Ok</string>
+  <string name="start">Comenzar</string>
+
+  <!-- Font strings -->
   <string name="font_gotham_round_bold">fonts/GothamRounded/Bold.otf</string>
   <string name="font_gotham_round_book">fonts/GothamRounded/Book.otf</string>
   <string name="font_gotham_round_light">fonts/GothamRounded/Light.otf</string>
   <string name="font_gotham_round_medium">fonts/GothamRounded/Medium.otf</string>
+
+  <!-- Introduction strings -->
   <string name="introduction_button_start">@string/start</string>
   <string name="introduction_tab_description_money">Transfiere a tu amigo el serrucho del almuerzo o paga tu factura de luz en segundos.</string>
   <string name="introduction_tab_description_purchase">Cuando estés de compras, al pagar solo toca tu celular y listo.</string>
@@ -11,7 +22,12 @@
   <string name="introduction_tab_title_money">Dinero al momento</string>
   <string name="introduction_tab_title_purchase">Tocar y pagar</string>
   <string name="introduction_tab_title_welcome">¡Bienvenidos!</string>
-  <string name="phone_number_validation_description">Ingresa el número de celular para verificar tu perfil</string>
-  <string name="phone_number_validation_title">¡Listo, empecemos!</string>
-  <string name="start">Comenzar</string>
+
+  <!-- Registration strings -->
+  <string name="phone_number_validation_button_next">@string/next</string>
+  <string name="phone_number_validation_error_incorrect_number_message">Bla bla bla bla bla bla</string>
+  <string name="phone_number_validation_error_incorrect_number_positive_button_text">@string/ok</string>
+  <string name="phone_number_validation_error_incorrect_number_title">Bla bla bla</string>
+  <string name="phone_number_validation_label_description">Ingresa el número de celular para verificar tu perfil</string>
+  <string name="phone_number_validation_label_title">¡Listo, empecemos!</string>
 </resources>

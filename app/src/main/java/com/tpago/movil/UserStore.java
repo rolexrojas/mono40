@@ -2,6 +2,7 @@ package com.tpago.movil;
 
 import android.content.SharedPreferences;
 
+import com.tpago.movil.content.SharedPreferencesCreator;
 import com.tpago.movil.util.Objects;
 
 import timber.log.Timber;

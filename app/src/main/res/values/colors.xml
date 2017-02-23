@@ -5,19 +5,27 @@
   <color name="transparent">@android:color/transparent</color>
   <color name="white">#FFF</color>
   <color name="white_alpha_50">#7FFFFFFF</color>
+  <color name="white_alpha_90">#E5FFFFFF</color>
 
   <!-- Theme colors -->
   <color name="accent">#9C188F</color>
   <color name="primary">#9C188F</color>
+  <color name="primary_alpha_05">#0D9C188F</color>
   <color name="primary_dark">#6D1764</color>
 
   <!-- Background colors -->
-  <color name="background_dark_colored_end">#691060</color>
-  <color name="background_dark_colored_start">@color/primary</color>
+  <color name="background_dark_colored_end">@color/primary</color>
+  <color name="background_dark_colored_start">#691060</color>
 
   <!-- Tab indicator colors -->
   <color name="tab_indicator_dot_default">@color/white_alpha_50</color>
   <color name="tab_indicator_dot_selected">@color/white</color>
+
+  <!-- Button colors -->
+  <color name="widget_button_dark_shape_gradient_background">@color/white_alpha_90</color>
+  <color name="widget_button_dark_shape_gradient_background_end">#33821477</color>
+  <color name="widget_button_dark_shape_gradient_background_start">@color/primary_alpha_05</color>
+  <color name="widget_button_dark_shape_solid_background">@color/white</color>
 
   <!-- Text input colors -->
   <color name="widget_text_input_dark_background">#CCC</color>
