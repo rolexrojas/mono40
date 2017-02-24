@@ -35,7 +35,7 @@
     android:layout_marginStart="32dp"
     android:layout_marginTop="16dp"
     android:layout_weight="1"/>
-  <com.tpago.movil.widget.AppButton
+  <Button
     android:id="@+id/button_next"
     style="@style/App.Widget.Button.Gradient.Dark"
     android:layout_width="match_parent"

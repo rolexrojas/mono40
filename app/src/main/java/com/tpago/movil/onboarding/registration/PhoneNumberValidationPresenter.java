@@ -50,12 +50,24 @@ final class PhoneNumberValidationPresenter {
     final String phoneNumber = Digits.stringify(phoneNumberDigits);
     isPhoneNumberValid = PhoneNumber.isValid(phoneNumber);
     if (Objects.isNotNull(view)) {
-      view.setText(phoneNumber);
+      view.setTextInputContent(phoneNumber);
       view.showNextButtonAsEnabled(isPhoneNumberValid);
       if (isPhoneNumberValid) {
-        view.setErraticStateEnabled(false);
+        view.showTextInputAsErratic(false);
       }
     }
+  }
+
+  private void startLoading() {
+    view.setNextButtonEnabled(false);
+    view.showNextButtonAsEnabled(false);
+    view.startLoading();
+  }
+
+  private void stopLoading() {
+    view.stopLoading();
+    view.setNextButtonEnabled(true);
+    view.showNextButtonAsEnabled(true);
   }
 
   final void setView(View view) {
@@ -64,7 +76,7 @@ final class PhoneNumberValidationPresenter {
     if (Objects.isNotNull(phoneNumber)) {
       this.phoneNumberDigits.addAll(Digits.getDigits(phoneNumber));
     } else {
-      Disposables.dispose(disposable);
+      Disposables.dispose(this.disposable);
     }
     this.updateView();
   }
@@ -84,57 +96,69 @@ final class PhoneNumberValidationPresenter {
   }
 
   final void validate() {
-    if (disposable.isDisposed()) {
-      if (isPhoneNumberValid) {
-        final PhoneNumber phoneNumber = PhoneNumber.create(Digits.stringify(phoneNumberDigits));
-        disposable = apiBridge.validatePhoneNumber(phoneNumber)
-          .subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(new Consumer<HttpResult<ApiData<PhoneNumber.State>>>() {
-            @Override
-            public void accept(HttpResult<ApiData<PhoneNumber.State>> result) throws Exception {
-              Timber.d(result.toString());
-              final ApiData<PhoneNumber.State> apiData = result.getData();
-              if (result.isSuccessful()) {
-                data.setPhoneNumber(phoneNumber, apiData.getValue());
-              } else {
-                final ApiError error = apiData.getError();
-                view.showError(
-                  stringResolver.resolve(R.string.error_title),
-                  error.getDescription(),
-                  stringResolver.resolve(R.string.error_positive_button_text));
-              }
-            }
-          }, new Consumer<Throwable>() {
-            @Override
-            public void accept(Throwable throwable) throws Exception {
-              Timber.e(throwable, "Validating phone number");
-              view.showError(
+    if (isPhoneNumberValid) {
+      final PhoneNumber phoneNumber = PhoneNumber.create(Digits.stringify(phoneNumberDigits));
+      disposable = apiBridge.validatePhoneNumber(phoneNumber)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnSubscribe(new Consumer<Disposable>() {
+          @Override
+          public void accept(Disposable disposable) throws Exception {
+            startLoading();
+          }
+        })
+        .subscribe(new Consumer<HttpResult<ApiData<PhoneNumber.State>>>() {
+          @Override
+          public void accept(HttpResult<ApiData<PhoneNumber.State>> result) throws Exception {
+            Timber.d(result.toString());
+            stopLoading();
+            final ApiData<PhoneNumber.State> apiData = result.getData();
+            if (result.isSuccessful()) {
+              data.setPhoneNumber(phoneNumber, apiData.getValue());
+              view.moveToNextScreen();
+            } else {
+              final ApiError error = apiData.getError();
+              view.showDialog(
                 stringResolver.resolve(R.string.error_title),
-                stringResolver.resolve(R.string.error_message),
+                error.getDescription(),
                 stringResolver.resolve(R.string.error_positive_button_text));
             }
-          });
-      } else {
-        view.showError(
-          stringResolver.resolve(R.string.phone_number_validation_error_incorrect_number_title),
-          stringResolver.resolve(R.string.phone_number_validation_error_incorrect_number_message),
-          stringResolver.resolve(
-            R.string.phone_number_validation_error_incorrect_number_positive_button_text));
-        view.setErraticStateEnabled(true);
-      }
+          }
+        }, new Consumer<Throwable>() {
+          @Override
+          public void accept(Throwable throwable) throws Exception {
+            Timber.e(throwable, "Validating phone number");
+            stopLoading();
+            view.showDialog(
+              stringResolver.resolve(R.string.error_title),
+              stringResolver.resolve(R.string.error_message),
+              stringResolver.resolve(R.string.error_positive_button_text));
+          }
+        });
+    } else {
+      view.showDialog(
+        stringResolver.resolve(R.string.phone_number_validation_error_incorrect_number_title),
+        stringResolver.resolve(R.string.phone_number_validation_error_incorrect_number_message),
+        stringResolver.resolve(R.string.phone_number_validation_error_incorrect_number_positive_button_text));
+      view.showTextInputAsErratic(true);
     }
   }
 
   public interface View {
-    void setText(String text);
+    void showDialog(String title, String message, String positiveButtonText);
 
-    void setErraticStateEnabled(boolean erraticStateEnabled);
+    void setTextInputContent(String text);
 
-    void showNextButtonAsEnabled(boolean enabled);
+    void showTextInputAsErratic(boolean showAsErratic);
+
+    void setNextButtonEnabled(boolean enabled);
+
+    void showNextButtonAsEnabled(boolean showAsEnabled);
+
+    void startLoading();
+
+    void stopLoading();
 
     void moveToNextScreen();
-
-    void showError(String title, String message, String positiveButtonText);
   }
 }

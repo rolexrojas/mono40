@@ -25,9 +25,9 @@
 
   <!-- Registration strings -->
   <string name="phone_number_validation_button_next">@string/next</string>
-  <string name="phone_number_validation_error_incorrect_number_message">Bla bla bla bla bla bla</string>
+  <string name="phone_number_validation_error_incorrect_number_message">Debes de ingresar un número de diez dígitos.</string>
   <string name="phone_number_validation_error_incorrect_number_positive_button_text">@string/ok</string>
-  <string name="phone_number_validation_error_incorrect_number_title">Bla bla bla</string>
+  <string name="phone_number_validation_error_incorrect_number_title">Número incorrecto</string>
   <string name="phone_number_validation_label_description">Ingresa el número de celular para verificar tu perfil</string>
   <string name="phone_number_validation_label_title">¡Listo, empecemos!</string>
 </resources>

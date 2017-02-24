@@ -13,8 +13,10 @@ import com.tpago.movil.R;
 import com.tpago.movil.api.ApiBridge;
 import com.tpago.movil.app.InformationalDialogFragment;
 import com.tpago.movil.content.StringResolver;
+import com.tpago.movil.widget.LoadIndicator;
 import com.tpago.movil.widget.NumPad;
 import com.tpago.movil.widget.TextInput;
+import com.tpago.movil.widget.TextInputLoadIndicator;
 
 import javax.inject.Inject;
 
@@ -22,6 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import timber.log.Timber;
 
 /**
  * @author hecvasro
@@ -32,6 +35,7 @@ public final class PhoneNumberValidationFragment
   NumPad.OnDigitClickedListener,
   NumPad.OnDeleteClickedListener {
   private Unbinder unbinder;
+  private LoadIndicator loadIndicator;
   private PhoneNumberValidationPresenter presenter;
 
   @BindView(R.id.text_input)
@@ -71,6 +75,8 @@ public final class PhoneNumberValidationFragment
     super.onViewCreated(view, savedInstanceState);
     // Binds all annotated views, resources and methods.
     unbinder = ButterKnife.bind(this, view);
+    // Creates the load indicator.
+    loadIndicator = new TextInputLoadIndicator(textInput);
     // Injects all annotated dependencies.
     getRegistrationComponent().inject(this);
     // Creates presenter.
@@ -109,38 +115,56 @@ public final class PhoneNumberValidationFragment
     // Destroys the presenter.
     presenter.setView(null);
     presenter = null;
+    // Destroys the load indicator.
+    loadIndicator = null;
     // Binds all annotated views, resources and methods.
     unbinder.unbind();
   }
 
   @Override
-  public void setText(String text) {
-    textInput.setText(text);
-  }
-
-  @Override
-  public void setErraticStateEnabled(boolean erraticStateEnabled) {
-    textInput.setErraticStateEnabled(erraticStateEnabled);
-  }
-
-  @Override
-  public void showNextButtonAsEnabled(boolean enabled) {
-    nextButton.setAlpha(enabled ? 1.0F : 0.5F);
-  }
-
-  @Override
-  public void moveToNextScreen() {
-    // TODO
-  }
-
-  @Override
-  public void showError(String title, String message, String positiveButtonText) {
+  public void showDialog(String title, String message, String positiveButtonText) {
     final DialogFragment fragment = InformationalDialogFragment.create(
       title,
       message,
       positiveButtonText);
     fragment.setTargetFragment(this, 0);
     fragment.show(getChildFragmentManager(), null);
+  }
+
+  @Override
+  public void setTextInputContent(String text) {
+    textInput.setText(text);
+  }
+
+  @Override
+  public void showTextInputAsErratic(boolean showAsErratic) {
+    textInput.setErraticStateEnabled(showAsErratic);
+  }
+
+  @Override
+  public void setNextButtonEnabled(boolean enabled) {
+    nextButton.setEnabled(enabled);
+  }
+
+  @Override
+  public void showNextButtonAsEnabled(boolean showAsEnabled) {
+    nextButton.setAlpha(showAsEnabled ? 1.0F : 0.5F);
+  }
+
+  @Override
+  public void startLoading() {
+    loadIndicator.start();
+  }
+
+  @Override
+  public void stopLoading() {
+    loadIndicator.stop();
+  }
+
+  @Override
+  public void moveToNextScreen() {
+    Timber.d("Move to next screen");
+    // TODO
   }
 
   @Override

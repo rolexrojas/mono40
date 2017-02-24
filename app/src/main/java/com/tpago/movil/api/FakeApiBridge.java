@@ -17,6 +17,8 @@ import io.reactivex.SingleSource;
  * @author hecvasro
  */
 class FakeApiBridge implements ApiBridge {
+  private static final long DELAY = 2000L;
+
   @Override
   public Single<HttpResult<ApiData<PhoneNumber.State>>> validatePhoneNumber(
     final PhoneNumber phoneNumber) {
@@ -36,6 +38,6 @@ class FakeApiBridge implements ApiBridge {
         return Single.just(HttpResult.create(HttpCode.OK, ApiData.create(state)));
       }
     })
-      .delay(1L, TimeUnit.SECONDS);
+      .delay(DELAY, TimeUnit.MILLISECONDS);
   }
 }

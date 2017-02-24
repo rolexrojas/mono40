@@ -15,7 +15,7 @@
     app:tabBackground="@drawable/tab_indicator_dot"
     app:tabGravity="center"
     app:tabIndicatorHeight="0dp"/>
-  <com.tpago.movil.widget.AppButton
+  <Button
     android:id="@+id/button_start"
     style="@style/App.Widget.Button.Solid.Dark.Rounded"
     android:layout_width="125dp"
