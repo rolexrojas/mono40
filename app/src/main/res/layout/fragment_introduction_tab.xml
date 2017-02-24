@@ -8,7 +8,7 @@
   tools:ignore="MissingPrefix">
   <TextView
     android:id="@+id/text_view_description"
-    style="@style/App.Text.Dark.Secondary"
+    style="@style/Label.Dark.Secondary"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
@@ -17,7 +17,7 @@
     android:gravity="center"/>
   <TextView
     android:id="@+id/text_view_title"
-    style="@style/App.Text.Dark.Primary"
+    style="@style/Label.Dark.Primary"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_above="@+id/text_view_description"

@@ -1,33 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <!-- Private styles -->
   <style name="Base"/>
-  <style name="Base.Text"/>
-  <style name="Base.Widget"/>
 
-  <!-- Text styles -->
-  <style name="Base.Text.Dark">
+  <style name="Base.Theme" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="colorAccent">@color/app_accent</item>
+    <item name="colorPrimary">@color/app_primary</item>
+    <item name="colorPrimaryDark">@color/app_primary_dark</item>
+  </style>
+  <style name="Base.ThemeOverlay.Dark" parent="ThemeOverlay.AppCompat.Dark">
+    <item name="colorAccent">@color/white</item>
+  </style>
+
+  <style name="Base.Label"/>
+  <style name="Base.Label.Dark">
     <item name="android:textColor">@color/white</item>
     <item name="android:gravity">center</item>
   </style>
-  <style name="Base.Text.Dark.Primary">
+  <style name="Base.Label.Dark.Primary">
     <item name="android:textSize">20sp</item>
     <item name="fontPath">@string/font_gotham_round_medium</item>
   </style>
-  <style name="Base.Text.Dark.Secondary">
+  <style name="Base.Label.Dark.Secondary">
     <item name="android:textSize">15sp</item>
     <item name="android:lineSpacingExtra">10sp</item>
     <item name="fontPath">@string/font_gotham_round_book</item>
   </style>
 
-  <style name="App.Text.Dark.Primary" parent="Base.Text.Dark.Primary"/>
-  <style name="App.Text.Dark.Secondary" parent="Base.Text.Dark.Secondary"/>
+  <style name="Base.Widget"/>
 
-  <!-- Button styles -->
   <style name="Base.Widget.Button">
     <item name="android:background">?attr/selectableItemBackground</item>
     <item name="android:clickable">true</item>
     <item name="android:gravity">center</item>
-    <item name="android:textColor">@color/primary</item>
+    <item name="android:textColor">@color/app_primary</item>
     <item name="android:textSize">14sp</item>
     <item name="fontPath">@string/font_gotham_round_bold</item>
   </style>
@@ -38,12 +44,9 @@
   </style>
   <style name="Base.Widget.Button.Gradient"/>
   <style name="Base.Widget.Button.Gradient.Dark">
+    <item name="android:background">@drawable/widget_button_gradient_dark_shape</item>
   </style>
 
-  <style name="App.Widget.Button.Solid.Dark.Rounded" parent="Base.Widget.Button.Solid.Dark.Rounded"/>
-  <style name="App.Widget.Button.Gradient.Dark" parent="Base.Widget.Button.Gradient.Dark"/>
-
-  <!-- Text input styles -->
   <style name="Base.Widget.TextInput" parent="Widget.AppCompat.EditText">
     <item name="android:textCursorDrawable">@drawable/widget_text_input_dark_cursor</item>
     <item name="android:textSize">16sp</item>
@@ -56,9 +59,13 @@
     <item name="android:theme">@style/App.ThemeOverlay.Dark</item>
   </style>
 
-  <style name="App.Widget.TextInput.Dark" parent="Base.Widget.TextInput.Dark"/>
+  <style name="Base.Widget.NotEditableTextInput.Dark" parent="Base.Widget.TextInput.Dark">
+    <item name="android:gravity">center</item>
+    <item name="android:maxLines">1</item>
+    <item name="android:textSize">34sp</item>
+    <item name="fontPath">@string/font_gotham_round_light</item>
+  </style>
 
-  <!-- Num pad styles -->
   <style name="Base.Widget.NumPadRow">
     <item name="android:layout_height">0dp</item>
     <item name="android:layout_weight">1</item>
@@ -89,34 +96,33 @@
     <item name="color">@color/widget_num_pad_light_color</item>
   </style>
 
-  <style name="App.Widget.NumPadRow" parent="Base.Widget.NumPadRow"/>
-  <style name="App.Widget.NumPadCell" parent="Base.Widget.NumPadCell"/>
-  <style name="App.Widget.NumPadCell.Text" parent="Base.Widget.NumPadCell.Text"/>
-  <style name="App.Widget.NumPad.Dark" parent="Base.Widget.NumPad.Dark"/>
-  <style name="App.Widget.NumPad.Light" parent="Base.Widget.NumPad.Light"/>
-
-  <!-- Num pad text input styles -->
-  <style name="Base.Widget.NotEditableTextInput.Dark" parent="Base.Widget.TextInput.Dark">
-    <item name="android:gravity">center</item>
-    <item name="android:maxLines">1</item>
-    <item name="android:textSize">34sp</item>
-    <item name="fontPath">@string/font_gotham_round_light</item>
+  <style name="Base.Widget.FullSizeLoadIndicator" parent="Theme.AppCompat"/>
+  <style name="Base.Widget.FullSizeLoadIndicator.Dark">
+    <item name="android:windowBackground">@color/fulL_size_load_indicator_background_window</item>
+    <item name="colorAccent">@color/full_size_load_indicator_accent</item>
+    <item name="colorPrimary">@color/full_size_load_indicator_primary</item>
+    <item name="colorPrimaryDark">@color/full_size_load_indicator_primary_dark</item>
   </style>
 
-  <style name="App.Widget.NotEditableTextInput.Dark" parent="Base.Widget.NotEditableTextInput.Dark"/>
-
-  <!-- Themes -->
-  <style name="Base.Theme" parent="Theme.AppCompat.Light.NoActionBar">
-    <item name="colorAccent">@color/accent</item>
-    <item name="colorPrimary">@color/primary</item>
-    <item name="colorPrimaryDark">@color/primary_dark</item>
-  </style>
-
+  <!-- Public styles -->
   <style name="App.Theme" parent="Base.Theme"/>
-
-  <style name="Base.ThemeOverlay.Dark" parent="ThemeOverlay.AppCompat.Dark">
-    <item name="colorAccent">@color/white</item>
-  </style>
-
   <style name="App.ThemeOverlay.Dark" parent="Base.ThemeOverlay.Dark"/>
+
+  <style name="Label.Dark.Primary" parent="Base.Label.Dark.Primary"/>
+  <style name="Label.Dark.Secondary" parent="Base.Label.Dark.Secondary"/>
+
+  <style name="Widget.Button.Solid.Dark.Rounded" parent="Base.Widget.Button.Solid.Dark.Rounded"/>
+  <style name="Widget.Button.Gradient.Dark" parent="Base.Widget.Button.Gradient.Dark"/>
+
+  <style name="Widget.TextInput.Dark" parent="Base.Widget.TextInput.Dark"/>
+
+  <style name="Widget.NotEditableTextInput.Dark" parent="Base.Widget.NotEditableTextInput.Dark"/>
+
+  <style name="Widget.NumPadRow" parent="Base.Widget.NumPadRow"/>
+  <style name="Widget.NumPadCell" parent="Base.Widget.NumPadCell"/>
+  <style name="Widget.NumPadCell.Text" parent="Base.Widget.NumPadCell.Text"/>
+  <style name="Widget.NumPad.Dark" parent="Base.Widget.NumPad.Dark"/>
+  <style name="Widget.NumPad.Light" parent="Base.Widget.NumPad.Light"/>
+
+  <style name="Widget.FullSizeLoadIndicator.Dark" parent="Base.Widget.FullSizeLoadIndicator.Dark"/>
 </resources>

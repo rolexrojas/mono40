@@ -17,7 +17,7 @@
     app:tabIndicatorHeight="0dp"/>
   <Button
     android:id="@+id/button_start"
-    style="@style/App.Widget.Button.Solid.Dark.Rounded"
+    style="@style/Widget.Button.Solid.Dark.Rounded"
     android:layout_width="125dp"
     android:layout_height="36dp"
     android:layout_above="@+id/tab_layout"

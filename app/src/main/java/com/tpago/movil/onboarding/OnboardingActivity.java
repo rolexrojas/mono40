@@ -23,9 +23,9 @@ import butterknife.Unbinder;
 public final class OnboardingActivity extends BaseActivity implements OnboardingScreen {
   private Unbinder unbinder;
 
-  @BindColor(R.color.background_dark_colored_start)
+  @BindColor(R.color.app_background_gradient_dark_start)
   int backgroundStartColor;
-  @BindColor(R.color.background_dark_colored_end)
+  @BindColor(R.color.app_background_gradient_dark_end)
   int backgroundEndColor;
 
   @BindView(android.R.id.content)

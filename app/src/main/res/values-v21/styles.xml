@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <style name="App.Widget.Button.Solid.Dark.Rounded" parent="Base.Widget.Button.Solid.Dark.Rounded">
+  <style name="Widget.Button.Solid.Dark.Rounded" parent="Base.Widget.Button.Solid.Dark.Rounded">
     <item name="android:background">@drawable/widget_button_solid_dark_rounded</item>
   </style>
-  <style name="App.Widget.Button.Gradient.Dark" parent="Base.Widget.Button.Gradient.Dark">
+  <style name="Widget.Button.Gradient.Dark" parent="Base.Widget.Button.Gradient.Dark">
     <item name="android:background">@drawable/widget_button_gradient_dark</item>
   </style>
 </resources>

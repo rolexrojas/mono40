@@ -13,13 +13,14 @@ import com.tpago.movil.R;
 import com.tpago.movil.api.ApiBridge;
 import com.tpago.movil.app.InformationalDialogFragment;
 import com.tpago.movil.content.StringResolver;
+import com.tpago.movil.widget.FullSizeLoadIndicator;
 import com.tpago.movil.widget.LoadIndicator;
 import com.tpago.movil.widget.NumPad;
 import com.tpago.movil.widget.TextInput;
-import com.tpago.movil.widget.TextInputLoadIndicator;
 
 import javax.inject.Inject;
 
+import butterknife.BindInt;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -37,6 +38,9 @@ public final class PhoneNumberValidationFragment
   private Unbinder unbinder;
   private LoadIndicator loadIndicator;
   private PhoneNumberValidationPresenter presenter;
+
+  @BindInt(R.integer.anim_duration_test)
+  int testAnimDuration;
 
   @BindView(R.id.text_input)
   TextInput textInput;
@@ -76,7 +80,7 @@ public final class PhoneNumberValidationFragment
     // Binds all annotated views, resources and methods.
     unbinder = ButterKnife.bind(this, view);
     // Creates the load indicator.
-    loadIndicator = new TextInputLoadIndicator(textInput);
+    loadIndicator = new FullSizeLoadIndicator(getChildFragmentManager());
     // Injects all annotated dependencies.
     getRegistrationComponent().inject(this);
     // Creates presenter.

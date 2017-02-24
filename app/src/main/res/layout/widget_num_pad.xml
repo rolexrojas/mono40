@@ -2,60 +2,60 @@
 <merge
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto">
-  <LinearLayout style="@style/App.Widget.NumPadRow">
+  <LinearLayout style="@style/Widget.NumPadRow">
     <Button
       android:id="@+id/num_pad_cell_one"
-      style="@style/App.Widget.NumPadCell.Text"
+      style="@style/Widget.NumPadCell.Text"
       android:text="1"/>
     <Button
       android:id="@+id/num_pad_cell_two"
-      style="@style/App.Widget.NumPadCell.Text"
+      style="@style/Widget.NumPadCell.Text"
       android:text="2"/>
     <Button
       android:id="@+id/num_pad_cell_three"
-      style="@style/App.Widget.NumPadCell.Text"
+      style="@style/Widget.NumPadCell.Text"
       android:text="3"/>
   </LinearLayout>
-  <LinearLayout style="@style/App.Widget.NumPadRow">
+  <LinearLayout style="@style/Widget.NumPadRow">
     <Button
       android:id="@+id/num_pad_cell_four"
-      style="@style/App.Widget.NumPadCell.Text"
+      style="@style/Widget.NumPadCell.Text"
       android:text="4"/>
     <Button
       android:id="@+id/num_pad_cell_five"
-      style="@style/App.Widget.NumPadCell.Text"
+      style="@style/Widget.NumPadCell.Text"
       android:text="5"/>
     <Button
       android:id="@+id/num_pad_cell_six"
-      style="@style/App.Widget.NumPadCell.Text"
+      style="@style/Widget.NumPadCell.Text"
       android:text="6"/>
   </LinearLayout>
-  <LinearLayout style="@style/App.Widget.NumPadRow">
+  <LinearLayout style="@style/Widget.NumPadRow">
     <Button
       android:id="@+id/num_pad_cell_seven"
-      style="@style/App.Widget.NumPadCell.Text"
+      style="@style/Widget.NumPadCell.Text"
       android:text="7"/>
     <Button
       android:id="@+id/num_pad_cell_eight"
-      style="@style/App.Widget.NumPadCell.Text"
+      style="@style/Widget.NumPadCell.Text"
       android:text="8"/>
     <Button
       android:id="@+id/num_pad_cell_nine"
-      style="@style/App.Widget.NumPadCell.Text"
+      style="@style/Widget.NumPadCell.Text"
       android:text="9"/>
   </LinearLayout>
-  <LinearLayout style="@style/App.Widget.NumPadRow">
+  <LinearLayout style="@style/Widget.NumPadRow">
     <Button
       android:id="@+id/num_pad_cell_dot"
-      style="@style/App.Widget.NumPadCell.Text"
+      style="@style/Widget.NumPadCell.Text"
       android:text="."/>
     <Button
       android:id="@+id/num_pad_cell_zero"
-      style="@style/App.Widget.NumPadCell.Text"
+      style="@style/Widget.NumPadCell.Text"
       android:text="0"/>
     <ImageButton
       android:id="@+id/num_pad_cell_delete"
-      style="@style/App.Widget.NumPadCell"
+      style="@style/Widget.NumPadCell"
       app:srcCompat="@drawable/ic_backspace_black_24dp"/>
   </LinearLayout>
 </merge>
