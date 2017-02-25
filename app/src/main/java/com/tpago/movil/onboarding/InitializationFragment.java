@@ -36,7 +36,6 @@ public final class InitializationFragment extends OnboardingFragment {
   public void onResume() {
     super.onResume();
     logoAnimator.reset();
-    Timber.d("Starting the initialization process");
     if (userStore.isSet()) {
       // TODO: Start the authentication process.
       Timber.d("Starting the authentication process");
