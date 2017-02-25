@@ -5,6 +5,7 @@ import com.tpago.movil.app.ActivityModule;
 import com.tpago.movil.app.ActivityQualifier;
 import com.tpago.movil.app.ActivityScope;
 import com.tpago.movil.app.FragmentReplacer;
+import com.tpago.movil.app.BackEventHandler;
 
 import dagger.Module;
 import dagger.Provides;
@@ -16,6 +17,12 @@ import dagger.Provides;
 public final class InitModule extends ActivityModule<InitActivity> {
   InitModule(InitActivity activity) {
     super(activity);
+  }
+
+  @Provides
+  @ActivityScope
+  BackEventHandler provideBackEventHandler() {
+    return new BackEventHandler();
   }
 
   @Provides

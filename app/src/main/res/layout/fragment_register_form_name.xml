@@ -29,7 +29,7 @@
     android:layout_marginStart="60dp"
     android:layout_marginTop="32dp"
     android:hint="@string/register_form_name_hint_first_name"
-    android:inputType="text|textPersonName"
+    android:inputType="text|textCapWords|textPersonName"
     android:maxLines="1"
     android:nextFocusDown="@+id/text_input_last_name"/>
   <com.tpago.movil.widget.TextInput
@@ -43,7 +43,7 @@
     android:layout_marginTop="8dp"
     android:hint="@string/register_form_name_hint_last_name"
     android:imeOptions="actionDone"
-    android:inputType="text|textPersonName"
+    android:inputType="text|textCapWords|textPersonName"
     android:maxLines="1"/>
   <Button
     android:id="@+id/button_move_to_next_screen"
