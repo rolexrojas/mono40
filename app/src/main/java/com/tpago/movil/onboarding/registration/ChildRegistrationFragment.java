@@ -11,6 +11,10 @@ import com.tpago.movil.util.Preconditions;
 public abstract class ChildRegistrationFragment extends Fragment {
   private RegistrationScreen parentScreen;
 
+  protected final RegistrationScreen getParentScreen() {
+    return parentScreen;
+  }
+
   protected final RegistrationComponent getRegistrationComponent() {
     return parentScreen.getRegistrationComponent();
   }

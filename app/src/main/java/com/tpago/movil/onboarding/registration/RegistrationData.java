@@ -40,8 +40,4 @@ final class RegistrationData {
     this.firstName = firstName;
     this.lastName = lastName;
   }
-
-  final void setName(String name) {
-    throw new UnsupportedOperationException("Not implemented");
-  }
 }

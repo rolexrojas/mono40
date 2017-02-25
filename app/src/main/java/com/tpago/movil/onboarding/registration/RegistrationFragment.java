@@ -2,6 +2,7 @@ package com.tpago.movil.onboarding.registration;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +10,6 @@ import android.view.ViewGroup;
 import com.tpago.movil.R;
 import com.tpago.movil.app.Fragments;
 import com.tpago.movil.onboarding.OnboardingFragment;
-
-import timber.log.Timber;
 
 /**
  * @author hecvasro
@@ -36,18 +35,17 @@ public final class RegistrationFragment extends OnboardingFragment implements Re
     super.onViewCreated(view, savedInstanceState);
     // Initializes the dependency injector.
     component = getOnboardingComponent().plus(new RegistrationModule());
-    // Sets the initial fragment.
-    Fragments.replace(getChildFragmentManager(), PhoneNumberValidationFragment.create());
-  }
-
-  @Override
-  public void onDestroyView() {
-    super.onDestroyView();
-    Timber.d("onDestroyView");
+    // Sets the initial registration screen.
+    setScreen(PhoneNumberFormFragment.create(), Fragments.Transition.NONE, false);
   }
 
   @Override
   public RegistrationComponent getRegistrationComponent() {
     return component;
+  }
+
+  @Override
+  public void setScreen(Fragment fragment, Fragments.Transition transition, boolean addToBackStack) {
+    Fragments.replace(getChildFragmentManager(), fragment, transition, addToBackStack);
   }
 }

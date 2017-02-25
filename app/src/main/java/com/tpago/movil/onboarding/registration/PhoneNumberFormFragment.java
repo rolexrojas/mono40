@@ -11,6 +11,7 @@ import android.widget.Button;
 import com.tpago.movil.Digit;
 import com.tpago.movil.R;
 import com.tpago.movil.api.ApiBridge;
+import com.tpago.movil.app.Fragments;
 import com.tpago.movil.app.InformationalDialogFragment;
 import com.tpago.movil.content.StringResolver;
 import com.tpago.movil.widget.FullSizeLoadIndicator;
@@ -20,27 +21,22 @@ import com.tpago.movil.widget.TextInput;
 
 import javax.inject.Inject;
 
-import butterknife.BindInt;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import timber.log.Timber;
 
 /**
  * @author hecvasro
  */
-public final class PhoneNumberValidationFragment
+public final class PhoneNumberFormFragment
   extends ChildRegistrationFragment
-  implements PhoneNumberValidationPresenter.View,
+  implements PhoneNumberFormPresenter.View,
   NumPad.OnDigitClickedListener,
   NumPad.OnDeleteClickedListener {
   private Unbinder unbinder;
   private LoadIndicator loadIndicator;
-  private PhoneNumberValidationPresenter presenter;
-
-  @BindInt(R.integer.anim_duration_test)
-  int testAnimDuration;
+  private PhoneNumberFormPresenter presenter;
 
   @BindView(R.id.text_input)
   TextInput textInput;
@@ -56,8 +52,8 @@ public final class PhoneNumberValidationFragment
   @Inject
   StringResolver stringResolver;
 
-  public static PhoneNumberValidationFragment create() {
-    return new PhoneNumberValidationFragment();
+  public static PhoneNumberFormFragment create() {
+    return new PhoneNumberFormFragment();
   }
 
   @OnClick(R.id.button_next)
@@ -84,7 +80,7 @@ public final class PhoneNumberValidationFragment
     // Injects all annotated dependencies.
     getRegistrationComponent().inject(this);
     // Creates presenter.
-    presenter = new PhoneNumberValidationPresenter(apiBridge, data, stringResolver);
+    presenter = new PhoneNumberFormPresenter(apiBridge, data, stringResolver);
     presenter.setView(this);
   }
 
@@ -167,8 +163,7 @@ public final class PhoneNumberValidationFragment
 
   @Override
   public void moveToNextScreen() {
-    Timber.d("Move to next screen");
-    // TODO
+    getParentScreen().setScreen(NameFormFragment.create(), Fragments.Transition.SRFO, true);
   }
 
   @Override

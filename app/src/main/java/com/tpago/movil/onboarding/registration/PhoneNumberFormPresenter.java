@@ -25,7 +25,7 @@ import timber.log.Timber;
 /**
  * @author hecvasro
  */
-final class PhoneNumberValidationPresenter {
+final class PhoneNumberFormPresenter {
   private final ApiBridge apiBridge;
   private final RegistrationData data;
   private final StringResolver stringResolver;
@@ -37,7 +37,7 @@ final class PhoneNumberValidationPresenter {
 
   private Disposable disposable = Disposables.disposed();
 
-  PhoneNumberValidationPresenter(
+  PhoneNumberFormPresenter(
     ApiBridge apiBridge,
     RegistrationData data,
     StringResolver stringResolver) {
@@ -137,14 +137,14 @@ final class PhoneNumberValidationPresenter {
         });
     } else {
       view.showDialog(
-        stringResolver.resolve(R.string.phone_number_validation_error_incorrect_number_title),
-        stringResolver.resolve(R.string.phone_number_validation_error_incorrect_number_message),
-        stringResolver.resolve(R.string.phone_number_validation_error_incorrect_number_positive_button_text));
+        stringResolver.resolve(R.string.phone_number_form_error_incorrect_number_title),
+        stringResolver.resolve(R.string.phone_number_form_error_incorrect_number_message),
+        stringResolver.resolve(R.string.phone_number_form_error_incorrect_number_positive_button_text));
       view.showTextInputAsErratic(true);
     }
   }
 
-  public interface View {
+  interface View {
     void showDialog(String title, String message, String positiveButtonText);
 
     void setTextInputContent(String text);

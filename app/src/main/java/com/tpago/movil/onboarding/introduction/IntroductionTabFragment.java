@@ -28,9 +28,9 @@ public final class IntroductionTabFragment extends Fragment {
 
   @BindView(R.id.image_view_art)
   ImageView artImageView;
-  @BindView(R.id.text_view_title)
+  @BindView(R.id.label_title)
   TextView titleTextView;
-  @BindView(R.id.text_view_description)
+  @BindView(R.id.label_description)
   TextView descriptionTextView;
 
   static IntroductionTabFragment create(int artId, int titleId, int descriptionId) {

@@ -10,5 +10,6 @@ import dagger.Subcomponent;
 @FragmentScope
 @Subcomponent(modules = RegistrationModule.class)
 public interface RegistrationComponent {
-  void inject(PhoneNumberValidationFragment fragment);
+  void inject(PhoneNumberFormFragment fragment);
+  void inject(NameFormFragment fragment);
 }
