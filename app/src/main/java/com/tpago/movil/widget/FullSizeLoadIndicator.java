@@ -58,7 +58,7 @@ public final class FullSizeLoadIndicator implements LoadIndicator {
       LayoutInflater inflater,
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-      return inflater.inflate(R.layout.fragment_full_size_load_indicator, container, false);
+      return inflater.inflate(R.layout.fragment_load_indicator_full_size, container, false);
     }
   }
 }

@@ -1,0 +1,98 @@
+package com.tpago.movil.init.register;
+
+import com.tpago.movil.R;
+import com.tpago.movil.content.StringResolver;
+import com.tpago.movil.text.Texts;
+import com.tpago.movil.util.Objects;
+
+/**
+ * @author hecvasro
+ */
+final class NameRegisterFormPresenter extends RegisterFormPresenter<NameRegisterFormPresenter.View> {
+  private String firstName;
+  private boolean isFirstNameValid = false;
+  private String lastName;
+  private boolean isLastNameValid = false;
+
+  private static String sanitize(String value) {
+    return Objects.isNull(value) ? "" : value.trim();
+  }
+
+  NameRegisterFormPresenter(
+    NameRegisterFormPresenter.View view,
+    StringResolver stringResolver,
+    RegisterData registerData) {
+    super(view, stringResolver, registerData);
+    this.firstName = sanitize(this.registerData.getFirstName());
+    this.isFirstNameValid = Texts.isNotEmpty(this.firstName);
+    this.lastName = sanitize(this.registerData.getLastName());
+    this.isLastNameValid = Texts.isNotEmpty(this.lastName);
+  }
+
+  private void updateView() {
+    if (Objects.isNotNull(view)) {
+      if (isFirstNameValid) {
+        view.showFirstNameTextInputAsErratic(false);
+      }
+      if (isLastNameValid) {
+        view.showLastNameTextInputAsErratic(false);
+      }
+      view.showMoveToNextScreenButtonAsEnabled(isFirstNameValid && isLastNameValid);
+    }
+  }
+
+  @Override
+  public void onViewStarted() {
+    super.onViewStarted();
+    view.setFirstNameTextInputContent(firstName);
+    view.showFirstNameTextInputAsErratic(false);
+    view.setLastNameTextInputContent(lastName);
+    view.showLastNameTextInputAsErratic(false);
+    view.showMoveToNextScreenButtonAsEnabled(false);
+  }
+
+  final void onFirstNameTextInputContentChanged(String content) {
+    final String sanitizedContent = sanitize(content);
+    if (!firstName.equals(sanitizedContent)) {
+      firstName = sanitizedContent;
+      isFirstNameValid = Texts.isNotEmpty(firstName);
+      updateView();
+    }
+  }
+
+  final void onLastNameTextInputContentChanged(String content) {
+    final String sanitizedContent = sanitize(content);
+    if (!lastName.equals(sanitizedContent)) {
+      lastName = sanitizedContent;
+      isLastNameValid = Texts.isNotEmpty(lastName);
+      updateView();
+    }
+  }
+
+  @Override
+  void onMoveToNextScreenButtonClicked() {
+    if (isFirstNameValid && isLastNameValid) {
+      registerData.setName(firstName, lastName);
+      view.moveToNextScreen();
+    } else if (Objects.isNotNull(view)) {
+      view.showDialog(
+        stringResolver.resolve(R.string.register_form_name_error_title),
+        stringResolver.resolve(R.string.register_form_name_error_message),
+        stringResolver.resolve(R.string.register_form_name_error_positive_button_text));
+      view.showFirstNameTextInputAsErratic(!isFirstNameValid);
+      view.showLastNameTextInputAsErratic(!isLastNameValid);
+    }
+  }
+
+  interface View extends RegisterFormPresenter.View {
+    void setFirstNameTextInputContent(String content);
+
+    void showFirstNameTextInputAsErratic(boolean showAsErratic);
+
+    void setLastNameTextInputContent(String content);
+
+    void showLastNameTextInputAsErratic(boolean showAsErratic);
+
+    void moveToNextScreen();
+  }
+}

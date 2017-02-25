@@ -98,10 +98,10 @@
 
   <style name="Base.Widget.FullSizeLoadIndicator" parent="Theme.AppCompat"/>
   <style name="Base.Widget.FullSizeLoadIndicator.Dark">
-    <item name="android:windowBackground">@color/fulL_size_load_indicator_background_window</item>
-    <item name="colorAccent">@color/full_size_load_indicator_accent</item>
-    <item name="colorPrimary">@color/full_size_load_indicator_primary</item>
-    <item name="colorPrimaryDark">@color/full_size_load_indicator_primary_dark</item>
+    <item name="android:windowBackground">@color/load_indicator_full_size_background_window</item>
+    <item name="colorAccent">@color/load_indicator_full_size_accent</item>
+    <item name="colorPrimary">@color/load_indicator_full_size_primary</item>
+    <item name="colorPrimaryDark">@color/load_indicator_full_size_primary_dark</item>
   </style>
 
   <!-- Public styles -->

@@ -1,8 +1,8 @@
 package com.tpago.movil.app;
 
 import com.tpago.movil.api.ApiModule;
-import com.tpago.movil.onboarding.OnboardingComponent;
-import com.tpago.movil.onboarding.OnboardingModule;
+import com.tpago.movil.init.InitComponent;
+import com.tpago.movil.init.InitModule;
 
 import javax.inject.Singleton;
 
@@ -17,5 +17,5 @@ import dagger.Component;
   ApiModule.class
 })
 public interface AppComponent {
-  OnboardingComponent plus(OnboardingModule module);
+  InitComponent plus(InitModule module);
 }

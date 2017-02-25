@@ -6,6 +6,7 @@
   <string name="error_title">¡Lo sentimos!</string>
   <string name="first_name">Nombre</string>
   <string name="last_name">Apellido</string>
+  <string name="later">Más Tarde</string>
   <string name="next">Continuar</string>
   <string name="ok">Ok</string>
   <string name="start">Comenzar</string>
@@ -16,27 +17,31 @@
   <string name="font_gotham_round_light">fonts/GothamRounded/Light.otf</string>
   <string name="font_gotham_round_medium">fonts/GothamRounded/Medium.otf</string>
 
-  <!-- Introduction strings -->
-  <string name="introduction_button_start">@string/start</string>
-  <string name="introduction_tab_description_money">Transfiere a tu amigo el serrucho del almuerzo o paga tu factura de luz en segundos.</string>
-  <string name="introduction_tab_description_purchase">Cuando estés de compras, al pagar solo toca tu celular y listo.</string>
-  <string name="introduction_tab_description_welcome">Con tPago puedes pagar, comprar y enviar dinero de manera rápida y segura.</string>
-  <string name="introduction_tab_title_money">Dinero al momento</string>
-  <string name="introduction_tab_title_purchase">Tocar y pagar</string>
-  <string name="introduction_tab_title_welcome">¡Bienvenidos!</string>
+  <!-- Intro strings -->
+  <string name="intro_button_start">@string/start</string>
+  <string name="intro_tab_description_money">Transfiere a tu amigo el serrucho del almuerzo o paga tu factura de luz en segundos.</string>
+  <string name="intro_tab_description_purchase">Cuando estés de compras, al pagar solo toca tu celular y listo.</string>
+  <string name="intro_tab_description_welcome">Con tPago puedes pagar, comprar y enviar dinero de manera rápida y segura.</string>
+  <string name="intro_tab_title_money">Dinero al momento</string>
+  <string name="intro_tab_title_purchase">Tocar y pagar</string>
+  <string name="intro_tab_title_welcome">¡Bienvenidos!</string>
 
-  <!-- Registration strings -->
-  <string name="name_form_error_message">Tu nombre y appellido son requeridos.</string>
-  <string name="name_form_error_positive_button_text">@string/ok</string>
-  <string name="name_form_error_title">¿Tienes nombre?</string>
-  <string name="name_form_hint_first_name">@string/first_name</string>
-  <string name="name_form_hint_last_name">@string/last_name</string>
-  <string name="name_form_label_description">Continuamos con crear tu perfil para tPago</string>
-  <string name="name_form_label_title">¿Cómo te llamas?</string>
-  <string name="phone_number_form_error_incorrect_number_message">Debes de ingresar un número de diez dígitos.</string>
-  <string name="phone_number_form_error_incorrect_number_positive_button_text">@string/ok</string>
-  <string name="phone_number_form_error_incorrect_number_title">Número incorrecto</string>
-  <string name="phone_number_form_label_description">Ingresa el número de celular para verificar tu perfil</string>
-  <string name="phone_number_form_label_title">¡Listo, empecemos!</string>
-  <string name="registration_button_next">@string/next</string>
+  <!-- Register strings -->
+  <string name="register_form_name_button_move_to_next_screen">@string/next</string>
+  <string name="register_form_name_error_message">Tu nombre y apellido son requeridos.</string>
+  <string name="register_form_name_error_positive_button_text">@string/ok</string>
+  <string name="register_form_name_error_title">¿Tienes nombre?</string>
+  <string name="register_form_name_hint_first_name">@string/first_name</string>
+  <string name="register_form_name_hint_last_name">@string/last_name</string>
+  <string name="register_form_name_label_description">Continuamos con crear tu perfil para tPago</string>
+  <string name="register_form_name_label_title">¿Cómo te llamas?</string>
+  <string name="register_form_phone_number_button_move_to_next_screen">@string/next</string>
+  <string name="register_form_phone_number_error_incorrect_number_message">Debes de ingresar un número de diez dígitos.</string>
+  <string name="register_form_phone_number_error_incorrect_number_positive_button_text">@string/ok</string>
+  <string name="register_form_phone_number_error_incorrect_number_title">Número incorrecto</string>
+  <string name="register_form_phone_number_label_description">Ingresa el número de celular para verificar tu perfil</string>
+  <string name="register_form_phone_number_label_title">¡Listo, empecemos!</string>
+  <string name="register_form_profile_picture_button_move_to_next_screen">@string/later</string>
+  <string name="register_form_profile_picture_label_description">Se usa para identificar tus cuentas más fácil</string>
+  <string name="register_form_profile_picture_label_title">¿Establecer tu foto?</string>
 </resources>

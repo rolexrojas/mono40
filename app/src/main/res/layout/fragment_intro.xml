@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+  <android.support.design.widget.TabLayout
+    android:id="@+id/tab_layout"
+    android:layout_width="match_parent"
+    android:layout_height="16dp"
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true"
+    android:layout_marginBottom="32dp"
+    android:clickable="false"
+    app:tabBackground="@drawable/tab_indicator_dot"
+    app:tabGravity="center"
+    app:tabIndicatorHeight="0dp"/>
+  <Button
+    android:id="@+id/button_start"
+    style="@style/Widget.Button.Solid.Dark.Rounded"
+    android:layout_width="125dp"
+    android:layout_height="36dp"
+    android:layout_above="@+id/tab_layout"
+    android:layout_centerHorizontal="true"
+    android:layout_marginBottom="32dp"
+    android:text="@string/intro_button_start"/>
+  <android.support.v4.view.ViewPager
+    android:id="@+id/view_pager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_above="@+id/button_start"
+    android:layout_marginBottom="32dp"/>
+</RelativeLayout>

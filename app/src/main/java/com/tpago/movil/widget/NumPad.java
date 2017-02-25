@@ -70,7 +70,7 @@ public final class NumPad extends LinearLayout {
   private void initializeNumPad(Context c, AttributeSet attrs, int defStyleAttr) {
     // Sets the orientation.
     setOrientation(VERTICAL);
-    // Initializes the attributes from the given set or from the default one.
+    // Initializes the attributes from the given replace or from the default one.
     final TypedArray a = c.obtainStyledAttributes(attrs, R.styleable.NumPad, defStyleAttr, 0);
     try {
       color = a.getColor(R.styleable.NumPad_color, ContextCompat.getColor(c, R.color.white));
