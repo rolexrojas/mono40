@@ -27,6 +27,9 @@
   <string name="intro_tab_title_welcome">¡Bienvenidos!</string>
 
   <!-- Register strings -->
+  <string name="register_form_avatar_button_move_to_next_screen">@string/later</string>
+  <string name="register_form_avatar_label_description">Se usa para identificar tus cuentas más fácil</string>
+  <string name="register_form_avatar_label_title">¿Establecer tu foto?</string>
   <string name="register_form_name_button_move_to_next_screen">@string/next</string>
   <string name="register_form_name_error_message">Tu nombre y apellido son requeridos.</string>
   <string name="register_form_name_error_positive_button_text">@string/ok</string>
@@ -41,7 +44,4 @@
   <string name="register_form_phone_number_error_incorrect_number_title">Número incorrecto</string>
   <string name="register_form_phone_number_label_description">Ingresa el número de celular para verificar tu perfil</string>
   <string name="register_form_phone_number_label_title">¡Listo, empecemos!</string>
-  <string name="register_form_profile_picture_button_move_to_next_screen">@string/later</string>
-  <string name="register_form_profile_picture_label_description">Se usa para identificar tus cuentas más fácil</string>
-  <string name="register_form_profile_picture_label_title">¿Establecer tu foto?</string>
 </resources>

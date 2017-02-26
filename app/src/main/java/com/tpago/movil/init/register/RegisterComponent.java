@@ -14,5 +14,5 @@ public interface RegisterComponent {
 
   void inject(PhoneNumberFormFragment fragment);
   void inject(NameRegisterFormFragment fragment);
-  void inject(ProfilePictureFormFragment fragment);
+  void inject(AvatarFormFragment fragment);
 }

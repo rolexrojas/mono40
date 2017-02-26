@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
   <TextView
@@ -8,7 +9,7 @@
     style="@style/Label.Dark.Primary"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="@string/register_form_profile_picture_label_title"/>
+    android:text="@string/register_form_avatar_label_title"/>
   <TextView
     android:id="@+id/label_description"
     style="@style/Label.Dark.Secondary"
@@ -18,12 +19,20 @@
     android:layout_marginEnd="60dp"
     android:layout_marginStart="60dp"
     android:layout_marginTop="10dp"
-    android:text="@string/register_form_profile_picture_label_description"/>
+    android:text="@string/register_form_avatar_label_description"/>
+  <ImageView
+    android:id="@+id/image_avatar"
+    android:layout_width="@dimen/widget_image_avatar_large"
+    android:layout_height="@dimen/widget_image_avatar_large"
+    android:layout_below="@+id/label_description"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="48dp"
+    app:srcCompat="@drawable/widget_image_dark_avatar_placeholder_large"/>
   <Button
     android:id="@+id/button_move_to_next_screen"
     style="@style/Widget.Button.Gradient.Dark"
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:layout_alignParentBottom="true"
-    android:text="@string/register_form_profile_picture_button_move_to_next_screen"/>
+    android:text="@string/register_form_avatar_button_move_to_next_screen"/>
 </RelativeLayout>

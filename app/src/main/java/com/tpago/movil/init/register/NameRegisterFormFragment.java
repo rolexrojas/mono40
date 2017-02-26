@@ -74,7 +74,7 @@ public final class NameRegisterFormFragment
 
   @Override
   protected Fragment getNextScreen() {
-    return ProfilePictureFormFragment.create();
+    return AvatarFormFragment.create();
   }
 
   @Override

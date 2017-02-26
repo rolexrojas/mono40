@@ -1,19 +1,20 @@
 package com.tpago.movil.init.register;
 
+import android.net.Uri;
+
 import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.util.Objects;
+import com.tpago.movil.util.Preconditions;
 
 /**
  * @author hecvasro
  */
 final class RegisterData {
   private PhoneNumber phoneNumber;
-  private PhoneNumber.State phoneNumberState;
+  private PhoneNumber.State phoneNumberState = PhoneNumber.State.NONE;
   private String firstName;
   private String lastName;
-
-  final boolean isValid() {
-    return false;
-  }
+  private Uri avatarUri = Uri.EMPTY;
 
   final PhoneNumber getPhoneNumber() {
     return phoneNumber;
@@ -24,8 +25,8 @@ final class RegisterData {
   }
 
   final void setPhoneNumber(PhoneNumber phoneNumber, PhoneNumber.State phoneNumberState) {
-    this.phoneNumber = phoneNumber;
-    this.phoneNumberState = phoneNumberState;
+    this.phoneNumber = Preconditions.checkNotNull(phoneNumber, "phoneNumber == null");
+    this.phoneNumberState = Preconditions.checkNotNull(phoneNumberState, "phoneNumberState == null");
   }
 
   final String getFirstName() {
@@ -37,7 +38,15 @@ final class RegisterData {
   }
 
   final void setName(String firstName, String lastName) {
-    this.firstName = firstName;
-    this.lastName = lastName;
+    this.firstName = Preconditions.checkNotNull(firstName, "firstName == null");
+    this.lastName = Preconditions.checkNotNull(lastName, "lastName == null");
+  }
+
+  final Uri getAvatarUri() {
+    return avatarUri;
+  }
+
+  final void setAvatarUri(Uri avatarUri) {
+    this.avatarUri = Objects.isNull(avatarUri) ? Uri.EMPTY : avatarUri;
   }
 }

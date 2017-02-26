@@ -5,6 +5,7 @@ import android.content.Context;
 import com.tpago.movil.content.SharedPreferencesCreator;
 import com.tpago.movil.UserStore;
 import com.tpago.movil.content.StringResolver;
+import com.tpago.movil.io.FileManager;
 import com.tpago.movil.util.Preconditions;
 
 import javax.inject.Singleton;
@@ -39,6 +40,12 @@ final class AppModule {
   @Singleton
   SharedPreferencesCreator provideSharedPreferencesCreator(Context context) {
     return new SharedPreferencesCreator(context);
+  }
+
+  @Provides
+  @Singleton
+  FileManager provideFileManager(Context context) {
+    return new FileManager(context);
   }
 
   @Provides
