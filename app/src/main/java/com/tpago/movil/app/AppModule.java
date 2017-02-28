@@ -2,10 +2,11 @@ package com.tpago.movil.app;
 
 import android.content.Context;
 
+import com.tpago.movil.Avatar;
 import com.tpago.movil.content.SharedPreferencesCreator;
 import com.tpago.movil.UserStore;
 import com.tpago.movil.content.StringResolver;
-import com.tpago.movil.io.FileManager;
+import com.tpago.movil.io.Files;
 import com.tpago.movil.util.Preconditions;
 
 import javax.inject.Singleton;
@@ -18,21 +19,21 @@ import dagger.Provides;
  */
 @Module
 final class AppModule {
-  private final Context context;
+  private final App app;
 
-  AppModule(Context context) {
-    this.context = Preconditions.checkNotNull(context, "context == null");
+  AppModule(App app) {
+    this.app = Preconditions.checkNotNull(app, "app == null");
   }
 
   @Provides
   @Singleton
   Context provideContext() {
-    return context;
+    return app;
   }
 
   @Provides
   @Singleton
-  StringResolver provideStringResolver() {
+  StringResolver provideStringResolver(Context context) {
     return new StringResolver(context);
   }
 
@@ -44,13 +45,13 @@ final class AppModule {
 
   @Provides
   @Singleton
-  FileManager provideFileManager(Context context) {
-    return new FileManager(context);
+  Avatar provideAvatar(Context context) {
+    return Avatar.create(Files.createInternalPictureFile(context, Avatar.class.getSimpleName()));
   }
 
   @Provides
   @Singleton
-  UserStore provideUserStore(SharedPreferencesCreator sharedPreferencesCreator) {
-    return new UserStore(sharedPreferencesCreator);
+  UserStore provideUserStore(SharedPreferencesCreator sharedPreferencesCreator, Avatar avatar) {
+    return new UserStore(sharedPreferencesCreator, avatar);
   }
 }

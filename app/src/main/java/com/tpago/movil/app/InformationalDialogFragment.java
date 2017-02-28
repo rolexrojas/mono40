@@ -8,9 +8,14 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.widget.TextView;
 
+import com.tpago.movil.R;
 import com.tpago.movil.text.Texts;
 import com.tpago.movil.util.Objects;
+import com.tpago.movil.util.Preconditions;
+
+import butterknife.ButterKnife;
 
 /**
  * @author hecvasro
@@ -35,15 +40,15 @@ public final class InformationalDialogFragment extends DialogFragment {
     String negativeButtonText) {
     final Bundle bundle = new Bundle();
     if (Texts.isEmpty(title)) {
-      throw new IllegalArgumentException("title.isEmpty() == true");
+      throw new IllegalArgumentException("Texts.isEmpty(title) == true");
     }
     bundle.putString(KEY_TITLE, title);
     if (Texts.isEmpty(message)) {
-      throw new IllegalArgumentException("message.isEmpty() == true");
+      throw new IllegalArgumentException("Texts.isEmpty(message) == true");
     }
     bundle.putString(KEY_MESSAGE, message);
     if (Texts.isEmpty(positiveButtonText)) {
-      throw new IllegalArgumentException("positiveButtonText.isEmpty() == true");
+      throw new IllegalArgumentException("Texts.isEmpty(positiveButtonText) == true");
     }
     bundle.putString(KEY_TEXT_BUTTON_POSITIVE, positiveButtonText);
     if (Texts.isNotEmpty(negativeButtonText)) {
@@ -74,22 +79,31 @@ public final class InformationalDialogFragment extends DialogFragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    final Bundle bundle = Objects.isNull(savedInstanceState) ? getArguments() : savedInstanceState;
-    if (Objects.isNotNull(bundle)) {
-      title = bundle.getString(KEY_TITLE, null);
-      message = bundle.getString(KEY_MESSAGE, null);
-      positiveButtonText = bundle.getString(KEY_TEXT_BUTTON_POSITIVE, null);
-      negativeButtonText = bundle.getString(KEY_TEXT_BUTTON_NEGATIVE, null);
+    final Bundle args = Preconditions.checkNotNull(getArguments(), "getArguments() == null");
+    if (!args.containsKey(KEY_TITLE)) {
+      throw new IllegalArgumentException("args.containsKey(KEY_TITLE) == false");
+    }
+    title = args.getString(KEY_TITLE, null);
+    if (!args.containsKey(KEY_MESSAGE)) {
+      throw new IllegalArgumentException("args.containsKey(KEY_MESSAGE) == false");
+    }
+    message = args.getString(KEY_MESSAGE, null);
+    if (!args.containsKey(KEY_MESSAGE)) {
+      throw new IllegalArgumentException("args.containsKey(KEY_POSITIVE_BUTTON_TEXT) == false");
+    }
+    positiveButtonText = args.getString(KEY_TEXT_BUTTON_POSITIVE, null);
+    if (args.containsKey(KEY_TEXT_BUTTON_NEGATIVE)) {
+      negativeButtonText = args.getString(KEY_TEXT_BUTTON_NEGATIVE, null);
     }
   }
 
   @NonNull
   @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
-    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+    final Context context = getActivity();
+    final AlertDialog.Builder builder = new AlertDialog.Builder(context)
       .setCancelable(false)
       .setTitle(title)
-      .setMessage(message)
       .setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
@@ -97,7 +111,8 @@ public final class InformationalDialogFragment extends DialogFragment {
             resultHandler.onPositiveResult();
           }
         }
-      });
+      })
+      .setView(R.layout.dialog_informational);
     if (Texts.isNotEmpty(negativeButtonText)) {
       builder.setNegativeButton(negativeButtonText, new DialogInterface.OnClickListener() {
         @Override
@@ -109,6 +124,13 @@ public final class InformationalDialogFragment extends DialogFragment {
       });
     }
     return builder.create();
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    ButterKnife.<TextView>findById(getDialog(), R.id.label_message)
+      .setText(message);
   }
 
   @Override

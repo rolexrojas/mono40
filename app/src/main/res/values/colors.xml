@@ -2,6 +2,9 @@
 <resources>
   <!-- Common colors -->
   <color name="black">#000</color>
+  <color name="black_alpha_54">#89000000</color>
+  <color name="black_alpha_80">#CC000000</color>
+  <color name="black_alpha_87">#DE000000</color>
   <color name="transparent">@android:color/transparent</color>
   <color name="white">#FFF</color>
   <color name="white_alpha_50">#7FFFFFFF</color>
@@ -43,4 +46,9 @@
   <color name="load_indicator_full_size_accent">@color/app_accent</color>
   <color name="load_indicator_full_size_primary">@color/app_primary</color>
   <color name="load_indicator_full_size_primary_dark">#AD77A8</color>
+
+  <!-- Dialog colors -->
+  <color name="dialog_label_action">@color/black</color>
+  <color name="dialog_label_message">@color/black_alpha_54</color>
+  <color name="dialog_title">@color/black_alpha_87</color>
 </resources>

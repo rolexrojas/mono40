@@ -8,6 +8,16 @@
   <dimen name="widget_text_input_background_shape_height">1dp</dimen>
   <dimen name="widget_text_input_background_shape_radius">11dp</dimen>
 
-  <!-- Image view dimensions -->
+  <!-- Dialog dimensions -->
+  <dimen name="dialog_label_action_container_height">32dp</dimen>
+  <dimen name="dialog_label_line_extra_space">8sp</dimen>
+  <dimen name="dialog_label_text">16sp</dimen>
+  <dimen name="dialog_label_title_line_extra_space">8sp</dimen>
+  <dimen name="dialog_label_title_text_size">20sp</dimen>
+  <dimen name="dialog_padding_bottom">20dp</dimen>
+  <dimen name="dialog_padding_horizontal">24dp</dimen>
+  <dimen name="dialog_padding_top">24dp</dimen>
+
+  <!-- Avatar dimensions -->
   <dimen name="widget_image_avatar_large">80dp</dimen>
 </resources>

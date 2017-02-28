@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!-- Common strings -->
+  <string name="edit">Editar</string>
   <string name="error_message">En estos momentos no podemos procesar esta solicitud. Favor intentar nuevamente.</string>
   <string name="error_positive_button_text">@string/ok</string>
   <string name="error_title">¡Lo sentimos!</string>
@@ -10,12 +11,22 @@
   <string name="next">Continuar</string>
   <string name="ok">Ok</string>
   <string name="start">Comenzar</string>
+  <string name="using">Usando &#8230;</string>
 
   <!-- Font strings -->
   <string name="font_gotham_round_bold">fonts/GothamRounded/Bold.otf</string>
   <string name="font_gotham_round_book">fonts/GothamRounded/Book.otf</string>
   <string name="font_gotham_round_light">fonts/GothamRounded/Light.otf</string>
   <string name="font_gotham_round_medium">fonts/GothamRounded/Medium.otf</string>
+  <string name="font_roboto_medium">fonts/Roboto/Medium.ttf</string>
+  <string name="font_roboto_regular">fonts/Roboto/Regular.ttf</string>
+
+  <!-- Avatar creation dialog strings -->
+  <string name="dialog_avatar_creation_editor_title">@string/edit</string>
+  <string name="dialog_avatar_creation_label_action_choose_from_gallery">Seleccionar de la galería</string>
+  <string name="dialog_avatar_creation_label_action_use_the_camera">Usar la cámara</string>
+  <string name="dialog_avatar_creation_label_title_create">Establecer foto de perfil</string>
+  <string name="dialog_avatar_creation_label_title_replace">Actualizar foto de perfil</string>
 
   <!-- Intro strings -->
   <string name="intro_button_start">@string/start</string>

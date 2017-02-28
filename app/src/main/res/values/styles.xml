@@ -3,13 +3,22 @@
   <!-- Private styles -->
   <style name="Base"/>
 
-  <style name="Base.Theme" parent="Theme.AppCompat.Light.NoActionBar">
+  <style name="Base.App.Theme" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="android:alertDialogTheme">@style/Dialog.Theme</item>
     <item name="colorAccent">@color/app_accent</item>
     <item name="colorPrimary">@color/app_primary</item>
     <item name="colorPrimaryDark">@color/app_primary_dark</item>
   </style>
-  <style name="Base.ThemeOverlay.Dark" parent="ThemeOverlay.AppCompat.Dark">
+  <style name="Base.App.ThemeOverlay.Dark" parent="ThemeOverlay.AppCompat.Dark">
     <item name="colorAccent">@color/white</item>
+  </style>
+
+  <style name="Base.CropImage.Theme" parent="Theme.AppCompat.Light">
+    <item name="actionMenuTextColor">@color/white</item>
+    <item name="android:textColorPrimary">@color/white</item>
+    <item name="colorPrimary">@color/app_primary</item>
+    <item name="colorPrimaryDark">@color/app_primary_dark</item>
+    <item name="titleTextColor">@color/white</item>
   </style>
 
   <style name="Base.Label"/>
@@ -97,16 +106,45 @@
   </style>
 
   <style name="Base.Widget.FullSizeLoadIndicator" parent="Theme.AppCompat"/>
-  <style name="Base.Widget.FullSizeLoadIndicator.Dark">
+  <style name="Base.Widget.FullSizeLoadIndicator.Light">
     <item name="android:windowBackground">@color/load_indicator_full_size_background_window</item>
     <item name="colorAccent">@color/load_indicator_full_size_accent</item>
     <item name="colorPrimary">@color/load_indicator_full_size_primary</item>
     <item name="colorPrimaryDark">@color/load_indicator_full_size_primary_dark</item>
   </style>
 
+  <style name="Base.Dialog"/>
+  <style name="Base.Dialog.Label">
+    <item name="android:gravity">center_vertical</item>
+    <item name="android:textSize">@dimen/dialog_label_text</item>
+    <item name="fontPath">@string/font_roboto_regular</item>
+    <item name="android:lineSpacingExtra">@dimen/dialog_label_line_extra_space</item>
+  </style>
+  <style name="Base.Dialog.Label.Action">
+    <item name="android:textColor">@color/dialog_label_action</item>
+  </style>
+  <style name="Base.Dialog.Label.Message">
+    <item name="android:textColor">@color/dialog_label_message</item>
+  </style>
+  <style name="Base.Dialog.Title.Appearance" parent="TextAppearance.AppCompat.Title">
+    <item name="android:textColor">@color/dialog_title</item>
+    <item name="android:textSize">@dimen/dialog_label_title_text_size</item>
+  </style>
+  <style name="Base.Dialog.Title" parent="Base.DialogWindowTitle.AppCompat">
+    <item name="android:lineSpacingExtra">@dimen/dialog_label_title_line_extra_space</item>
+    <item name="android:textAppearance">@style/Dialog.Title.Appearance</item>
+    <item name="fontPath">@string/font_roboto_medium</item>
+  </style>
+  <style name="Base.Dialog.Theme" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <item name="android:textColorPrimary">@color/dialog_label_message</item>
+    <item name="android:windowTitleStyle">@style/Dialog.Title</item>
+  </style>
+
   <!-- Public styles -->
-  <style name="App.Theme" parent="Base.Theme"/>
-  <style name="App.ThemeOverlay.Dark" parent="Base.ThemeOverlay.Dark"/>
+  <style name="App.Theme" parent="Base.App.Theme"/>
+  <style name="App.ThemeOverlay.Dark" parent="Base.App.ThemeOverlay.Dark"/>
+
+  <style name="CropImage.Theme" parent="Base.CropImage.Theme"/>
 
   <style name="Label.Dark.Primary" parent="Base.Label.Dark.Primary"/>
   <style name="Label.Dark.Secondary" parent="Base.Label.Dark.Secondary"/>
@@ -124,5 +162,11 @@
   <style name="Widget.NumPad.Dark" parent="Base.Widget.NumPad.Dark"/>
   <style name="Widget.NumPad.Light" parent="Base.Widget.NumPad.Light"/>
 
-  <style name="Widget.FullSizeLoadIndicator.Dark" parent="Base.Widget.FullSizeLoadIndicator.Dark"/>
+  <style name="Widget.FullSizeLoadIndicator.Light" parent="Base.Widget.FullSizeLoadIndicator.Light"/>
+
+  <style name="Dialog.Label.Action" parent="Base.Dialog.Label.Action"/>
+  <style name="Dialog.Label.Message" parent="Base.Dialog.Label.Message"/>
+  <style name="Dialog.Title.Appearance" parent="Base.Dialog.Title.Appearance"/>
+  <style name="Dialog.Title" parent="Base.Dialog.Title"/>
+  <style name="Dialog.Theme" parent="Base.Dialog.Theme"/>
 </resources>

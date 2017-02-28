@@ -25,8 +25,6 @@ public abstract class RegisterFormFragment<P extends RegisterFormPresenter>
   implements RegisterFormPresenter.View {
   private Unbinder unbinder;
 
-  private View.OnClickListener moveToNextScreenOnClickListener;
-
   @Inject
   @FragmentQualifier
   FragmentReplacer fragmentReplacer;
@@ -56,13 +54,12 @@ public abstract class RegisterFormFragment<P extends RegisterFormPresenter>
   public void onResume() {
     super.onResume();
     // Adds the listener that gets notified every time the move to the next screen button is clicked.
-    moveToNextScreenOnClickListener = new View.OnClickListener() {
+    moveToNextScreenButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
         getPresenter().onMoveToNextScreenButtonClicked();
       }
-    };
-    moveToNextScreenButton.setOnClickListener(moveToNextScreenOnClickListener);
+    });
   }
 
   @Override
@@ -70,7 +67,6 @@ public abstract class RegisterFormFragment<P extends RegisterFormPresenter>
     super.onPause();
     // Removes the listener that gets notified every time the move to the next screen button is clicked.
     moveToNextScreenButton.setOnClickListener(null);
-    moveToNextScreenOnClickListener = null;
   }
 
   @Override

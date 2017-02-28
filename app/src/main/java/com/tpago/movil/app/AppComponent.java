@@ -18,4 +18,6 @@ import dagger.Component;
 })
 public interface AppComponent {
   InitComponent plus(InitModule module);
+
+  void inject(AvatarCreationDialogFragment fragment);
 }

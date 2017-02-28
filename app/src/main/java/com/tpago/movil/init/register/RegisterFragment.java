@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tpago.movil.Avatar;
 import com.tpago.movil.R;
 import com.tpago.movil.app.BackEventHandler;
 import com.tpago.movil.app.FragmentBackEventHandler;
@@ -22,6 +23,9 @@ public final class RegisterFragment extends BaseInitFragment implements Register
   private RegisterComponent component;
 
   private FragmentBackEventHandler fragmentBackEventHandler;
+
+  @Inject
+  Avatar avatar;
 
   @Inject
   BackEventHandler backEventHandler;
@@ -61,6 +65,8 @@ public final class RegisterFragment extends BaseInitFragment implements Register
     // Shows the initial fragment.
     fragmentReplacer.begin(PhoneNumberFormFragment.create())
       .commit();
+    // Clears the avatar, if needed.
+    avatar.clear();
   }
 
   @Override

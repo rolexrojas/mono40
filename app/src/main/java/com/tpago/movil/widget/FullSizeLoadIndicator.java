@@ -49,7 +49,7 @@ public final class FullSizeLoadIndicator implements LoadIndicator {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      setStyle(STYLE_NO_FRAME, R.style.Widget_FullSizeLoadIndicator_Dark);
+      setStyle(STYLE_NO_FRAME, R.style.Widget_FullSizeLoadIndicator_Light);
     }
 
     @Nullable
