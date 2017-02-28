@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<io.codetail.widget.RevealFrameLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <FrameLayout
+    android:id="@+id/frame_layout_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_pin_confirmation">
+
+    <LinearLayout
+      android:id="@+id/linear_layout_container"
+      style="@style/PinConfirmationContainer"
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical">
+
+      <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+
+        <ImageView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:contentDescription="@string/logo"
+          android:src="@drawable/logo_pin_confirmation"/>
+      </FrameLayout>
+
+      <TextView
+        style="@style/PinConfirmationTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/pin_confirmation"/>
+
+      <TextView
+        android:id="@+id/text_view_action_description"
+        style="@style/PinConfirmationDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"/>
+
+      <com.tpago.movil.ui.view.widget.PinView
+        android:id="@+id/pin_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="60dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="16dp"/>
+
+      <com.tpago.movil.ui.view.widget.pad.NumPad
+        android:id="@+id/num_pad"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/space_vertical_large"
+        android:layout_marginEnd="@dimen/space_horizontal_large"
+        android:layout_marginStart="@dimen/space_horizontal_large"
+        android:layout_marginTop="@dimen/space_vertical_large"
+        app:deleteEnabled="true"
+        app:dotEnabled="false"
+        app:tintColor="@color/white"/>
+    </LinearLayout>
+  </FrameLayout>
+</io.codetail.widget.RevealFrameLayout>

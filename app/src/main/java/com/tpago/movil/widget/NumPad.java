@@ -79,7 +79,7 @@ public final class NumPad extends LinearLayout {
       a.recycle();
     }
     // Inflates the layout.
-    LayoutInflater.from(getContext()).inflate(R.layout.widget_num_pad, this);
+    LayoutInflater.from(getContext()).inflate(R.layout.widget_dep_num_pad, this);
   }
 
   @OnClick({

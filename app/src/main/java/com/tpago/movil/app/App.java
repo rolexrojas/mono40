@@ -29,6 +29,11 @@ public final class App extends Application {
     return component;
   }
 
+  @Deprecated
+  public final AppComponent getComponent() {
+    return getAppComponent();
+  }
+
   @Override
   public void onCreate() {
     super.onCreate();

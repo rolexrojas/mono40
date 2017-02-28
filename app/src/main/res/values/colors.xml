@@ -51,4 +51,47 @@
   <color name="dialog_label_action">@color/black</color>
   <color name="dialog_label_message">@color/black_alpha_54</color>
   <color name="dialog_title">@color/black_alpha_87</color>
+
+  <!-- Deprecated colors -->
+  <color name="accent">#9C188F</color>
+  <color name="accent_alpha_20">#339C188F</color>
+  <color name="app_text_widget_prefixable_text_view_content">#333333</color>
+  <color name="app_text_widget_prefixable_text_view_prefix">#7F333333</color>
+  <color name="app_widget_num_pad_tint">#333333</color>
+  <color name="background_menu">#821477</color>
+  <color name="black_alpha_12">#1F000000</color>
+  <color name="button_colored_gradient_end">#33821477</color>
+  <color name="button_colored_gradient_start">#0C9C188F</color>
+  <color name="button_colored_solid">@color/white_alpha_90</color>
+  <color name="button_colored_solid_disabled">@color/white_alpha_40</color>
+  <color name="commerce_payment_indicator_background_gradient_end">#33821477</color>
+  <color name="commerce_payment_indicator_background_gradient_start">#0D9C188F</color>
+  <color name="commerce_payment_indicator_background_solid">@color/window_background_default</color>
+  <color name="commerce_payment_message_text_color">#FFFFFF</color>
+  <color name="commerce_payment_option_background">#D8D8D8</color>
+  <color name="commerce_payment_option_border">#809C188F</color>
+  <color name="commerce_payment_option_product_number_default_text_shadow">#33000000</color>
+  <color name="commerce_payment_option_shadow_border">#1A000000</color>
+  <color name="commerce_payment_option_text_default">#333333</color>
+  <color name="commerce_payment_status_bar_default_background">#160414</color>
+  <color name="commerce_payment_window_default_background">#CC000000</color>
+  <color name="divider">#33333333</color>
+  <color name="edit_text_background_disabled">#7FCCCCCC</color>
+  <color name="edit_text_background_enabled">#CCCCCC</color>
+  <color name="edit_text_content_disabled">@color/white_alpha_50</color>
+  <color name="edit_text_content_enabled">@color/white</color>
+  <color name="edit_text_cursor">@color/white</color>
+  <color name="edit_text_hint">@color/white_alpha_50</color>
+  <color name="primary">#9C188F</color>
+  <color name="primary_dark">#6D1764</color>
+  <color name="search_view_drawable">#999</color>
+  <color name="search_view_hint">#999</color>
+  <color name="search_view_text">@color/black</color>
+  <color name="transaction_creation_text_widget_amount_prefix">@color/app_text_widget_prefixable_text_view_prefix</color>
+  <color name="transaction_creation_text_widget_amount_value">@color/app_text_widget_prefixable_text_view_content</color>
+  <color name="transaction_type_credit">#347A57</color>
+  <color name="transaction_type_debit">#A5464E</color>
+  <color name="white_alpha_20">#33FFFFFF</color>
+  <color name="white_alpha_40">#66FFFFFF</color>
+  <color name="window_background_default">#EFEFEF</color>
 </resources>
