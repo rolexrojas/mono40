@@ -32,7 +32,6 @@ public final class NameRegisterFormFragment
 
   private TextWatcher firstNameTextWatcher;
   private TextWatcher lastNameTextWatcher;
-  private TextView.OnEditorActionListener lastNameOnEditorActionListener;
 
   @BindView(R.id.text_input_first_name)
   TextInput firstNameTextInput;
@@ -49,6 +48,19 @@ public final class NameRegisterFormFragment
   }
 
   @Override
+  protected NameRegisterFormPresenter getPresenter() {
+    if (Objects.isNull(presenter)) {
+      presenter = new NameRegisterFormPresenter(this, stringResolver, registerData);
+    }
+    return presenter;
+  }
+
+  @Override
+  protected Fragment getNextScreen() {
+    return AvatarFormFragment.create();
+  }
+
+  @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // Injects all the annotated dependencies.
@@ -62,19 +74,6 @@ public final class NameRegisterFormFragment
     @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_register_form_name, container, false);
-  }
-
-  @Override
-  protected NameRegisterFormPresenter getPresenter() {
-    if (Objects.isNull(presenter)) {
-      presenter = new NameRegisterFormPresenter(this, stringResolver, registerData);
-    }
-    return presenter;
-  }
-
-  @Override
-  protected Fragment getNextScreen() {
-    return AvatarFormFragment.create();
   }
 
   @Override
@@ -96,7 +95,7 @@ public final class NameRegisterFormFragment
       }
     };
     lastNameTextInput.addTextChangedListener(lastNameTextWatcher);
-    lastNameOnEditorActionListener = new TextView.OnEditorActionListener() {
+    lastNameTextInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
       @Override
       public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -104,19 +103,17 @@ public final class NameRegisterFormFragment
         }
         return false;
       }
-    };
-    lastNameTextInput.setOnEditorActionListener(lastNameOnEditorActionListener);
+    });
   }
 
   @Override
   public void onPause() {
     super.onPause();
-    // Attaches the last name text input from the presenter.
+    // Detaches the last name text input from the presenter.
     lastNameTextInput.setOnEditorActionListener(null);
-    lastNameOnEditorActionListener = null;
     lastNameTextInput.removeTextChangedListener(lastNameTextWatcher);
     lastNameTextWatcher = null;
-    // Attaches the first name text input from the presenter.
+    // Detaches the first name text input from the presenter.
     firstNameTextInput.removeTextChangedListener(firstNameTextWatcher);
     lastNameTextWatcher = null;
   }

@@ -2,6 +2,7 @@
 <resources>
   <!-- Common strings -->
   <string name="edit">Editar</string>
+  <string name="email">Correo electrónico</string>
   <string name="error_message">En estos momentos no podemos procesar esta solicitud. Favor intentar nuevamente.</string>
   <string name="error_positive_button_text">@string/ok</string>
   <string name="error_title">¡Lo sentimos!</string>
@@ -11,6 +12,7 @@
   <string name="next">Continuar</string>
   <string name="ok">Ok</string>
   <string name="start">Comenzar</string>
+  <string name="password">Contraseña</string>
   <string name="using">Usando &#8230;</string>
 
   <!-- Font strings -->
@@ -41,6 +43,14 @@
   <string name="register_form_avatar_button_move_to_next_screen">@string/later</string>
   <string name="register_form_avatar_label_description">Se usa para identificar tus cuentas más fácil</string>
   <string name="register_form_avatar_label_title">¿Establecer tu foto?</string>
+  <string name="register_form_email_button_move_to_next_screen">@string/next</string>
+  <string name="register_form_email_error_message">Parece que tu correo electrónico no está bien escrito. Favor intentar nuevamente.</string>
+  <string name="register_form_email_error_positive_button_text">@string/ok</string>
+  <string name="register_form_email_error_title">Correo incorrecto</string>
+  <string name="register_form_email_input_hint">@string/email</string>
+  <string name="register_form_email_input_hint_confirmation">Confirmar correo electrónico</string>
+  <string name="register_form_email_label_description">Seguimos con tu correo electrónico</string>
+  <string name="register_form_email_label_title">Un poco de ti</string>
   <string name="register_form_name_button_move_to_next_screen">@string/next</string>
   <string name="register_form_name_error_message">Tu nombre y apellido son requeridos.</string>
   <string name="register_form_name_error_positive_button_text">@string/ok</string>
@@ -49,6 +59,14 @@
   <string name="register_form_name_hint_last_name">@string/last_name</string>
   <string name="register_form_name_label_description">Continuamos con crear tu perfil para tPago</string>
   <string name="register_form_name_label_title">¿Cómo te llamas?</string>
+  <string name="register_form_password_button_move_to_next_screen">@string/next</string>
+  <string name="register_form_password_error_message">Parece que tu contraseña no está bien escrita. Favor intentar nuevamente.</string>
+  <string name="register_form_password_error_positive_button_text">@string/ok</string>
+  <string name="register_form_password_error_title">Contraseña incorrecta</string>
+  <string name="register_form_password_input_hint">@string/password</string>
+  <string name="register_form_password_input_hint_confirmation">Confirmar contraseña</string>
+  <string name="register_form_password_label_description">Ahora crea una contraseña</string>
+  <string name="register_form_password_label_title">¡Perfecto!</string>
   <string name="register_form_phone_number_button_move_to_next_screen">@string/next</string>
   <string name="register_form_phone_number_error_incorrect_number_message">Debes de ingresar un número de diez dígitos.</string>
   <string name="register_form_phone_number_error_incorrect_number_positive_button_text">@string/ok</string>

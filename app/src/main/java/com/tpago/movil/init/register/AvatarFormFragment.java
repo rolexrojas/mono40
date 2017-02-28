@@ -12,6 +12,8 @@ import com.squareup.picasso.Picasso;
 import com.tpago.movil.Avatar;
 import com.tpago.movil.R;
 import com.tpago.movil.app.AvatarCreationDialogFragment;
+import com.tpago.movil.app.FragmentQualifier;
+import com.tpago.movil.app.FragmentReplacer;
 import com.tpago.movil.graphics.CircleTransformation;
 
 import java.io.File;
@@ -31,6 +33,9 @@ public final class AvatarFormFragment extends BaseRegisterFragment {
 
   @Inject
   Avatar avatar;
+  @Inject
+  @FragmentQualifier
+  FragmentReplacer fragmentReplacer;
 
   @BindView(R.id.image_view_avatar)
   ImageView avatarImageView;
@@ -41,7 +46,10 @@ public final class AvatarFormFragment extends BaseRegisterFragment {
 
   @OnClick(R.id.button_move_to_next_screen)
   void onMoveToNextScreenButtonClicked() {
-    // TODO
+    fragmentReplacer.begin(EmailRegisterFormFragment.create())
+      .addToBackStack()
+      .setTransition(FragmentReplacer.Transition.SRFO)
+      .commit();
   }
 
   @OnClick(R.id.image_view_avatar)

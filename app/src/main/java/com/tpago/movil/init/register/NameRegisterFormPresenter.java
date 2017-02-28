@@ -39,16 +39,6 @@ final class NameRegisterFormPresenter extends RegisterFormPresenter<NameRegister
     view.showMoveToNextScreenButtonAsEnabled(isFirstNameValid && isLastNameValid);
   }
 
-  @Override
-  public void onViewStarted() {
-    super.onViewStarted();
-    view.setFirstNameTextInputContent(firstName);
-    view.showFirstNameTextInputAsErratic(false);
-    view.setLastNameTextInputContent(lastName);
-    view.showLastNameTextInputAsErratic(false);
-    view.showMoveToNextScreenButtonAsEnabled(isFirstNameValid && isLastNameValid);
-  }
-
   final void onFirstNameTextInputContentChanged(String content) {
     final String sanitizedContent = sanitize(content);
     if (!firstName.equals(sanitizedContent)) {
@@ -72,7 +62,7 @@ final class NameRegisterFormPresenter extends RegisterFormPresenter<NameRegister
     if (isFirstNameValid && isLastNameValid) {
       registerData.setName(firstName, lastName);
       view.moveToNextScreen();
-    } else if (Objects.isNotNull(view)) {
+    } else {
       view.showDialog(
         stringResolver.resolve(R.string.register_form_name_error_title),
         stringResolver.resolve(R.string.register_form_name_error_message),
@@ -80,6 +70,14 @@ final class NameRegisterFormPresenter extends RegisterFormPresenter<NameRegister
       view.showFirstNameTextInputAsErratic(!isFirstNameValid);
       view.showLastNameTextInputAsErratic(!isLastNameValid);
     }
+  }
+
+  @Override
+  public void onViewStarted() {
+    super.onViewStarted();
+    view.setFirstNameTextInputContent(firstName);
+    view.setLastNameTextInputContent(lastName);
+    updateView();
   }
 
   interface View extends RegisterFormPresenter.View {
@@ -90,7 +88,5 @@ final class NameRegisterFormPresenter extends RegisterFormPresenter<NameRegister
     void setLastNameTextInputContent(String content);
 
     void showLastNameTextInputAsErratic(boolean showAsErratic);
-
-    void moveToNextScreen();
   }
 }
