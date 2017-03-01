@@ -70,4 +70,13 @@ final class RetrofitApiBridge implements ApiBridge {
       pin.getValue()))
       .map(mapToHttpResult(AuthResponseData.mapperFunc()));
   }
+
+  @Override
+  public Single<HttpResult<ApiData<String>>> signIn(
+    PhoneNumber phoneNumber,
+    Email email,
+    String password,
+    boolean shouldForce) {
+    return Single.error(new UnsupportedOperationException("Not implemented"));
+  }
 }

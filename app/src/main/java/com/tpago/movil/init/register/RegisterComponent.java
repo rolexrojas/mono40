@@ -1,6 +1,7 @@
 package com.tpago.movil.init.register;
 
 import com.tpago.movil.app.FragmentScope;
+import com.tpago.movil.init.PhoneNumberFormFragment;
 
 import dagger.Subcomponent;
 
@@ -12,7 +13,6 @@ import dagger.Subcomponent;
 public interface RegisterComponent {
   void inject(RegisterFragment fragment);
 
-  void inject(PhoneNumberFormFragment fragment);
   void inject(NameRegisterFormFragment fragment);
   void inject(AvatarFormFragment fragment);
   void inject(EmailRegisterFormFragment fragment);

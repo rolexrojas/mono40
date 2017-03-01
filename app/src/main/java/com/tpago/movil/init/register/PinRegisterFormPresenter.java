@@ -67,12 +67,12 @@ public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPre
             view.stopLoading();
             final ApiData<String> apiData = result.getData();
             if (result.isSuccessful()) {
+              sessionBuilder.setToken(apiData.getValue());
               userStore.set(
                 registerData.getPhoneNumber(),
                 registerData.getEmail(),
                 registerData.getFirstName(),
                 registerData.getLastName());
-              sessionBuilder.setToken(apiData.getValue());
               view.moveToNextScreen();
             } else {
               final ApiError error = apiData.getError();

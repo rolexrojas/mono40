@@ -60,17 +60,10 @@ public final class RegisterFragment extends BaseInitFragment implements Register
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     // Shows the initial fragment.
-    fragmentReplacer.begin(PhoneNumberFormFragment.create())
+    fragmentReplacer.begin(NameRegisterFormFragment.create())
       .commit();
     // Clears the avatar, if needed.
     avatar.clear();
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
-    // Moves the logo out of the screen.
-    logoAnimator.moveOutOfScreen();
   }
 
   @Override

@@ -44,6 +44,13 @@ public final class OnboardingFragment extends BaseInitFragment {
       .commit();
   }
 
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    // Injects all annotated dependencies.
+    getInitComponent().inject(this);
+  }
+
   @Nullable
   @Override
   public View onCreateView(

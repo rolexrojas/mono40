@@ -1,8 +1,7 @@
-package com.tpago.movil.init.register;
+package com.tpago.movil.init;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +9,11 @@ import android.widget.Button;
 
 import com.tpago.movil.Digit;
 import com.tpago.movil.R;
-import com.tpago.movil.api.ApiBridge;
-import com.tpago.movil.app.FragmentQualifier;
+import com.tpago.movil.app.ActivityQualifier;
 import com.tpago.movil.app.FragmentReplacer;
 import com.tpago.movil.app.InformationalDialogFragment;
-import com.tpago.movil.content.StringResolver;
+import com.tpago.movil.init.register.RegisterFragment;
+import com.tpago.movil.init.signin.SignInFragment;
 import com.tpago.movil.widget.FullSizeLoadIndicator;
 import com.tpago.movil.widget.LoadIndicator;
 import com.tpago.movil.widget.NumPad;
@@ -31,7 +30,7 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 public final class PhoneNumberFormFragment
-  extends BaseRegisterFragment
+  extends BaseInitFragment
   implements PhoneNumberFormPresenter.View,
   NumPad.OnDigitClickedListener,
   NumPad.OnDeleteClickedListener {
@@ -39,22 +38,12 @@ public final class PhoneNumberFormFragment
   private LoadIndicator loadIndicator;
   private PhoneNumberFormPresenter presenter;
 
-  @BindView(R.id.text_input)
-  TextInput textInput;
-  @BindView(R.id.num_pad)
-  NumPad numPad;
-  @BindView(R.id.button_move_to_next_screen)
-  Button nextButton;
+  @BindView(R.id.text_input) TextInput textInput;
+  @BindView(R.id.num_pad) NumPad numPad;
+  @BindView(R.id.button_move_to_next_screen) Button nextButton;
 
-  @Inject
-  ApiBridge apiBridge;
-  @Inject
-  StringResolver stringResolver;
-  @Inject
-  RegisterData data;
-  @Inject
-  @FragmentQualifier
-  FragmentReplacer fragmentReplacer;
+  @Inject LogoAnimator logoAnimator;
+  @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
 
   public static PhoneNumberFormFragment create() {
     return new PhoneNumberFormFragment();
@@ -63,6 +52,13 @@ public final class PhoneNumberFormFragment
   @OnClick(R.id.button_move_to_next_screen)
   void onNextButtonClicked() {
     presenter.validate();
+  }
+
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    // Injects all the annotated dependencies.
+    getInitComponent().inject(this);
   }
 
   @Nullable
@@ -81,11 +77,8 @@ public final class PhoneNumberFormFragment
     unbinder = ButterKnife.bind(this, view);
     // Creates the load indicator.
     loadIndicator = new FullSizeLoadIndicator(getChildFragmentManager());
-    // Injects all annotated dependencies.
-    getRegisterComponent().inject(this);
     // Creates presenter.
-    presenter = new PhoneNumberFormPresenter(apiBridge, data, stringResolver);
-    presenter.setView(this);
+    presenter = new PhoneNumberFormPresenter(this, getInitComponent());
   }
 
   @Override
@@ -95,11 +88,15 @@ public final class PhoneNumberFormFragment
     numPad.setOnDigitClickedListener(this);
     // Adds a listener that gets notified each time the delete button of the num pad is clicked.
     numPad.setOnDeleteClickedListener(this);
+    // Starts the presenter.
+    presenter.onViewStarted();
   }
 
   @Override
   public void onResume() {
     super.onResume();
+    // Moves the logo out of the screen.
+    logoAnimator.moveOutOfScreen();
     // Sets focus on the num pad text input.
     textInput.requestFocus();
   }
@@ -107,6 +104,8 @@ public final class PhoneNumberFormFragment
   @Override
   public void onStop() {
     super.onStop();
+    // Stops the presenter.
+    presenter.onViewStopped();
     // Removes the listener that gets notified each time a digit button of the num pad is clicked.
     numPad.setOnDigitClickedListener(null);
     // Removes the listener that gets notified each time the delete button of the num pad is clicked.
@@ -117,7 +116,6 @@ public final class PhoneNumberFormFragment
   public void onDestroyView() {
     super.onDestroyView();
     // Destroys the presenter.
-    presenter.setView(null);
     presenter = null;
     // Destroys the load indicator.
     loadIndicator = null;
@@ -126,13 +124,14 @@ public final class PhoneNumberFormFragment
   }
 
   @Override
-  public void showDialog(String title, String message, String positiveButtonText) {
-    final DialogFragment fragment = InformationalDialogFragment.create(
-      title,
-      message,
-      positiveButtonText);
-    fragment.setTargetFragment(this, 0);
-    fragment.show(getChildFragmentManager(), null);
+  public void showDialog(int titleId, String message, int positiveButtonTextId) {
+    InformationalDialogFragment.create(getString(titleId), message, getString(positiveButtonTextId))
+      .show(getChildFragmentManager(), null);
+  }
+
+  @Override
+  public void showDialog(int titleId, int messageId, int positiveButtonTextId) {
+    showDialog(titleId, getString(messageId), positiveButtonTextId);
   }
 
   @Override
@@ -166,8 +165,16 @@ public final class PhoneNumberFormFragment
   }
 
   @Override
-  public void moveToNextScreen() {
-    fragmentReplacer.begin(NameRegisterFormFragment.create())
+  public void moveToSignInScreen() {
+    fragmentReplacer.begin(SignInFragment.create())
+      .addToBackStack()
+      .setTransition(FragmentReplacer.Transition.SRFO)
+      .commit();
+  }
+
+  @Override
+  public void moveToSignUpScreen() {
+    fragmentReplacer.begin(RegisterFragment.create())
       .addToBackStack()
       .setTransition(FragmentReplacer.Transition.SRFO)
       .commit();

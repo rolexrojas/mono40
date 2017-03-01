@@ -40,6 +40,7 @@ public final class SummaryRegisterFragment extends BaseRegisterFragment {
   @OnClick(R.id.button_later)
   void onLaterButtonClicked() {
     fragmentReplacer.begin(InitFragment.create())
+      .setTransition(FragmentReplacer.Transition.FIFO)
       .commit();
   }
 

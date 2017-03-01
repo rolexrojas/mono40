@@ -71,6 +71,13 @@ public final class PinRegisterFormFragment
   }
 
   @Override
+  public void onStart() {
+    super.onStart();
+    // Notifies the presenter that the view its being started.
+    presenter.onViewStarted();
+  }
+
+  @Override
   public void onResume() {
     super.onResume();
     // Sets focus on the num pad text input.
@@ -88,6 +95,13 @@ public final class PinRegisterFormFragment
     numPad.setOnDigitClickedListener(null);
     // Removes the listener that gets notified each time the delete button of the num pad is clicked.
     numPad.setOnDeleteClickedListener(null);
+  }
+
+  @Override
+  public void onStop() {
+    super.onStop();
+    // Notifies the presenter that the view its being stopped.
+    presenter.onViewStopped();
   }
 
   @Override

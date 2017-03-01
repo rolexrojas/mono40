@@ -22,6 +22,12 @@ public final class InitModule extends ActivityModule<InitActivity> {
 
   @Provides
   @ActivityScope
+  InitData provideInitData() {
+    return new InitData();
+  }
+
+  @Provides
+  @ActivityScope
   Session.Builder provideSessionBuilder() {
     return new Session.Builder();
   }

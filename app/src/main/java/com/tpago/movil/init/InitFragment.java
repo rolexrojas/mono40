@@ -13,6 +13,7 @@ import com.tpago.movil.app.FragmentReplacer;
 import com.tpago.movil.app.PermissionRequestResult;
 import com.tpago.movil.app.Permissions;
 import com.tpago.movil.init.intro.IntroFragment;
+import com.tpago.movil.init.signin.SignInFragment;
 
 import javax.inject.Inject;
 
@@ -34,13 +35,14 @@ public final class InitFragment extends BaseInitFragment {
   }
 
   private void resolve() {
-    userStore.clear();
     if (!userStore.isSet()) {
       fragmentReplacer.begin(IntroFragment.create())
         .setTransition(FragmentReplacer.Transition.SRFO)
         .commit();
     } else if (!sessionBuilder.canBuild()) {
-      // TODO: Sign in.
+//      fragmentReplacer.begin(SignInFragment.create())
+//        .setTransition(FragmentReplacer.Transition.FIFO)
+//        .commit();
     } else {
       // TODO: Initial load.
     }

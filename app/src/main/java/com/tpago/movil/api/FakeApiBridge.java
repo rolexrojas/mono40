@@ -54,13 +54,44 @@ final class FakeApiBridge implements ApiBridge {
       public SingleSource<? extends HttpResult<ApiData<String>>> call() {
         final String p = pin.getValue();
         final int v = Integer.parseInt(Character.toString(p.charAt(p.length() - 1)));
+        final HttpCode c;
         final ApiData<String> d;
         if (v % 2 == 0) {
+          c = HttpCode.OK;
           d = ApiData.create(UUID.randomUUID().toString());
         } else {
+          c = HttpCode.BAD_REQUEST;
           d = ApiData.create(ApiError.create(ApiError.Code.INVALID_PIN, "Incorrect PIN"));
         }
-        return Single.just(HttpResult.create(HttpCode.OK, d));
+        return Single.just(HttpResult.create(c, d));
+      }
+    })
+      .delay(1L, TimeUnit.SECONDS);
+  }
+
+  @Override
+  public Single<HttpResult<ApiData<String>>> signIn(
+    final PhoneNumber phoneNumber,
+    Email email,
+    String password,
+    boolean shouldForce) {
+    return Single.defer(new Callable<SingleSource<? extends HttpResult<ApiData<String>>>>() {
+      @Override
+      public SingleSource<? extends HttpResult<ApiData<String>>> call() throws Exception {
+        final List<Digit> dL = Digits.getDigits(phoneNumber);
+        final int v = dL.get(dL.size() - 1).getValue();
+        final HttpCode c;
+        final ApiData<String> d;
+        if (v % 2 == 0) {
+          c = HttpCode.OK;
+          d = ApiData.create(UUID.randomUUID().toString());
+        } else {
+          c = HttpCode.BAD_REQUEST;
+          d = ApiData.create(ApiError.create(
+            ApiError.Code.ALREADY_ASSOCIATED_DEVICE,
+            "Already associated device"));
+        }
+        return Single.just(HttpResult.create(c, d));
       }
     })
       .delay(1L, TimeUnit.SECONDS);

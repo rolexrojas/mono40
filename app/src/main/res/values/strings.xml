@@ -12,9 +12,11 @@
   <string name="next">Continuar</string>
   <string name="ok">Ok</string>
   <string name="password">Contraseña</string>
+  <string name="sign_in">Iniciar sesión</string>
   <string name="skip">Saltar</string>
   <string name="start">Comenzar</string>
   <string name="using">Usando &#8230;</string>
+  <string name="welcome">¡Bienvenido!</string>
 
   <!-- Font strings -->
   <string name="font_gotham_round_bold">fonts/GothamRounded/Bold.otf</string>
@@ -91,6 +93,16 @@
   <string name="onboarding_second_label_title">Agrega amigos</string>
   <string name="onboarding_third_label_description">Encuentra todo desde el menú. Consulta cuánto dinero tienes en tus cuentas, ajustas, buscas ayuda y más.</string>
   <string name="onboarding_third_label_title">Abre el menú</string>
+  
+  <!-- Sign in strings -->
+  <string name="sign_in_button">@string/sign_in</string>
+  <string name="sign_in_error_positive_button_text">@string/ok</string>
+  <string name="sign_in_error_description">Tanto el correo electrónico como la contraseña son requeridos.</string>
+  <string name="sign_in_error_title">Credenciales incorrectos</string>
+  <string name="sign_in_input_hint_email">@string/email</string>
+  <string name="sign_in_input_hint_password">@string/password</string>
+  <string name="sign_in_label_description">Iniciar sesión con usuario y contraseña de tPago</string>
+  <string name="sign_in_label_title">@string/welcome</string>
 
   <!-- Deprecated strings -->
   <string name="about">Acerca de</string>

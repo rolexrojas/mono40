@@ -26,6 +26,7 @@ public final class FragmentReplacer {
 
   public enum Transition {
     NONE,
+    FIFO,
     /**
      * Enters and exits sliding from and to the right. Previous fragment is faded out while exiting
      * and faded in while entering.
@@ -73,6 +74,12 @@ public final class FragmentReplacer {
       final FragmentTransaction transaction = fragmentManager.beginTransaction();
       // Applies the given transition animation.
       switch (transition) {
+        case FIFO:
+          transaction.setCustomAnimations(
+            R.anim.enter_fade,
+            R.anim.exit_fade,
+            R.anim.enter_fade,
+            R.anim.exit_fade);
         case SRFO:
           transaction.setCustomAnimations(
             R.anim.enter_slide_right,

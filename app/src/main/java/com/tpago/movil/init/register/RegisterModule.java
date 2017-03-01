@@ -4,6 +4,7 @@ import com.tpago.movil.R;
 import com.tpago.movil.app.FragmentQualifier;
 import com.tpago.movil.app.FragmentReplacer;
 import com.tpago.movil.app.FragmentScope;
+import com.tpago.movil.init.InitData;
 import com.tpago.movil.util.Preconditions;
 
 import dagger.Module;
@@ -22,8 +23,8 @@ public class RegisterModule {
 
   @Provides
   @FragmentScope
-  RegisterData provideRegisterData() {
-    return new RegisterData();
+  RegisterData provideRegisterData(InitData initData) {
+    return new RegisterData(initData);
   }
 
   @Provides

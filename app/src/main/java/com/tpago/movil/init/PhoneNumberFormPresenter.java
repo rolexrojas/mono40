@@ -1,4 +1,4 @@
-package com.tpago.movil.init.register;
+package com.tpago.movil.init;
 
 import com.tpago.movil.Digit;
 import com.tpago.movil.Digits;
@@ -7,7 +7,7 @@ import com.tpago.movil.R;
 import com.tpago.movil.api.ApiBridge;
 import com.tpago.movil.api.ApiData;
 import com.tpago.movil.api.ApiError;
-import com.tpago.movil.content.StringResolver;
+import com.tpago.movil.app.Presenter;
 import com.tpago.movil.net.HttpResult;
 import com.tpago.movil.reactivex.Disposables;
 import com.tpago.movil.util.Objects;
@@ -15,6 +15,8 @@ import com.tpago.movil.util.Preconditions;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -25,25 +27,20 @@ import timber.log.Timber;
 /**
  * @author hecvasro
  */
-final class PhoneNumberFormPresenter {
-  private final ApiBridge apiBridge;
-  private final RegisterData data;
-  private final StringResolver stringResolver;
-
-  private View view;
+public final class PhoneNumberFormPresenter extends Presenter<PhoneNumberFormPresenter.View> {
+  @Inject ApiBridge apiBridge;
+  @Inject InitData initData;
 
   private boolean isPhoneNumberValid = false;
   private List<Digit> phoneNumberDigits = new ArrayList<>();
 
   private Disposable disposable = Disposables.disposed();
 
-  PhoneNumberFormPresenter(
-    ApiBridge apiBridge,
-    RegisterData data,
-    StringResolver stringResolver) {
-    this.apiBridge = Preconditions.checkNotNull(apiBridge, "apiBridge == null");
-    this.data = Preconditions.checkNotNull(data, "registrationData == null");
-    this.stringResolver = Preconditions.checkNotNull(stringResolver, "stringResolver == null");
+  PhoneNumberFormPresenter(View view, InitComponent component) {
+    super(view);
+    // Injects all the annotated dependencies.
+    Preconditions.checkNotNull(component, "component == null")
+      .inject(this);
   }
 
   private void updateView() {
@@ -68,17 +65,6 @@ final class PhoneNumberFormPresenter {
     view.stopLoading();
     view.setNextButtonEnabled(true);
     view.showNextButtonAsEnabled(true);
-  }
-
-  final void setView(View view) {
-    this.view = view;
-    final PhoneNumber phoneNumber = this.data.getPhoneNumber();
-    if (Objects.isNotNull(phoneNumber)) {
-      this.phoneNumberDigits.addAll(Digits.getDigits(phoneNumber));
-    } else {
-      Disposables.dispose(this.disposable);
-    }
-    this.updateView();
   }
 
   final void addDigit(Digit digit) {
@@ -114,18 +100,18 @@ final class PhoneNumberFormPresenter {
             final ApiData<PhoneNumber.State> apiData = result.getData();
             if (result.isSuccessful()) {
               final PhoneNumber.State state = apiData.getValue();
-              data.setPhoneNumber(phoneNumber, state);
+              initData.setPhoneNumber(phoneNumber, state);
               if (state.equals(PhoneNumber.State.REGISTERED)) {
-                // TODO: Move to the log in screen.
+                view.moveToSignInScreen();
               } else {
-                view.moveToNextScreen();
+                view.moveToSignUpScreen();
               }
             } else {
               final ApiError error = apiData.getError();
               view.showDialog(
-                stringResolver.resolve(R.string.error_title),
+                R.string.error_title,
                 error.getDescription(),
-                stringResolver.resolve(R.string.error_positive_button_text));
+                R.string.error_positive_button_text);
             }
           }
         }, new Consumer<Throwable>() {
@@ -134,22 +120,39 @@ final class PhoneNumberFormPresenter {
             Timber.e(throwable, "Validating phone number");
             stopLoading();
             view.showDialog(
-              stringResolver.resolve(R.string.error_title),
-              stringResolver.resolve(R.string.error_message),
-              stringResolver.resolve(R.string.error_positive_button_text));
+              R.string.error_title,
+              R.string.error_message,
+              R.string.error_positive_button_text);
           }
         });
     } else {
       view.showDialog(
-        stringResolver.resolve(R.string.register_form_phone_number_error_incorrect_number_title),
-        stringResolver.resolve(R.string.register_form_phone_number_error_incorrect_number_message),
-        stringResolver.resolve(R.string.register_form_phone_number_error_incorrect_number_positive_button_text));
+        R.string.register_form_phone_number_error_incorrect_number_title,
+        R.string.register_form_phone_number_error_incorrect_number_message,
+        R.string.register_form_phone_number_error_incorrect_number_positive_button_text);
       view.showTextInputAsErratic(true);
     }
   }
 
-  interface View {
-    void showDialog(String title, String message, String positiveButtonText);
+  @Override
+  public void onViewStarted() {
+    super.onViewStarted();
+    final PhoneNumber phoneNumber = initData.getPhoneNumber();
+    if (Objects.isNotNull(phoneNumber)) {
+      phoneNumberDigits.addAll(Digits.getDigits(phoneNumber));
+    }
+    updateView();
+  }
+
+  @Override
+  public void onViewStopped() {
+    super.onViewStopped();
+    Disposables.dispose(disposable);
+  }
+
+  interface View extends Presenter.View {
+    void showDialog(int titleId, String message, int positiveButtonTextId);
+    void showDialog(int titleId, int messageId, int positiveButtonTextId);
 
     void setTextInputContent(String text);
 
@@ -163,6 +166,8 @@ final class PhoneNumberFormPresenter {
 
     void stopLoading();
 
-    void moveToNextScreen();
+    void moveToSignInScreen();
+
+    void moveToSignUpScreen();
   }
 }

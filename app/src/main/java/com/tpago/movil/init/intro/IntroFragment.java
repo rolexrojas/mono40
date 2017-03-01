@@ -13,7 +13,7 @@ import com.tpago.movil.app.ActivityQualifier;
 import com.tpago.movil.app.FragmentReplacer;
 import com.tpago.movil.init.BaseInitFragment;
 import com.tpago.movil.init.LogoAnimator;
-import com.tpago.movil.init.register.RegisterFragment;
+import com.tpago.movil.init.PhoneNumberFormFragment;
 import com.tpago.movil.widget.AutoTabSwitcher;
 
 import javax.inject.Inject;
@@ -42,7 +42,7 @@ public final class IntroFragment extends BaseInitFragment {
 
   @OnClick(R.id.button_start)
   void onStartButtonClicked() {
-    fragmentReplacer.begin(RegisterFragment.create())
+    fragmentReplacer.begin(PhoneNumberFormFragment.create())
       .addToBackStack()
       .setTransition(FragmentReplacer.Transition.SRFO)
       .commit();
