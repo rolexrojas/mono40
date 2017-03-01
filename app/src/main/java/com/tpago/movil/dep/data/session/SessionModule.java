@@ -2,7 +2,7 @@ package com.tpago.movil.dep.data.session;
 
 import android.content.Context;
 
-import com.tpago.movil.dep.domain.DeviceManager;
+import com.tpago.movil.dep.domain.DepDeviceManager;
 import com.tpago.movil.dep.domain.session.SessionManager;
 import com.tpago.movil.dep.domain.session.SessionRepo;
 import com.tpago.movil.dep.domain.session.SessionService;
@@ -33,7 +33,7 @@ public class SessionModule {
 
   @Provides
   @Singleton
-  SessionManager provideSessionManager(DeviceManager deviceManager, SessionRepo sessionRepo,
+  SessionManager provideSessionManager(DepDeviceManager deviceManager, SessionRepo sessionRepo,
     SessionService sessionService, EventBus eventBus) {
     return new SessionManager(deviceManager, sessionRepo, sessionService, eventBus);
   }

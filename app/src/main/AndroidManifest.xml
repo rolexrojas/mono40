@@ -33,5 +33,17 @@
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
+    <activity
+      android:name="com.tpago.movil.dep.ui.main.MainActivity"
+      android:screenOrientation="portrait"/>
+    <activity
+      android:name="com.tpago.movil.dep.ui.main.recipients.AddRecipientActivity"
+      android:screenOrientation="portrait"/>
+    <activity
+      android:name="com.tpago.movil.dep.ui.main.transactions.TransactionCreationActivity"
+      android:screenOrientation="portrait"/>
+    <activity
+      android:name="com.tpago.movil.dep.ui.main.products.transactions.RecentTransactionsActivity"
+      android:screenOrientation="portrait"/>
   </application>
 </manifest>

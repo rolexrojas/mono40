@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.Avatar;
 import com.tpago.movil.R;
-import com.tpago.movil.app.AvatarCreationDialogFragment;
+import com.tpago.movil.AvatarCreationDialogFragment;
 import com.tpago.movil.app.FragmentQualifier;
 import com.tpago.movil.app.FragmentReplacer;
 import com.tpago.movil.graphics.CircleTransformation;

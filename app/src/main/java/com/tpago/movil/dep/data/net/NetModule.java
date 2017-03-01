@@ -11,6 +11,7 @@ import dagger.Provides;
  * @author hecvasro
  */
 @Module
+@Deprecated
 public class NetModule {
   @Provides
   @Singleton

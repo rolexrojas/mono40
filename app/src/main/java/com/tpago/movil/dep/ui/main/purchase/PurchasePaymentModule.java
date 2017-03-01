@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.domain.Product;
 import com.tpago.movil.dep.domain.ProductManager;
-import com.tpago.movil.dep.domain.api.ApiBridge;
+import com.tpago.movil.dep.domain.api.DepApiBridge;
 import com.tpago.movil.dep.domain.pos.PosBridge;
 import com.tpago.movil.dep.domain.session.SessionManager;
 import com.tpago.movil.dep.ui.ChildFragmentScope;
@@ -28,7 +28,7 @@ class PurchasePaymentModule {
   @Provides
   @ChildFragmentScope
   PurchasePaymentPresenter providePresenter(StringHelper stringHelper,
-    ProductManager productManager, Lazy<PosBridge> posBridge, ApiBridge apiBridge,
+    ProductManager productManager, Lazy<PosBridge> posBridge, DepApiBridge apiBridge,
     SessionManager sessionManager) {
     return new PurchasePaymentPresenter(stringHelper, paymentOption, productManager, posBridge,
       apiBridge, sessionManager);

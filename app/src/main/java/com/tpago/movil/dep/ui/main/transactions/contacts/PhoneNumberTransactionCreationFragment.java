@@ -24,7 +24,7 @@ import com.tpago.movil.dep.ui.main.transactions.PaymentOptionAdapter;
 import com.tpago.movil.dep.ui.main.transactions.TransactionCreationContainer;
 import com.tpago.movil.dep.ui.view.widget.pad.Digit;
 import com.tpago.movil.dep.ui.view.widget.pad.Dot;
-import com.tpago.movil.dep.ui.view.widget.pad.NumPad;
+import com.tpago.movil.dep.ui.view.widget.pad.DepNumPad;
 import com.tpago.movil.dep.ui.view.widget.PrefixableTextView;
 
 import java.math.BigDecimal;
@@ -45,8 +45,8 @@ import butterknife.Unbinder;
  */
 public class PhoneNumberTransactionCreationFragment
   extends ChildFragment<TransactionCreationContainer> implements PhoneNumberTransactionCreationScreen,
-  Spinner.OnItemSelectedListener, NumPad.OnDigitClickedListener, NumPad.OnDotClickedListener,
-  NumPad.OnDeleteClickedListener, PinConfirmationDialogFragment.OnDismissListener {
+  Spinner.OnItemSelectedListener, DepNumPad.OnDigitClickedListener, DepNumPad.OnDotClickedListener,
+  DepNumPad.OnDeleteClickedListener, PinConfirmationDialogFragment.OnDismissListener {
   /**
    * TODO
    */
@@ -73,7 +73,7 @@ public class PhoneNumberTransactionCreationFragment
   @BindView(R.id.transaction_creation_amount)
   PrefixableTextView amountTextView;
   @BindView(R.id.transaction_creation_num_pad)
-  NumPad numPad;
+  DepNumPad numPad;
   @BindView(R.id.action_transfer)
   Button transferActionButton;
 

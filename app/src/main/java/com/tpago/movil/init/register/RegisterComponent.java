@@ -17,4 +17,7 @@ public interface RegisterComponent {
   void inject(AvatarFormFragment fragment);
   void inject(EmailRegisterFormFragment fragment);
   void inject(PasswordRegisterFormFragment fragment);
+  void inject(PinRegisterFormFragment fragment);
+  void inject(PinRegisterFormPresenter presenter);
+  void inject(SummaryRegisterFragment fragment);
 }

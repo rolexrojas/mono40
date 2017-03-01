@@ -1,6 +1,7 @@
 package com.tpago.movil;
 
 import com.google.auto.value.AutoValue;
+import com.google.gson.annotations.SerializedName;
 import com.tpago.movil.util.Objects;
 import com.tpago.movil.text.Texts;
 
@@ -59,8 +60,8 @@ public abstract class PhoneNumber {
   public abstract String getValue();
 
   public enum State {
-    NONE,
-    AFFILIATED,
-    REGISTERED
+    @SerializedName("1") NONE,
+    @SerializedName("2") AFFILIATED,
+    @SerializedName("3") REGISTERED
   }
 }

@@ -24,7 +24,7 @@ import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.ui.FullScreenDialogFragment;
 import com.tpago.movil.dep.ui.view.BaseAnimatorListener;
 import com.tpago.movil.dep.ui.view.widget.pad.Digit;
-import com.tpago.movil.dep.ui.view.widget.pad.NumPad;
+import com.tpago.movil.dep.ui.view.widget.pad.DepNumPad;
 import com.tpago.movil.dep.ui.view.widget.PinView;
 
 import java.io.Serializable;
@@ -41,8 +41,8 @@ import timber.log.Timber;
  */
 @Deprecated
 public class PinConfirmationDialogFragment extends FullScreenDialogFragment
-  implements DialogInterface.OnShowListener, PinView.Listener, NumPad.OnDigitClickedListener,
-  NumPad.OnDeleteClickedListener {
+  implements DialogInterface.OnShowListener, PinView.Listener, DepNumPad.OnDigitClickedListener,
+  DepNumPad.OnDeleteClickedListener {
   private static final String KEY_CENTER_X = "centerX";
   private static final String KEY_CENTER_Y = "centerY";
   private static final String KEY_ACTION_DESCRIPTION = "actionDescription";
@@ -73,7 +73,7 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
   @BindView(R.id.pin_view)
   PinView pinView;
   @BindView(R.id.num_pad)
-  NumPad numPad;
+  DepNumPad numPad;
 
   public static PinConfirmationDialogFragment newInstance(int centerX, int centerY,
     @NonNull String actionDescription, @NonNull Callback callback) {
@@ -168,7 +168,7 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_pin_confirmation, container, false);
+    return inflater.inflate(R.layout.dep_fragment_pin_confirmation, container, false);
   }
 
   @Override

@@ -6,10 +6,10 @@ import android.support.v4.util.Pair;
 
 import com.tpago.movil.dep.domain.api.ApiCode;
 import com.tpago.movil.dep.domain.api.ApiUtils;
+import com.tpago.movil.dep.domain.api.DepApiBridge;
 import com.tpago.movil.dep.domain.util.EventBus;
 import com.tpago.movil.dep.misc.rx.RxUtils;
 import com.tpago.movil.dep.misc.Utils;
-import com.tpago.movil.dep.domain.api.ApiBridge;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +39,7 @@ public final class BalanceManager {
   private static final long EXPIRATION_TIME = 300000L; // Five (5) minutes.
 
   private final EventBus eventBus;
-  private final ApiBridge apiBridge;
+  private final DepApiBridge apiBridge;
   private final com.tpago.movil.dep.domain.session.SessionManager sessionManager;
 
   /**
@@ -50,7 +50,7 @@ public final class BalanceManager {
 
   private Subscription subscription = Subscriptions.unsubscribed();
 
-  public BalanceManager(@NonNull EventBus eventBus, @NonNull ApiBridge apiBridge,
+  public BalanceManager(@NonNull EventBus eventBus, @NonNull DepApiBridge apiBridge,
     @NonNull com.tpago.movil.dep.domain.session.SessionManager sessionManager) {
     this.eventBus = eventBus;
     this.apiBridge = apiBridge;

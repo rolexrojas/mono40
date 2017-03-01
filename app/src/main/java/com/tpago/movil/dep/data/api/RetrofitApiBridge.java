@@ -9,7 +9,7 @@ import com.tpago.movil.dep.domain.Product;
 import com.tpago.movil.dep.domain.ProductCategory;
 import com.tpago.movil.dep.domain.Recipient;
 import com.tpago.movil.dep.domain.Transaction;
-import com.tpago.movil.dep.domain.api.ApiBridge;
+import com.tpago.movil.dep.domain.api.DepApiBridge;
 import com.tpago.movil.dep.domain.api.ApiCode;
 import com.tpago.movil.dep.domain.api.ApiError;
 import com.tpago.movil.dep.domain.api.ApiResult;
@@ -32,7 +32,8 @@ import rx.functions.Func1;
  *
  * @author hecvasro
  */
-class RetrofitApiBridge implements ApiBridge {
+@Deprecated
+class RetrofitApiBridge implements DepApiBridge {
   private final ApiService apiService;
   private final Converter<ResponseBody, ApiError> errorConverter;
 

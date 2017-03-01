@@ -2,7 +2,7 @@ package com.tpago.movil.dep.domain;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.dep.domain.api.ApiBridge;
+import com.tpago.movil.dep.domain.api.DepApiBridge;
 import com.tpago.movil.dep.domain.api.ApiUtils;
 
 import rx.Observable;
@@ -15,12 +15,12 @@ import rx.functions.Func1;
  */
 @Deprecated
 public final class InitialDataLoader {
-  private final ApiBridge apiBridge;
+  private final DepApiBridge apiBridge;
   private final ProductManager productManager;
   private final RecipientManager recipientManager;
   private final com.tpago.movil.dep.domain.session.SessionManager sessionManager;
 
-  public InitialDataLoader(@NonNull ApiBridge apiBridge, @NonNull ProductManager productManager,
+  public InitialDataLoader(@NonNull DepApiBridge apiBridge, @NonNull ProductManager productManager,
     @NonNull RecipientManager recipientManager,
     @NonNull com.tpago.movil.dep.domain.session.SessionManager sessionManager) {
     this.apiBridge = apiBridge;

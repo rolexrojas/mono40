@@ -27,6 +27,8 @@
   <color name="widget_button_dark_shape_gradient_background_end">#33821477</color>
   <color name="widget_button_dark_shape_gradient_background_start">@color/app_primary_alpha_05</color>
   <color name="widget_button_dark_shape_solid_background">@color/white</color>
+  <color name="widget_button_dark_transparent_shape_background">@color/transparent</color>
+  <color name="widget_button_dark_transparent_text">@color/white</color>
 
   <!-- Text input colors -->
   <color name="widget_text_input_dark_background">#CCC</color>

@@ -2,7 +2,7 @@ package com.tpago.movil.dep.ui.main.purchase;
 
 import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.domain.ProductManager;
-import com.tpago.movil.dep.domain.api.ApiBridge;
+import com.tpago.movil.dep.domain.api.DepApiBridge;
 import com.tpago.movil.dep.domain.pos.PosBridge;
 import com.tpago.movil.dep.domain.session.SessionManager;
 import com.tpago.movil.dep.ui.FragmentScope;
@@ -18,7 +18,7 @@ import dagger.Component;
 interface PurchaseComponent {
   void inject(PurchaseFragment screen);
 
-  ApiBridge provideApiBridge();
+  DepApiBridge provideApiBridge();
   PosBridge providePosBridge();
   ProductManager provideProductManager();
   PurchasePaymentOptionBinder providePaymentOptionBinder();

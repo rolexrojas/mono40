@@ -20,7 +20,7 @@ import rx.Observable;
  * @author hecvasro
  */
 @Deprecated
-public interface ApiBridge {
+public interface DepApiBridge {
   /**
    * Creates an {@link Observable observable} that emits all the associated {@link Bank banks}.
    * <p>

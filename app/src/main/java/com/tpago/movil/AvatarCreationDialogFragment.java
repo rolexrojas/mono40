@@ -1,4 +1,4 @@
-package com.tpago.movil.app;
+package com.tpago.movil;
 
 import android.Manifest;
 import android.app.Activity;
@@ -20,7 +20,8 @@ import android.view.View;
 
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
-import com.tpago.movil.R;
+import com.tpago.movil.app.PermissionRequestResult;
+import com.tpago.movil.app.Permissions;
 import com.tpago.movil.io.Files;
 import com.tpago.movil.util.Objects;
 import com.tpago.movil.util.Preconditions;

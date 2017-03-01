@@ -2,7 +2,7 @@ package com.tpago.movil.dep.domain;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.dep.domain.api.ApiBridge;
+import com.tpago.movil.dep.domain.api.DepApiBridge;
 import com.tpago.movil.dep.domain.api.ApiCode;
 import com.tpago.movil.dep.domain.api.ApiUtils;
 import com.tpago.movil.dep.domain.session.SessionManager;
@@ -19,10 +19,10 @@ import rx.functions.Func1;
  */
 @Deprecated
 public final class TransactionManager {
-  private final ApiBridge apiBridge;
+  private final DepApiBridge apiBridge;
   private final com.tpago.movil.dep.domain.session.SessionManager sessionManager;
 
-  public TransactionManager(@NonNull ApiBridge apiBridge, @NonNull SessionManager sessionManager) {
+  public TransactionManager(@NonNull DepApiBridge apiBridge, @NonNull SessionManager sessionManager) {
     this.apiBridge = apiBridge;
     this.sessionManager = sessionManager;
   }

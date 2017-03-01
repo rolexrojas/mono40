@@ -9,7 +9,7 @@ import com.tpago.movil.dep.data.repo.RepoModule;
 import com.tpago.movil.dep.data.res.AssetProvider;
 import com.tpago.movil.dep.data.res.LocalAssetProvider;
 import com.tpago.movil.dep.data.session.SessionModule;
-import com.tpago.movil.dep.domain.DeviceManager;
+import com.tpago.movil.dep.domain.DepDeviceManager;
 
 import javax.inject.Singleton;
 
@@ -36,7 +36,7 @@ public final class DepDataModule {
 
   @Provides
   @Singleton
-  DeviceManager provideDeviceManager(Context context) {
+  DepDeviceManager provideDeviceManager(Context context) {
     return new AndroidDeviceManager(context);
   }
 

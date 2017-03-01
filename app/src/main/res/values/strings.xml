@@ -11,8 +11,8 @@
   <string name="later">Más Tarde</string>
   <string name="next">Continuar</string>
   <string name="ok">Ok</string>
-  <string name="start">Comenzar</string>
   <string name="password">Contraseña</string>
+  <string name="start">Comenzar</string>
   <string name="using">Usando &#8230;</string>
 
   <!-- Font strings -->
@@ -73,6 +73,12 @@
   <string name="register_form_phone_number_error_incorrect_number_title">Número incorrecto</string>
   <string name="register_form_phone_number_label_description">Ingresa el número de celular para verificar tu perfil</string>
   <string name="register_form_phone_number_label_title">¡Listo, empecemos!</string>
+  <string name="register_form_pin_label_description">Vinculación al celular, creación de perfil e inicio de sesión</string>
+  <string name="register_form_pin_label_title">Confirma con tu PIN</string>
+  <string name="register_summary_button_continue">@string/next</string>
+  <string name="register_summary_button_later">@string/later</string>
+  <string name="register_summary_label_description">Empecemos con mostrarte lo más básico de la nueva App</string>
+  <string name="register_summary_label_title">¡tPago esta listo!</string>
 
   <!-- Deprecated strings -->
   <string name="about">Acerca de</string>
@@ -123,10 +129,10 @@
   <string name="dot">Punto</string>
   <string name="edit_text_content_font">@string/font_gotham_rounded_book</string>
   <string name="fee_for_transaction">Cargo por transacción %1$s</string>
-  <string name="font_gotham_rounded_bold">fonts/gotham-rounded/GothamRounded-Bold.otf</string>
-  <string name="font_gotham_rounded_book">fonts/gotham-rounded/GothamRounded-Book.otf</string>
-  <string name="font_gotham_rounded_light">fonts/gotham-rounded/GothamRounded-Light.otf</string>
-  <string name="font_gotham_rounded_medium">fonts/gotham-rounded/GothamRounded-Medium.otf</string>
+  <string name="font_gotham_rounded_bold">@string/font_gotham_round_bold</string>
+  <string name="font_gotham_rounded_book">@string/font_gotham_round_book</string>
+  <string name="font_gotham_rounded_light">@string/font_gotham_round_light</string>
+  <string name="font_gotham_rounded_medium">@string/font_gotham_round_medium</string>
   <string name="format_credit_card_number_masked">•••• •••• •••• %1$s</string>
   <string name="format_product_number_masked">•••• •••• %1$s</string>
   <string name="format_recipient_addition_message_contact">¿Le gustaría dar un apodo a %1$s para reconocerlo más fácil en tu lista de pagos?</string>

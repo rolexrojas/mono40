@@ -42,18 +42,26 @@
     <item name="android:background">?attr/selectableItemBackground</item>
     <item name="android:clickable">true</item>
     <item name="android:gravity">center</item>
+    <item name="android:layout_height">36dp</item>
+    <item name="android:layout_width">125dp</item>
     <item name="android:textColor">@color/app_primary</item>
     <item name="android:textSize">14sp</item>
     <item name="fontPath">@string/font_gotham_round_bold</item>
   </style>
-  <style name="Base.Widget.Button.Solid"/>
-  <style name="Base.Widget.Button.Solid.Dark"/>
-  <style name="Base.Widget.Button.Solid.Dark.Rounded">
-    <item name="android:background">@drawable/widget_button_solid_dark_rounded_shape</item>
+  <style name="Base.Widget.Button.Dark"/>
+  <style name="Base.Widget.Button.Dark.Gradient">
+    <item name="android:background">@drawable/widget_button_dark_gradient_shape</item>
   </style>
-  <style name="Base.Widget.Button.Gradient"/>
-  <style name="Base.Widget.Button.Gradient.Dark">
-    <item name="android:background">@drawable/widget_button_gradient_dark_shape</item>
+  <style name="Base.Widget.Button.Dark.Solid"/>
+  <style name="Base.Widget.Button.Dark.Solid.Rounded">
+    <item name="android:background">@drawable/widget_button_dark_solid_rounded_shape</item>
+  </style>
+  <style name="Base.Widget.Button.Dark.Transparent">
+    <item name="android:theme">@style/App.ThemeOverlay.Dark</item>
+  </style>
+  <style name="Base.Widget.Button.Dark.Transparent.Rounded">
+    <item name="android:background">@drawable/widget_button_dark_transparent_rounded_shape</item>
+    <item name="android:textColor">@color/widget_button_dark_transparent_text</item>
   </style>
 
   <style name="Base.Widget.TextInput" parent="Widget.AppCompat.EditText">
@@ -149,8 +157,9 @@
   <style name="Label.Dark.Primary" parent="Base.Label.Dark.Primary"/>
   <style name="Label.Dark.Secondary" parent="Base.Label.Dark.Secondary"/>
 
-  <style name="Widget.Button.Solid.Dark.Rounded" parent="Base.Widget.Button.Solid.Dark.Rounded"/>
-  <style name="Widget.Button.Gradient.Dark" parent="Base.Widget.Button.Gradient.Dark"/>
+  <style name="Widget.Button.Dark.Gradient" parent="Base.Widget.Button.Dark.Gradient"/>
+  <style name="Widget.Button.Dark.Solid.Rounded" parent="Base.Widget.Button.Dark.Solid.Rounded"/>
+  <style name="Widget.Button.Dark.Transparent.Rounded" parent="Base.Widget.Button.Dark.Transparent.Rounded"/>
 
   <style name="Widget.TextInput.Dark" parent="Base.Widget.TextInput.Dark"/>
 

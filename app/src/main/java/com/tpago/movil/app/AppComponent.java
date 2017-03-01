@@ -2,6 +2,7 @@ package com.tpago.movil.app;
 
 import android.content.Context;
 
+import com.tpago.movil.AvatarCreationDialogFragment;
 import com.tpago.movil.dep.DepAppModule;
 import com.tpago.movil.api.ApiModule;
 import com.tpago.movil.dep.data.DepDataModule;
@@ -15,12 +16,13 @@ import com.tpago.movil.dep.domain.ProductManager;
 import com.tpago.movil.dep.domain.RecipientManager;
 import com.tpago.movil.dep.domain.TransactionManager;
 import com.tpago.movil.dep.domain.TransactionRepo;
-import com.tpago.movil.dep.domain.api.ApiBridge;
+import com.tpago.movil.dep.domain.api.DepApiBridge;
 import com.tpago.movil.dep.domain.pos.PosBridge;
 import com.tpago.movil.dep.domain.session.SessionManager;
 import com.tpago.movil.dep.domain.util.EventBus;
 import com.tpago.movil.init.InitComponent;
 import com.tpago.movil.init.InitModule;
+import com.tpago.movil.net.NetModule;
 
 import javax.inject.Singleton;
 
@@ -32,6 +34,7 @@ import dagger.Component;
 @Singleton
 @Component(modules = {
   AppModule.class,
+  NetModule.class,
   ApiModule.class,
   // Deprecated modules
   DepAppModule.class,
@@ -43,7 +46,7 @@ public interface AppComponent {
   void inject(AvatarCreationDialogFragment fragment);
 
   // Deprecated provides
-  ApiBridge provideApiBridge();
+  DepApiBridge provideApiBridge();
   AssetProvider provideResourceProvider();
   BalanceManager provideBalanceManager();
   Context provideContext();

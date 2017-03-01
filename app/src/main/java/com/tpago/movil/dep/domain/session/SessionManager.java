@@ -2,7 +2,7 @@ package com.tpago.movil.dep.domain.session;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.dep.domain.DeviceManager;
+import com.tpago.movil.dep.domain.DepDeviceManager;
 import com.tpago.movil.dep.domain.ResetEvent;
 import com.tpago.movil.dep.domain.api.ApiResult;
 import com.tpago.movil.dep.domain.util.Event;
@@ -27,7 +27,7 @@ import rx.subscriptions.Subscriptions;
 public final class SessionManager {
   private static final long MAX_IDLE_TIME = 2L * 60L * 1000L; // Two (2) minutes.
 
-  private final DeviceManager deviceManager;
+  private final DepDeviceManager deviceManager;
   private final SessionRepo sessionRepo;
   private final SessionService sessionService;
   private final EventBus eventBus;
@@ -43,7 +43,7 @@ public final class SessionManager {
    * @param sessionRepo
    *   TODO
    */
-  public SessionManager(@NonNull DeviceManager deviceManager, @NonNull SessionRepo sessionRepo,
+  public SessionManager(@NonNull DepDeviceManager deviceManager, @NonNull SessionRepo sessionRepo,
     @NonNull SessionService sessionService, EventBus eventBus) {
     this.deviceManager = deviceManager;
     this.sessionRepo = sessionRepo;

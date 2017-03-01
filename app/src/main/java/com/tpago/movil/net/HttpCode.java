@@ -12,7 +12,7 @@ public enum HttpCode {
   private final int value;
 
   public static boolean isSuccessCode(HttpCode code) {
-    return code.getValue() >= 200 || code.getValue() < 300;
+    return code.getValue() >= 200 && code.getValue() < 300;
   }
 
   public static HttpCode find(int value) {

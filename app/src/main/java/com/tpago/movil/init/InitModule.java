@@ -1,6 +1,7 @@
 package com.tpago.movil.init;
 
 import com.tpago.movil.R;
+import com.tpago.movil.Session;
 import com.tpago.movil.app.ActivityModule;
 import com.tpago.movil.app.ActivityQualifier;
 import com.tpago.movil.app.ActivityScope;
@@ -17,6 +18,12 @@ import dagger.Provides;
 public final class InitModule extends ActivityModule<InitActivity> {
   InitModule(InitActivity activity) {
     super(activity);
+  }
+
+  @Provides
+  @ActivityScope
+  Session.Builder provideSessionBuilder() {
+    return new Session.Builder();
   }
 
   @Provides

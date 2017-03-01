@@ -2,5 +2,5 @@
 <ripple
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:color="?attr/colorControlHighlight">
-  <item android:drawable="@drawable/widget_button_gradient_dark_shape"/>
+  <item android:drawable="@drawable/widget_button_dark_gradient_shape"/>
 </ripple>

@@ -10,7 +10,7 @@ import com.tpago.movil.util.Preconditions;
  * @author hecvasro
  */
 final class LogoAnimator {
-  private final View logo;
+  private final Logo logo;
   private final View anchor;
   private final long duration;
 
@@ -41,6 +41,14 @@ final class LogoAnimator {
       movedAndScaledTranslationY = (Math.abs(aH - lH) / 2) - Math.abs(aY - lY);
     }
     animate(movedAndScaledTranslationY, 0.6F, 0.6F);
+  }
+
+  final void start() {
+    logo.start();
+  }
+
+  final void stop() {
+    logo.stop();
   }
 
   final void reset() {

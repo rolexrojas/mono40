@@ -33,6 +33,12 @@ final class AppModule {
 
   @Provides
   @Singleton
+  DeviceManager provideDeviceManager(Context context) {
+    return new DeviceManager(context);
+  }
+
+  @Provides
+  @Singleton
   StringResolver provideStringResolver(Context context) {
     return new StringResolver(context);
   }

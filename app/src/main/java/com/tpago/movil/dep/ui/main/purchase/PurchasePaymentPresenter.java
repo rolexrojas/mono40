@@ -6,7 +6,7 @@ import android.support.v4.util.Pair;
 import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.domain.Product;
 import com.tpago.movil.dep.domain.ProductManager;
-import com.tpago.movil.dep.domain.api.ApiBridge;
+import com.tpago.movil.dep.domain.api.DepApiBridge;
 import com.tpago.movil.dep.domain.api.ApiResult;
 import com.tpago.movil.dep.domain.pos.PosBridge;
 import com.tpago.movil.dep.domain.pos.PosResult;
@@ -34,14 +34,14 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
   private final Product paymentOption;
   private final ProductManager productManager;
   private final Lazy<PosBridge> posBridge;
-  private final ApiBridge apiBridge;
+  private final DepApiBridge apiBridge;
   private final SessionManager sessionManager;
 
   private Subscription subscription = Subscriptions.unsubscribed();
 
   PurchasePaymentPresenter(@NonNull StringHelper stringHelper, @NonNull Product paymentOption,
     @NonNull ProductManager productManager, @NonNull Lazy<PosBridge> posBridge,
-    @NonNull ApiBridge apiBridge, @NonNull SessionManager sessionManager) {
+    @NonNull DepApiBridge apiBridge, @NonNull SessionManager sessionManager) {
     this.stringHelper = stringHelper;
     this.paymentOption = paymentOption;
     this.productManager = productManager;

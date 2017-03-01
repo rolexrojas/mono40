@@ -24,7 +24,7 @@ import com.tpago.movil.dep.misc.rx.RxUtils;
 import com.tpago.movil.dep.ui.view.BaseAnimatorListener;
 import com.tpago.movil.dep.ui.view.widget.PinView;
 import com.tpago.movil.dep.ui.view.widget.pad.Digit;
-import com.tpago.movil.dep.ui.view.widget.pad.NumPad;
+import com.tpago.movil.dep.ui.view.widget.pad.DepNumPad;
 
 import butterknife.BindInt;
 import butterknife.BindView;
@@ -106,8 +106,8 @@ public final class PinConfirmator {
    * TODO
    */
   public static class PinConfirmatorFragment extends DialogFragment
-    implements DialogInterface.OnShowListener, PinView.Listener, NumPad.OnDigitClickedListener,
-    NumPad.OnDeleteClickedListener {
+    implements DialogInterface.OnShowListener, PinView.Listener, DepNumPad.OnDigitClickedListener,
+    DepNumPad.OnDeleteClickedListener {
     private static final String KEY_MESSAGE = "message";
     private static final String KEY_ORIGIN_X = "originX";
     private static final String KEY_ORIGIN_Y = "originY";
@@ -135,7 +135,7 @@ public final class PinConfirmator {
     @BindView(R.id.pin_view)
     PinView pinView;
     @BindView(R.id.num_pad)
-    NumPad numPad;
+    DepNumPad numPad;
 
     /**
      * TODO
@@ -217,7 +217,7 @@ public final class PinConfirmator {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-      return inflater.inflate(R.layout.fragment_pin_confirmation, container, false);
+      return inflater.inflate(R.layout.dep_fragment_pin_confirmation, container, false);
     }
 
     @Override

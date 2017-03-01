@@ -2,6 +2,10 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 android {
+  packagingOptions {
+    exclude 'META-INF/rxjava.properties'
+  }
+
   signingConfigs {
     debug {
       storeFile rootProject.file('keystores/debug.jks')
@@ -89,6 +93,12 @@ dependencies {
   def okHttpVersion = '3.6.0'
   compile "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}"
   compile "com.squareup.okhttp3:okhttp:${okHttpVersion}"
+
+  compile 'com.google.code.gson:gson:2.8.0'
+
+  def autoValueGsonVersion = '0.4.6'
+  provided "com.ryanharter.auto.value:auto-value-gson:${autoValueGsonVersion}"
+  annotationProcessor "com.ryanharter.auto.value:auto-value-gson:${autoValueGsonVersion}"
 
   def retrofitVersion = '2.1.0'
   compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"

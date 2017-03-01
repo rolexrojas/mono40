@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <style name="Widget.Button.Solid.Dark.Rounded" parent="Base.Widget.Button.Solid.Dark.Rounded">
-    <item name="android:background">@drawable/widget_button_solid_dark_rounded</item>
+  <style name="Widget.Button.Dark.Gradient" parent="Base.Widget.Button.Dark.Gradient">
+    <item name="android:background">@drawable/widget_button_dark_gradient</item>
   </style>
-  <style name="Widget.Button.Gradient.Dark" parent="Base.Widget.Button.Gradient.Dark">
-    <item name="android:background">@drawable/widget_button_gradient_dark</item>
+  <style name="Widget.Button.Dark.Solid.Rounded" parent="Base.Widget.Button.Dark.Solid.Rounded">
+    <item name="android:background">@drawable/widget_button_dark_solid_rounded</item>
+  </style>
+  <style name="Widget.Button.Dark.Transparent.Rounded" parent="Base.Widget.Button.Dark.Transparent.Rounded">
+    <item name="android:background">@drawable/widget_button_dark_transparent_rounded</item>
   </style>
 
 

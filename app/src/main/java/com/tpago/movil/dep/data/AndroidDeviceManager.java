@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.telephony.TelephonyManager;
 
-import com.tpago.movil.dep.domain.DeviceManager;
+import com.tpago.movil.dep.domain.DepDeviceManager;
 import com.tpago.movil.dep.domain.text.TextHelper;
 
 import javax.inject.Inject;
@@ -16,7 +16,7 @@ import javax.inject.Singleton;
  * @author hecvasro
  */
 @Singleton
-final class AndroidDeviceManager implements DeviceManager {
+final class AndroidDeviceManager implements DepDeviceManager {
   private final TelephonyManager telephonyManager;
 
   /**

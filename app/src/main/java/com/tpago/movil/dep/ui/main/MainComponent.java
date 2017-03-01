@@ -8,7 +8,7 @@ import com.tpago.movil.dep.data.SchedulerProvider;
 import com.tpago.movil.dep.data.res.AssetProvider;
 import com.tpago.movil.dep.domain.ProductManager;
 import com.tpago.movil.dep.domain.BalanceManager;
-import com.tpago.movil.dep.domain.api.ApiBridge;
+import com.tpago.movil.dep.domain.api.DepApiBridge;
 import com.tpago.movil.dep.domain.pos.PosBridge;
 import com.tpago.movil.dep.domain.session.SessionManager;
 import com.tpago.movil.dep.domain.util.EventBus;
@@ -31,7 +31,7 @@ public interface MainComponent extends ActivityComponent {
 
   SessionManager provideSessionManager();
 
-  ApiBridge provideApiBridge();
+  DepApiBridge provideApiBridge();
   AssetProvider provideResourceProvider();
   BalanceManager provideBalanceManager();
   Context provideContext();

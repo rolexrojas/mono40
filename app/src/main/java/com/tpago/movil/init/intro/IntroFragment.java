@@ -29,14 +29,10 @@ public final class IntroFragment extends BaseInitFragment {
 
   private AutoTabSwitcher autoTabSwitcher;
 
-  @Inject
-  @ActivityQualifier
-  FragmentReplacer fragmentReplacer;
+  @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
 
-  @BindView(R.id.view_pager)
-  ViewPager viewPager;
-  @BindView(R.id.tab_layout)
-  TabLayout tabLayout;
+  @BindView(R.id.view_pager) ViewPager viewPager;
+  @BindView(R.id.tab_layout) TabLayout tabLayout;
 
   public static IntroFragment create() {
     return new IntroFragment();

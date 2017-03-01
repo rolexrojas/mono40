@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.tpago.movil.BuildConfig;
+import com.tpago.movil.dep.DepAppModule;
 import com.tpago.movil.util.Objects;
 import com.tpago.movil.util.Preconditions;
 
@@ -24,6 +25,7 @@ public final class App extends Application {
     if (Objects.isNull(component)) {
       component = DaggerAppComponent.builder()
         .appModule(new AppModule(this))
+        .depAppModule(new DepAppModule(this))
         .build();
     }
     return component;

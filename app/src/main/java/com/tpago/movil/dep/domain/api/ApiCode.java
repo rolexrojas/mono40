@@ -3,7 +3,7 @@ package com.tpago.movil.dep.domain.api;
 import android.support.annotation.NonNull;
 
 /**
- * {@link ApiBridge API}'s code enumeration.
+ * {@link DepApiBridge API}'s code enumeration.
  *
  * @author hecvasro
  */

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@link NumPad Num pad}'s digit representation.
+ * {@link DepNumPad Num pad}'s digit representation.
  *
  * @author hecvasro
  */
@@ -72,7 +72,7 @@ public final class Digit extends NumPadCell<Integer> {
   }
 
   /**
-   * Constructs a digit of a {@link NumPad num pad}.
+   * Constructs a digit of a {@link DepNumPad num pad}.
    *
    * @param value
    *   Cell's value.

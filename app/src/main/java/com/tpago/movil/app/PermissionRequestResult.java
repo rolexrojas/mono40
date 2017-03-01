@@ -10,7 +10,7 @@ import java.util.Map;
  * @author hecvasro
  */
 @AutoValue
-abstract class PermissionRequestResult {
+public abstract class PermissionRequestResult {
   public static PermissionRequestResult create(String[] permissions, int[] results) {
     Preconditions.checkNotNull(permissions, "permissions == null");
     Preconditions.checkNotNull(results, "results == null");

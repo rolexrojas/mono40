@@ -1,6 +1,8 @@
 package com.tpago.movil.api;
 
+import com.tpago.movil.Email;
 import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.Pin;
 import com.tpago.movil.net.HttpResult;
 
 import io.reactivex.Single;
@@ -10,4 +12,10 @@ import io.reactivex.Single;
  */
 public interface ApiBridge {
   Single<HttpResult<ApiData<PhoneNumber.State>>> validatePhoneNumber(PhoneNumber phoneNumber);
+
+  Single<HttpResult<ApiData<String>>> signUp(
+    PhoneNumber phoneNumber,
+    Email email,
+    String password,
+    Pin pin);
 }

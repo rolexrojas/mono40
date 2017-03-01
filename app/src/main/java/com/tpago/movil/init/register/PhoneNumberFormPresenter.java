@@ -110,12 +110,16 @@ final class PhoneNumberFormPresenter {
         .subscribe(new Consumer<HttpResult<ApiData<PhoneNumber.State>>>() {
           @Override
           public void accept(HttpResult<ApiData<PhoneNumber.State>> result) throws Exception {
-            Timber.d(result.toString());
             stopLoading();
             final ApiData<PhoneNumber.State> apiData = result.getData();
             if (result.isSuccessful()) {
-              data.setPhoneNumber(phoneNumber, apiData.getValue());
-              view.moveToNextScreen();
+              final PhoneNumber.State state = apiData.getValue();
+              data.setPhoneNumber(phoneNumber, state);
+              if (state.equals(PhoneNumber.State.REGISTERED)) {
+                // TODO: Move to the log in screen.
+              } else {
+                view.moveToNextScreen();
+              }
             } else {
               final ApiError error = apiData.getError();
               view.showDialog(

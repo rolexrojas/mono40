@@ -24,15 +24,10 @@ public final class RegisterFragment extends BaseInitFragment implements Register
 
   private FragmentBackEventHandler fragmentBackEventHandler;
 
-  @Inject
-  Avatar avatar;
+  @Inject Avatar avatar;
 
-  @Inject
-  BackEventHandler backEventHandler;
-
-  @Inject
-  @FragmentQualifier
-  FragmentReplacer fragmentReplacer;
+  @Inject BackEventHandler backEventHandler;
+  @Inject @FragmentQualifier FragmentReplacer fragmentReplacer;
 
   public static RegisterFragment create() {
     return new RegisterFragment();

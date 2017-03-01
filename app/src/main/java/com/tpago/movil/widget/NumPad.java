@@ -74,12 +74,12 @@ public final class NumPad extends LinearLayout {
     final TypedArray a = c.obtainStyledAttributes(attrs, R.styleable.NumPad, defStyleAttr, 0);
     try {
       color = a.getColor(R.styleable.NumPad_color, ContextCompat.getColor(c, R.color.white));
-      dotEnabled = a.getBoolean(R.styleable.NumPad_dotEnabled, false);
+      dotEnabled = a.getBoolean(R.styleable.DepNumPad_dotEnabled, false);
     } finally {
       a.recycle();
     }
     // Inflates the layout.
-    LayoutInflater.from(getContext()).inflate(R.layout.widget_dep_num_pad, this);
+    LayoutInflater.from(getContext()).inflate(R.layout.widget_num_pad, this);
   }
 
   @OnClick({

@@ -7,7 +7,8 @@ import android.support.annotation.NonNull;
  *
  * @author hecvasro
  */
-public interface DeviceManager {
+@Deprecated
+public interface DepDeviceManager {
   /**
    * TODO
    *

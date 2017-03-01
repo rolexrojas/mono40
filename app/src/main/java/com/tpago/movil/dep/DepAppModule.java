@@ -8,12 +8,12 @@ import com.tpago.movil.dep.domain.ProductManager;
 import com.tpago.movil.dep.domain.ProductRepo;
 import com.tpago.movil.dep.domain.BalanceManager;
 import com.tpago.movil.dep.domain.TransactionManager;
+import com.tpago.movil.dep.domain.api.DepApiBridge;
 import com.tpago.movil.dep.domain.pos.PosBridge;
 import com.tpago.movil.dep.domain.session.SessionManager;
 import com.tpago.movil.dep.domain.util.EventBus;
 import com.tpago.movil.dep.domain.RecipientManager;
 import com.tpago.movil.dep.domain.RecipientRepo;
-import com.tpago.movil.dep.domain.api.ApiBridge;
 
 import javax.inject.Singleton;
 
@@ -35,7 +35,7 @@ public final class DepAppModule {
 
   @Provides
   @Singleton
-  InitialDataLoader provideInitialDataLoader(ApiBridge apiBridge, ProductManager productManager,
+  InitialDataLoader provideInitialDataLoader(DepApiBridge apiBridge, ProductManager productManager,
     RecipientManager recipientManager, SessionManager sessionManager) {
     return new InitialDataLoader(apiBridge, productManager, recipientManager, sessionManager);
   }
@@ -55,21 +55,21 @@ public final class DepAppModule {
 
   @Provides
   @Singleton
-  BalanceManager provideBalanceManager(EventBus eventBus, ApiBridge apiBridge,
+  BalanceManager provideBalanceManager(EventBus eventBus, DepApiBridge apiBridge,
     SessionManager sessionManager) {
     return new BalanceManager(eventBus, apiBridge, sessionManager);
   }
 
   @Provides
   @Singleton
-  RecipientManager provideRecipientManager(RecipientRepo recipientRepo, ApiBridge apiBridge,
+  RecipientManager provideRecipientManager(RecipientRepo recipientRepo, DepApiBridge apiBridge,
     SessionManager sessionManager) {
     return new RecipientManager(recipientRepo, apiBridge, sessionManager);
   }
 
   @Provides
   @Singleton
-  TransactionManager provideTransactionManager(ApiBridge apiBridge, SessionManager sessionManager) {
+  TransactionManager provideTransactionManager(DepApiBridge apiBridge, SessionManager sessionManager) {
     return new TransactionManager(apiBridge, sessionManager);
   }
 }

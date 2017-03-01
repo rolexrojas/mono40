@@ -31,7 +31,8 @@ import butterknife.OnClick;
  *
  * @author hecvasro
  */
-public class NumPad extends LinearLayout {
+@Deprecated
+public class DepNumPad extends LinearLayout {
   /**
    * TODO
    */
@@ -66,7 +67,7 @@ public class NumPad extends LinearLayout {
    */
   private OnDeleteClickedListener onDeleteClickedListener;
 
-  @BindViews({ R.id.num_pad_cell_digit_zero, R.id.num_pad_cell_digit_one,
+  @BindViews({ R.id.num_pad_cell_zero, R.id.num_pad_cell_digit_one,
     R.id.num_pad_cell_digit_two, R.id.num_pad_cell_digit_three, R.id.num_pad_cell_digit_four,
     R.id.num_pad_cell_digit_five, R.id.num_pad_cell_digit_six, R.id.num_pad_cell_digit_seven,
     R.id.num_pad_cell_digit_eight, R.id.num_pad_cell_digit_nine })
@@ -78,15 +79,15 @@ public class NumPad extends LinearLayout {
   @BindView(R.id.num_pad_cell_delete)
   ImageButton deleteButton;
 
-  public NumPad(Context context) {
+  public DepNumPad(Context context) {
     this(context, null);
   }
 
-  public NumPad(Context context, AttributeSet attrs) {
+  public DepNumPad(Context context, AttributeSet attrs) {
     this(context, attrs, R.attr.numPadStyle);
   }
 
-  public NumPad(Context context, AttributeSet attrs, int defStyleAttr) {
+  public DepNumPad(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     setOrientation(VERTICAL);
     final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.DepNumPad,
@@ -94,9 +95,9 @@ public class NumPad extends LinearLayout {
     try {
       tintColor = array.getColor(R.styleable.DepNumPad_tintColor,
         ContextCompat.getColor(context, R.color.app_widget_num_pad_tint));
-      dotEnabled = array.getBoolean(R.styleable.NumPad_dotEnabled, false);
+      dotEnabled = array.getBoolean(R.styleable.DepNumPad_dotEnabled, false);
       deleteEnabled = array.getBoolean(R.styleable.DepNumPad_deleteEnabled, true);
-      deleteDrawable = array.getResourceId(R.styleable.NumPad_deleteDrawable,
+      deleteDrawable = array.getResourceId(R.styleable.DepNumPad_deleteDrawable,
         R.drawable.app_widget_num_pad_delete);
     } finally {
       array.recycle();
@@ -131,7 +132,7 @@ public class NumPad extends LinearLayout {
    * @param button
    *   {@link Button} that was clicked.
    */
-  @OnClick({ R.id.num_pad_cell_digit_zero, R.id.num_pad_cell_digit_one,
+  @OnClick({ R.id.num_pad_cell_zero, R.id.num_pad_cell_digit_one,
     R.id.num_pad_cell_digit_two, R.id.num_pad_cell_digit_three, R.id.num_pad_cell_digit_four,
     R.id.num_pad_cell_digit_five, R.id.num_pad_cell_digit_six, R.id.num_pad_cell_digit_seven,
     R.id.num_pad_cell_digit_eight, R.id.num_pad_cell_digit_nine })

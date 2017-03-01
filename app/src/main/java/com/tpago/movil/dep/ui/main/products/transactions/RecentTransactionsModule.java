@@ -4,7 +4,7 @@ import com.tpago.movil.dep.data.SchedulerProvider;
 import com.tpago.movil.dep.domain.DecoratedTransactionProvider;
 import com.tpago.movil.dep.domain.TransactionProvider;
 import com.tpago.movil.dep.domain.TransactionRepo;
-import com.tpago.movil.dep.domain.api.ApiBridge;
+import com.tpago.movil.dep.domain.api.DepApiBridge;
 import com.tpago.movil.dep.domain.session.SessionManager;
 import com.tpago.movil.dep.ui.FragmentScope;
 
@@ -22,7 +22,7 @@ class RecentTransactionsModule {
   @Provides
   @FragmentScope
   TransactionProvider provideTransactionManager(TransactionRepo transactionRepo,
-    ApiBridge apiBridge, SessionManager sessionManager) {
+    DepApiBridge apiBridge, SessionManager sessionManager) {
     return new DecoratedTransactionProvider(transactionRepo, apiBridge, sessionManager);
   }
 

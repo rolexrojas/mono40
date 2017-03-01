@@ -57,7 +57,7 @@ public final class PasswordRegisterFormFragment
 
   @Override
   protected Fragment getNextScreen() {
-    return null;
+    return PinRegisterFormFragment.create();
   }
 
   @Override

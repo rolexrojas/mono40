@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
-import com.tpago.movil.dep.domain.api.ApiBridge;
+import com.tpago.movil.dep.domain.api.DepApiBridge;
 import com.tpago.movil.dep.domain.api.ApiUtils;
 import com.tpago.movil.dep.domain.session.SessionManager;
 import com.tpago.movil.dep.ui.main.recipients.Contact;
@@ -22,10 +22,10 @@ import rx.functions.Func1;
 @Deprecated
 public final class RecipientManager implements RecipientProvider {
   private final RecipientRepo recipientRepo;
-  private final ApiBridge apiBridge;
+  private final DepApiBridge apiBridge;
   private final com.tpago.movil.dep.domain.session.SessionManager sessionManager;
 
-  public RecipientManager(@NonNull RecipientRepo recipientRepo, @NonNull ApiBridge apiBridge,
+  public RecipientManager(@NonNull RecipientRepo recipientRepo, @NonNull DepApiBridge apiBridge,
     @NonNull SessionManager sessionManager) {
     this.recipientRepo = recipientRepo;
     this.apiBridge = apiBridge;
