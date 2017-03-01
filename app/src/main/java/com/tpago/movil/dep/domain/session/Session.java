@@ -9,6 +9,7 @@ import com.tpago.movil.dep.misc.Utils;
  *
  * @author hecvasro
  */
+@Deprecated
 public final class Session {
   /**
    * User's phone number.

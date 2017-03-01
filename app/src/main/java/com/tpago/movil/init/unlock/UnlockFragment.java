@@ -1,9 +1,8 @@
-package com.tpago.movil.init.signin;
+package com.tpago.movil.init.unlock;
 
-import android.content.DialogInterface;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -12,12 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.tpago.movil.R;
 import com.tpago.movil.app.ActivityQualifier;
 import com.tpago.movil.app.FragmentReplacer;
 import com.tpago.movil.app.InformationalDialogFragment;
+import com.tpago.movil.graphics.CircleTransformation;
 import com.tpago.movil.init.BaseInitFragment;
 import com.tpago.movil.init.InitFragment;
 import com.tpago.movil.init.LogoAnimator;
@@ -25,6 +27,8 @@ import com.tpago.movil.text.BaseTextWatcher;
 import com.tpago.movil.widget.FullSizeLoadIndicator;
 import com.tpago.movil.widget.LoadIndicator;
 import com.tpago.movil.widget.TextInput;
+
+import java.io.File;
 
 import javax.inject.Inject;
 
@@ -35,24 +39,24 @@ import butterknife.Unbinder;
 /**
  * @author hecvasro
  */
-public final class SignInFragment extends BaseInitFragment implements SignInPresenter.View {
+public final class UnlockFragment extends BaseInitFragment implements UnlockPresenter.View {
   private Unbinder unbinder;
   private LoadIndicator loadIndicator;
 
-  private TextWatcher emailTextInputTextWatcher;
   private TextWatcher passwordTextInputTextWatcher;
 
-  private SignInPresenter presenter;
+  private UnlockPresenter presenter;
 
   @Inject LogoAnimator logoAnimator;
   @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
 
-  @BindView(R.id.text_input_email) TextInput emailTextInput;
+  @BindView(R.id.image_view_avatar) ImageView avatarImageView;
+  @BindView(R.id.label_title) TextView titleLabel;
   @BindView(R.id.text_input_password) TextInput passwordTextInput;
-  @BindView(R.id.button_unlock) Button signInButton;
+  @BindView(R.id.button_unlock) Button unlockButton;
 
-  public static SignInFragment create() {
-    return new SignInFragment();
+  public static UnlockFragment create() {
+    return new UnlockFragment();
   }
 
   @Override
@@ -79,7 +83,7 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
     // Creates the load indicator.
     loadIndicator = new FullSizeLoadIndicator(getChildFragmentManager());
     // Creates the presenter.
-    presenter = new SignInPresenter(this, getInitComponent());
+    presenter = new UnlockPresenter(this, getInitComponent());
   }
 
   @Override
@@ -94,14 +98,6 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
     super.onResume();
     // Moves the logo out of the screen.
     logoAnimator.moveOutOfScreen();
-    // Attaches the email text input to the presenter.
-    emailTextInputTextWatcher = new BaseTextWatcher() {
-      @Override
-      public void afterTextChanged(Editable s) {
-        presenter.onEmailTextInputContentChanged(s.toString());
-      }
-    };
-    emailTextInput.addTextChangedListener(emailTextInputTextWatcher);
     // Attaches the password text input to the presenter.
     passwordTextInputTextWatcher = new BaseTextWatcher() {
       @Override
@@ -128,9 +124,6 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
     passwordTextInput.setOnEditorActionListener(null);
     passwordTextInput.removeTextChangedListener(passwordTextInputTextWatcher);
     passwordTextInputTextWatcher = null;
-    // Detaches the first name text input from the presenter.
-    emailTextInput.removeTextChangedListener(emailTextInputTextWatcher);
-    emailTextInputTextWatcher = null;
   }
 
   @Override
@@ -163,13 +156,22 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
   }
 
   @Override
-  public void setEmailTextInputContent(String content) {
-    emailTextInput.setText(content);
+  public void setAvatarImageContent(File file) {
+    final Context context = getActivity();
+    Picasso.with(context).invalidate(file);
+    Picasso.with(context)
+      .load(file)
+      .resizeDimen(R.dimen.widget_image_avatar_large, R.dimen.widget_image_avatar_large)
+      .transform(new CircleTransformation())
+      .placeholder(R.color.black) // TODO: Request a placeholder to UX.
+      .error(R.color.black) // TODO: Request a placeholder to UX.
+      .noFade()
+      .into(avatarImageView);
   }
 
   @Override
-  public void showEmailTextInputAsErratic(boolean showAsErratic) {
-    emailTextInput.setErraticStateEnabled(showAsErratic);
+  public void setTitleLabelContent(String content) {
+    titleLabel.setText(String.format(getString(R.string.unlock_label_title), content));
   }
 
   @Override
@@ -183,13 +185,13 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
   }
 
   @Override
-  public void setSignInButtonEnabled(boolean enabled) {
-    signInButton.setEnabled(enabled);
+  public void setUnlockButtonEnabled(boolean enabled) {
+    unlockButton.setEnabled(enabled);
   }
 
   @Override
-  public void showSignInButtonAsEnabled(boolean showAsEnabled) {
-    signInButton.setAlpha(showAsEnabled ? 1.0F : 0.5F);
+  public void showUnlockButtonAsEnabled(boolean showAsEnabled) {
+    unlockButton.setAlpha(showAsEnabled ? 1.0F : 0.5F);
   }
 
   @Override
@@ -200,24 +202,6 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
   @Override
   public void stopLoading() {
     loadIndicator.stop();
-  }
-
-  @Override
-  public void checkIfUseWantsToForceSignIn() {
-    new AlertDialog.Builder(getActivity())
-      .setTitle(R.string.dialog_title_already_associated_device)
-      .setMessage(R.string.dialog_message_already_associated_device)
-      .setNegativeButton(R.string.dialog_negative_text_already_associated_device, null)
-      .setPositiveButton(
-        R.string.dialog_positive_text_already_associated_device,
-        new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            presenter.onSignInForcingButtonClicked();
-          }
-        })
-      .create()
-      .show();
   }
 
   @Override

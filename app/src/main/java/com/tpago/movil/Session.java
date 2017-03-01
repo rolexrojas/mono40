@@ -8,14 +8,14 @@ import com.tpago.movil.text.Texts;
  */
 @AutoValue
 public abstract class Session {
-  public abstract String getToken();
-
   private static Session create(String token) {
     return new AutoValue_Session(token);
   }
 
   protected Session() {
   }
+
+  public abstract String getToken();
 
   public static final class Builder {
     private String token;

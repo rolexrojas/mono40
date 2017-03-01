@@ -15,6 +15,7 @@
   <string name="sign_in">Iniciar sesión</string>
   <string name="skip">Saltar</string>
   <string name="start">Comenzar</string>
+  <string name="unlock">Desbloquear</string>
   <string name="using">Usando &#8230;</string>
   <string name="welcome">¡Bienvenido!</string>
 
@@ -103,6 +104,11 @@
   <string name="sign_in_input_hint_password">@string/password</string>
   <string name="sign_in_label_description">Iniciar sesión con usuario y contraseña de tPago</string>
   <string name="sign_in_label_title">@string/welcome</string>
+
+  <!-- Unlock screen strings -->
+  <string name="unlock_button">@string/unlock</string>
+  <string name="unlock_input_hint_password">@string/password</string>
+  <string name="unlock_label_title">¡Bienvenido, %1$s!</string>
 
   <!-- Deprecated strings -->
   <string name="about">Acerca de</string>

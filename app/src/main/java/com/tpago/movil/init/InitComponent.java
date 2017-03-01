@@ -7,6 +7,8 @@ import com.tpago.movil.init.register.RegisterComponent;
 import com.tpago.movil.init.register.RegisterModule;
 import com.tpago.movil.init.signin.SignInFragment;
 import com.tpago.movil.init.signin.SignInPresenter;
+import com.tpago.movil.init.unlock.UnlockFragment;
+import com.tpago.movil.init.unlock.UnlockPresenter;
 
 import dagger.Subcomponent;
 
@@ -25,7 +27,12 @@ public interface InitComponent {
   void inject(PhoneNumberFormPresenter presenter);
 
   void inject(IntroFragment fragment);
+
   void inject(OnboardingFragment fragment);
+
   void inject(SignInFragment fragment);
   void inject(SignInPresenter presenter);
+
+  void inject(UnlockFragment fragment);
+  void inject(UnlockPresenter presenter);
 }
