@@ -121,6 +121,16 @@
     <item name="colorPrimaryDark">@color/load_indicator_full_size_primary_dark</item>
   </style>
 
+  <style name="Base.Widget.TabLayout" parent="Widget.Design.TabLayout"/>
+  <style name="Base.Widget.TabLayout.Dark">
+    <item name="android:clickable">false</item>
+    <item name="android:layout_height">16dp</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="tabBackground">@drawable/widget_tab_layout_indicator</item>
+    <item name="tabGravity">center</item>
+    <item name="tabIndicatorHeight">0dp</item>
+  </style>
+
   <style name="Base.Dialog"/>
   <style name="Base.Dialog.Label">
     <item name="android:gravity">center_vertical</item>
@@ -172,6 +182,8 @@
   <style name="Widget.NumPad.Light" parent="Base.Widget.NumPad.Light"/>
 
   <style name="Widget.FullSizeLoadIndicator.Light" parent="Base.Widget.FullSizeLoadIndicator.Light"/>
+
+  <style name="Widget.TabLayout.Dark" parent="Base.Widget.TabLayout.Dark"/>
 
   <style name="Dialog.Label.Action" parent="Base.Dialog.Label.Action"/>
   <style name="Dialog.Label.Message" parent="Base.Dialog.Label.Message"/>

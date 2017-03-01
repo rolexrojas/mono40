@@ -34,15 +34,14 @@ public final class InitFragment extends BaseInitFragment {
   }
 
   private void resolve() {
+    userStore.clear();
     if (!userStore.isSet()) {
-      logoAnimator.moveAndScale();
       fragmentReplacer.begin(IntroFragment.create())
         .setTransition(FragmentReplacer.Transition.SRFO)
         .commit();
     } else if (!sessionBuilder.canBuild()) {
       // TODO: Sign in.
     } else {
-      logoAnimator.start();
       // TODO: Initial load.
     }
   }
@@ -73,7 +72,6 @@ public final class InitFragment extends BaseInitFragment {
   @Override
   public void onResume() {
     super.onResume();
-    logoAnimator.reset();
     final Context context = getContext();
     if (Permissions.checkIfGranted(context, Manifest.permission.READ_PHONE_STATE)
       && Permissions.checkIfGranted(context, Manifest.permission.READ_SMS)) {

@@ -12,6 +12,7 @@
   <string name="next">Continuar</string>
   <string name="ok">Ok</string>
   <string name="password">Contraseña</string>
+  <string name="skip">Saltar</string>
   <string name="start">Comenzar</string>
   <string name="using">Usando &#8230;</string>
 
@@ -79,6 +80,17 @@
   <string name="register_summary_button_later">@string/later</string>
   <string name="register_summary_label_description">Empecemos con mostrarte lo más básico de la nueva App</string>
   <string name="register_summary_label_title">¡tPago esta listo!</string>
+  
+  <!-- Onboarding strings -->
+  <string name="onboarding_button_skip">@string/skip</string>
+  <string name="onboarding_first_label_description">Envia dinero o recargas minutos a tu familia y amigos. ¡Además pagas facturas en segundos!</string>
+  <string name="onboarding_first_label_title">Paga más rápido</string>
+  <string name="onboarding_fourth_label_description">En Comprar, configura tus cuentas para usar con Tocar y Pagar. Es la forma más rápida de pagar en comercios.</string>
+  <string name="onboarding_fourth_label_title">Tocar y pagar</string>
+  <string name="onboarding_second_label_description">Toca arriba para agregar amigos. Utiliza tus contactos para agregar a las personas más rapido.</string>
+  <string name="onboarding_second_label_title">Agrega amigos</string>
+  <string name="onboarding_third_label_description">Encuentra todo desde el menú. Consulta cuánto dinero tienes en tus cuentas, ajustas, buscas ayuda y más.</string>
+  <string name="onboarding_third_label_title">Abre el menú</string>
 
   <!-- Deprecated strings -->
   <string name="about">Acerca de</string>

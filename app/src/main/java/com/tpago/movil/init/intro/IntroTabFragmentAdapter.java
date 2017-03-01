@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.tpago.movil.R;
-import com.tpago.movil.util.Preconditions;
 
 /**
  * @author hecvasro
@@ -17,12 +16,7 @@ final class IntroTabFragmentAdapter extends FragmentPagerAdapter {
   private final int[] titles;
   private final int[] descriptions;
 
-  static IntroTabFragmentAdapter create(FragmentManager fragmentManager) {
-    return new IntroTabFragmentAdapter(
-      Preconditions.checkNotNull(fragmentManager, "fragmentManager == null"));
-  }
-
-  private IntroTabFragmentAdapter(FragmentManager fragmentManager) {
+  IntroTabFragmentAdapter(FragmentManager fragmentManager) {
     super(fragmentManager);
     arts = new int[COUNT];
     titles = new int[] {

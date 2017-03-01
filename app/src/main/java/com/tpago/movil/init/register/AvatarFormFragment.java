@@ -71,7 +71,7 @@ public final class AvatarFormFragment extends BaseRegisterFragment {
     LayoutInflater inflater,
     @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_register_form_profile_picture, container, false);
+    return inflater.inflate(R.layout.fragment_register_form_avatar, container, false);
   }
 
   @Override

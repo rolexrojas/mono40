@@ -1,4 +1,4 @@
-package com.tpago.movil.init.intro;
+package com.tpago.movil.init.onboarding;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,8 +12,7 @@ import com.tpago.movil.R;
 import com.tpago.movil.app.ActivityQualifier;
 import com.tpago.movil.app.FragmentReplacer;
 import com.tpago.movil.init.BaseInitFragment;
-import com.tpago.movil.init.LogoAnimator;
-import com.tpago.movil.init.register.RegisterFragment;
+import com.tpago.movil.init.InitFragment;
 import com.tpago.movil.widget.AutoTabSwitcher;
 
 import javax.inject.Inject;
@@ -26,33 +25,23 @@ import butterknife.Unbinder;
 /**
  * @author hecvasro
  */
-public final class IntroFragment extends BaseInitFragment {
+public final class OnboardingFragment extends BaseInitFragment {
   private Unbinder unbinder;
   private AutoTabSwitcher autoTabSwitcher;
 
-  @Inject LogoAnimator logoAnimator;
   @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
 
-  @BindView(R.id.view_pager) ViewPager viewPager;
   @BindView(R.id.tab_layout) TabLayout tabLayout;
+  @BindView(R.id.view_pager) ViewPager viewPager;
 
-  public static IntroFragment create() {
-    return new IntroFragment();
+  public static OnboardingFragment create() {
+    return new OnboardingFragment();
   }
 
-  @OnClick(R.id.button_start)
-  void onStartButtonClicked() {
-    fragmentReplacer.begin(RegisterFragment.create())
-      .addToBackStack()
-      .setTransition(FragmentReplacer.Transition.SRFO)
+  @OnClick(R.id.button_skip)
+  void onSkipButtonClicked() {
+    fragmentReplacer.begin(InitFragment.create())
       .commit();
-  }
-
-  @Override
-  public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    // Injects all annotated dependencies.
-    getInitComponent().inject(this);
   }
 
   @Nullable
@@ -61,7 +50,7 @@ public final class IntroFragment extends BaseInitFragment {
     LayoutInflater inflater,
     @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_intro, container, false);
+    return inflater.inflate(R.layout.fragment_onboarding, container, false);
   }
 
   @Override
@@ -70,7 +59,7 @@ public final class IntroFragment extends BaseInitFragment {
     // Binds all the annotated resources, views and methods.
     unbinder = ButterKnife.bind(this, view);
     // Initializes the view pager and the tab layout.
-    viewPager.setAdapter(new IntroTabFragmentAdapter(getChildFragmentManager()));
+    viewPager.setAdapter(new OnboardingTabFragmentAdapter(getChildFragmentManager()));
     tabLayout.setupWithViewPager(viewPager);
     // Creates the automatic tab switcher.
     autoTabSwitcher = new AutoTabSwitcher(viewPager);
@@ -79,16 +68,12 @@ public final class IntroFragment extends BaseInitFragment {
   @Override
   public void onResume() {
     super.onResume();
-    // Moves the logo back to the screen.
-    logoAnimator.moveTopAndScaleDown();
-    // Starts the automatic tab switcher.
     autoTabSwitcher.start();
   }
 
   @Override
   public void onPause() {
     super.onPause();
-    // Stops the automatic tab switcher.
     autoTabSwitcher.stop();
   }
 

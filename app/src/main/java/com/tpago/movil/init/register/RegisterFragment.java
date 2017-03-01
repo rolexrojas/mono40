@@ -13,6 +13,7 @@ import com.tpago.movil.app.FragmentBackEventHandler;
 import com.tpago.movil.app.FragmentQualifier;
 import com.tpago.movil.app.FragmentReplacer;
 import com.tpago.movil.init.BaseInitFragment;
+import com.tpago.movil.init.LogoAnimator;
 
 import javax.inject.Inject;
 
@@ -27,6 +28,7 @@ public final class RegisterFragment extends BaseInitFragment implements Register
   @Inject Avatar avatar;
 
   @Inject BackEventHandler backEventHandler;
+  @Inject LogoAnimator logoAnimator;
   @Inject @FragmentQualifier FragmentReplacer fragmentReplacer;
 
   public static RegisterFragment create() {
@@ -62,6 +64,13 @@ public final class RegisterFragment extends BaseInitFragment implements Register
       .commit();
     // Clears the avatar, if needed.
     avatar.clear();
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    // Moves the logo out of the screen.
+    logoAnimator.moveOutOfScreen();
   }
 
   @Override
