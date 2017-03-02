@@ -20,14 +20,14 @@ final class IntroTabFragmentAdapter extends FragmentPagerAdapter {
     super(fragmentManager);
     arts = new int[COUNT];
     titles = new int[] {
-      R.string.intro_tab_title_welcome,
-      R.string.intro_tab_title_purchase,
-      R.string.intro_tab_title_money
+      R.string.intro_tab_title_first,
+      R.string.intro_tab_title_second,
+      R.string.intro_tab_title_third
     };
     descriptions = new int[] {
-      R.string.intro_tab_description_welcome,
-      R.string.intro_tab_description_purchase,
-      R.string.intro_tab_description_money
+      R.string.intro_tab_description_first,
+      R.string.intro_tab_description_second,
+      R.string.intro_tab_description_third
     };
   }
 

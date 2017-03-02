@@ -36,12 +36,12 @@
 
   <!-- Intro strings -->
   <string name="intro_button_start">@string/start</string>
-  <string name="intro_tab_description_money">Transfiere a tu amigo el serrucho del almuerzo o paga tu factura de luz en segundos.</string>
-  <string name="intro_tab_description_purchase">Cuando estés de compras, al pagar solo toca tu celular y listo.</string>
-  <string name="intro_tab_description_welcome">Con tPago puedes pagar, comprar y enviar dinero de manera rápida y segura.</string>
-  <string name="intro_tab_title_money">Dinero al momento</string>
-  <string name="intro_tab_title_purchase">Tocar y pagar</string>
-  <string name="intro_tab_title_welcome">¡Bienvenidos!</string>
+  <string name="intro_tab_description_first">Paga, compra, recarga y transfiere rápido y seguro.</string>
+  <string name="intro_tab_description_second">Cuando estés de compras, al pagar toca tu celular y listo.</string>
+  <string name="intro_tab_description_third">Transfiere a tu amigo el serrucho del almuerzo o paga tu factura de luz al instante.</string>
+  <string name="intro_tab_title_first">¡Bienvenidos a tPago!</string>
+  <string name="intro_tab_title_second">Tocar y pagar</string>
+  <string name="intro_tab_title_third">Pagos al instante</string>
 
   <!-- Register strings -->
   <string name="register_form_avatar_button_move_to_next_screen">@string/later</string>
