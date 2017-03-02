@@ -13,9 +13,6 @@ import com.tpago.movil.R;
  */
 public abstract class SwitchableContainerActivity<C> extends ContainerActivity<C>
   implements SwitchableContainer<C> {
-  /**
-   * TODO
-   */
   private static final String TAG_CHILD_FRAGMENT = "childFragment";
 
   @Override

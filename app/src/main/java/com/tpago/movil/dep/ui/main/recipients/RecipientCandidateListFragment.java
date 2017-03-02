@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tpago.movil.Partner;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.data.util.BinderFactory;
@@ -39,7 +40,8 @@ import rx.Observable;
  * @author hecvasro
  */
 public abstract class RecipientCandidateListFragment<P extends RecipientCandidateListPresenter>
-  extends ChildFragment<SearchOrChooseRecipientContainer> implements RecipientCandidateListScreen,
+  extends ChildFragment<SearchOrChooseRecipientContainer>
+  implements RecipientCandidateListScreen,
   ListItemHolder.OnClickListener {
   private Unbinder unbinder;
   private LoadIndicator loadIndicator;
@@ -157,6 +159,8 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
     final Object item = adapter.get(position);
     if (item instanceof Contact) {
       getContainer().onContactClicked((Contact) item);
+    } else if (item instanceof Partner) {
+      getContainer().onPartnerClicked(((Partner) item));
     }
   }
 }

@@ -2,6 +2,7 @@ package com.tpago.movil.dep.ui.main.recipients;
 
 import android.support.annotation.NonNull;
 
+import com.tpago.movil.Partner;
 import com.tpago.movil.dep.data.SchedulerProvider;
 import com.tpago.movil.dep.ui.Container;
 
@@ -13,13 +14,8 @@ import rx.Observable;
  * @author hecvasro
  */
 public interface SearchOrChooseRecipientContainer extends Container<AddRecipientComponent> {
-  /**
-   * TODO
-   *
-   * @param contact
-   *   TODO
-   */
-  void onContactClicked(@NonNull Contact contact);
+  void onContactClicked(Contact contact);
+  void onPartnerClicked(Partner partner);
 
   /**
    * Creates an {@link Observable observable} that emits all query change events.

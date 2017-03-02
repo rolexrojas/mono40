@@ -1,7 +1,6 @@
 package com.tpago.movil.dep.ui.main.recipients;
 
-import android.support.annotation.NonNull;
-
+import com.tpago.movil.Partner;
 import com.tpago.movil.dep.ui.SwitchableContainer;
 
 /**
@@ -10,11 +9,6 @@ import com.tpago.movil.dep.ui.SwitchableContainer;
  * @author hecvasro
  */
 public interface AddRecipientContainer extends SwitchableContainer<AddRecipientComponent> {
-  /**
-   * TODO
-   *
-   * @param contact
-   *   TODO
-   */
-  void onContactClicked(@NonNull Contact contact);
+  void onContactClicked(Contact contact);
+  void onPartnerClicked(Partner partner);
 }

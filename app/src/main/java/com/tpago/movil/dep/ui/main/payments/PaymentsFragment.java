@@ -204,7 +204,9 @@ public class PaymentsFragment
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.payments_menu_option_add_recipient:
-        startActivity(AddRecipientActivity.getLaunchIntent(getContext()));
+        startActivityForResult(
+          AddRecipientActivity.getLaunchIntent(getContext()),
+          REQUEST_CODE_RECIPIENT_ADDITION);
         return true;
       case R.id.payments_menu_option_remove_recipient:
         presenter.startDeleting();

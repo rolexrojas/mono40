@@ -201,4 +201,16 @@ final class FakeDepApiBridge implements DepApiBridge {
     return Observable.just(new ApiResult<>(ApiCode.OK, partnerList, null))
       .delay(1L, TimeUnit.SECONDS);
   }
+
+  @Override
+  public Observable<ApiResult<BillRecipient>> addBill(
+    String authToken,
+    Partner partner,
+    String contractNumber) {
+    return Observable.just(new ApiResult<>(
+      ApiCode.OK,
+      new BillRecipient(partner, contractNumber),
+      null))
+      .delay(1L, TimeUnit.SECONDS);
+  }
 }

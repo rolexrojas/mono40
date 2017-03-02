@@ -10,8 +10,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import com.tpago.movil.Partner;
 import com.tpago.movil.app.App;
 import com.tpago.movil.R;
+import com.tpago.movil.dep.domain.api.DepApiBridge;
+import com.tpago.movil.dep.domain.session.SessionManager;
 import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.domain.Recipient;
 import com.tpago.movil.dep.ui.ActivityModule;
@@ -19,6 +22,7 @@ import com.tpago.movil.dep.ui.SwitchableContainerActivity;
 import com.tpago.movil.dep.ui.misc.UiUtils;
 import com.tpago.movil.dep.ui.view.widget.FullScreenLoadIndicator;
 import com.tpago.movil.dep.ui.view.widget.LoadIndicator;
+import com.tpago.movil.util.Objects;
 
 import javax.inject.Inject;
 
@@ -31,35 +35,25 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class AddRecipientActivity extends SwitchableContainerActivity<AddRecipientComponent>
-  implements AddRecipientContainer, AddRecipientScreen {
-  /**
-   * TODO
-   */
+public class AddRecipientActivity
+  extends SwitchableContainerActivity<AddRecipientComponent>
+  implements AddRecipientContainer,
+  AddRecipientScreen {
   private static final String EXTRA_RECIPIENT = "recipient";
 
   private AddRecipientComponent component;
   private Unbinder unbinder;
   private LoadIndicator loadIndicator;
 
-  @Inject
-  AddRecipientPresenter presenter;
+  @Inject SessionManager sessionManager;
+  @Inject DepApiBridge apiBridge;
+  @Inject AddRecipientPresenter presenter;
 
-  @BindView(R.id.toolbar)
-  Toolbar toolbar;
-  @BindView(R.id.container)
-  FrameLayout containerFrameLayout;
+  @BindView(R.id.toolbar) Toolbar toolbar;
+  @BindView(R.id.container) FrameLayout containerFrameLayout;
 
-  /**
-   * TODO
-   *
-   * @param recipient
-   *   TODO
-   *
-   * @return TODO
-   */
   @NonNull
-  private static Intent serializeResult(@Nullable Recipient recipient) {
+  protected static Intent serializeResult(Recipient recipient) {
     final Intent intent = new Intent();
     if (Utils.isNotNull(recipient)) {
       intent.putExtra(EXTRA_RECIPIENT, recipient);
@@ -67,33 +61,17 @@ public class AddRecipientActivity extends SwitchableContainerActivity<AddRecipie
     return intent;
   }
 
-  /**
-   * TODO
-   *
-   * @param context
-   *   {@link android.app.Activity Caller}'s context.
-   *
-   * @return TODO
-   */
   @NonNull
   public static Intent getLaunchIntent(@NonNull Context context) {
     return new Intent(context, AddRecipientActivity.class);
   }
 
-  /**
-   * TODO
-   *
-   * @param intent
-   *   TODO
-   *
-   * @return TODO
-   */
   @Nullable
   public static Recipient deserializeResult(@Nullable Intent intent) {
-    if (Utils.isNotNull(intent)) {
-      return (Recipient) intent.getSerializableExtra(EXTRA_RECIPIENT);
-    } else {
+    if (Objects.isNull(intent)) {
       return null;
+    } else {
+      return (Recipient) intent.getSerializableExtra(EXTRA_RECIPIENT);
     }
   }
 
@@ -157,8 +135,21 @@ public class AddRecipientActivity extends SwitchableContainerActivity<AddRecipie
   }
 
   @Override
-  public void onContactClicked(@NonNull Contact contact) {
+  public void onContactClicked(Contact contact) {
     presenter.add(contact);
+  }
+
+  @Override
+  public void onPartnerClicked(Partner partner) {
+    getSupportFragmentManager().beginTransaction()
+      .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+      .replace(
+        R.id.container,
+        RecipientBuilderFragment.create(
+          getString(R.string.contract).toLowerCase(),
+          new BillRecipientBuilder(sessionManager.getSession().getAuthToken(), apiBridge, partner)))
+      .addToBackStack(null)
+      .commit();
   }
 
   @Nullable

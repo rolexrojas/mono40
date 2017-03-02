@@ -12,9 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tpago.movil.Partner;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.ui.ChildFragment;
 import com.tpago.movil.dep.ui.main.recipients.contacts.ContactListFragment;
+import com.tpago.movil.dep.ui.main.recipients.partners.PartnerListFragment;
 import com.tpago.movil.dep.ui.view.widget.SearchView;
 
 import butterknife.BindView;
@@ -23,11 +25,10 @@ import butterknife.Unbinder;
 import rx.Observable;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
-public class SearchOrChooseRecipientFragment extends ChildFragment<AddRecipientContainer>
+public class SearchOrChooseRecipientFragment
+  extends ChildFragment<AddRecipientContainer>
   implements SearchOrChooseRecipientContainer {
   private Unbinder unbinder;
 
@@ -38,11 +39,6 @@ public class SearchOrChooseRecipientFragment extends ChildFragment<AddRecipientC
   @BindView(R.id.view_pager)
   ViewPager viewPager;
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
   @NonNull
   public static SearchOrChooseRecipientFragment newInstance() {
     return new SearchOrChooseRecipientFragment();
@@ -80,8 +76,13 @@ public class SearchOrChooseRecipientFragment extends ChildFragment<AddRecipientC
   }
 
   @Override
-  public void onContactClicked(@NonNull Contact contact) {
+  public void onContactClicked(Contact contact) {
     getContainer().onContactClicked(contact);
+  }
+
+  @Override
+  public void onPartnerClicked(Partner partner) {
+    getContainer().onPartnerClicked(partner);
   }
 
   @NonNull
@@ -90,9 +91,6 @@ public class SearchOrChooseRecipientFragment extends ChildFragment<AddRecipientC
     return searchView.onQueryChanged();
   }
 
-  /**
-   * TODO
-   */
   private class RecipientListAdapter extends FragmentPagerAdapter {
     RecipientListAdapter(FragmentManager fragmentManager) {
       super(fragmentManager);
@@ -100,17 +98,25 @@ public class SearchOrChooseRecipientFragment extends ChildFragment<AddRecipientC
 
     @Override
     public Fragment getItem(int position) {
-      return new ContactListFragment();
+      if (position == 0) {
+        return new PartnerListFragment();
+      } else {
+        return new ContactListFragment();
+      }
     }
 
     @Override
     public int getCount() {
-      return 1;
+      return 2;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-      return getString(R.string.contacts);
+      if (position == 0) {
+        return getString(R.string.partners);
+      } else {
+        return getString(R.string.contacts);
+      }
     }
   }
 }

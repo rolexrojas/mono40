@@ -15,9 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
-import rx.Subscription;
 import rx.functions.Func1;
-import rx.subscriptions.Subscriptions;
 
 /**
  * TODO

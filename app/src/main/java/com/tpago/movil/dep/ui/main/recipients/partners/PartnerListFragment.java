@@ -5,14 +5,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.tpago.movil.Partner;
 import com.tpago.movil.dep.data.util.BinderFactory;
 import com.tpago.movil.dep.ui.main.list.ListItemHolderCreatorFactory;
-import com.tpago.movil.dep.ui.main.recipients.Contact;
 import com.tpago.movil.dep.ui.main.recipients.RecipientCandidateListFragment;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 public class PartnerListFragment
@@ -32,14 +30,14 @@ public class PartnerListFragment
   @Override
   protected ListItemHolderCreatorFactory.Builder createHolderCreatorFactoryBuilder() {
     return new ListItemHolderCreatorFactory.Builder()
-      .addCreator(Contact.class, new PartnerListItemHolderCreator(this));
+      .addCreator(Partner.class, new PartnerListItemHolderCreator(this));
   }
 
   @NonNull
   @Override
   protected BinderFactory.Builder createHolderBinderFactoryBuilder() {
     return new BinderFactory.Builder()
-      .addBinder(Contact.class, PartnerListItemHolder.class, new PartnerListItemHolderBinder());
+      .addBinder(Partner.class, PartnerListItemHolder.class, new PartnerListItemHolderBinder());
   }
 
   @Override

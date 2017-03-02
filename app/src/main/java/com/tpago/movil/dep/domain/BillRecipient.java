@@ -41,7 +41,7 @@ public class BillRecipient extends Recipient {
   @NonNull
   @Override
   public String getIdentifier() {
-    return partner.getName();
+    return contractNumber;
   }
 
   @Override
