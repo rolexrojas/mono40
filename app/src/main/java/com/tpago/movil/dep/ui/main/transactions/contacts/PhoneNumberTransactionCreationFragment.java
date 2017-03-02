@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -143,8 +142,10 @@ public class PhoneNumberTransactionCreationFragment
       view.getLocationOnScreen(location);
       final int x = location[0] + (view.getWidth() / 2);
       final int y = location[1];
-      final String description = String.format(getString(R.string.format_transfer_to),
-        recipient.getIdentifier(), Formatter.amount(amountTextView.getPrefix().toString(), amount));
+      final String description = String.format(
+        getString(R.string.format_transfer_to),
+        Formatter.amount(amountTextView.getPrefix().toString(), amount),
+        recipient.getIdentifier());
       PinConfirmationDialogFragment.newInstance(x, y, description,
         new PinConfirmationDialogFragment.Callback() {
           @Override
