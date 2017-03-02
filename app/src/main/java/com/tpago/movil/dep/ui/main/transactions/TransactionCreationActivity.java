@@ -130,9 +130,14 @@ public class TransactionCreationActivity
           fragment = PhoneNumberTransactionCreationFragment.newInstance();
           break;
         default:
-          throw new UnsupportedOperationException("Transaction type '" + type + "' not supported");
+          fragment = null;
+          break;
       }
-      setChildFragment(fragment, false, false);
+      if (Objects.isNull(fragment)) {
+        finish();
+      } else {
+        setChildFragment(fragment, false, false);
+      }
     }
   }
 

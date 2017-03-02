@@ -16,13 +16,13 @@ import java.math.BigDecimal;
  * @author hecvasro
  */
 @AutoValue
-public abstract class TransferToRequestBody {
-  static TransferToRequestBody create(
+public abstract class TransferToAffiliatedRequestBody {
+  static TransferToAffiliatedRequestBody create(
     Product product,
     Recipient recipient,
     BigDecimal amount,
     String pin) {
-    return new AutoValue_TransferToRequestBody(
+    return new AutoValue_TransferToAffiliatedRequestBody(
       product.getAlias(),
       product.getNumber(),
       product.getType().name(),
@@ -34,8 +34,8 @@ public abstract class TransferToRequestBody {
       recipient.getLabel());
   }
 
-  public static TypeAdapter<TransferToRequestBody> typeAdapter(Gson gson) {
-    return new AutoValue_TransferToRequestBody.GsonTypeAdapter(gson);
+  public static TypeAdapter<TransferToAffiliatedRequestBody> typeAdapter(Gson gson) {
+    return new AutoValue_TransferToAffiliatedRequestBody.GsonTypeAdapter(gson);
   }
 
   @SerializedName("account-alias") abstract String getAccountAlias();

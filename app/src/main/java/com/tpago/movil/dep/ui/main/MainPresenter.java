@@ -32,6 +32,8 @@ final class MainPresenter extends Presenter<MainScreen> {
 
   private Subscription subscription = Subscriptions.unsubscribed();
 
+  private boolean alreadyAskedForActivation = false;
+
   MainPresenter(@NonNull StringHelper stringHelper, @NonNull EventBus eventBus,
     @NonNull BalanceManager balanceManager, @NonNull AppDialog.Creator screenDialogCreator,
     NfcHandler nfcHandler) {
@@ -42,59 +44,50 @@ final class MainPresenter extends Presenter<MainScreen> {
     this.nfcHandler = nfcHandler;
   }
 
-  /**
-   * TODO
-   */
   final void create() {
     assertScreen();
     balanceManager.start();
   }
 
-  /**
-   * TODO
-   */
   final void start() {
     assertScreen();
     if (nfcHandler.isAvailable()) {
-      subscription = eventBus.onEventDispatched(EventType.PRODUCT_ADDITION)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Action1<Event>() {
-          @Override
-          public void call(final Event event) {
-            screenDialogCreator.create(stringHelper.dialogProductAdditionTitle())
-              .message(stringHelper.dialogProductAdditionMessage())
-              .positiveAction(stringHelper.dialogProductAdditionPositiveAction(),
-                new AppDialog.OnActionClickedListener() {
-                  @Override
-                  public void onActionClicked(@NonNull AppDialog.Action action) {
-                    eventBus.release(event);
-                    screen.openPurchaseScreen();
-                  }
-                })
-              .negativeAction(stringHelper.dialogProductAdditionNegativeAction())
-              .build()
-              .show();
-          }
-        }, new Action1<Throwable>() {
-          @Override
-          public void call(Throwable throwable) {
-            Timber.e(throwable, "Listening to product addition events");
-          }
-        });
+      if (!alreadyAskedForActivation) {
+        subscription = eventBus.onEventDispatched(EventType.PRODUCT_ADDITION)
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(new Action1<Event>() {
+            @Override
+            public void call(final Event event) {
+              alreadyAskedForActivation = true;
+              screenDialogCreator.create(stringHelper.dialogProductAdditionTitle())
+                .message(stringHelper.dialogProductAdditionMessage())
+                .positiveAction(stringHelper.dialogProductAdditionPositiveAction(),
+                  new AppDialog.OnActionClickedListener() {
+                    @Override
+                    public void onActionClicked(@NonNull AppDialog.Action action) {
+                      eventBus.release(event);
+                      screen.openPurchaseScreen();
+                    }
+                  })
+                .negativeAction(stringHelper.dialogProductAdditionNegativeAction())
+                .build()
+                .show();
+            }
+          }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+              Timber.e(throwable, "Listening to product addition events");
+            }
+          });
+      }
     }
   }
 
-  /**
-   * TODO
-   */
   final void stop() {
     assertScreen();
     RxUtils.unsubscribe(subscription);
   }
 
-  /**
-   * TODO
-   */
   final void destroy() {
     assertScreen();
     balanceManager.stop();

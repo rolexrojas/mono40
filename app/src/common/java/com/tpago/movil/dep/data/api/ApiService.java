@@ -7,7 +7,6 @@ import com.tpago.movil.dep.domain.CreditCardBalance;
 import com.tpago.movil.dep.domain.InitialData;
 import com.tpago.movil.dep.domain.Loan;
 import com.tpago.movil.dep.domain.LoanBalance;
-import com.tpago.movil.dep.domain.Product;
 import com.tpago.movil.dep.domain.Transaction;
 
 import java.util.List;
@@ -62,8 +61,14 @@ interface ApiService {
     @Query("recipient-msisdn") String phoneNumber);
 
   @POST("transfer/gcs-gcs")
-  Observable<Response<Void>> transferTo(@Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body TransferToRequestBody body);
+  Observable<Response<TransferResponseBody>> transferToAffiliated(
+    @Header(Api.Header.AUTHORIZATION) String authToken,
+    @Body TransferToAffiliatedRequestBody body);
+
+  @POST("transfer/gcs-non")
+  Observable<Response<TransferResponseBody>> transferToNonAffiliated(
+    @Header(Api.Header.AUTHORIZATION) String authToken,
+    @Body TransferToNonAffiliatedRequestBody body);
 
   @POST("payments/change-default-account")
   Observable<Response<Void>> setDefaultPaymentOption(

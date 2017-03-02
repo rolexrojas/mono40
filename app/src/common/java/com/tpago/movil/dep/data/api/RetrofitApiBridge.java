@@ -5,7 +5,9 @@ import android.support.annotation.NonNull;
 import com.tpago.movil.Partner;
 import com.tpago.movil.dep.domain.Balance;
 import com.tpago.movil.Bank;
+import com.tpago.movil.dep.domain.BillRecipient;
 import com.tpago.movil.dep.domain.InitialData;
+import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.dep.domain.Product;
 import com.tpago.movil.dep.domain.ProductCategory;
 import com.tpago.movil.dep.domain.Recipient;
@@ -195,22 +197,27 @@ class RetrofitApiBridge implements DepApiBridge {
 
   @NonNull
   @Override
-  public Observable<ApiResult<Boolean>> transferTo(
+  public Observable<ApiResult<String>> transferTo(
     @NonNull String authToken,
     @NonNull Product product,
     @NonNull Recipient recipient,
     @NonNull BigDecimal amount,
     @NonNull String pin) {
-    return apiService.transferTo(
-      authToken,
-      TransferToRequestBody.create(product, recipient, amount, pin))
-      .flatMap(new Func1<Response<Void>, Observable<ApiResult<Boolean>>>() {
-        @Override
-        public Observable<ApiResult<Boolean>> call(Response<Void> response) {
-          final ApiCode code = ApiCode.fromValue(response.code());
-          return Observable.just(new ApiResult<>(code, code.equals(ApiCode.OK), null));
-        }
-      });
+    final Observable<Response<TransferResponseBody>> observable;
+    if (recipient instanceof NonAffiliatedPhoneNumberRecipient) {
+      observable = apiService.transferToNonAffiliated(
+        authToken,
+        TransferToNonAffiliatedRequestBody.create(
+          product,
+          ((NonAffiliatedPhoneNumberRecipient) recipient),
+          pin,
+          amount));
+    } else {
+      observable = apiService.transferToAffiliated(
+        authToken,
+        TransferToAffiliatedRequestBody.create(product, recipient, amount, pin));
+    }
+    return observable.flatMap(mapToApiResult(TransferResponseBody.mapFunc()));
   }
 
   @NonNull
@@ -243,5 +250,16 @@ class RetrofitApiBridge implements DepApiBridge {
   public Observable<ApiResult<List<Partner>>> partners(String authToken) {
     return apiService.partners(authToken)
       .flatMap(mapToApiResult(PartnerListRequestResponse.mapFunc()));
+  }
+
+  @Override
+  public Observable<ApiResult<BillRecipient>> addBill(
+    String authToken,
+    Partner partner,
+    String contractNumber) {
+    return Observable.just(new ApiResult<>(
+      ApiCode.OK,
+      new BillRecipient(partner, contractNumber),
+      null));
   }
 }
