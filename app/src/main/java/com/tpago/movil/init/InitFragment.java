@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 
@@ -15,7 +14,6 @@ import com.tpago.movil.User;
 import com.tpago.movil.UserStore;
 import com.tpago.movil.app.ActivityQualifier;
 import com.tpago.movil.app.FragmentReplacer;
-import com.tpago.movil.app.PermissionRequestResult;
 import com.tpago.movil.app.Permissions;
 import com.tpago.movil.dep.domain.InitialDataLoader;
 import com.tpago.movil.dep.domain.session.SessionRepo;
@@ -50,6 +48,8 @@ public final class InitFragment extends BaseInitFragment {
   @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
 
   @Inject LogoAnimator logoAnimator;
+
+  private boolean werePermissionsRequested = false;
 
   public static InitFragment create() {
     return new InitFragment();
@@ -114,22 +114,6 @@ public final class InitFragment extends BaseInitFragment {
   }
 
   @Override
-  public void onRequestPermissionsResult(
-    int requestCode,
-    @NonNull String[] permissions,
-    @NonNull int[] results) {
-    super.onRequestPermissionsResult(requestCode, permissions, results);
-    final PermissionRequestResult result = PermissionRequestResult.create(permissions, results);
-    if (requestCode == REQUEST_CODE_PHONE) {
-      if (result.isSuccessful()) {
-        resolve();
-      } else {
-        // TODO: Let the user know that those permissions are required.
-      }
-    }
-  }
-
-  @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // Injects all annotated dependencies.
@@ -143,12 +127,15 @@ public final class InitFragment extends BaseInitFragment {
     if (Permissions.checkIfGranted(context, Manifest.permission.READ_PHONE_STATE)
       && Permissions.checkIfGranted(context, Manifest.permission.READ_SMS)) {
       resolve();
-    } else {
+    } else if (!werePermissionsRequested) {
+      werePermissionsRequested = true;
       Permissions.requestPermissions(
         this,
         REQUEST_CODE_PHONE,
         Manifest.permission.READ_PHONE_STATE,
         Manifest.permission.READ_SMS);
+    } else {
+      // TODO: Let the user know that those permissions are required.
     }
   }
 
