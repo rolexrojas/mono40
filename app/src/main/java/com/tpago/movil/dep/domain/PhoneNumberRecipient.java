@@ -3,6 +3,7 @@ package com.tpago.movil.dep.domain;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.tpago.movil.*;
 import com.tpago.movil.dep.domain.util.StringUtils;
 import com.tpago.movil.text.Texts;
 
@@ -43,7 +44,7 @@ public class PhoneNumberRecipient extends Recipient {
   @NonNull
   @Override
   public String getIdentifier() {
-    return phoneNumber;
+    return com.tpago.movil.PhoneNumber.format(phoneNumber);
   }
 
   @Override

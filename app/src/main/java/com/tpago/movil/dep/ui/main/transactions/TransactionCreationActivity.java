@@ -133,9 +133,6 @@ public class TransactionCreationActivity
         case NON_AFFILIATED_PHONE_NUMBER:
           fragment = PhoneNumberTransactionCreationFragment.newInstance();
           break;
-        case CONTACT:
-          fragment = PhoneNumberTransactionCreationFragment.newInstance();
-          break;
         default:
           throw new UnsupportedOperationException("Transaction type '" + type + "' not supported");
       }

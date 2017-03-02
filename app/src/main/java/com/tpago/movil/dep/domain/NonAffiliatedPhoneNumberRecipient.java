@@ -3,7 +3,7 @@ package com.tpago.movil.dep.domain;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.tpago.movil.Bank;
+import com.tpago.movil.*;
 import com.tpago.movil.text.Texts;
 import com.tpago.movil.util.Objects;
 
@@ -76,6 +76,6 @@ public class NonAffiliatedPhoneNumberRecipient extends Recipient {
   @NonNull
   @Override
   public String getIdentifier() {
-    return phoneNumber;
+    return com.tpago.movil.PhoneNumber.format(phoneNumber);
   }
 }

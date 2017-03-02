@@ -78,20 +78,9 @@ final class FakeApiBridge implements ApiBridge {
     return Single.defer(new Callable<SingleSource<? extends HttpResult<ApiData<String>>>>() {
       @Override
       public SingleSource<? extends HttpResult<ApiData<String>>> call() throws Exception {
-        final List<Digit> dL = Digits.getDigits(phoneNumber);
-        final int v = dL.get(dL.size() - 1).getValue();
-        final HttpCode c;
-        final ApiData<String> d;
-        if (v % 2 == 0) {
-          c = HttpCode.OK;
-          d = ApiData.create(UUID.randomUUID().toString());
-        } else {
-          c = HttpCode.BAD_REQUEST;
-          d = ApiData.create(ApiError.create(
-            ApiError.Code.ALREADY_ASSOCIATED_DEVICE,
-            "Already associated device"));
-        }
-        return Single.just(HttpResult.create(c, d));
+        return Single.just(HttpResult.create(
+          HttpCode.OK,
+          ApiData.create(UUID.randomUUID().toString())));
       }
     })
       .delay(1L, TimeUnit.SECONDS);

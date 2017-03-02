@@ -5,7 +5,6 @@ import com.tpago.movil.dep.DepQualifier;
 import com.tpago.movil.dep.domain.Account;
 import com.tpago.movil.dep.domain.AccountBalance;
 import com.tpago.movil.dep.domain.Balance;
-import com.tpago.movil.dep.domain.ContactRecipient;
 import com.tpago.movil.dep.domain.CreditCard;
 import com.tpago.movil.dep.domain.CreditCardBalance;
 import com.tpago.movil.dep.domain.InitialData;
@@ -49,7 +48,6 @@ public class ApiModule {
       .registerTypeAdapter(LoanBalance.class, new BalanceTypeAdapter())
       .registerTypeAdapter(Recipient.class, new RecipientTypeAdapter())
       .registerTypeAdapter(PhoneNumberRecipient.class, new RecipientTypeAdapter())
-      .registerTypeAdapter(ContactRecipient.class, new RecipientTypeAdapter())
       .create();
   }
 }

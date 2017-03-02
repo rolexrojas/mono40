@@ -7,7 +7,6 @@ import com.tpago.movil.Partner;
 import com.tpago.movil.dep.domain.AccountBalance;
 import com.tpago.movil.dep.domain.Balance;
 import com.tpago.movil.dep.domain.BillRecipient;
-import com.tpago.movil.dep.domain.ContactRecipient;
 import com.tpago.movil.dep.domain.CreditCardBalance;
 import com.tpago.movil.dep.domain.InitialData;
 import com.tpago.movil.dep.domain.LoanBalance;
@@ -95,8 +94,6 @@ final class FakeDepApiBridge implements DepApiBridge {
     rt = new PhoneNumberRecipient("8098829887", "Hector Vasquez");
     recipientList.add(rt);
     rt = new NonAffiliatedPhoneNumberRecipient("8092817626", "Luis Ruiz", bk, "2000");
-    recipientList.add(rt);
-    rt = new ContactRecipient("8098779269", "Diego Mena");
     recipientList.add(rt);
     rt = new BillRecipient(pr, "AUTO-000");
     recipientList.add(rt);
