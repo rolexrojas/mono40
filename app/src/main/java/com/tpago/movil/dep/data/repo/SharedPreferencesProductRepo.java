@@ -32,10 +32,6 @@ final class SharedPreferencesProductRepo implements ProductRepo {
     this.indexSet = this.sharedPreferences.getStringSet(KEY_INDEX, new HashSet<String>());
   }
 
-  private static String getProductKey(Product product) {
-    return Integer.toString(product.hashCode());
-  }
-
   @NonNull
   @Override
   public Observable<Product> save(@NonNull Product product) {
@@ -43,7 +39,7 @@ final class SharedPreferencesProductRepo implements ProductRepo {
       .doOnNext(new Action1<Product>() {
         @Override
         public void call(Product product) {
-          final String productKey = getProductKey(product);
+          final String productKey = product.getId();
           if (!indexSet.contains(productKey)) {
             indexSet.add(productKey);
           }
@@ -62,7 +58,7 @@ final class SharedPreferencesProductRepo implements ProductRepo {
       .doOnNext(new Action1<Product>() {
         @Override
         public void call(Product product) {
-          final String productKey = getProductKey(product);
+          final String productKey = product.getId();
           if (indexSet.contains(productKey)) {
             indexSet.remove(productKey);
           }

@@ -3,6 +3,8 @@ package com.tpago.movil.dep.data.api;
 import android.text.TextUtils;
 
 import com.tpago.movil.Bank;
+import com.tpago.movil.Partner;
+import com.tpago.movil.dep.domain.BillRecipient;
 import com.tpago.movil.dep.domain.ContactRecipient;
 import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.dep.domain.PhoneNumberRecipient;
@@ -29,6 +31,8 @@ class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSerialize
   private static final String PROPERTY_PHONE_NUMBER = "phoneNumber";
   private static final String PROPERTY_BANK = "bank";
   private static final String PROPERTY_ACCOUNT_NUMBER = "accountNumber";
+  private static final String PROPERTY_PARTNER = "partner";
+  private static final String PROPERTY_CONTRACT_NUMBER = "contractNumber";
 
   @Override
   public Recipient deserialize(
@@ -64,6 +68,16 @@ class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSerialize
         accountNumber = jo.get(PROPERTY_ACCOUNT_NUMBER).getAsString();
       }
       return new NonAffiliatedPhoneNumberRecipient(phoneNumber, label, bank, accountNumber);
+    } else if (type.equals(RecipientType.BILL)) {
+      if (!jo.has(PROPERTY_PARTNER)) {
+        throw new JsonParseException("Property '" + PROPERTY_PARTNER + "' is missing");
+      }
+      final Partner partner = context.deserialize(jo.get(PROPERTY_PARTNER), Partner.class);
+      if (!jo.has(PROPERTY_CONTRACT_NUMBER)) {
+        throw new JsonParseException("Property '" + PROPERTY_CONTRACT_NUMBER + "' is missing");
+      }
+      final String contractNumber = jo.get(PROPERTY_CONTRACT_NUMBER).getAsString();
+      return new BillRecipient(partner, contractNumber, label);
     } else {
       if (!jo.has(PROPERTY_PHONE_NUMBER)) {
         throw new JsonParseException("Property '" + PROPERTY_PHONE_NUMBER + "' is missing");
@@ -93,6 +107,10 @@ class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSerialize
       if (Texts.isNotEmpty(r.getAccountNumber())) {
         jsonObject.addProperty(PROPERTY_ACCOUNT_NUMBER, r.getAccountNumber());
       }
+    } else if (type.equals(RecipientType.BILL)) {
+      final BillRecipient r = (BillRecipient) src;
+      jsonObject.add(PROPERTY_PARTNER, context.serialize(r.getPartner()));
+      jsonObject.addProperty(PROPERTY_CONTRACT_NUMBER, r.getContractNumber());
     } else {
       final ContactRecipient r = (ContactRecipient) src;
       jsonObject.addProperty(PROPERTY_PHONE_NUMBER, r.getIdentifier());

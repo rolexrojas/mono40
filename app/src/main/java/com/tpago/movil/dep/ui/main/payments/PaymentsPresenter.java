@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
+import com.tpago.movil.UserStore;
 import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.domain.PhoneNumber;
 import com.tpago.movil.dep.domain.ProductManager;
@@ -49,6 +50,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   private final SessionManager sessionManager;
   private final ProductManager productManager;
   private final PosBridge posBridge;
+  private final UserStore userStore;
 
   private boolean deleting = false;
   private List<Recipient> selectedRecipients = new ArrayList<>();
@@ -62,13 +64,14 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   PaymentsPresenter(@NonNull StringHelper stringHelper,
     @NonNull SchedulerProvider schedulerProvider, @NonNull RecipientManager recipientManager,
     @NonNull SessionManager sessionManager, @NonNull ProductManager productManager,
-    PosBridge posBridge) {
+    PosBridge posBridge, UserStore userStore) {
     this.stringHelper = stringHelper;
     this.schedulerProvider = schedulerProvider;
     this.recipientManager = recipientManager;
     this.sessionManager = sessionManager;
     this.productManager = productManager;
     this.posBridge = posBridge;
+    this.userStore = userStore;
   }
 
   /**
@@ -323,7 +326,8 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
             sessionManager.deactivate();
             productManager.clear();
             recipientManager.clear();
-            screen.openIndexScreen();
+            userStore.clear();
+            screen.openInitScreen();
             screen.finish();
           } else {
             screen.showMessage(result.getData());

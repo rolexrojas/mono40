@@ -35,10 +35,6 @@ class SharedPreferencesRecipientRepo implements RecipientRepo {
     this.indexSet = this.sharedPreferences.getStringSet(KEY_INDEX, new HashSet<String>());
   }
 
-  private static String getRecipientKey(Recipient recipient) {
-    return Integer.toString(recipient.hashCode());
-  }
-
   /**
    * {@inheritDoc}
    */
@@ -71,7 +67,7 @@ class SharedPreferencesRecipientRepo implements RecipientRepo {
       .doOnNext(new Action1<Recipient>() {
         @Override
         public void call(Recipient recipient) {
-          final String recipientKey = getRecipientKey(recipient);
+          final String recipientKey = recipient.getId();
           if (!indexSet.contains(recipientKey)) {
             indexSet.add(recipientKey);
           }
@@ -96,7 +92,7 @@ class SharedPreferencesRecipientRepo implements RecipientRepo {
           return save(recipient);
         }
       })
-      .compose(Recipient.toSortedListByIdentifier());
+      .toList();
   }
 
   @Override
@@ -105,7 +101,7 @@ class SharedPreferencesRecipientRepo implements RecipientRepo {
       .doOnNext(new Action1<Recipient>() {
         @Override
         public void call(Recipient recipient) {
-          final String recipientKey = getRecipientKey(recipient);
+          final String recipientKey = recipient.getId();
           if (indexSet.contains(recipientKey)) {
             indexSet.remove(recipientKey);
           }

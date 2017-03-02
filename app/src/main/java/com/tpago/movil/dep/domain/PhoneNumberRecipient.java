@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.tpago.movil.dep.domain.util.StringUtils;
-import com.tpago.movil.dep.misc.Utils;
+import com.tpago.movil.text.Texts;
 
 /**
  * Phone number recipient representation.
@@ -35,23 +35,15 @@ public class PhoneNumberRecipient extends Recipient {
     return phoneNumber;
   }
 
+  @Override
+  public String getId() {
+    return Texts.join("-", getType(), phoneNumber);
+  }
+
   @NonNull
   @Override
   public String getIdentifier() {
     return phoneNumber;
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    return super.equals(object) || (Utils.isNotNull(object)
-      && object instanceof PhoneNumberRecipient
-      && ((PhoneNumberRecipient) object).getType().equals(getType())
-      && ((PhoneNumberRecipient) object).phoneNumber.equals(phoneNumber));
-  }
-
-  @Override
-  public int hashCode() {
-    return Utils.hashCode(getType(), phoneNumber);
   }
 
   @Override

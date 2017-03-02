@@ -9,6 +9,6 @@ import com.ryanharter.auto.value.gson.GsonTypeAdapterFactory;
 @GsonTypeAdapterFactory
 public abstract class AppTypeAdapterFactory implements TypeAdapterFactory {
   public static AppTypeAdapterFactory create() {
-    return null;
+    return new AutoValueGson_AppTypeAdapterFactory();
   }
 }

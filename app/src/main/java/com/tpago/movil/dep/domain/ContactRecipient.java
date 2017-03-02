@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.tpago.movil.dep.domain.util.StringUtils;
 import com.tpago.movil.dep.misc.Utils;
+import com.tpago.movil.text.Texts;
 
 /**
  * TODO
@@ -24,23 +25,15 @@ public class ContactRecipient extends Recipient {
     this.phoneNumber = phoneNumber;
   }
 
+  @Override
+  public String getId() {
+    return Texts.join("-", getType(), phoneNumber);
+  }
+
   @NonNull
   @Override
   public String getIdentifier() {
     return phoneNumber;
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    return super.equals(object) || (Utils.isNotNull(object)
-      && object instanceof ContactRecipient
-      && ((ContactRecipient) object).getType().equals(getType())
-      && ((ContactRecipient) object).phoneNumber.equals(phoneNumber));
-  }
-
-  @Override
-  public int hashCode() {
-    return Utils.hashCode(getType(), phoneNumber);
   }
 
   @Override

@@ -74,6 +74,8 @@ public abstract class Recipient implements Serializable, Matchable {
     };
   }
 
+  public abstract String getId();
+
   /**
    * Gets the {@link RecipientType type} of the recipient.
    *
@@ -118,6 +120,16 @@ public abstract class Recipient implements Serializable, Matchable {
 
   public void setSelected(boolean selected) {
     this.selected = selected;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return o != null && o instanceof Recipient && ((Recipient) o).getId().equals(getId());
+  }
+
+  @Override
+  public int hashCode() {
+    return getId().hashCode();
   }
 
   @Override

@@ -7,6 +7,7 @@ import android.support.v4.util.Pair;
 import com.tpago.movil.dep.domain.api.DepApiBridge;
 import com.tpago.movil.dep.domain.api.ApiUtils;
 import com.tpago.movil.dep.domain.session.SessionManager;
+import com.tpago.movil.dep.misc.rx.RxUtils;
 import com.tpago.movil.dep.ui.main.recipients.Contact;
 
 import java.util.List;
@@ -113,21 +114,21 @@ public final class RecipientManager implements RecipientProvider {
   @NonNull
   @Override
   public Observable<List<Recipient>> getAll(@Nullable final String query) {
-    return apiBridge.recipients(sessionManager.getSession().getAuthToken())
-      .compose(ApiUtils.<List<Recipient>>handleApiResult(true))
-      .flatMap(new Func1<List<Recipient>, Observable<List<Recipient>>>() {
-        @Override
-        public Observable<List<Recipient>> call(List<Recipient> recipients) {
-          return syncRecipients(recipients)
-            .flatMap(new Func1<List<Recipient>, Observable<List<Recipient>>>() {
-              @Override
-              public Observable<List<Recipient>> call(List<Recipient> recipients) {
-                return recipientRepo.getAll(query);
-              }
-            });
-        }
-      })
-      .onErrorResumeNext(recipientRepo.getAll(query));
+    return Observable.concat(
+      recipientRepo.getAll(query)
+        .compose(RxUtils.<Recipient>fromCollection()),
+      apiBridge.recipients(sessionManager.getSession().getAuthToken())
+        .compose(ApiUtils.<List<Recipient>>handleApiResult(true))
+        .compose(RxUtils.<Recipient>fromCollection())
+        .flatMap(new Func1<Recipient, Observable<Recipient>>() {
+          @Override
+          public Observable<Recipient> call(Recipient recipient) {
+            return recipientRepo.save(recipient);
+          }
+        }))
+      .onErrorResumeNext(recipientRepo.getAll(query).compose(RxUtils.<Recipient>fromCollection()))
+      .distinct()
+      .compose(Recipient.toSortedListByIdentifier());
   }
 
   public final Observable<List<Recipient>> remove(List<Recipient> recipients) {

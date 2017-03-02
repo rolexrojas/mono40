@@ -54,7 +54,7 @@ interface PaymentsScreen extends Screen {
 
   void startTransfer(@NonNull String phoneNumber, boolean isAffiliated);
 
-  void openIndexScreen();
+  void openInitScreen();
   void finish();
   void setDeleting(boolean deleting);
   void startTransfer(Recipient recipient);

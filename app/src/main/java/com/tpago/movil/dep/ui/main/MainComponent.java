@@ -2,6 +2,7 @@ package com.tpago.movil.dep.ui.main;
 
 import android.content.Context;
 
+import com.tpago.movil.UserStore;
 import com.tpago.movil.app.AppComponent;
 import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.data.SchedulerProvider;
@@ -41,4 +42,5 @@ public interface MainComponent extends ActivityComponent {
   RecipientManager provideRecipientManager();
   SchedulerProvider provideSchedulerProvider();
   StringHelper provideMessageHelper();
+  UserStore provideUserStore();
 }

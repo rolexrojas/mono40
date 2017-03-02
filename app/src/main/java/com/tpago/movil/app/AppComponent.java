@@ -3,6 +3,7 @@ package com.tpago.movil.app;
 import android.content.Context;
 
 import com.tpago.movil.AvatarCreationDialogFragment;
+import com.tpago.movil.UserStore;
 import com.tpago.movil.dep.DepAppModule;
 import com.tpago.movil.api.ApiModule;
 import com.tpago.movil.dep.data.DepDataModule;
@@ -67,4 +68,5 @@ public interface AppComponent {
   StringHelper provideStringHelper();
   TransactionManager provideTransactionManager();
   TransactionRepo provideTransactionRepo();
+  UserStore provideUserStore();
 }

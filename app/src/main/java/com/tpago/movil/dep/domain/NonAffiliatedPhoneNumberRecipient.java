@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.tpago.movil.Bank;
-import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.text.Texts;
 import com.tpago.movil.util.Objects;
 
@@ -40,7 +39,7 @@ public class NonAffiliatedPhoneNumberRecipient extends Recipient {
     return phoneNumber;
   }
 
-  public boolean canBeTransferedTo() {
+  public boolean canBeTransferTo() {
     return Objects.isNotNull(bank) && Texts.isNotEmpty(accountNumber);
   }
 
@@ -61,22 +60,17 @@ public class NonAffiliatedPhoneNumberRecipient extends Recipient {
   }
 
   @Override
-  public boolean equals(Object object) {
-    return super.equals(object) || (Objects.isNotNull(object)
-      && object instanceof NonAffiliatedPhoneNumberRecipient
-      && ((NonAffiliatedPhoneNumberRecipient) object).getType().equals(getType())
-      && ((NonAffiliatedPhoneNumberRecipient) object).phoneNumber.equals(phoneNumber));
-  }
-
-  @Override
-  public int hashCode() {
-    return Utils.hashCode(getType(), phoneNumber);
-  }
-
-  @Override
   public String toString() {
     return PhoneNumberRecipient.class.getSimpleName() + ":{super=" + super.toString()
-      + ",phoneNumber='" + phoneNumber + "'}";
+      + ",phoneNumber='" + phoneNumber + "'"
+      + ",bank=" + bank.toString()
+      + ",accountNumber='" + accountNumber + "'"
+      + "}";
+  }
+
+  @Override
+  public String getId() {
+    return Texts.join("-", getType(), phoneNumber, bank.getId(), accountNumber);
   }
 
   @NonNull

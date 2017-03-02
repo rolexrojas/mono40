@@ -5,11 +5,13 @@ import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * @author hecvasro
  */
 @AutoValue
-public abstract class Partner {
+public abstract class Partner implements Serializable {
   public static Partner create(int code, String id, String name, String logoUri) {
     return new AutoValue_Partner(code, id, name, logoUri);
   }

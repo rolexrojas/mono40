@@ -114,7 +114,7 @@ public interface DepApiBridge {
    * @return TODO
    */
   @NonNull
-  Observable<ApiResult<Boolean>> transferTo(@NonNull String authToken, @NonNull Product product,
+  Observable<ApiResult<String>> transferTo(@NonNull String authToken, @NonNull Product product,
     @NonNull Recipient recipient, @NonNull BigDecimal amount, @NonNull String pin);
 
   /**

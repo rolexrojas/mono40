@@ -1,5 +1,7 @@
 package com.tpago.movil.init;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -37,6 +39,10 @@ public final class InitActivity extends BaseActivity implements InitContainer {
   @BindView(R.id.view_placeholder) View placeholderView;
   @BindView(R.id.view_container) View screenContainerView;
   @BindView(R.id.logo) Logo logo;
+
+  public static Intent getLaunchIntent(Context context) {
+    return new Intent(context, InitActivity.class);
+  }
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {

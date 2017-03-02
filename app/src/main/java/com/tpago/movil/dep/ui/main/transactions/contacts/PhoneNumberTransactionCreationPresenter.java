@@ -3,6 +3,7 @@ package com.tpago.movil.dep.ui.main.transactions.contacts;
 import android.support.annotation.NonNull;
 
 import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
+import com.tpago.movil.dep.domain.api.ApiResult;
 import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.data.SchedulerProvider;
 import com.tpago.movil.dep.domain.Product;
@@ -37,8 +38,10 @@ class PhoneNumberTransactionCreationPresenter
   private Subscription paymentOptionSubscription = Subscriptions.unsubscribed();
   private Subscription paymentSubscription = Subscriptions.unsubscribed();
 
-  PhoneNumberTransactionCreationPresenter(@NonNull SchedulerProvider schedulerProvider,
-    @NonNull ProductManager productManager, @NonNull TransactionManager transactionManager,
+  PhoneNumberTransactionCreationPresenter(
+    @NonNull SchedulerProvider schedulerProvider,
+    @NonNull ProductManager productManager,
+    @NonNull TransactionManager transactionManager,
     @NonNull Recipient recipient) {
     this.schedulerProvider = schedulerProvider;
     this.productManager = productManager;
@@ -51,8 +54,8 @@ class PhoneNumberTransactionCreationPresenter
     if (shouldBeClosed) {
       screen.finish();
     } else {
-      if (recipient instanceof NonAffiliatedPhoneNumberRecipient
-        && ((NonAffiliatedPhoneNumberRecipient) recipient).canBeTransferedTo()) {
+      if (!(recipient instanceof NonAffiliatedPhoneNumberRecipient)
+        || ((NonAffiliatedPhoneNumberRecipient) recipient).canBeTransferTo()) {
         paymentOptionSubscription = productManager.getAllPaymentOptions()
           .subscribeOn(schedulerProvider.io())
           .observeOn(schedulerProvider.ui())
@@ -94,10 +97,10 @@ class PhoneNumberTransactionCreationPresenter
       paymentSubscription = transactionManager.transferTo(paymentOption, recipient, value, pin)
         .subscribeOn(schedulerProvider.io())
         .observeOn(schedulerProvider.ui())
-        .subscribe(new Action1<Boolean>() {
+        .subscribe(new Action1<ApiResult<String>>() {
           @Override
-          public void call(Boolean succeeded) {
-            screen.setPaymentResult(succeeded);
+          public void call(ApiResult<String> result) {
+            screen.setPaymentResult(result.isSuccessful());
           }
         }, new Action1<Throwable>() {
           @Override

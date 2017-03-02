@@ -150,7 +150,13 @@ public final class ProductManager implements ProductProvider {
 
   @Override
   public Observable<List<Product>> getAll() {
-    return productRepo.getAll();
+    return productRepo.getAll()
+      .doOnNext(new Action1<List<Product>>() {
+        @Override
+        public void call(List<Product> productList) {
+          Timber.d("productList.size() == %1$d", productList.size());
+        }
+      });
   }
 
   public void clear() {

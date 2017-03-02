@@ -23,7 +23,6 @@ import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.data.util.BinderFactory;
 import com.tpago.movil.dep.domain.Recipient;
-import com.tpago.movil.dep.ui.index.IndexActivity;
 import com.tpago.movil.dep.ui.main.MainActivity;
 import com.tpago.movil.dep.ui.misc.UiUtils;
 import com.tpago.movil.dep.ui.main.MainContainer;
@@ -41,6 +40,7 @@ import com.tpago.movil.dep.ui.view.widget.LoadIndicator;
 import com.tpago.movil.dep.ui.ChildFragment;
 import com.tpago.movil.dep.ui.view.widget.SearchView;
 import com.tpago.movil.dep.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
+import com.tpago.movil.init.InitActivity;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import javax.inject.Inject;
@@ -121,7 +121,8 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
     // Prepares the actions and recipients list.
-    final ListItemHolderCreatorFactory holderCreatorFactory = new ListItemHolderCreatorFactory.Builder()
+    final ListItemHolderCreatorFactory holderCreatorFactory = new ListItemHolderCreatorFactory
+      .Builder()
       .addCreator(Recipient.class, new RecipientListItemHolderCreator(this))
       .addCreator(Action.class, new ActionListItemHolderCreator(this))
       .addCreator(NoResultsListItemItem.class, new NoResultsListItemHolderCreator())
@@ -320,8 +321,8 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
   }
 
   @Override
-  public void openIndexScreen() {
-    startActivity(IndexActivity.getLaunchIntent(getContext()));
+  public void openInitScreen() {
+    startActivity(InitActivity.getLaunchIntent(getContext()));
   }
 
   @Override

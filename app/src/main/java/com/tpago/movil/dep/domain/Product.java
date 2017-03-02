@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.tpago.movil.Bank;
 import com.tpago.movil.dep.misc.Utils;
+import com.tpago.movil.text.Texts;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -111,6 +112,10 @@ public abstract class Product implements Serializable {
     return isPaymentOption(product) && product.isDefault;
   }
 
+  public final String getId() {
+    return Texts.join("-", bank.getId(), category, type, alias, number, currency);
+  }
+
   /**
    * Gets the {@link ProductCategory category} of the product.
    *
@@ -214,7 +219,7 @@ public abstract class Product implements Serializable {
 
   @Override
   public int hashCode() {
-    return Utils.hashCode(category, type, alias, bank);
+    return getId().hashCode();
   }
 
   @Override

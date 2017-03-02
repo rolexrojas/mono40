@@ -8,5 +8,6 @@ package com.tpago.movil.dep.domain;
 public enum RecipientType {
   PHONE_NUMBER,
   NON_AFFILIATED_PHONE_NUMBER,
+  BILL,
   CONTACT
 }

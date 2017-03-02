@@ -9,19 +9,11 @@ import com.tpago.movil.dep.ui.main.list.ListItemHolder;
 import com.tpago.movil.dep.ui.main.list.ListItemHolderCreator;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 class RecipientListItemHolderCreator implements ListItemHolderCreator<RecipientListItemHolder> {
   private final ListItemHolder.OnClickListener onClickListener;
 
-  /**
-   * TODO
-   *
-   * @param onClickListener
-   *   TODO
-   */
   RecipientListItemHolderCreator(@NonNull ListItemHolder.OnClickListener onClickListener) {
     this.onClickListener = onClickListener;
   }
