@@ -67,14 +67,7 @@ class SharedPreferencesRecipientRepo implements RecipientRepo {
       .doOnNext(new Action1<Recipient>() {
         @Override
         public void call(Recipient recipient) {
-          final String recipientKey = recipient.getId();
-          if (!indexSet.contains(recipientKey)) {
-            indexSet.add(recipientKey);
-          }
-          sharedPreferences.edit()
-            .putStringSet(KEY_INDEX, indexSet)
-            .putString(recipientKey, gson.toJson(recipient))
-            .apply();
+          saveSync(recipient);
         }
       });
   }
@@ -119,5 +112,22 @@ class SharedPreferencesRecipientRepo implements RecipientRepo {
     sharedPreferences.edit()
       .clear()
       .apply();
+  }
+
+  @Override
+  public void saveSync(Recipient recipient) {
+    final String recipientKey = recipient.getId();
+    if (!indexSet.contains(recipientKey)) {
+      indexSet.add(recipientKey);
+    }
+    sharedPreferences.edit()
+      .putStringSet(KEY_INDEX, indexSet)
+      .putString(recipientKey, gson.toJson(recipient))
+      .apply();
+  }
+
+  @Override
+  public boolean checkIfExists(Recipient recipient) {
+    return indexSet.contains(recipient.getId());
   }
 }

@@ -2,11 +2,11 @@ package com.tpago.movil.dep.ui.main.payments;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.util.Pair;
 
 import com.tpago.movil.UserStore;
 import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.domain.PhoneNumber;
+import com.tpago.movil.dep.domain.PhoneNumberRecipient;
 import com.tpago.movil.dep.domain.ProductManager;
 import com.tpago.movil.dep.domain.pos.PosBridge;
 import com.tpago.movil.dep.domain.pos.PosResult;
@@ -34,14 +34,9 @@ import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 class PaymentsPresenter extends Presenter<PaymentsScreen> {
-  /**
-   * TODO
-   */
   private static final long DEFAULT_IME_SPAN_QUERY = 300L; // 0.3 seconds.
 
   private final StringHelper stringHelper;
@@ -61,10 +56,14 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   private Subscription deleteSubscription = Subscriptions.unsubscribed();
   private Subscription signOutSubscription = Subscriptions.unsubscribed();
 
-  PaymentsPresenter(@NonNull StringHelper stringHelper,
-    @NonNull SchedulerProvider schedulerProvider, @NonNull RecipientManager recipientManager,
-    @NonNull SessionManager sessionManager, @NonNull ProductManager productManager,
-    PosBridge posBridge, UserStore userStore) {
+  PaymentsPresenter(
+    @NonNull StringHelper stringHelper,
+    @NonNull SchedulerProvider schedulerProvider,
+    @NonNull RecipientManager recipientManager,
+    @NonNull SessionManager sessionManager,
+    @NonNull ProductManager productManager,
+    PosBridge posBridge,
+    UserStore userStore) {
     this.stringHelper = stringHelper;
     this.schedulerProvider = schedulerProvider;
     this.recipientManager = recipientManager;
@@ -74,9 +73,6 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
     this.userStore = userStore;
   }
 
-  /**
-   * TODO
-   */
   void start() {
     assertScreen();
     querySubscription = screen.onQueryChanged()
@@ -113,7 +109,8 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
           if (!deleting) {
             observable = observable.switchIfEmpty(actionsObservable);
           }
-          observable.switchIfEmpty(Observable.just(new NoResultsListItemItem(query)))
+          searchSubscription = observable
+            .switchIfEmpty(Observable.just(new NoResultsListItemItem(query)))
             .observeOn(schedulerProvider.ui())
             .doOnSubscribe(new Action0() {
               @Override
@@ -131,12 +128,14 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
             .subscribe(new Action1<Object>() {
               @Override
               public void call(Object item) {
+                screen.hideLoadIndicator();
                 screen.add(item);
               }
             }, new Action1<Throwable>() {
               @Override
               public void call(Throwable throwable) {
                 Timber.e(throwable, "Querying recipients and constructing actions");
+                screen.hideLoadIndicator();
                 // TODO: Let the user know that finding recipients with the given query failed.
               }
             });
@@ -150,9 +149,6 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
       });
   }
 
-  /**
-   * TODO
-   */
   void stop() {
     assertScreen();
     RxUtils.unsubscribe(subscription);
@@ -162,48 +158,31 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
     RxUtils.unsubscribe(signOutSubscription);
   }
 
-  /**
-   * TODO
-   *
-   * @param recipient
-   *   TODO
-   */
   void addRecipient(@NonNull Recipient recipient) {
     assertScreen();
-    screen.clearQuery();
-    screen.showConfirmationDialog(recipient,
-      stringHelper.doneWithExclamationMark(),
-      stringHelper.recipientAdditionConfirmationMessage(recipient));
+    screen.showRecipientAdditionDialog(recipient);
   }
 
-  /**
-   * TODO
-   *
-   * @param phoneNumber
-   *   TODO
-   */
-  void addRecipient(@NonNull String phoneNumber) {
+  void addRecipient(@NonNull final String phoneNumber) {
     assertScreen();
     if (subscription.isUnsubscribed()) {
-      subscription = recipientManager.addRecipient(phoneNumber)
-        .subscribeOn(schedulerProvider.io())
-        .observeOn(schedulerProvider.ui())
+      subscription = recipientManager.checkIfAffiliated(phoneNumber)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(new Action0() {
           @Override
           public void call() {
             screen.showLoadIndicator(true);
           }
         })
-        .subscribe(new Action1<Pair<Boolean, Recipient>>() {
+        .subscribe(new Action1<Boolean>() {
           @Override
-          public void call(Pair<Boolean, Recipient> pair) {
+          public void call(Boolean isAffiliated) {
             screen.hideLoadIndicator();
-            if (pair.first) {
-              screen.clear();
-              screen.add(pair.second);
-              addRecipient(pair.second);
+            if (isAffiliated) {
+              screen.showRecipientAdditionDialog(new PhoneNumberRecipient(phoneNumber));
             } else {
-              screen.showUnaffiliatedRecipientAdditionNotAvailableMessage();
+              screen.startNonAffiliatedPhoneNumberRecipientAddition(phoneNumber);
             }
           }
         }, new Action1<Throwable>() {
@@ -217,54 +196,13 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
     }
   }
 
-  /**
-   * TODO
-   *
-   * @param recipient
-   *   TODO
-   * @param label
-   *   TODO
-   */
   void updateRecipient(@NonNull Recipient recipient, @Nullable String label) {
     assertScreen();
-    if (subscription.isUnsubscribed()) {
-      recipient.setLabel(label);
-      subscription = recipientManager.updateRecipient(recipient)
-        .subscribeOn(schedulerProvider.io())
-        .observeOn(schedulerProvider.ui())
-        .doOnSubscribe(new Action0() {
-          @Override
-          public void call() {
-            screen.showLoadIndicator(true);
-          }
-        })
-        .doOnUnsubscribe(new Action0() {
-          @Override
-          public void call() {
-            screen.hideLoadIndicator();
-          }
-        })
-        .subscribe(new Action1<Recipient>() {
-          @Override
-          public void call(Recipient recipient) {
-            screen.update(recipient);
-          }
-        }, new Action1<Throwable>() {
-          @Override
-          public void call(Throwable throwable) {
-            Timber.e(throwable, "Updating a recipient");
-            screen.showMessage(stringHelper.cannotProcessYourRequestAtTheMoment());
-          }
-        });
-    }
+    recipient.setLabel(label);
+    recipientManager.addSync(recipient);
+    screen.clearQuery();
   }
 
-  /**
-   * TODO
-   *
-   * @param phoneNumber
-   *   TODO
-   */
   void startTransfer(@NonNull final String phoneNumber) {
     assertScreen();
     if (subscription.isUnsubscribed()) {
@@ -294,17 +232,14 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
     }
   }
 
-  void showTransactionConfirmation(
+  void showTransactionSummary(
     final Recipient recipient,
     final String transactionId) {
     assertScreen();
-    screen.clearQuery();
-    // TODO: Include the transaction id into the dialog.
-    // TODO: Include a flag that indicates if the recipient was already saved or not.
-    screen.showConfirmationDialog(
+    screen.showTransactionSummary(
       recipient,
-      stringHelper.transactionCreationConfirmationTitle(),
-      stringHelper.transactionCreationConfirmationMessage(recipient));
+      recipientManager.checkIfExists(recipient),
+      transactionId);
   }
 
   final void signOut() {
@@ -385,22 +320,18 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
             screen.showLoadIndicator(true);
           }
         })
-        .doOnUnsubscribe(new Action0() {
-          @Override
-          public void call() {
-            screen.hideLoadIndicator();
-          }
-        })
         .compose(RxUtils.<Recipient>fromCollection())
         .subscribe(new Action1<Recipient>() {
           @Override
           public void call(Recipient recipient) {
-            screen.remove(recipient);
+            screen.hideLoadIndicator();
+            screen.clearQuery();
           }
         }, new Action1<Throwable>() {
           @Override
           public void call(Throwable throwable) {
             Timber.e(throwable, "Removing one or more recipients");
+            screen.hideLoadIndicator();
             screen.showMessage(stringHelper.cannotProcessYourRequestAtTheMoment());
           }
         }, new Action0() {

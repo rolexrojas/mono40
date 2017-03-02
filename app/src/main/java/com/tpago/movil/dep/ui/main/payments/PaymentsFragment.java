@@ -18,13 +18,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.tpago.movil.Bank;
 import com.tpago.movil.R;
+import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.data.util.BinderFactory;
 import com.tpago.movil.dep.domain.Recipient;
 import com.tpago.movil.dep.ui.main.MainActivity;
-import com.tpago.movil.dep.ui.misc.UiUtils;
 import com.tpago.movil.dep.ui.main.MainContainer;
 import com.tpago.movil.dep.ui.main.list.ListItemAdapter;
 import com.tpago.movil.dep.ui.main.list.ListItemHolder;
@@ -34,6 +35,7 @@ import com.tpago.movil.dep.ui.main.list.NoResultsListItemHolder;
 import com.tpago.movil.dep.ui.main.list.NoResultsListItemHolderBinder;
 import com.tpago.movil.dep.ui.main.list.NoResultsListItemHolderCreator;
 import com.tpago.movil.dep.ui.main.recipients.AddRecipientActivity;
+import com.tpago.movil.dep.ui.main.recipients.NonAffiliatedPhoneNumberRecipientAdditionActivity;
 import com.tpago.movil.dep.ui.main.transactions.TransactionCreationActivity;
 import com.tpago.movil.dep.ui.view.widget.FullScreenLoadIndicator;
 import com.tpago.movil.dep.ui.view.widget.LoadIndicator;
@@ -41,6 +43,7 @@ import com.tpago.movil.dep.ui.ChildFragment;
 import com.tpago.movil.dep.ui.view.widget.SearchView;
 import com.tpago.movil.dep.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.tpago.movil.init.InitActivity;
+import com.tpago.movil.util.Objects;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import javax.inject.Inject;
@@ -56,12 +59,14 @@ import rx.Observable;
  *
  * @author hecvasro
  */
-public class PaymentsFragment extends ChildFragment<MainContainer>
+public class PaymentsFragment
+  extends ChildFragment<MainContainer>
   implements PaymentsScreen,
   ListItemHolder.OnClickListener,
-  ConfirmationDialogFragment.OnSaveButtonClickedListener {
+  OnSaveButtonClickedListener {
   private static final int REQUEST_CODE_RECIPIENT_ADDITION = 0;
   private static final int REQUEST_CODE_TRANSACTION_CREATION = 1;
+  private static final int REQUEST_CODE_NON_AFFILIATED_RECIPIENT_ADDITION = 2;
 
   private Unbinder unbinder;
   private ListItemAdapter adapter;
@@ -85,6 +90,9 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
   StringHelper stringHelper;
   @Inject
   PaymentsPresenter presenter;
+
+  private String nonAffiliatedPhoneNumber = null;
+  private Pair<Bank, String> nonAffiliatedPhoneNumberRequestResult = null;
 
   /**
    * Creates a new instance of the {@link PaymentsFragment screen}.
@@ -169,9 +177,19 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
         presenter.addRecipient(recipient);
       } else if (code == REQUEST_CODE_TRANSACTION_CREATION) {
         final String transactionId = requestResult.second.second;
-        presenter.showTransactionConfirmation(recipient, transactionId);
+        presenter.showTransactionSummary(recipient, transactionId);
       }
       requestResult = null;
+    } else if (
+      Objects.isNotNull(nonAffiliatedPhoneNumber)
+        && Objects.isNotNull(nonAffiliatedPhoneNumberRequestResult)) {
+      presenter.addRecipient(new NonAffiliatedPhoneNumberRecipient(
+        nonAffiliatedPhoneNumber,
+        null,
+        nonAffiliatedPhoneNumberRequestResult.first,
+        nonAffiliatedPhoneNumberRequestResult.second));
+      nonAffiliatedPhoneNumber = null;
+      nonAffiliatedPhoneNumberRequestResult = null;
     }
   }
 
@@ -234,6 +252,9 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
           requestResult = Pair.create(requestCode, result);
         }
       }
+    } else if (requestCode == REQUEST_CODE_NON_AFFILIATED_RECIPIENT_ADDITION) {
+      nonAffiliatedPhoneNumberRequestResult = NonAffiliatedPhoneNumberRecipientAdditionActivity
+        .deserializeResult(data);
     }
   }
 
@@ -285,33 +306,6 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
   @Override
   public void update(@NonNull Object item) {
     adapter.updateOrAdd(item);
-  }
-
-  @Override
-  public void showConfirmationDialog(@NonNull Recipient recipient, @NonNull String title,
-    @Nullable String message) {
-    ConfirmationDialogFragment.newInstance(recipient, title, message)
-      .show(getChildFragmentManager(), null);
-  }
-
-  @Override
-  public void showUnaffiliatedRecipientAdditionNotAvailableMessage() {
-    UiUtils.createDialog(
-      getContext(),
-      getString(R.string.sorry),
-      getString(R.string.info_not_available_unaffiliated_contact_recipient_addition),
-      getString(R.string.ok),
-      null,
-      null,
-      null)
-      .show();
-  }
-
-  @Override
-  public void showPaymentToUnaffiliatedRecipientNotAvailableMessage() {
-    UiUtils.createDialog(getContext(), getString(R.string.sorry),
-      getString(R.string.info_not_available_payment_to_unaffiliated_recipient),
-      getString(R.string.ok), null, null, null).show();
   }
 
   @Override
@@ -382,6 +376,31 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
   }
 
   @Override
+  public void showRecipientAdditionDialog(Recipient recipient) {
+    RecipientAdditionDialogFragment.create(recipient)
+      .show(getChildFragmentManager(), null);
+  }
+
+  @Override
+  public void startNonAffiliatedPhoneNumberRecipientAddition(String phoneNumber) {
+    nonAffiliatedPhoneNumber = phoneNumber;
+    startActivityForResult(
+      NonAffiliatedPhoneNumberRecipientAdditionActivity.getLaunchIntent(
+        getContext(),
+        nonAffiliatedPhoneNumber),
+      REQUEST_CODE_NON_AFFILIATED_RECIPIENT_ADDITION);
+  }
+
+  @Override
+  public void showTransactionSummary(
+    Recipient recipient,
+    boolean alreadyExists,
+    String transactionId) {
+    TransactionSummaryDialogFragment.create(recipient, alreadyExists, transactionId)
+      .show(getChildFragmentManager(), null);
+  }
+
+  @Override
   public void onClick(int position) {
     final Object item = adapter.get(position);
     if (item instanceof Recipient) {
@@ -399,7 +418,7 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
   }
 
   @Override
-  public void onSaveButtonClicked(@NonNull Recipient recipient, @Nullable String label) {
+  public void onSaveButtonClicked(Recipient recipient, String label) {
     presenter.updateRecipient(recipient, label);
   }
 }

@@ -3,6 +3,7 @@
   <!-- Common colors -->
   <color name="black">#000</color>
   <color name="black_alpha_10">#20000000</color>
+  <color name="black_alpha_27">#45000000</color>
   <color name="black_alpha_40">#66000000</color>
   <color name="black_alpha_54">#89000000</color>
   <color name="black_alpha_80">#CC000000</color>

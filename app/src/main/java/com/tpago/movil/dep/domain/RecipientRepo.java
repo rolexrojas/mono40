@@ -7,34 +7,13 @@ import java.util.List;
 import rx.Observable;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 public interface RecipientRepo extends RecipientProvider {
-  /**
-   * TODO
-   *
-   * @param recipient
-   *   TODO
-   *
-   * @return TODO
-   */
-  @NonNull
-  Observable<Recipient> save(@NonNull Recipient recipient);
-
-  /**
-   * TODO
-   *
-   * @param recipients
-   *   TODO
-   *
-   * @return TODO
-   */
-  @NonNull
-  Observable<List<Recipient>> saveAll(@NonNull List<Recipient> recipients);
-
+  @NonNull Observable<Recipient> save(@NonNull Recipient recipient);
+  @NonNull Observable<List<Recipient>> saveAll(@NonNull List<Recipient> recipients);
   Observable<Recipient> remove(Recipient recipient);
-
   void clear();
+  void saveSync(Recipient recipient);
+  boolean checkIfExists(Recipient recipient);
 }

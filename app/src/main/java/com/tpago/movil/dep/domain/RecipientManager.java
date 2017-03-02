@@ -69,40 +69,16 @@ public final class RecipientManager implements RecipientProvider {
       });
   }
 
-  /**
-   * TODO
-   *
-   * @param phoneNumber
-   *   TODO
-   *
-   * @return TODO
-   */
   @NonNull
   public final Observable<Pair<Boolean, Recipient>> addRecipient(@NonNull String phoneNumber) {
     return addRecipient(phoneNumber, null);
   }
 
-  /**
-   * TODO
-   *
-   * @param contact
-   *   TODO
-   *
-   * @return TODO
-   */
   @NonNull
   public final Observable<Pair<Boolean, Recipient>> addRecipient(@NonNull Contact contact) {
     return addRecipient(contact.getPhoneNumber().toString(), contact.getName());
   }
 
-  /**
-   * TODO
-   *
-   * @param recipient
-   *   TODO
-   *
-   * @return TODO
-   */
   @NonNull
   public final Observable<Recipient> updateRecipient(@NonNull Recipient recipient) {
     return recipientRepo.save(recipient);
@@ -150,5 +126,13 @@ public final class RecipientManager implements RecipientProvider {
 
   public void clear() {
     recipientRepo.clear();
+  }
+
+  public final boolean checkIfExists(Recipient recipient) {
+    return recipientRepo.checkIfExists(recipient);
+  }
+
+  public final void addSync(Recipient recipient) {
+    recipientRepo.saveSync(recipient);
   }
 }

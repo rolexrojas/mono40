@@ -1,7 +1,6 @@
 package com.tpago.movil.dep.ui.main.payments;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.tpago.movil.dep.domain.Recipient;
 import com.tpago.movil.dep.ui.Screen;
@@ -43,15 +42,6 @@ interface PaymentsScreen extends Screen {
 
   void update(@NonNull Object item);
 
-  void showConfirmationDialog(
-    @NonNull Recipient recipient,
-    @NonNull String title,
-    @Nullable String message);
-
-  void showUnaffiliatedRecipientAdditionNotAvailableMessage();
-
-  void showPaymentToUnaffiliatedRecipientNotAvailableMessage();
-
   void startTransfer(@NonNull String phoneNumber, boolean isAffiliated);
 
   void openInitScreen();
@@ -61,4 +51,8 @@ interface PaymentsScreen extends Screen {
   void showMessage(String message);
   void remove(Object item);
   void setDeleteButtonEnabled(boolean enabled);
+
+  void showRecipientAdditionDialog(Recipient recipient);
+  void startNonAffiliatedPhoneNumberRecipientAddition(String phoneNumber);
+  void showTransactionSummary(Recipient recipient, boolean alreadyExists, String transactionId);
 }

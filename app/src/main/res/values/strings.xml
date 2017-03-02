@@ -216,4 +216,9 @@
   <string name="your_account_have_been_added">Tu cuenta se agregó exitosamente al mundo %1$s. Ya puedes usarla como cuenta de fondos.</string>
   <string name="your_account_have_been_removed">Tu cuenta se removió exitosamente del mundo %1$s. Ya no puedes usarla como cuenta de fondos.</string>
   <string name="transaction">Ingresa el número de cuenta del %1$s para realizar la transacción.</string>
+  <string name="recipient_addition_title">¡Listo!</string>
+  <string name="recipient_addition_message_phone_number">¿Te gustaría guardar este número para usarlo en el futuro?</string>
+  <string name="recipient_addition_message_bill">¿Te gustaría guardar esta factura para reconocerla con más facilidad?</string>
+  <string name="recipient_addition_hint_phone_number">Nombre de contacto</string>
+  <string name="recipient_addition_hint_bill">Nombre de factura</string>
 </resources>
