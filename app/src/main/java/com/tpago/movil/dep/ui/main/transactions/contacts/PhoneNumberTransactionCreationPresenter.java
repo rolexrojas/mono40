@@ -1,9 +1,7 @@
 package com.tpago.movil.dep.ui.main.transactions.contacts;
 
 import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
 
-import com.tpago.movil.Bank;
 import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.dep.domain.api.ApiResult;
 import com.tpago.movil.dep.data.SchedulerProvider;
@@ -70,7 +68,7 @@ class PhoneNumberTransactionCreationPresenter
       });
   }
 
-  void start(boolean shouldBeClosed, Pair<Bank, String> result) {
+  void start(boolean shouldBeClosed, Recipient requestResult) {
     assertScreen();
     if (shouldBeClosed) {
       screen.finish();
@@ -78,9 +76,11 @@ class PhoneNumberTransactionCreationPresenter
       initilize();
     } else {
       final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) recipient;
-      if (Objects.isNotNull(result)) {
-        r.setBank(result.first);
-        r.setAccountNumber(result.second);
+      final NonAffiliatedPhoneNumberRecipient nR = (NonAffiliatedPhoneNumberRecipient) requestResult;
+      if (Objects.isNotNull(requestResult)) {
+        r.setBank(nR.getBank());
+        r.setAccountNumber(nR.getAccountNumber());
+        r.setProduct(nR.getProduct());
       }
       if (r.canBeTransferTo()) {
         initilize();

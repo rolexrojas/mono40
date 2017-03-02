@@ -14,8 +14,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 
-import com.tpago.movil.Bank;
-import com.tpago.movil.Partner;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.dep.misc.Utils;
@@ -96,7 +94,7 @@ public class PhoneNumberTransactionCreationFragment
   private String resultMessage = null;
 
   private boolean shouldBeClosed = false;
-  private Pair<Bank, String> requestResult = null;
+  private Recipient requestResult = null;
 
   @NonNull
   public static PhoneNumberTransactionCreationFragment newInstance() {
@@ -165,7 +163,11 @@ public class PhoneNumberTransactionCreationFragment
     if (requestCode == REQUEST_CODE) {
       shouldBeClosed = resultCode != Activity.RESULT_OK;
       if (!shouldBeClosed) {
-        requestResult = NonAffiliatedPhoneNumberRecipientAdditionActivity.deserializeResult(data);
+        final Recipient recipient = NonAffiliatedPhoneNumberRecipientAdditionActivity
+          .deserializeResult(data);
+        if (Objects.isNotNull(recipient)) {
+          requestResult = recipient;
+        }
       }
     }
   }

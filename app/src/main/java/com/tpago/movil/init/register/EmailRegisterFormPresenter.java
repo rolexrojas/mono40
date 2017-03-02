@@ -35,6 +35,12 @@ final class EmailRegisterFormPresenter
     }
   }
 
+  private boolean canMoveToNextScreen() {
+    return isTextInputContentValid
+      && isConfirmationTextInputContentValid
+      && textInputContent.equals(confirmationTextInputContent);
+  }
+
   private void updateView() {
     if (isTextInputContentValid) {
       view.showTextInputContentAsErratic(false);
@@ -42,8 +48,7 @@ final class EmailRegisterFormPresenter
     if (isConfirmationTextInputContentValid) {
       view.showConfirmationTextInputContentAsErratic(false);
     }
-    view.showMoveToNextScreenButtonAsEnabled(isTextInputContentValid
-      && isConfirmationTextInputContentValid);
+    view.showMoveToNextScreenButtonAsEnabled(canMoveToNextScreen());
   }
 
   final void onTextInputContentChanged(String content) {
@@ -59,15 +64,14 @@ final class EmailRegisterFormPresenter
     final String sanitizedContent = sanitize(content);
     if (!sanitizedContent.equals(confirmationTextInputContent)) {
       confirmationTextInputContent = sanitizedContent;
-      isConfirmationTextInputContentValid = Email.isValid(confirmationTextInputContent)
-        && confirmationTextInputContent.equals(textInputContent);
+      isConfirmationTextInputContentValid = Email.isValid(confirmationTextInputContent);
       updateView();
     }
   }
 
   @Override
   void onMoveToNextScreenButtonClicked() {
-    if (isTextInputContentValid && isConfirmationTextInputContentValid) {
+    if (canMoveToNextScreen()) {
       registerData.setEmail(Email.create(textInputContent));
       view.moveToNextScreen();
     } else {

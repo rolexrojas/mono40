@@ -9,20 +9,12 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 @Module
 class TransactionCreationModule {
   private final Recipient recipient;
 
-  /**
-   * TODO
-   *
-   * @param recipient
-   *   TODO
-   */
   TransactionCreationModule(@NonNull Recipient recipient) {
     this.recipient = recipient;
   }

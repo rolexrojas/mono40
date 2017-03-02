@@ -19,6 +19,7 @@ import com.tpago.movil.dep.domain.Recipient;
 import com.tpago.movil.dep.domain.RecipientType;
 import com.tpago.movil.dep.ui.ChildFragment;
 import com.tpago.movil.dep.ui.SwitchableContainerActivity;
+import com.tpago.movil.dep.ui.main.transactions.bills.BillTransactionCreationFragment;
 import com.tpago.movil.dep.ui.main.transactions.contacts.PhoneNumberTransactionCreationFragment;
 import com.tpago.movil.util.Objects;
 
@@ -128,6 +129,9 @@ public class TransactionCreationActivity
           break;
         case NON_AFFILIATED_PHONE_NUMBER:
           fragment = PhoneNumberTransactionCreationFragment.newInstance();
+          break;
+        case BILL:
+          fragment = BillTransactionCreationFragment.create();
           break;
         default:
           fragment = null;

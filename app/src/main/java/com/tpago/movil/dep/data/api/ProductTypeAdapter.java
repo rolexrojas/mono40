@@ -13,6 +13,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 
 /**
  * TODO
@@ -43,22 +44,23 @@ class ProductTypeAdapter implements JsonDeserializer<Product>, JsonSerializer<Pr
       throw new JsonParseException("Property '" + PROPERTY_BANK + "' is missing");
     } else if (!jsonObject.has(PROPERTY_CURRENCY)) {
       throw new JsonParseException("Property '" + PROPERTY_CURRENCY + "' is missing");
-    } else if (!jsonObject.has(PROPERTY_QUERY_FEE)) {
-      throw new JsonParseException("Property '" + PROPERTY_QUERY_FEE + "' is missing");
-    } else if (!jsonObject.has(PROPERTY_PAYMENT_OPTION)) {
-      throw new JsonParseException("Property '" + PROPERTY_PAYMENT_OPTION + "' is missing");
-    } else if (!jsonObject.has(PROPERTY_IS_DEFAULT)) {
-      throw new JsonParseException("Property '" + PROPERTY_IS_DEFAULT + "' is missing");
     } else {
+      JsonElement je;
+      je = jsonObject.get(PROPERTY_QUERY_FEE);
+      final BigDecimal queryFee = je.isJsonNull() ? BigDecimal.ZERO : BigDecimal.valueOf(je.getAsDouble());
+      je = jsonObject.get(PROPERTY_PAYMENT_OPTION);
+      final boolean paymentOption = !json.isJsonNull() && je.getAsBoolean();
+      je = jsonObject.get(PROPERTY_IS_DEFAULT);
+      final boolean isDefault = !je.isJsonNull() && je.getAsBoolean();
       return ProductCreator.create(
         ProductType.valueOf(jsonObject.get(PROPERTY_TYPE).getAsString()),
         jsonObject.get(PROPERTY_ALIAS).getAsString(),
         jsonObject.get(PROPERTY_NUMBER).getAsString(),
         (Bank) context.deserialize(jsonObject.get(PROPERTY_BANK), Bank.class),
         jsonObject.get(PROPERTY_CURRENCY).getAsString(),
-        jsonObject.get(PROPERTY_QUERY_FEE).getAsBigDecimal(),
-        jsonObject.get(PROPERTY_PAYMENT_OPTION).getAsBoolean(),
-        jsonObject.get(PROPERTY_IS_DEFAULT).getAsBoolean());
+        queryFee,
+        paymentOption,
+        isDefault);
     }
   }
 

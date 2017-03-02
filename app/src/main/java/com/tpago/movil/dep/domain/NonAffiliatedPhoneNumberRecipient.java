@@ -15,20 +15,23 @@ public class NonAffiliatedPhoneNumberRecipient extends Recipient {
 
   private Bank bank;
   private String accountNumber;
+  private Product product;
 
   public NonAffiliatedPhoneNumberRecipient(
     @NonNull String phoneNumber,
     @Nullable String label,
     Bank bank,
-    String accountNumber) {
+    String accountNumber,
+    Product product) {
     super(RecipientType.NON_AFFILIATED_PHONE_NUMBER, label);
     this.phoneNumber = phoneNumber;
     this.bank = bank;
     this.accountNumber = accountNumber;
+    this.product = product;
   }
 
   public NonAffiliatedPhoneNumberRecipient(@NonNull String phoneNumber, @Nullable String label) {
-    this(phoneNumber, label, null, null);
+    this(phoneNumber, label, null, null, null);
   }
 
   public NonAffiliatedPhoneNumberRecipient(@NonNull String phoneNumber) {
@@ -59,12 +62,21 @@ public class NonAffiliatedPhoneNumberRecipient extends Recipient {
     this.accountNumber = accountNumber;
   }
 
+  public Product getProduct() {
+    return product;
+  }
+
+  public void setProduct(Product product) {
+    this.product = product;
+  }
+
   @Override
   public String toString() {
     return PhoneNumberRecipient.class.getSimpleName() + ":{super=" + super.toString()
       + ",phoneNumber='" + phoneNumber + "'"
       + ",bank=" + bank.toString()
       + ",accountNumber='" + accountNumber + "'"
+      + ",product=" + product
       + "}";
   }
 

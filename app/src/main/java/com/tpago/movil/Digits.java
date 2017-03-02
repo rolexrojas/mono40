@@ -15,7 +15,7 @@ public final class Digits {
     for (Digit digit : digits) {
       builder.append(digit.getValue());
     }
-    return PhoneNumber.format(builder.toString());
+    return builder.toString();
   }
 
   public static List<Digit> getDigits(PhoneNumber phoneNumber) {

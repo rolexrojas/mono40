@@ -8,6 +8,7 @@ import com.tpago.movil.Bank;
 import com.tpago.movil.dep.domain.BillRecipient;
 import com.tpago.movil.dep.domain.InitialData;
 import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
+import com.tpago.movil.dep.domain.PhoneNumberRecipient;
 import com.tpago.movil.dep.domain.Product;
 import com.tpago.movil.dep.domain.ProductCategory;
 import com.tpago.movil.dep.domain.Recipient;
@@ -31,8 +32,6 @@ import rx.Observable;
 import rx.functions.Func1;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 @Deprecated
@@ -215,7 +214,11 @@ class RetrofitApiBridge implements DepApiBridge {
     } else {
       observable = apiService.transferToAffiliated(
         authToken,
-        TransferToAffiliatedRequestBody.create(product, recipient, amount, pin));
+        TransferToAffiliatedRequestBody.create(
+          product,
+          (PhoneNumberRecipient) recipient,
+          amount,
+          pin));
     }
     return observable.flatMap(mapToApiResult(TransferResponseBody.mapFunc()));
   }
@@ -231,17 +234,17 @@ class RetrofitApiBridge implements DepApiBridge {
   }
 
   @Override
-  public Observable<ApiResult<Void>> checkAccountNumber(
+  public Observable<ApiResult<Product>> checkAccountNumber(
     String authToken,
     Bank bank,
     String accountNumber) {
     return apiService.checkAccountNumber(
       authToken,
       RecipientAccountInfoRequestBody.create(bank, accountNumber))
-      .flatMap(mapToApiResult(new Func1<Void, Void>() {
+      .flatMap(mapToApiResult(new Func1<Product, Product>() {
         @Override
-        public Void call(Void aVoid) {
-          return aVoid;
+        public Product call(Product product) {
+          return product;
         }
       }));
   }

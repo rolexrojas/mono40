@@ -18,9 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.tpago.movil.Bank;
 import com.tpago.movil.R;
-import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.data.util.BinderFactory;
@@ -90,9 +88,6 @@ public class PaymentsFragment
   StringHelper stringHelper;
   @Inject
   PaymentsPresenter presenter;
-
-  private String nonAffiliatedPhoneNumber = null;
-  private Pair<Bank, String> nonAffiliatedPhoneNumberRequestResult = null;
 
   /**
    * Creates a new instance of the {@link PaymentsFragment screen}.
@@ -178,18 +173,10 @@ public class PaymentsFragment
       } else if (code == REQUEST_CODE_TRANSACTION_CREATION) {
         final String transactionId = requestResult.second.second;
         presenter.showTransactionSummary(recipient, transactionId);
+      } else if (code == REQUEST_CODE_NON_AFFILIATED_RECIPIENT_ADDITION) {
+        presenter.addRecipient(recipient);
       }
       requestResult = null;
-    } else if (
-      Objects.isNotNull(nonAffiliatedPhoneNumber)
-        && Objects.isNotNull(nonAffiliatedPhoneNumberRequestResult)) {
-      presenter.addRecipient(new NonAffiliatedPhoneNumberRecipient(
-        nonAffiliatedPhoneNumber,
-        null,
-        nonAffiliatedPhoneNumberRequestResult.first,
-        nonAffiliatedPhoneNumberRequestResult.second));
-      nonAffiliatedPhoneNumber = null;
-      nonAffiliatedPhoneNumberRequestResult = null;
     }
   }
 
@@ -255,8 +242,13 @@ public class PaymentsFragment
         }
       }
     } else if (requestCode == REQUEST_CODE_NON_AFFILIATED_RECIPIENT_ADDITION) {
-      nonAffiliatedPhoneNumberRequestResult = NonAffiliatedPhoneNumberRecipientAdditionActivity
-        .deserializeResult(data);
+      if (resultCode == Activity.RESULT_OK) {
+        final Recipient recipient = NonAffiliatedPhoneNumberRecipientAdditionActivity
+          .deserializeResult(data);
+        if (Objects.isNotNull(recipient)) {
+          requestResult = Pair.create(requestCode, Pair.create(recipient, (String) null));
+        }
+      }
     }
   }
 
@@ -385,11 +377,10 @@ public class PaymentsFragment
 
   @Override
   public void startNonAffiliatedPhoneNumberRecipientAddition(String phoneNumber) {
-    nonAffiliatedPhoneNumber = phoneNumber;
     startActivityForResult(
       NonAffiliatedPhoneNumberRecipientAdditionActivity.getLaunchIntent(
         getContext(),
-        nonAffiliatedPhoneNumber),
+        phoneNumber),
       REQUEST_CODE_NON_AFFILIATED_RECIPIENT_ADDITION);
   }
 

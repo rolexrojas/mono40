@@ -1,12 +1,14 @@
 package com.tpago.movil.dep.data.api;
 
+import android.support.annotation.Nullable;
+
 import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.tpago.movil.Bank;
+import com.tpago.movil.dep.domain.PhoneNumberRecipient;
 import com.tpago.movil.dep.domain.Product;
-import com.tpago.movil.dep.domain.Recipient;
 
 import java.math.BigDecimal;
 
@@ -19,7 +21,7 @@ import java.math.BigDecimal;
 public abstract class TransferToAffiliatedRequestBody {
   static TransferToAffiliatedRequestBody create(
     Product product,
-    Recipient recipient,
+    PhoneNumberRecipient recipient,
     BigDecimal amount,
     String pin) {
     return new AutoValue_TransferToAffiliatedRequestBody(
@@ -30,7 +32,7 @@ public abstract class TransferToAffiliatedRequestBody {
       product.getCurrency(),
       pin,
       amount,
-      recipient.getIdentifier(),
+      recipient.getPhoneNumber(),
       recipient.getLabel());
   }
 
@@ -46,5 +48,5 @@ public abstract class TransferToAffiliatedRequestBody {
   @SerializedName("pin") abstract String getPin();
   @SerializedName("amount") abstract BigDecimal getAmount();
   @SerializedName("recipient-msisdn") abstract String getRecipientMsisdn();
-  @SerializedName("recipient-name") abstract String getRecipientName();
+  @Nullable @SerializedName("recipient-name") abstract String getRecipientName();
 }

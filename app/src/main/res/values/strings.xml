@@ -224,4 +224,10 @@
   <string name="recipient_addition_hint_bill">Nombre de factura</string>
   <string name="partners">Facturadores</string>
   <string name="contract">Contrato</string>
+  <string name="pay_total">Pagar total</string>
+  <string name="pay_minimum">Pagar mínimo</string>
+  <string name="total_owed">Total adeudado</string>
+  <string name="total">Total</string>
+  <string name="minimum">Mínimo</string>
+  <string name="due_date">Fecha de vencimiento</string>
 </resources>

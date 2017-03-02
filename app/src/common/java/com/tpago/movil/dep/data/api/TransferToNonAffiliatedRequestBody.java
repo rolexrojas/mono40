@@ -21,7 +21,7 @@ public abstract class TransferToNonAffiliatedRequestBody {
     BigDecimal amount) {
     return new AutoValue_TransferToNonAffiliatedRequestBody(
       fundingAccount,
-      RecipientAccount.create(recipient),
+      recipient.getProduct(),
       pin,
       amount);
   }
@@ -31,7 +31,7 @@ public abstract class TransferToNonAffiliatedRequestBody {
   }
 
   @SerializedName("funding-account") public abstract Product getFundingAccount();
-  @SerializedName("recipient-account") public abstract RecipientAccount getRecipientAccount();
+  @SerializedName("recipient-account") public abstract Product getRecipientAccount();
   public abstract String getPin();
   public abstract BigDecimal getAmount();
 }

@@ -7,6 +7,7 @@ import com.tpago.movil.dep.domain.ProductManager;
 import com.tpago.movil.dep.domain.Recipient;
 import com.tpago.movil.dep.domain.TransactionManager;
 import com.tpago.movil.dep.ui.ActivityScope;
+import com.tpago.movil.dep.ui.main.transactions.bills.BillTransactionCreationPresenter;
 
 import dagger.Component;
 
@@ -14,15 +15,12 @@ import dagger.Component;
  * @author hecvasro
  */
 @ActivityScope
-@Component(dependencies = AppComponent.class, modules = TransactionCreationModule.class)
+@Component(
+  dependencies = AppComponent.class,
+  modules = TransactionCreationModule.class)
 public interface TransactionCreationComponent {
-  /**
-   * TODO
-   *
-   * @param activity
-   *   TODO
-   */
   void inject(TransactionCreationActivity activity);
+  void inject(BillTransactionCreationPresenter presenter);
 
   SchedulerProvider provideSchedulerProvider();
 

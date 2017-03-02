@@ -7,6 +7,7 @@ import com.tpago.movil.Partner;
 import com.tpago.movil.dep.domain.BillRecipient;
 import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.dep.domain.PhoneNumberRecipient;
+import com.tpago.movil.dep.domain.Product;
 import com.tpago.movil.dep.domain.Recipient;
 import com.tpago.movil.dep.domain.RecipientType;
 import com.google.gson.JsonDeserializationContext;
@@ -32,6 +33,7 @@ class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSerialize
   private static final String PROPERTY_ACCOUNT_NUMBER = "accountNumber";
   private static final String PROPERTY_PARTNER = "partner";
   private static final String PROPERTY_CONTRACT_NUMBER = "contractNumber";
+  private static final String PROPERTY_PRODUCT = "product";
 
   @Override
   public Recipient deserialize(
@@ -66,7 +68,11 @@ class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSerialize
       if (jo.has(PROPERTY_ACCOUNT_NUMBER)) {
         accountNumber = jo.get(PROPERTY_ACCOUNT_NUMBER).getAsString();
       }
-      return new NonAffiliatedPhoneNumberRecipient(phoneNumber, label, bank, accountNumber);
+      Product product = null;
+      if (jo.has(PROPERTY_PRODUCT)) {
+        product = context.deserialize(jo.get(PROPERTY_PRODUCT), Product.class);
+      }
+      return new NonAffiliatedPhoneNumberRecipient(phoneNumber, label, bank, accountNumber, product);
     } else if (type.equals(RecipientType.BILL)) {
       if (!jo.has(PROPERTY_PARTNER)) {
         throw new JsonParseException("Property '" + PROPERTY_PARTNER + "' is missing");
@@ -101,6 +107,9 @@ class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSerialize
       }
       if (Texts.isNotEmpty(r.getAccountNumber())) {
         jsonObject.addProperty(PROPERTY_ACCOUNT_NUMBER, r.getAccountNumber());
+      }
+      if (Objects.isNotNull(r.getProduct())) {
+        jsonObject.add(PROPERTY_PRODUCT, context.serialize(r.getProduct()));
       }
     } else if (type.equals(RecipientType.BILL)) {
       final BillRecipient r = (BillRecipient) src;

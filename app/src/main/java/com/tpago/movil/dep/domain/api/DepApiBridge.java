@@ -130,7 +130,7 @@ public interface DepApiBridge {
   Observable<ApiResult<Void>> setDefaultPaymentOption(@NonNull String authToken,
     @NonNull Product product);
 
-  Observable<ApiResult<Void>> checkAccountNumber(
+  Observable<ApiResult<Product>> checkAccountNumber(
     String authToken,
     Bank bank,
     String accountNumber);

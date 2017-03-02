@@ -47,7 +47,7 @@ public final class PhoneNumberFormPresenter extends Presenter<PhoneNumberFormPre
     final String phoneNumber = Digits.stringify(phoneNumberDigits);
     isPhoneNumberValid = PhoneNumber.isValid(phoneNumber);
     if (Objects.isNotNull(view)) {
-      view.setTextInputContent(phoneNumber);
+      view.setTextInputContent(PhoneNumber.format(phoneNumber));
       view.showNextButtonAsEnabled(isPhoneNumberValid);
       if (isPhoneNumberValid) {
         view.showTextInputAsErratic(false);

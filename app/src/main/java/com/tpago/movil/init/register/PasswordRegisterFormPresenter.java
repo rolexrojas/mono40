@@ -27,6 +27,12 @@ final class PasswordRegisterFormPresenter
     this.isConfirmationTextInputContentValid = this.isTextInputContentValid;
   }
 
+  private boolean canMoveToNextScreen() {
+    return isTextInputContentValid
+      && isConfirmationTextInputContentValid
+      && textInputContent.equals(confirmationTextInputContent);
+  }
+
   private void updateView() {
     if (isTextInputContentValid) {
       view.showTextInputContentAsErratic(false);
@@ -34,8 +40,7 @@ final class PasswordRegisterFormPresenter
     if (isConfirmationTextInputContentValid) {
       view.showConfirmationTextInputContentAsErratic(false);
     }
-    view.showMoveToNextScreenButtonAsEnabled(isTextInputContentValid
-      && isConfirmationTextInputContentValid);
+    view.showMoveToNextScreenButtonAsEnabled(canMoveToNextScreen());
   }
 
   final void onTextInputContentChanged(String content) {
@@ -51,15 +56,14 @@ final class PasswordRegisterFormPresenter
     final String sanitizedContent = sanitize(content);
     if (!sanitizedContent.equals(confirmationTextInputContent)) {
       confirmationTextInputContent = sanitizedContent;
-      isConfirmationTextInputContentValid = Texts.isNotEmpty(confirmationTextInputContent)
-        && confirmationTextInputContent.equals(textInputContent);
+      isConfirmationTextInputContentValid = Texts.isNotEmpty(confirmationTextInputContent);
       updateView();
     }
   }
 
   @Override
   void onMoveToNextScreenButtonClicked() {
-    if (isTextInputContentValid && isConfirmationTextInputContentValid) {
+    if (canMoveToNextScreen()) {
       registerData.setPassword(textInputContent);
       view.moveToNextScreen();
     } else {

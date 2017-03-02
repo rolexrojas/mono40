@@ -162,6 +162,8 @@ public final class UnlockFragment extends BaseInitFragment implements UnlockPres
     Picasso.with(context)
       .load(file)
       .resizeDimen(R.dimen.widget_image_avatar_large, R.dimen.widget_image_avatar_large)
+      .placeholder(R.drawable.widget_image_dark_avatar_placeholder_large)
+      .error(R.drawable.widget_image_dark_avatar_placeholder_large)
       .transform(new CircleTransformation())
       .noFade()
       .into(avatarImageView);

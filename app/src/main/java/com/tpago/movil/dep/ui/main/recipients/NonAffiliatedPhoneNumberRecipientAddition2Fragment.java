@@ -19,6 +19,7 @@ import com.tpago.movil.R;
 import com.tpago.movil.app.App;
 import com.tpago.movil.dep.data.res.AssetProvider;
 import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
+import com.tpago.movil.dep.domain.Product;
 import com.tpago.movil.dep.domain.api.ApiResult;
 import com.tpago.movil.dep.domain.api.DepApiBridge;
 import com.tpago.movil.dep.domain.session.SessionManager;
@@ -91,18 +92,17 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
             loadIndicator.start();
           }
         })
-        .subscribe(new Action1<ApiResult<Void>>() {
+        .subscribe(new Action1<ApiResult<Product>>() {
           @Override
-          public void call(ApiResult<Void> result) {
+          public void call(ApiResult<Product> result) {
             loadIndicator.stop();
             if (result.isSuccessful()) {
               recipient.setAccountNumber(content);
+              recipient.setProduct(result.getData());
               final Activity activity = getActivity();
               activity.setResult(
                 Activity.RESULT_OK,
-                NonAffiliatedPhoneNumberRecipientAdditionActivity.serializeResult(
-                  recipient.getBank(),
-                  recipient.getAccountNumber()));
+                NonAffiliatedPhoneNumberRecipientAdditionActivity.serializeResult(recipient));
               activity.finish();
             } else {
               Dialogs.builder(getContext())

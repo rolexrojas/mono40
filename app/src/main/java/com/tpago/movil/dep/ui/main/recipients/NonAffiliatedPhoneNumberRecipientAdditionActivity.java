@@ -4,13 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.util.Pair;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 
-import com.tpago.movil.Bank;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
+import com.tpago.movil.dep.domain.Recipient;
 import com.tpago.movil.dep.ui.BaseActivity;
 import com.tpago.movil.util.Objects;
 
@@ -24,19 +23,15 @@ import butterknife.Unbinder;
 public class NonAffiliatedPhoneNumberRecipientAdditionActivity extends BaseActivity {
   private static final String KEY_RECIPIENT = "recipient";
 
-  private static final String KEY_BANK = "bank";
-  private static final String KEY_ACCOUNT_NUMBER = "accountNumber";
-
   private Unbinder unbinder;
 
   protected NonAffiliatedPhoneNumberRecipient recipient;
 
   @BindView(R.id.toolbar) Toolbar toolbar;
 
-  protected static Intent serializeResult(Bank bank, String accountNumber) {
+  protected static Intent serializeResult(Recipient recipient) {
     final Intent intent = new Intent();
-    intent.putExtra(KEY_BANK, bank);
-    intent.putExtra(KEY_ACCOUNT_NUMBER, accountNumber);
+    intent.putExtra(KEY_RECIPIENT, recipient);
     return intent;
   }
 
@@ -54,13 +49,11 @@ public class NonAffiliatedPhoneNumberRecipientAdditionActivity extends BaseActiv
     return getLaunchIntent(context, new NonAffiliatedPhoneNumberRecipient(phoneNumber));
   }
 
-  public static Pair<Bank, String> deserializeResult(Intent data) {
+  public static Recipient deserializeResult(Intent data) {
     if (Objects.isNull(data)) {
       return null;
     } else {
-      final Bank bank = (Bank) data.getSerializableExtra(KEY_BANK);
-      final String accountNumber = data.getStringExtra(KEY_ACCOUNT_NUMBER);
-      return Pair.create(bank, accountNumber);
+      return (Recipient) data.getSerializableExtra(KEY_RECIPIENT);
     }
   }
 
