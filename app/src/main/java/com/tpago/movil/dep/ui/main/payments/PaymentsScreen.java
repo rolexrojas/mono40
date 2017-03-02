@@ -31,71 +31,28 @@ interface PaymentsScreen extends Screen {
   @NonNull
   Observable<String> onQueryChanged();
 
-  /**
-   * TODO
-   */
   void clearQuery();
 
-  /**
-   * TODO
-   *
-   * @param fullscreen
-   *   TODO
-   */
   void showLoadIndicator(boolean fullscreen);
 
-  /**
-   * TODO
-   */
   void hideLoadIndicator();
 
-  /**
-   * TODO
-   */
   void clear();
 
-  /**
-   * TODO
-   *
-   * @param item
-   *   TODO
-   */
   void add(@NonNull Object item);
 
-  /**
-   * TODO
-   *
-   * @param item
-   *   TODO
-   */
   void update(@NonNull Object item);
 
-  /**
-   * TODO
-   *
-   * @param recipient
-   *   TODO
-   */
-  void showConfirmationDialog(@NonNull Recipient recipient, @NonNull String title,
+  void showConfirmationDialog(
+    @NonNull Recipient recipient,
+    @NonNull String title,
     @Nullable String message);
 
-  /**
-   * TODO
-   */
   void showUnaffiliatedRecipientAdditionNotAvailableMessage();
 
-  /**
-   * TODO
-   */
   void showPaymentToUnaffiliatedRecipientNotAvailableMessage();
 
-  /**
-   * TODO
-   *
-   * @param phoneNumber
-   *   TODO
-   */
-  void startTransfer(@NonNull String phoneNumber);
+  void startTransfer(@NonNull String phoneNumber, boolean isAffiliated);
 
   void openIndexScreen();
   void finish();

@@ -12,6 +12,7 @@
   <style name="Base.App.ThemeOverlay.Dark" parent="ThemeOverlay.AppCompat.Dark">
     <item name="colorAccent">@color/white</item>
   </style>
+  <style name="Base.App.ThemeOverlay.Light" parent="ThemeOverlay.AppCompat.Light"/>
 
   <style name="Base.CropImage.Theme" parent="Theme.AppCompat.Light">
     <item name="actionMenuTextColor">@color/white</item>
@@ -48,7 +49,9 @@
     <item name="android:textSize">14sp</item>
     <item name="fontPath">@string/font_gotham_round_bold</item>
   </style>
-  <style name="Base.Widget.Button.Dark"/>
+  <style name="Base.Widget.Button.Dark">
+    <item name="android:theme">@style/App.ThemeOverlay.Dark</item>
+  </style>
   <style name="Base.Widget.Button.Dark.Gradient">
     <item name="android:background">@drawable/widget_button_dark_gradient_shape</item>
   </style>
@@ -56,16 +59,19 @@
   <style name="Base.Widget.Button.Dark.Solid.Rounded">
     <item name="android:background">@drawable/widget_button_dark_solid_rounded_shape</item>
   </style>
-  <style name="Base.Widget.Button.Dark.Transparent">
-    <item name="android:theme">@style/App.ThemeOverlay.Dark</item>
-  </style>
+  <style name="Base.Widget.Button.Dark.Transparent"/>
   <style name="Base.Widget.Button.Dark.Transparent.Rounded">
     <item name="android:background">@drawable/widget_button_dark_transparent_rounded_shape</item>
     <item name="android:textColor">@color/widget_button_dark_transparent_text</item>
   </style>
+  <style name="Base.Widget.Button.Light">
+    <item name="android:theme">@style/App.ThemeOverlay.Light</item>
+  </style>
+  <style name="Base.Widget.Button.Light.Solid">
+    <item name="android:background">@drawable/widget_button_light_solid_shape</item>
+  </style>
 
   <style name="Base.Widget.TextInput" parent="Widget.AppCompat.EditText">
-    <item name="android:textCursorDrawable">@drawable/widget_text_input_dark_cursor</item>
     <item name="android:textSize">16sp</item>
     <item name="fontPath">@string/font_gotham_round_book</item>
   </style>
@@ -73,7 +79,15 @@
     <item name="android:background">@drawable/widget_text_input_dark</item>
     <item name="android:textColor">@color/widget_text_input_dark</item>
     <item name="android:textColorHint">@color/widget_text_input_dark_text_alpha_50</item>
+    <item name="android:textCursorDrawable">@drawable/widget_text_input_dark_cursor</item>
     <item name="android:theme">@style/App.ThemeOverlay.Dark</item>
+  </style>
+  <style name="Base.Widget.TextInput.Light">
+    <item name="android:background">@drawable/widget_text_input_light</item>
+    <item name="android:textColor">@color/widget_text_input_light</item>
+    <item name="android:textColorHint">@color/widget_text_input_light_text_alpha_50</item>
+    <item name="android:textCursorDrawable">@drawable/widget_text_input_light_cursor</item>
+    <item name="android:theme">@style/App.ThemeOverlay.Light</item>
   </style>
 
   <style name="Base.Widget.NotEditableTextInput.Dark" parent="Base.Widget.TextInput.Dark">
@@ -161,6 +175,7 @@
   <!-- Public styles -->
   <style name="App.Theme" parent="Base.App.Theme"/>
   <style name="App.ThemeOverlay.Dark" parent="Base.App.ThemeOverlay.Dark"/>
+  <style name="App.ThemeOverlay.Light" parent="Base.App.ThemeOverlay.Light"/>
 
   <style name="CropImage.Theme" parent="Base.CropImage.Theme"/>
 
@@ -170,8 +185,10 @@
   <style name="Widget.Button.Dark.Gradient" parent="Base.Widget.Button.Dark.Gradient"/>
   <style name="Widget.Button.Dark.Solid.Rounded" parent="Base.Widget.Button.Dark.Solid.Rounded"/>
   <style name="Widget.Button.Dark.Transparent.Rounded" parent="Base.Widget.Button.Dark.Transparent.Rounded"/>
+  <style name="Widget.Button.Light.Solid" parent="Base.Widget.Button.Light.Solid"/>
 
   <style name="Widget.TextInput.Dark" parent="Base.Widget.TextInput.Dark"/>
+  <style name="Widget.TextInput.Light" parent="Base.Widget.TextInput.Light"/>
 
   <style name="Widget.NotEditableTextInput.Dark" parent="Base.Widget.NotEditableTextInput.Dark"/>
 

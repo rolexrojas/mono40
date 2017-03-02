@@ -9,6 +9,9 @@
   <style name="Widget.Button.Dark.Transparent.Rounded" parent="Base.Widget.Button.Dark.Transparent.Rounded">
     <item name="android:background">@drawable/widget_button_dark_transparent_rounded</item>
   </style>
+  <style name="Widget.Button.Light.Solid" parent="Base.Widget.Button.Light.Solid">
+    <item name="android:background">@drawable/widget_button_light_solid</item>
+  </style>
 
 
   <!-- Deprecated styles -->

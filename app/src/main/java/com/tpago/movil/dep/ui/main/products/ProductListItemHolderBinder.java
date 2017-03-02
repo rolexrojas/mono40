@@ -7,7 +7,7 @@ import com.tpago.movil.dep.data.Formatter;
 import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.data.res.AssetProvider;
 import com.tpago.movil.dep.domain.Balance;
-import com.tpago.movil.dep.domain.Bank;
+import com.tpago.movil.Bank;
 import com.tpago.movil.dep.domain.Product;
 import com.tpago.movil.dep.ui.main.list.ListItemHolderBinder;
 import com.squareup.picasso.Picasso;

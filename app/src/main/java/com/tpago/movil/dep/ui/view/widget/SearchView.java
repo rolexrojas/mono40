@@ -65,7 +65,7 @@ public class SearchView extends LinearLayout {
   public SearchView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     setOrientation(LinearLayout.HORIZONTAL);
-    final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.SearchView,
+    final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.DepSearchView,
       defStyleAttr, R.style.Dep_App_Widget_SearchView);
     try {
       hint = array.getString(R.styleable.DepSearchView_hint);

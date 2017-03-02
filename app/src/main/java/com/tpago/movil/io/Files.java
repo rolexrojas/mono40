@@ -18,7 +18,7 @@ public final class Files {
     Preconditions.checkNotNull(context, "context == null");
     final File d = context.getExternalFilesDir(DIRECTORY_PICTURES);
     if (Objects.isNull(d)) {
-      throw new IllegalStateException("External storage is unavailable");
+      throw new IllegalStateException("context.getExternalFilesDir(DIRECTORY_PICTURES) == null");
     }
     return new File(d, Long.toString(System.currentTimeMillis()));
   }

@@ -11,6 +11,7 @@ import android.view.MenuItem;
 
 import com.tpago.movil.app.App;
 import com.tpago.movil.R;
+import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.domain.PhoneNumberRecipient;
 import com.tpago.movil.dep.domain.Recipient;
@@ -33,9 +34,6 @@ import butterknife.Unbinder;
 public class TransactionCreationActivity
   extends SwitchableContainerActivity<TransactionCreationComponent>
   implements TransactionCreationContainer {
-  /**
-   * TODO
-   */
   private static final String EXTRA_RECIPIENT = "recipient";
 
   private TransactionCreationComponent component;
@@ -48,14 +46,6 @@ public class TransactionCreationActivity
   @BindView(R.id.toolbar)
   Toolbar toolbar;
 
-  /**
-   * TODO
-   *
-   * @param recipient
-   *   TODO
-   *
-   * @return TODO
-   */
   @NonNull
   private static Intent serializeResult(@NonNull Recipient recipient) {
     final Intent intent = new Intent();
@@ -63,29 +53,11 @@ public class TransactionCreationActivity
     return intent;
   }
 
-  /**
-   * TODO
-   *
-   * @param context
-   *   TODO
-   *
-   * @return TODO
-   */
   @NonNull
   private static Intent getLaunchIntent(@NonNull Context context) {
     return new Intent(context, TransactionCreationActivity.class);
   }
 
-  /**
-   * TODO
-   *
-   * @param context
-   *   TODO
-   * @param recipient
-   *   TODO
-   *
-   * @return TODO
-   */
   @NonNull
   public static Intent getLaunchIntent(@NonNull Context context, @NonNull Recipient recipient) {
     final Intent intent = getLaunchIntent(context);
@@ -93,19 +65,18 @@ public class TransactionCreationActivity
     return intent;
   }
 
-  /**
-   * TODO
-   *
-   * @param context
-   *   TODO
-   * @param phoneNumber
-   *   TODO
-   *
-   * @return TODO
-   */
   @NonNull
-  public static Intent getLaunchIntent(@NonNull Context context, @NonNull String phoneNumber) {
-    return getLaunchIntent(context, new PhoneNumberRecipient(phoneNumber));
+  public static Intent getLaunchIntent(
+    @NonNull Context context,
+    @NonNull String phoneNumber,
+    boolean isAffiliated) {
+    final Recipient r;
+    if (isAffiliated) {
+      r = new PhoneNumberRecipient(phoneNumber);
+    } else {
+      r = new NonAffiliatedPhoneNumberRecipient(phoneNumber);
+    }
+    return getLaunchIntent(context, r);
   }
 
   /**
@@ -157,6 +128,9 @@ public class TransactionCreationActivity
       final ChildFragment<TransactionCreationContainer> fragment;
       switch (type) {
         case PHONE_NUMBER:
+          fragment = PhoneNumberTransactionCreationFragment.newInstance();
+          break;
+        case NON_AFFILIATED_PHONE_NUMBER:
           fragment = PhoneNumberTransactionCreationFragment.newInstance();
           break;
         case CONTACT:

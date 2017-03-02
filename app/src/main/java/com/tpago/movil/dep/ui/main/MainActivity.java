@@ -24,7 +24,7 @@ import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.misc.rx.RxUtils;
 import com.tpago.movil.dep.ui.ActivityModule;
 import com.tpago.movil.dep.ui.ChildFragment;
-import com.tpago.movil.dep.ui.DialogCreator;
+import com.tpago.movil.dep.ui.Dialogs;
 import com.tpago.movil.dep.ui.SwitchableContainerActivity;
 import com.tpago.movil.dep.ui.index.IndexActivity;
 import com.tpago.movil.dep.ui.main.purchase.PurchaseFragment;
@@ -215,7 +215,7 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
     if (Utils.isNotNull(childFragment)) {
       setChildFragment(childFragment, true, true);
     } else {
-      DialogCreator.featureNotAvailable(this)
+      Dialogs.featureNotAvailable(this)
         .show();
     }
   }

@@ -121,8 +121,8 @@
   <string name="action.skip">Saltar</string>
   <string name="action.transfer">Transferir</string>
   <string name="add_another_account">Agregar otra cuenta</string>
-  <string name="add_recipient.search.hint">Seleccione o busque el recipiente</string>
-  <string name="add_recipient.title">Agregar recipiente</string>
+  <string name="add_recipient.search.hint">Seleccione o busque el destinatario</string>
+  <string name="add_recipient.title">Agregar destinatario</string>
   <string name="app_text_widget_num_pad_cell_font">@string/font_gotham_rounded_medium</string>
   <string name="app_text_widget_prefixable_text_view_font">@string/font_gotham_rounded_book</string>
   <string name="balance">Saldo</string>
@@ -176,7 +176,7 @@
   <string name="info.not_available.payments">Por el momento no es posible realizar pagos.</string>
   <string name="info.not_available.recent_transactions">Por el momento no es posible ver las últimas transacciones.</string>
   <string name="info.not_available.recharge">Por el momento no es posible recargar.</string>
-  <string name="info.not_available.remove_recipients">Por el momento no es posible remover recipientes.</string>
+  <string name="info.not_available.remove_recipients">Por el momento no es posible remover destinatarios.</string>
   <string name="info.not_available.unaffiliated_contact_recipient_addition">Por el momento no es posible agregar números no afiliados.</string>
   <string name="instruction_content_first">¡Listo! Visita la sucursal del banco donde tienes la cuenta o tarjeta de crédito que deseas agregar.</string>
   <string name="instruction_content_second">Con tu cédula y celular en mano, solicita a un representante de servicio, que active tu cuenta o tarjeta a tPago.</string>
@@ -194,14 +194,14 @@
   <string name="pay_screen_search_hint">Nombre, número o facturador</string>
   <string name="payments.action.phone_number.add">Agregar \'%1$s\'</string>
   <string name="payments.action.phone_number.transaction">Transacción con \'%1$s\'</string>
-  <string name="payments.menu.option.add_recipient">Agregar recipiente</string>
-  <string name="payments.menu.option.remove_recipient">Remover recipiente</string>
+  <string name="payments.menu.option.add_recipient">Agregar destinatario</string>
+  <string name="payments.menu.option.remove_recipient">Remover destinatario</string>
   <string name="payments.title">Pagar</string>
   <string name="pin_confirmation">Confirma con tu PIN</string>
   <string name="preferences">Preferencias</string>
   <string name="recent_transactions">Últimas transacciones</string>
   <string name="recipient">Recipiente</string>
-  <string name="recipient.picture">Imagen del recipiente</string>
+  <string name="recipient.picture">Imagen del destinatario</string>
   <string name="recipient_addition_title_contact">¡Contacto agregado!</string>
   <string name="screen_payments_commerce_title">Comprar</string>
   <string name="screen_products_text_widget_amount_value_font">@string/font_gotham_rounded_medium</string>
@@ -215,4 +215,5 @@
   <string name="we_are_sorry">¡Lo sentimos!</string>
   <string name="your_account_have_been_added">Tu cuenta se agregó exitosamente al mundo %1$s. Ya puedes usarla como cuenta de fondos.</string>
   <string name="your_account_have_been_removed">Tu cuenta se removió exitosamente del mundo %1$s. Ya no puedes usarla como cuenta de fondos.</string>
+  <string name="transaction">Ingresa el número de cuenta del %1$s para realizar la transacción.</string>
 </resources>

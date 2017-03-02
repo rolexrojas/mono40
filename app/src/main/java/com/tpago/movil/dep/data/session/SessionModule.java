@@ -12,23 +12,17 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import retrofit2.Retrofit;
 
 /**
  * @author hecvasro
  */
-@Module
+@Deprecated
+@Module(includes = SessionFlavorModule.class)
 public class SessionModule {
   @Provides
   @Singleton
   SessionRepo provideSessionRepo(Context context) {
     return new SharedPreferencesSessionRepo(context);
-  }
-
-  @Provides
-  @Singleton
-  SessionService provideSessionService(Retrofit retrofit) {
-    return new RetrofitSessionService(retrofit);
   }
 
   @Provides

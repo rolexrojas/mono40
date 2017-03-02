@@ -2,6 +2,7 @@ package com.tpago.movil.dep.domain;
 
 import android.support.annotation.NonNull;
 
+import com.tpago.movil.Bank;
 import com.tpago.movil.dep.misc.Utils;
 
 import java.io.Serializable;

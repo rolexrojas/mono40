@@ -36,7 +36,7 @@ public final class ApiError {
     INVALID_PHONE_NUMBER(13),
     INVALID_PIN(16),
     UNASSOCIATED_PROFILE(144),
-    UNAVAILABLE_SERVICE(14),
+    UNREGISTERED_PHONE_NUMBER(14),
     UNEXPECTED(500);
 
     private final int value;

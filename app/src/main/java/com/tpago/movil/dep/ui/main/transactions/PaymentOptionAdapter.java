@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.data.res.AssetProvider;
-import com.tpago.movil.dep.domain.Bank;
+import com.tpago.movil.Bank;
 import com.tpago.movil.dep.domain.Product;
 import com.squareup.picasso.Picasso;
 

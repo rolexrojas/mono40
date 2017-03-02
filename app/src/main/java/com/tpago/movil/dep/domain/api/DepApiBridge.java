@@ -2,8 +2,9 @@ package com.tpago.movil.dep.domain.api;
 
 import android.support.annotation.NonNull;
 
+import com.tpago.movil.Partner;
 import com.tpago.movil.dep.domain.Balance;
-import com.tpago.movil.dep.domain.Bank;
+import com.tpago.movil.Bank;
 import com.tpago.movil.dep.domain.InitialData;
 import com.tpago.movil.dep.domain.Product;
 import com.tpago.movil.dep.domain.Recipient;
@@ -30,7 +31,7 @@ public interface DepApiBridge {
    * @return An {@link Observable observable} that emits all the associated {@link Bank banks}.
    */
   @NonNull
-  Observable<ApiResult<List<Bank>>> banks();
+  Observable<ApiResult<List<Bank>>> banks(@NonNull String authToken);
 
   /**
    * TODO
@@ -127,4 +128,11 @@ public interface DepApiBridge {
   @NonNull
   Observable<ApiResult<Void>> setDefaultPaymentOption(@NonNull String authToken,
     @NonNull Product product);
+
+  Observable<ApiResult<Void>> checkAccountNumber(
+    String authToken,
+    Bank bank,
+    String accountNumber);
+
+  Observable<ApiResult<List<Partner>>> partners(String authToken);
 }

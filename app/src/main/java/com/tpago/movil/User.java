@@ -15,7 +15,12 @@ public abstract class User {
 
   private OnNameChangedListener onNameChangedListener;
 
-  static User create(PhoneNumber phoneNumber, Email email, String firstName, String lastName, Avatar avatar) {
+  static User create(
+    PhoneNumber phoneNumber,
+    Email email,
+    String firstName,
+    String lastName,
+    Avatar avatar) {
     final User user = new AutoValue_User(phoneNumber, email, avatar);
     user.setName(firstName, lastName);
     return user;

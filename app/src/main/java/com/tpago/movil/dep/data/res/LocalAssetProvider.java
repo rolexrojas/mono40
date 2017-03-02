@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 
 import com.tpago.movil.BuildConfig;
 import com.tpago.movil.R;
-import com.tpago.movil.dep.domain.Bank;
+import com.tpago.movil.Bank;
 
 /**
  * TODO

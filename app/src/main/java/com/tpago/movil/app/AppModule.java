@@ -2,6 +2,8 @@ package com.tpago.movil.app;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.tpago.movil.Avatar;
 import com.tpago.movil.content.SharedPreferencesCreator;
 import com.tpago.movil.UserStore;
@@ -39,8 +41,8 @@ final class AppModule {
 
   @Provides
   @Singleton
-  StringResolver provideStringResolver(Context context) {
-    return new StringResolver(context);
+  Avatar provideAvatar(Context context) {
+    return Avatar.create(Files.createInternalPictureFile(context, Avatar.class.getSimpleName()));
   }
 
   @Provides
@@ -51,13 +53,21 @@ final class AppModule {
 
   @Provides
   @Singleton
-  Avatar provideAvatar(Context context) {
-    return Avatar.create(Files.createInternalPictureFile(context, Avatar.class.getSimpleName()));
+  UserStore provideUserStore(SharedPreferencesCreator sharedPreferencesCreator, Avatar avatar) {
+    return new UserStore(sharedPreferencesCreator, avatar);
   }
 
   @Provides
   @Singleton
-  UserStore provideUserStore(SharedPreferencesCreator sharedPreferencesCreator, Avatar avatar) {
-    return new UserStore(sharedPreferencesCreator, avatar);
+  Gson provideGson() {
+    return new GsonBuilder()
+      .registerTypeAdapterFactory(AppTypeAdapterFactory.create())
+      .create();
+  }
+
+  @Provides
+  @Singleton
+  StringResolver provideStringResolver(Context context) {
+    return new StringResolver(context);
   }
 }

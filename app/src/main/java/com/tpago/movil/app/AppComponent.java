@@ -20,6 +20,8 @@ import com.tpago.movil.dep.domain.api.DepApiBridge;
 import com.tpago.movil.dep.domain.pos.PosBridge;
 import com.tpago.movil.dep.domain.session.SessionManager;
 import com.tpago.movil.dep.domain.util.EventBus;
+import com.tpago.movil.dep.ui.main.recipients.NonAffiliatedPhoneNumberRecipientAddition1Fragment;
+import com.tpago.movil.dep.ui.main.recipients.NonAffiliatedPhoneNumberRecipientAddition2Fragment;
 import com.tpago.movil.init.InitComponent;
 import com.tpago.movil.init.InitModule;
 import com.tpago.movil.net.NetModule;
@@ -44,6 +46,10 @@ public interface AppComponent {
   InitComponent plus(InitModule module);
 
   void inject(AvatarCreationDialogFragment fragment);
+
+  // Deprecated injects
+  void inject(NonAffiliatedPhoneNumberRecipientAddition1Fragment fragment);
+  void inject(NonAffiliatedPhoneNumberRecipientAddition2Fragment fragment);
 
   // Deprecated provides
   DepApiBridge provideApiBridge();

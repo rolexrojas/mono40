@@ -2,6 +2,7 @@
 <resources>
   <!-- Common colors -->
   <color name="black">#000</color>
+  <color name="black_alpha_10">#20000000</color>
   <color name="black_alpha_40">#66000000</color>
   <color name="black_alpha_54">#89000000</color>
   <color name="black_alpha_80">#CC000000</color>
@@ -17,6 +18,7 @@
   <color name="app_background_gradient_dark_start">#691060</color>
   <color name="app_primary">#9C188F</color>
   <color name="app_primary_alpha_05">#0D9C188F</color>
+  <color name="app_primary_alpha_50">#7F9C188F</color>
   <color name="app_primary_dark">#6D1764</color>
 
   <!-- Tab indicator colors -->
@@ -30,6 +32,7 @@
   <color name="widget_button_dark_shape_solid_background">@color/white</color>
   <color name="widget_button_dark_transparent_shape_background">@color/transparent</color>
   <color name="widget_button_dark_transparent_text">@color/white</color>
+  <color name="widget_button_light_shape_solid_background">@color/white_alpha_50</color>
 
   <!-- Text input colors -->
   <color name="widget_text_input_dark_background">#CCC</color>
@@ -39,6 +42,13 @@
   <color name="widget_text_input_dark_erratic_alpha_50">#7FF8E81C</color>
   <color name="widget_text_input_dark_text">@color/white</color>
   <color name="widget_text_input_dark_text_alpha_50">@color/white_alpha_50</color>
+  <color name="widget_text_input_light_background">@color/black</color>
+  <color name="widget_text_input_light_background_alpha_50">#7FCCCCCC</color>
+  <color name="widget_text_input_light_cursor">#333</color>
+  <color name="widget_text_input_light_erratic">@color/app_primary</color>
+  <color name="widget_text_input_light_erratic_alpha_50">@color/app_primary_alpha_50</color>
+  <color name="widget_text_input_light_text">#333</color>
+  <color name="widget_text_input_light_text_alpha_50">#7F333333</color>
 
   <!-- Num pad colors -->
   <color name="widget_num_pad_dark_color">@color/white</color>

@@ -5,8 +5,6 @@ import com.google.gson.annotations.SerializedName;
 import com.tpago.movil.util.Objects;
 import com.tpago.movil.text.Texts;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Pattern;
 
 /**

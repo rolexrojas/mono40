@@ -20,7 +20,7 @@ import android.widget.Button;
 import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.data.res.AssetProvider;
 import com.tpago.movil.dep.data.util.BinderFactory;
-import com.tpago.movil.dep.ui.DialogCreator;
+import com.tpago.movil.dep.ui.Dialogs;
 import com.tpago.movil.dep.ui.main.MainContainer;
 import com.tpago.movil.dep.ui.main.list.ListItemAdapter;
 import com.tpago.movil.dep.ui.main.list.ListItemHolderCreatorFactory;
@@ -270,6 +270,6 @@ public class ProductsFragment extends ChildFragment<MainContainer> implements Pr
 
   @Override
   public void onShowRecentTransactionsButtonClicked() {
-    DialogCreator.featureNotAvailable(getActivity()).show();
+    Dialogs.featureNotAvailable(getActivity()).show();
   }
 }

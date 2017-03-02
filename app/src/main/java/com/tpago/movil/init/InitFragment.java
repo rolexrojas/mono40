@@ -79,6 +79,7 @@ public final class InitFragment extends BaseInitFragment {
         .doOnSubscribe(new Action0() {
           @Override
           public void call() {
+            logoAnimator.reset();
             logoAnimator.start();
           }
         })

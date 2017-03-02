@@ -10,7 +10,7 @@ import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.data.res.AssetProvider;
 import com.tpago.movil.dep.data.util.Binder;
-import com.tpago.movil.dep.domain.Bank;
+import com.tpago.movil.Bank;
 import com.tpago.movil.dep.domain.Product;
 import com.squareup.picasso.Picasso;
 

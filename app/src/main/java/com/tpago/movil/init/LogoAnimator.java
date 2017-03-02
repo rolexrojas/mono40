@@ -28,12 +28,6 @@ public final class LogoAnimator {
     movedAndScaledTranslationY = (Math.abs(aH - lH) / 2) - Math.abs(aY - lY);
   }
 
-  private void animateTranslationY(float translationY) {
-    ObjectAnimator.ofFloat(logo, View.TRANSLATION_Y, translationY)
-      .setDuration(duration)
-      .start();
-  }
-
   private void animateTranslationYAndScaleXY(float translationY, float scaleX, float scaleY) {
     final AnimatorSet animator = new AnimatorSet();
     animator.playTogether(
@@ -61,10 +55,10 @@ public final class LogoAnimator {
   }
 
   public final void moveOutOfScreen() {
-    animateTranslationY(outOfScreenTranslationY);
+    animateTranslationYAndScaleXY(outOfScreenTranslationY, 0.6F, 0.6F);
   }
 
   public final void moveBackToScreen() {
-    animateTranslationY(movedAndScaledTranslationY);
+    animateTranslationYAndScaleXY(movedAndScaledTranslationY, 0.6F, 0.6F);
   }
 }

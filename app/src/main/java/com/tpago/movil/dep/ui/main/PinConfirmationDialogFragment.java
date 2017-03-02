@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +21,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tpago.movil.R;
+import com.tpago.movil.app.InformationalDialogFragment;
 import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.ui.FullScreenDialogFragment;
 import com.tpago.movil.dep.ui.view.BaseAnimatorListener;
 import com.tpago.movil.dep.ui.view.widget.pad.Digit;
 import com.tpago.movil.dep.ui.view.widget.pad.DepNumPad;
 import com.tpago.movil.dep.ui.view.widget.PinView;
+import com.tpago.movil.util.Objects;
+import com.tpago.movil.widget.FullSizeLoadIndicator;
+import com.tpago.movil.widget.LoadIndicator;
 
 import java.io.Serializable;
 
@@ -58,6 +63,8 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
 
   private boolean succeeded = false;
   private OnDismissListener onDismissListener;
+
+  private LoadIndicator loadIndicator;
 
   @BindInt(android.R.integer.config_shortAnimTime)
   int enterDuration;
@@ -112,8 +119,25 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
   }
 
   public final void resolve(boolean succeeded) {
+    loadIndicator.stop();
     this.succeeded = succeeded;
-    this.pinView.resolve(this.succeeded);
+    if (this.succeeded) {
+      finish();
+    } else {
+      new AlertDialog.Builder(getContext())
+        .setTitle(R.string.error_title)
+        .setMessage(R.string.error_message)
+        .setPositiveButton(
+          R.string.error_positive_button_text,
+          new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              finish();
+            }
+          })
+        .create()
+        .show();
+    }
   }
 
   @Override
@@ -258,15 +282,11 @@ public class PinConfirmationDialogFragment extends FullScreenDialogFragment
   @Override
   public void onConfirmationStarted(@NonNull String pin) {
     Timber.d("onConfirmationStarted(%1$s)", pin);
-    callback.confirm(pin);
-  }
-
-  @Override
-  public void onConfirmationFinished(boolean succeeded) {
-    Timber.d("onConfirmationFinished(%1$s)", succeeded);
-    if (succeeded) {
-      finish();
+    if (Objects.isNull(loadIndicator)) {
+      loadIndicator = new FullSizeLoadIndicator(getChildFragmentManager());
     }
+    loadIndicator.start();
+    callback.confirm(pin);
   }
 
   public interface Callback extends Serializable {

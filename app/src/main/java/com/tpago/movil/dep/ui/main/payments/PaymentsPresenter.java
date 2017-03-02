@@ -277,11 +277,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
           @Override
           public void call(Boolean isAffiliated) {
             screen.hideLoadIndicator();
-            if (isAffiliated) {
-              screen.startTransfer(phoneNumber);
-            } else {
-              screen.showPaymentToUnaffiliatedRecipientNotAvailableMessage();
-            }
+            screen.startTransfer(phoneNumber, isAffiliated);
           }
         }, new Action1<Throwable>() {
           @Override

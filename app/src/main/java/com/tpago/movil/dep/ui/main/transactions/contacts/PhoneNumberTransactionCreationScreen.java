@@ -13,32 +13,15 @@ import java.util.List;
  * @author hecvasro
  */
 interface PhoneNumberTransactionCreationScreen extends Screen {
-  /**
-   * TODO
-   *
-   * @param paymentOptions
-   *   TODO
-   */
   void setPaymentOptions(@NonNull List<Product> paymentOptions);
 
-  /**
-   * TODO
-   *
-   * @param currency
-   *   TODO
-   */
   void setPaymentOptionCurrency(@NonNull String currency);
 
-  /**
-   * TODO
-   */
   void clearAmount();
 
-  /**
-   * TODO
-   *
-   * @param succeeded
-   *   TODO
-   */
   void setPaymentResult(boolean succeeded);
+
+  void requestBankAndAccountNumber();
+
+  void finish();
 }

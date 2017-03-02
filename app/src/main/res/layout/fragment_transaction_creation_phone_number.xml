@@ -7,7 +7,7 @@
   android:orientation="vertical"
   tools:ignore="MissingPrefix">
   <include layout="@layout/reusable_payment_option_chooser"/>
-  <com.tpago.movil.ui.view.widget.AutoResizeablePrefixableTextView
+  <com.tpago.movil.dep.ui.view.widget.AutoResizeablePrefixableTextView
     android:id="@+id/transaction_creation.amount"
     style="@style/TransactionCreation.Widget.Amount"
     android:layout_width="match_parent"
@@ -21,7 +21,7 @@
     android:layout_marginStart="@dimen/space_horizontal_large"
     android:alpha="0.1"
     android:background="@color/black"/>
-  <com.tpago.movil.ui.view.widget.pad.NumPad
+  <com.tpago.movil.dep.ui.view.widget.pad.DepNumPad
     android:id="@+id/transaction_creation.num_pad"
     android:layout_width="match_parent"
     android:layout_height="0dp"

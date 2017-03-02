@@ -72,7 +72,7 @@ public final class UnlockFragment extends BaseInitFragment implements UnlockPres
     LayoutInflater inflater,
     @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_sign_in, container, false);
+    return inflater.inflate(R.layout.fragment_unlock, container, false);
   }
 
   @Override
@@ -163,8 +163,6 @@ public final class UnlockFragment extends BaseInitFragment implements UnlockPres
       .load(file)
       .resizeDimen(R.dimen.widget_image_avatar_large, R.dimen.widget_image_avatar_large)
       .transform(new CircleTransformation())
-      .placeholder(R.color.black) // TODO: Request a placeholder to UX.
-      .error(R.color.black) // TODO: Request a placeholder to UX.
       .noFade()
       .into(avatarImageView);
   }

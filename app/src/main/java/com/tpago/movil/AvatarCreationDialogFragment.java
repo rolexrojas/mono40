@@ -37,7 +37,7 @@ import timber.log.Timber;
  * @author hecvasro
  */
 public final class AvatarCreationDialogFragment extends DialogFragment {
-  private static final String KEY_AVATAR_FILE = "outputFile";
+  private static final String KEY_OUTPUT_FILE = "outputFile";
 
   private static final int REQUEST_CODE_GALLERY = 0;
   private static final int REQUEST_CODE_CAMERA = 1;
@@ -53,10 +53,10 @@ public final class AvatarCreationDialogFragment extends DialogFragment {
 
   private boolean shouldBeDismissed = false;
 
-  public static AvatarCreationDialogFragment create(File avatarFile) {
-    Preconditions.checkNotNull(avatarFile, "outputFile == null");
+  public static AvatarCreationDialogFragment create(File outputFile) {
+    Preconditions.checkNotNull(outputFile, "outputFile == null");
     final Bundle args = new Bundle();
-    args.putSerializable(KEY_AVATAR_FILE, avatarFile);
+    args.putSerializable(KEY_OUTPUT_FILE, outputFile);
     final AvatarCreationDialogFragment fragment = new AvatarCreationDialogFragment();
     fragment.setArguments(args);
     return fragment;
@@ -169,10 +169,10 @@ public final class AvatarCreationDialogFragment extends DialogFragment {
     super.onCreate(savedInstanceState);
     // Retrieves the avatar file from the arguments.
     final Bundle args = Preconditions.checkNotNull(getArguments(), "getArguments() == null");
-    if (!args.containsKey(KEY_AVATAR_FILE)) {
+    if (!args.containsKey(KEY_OUTPUT_FILE)) {
       throw new IllegalArgumentException("args.containsKey('outputFile') == false");
     }
-    outputFile = (File) args.getSerializable(KEY_AVATAR_FILE);
+    outputFile = (File) args.getSerializable(KEY_OUTPUT_FILE);
   }
 
   @NonNull

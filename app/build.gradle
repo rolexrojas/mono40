@@ -25,6 +25,9 @@ android {
     targetSdkVersion 24
 
     vectorDrawables.useSupportLibrary = true
+
+    resValue 'string', 'app_name', 'tPago'
+    buildConfigField 'boolean', 'CRASHLYTICS', 'false'
   }
 
   buildTypes {
@@ -38,35 +41,28 @@ android {
   }
 
   productFlavors {
-    def appName = 'tPago'
-    def res = [
-      type: [string: 'string'],
-      key: [appName: 'app_name']
-    ]
-    def build = [
-      type: [boolean: 'Boolean', string: 'String'],
-      field: [apiUrl: 'API_URL', crashlytics: 'CRASHLYTICS'],
-      value: [true: 'true', false: 'false']
-    ]
+    mock {
+      applicationIdSuffix '.mock'
+      resValue 'string', 'app_name', 'tPago-mock'
+    }
     development {
-      def flavorId = 'dev'
-      applicationIdSuffix ".${flavorId}"
-      resValue res.type.string, res.key.appName, "${appName}-${flavorId}"
-      buildConfigField build.type.boolean, build.field.crashlytics, build.value.false
-      buildConfigField build.type.string, build.field.apiUrl, '"http://172.19.1.103:8081/api/neo/"'
+      applicationIdSuffix '.dev'
+      resValue 'string', 'app_name', 'tPago-dev'
     }
     staging {
-      def flavorId = 'stag'
-      applicationIdSuffix ".${flavorId}"
-      resValue res.type.string, res.key.appName, "${appName}-${flavorId}"
-      buildConfigField build.type.boolean, build.field.crashlytics, build.value.true
-      buildConfigField build.type.string, build.field.apiUrl, '"https://demo.gcs-systems.com/api/neo/"'
+      applicationIdSuffix '.stag'
+      resValue 'string', 'app_name', 'tPago-stag'
+      buildConfigField 'boolean', 'CRASHLYTICS', 'true'
     }
     production {
-      resValue res.type.string, res.key.appName, appName
-      buildConfigField build.type.boolean, build.field.crashlytics, build.value.true
-      buildConfigField build.type.string, build.field.apiUrl, 'null'
+      buildConfigField 'boolean', 'CRASHLYTICS', 'true'
     }
+  }
+
+  sourceSets {
+    development.java.srcDir 'src/common/java'
+    staging.java.srcDir 'src/common/java'
+    production.java.srcDir 'src/common/java'
   }
 }
 

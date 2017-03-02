@@ -57,15 +57,10 @@ import rx.Observable;
  * @author hecvasro
  */
 public class PaymentsFragment extends ChildFragment<MainContainer>
-  implements PaymentsScreen, ListItemHolder.OnClickListener,
+  implements PaymentsScreen,
+  ListItemHolder.OnClickListener,
   ConfirmationDialogFragment.OnSaveButtonClickedListener {
-  /**
-   * TODO
-   */
   private static final int REQUEST_CODE_RECIPIENT_ADDITION = 0;
-  /**
-   * TODO
-   */
   private static final int REQUEST_CODE_TRANSACTION_CREATION = 1;
 
   private Unbinder unbinder;
@@ -318,8 +313,9 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
   }
 
   @Override
-  public void startTransfer(@NonNull String phoneNumber) {
-    startActivityForResult(TransactionCreationActivity.getLaunchIntent(getContext(), phoneNumber),
+  public void startTransfer(@NonNull String phoneNumber, boolean isAffiliated) {
+    startActivityForResult(
+      TransactionCreationActivity.getLaunchIntent(getContext(), phoneNumber, isAffiliated),
       REQUEST_CODE_TRANSACTION_CREATION);
   }
 
@@ -363,7 +359,9 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
 
   @Override
   public void startTransfer(Recipient recipient) {
-    startActivityForResult(TransactionCreationActivity.getLaunchIntent(getActivity(), recipient), REQUEST_CODE_TRANSACTION_CREATION);
+    startActivityForResult(
+      TransactionCreationActivity.getLaunchIntent(getActivity(), recipient),
+      REQUEST_CODE_TRANSACTION_CREATION);
   }
 
   @Override

@@ -25,53 +25,30 @@ public final class RecipientManager implements RecipientProvider {
   private final DepApiBridge apiBridge;
   private final com.tpago.movil.dep.domain.session.SessionManager sessionManager;
 
-  public RecipientManager(@NonNull RecipientRepo recipientRepo, @NonNull DepApiBridge apiBridge,
+  public RecipientManager(
+    @NonNull RecipientRepo recipientRepo,
+    @NonNull DepApiBridge apiBridge,
     @NonNull SessionManager sessionManager) {
     this.recipientRepo = recipientRepo;
     this.apiBridge = apiBridge;
     this.sessionManager = sessionManager;
   }
 
-  /**
-   * TODO
-   *
-   * @param recipients
-   *   TODO
-   *
-   * @return TODO
-   */
   @NonNull
   final Observable<List<Recipient>> syncRecipients(@NonNull List<Recipient> recipients) {
     return recipientRepo.saveAll(recipients);
   }
 
-  /**
-   * TODO
-   *
-   * @param phoneNumber
-   *   TODO
-   *
-   * @return TODO
-   */
   @NonNull
   public final Observable<Boolean> checkIfAffiliated(@NonNull String phoneNumber) {
     return apiBridge.checkIfAffiliated(sessionManager.getSession().getAuthToken(), phoneNumber)
       .compose(ApiUtils.<Boolean>handleApiResult(true));
   }
 
-  /**
-   * TODO
-   *
-   * @param phoneNumber
-   *   TODO
-   * @param label
-   *   TODO
-   *
-   * @return TODO
-   */
   @NonNull
   public final Observable<Pair<Boolean, Recipient>> addRecipient(
-    @NonNull final String phoneNumber, @Nullable final String label) {
+    @NonNull final String phoneNumber,
+    @Nullable final String label) {
     return checkIfAffiliated(phoneNumber)
       .flatMap(new Func1<Boolean, Observable<Pair<Boolean, Recipient>>>() {
         @Override

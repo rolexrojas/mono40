@@ -13,16 +13,6 @@ import rx.Observable;
  * @author hecvasro
  */
 public interface RecipientService {
-  /**
-   * TODO
-   *
-   * @param authToken
-   *   TODO
-   * @param phoneNumber
-   *   TODO
-   *
-   * @return TODO
-   */
   Observable<ApiResult<String>> getName(@NonNull String authToken,
     @NonNull PhoneNumber phoneNumber);
 }

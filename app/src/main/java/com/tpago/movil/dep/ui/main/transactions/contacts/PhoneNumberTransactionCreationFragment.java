@@ -1,5 +1,7 @@
 package com.tpago.movil.dep.ui.main.transactions.contacts;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,14 +14,16 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.tpago.movil.R;
+import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.data.Formatter;
 import com.tpago.movil.dep.data.res.AssetProvider;
 import com.tpago.movil.dep.domain.Product;
 import com.tpago.movil.dep.domain.Recipient;
 import com.tpago.movil.dep.ui.ChildFragment;
-import com.tpago.movil.dep.ui.DialogCreator;
+import com.tpago.movil.dep.ui.Dialogs;
 import com.tpago.movil.dep.ui.main.PinConfirmationDialogFragment;
+import com.tpago.movil.dep.ui.main.recipients.NonAffiliatedPhoneNumberRecipientAdditionActivity;
 import com.tpago.movil.dep.ui.main.transactions.PaymentOptionAdapter;
 import com.tpago.movil.dep.ui.main.transactions.TransactionCreationContainer;
 import com.tpago.movil.dep.ui.view.widget.pad.Digit;
@@ -44,13 +48,16 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 public class PhoneNumberTransactionCreationFragment
-  extends ChildFragment<TransactionCreationContainer> implements PhoneNumberTransactionCreationScreen,
-  Spinner.OnItemSelectedListener, DepNumPad.OnDigitClickedListener, DepNumPad.OnDotClickedListener,
-  DepNumPad.OnDeleteClickedListener, PinConfirmationDialogFragment.OnDismissListener {
-  /**
-   * TODO
-   */
+  extends ChildFragment<TransactionCreationContainer>
+  implements PhoneNumberTransactionCreationScreen,
+  Spinner.OnItemSelectedListener,
+  DepNumPad.OnDigitClickedListener,
+  DepNumPad.OnDotClickedListener,
+  DepNumPad.OnDeleteClickedListener,
+  PinConfirmationDialogFragment.OnDismissListener {
   private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
+
+  private static final int REQUEST_CODE = 0;
 
   private static final BigDecimal ZERO = BigDecimal.ZERO;
   private static final BigDecimal ONE = BigDecimal.ONE;
@@ -81,11 +88,8 @@ public class PhoneNumberTransactionCreationFragment
   private BigDecimal amount = ZERO;
   private BigDecimal fractionOffset = ONE;
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
+  private boolean shouldBeClosed = false;
+
   @NonNull
   public static PhoneNumberTransactionCreationFragment newInstance() {
     return new PhoneNumberTransactionCreationFragment();
@@ -122,7 +126,7 @@ public class PhoneNumberTransactionCreationFragment
 
   @OnClick(R.id.action_recharge)
   void onRechargeButtonClicked() {
-    DialogCreator.featureNotAvailable(getActivity())
+    Dialogs.featureNotAvailable(getActivity())
       .show();
   }
 
@@ -144,6 +148,14 @@ public class PhoneNumberTransactionCreationFragment
         }).show(getChildFragmentManager(), TAG_PIN_CONFIRMATION);
     } else {
       // TODO: Let the user know that he must insert an amount greater than zero.
+    }
+  }
+
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == REQUEST_CODE) {
+      shouldBeClosed = resultCode != Activity.RESULT_OK;
     }
   }
 
@@ -187,7 +199,7 @@ public class PhoneNumberTransactionCreationFragment
   public void onStart() {
     super.onStart();
     // Starts the presenter.
-    presenter.start();
+    presenter.start(shouldBeClosed);
   }
 
   @Override
@@ -236,6 +248,20 @@ public class PhoneNumberTransactionCreationFragment
     if (Utils.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
       ((PinConfirmationDialogFragment) fragment).resolve(succeeded);
     }
+  }
+
+  @Override
+  public void requestBankAndAccountNumber() {
+    startActivityForResult(
+      NonAffiliatedPhoneNumberRecipientAdditionActivity.getLaunchIntent(
+        getContext(),
+        (NonAffiliatedPhoneNumberRecipient) recipient),
+      REQUEST_CODE);
+  }
+
+  @Override
+  public void finish() {
+    getContainer().finish(false);
   }
 
   @Override

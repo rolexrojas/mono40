@@ -2,6 +2,7 @@ package com.tpago.movil.dep.ui.main.transactions.contacts;
 
 import android.support.annotation.NonNull;
 
+import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.data.SchedulerProvider;
 import com.tpago.movil.dep.domain.Product;
@@ -45,44 +46,41 @@ class PhoneNumberTransactionCreationPresenter
     this.recipient = recipient;
   }
 
-  /**
-   * TODO
-   */
-  void start() {
+  void start(boolean shouldBeClosed) {
     assertScreen();
-    paymentOptionSubscription = productManager.getAllPaymentOptions()
-      .subscribeOn(schedulerProvider.io())
-      .observeOn(schedulerProvider.ui())
-      .subscribe(new Action1<List<Product>>() {
-        @Override
-        public void call(List<Product> paymentOptions) {
-          screen.setPaymentOptions(paymentOptions);
-          // TODO: Let the user know that he is now able to choose a payment option.
-        }
-      }, new Action1<Throwable>() {
-        @Override
-        public void call(Throwable throwable) {
-          Timber.e(throwable, "Loading all payment options");
-          // TODO: Let the user know that loading all the payment options failed.
-        }
-      });
+    if (shouldBeClosed) {
+      screen.finish();
+    } else {
+      if (recipient instanceof NonAffiliatedPhoneNumberRecipient
+        && ((NonAffiliatedPhoneNumberRecipient) recipient).canBeTransferedTo()) {
+        paymentOptionSubscription = productManager.getAllPaymentOptions()
+          .subscribeOn(schedulerProvider.io())
+          .observeOn(schedulerProvider.ui())
+          .subscribe(new Action1<List<Product>>() {
+            @Override
+            public void call(List<Product> paymentOptions) {
+              screen.setPaymentOptions(paymentOptions);
+              // TODO: Let the user know that he is now able to choose a payment option.
+            }
+          }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+              Timber.e(throwable, "Loading all payment options");
+              // TODO: Let the user know that loading all the payment options failed.
+            }
+          });
+      } else {
+        screen.requestBankAndAccountNumber();
+      }
+    }
   }
 
-  /**
-   * TODO
-   */
   void stop() {
     assertScreen();
     RxUtils.unsubscribe(paymentSubscription);
     RxUtils.unsubscribe(paymentOptionSubscription);
   }
 
-  /**
-   * TODO
-   *
-   * @param paymentOption
-   *   TODO
-   */
   void setPaymentOption(@NonNull Product paymentOption) {
     this.assertScreen();
     this.paymentOption = paymentOption;
@@ -90,14 +88,6 @@ class PhoneNumberTransactionCreationPresenter
     this.screen.clearAmount();
   }
 
-  /**
-   * TODO
-   *
-   * @param value
-   *   TODO
-   * @param pin
-   *   TODO
-   */
   void transferTo(@NonNull BigDecimal value, @NonNull String pin) {
     assertScreen();
     if (Utils.isNotNull(paymentOption)) {

@@ -2,6 +2,8 @@ package com.tpago.movil.dep.domain;
 
 import android.support.annotation.NonNull;
 
+import com.tpago.movil.Bank;
+
 import java.util.Set;
 
 import rx.Observable;

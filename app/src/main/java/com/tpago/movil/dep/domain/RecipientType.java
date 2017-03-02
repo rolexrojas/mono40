@@ -7,6 +7,6 @@ package com.tpago.movil.dep.domain;
  */
 public enum RecipientType {
   PHONE_NUMBER,
-  CONTACT;
-
+  NON_AFFILIATED_PHONE_NUMBER,
+  CONTACT
 }

@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,9 @@ import com.tpago.movil.dep.ui.view.BaseAnimatorListener;
 import com.tpago.movil.dep.ui.view.widget.PinView;
 import com.tpago.movil.dep.ui.view.widget.pad.Digit;
 import com.tpago.movil.dep.ui.view.widget.pad.DepNumPad;
+import com.tpago.movil.util.Objects;
+import com.tpago.movil.widget.FullSizeLoadIndicator;
+import com.tpago.movil.widget.LoadIndicator;
 
 import butterknife.BindInt;
 import butterknife.BindView;
@@ -34,6 +38,7 @@ import io.codetail.animation.ViewAnimationUtils;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
@@ -43,6 +48,7 @@ import timber.log.Timber;
  *
  * @author hecvasro
  */
+@Deprecated
 public final class PinConfirmator {
   /**
    * TODO
@@ -280,29 +286,63 @@ public final class PinConfirmator {
       animator.start();
     }
 
+    private LoadIndicator loadIndicator;
+
     @Override
     public void onConfirmationStarted(@NonNull String pin) {
       subscription = callback.confirm(pin)
         .observeOn(AndroidSchedulers.mainThread())
+        .doOnSubscribe(new Action0() {
+          @Override
+          public void call() {
+            if (Objects.isNull(loadIndicator)) {
+              loadIndicator = new FullSizeLoadIndicator(getChildFragmentManager());
+            }
+            loadIndicator.start();
+          }
+        })
         .subscribe(new Action1<Boolean>() {
           @Override
           public void call(Boolean succeeded) {
-            pinView.resolve(succeeded);
+            loadIndicator.stop();
+            if (succeeded) {
+              finish();
+            } else {
+              new AlertDialog.Builder(getContext())
+                .setTitle(R.string.error_title)
+                .setMessage(R.string.error_message)
+                .setPositiveButton(
+                  R.string.error_positive_button_text,
+                  new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                      finish();
+                    }
+                  })
+                .create()
+                .show();
+            }
           }
         }, new Action1<Throwable>() {
           @Override
           public void call(Throwable throwable) {
             Timber.e(throwable, "Failed to confirm user's pin");
-            // TODO: Let the user know that the PIN confirmation failed.
+            loadIndicator.stop();
+            new AlertDialog.Builder(getContext())
+              .setTitle(R.string.error_title)
+              .setMessage(R.string.error_message)
+              .setPositiveButton(
+                R.string.error_positive_button_text,
+                new DialogInterface.OnClickListener() {
+                  @Override
+                  public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                  }
+                })
+              .create()
+              .show();
           }
         });
-    }
-
-    @Override
-    public void onConfirmationFinished(boolean succeeded) {
-      if (succeeded) {
-        finish();
-      }
     }
 
     @Override
