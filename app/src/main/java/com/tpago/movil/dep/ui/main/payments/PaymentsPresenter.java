@@ -99,7 +99,8 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
               @Override
               public Observable<Object> call() {
                 if (PhoneNumber.isValid(query)) {
-                  return Observable.just(new TransactionWithPhoneNumberAction(query),
+                  return Observable.just(
+                    new TransactionWithPhoneNumberAction(query),
                     new AddPhoneNumberAction(query))
                     .cast(Object.class);
                 } else {
@@ -293,15 +294,13 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
     }
   }
 
-  /**
-   * TODO
-   *
-   * @param recipient
-   *   TODO
-   */
-  void showTransactionConfirmation(@NonNull final Recipient recipient) {
+  void showTransactionConfirmation(
+    final Recipient recipient,
+    final String transactionId) {
     assertScreen();
     screen.clearQuery();
+    // TODO: Include the transaction id into the dialog.
+    // TODO: Include a flag that indicates if the recipient was already saved or not.
     screen.showConfirmationDialog(
       recipient,
       stringHelper.transactionCreationConfirmationTitle(),

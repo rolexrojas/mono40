@@ -125,6 +125,12 @@ public final class RecipientManager implements RecipientProvider {
           public Observable<Recipient> call(Recipient recipient) {
             return recipientRepo.save(recipient);
           }
+        })
+        .filter(new Func1<Recipient, Boolean>() {
+          @Override
+          public Boolean call(Recipient recipient) {
+            return recipient.matches(query);
+          }
         }))
       .onErrorResumeNext(recipientRepo.getAll(query).compose(RxUtils.<Recipient>fromCollection()))
       .distinct()

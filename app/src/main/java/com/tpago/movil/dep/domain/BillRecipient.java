@@ -3,8 +3,9 @@ package com.tpago.movil.dep.domain;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.common.base.Strings;
 import com.tpago.movil.Partner;
-import com.tpago.movil.dep.misc.Utils;
+import com.tpago.movil.dep.domain.util.StringUtils;
 import com.tpago.movil.text.Texts;
 
 /**
@@ -49,5 +50,12 @@ public class BillRecipient extends Recipient {
       + ",partner=" + partner
       + ",contractNumber='" + contractNumber + "'"
       + "}";
+  }
+
+  @Override
+  public boolean matches(@Nullable String query) {
+    return super.matches(query)
+      || StringUtils.matches(partner.getName(), query)
+      || StringUtils.matches(contractNumber, query);
   }
 }

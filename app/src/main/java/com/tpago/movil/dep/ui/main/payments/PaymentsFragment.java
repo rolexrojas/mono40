@@ -70,7 +70,7 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
   private LoadIndicator fullScreenLoadIndicator;
   private LoadIndicator currentLoadIndicator;
 
-  private Pair<Integer, Recipient> requestResult;
+  private Pair<Integer, Pair<Recipient, String>> requestResult;
 
   private RecipientListItemHolderBinder recipientBinder;
 
@@ -164,11 +164,12 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
     super.onResume();
     if (Utils.isNotNull(requestResult)) {
       final int code = requestResult.first;
-      final Recipient recipient = requestResult.second;
+      final Recipient recipient = requestResult.second.first;
       if (code == REQUEST_CODE_RECIPIENT_ADDITION) {
         presenter.addRecipient(recipient);
       } else if (code == REQUEST_CODE_TRANSACTION_CREATION) {
-        presenter.showTransactionConfirmation(recipient);
+        final String transactionId = requestResult.second.second;
+        presenter.showTransactionConfirmation(recipient, transactionId);
       }
       requestResult = null;
     }
@@ -223,14 +224,14 @@ public class PaymentsFragment extends ChildFragment<MainContainer>
       if (resultCode == Activity.RESULT_OK) {
         final Recipient recipient = AddRecipientActivity.deserializeResult(data);
         if (Utils.isNotNull(recipient)) {
-          requestResult = Pair.create(requestCode, recipient);
+          requestResult = Pair.create(requestCode, Pair.create(recipient, (String) null));
         }
       }
     } else if (requestCode == REQUEST_CODE_TRANSACTION_CREATION) {
       if (resultCode == Activity.RESULT_OK) {
-        final Recipient recipient = TransactionCreationActivity.deserializeResult(data);
-        if (Utils.isNotNull(recipient)) {
-          requestResult = Pair.create(requestCode, recipient);
+        final Pair<Recipient, String> result = TransactionCreationActivity.deserializeResult(data);
+        if (Utils.isNotNull(result)) {
+          requestResult = Pair.create(requestCode, result);
         }
       }
     }

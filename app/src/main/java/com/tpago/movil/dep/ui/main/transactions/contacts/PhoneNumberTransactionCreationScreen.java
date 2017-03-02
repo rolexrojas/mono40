@@ -19,7 +19,7 @@ interface PhoneNumberTransactionCreationScreen extends Screen {
 
   void clearAmount();
 
-  void setPaymentResult(boolean succeeded);
+  void setPaymentResult(boolean succeeded, String message);
 
   void requestBankAndAccountNumber();
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -19,6 +20,7 @@ import com.tpago.movil.dep.domain.RecipientType;
 import com.tpago.movil.dep.ui.ChildFragment;
 import com.tpago.movil.dep.ui.SwitchableContainerActivity;
 import com.tpago.movil.dep.ui.main.transactions.contacts.PhoneNumberTransactionCreationFragment;
+import com.tpago.movil.util.Objects;
 
 import javax.inject.Inject;
 
@@ -34,7 +36,8 @@ import butterknife.Unbinder;
 public class TransactionCreationActivity
   extends SwitchableContainerActivity<TransactionCreationComponent>
   implements TransactionCreationContainer {
-  private static final String EXTRA_RECIPIENT = "recipient";
+  private static final String KEY_RECIPIENT = "recipient";
+  private static final String KEY_TRANSACTION_ID = "transactionId";
 
   private TransactionCreationComponent component;
 
@@ -46,10 +49,10 @@ public class TransactionCreationActivity
   @BindView(R.id.toolbar)
   Toolbar toolbar;
 
-  @NonNull
-  private static Intent serializeResult(@NonNull Recipient recipient) {
+  private static Intent serializeResult(Recipient recipient, String transactionId) {
     final Intent intent = new Intent();
-    intent.putExtra(EXTRA_RECIPIENT, recipient);
+    intent.putExtra(KEY_RECIPIENT, recipient);
+    intent.putExtra(KEY_TRANSACTION_ID, transactionId);
     return intent;
   }
 
@@ -61,7 +64,7 @@ public class TransactionCreationActivity
   @NonNull
   public static Intent getLaunchIntent(@NonNull Context context, @NonNull Recipient recipient) {
     final Intent intent = getLaunchIntent(context);
-    intent.putExtra(EXTRA_RECIPIENT, recipient);
+    intent.putExtra(KEY_RECIPIENT, recipient);
     return intent;
   }
 
@@ -79,20 +82,13 @@ public class TransactionCreationActivity
     return getLaunchIntent(context, r);
   }
 
-  /**
-   * TODO
-   *
-   * @param intent
-   *   TODO
-   *
-   * @return TODO
-   */
-  @Nullable
-  public static Recipient deserializeResult(@Nullable Intent intent) {
-    if (Utils.isNotNull(intent)) {
-      return (Recipient) intent.getSerializableExtra(EXTRA_RECIPIENT);
-    } else {
+  public static Pair<Recipient, String> deserializeResult(Intent intent) {
+    if (Objects.isNull(intent)) {
       return null;
+    } else {
+      final Recipient recipient = (Recipient) intent.getSerializableExtra(KEY_RECIPIENT);
+      final String transactionId = intent.getStringExtra(KEY_TRANSACTION_ID);
+      return Pair.create(recipient, transactionId);
     }
   }
 
@@ -102,10 +98,10 @@ public class TransactionCreationActivity
     // Asserts all the required arguments.
     final Bundle bundle = Utils.isNotNull(savedInstanceState) ? savedInstanceState : getIntent()
       .getExtras();
-    if (Utils.isNull(bundle) || !bundle.containsKey(EXTRA_RECIPIENT)) {
-      throw new NullPointerException("Argument '" + EXTRA_RECIPIENT + "' must be provided");
+    if (Utils.isNull(bundle) || !bundle.containsKey(KEY_RECIPIENT)) {
+      throw new NullPointerException("Argument '" + KEY_RECIPIENT + "' must be provided");
     } else {
-      final Recipient recipient = (Recipient) bundle.getSerializable(EXTRA_RECIPIENT);
+      final Recipient recipient = (Recipient) bundle.getSerializable(KEY_RECIPIENT);
       // Injects all the annotated dependencies.
       component = DaggerTransactionCreationComponent.builder()
         .appComponent(((App) getApplication()).getComponent())
@@ -187,9 +183,9 @@ public class TransactionCreationActivity
   }
 
   @Override
-  public void finish(boolean succeeded) {
+  public void finish(boolean succeeded, String transactionId) {
     if (succeeded) {
-      setResult(RESULT_OK, serializeResult(recipient));
+      setResult(RESULT_OK, serializeResult(recipient, transactionId));
     } else {
       setResult(RESULT_CANCELED);
     }

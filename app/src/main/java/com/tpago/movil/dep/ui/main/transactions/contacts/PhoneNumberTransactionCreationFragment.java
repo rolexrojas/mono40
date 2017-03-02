@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.tpago.movil.Bank;
+import com.tpago.movil.Partner;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.dep.misc.Utils;
@@ -30,6 +33,8 @@ import com.tpago.movil.dep.ui.view.widget.pad.Digit;
 import com.tpago.movil.dep.ui.view.widget.pad.Dot;
 import com.tpago.movil.dep.ui.view.widget.pad.DepNumPad;
 import com.tpago.movil.dep.ui.view.widget.PrefixableTextView;
+import com.tpago.movil.text.Texts;
+import com.tpago.movil.util.Objects;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -88,7 +93,10 @@ public class PhoneNumberTransactionCreationFragment
   private BigDecimal amount = ZERO;
   private BigDecimal fractionOffset = ONE;
 
+  private String resultMessage = null;
+
   private boolean shouldBeClosed = false;
+  private Pair<Bank, String> requestResult = null;
 
   @NonNull
   public static PhoneNumberTransactionCreationFragment newInstance() {
@@ -156,6 +164,9 @@ public class PhoneNumberTransactionCreationFragment
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == REQUEST_CODE) {
       shouldBeClosed = resultCode != Activity.RESULT_OK;
+      if (!shouldBeClosed) {
+        requestResult = NonAffiliatedPhoneNumberRecipientAdditionActivity.deserializeResult(data);
+      }
     }
   }
 
@@ -199,7 +210,7 @@ public class PhoneNumberTransactionCreationFragment
   public void onStart() {
     super.onStart();
     // Starts the presenter.
-    presenter.start(shouldBeClosed);
+    presenter.start(shouldBeClosed, requestResult);
   }
 
   @Override
@@ -243,7 +254,8 @@ public class PhoneNumberTransactionCreationFragment
   }
 
   @Override
-  public void setPaymentResult(boolean succeeded) {
+  public void setPaymentResult(boolean succeeded, String message) {
+    this.resultMessage = message;
     final Fragment fragment = getChildFragmentManager().findFragmentByTag(TAG_PIN_CONFIRMATION);
     if (Utils.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
       ((PinConfirmationDialogFragment) fragment).resolve(succeeded);
@@ -261,7 +273,7 @@ public class PhoneNumberTransactionCreationFragment
 
   @Override
   public void finish() {
-    getContainer().finish(false);
+    getContainer().finish(false, null);
   }
 
   @Override
@@ -323,7 +335,15 @@ public class PhoneNumberTransactionCreationFragment
   @Override
   public void onDismiss(boolean succeeded) {
     if (succeeded) {
-      getContainer().finish(true);
+      getContainer().finish(true, resultMessage);
+    } else {
+      final String message = Texts.isEmpty(resultMessage) ? getString(R.string.error_message) : resultMessage;
+      Dialogs.builder(getContext())
+        .setTitle(R.string.error_title)
+        .setMessage(message)
+        .setPositiveButton(R.string.error_positive_button_text, null)
+        .create()
+        .show();
     }
   }
 }

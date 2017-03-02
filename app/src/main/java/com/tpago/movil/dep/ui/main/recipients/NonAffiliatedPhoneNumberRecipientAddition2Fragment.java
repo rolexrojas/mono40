@@ -53,9 +53,12 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
 
   private Subscription subscription = Subscriptions.unsubscribed();
 
-  @Inject DepApiBridge apiBridge;
-  @Inject AssetProvider assetProvider;
-  @Inject SessionManager sessionManager;
+  @Inject
+  DepApiBridge apiBridge;
+  @Inject
+  AssetProvider assetProvider;
+  @Inject
+  SessionManager sessionManager;
 
   @BindView(R.id.image_view)
   ImageView imageView;
@@ -95,7 +98,11 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
             if (result.isSuccessful()) {
               recipient.setAccountNumber(content);
               final Activity activity = getActivity();
-              activity.setResult(Activity.RESULT_OK);
+              activity.setResult(
+                Activity.RESULT_OK,
+                NonAffiliatedPhoneNumberRecipientAdditionActivity.serializeResult(
+                  recipient.getBank(),
+                  recipient.getAccountNumber()));
               activity.finish();
             } else {
               Dialogs.builder(getContext())
