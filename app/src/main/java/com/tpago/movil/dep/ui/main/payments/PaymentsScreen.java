@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import com.tpago.movil.dep.domain.Recipient;
 import com.tpago.movil.dep.ui.Screen;
 
+import java.util.List;
+
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -55,4 +57,7 @@ interface PaymentsScreen extends Screen {
   void showRecipientAdditionDialog(Recipient recipient);
   void startNonAffiliatedPhoneNumberRecipientAddition(String phoneNumber);
   void showTransactionSummary(Recipient recipient, boolean alreadyExists, String transactionId);
+
+  void requestPin();
+  void dismissPinConfirmator();
 }

@@ -309,37 +309,31 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
     }
   }
 
-  final void deleteSelectedRecipients() {
+  final void onPinRequestFinished(String pin) {
     if (deleting && deleteSubscription.isUnsubscribed()) {
-      deleteSubscription = recipientManager.remove(selectedRecipients)
+      deleteSubscription = recipientManager.remove(selectedRecipients, pin)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe(new Action0() {
+        .subscribe(new Action1<List<Recipient>>() {
           @Override
-          public void call() {
-            screen.showLoadIndicator(true);
-          }
-        })
-        .compose(RxUtils.<Recipient>fromCollection())
-        .subscribe(new Action1<Recipient>() {
-          @Override
-          public void call(Recipient recipient) {
-            screen.hideLoadIndicator();
+          public void call(List<Recipient> recipientList) {
+            screen.dismissPinConfirmator();
             screen.clearQuery();
           }
         }, new Action1<Throwable>() {
           @Override
           public void call(Throwable throwable) {
             Timber.e(throwable, "Removing one or more recipients");
-            screen.hideLoadIndicator();
+            screen.dismissPinConfirmator();
             screen.showMessage(stringHelper.cannotProcessYourRequestAtTheMoment());
           }
-        }, new Action0() {
-          @Override
-          public void call() {
-            stopDeleting();
-          }
         });
+    }
+  }
+
+  final void deleteSelectedRecipients() {
+    if (deleting && deleteSubscription.isUnsubscribed()) {
+      screen.requestPin();
     }
   }
 }

@@ -49,9 +49,23 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
     final RecipientType type = item.getType();
     Uri imageUri = Uri.EMPTY;
     boolean shouldBeCropped = false;
-    String dueDate = null;
-    String totalOwedCurrency = null;
-    String totalOwedValue = null;
+    if (type.equals(RecipientType.NON_AFFILIATED_PHONE_NUMBER)) {
+      imageUri = assetProvider.getLogoUri(
+        ((NonAffiliatedPhoneNumberRecipient) item).getBank(),
+        AssetProvider.STYLE_24_PRIMARY);
+    } else if (type.equals(RecipientType.BILL)) {
+      imageUri = assetProvider.getLogoUri(
+        ((BillRecipient) item).getPartner(),
+        AssetProvider.STYLE_24_PRIMARY);
+    }
+    if (!imageUri.equals(Uri.EMPTY)) {
+      final RequestCreator creator = Picasso.with(holder.getContext())
+        .load(imageUri);
+      if (shouldBeCropped) {
+        creator.transform(new CircleTransformation());
+      }
+      creator.into(holder.recipientPictureImageView);
+    }
     if (Utils.isNotNull(label)) {
       holder.recipientLabelTextView.setText(label);
       holder.recipientLabelTextView.setGravity(Gravity.START | Gravity.BOTTOM);
@@ -64,41 +78,9 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
       holder.recipientExtraTextView.setText(null);
       holder.recipientExtraTextView.setVisibility(View.GONE);
     }
-    if (type.equals(RecipientType.NON_AFFILIATED_PHONE_NUMBER)) {
-      holder.totalOwedPrefixableTextView.setVisibility(View.GONE);
-      holder.dueDateTextView.setVisibility(View.GONE);
-      holder.proceedActionView.setVisibility(View.VISIBLE);
-      imageUri = assetProvider.getLogoUri(
-        ((NonAffiliatedPhoneNumberRecipient) item).getBank(),
-        AssetProvider.STYLE_24_PRIMARY);
-    } else if (type.equals(RecipientType.BILL)) {
-      holder.totalOwedPrefixableTextView.setVisibility(View.VISIBLE);
-      holder.dueDateTextView.setVisibility(View.VISIBLE);
-      holder.proceedActionView.setVisibility(View.GONE);
-      final BillRecipient r = (BillRecipient) item;
-      imageUri = assetProvider.getLogoUri(
-        ((BillRecipient) item).getPartner(),
-        AssetProvider.STYLE_24_PRIMARY);
-      final BillBalance b = r.getBalance();
-      if (Objects.isNotNull(b)) {
-        dueDate = new SimpleDateFormat("dd MMMM", new Locale("es", "DO"))
-          .format(b.getDate())
-          .toUpperCase();
-        totalOwedCurrency = r.getCurrency();
-        totalOwedValue = Formatter.amount(b.getTotal());
-      }
-    }
-    holder.dueDateTextView.setText(dueDate);
-    holder.totalOwedPrefixableTextView.setPrefix(totalOwedCurrency);
-    holder.totalOwedPrefixableTextView.setContent(totalOwedValue);
-    if (!imageUri.equals(Uri.EMPTY)) {
-      final RequestCreator creator = Picasso.with(holder.getContext())
-        .load(imageUri);
-      if (shouldBeCropped) {
-        creator.transform(new CircleTransformation());
-      }
-      creator.into(holder.recipientPictureImageView);
-    }
+    String dueDate = null;
+    String totalOwedCurrency = null;
+    String totalOwedValue = null;
     if (isDeleting()) {
       holder.deleteCheckbox.setVisibility(View.VISIBLE);
       holder.deleteCheckbox.setChecked(item.isSelected());
@@ -106,7 +88,27 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
     } else {
       holder.deleteCheckbox.setVisibility(View.GONE);
       holder.deleteCheckbox.setChecked(false);
-      holder.proceedActionView.setVisibility(View.VISIBLE);
+      if (type.equals(RecipientType.NON_AFFILIATED_PHONE_NUMBER)) {
+        holder.totalOwedPrefixableTextView.setVisibility(View.GONE);
+        holder.dueDateTextView.setVisibility(View.GONE);
+        holder.proceedActionView.setVisibility(View.VISIBLE);
+      } else if (type.equals(RecipientType.BILL)) {
+        holder.totalOwedPrefixableTextView.setVisibility(View.VISIBLE);
+        holder.dueDateTextView.setVisibility(View.VISIBLE);
+        holder.proceedActionView.setVisibility(View.GONE);
+        final BillRecipient r = (BillRecipient) item;
+        final BillBalance b = r.getBalance();
+        if (Objects.isNotNull(b)) {
+          dueDate = new SimpleDateFormat("dd MMMM", new Locale("es", "DO"))
+            .format(b.getDate())
+            .toUpperCase();
+          totalOwedCurrency = r.getCurrency();
+          totalOwedValue = Formatter.amount(b.getTotal());
+        }
+      }
     }
+    holder.dueDateTextView.setText(dueDate);
+    holder.totalOwedPrefixableTextView.setPrefix(totalOwedCurrency);
+    holder.totalOwedPrefixableTextView.setContent(totalOwedValue);
   }
 }

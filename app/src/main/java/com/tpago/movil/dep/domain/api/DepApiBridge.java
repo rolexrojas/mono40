@@ -147,10 +147,9 @@ public interface DepApiBridge {
     String contractNumber,
     String pin);
 
-  Observable<ApiResult<Void>> removeBill(
+  Observable<ApiResult<Recipient>> removeBill(
     String authToken,
-    Partner partner,
-    String contractNumber,
+    BillRecipient bill,
     String pin);
 
   Observable<Recipient> queryBalance(String authToken, BillRecipient recipient);

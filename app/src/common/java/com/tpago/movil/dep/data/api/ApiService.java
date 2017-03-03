@@ -107,4 +107,9 @@ interface ApiService {
   Observable<Response<Void>> payBill(
     @Header(Api.Header.AUTHORIZATION) String authToken,
     @Body PayBillRequestBody body);
+
+  @POST("payments/remove-invoice")
+  Observable<Response<Void>> removeBill(
+    @Header(Api.Header.AUTHORIZATION) String authToken,
+    @Body BillRequestBody body);
 }

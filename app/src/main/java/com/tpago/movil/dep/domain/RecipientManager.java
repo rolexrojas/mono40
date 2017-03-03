@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
+import com.tpago.movil.dep.domain.api.ApiResult;
 import com.tpago.movil.dep.domain.api.DepApiBridge;
 import com.tpago.movil.dep.domain.api.ApiUtils;
 import com.tpago.movil.dep.domain.session.SessionManager;
@@ -151,13 +152,26 @@ public final class RecipientManager implements RecipientProvider {
 //      .compose(Recipient.toSortedListByIdentifier());
   }
 
-  public final Observable<List<Recipient>> remove(List<Recipient> recipients) {
+  public final Observable<List<Recipient>> remove(List<Recipient> recipients, final String pin) {
     return Observable.from(recipients)
       .flatMap(new Func1<Recipient, Observable<Recipient>>() {
         @Override
-        public Observable<Recipient> call(Recipient recipient) {
+        public Observable<Recipient> call(final Recipient recipient) {
           if (recipient.getType().equals(RecipientType.BILL)) {
-            return Observable.error(new UnsupportedOperationException("Cannot remove bills"));
+            return apiBridge.removeBill(
+              sessionManager.getSession().getAuthToken(),
+              (BillRecipient) recipient,
+              pin)
+              .flatMap(new Func1<ApiResult<Recipient>, Observable<Recipient>>() {
+                @Override
+                public Observable<Recipient> call(ApiResult<Recipient> result) {
+                  if (result.isSuccessful()) {
+                    return recipientRepo.remove(result.getData());
+                  } else {
+                    return Observable.just(result.getData());
+                  }
+                }
+              });
           } else {
             return recipientRepo.remove(recipient);
           }

@@ -191,7 +191,7 @@ public class BillTransactionCreationFragment
   @Override
   public void requestPin(String partnerName, String value) {
     final int x = Math.round((button.getRight() - button.getLeft()) / 2);
-    final int y = Math.round((button.getBottom() - button.getTop()) / 2);
+    final int y = Math.round(button.getY() + ((button.getBottom() - button.getTop()) / 2));
     PinConfirmationDialogFragment.newInstance(
       x,
       y,

@@ -285,12 +285,19 @@ class RetrofitApiBridge implements DepApiBridge {
   }
 
   @Override
-  public Observable<ApiResult<Void>> removeBill(
+  public Observable<ApiResult<Recipient>> removeBill(
     String authToken,
-    Partner partner,
-    String contractNumber,
+    final BillRecipient bill,
     String pin) {
-    return Observable.error(new UnsupportedOperationException("Not implemented"));
+    return apiService.removeBill(
+      authToken,
+      BillRequestBody.create(bill.getPartner(), bill.getContractNumber(), pin))
+      .flatMap(mapToApiResult(new Func1<Void, Recipient>() {
+        @Override
+        public Recipient call(Void aVoid) {
+          return bill;
+        }
+      }));
   }
 
   @Override

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,6 +27,7 @@ import com.tpago.movil.dep.data.util.BinderFactory;
 import com.tpago.movil.dep.domain.Recipient;
 import com.tpago.movil.dep.ui.main.MainActivity;
 import com.tpago.movil.dep.ui.main.MainContainer;
+import com.tpago.movil.dep.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.dep.ui.main.list.ListItemAdapter;
 import com.tpago.movil.dep.ui.main.list.ListItemHolder;
 import com.tpago.movil.dep.ui.main.list.ListItemHolderCreatorFactory;
@@ -63,6 +65,8 @@ public class PaymentsFragment
   implements PaymentsScreen,
   ListItemHolder.OnClickListener,
   OnSaveButtonClickedListener {
+  private static final String TAG_PIN = "pin";
+
   private static final int REQUEST_CODE_RECIPIENT_ADDITION = 0;
   private static final int REQUEST_CODE_TRANSACTION_CREATION = 1;
   private static final int REQUEST_CODE_NON_AFFILIATED_RECIPIENT_ADDITION = 2;
@@ -395,6 +399,33 @@ public class PaymentsFragment
     TransactionSummaryDialogFragment.create(recipient, alreadyExists, transactionId)
       .show(getChildFragmentManager(), null);
   }
+
+  @Override
+  public void requestPin() {
+    final View rootView = ButterKnife.findById(getActivity(), android.R.id.content);
+    final int x = Math.round((rootView.getRight() - rootView.getLeft()) / 2);
+    final int y = Math.round((rootView.getBottom() - rootView.getTop()) / 2);
+    PinConfirmationDialogFragment.newInstance(
+      x,
+      y,
+      "Eliminar destinatarios",
+      new PinConfirmationDialogFragment.Callback() {
+        @Override
+        public void confirm(@NonNull String pin) {
+          presenter.onPinRequestFinished(pin);
+        }
+      })
+      .show(getChildFragmentManager(), TAG_PIN);
+  }
+
+  @Override
+  public void dismissPinConfirmator() {
+    final Fragment f = getChildFragmentManager().findFragmentByTag(TAG_PIN);
+    if (Objects.isNotNull(f)) {
+      ((PinConfirmationDialogFragment) f).resolve(true);
+    }
+  }
+
 
   @Override
   public void onClick(int position) {
