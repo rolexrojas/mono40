@@ -3,6 +3,7 @@ package com.tpago.movil.dep.domain;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.gson.annotations.SerializedName;
 import com.tpago.movil.Partner;
 import com.tpago.movil.dep.domain.util.StringUtils;
 import com.tpago.movil.text.Texts;
@@ -82,5 +83,10 @@ public class BillRecipient extends Recipient {
     return super.matches(query)
       || StringUtils.matches(partner.getName(), query)
       || StringUtils.matches(contractNumber, query);
+  }
+
+  public enum Option {
+    @SerializedName("PayTotal") TOTAL,
+    @SerializedName("PayMinimum") MINIMUM
   }
 }

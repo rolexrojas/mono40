@@ -102,4 +102,9 @@ interface ApiService {
   @GET("payments/invoices")
   Observable<Response<List<BillResponseBody>>> getBills(
     @Header(Api.Header.AUTHORIZATION) String authToken);
+
+  @POST("payments/invoices/pay")
+  Observable<Response<Void>> payBill(
+    @Header(Api.Header.AUTHORIZATION) String authToken,
+    @Body PayBillRequestBody body);
 }

@@ -311,4 +311,22 @@ class RetrofitApiBridge implements DepApiBridge {
         }
       });
   }
+
+  @Override
+  public Observable<ApiResult<String>> payBill(
+    String authToken,
+    BillRecipient bill,
+    Product fundingAccount,
+    BillRecipient.Option option,
+    String pin) {
+    return apiService.payBill(
+      authToken,
+      PayBillRequestBody.create(fundingAccount, bill, pin, option))
+      .flatMap(mapToApiResult(new Func1<Void, String>() {
+        @Override
+        public String call(Void aVoid) {
+          return Long.toString(System.currentTimeMillis());
+        }
+      }));
+  }
 }

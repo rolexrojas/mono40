@@ -212,6 +212,7 @@
   <string name="transaction_creation.text.widget.amount.currency.font">@string/font_gotham_rounded_light</string>
   <string name="transaction_creation.text.widget.amount.value.font">@string/font_gotham_rounded_light</string>
   <string name="transaction_creation.title">Transacción con %1$s</string>
+  <string name="transaction_creation_title_bill">Pago a %1$s</string>
   <string name="we_are_sorry">¡Lo sentimos!</string>
   <string name="your_account_have_been_added">Tu cuenta se agregó exitosamente al mundo %1$s. Ya puedes usarla como cuenta de fondos.</string>
   <string name="your_account_have_been_removed">Tu cuenta se removió exitosamente del mundo %1$s. Ya no puedes usarla como cuenta de fondos.</string>
@@ -231,4 +232,5 @@
   <string name="minimum">Mínimo</string>
   <string name="due_date">Fecha de vencimiento</string>
   <string name="recipient_addition_confirmation">Agregar factura #%1$s de %2$s</string>
+  <string name="transaction_creation_bill_confirmation">Pago de %1$s a %2$s</string>
 </resources>

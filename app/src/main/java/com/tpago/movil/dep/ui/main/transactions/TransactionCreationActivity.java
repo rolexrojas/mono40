@@ -162,7 +162,13 @@ public class TransactionCreationActivity
     toolbar.post(new Runnable() {
       @Override
       public void run() {
-        toolbar.setTitle(String.format(getString(R.string.transaction_creation_title), title));
+        final int stringId;
+        if (recipient.getType().equals(RecipientType.BILL)) {
+          stringId = R.string.transaction_creation_title_bill;
+        } else {
+          stringId = R.string.transaction_creation_title;
+        }
+        toolbar.setTitle(getString(stringId, title));
         toolbar.setSubtitle(subtitle);
       }
     });

@@ -154,4 +154,11 @@ public interface DepApiBridge {
     String pin);
 
   Observable<Recipient> queryBalance(String authToken, BillRecipient recipient);
+
+  Observable<ApiResult<String>> payBill(
+    String authToken,
+    BillRecipient bill,
+    Product fundingAccount,
+    BillRecipient.Option option,
+    String pin);
 }

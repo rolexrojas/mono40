@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tpago.movil.R;
-import com.tpago.movil.app.InformationalDialogFragment;
 import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.ui.FullScreenDialogFragment;
 import com.tpago.movil.dep.ui.view.BaseAnimatorListener;
@@ -124,23 +122,7 @@ public class PinConfirmationDialogFragment
   public final void resolve(boolean succeeded) {
     loadIndicator.stop();
     this.succeeded = succeeded;
-    if (this.succeeded) {
-      finish();
-    } else {
-      new AlertDialog.Builder(getContext())
-        .setTitle(R.string.error_title)
-        .setMessage(R.string.error_message)
-        .setPositiveButton(
-          R.string.error_positive_button_text,
-          new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              finish();
-            }
-          })
-        .create()
-        .show();
-    }
+    this.finish();
   }
 
   @Override

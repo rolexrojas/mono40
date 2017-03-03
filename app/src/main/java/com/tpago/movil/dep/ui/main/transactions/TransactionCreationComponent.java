@@ -8,6 +8,7 @@ import com.tpago.movil.dep.domain.ProductManager;
 import com.tpago.movil.dep.domain.Recipient;
 import com.tpago.movil.dep.domain.TransactionManager;
 import com.tpago.movil.dep.ui.ActivityScope;
+import com.tpago.movil.dep.ui.main.transactions.bills.BillTransactionCreationFragment;
 import com.tpago.movil.dep.ui.main.transactions.bills.BillTransactionCreationPresenter;
 import com.tpago.movil.dep.ui.main.transactions.contacts.NonAffiliatedPhoneNumberTransactionCreation1Fragment;
 import com.tpago.movil.dep.ui.main.transactions.contacts.NonAffiliatedPhoneNumberTransactionCreation2Fragment;
@@ -28,6 +29,7 @@ public interface TransactionCreationComponent {
   void inject(TransactionCreationActivity activity);
   void inject(NonAffiliatedPhoneNumberTransactionCreation1Fragment fragment);
   void inject(NonAffiliatedPhoneNumberTransactionCreation2Fragment fragment);
+  void inject(BillTransactionCreationFragment fragment);
   void inject(BillTransactionCreationPresenter presenter);
 
   AssetProvider provideResourceProvider();
