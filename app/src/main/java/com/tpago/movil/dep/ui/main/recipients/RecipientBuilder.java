@@ -14,7 +14,7 @@ public abstract class RecipientBuilder implements Serializable {
   public abstract String getImagePath();
   public abstract String getTitle();
 
-  public abstract Observable<Result> build(String number);
+  public abstract Observable<Result> build(String number, String pin);
 
   public static final class Result {
     private final Recipient recipient;

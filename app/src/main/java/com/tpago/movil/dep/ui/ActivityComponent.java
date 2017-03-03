@@ -1,7 +1,6 @@
 package com.tpago.movil.dep.ui;
 
 import com.tpago.movil.app.AppComponent;
-import com.tpago.movil.dep.ui.main.PinConfirmator;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import dagger.Component;
@@ -17,6 +16,4 @@ public interface ActivityComponent {
   AppDialog.Creator provideScreenDialogCreator();
 
   RxPermissions providePermissionManager();
-
-  PinConfirmator providePinConfirmator();
 }

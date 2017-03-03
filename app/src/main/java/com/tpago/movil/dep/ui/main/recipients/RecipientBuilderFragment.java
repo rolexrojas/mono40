@@ -2,23 +2,26 @@ package com.tpago.movil.dep.ui.main.recipients;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.ui.Dialogs;
+import com.tpago.movil.dep.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.text.Texts;
+import com.tpago.movil.util.Objects;
 import com.tpago.movil.util.Preconditions;
-import com.tpago.movil.widget.FullSizeLoadIndicator;
-import com.tpago.movil.widget.LoadIndicator;
 import com.tpago.movil.widget.TextInput;
 
 import butterknife.BindView;
@@ -27,7 +30,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
@@ -36,7 +38,11 @@ import timber.log.Timber;
 /**
  * @author hecvasro
  */
-public class RecipientBuilderFragment extends Fragment {
+public class RecipientBuilderFragment
+  extends Fragment
+  implements PinConfirmationDialogFragment.OnDismissListener {
+  private static final String KEY_PIN_CONFIRMATION = "pinConfirmation";
+
   private static final String KEY_KEYWORD = "keyword";
   private static final String KEY_BUILDER = "builder";
 
@@ -44,9 +50,10 @@ public class RecipientBuilderFragment extends Fragment {
   private RecipientBuilder builder;
 
   private Unbinder unbinder;
-  private LoadIndicator loadIndicator;
 
   private Subscription subscription = Subscriptions.unsubscribed();
+
+  private RecipientBuilder.Result result = null;
 
   public static RecipientBuilderFragment create(String keyword, RecipientBuilder builder) {
     final Bundle bundle = new Bundle();
@@ -63,6 +70,17 @@ public class RecipientBuilderFragment extends Fragment {
   TextView textView;
   @BindView(R.id.text_input)
   TextInput textInput;
+  @BindView(R.id.button)
+  Button button;
+
+  private void resolve(RecipientBuilder.Result result) {
+    this.result = result;
+    final FragmentManager fm = getChildFragmentManager();
+    final Fragment f = fm.findFragmentByTag(KEY_PIN_CONFIRMATION);
+    if (Objects.isNotNull(f)) {
+      ((PinConfirmationDialogFragment) f).resolve(this.result.isSuccessful());
+    }
+  }
 
   @OnClick(R.id.button)
   void onButtonClicked() {
@@ -76,47 +94,40 @@ public class RecipientBuilderFragment extends Fragment {
         .show();
       textInput.setErraticStateEnabled(true);
     } else {
-      subscription = builder.build(content)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe(new Action0() {
+      final int x = Math.round((button.getRight() - button.getLeft()) / 2);
+      final int y = Math.round((button.getBottom() - button.getTop()) / 2);
+      Timber.d(
+        "{left:%1%d,top:%2$d,right:%3$d,bottom:%4$d",
+        button.getLeft(),
+        button.getTop(),
+        button.getRight(),
+        button.getBottom());
+      Timber.d("{x:%1$d,y:%2$d}", x, y);
+      PinConfirmationDialogFragment.newInstance(
+        x,
+        y,
+        getString(R.string.recipient_addition_confirmation, content, builder.getTitle()),
+        new PinConfirmationDialogFragment.Callback() {
           @Override
-          public void call() {
-            loadIndicator.start();
+          public void confirm(@NonNull String pin) {
+            subscription = builder.build(content, pin)
+              .subscribeOn(Schedulers.io())
+              .observeOn(AndroidSchedulers.mainThread())
+              .subscribe(new Action1<RecipientBuilder.Result>() {
+                @Override
+                public void call(RecipientBuilder.Result result) {
+                  resolve(result);
+                }
+              }, new Action1<Throwable>() {
+                @Override
+                public void call(Throwable throwable) {
+                  Timber.e(throwable, "Building a recipient");
+                  resolve(new RecipientBuilder.Result(getString(R.string.error_message)));
+                }
+              });
           }
         })
-        .subscribe(new Action1<RecipientBuilder.Result>() {
-          @Override
-          public void call(RecipientBuilder.Result result) {
-            loadIndicator.stop();
-            if (result.isSuccessful()) {
-              final Activity activity = getActivity();
-              activity.setResult(
-                Activity.RESULT_OK,
-                AddRecipientActivity.serializeResult(result.getData()));
-              activity.finish();
-            } else {
-              Dialogs.builder(getContext())
-                .setTitle(R.string.error_title)
-                .setMessage(result.getError())
-                .setPositiveButton(R.string.error_positive_button_text, null)
-                .create()
-                .show();
-            }
-          }
-        }, new Action1<Throwable>() {
-          @Override
-          public void call(Throwable throwable) {
-            Timber.e(throwable, "Building a recipient");
-            loadIndicator.stop();
-            Dialogs.builder(getContext())
-              .setTitle(R.string.error_title)
-              .setMessage(R.string.error_message)
-              .setPositiveButton(R.string.error_positive_button_text, null)
-              .create()
-              .show();
-          }
-        });
+        .show(getChildFragmentManager(), KEY_PIN_CONFIRMATION);
     }
   }
 
@@ -145,7 +156,6 @@ public class RecipientBuilderFragment extends Fragment {
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     unbinder = ButterKnife.bind(this, view);
-    loadIndicator = new FullSizeLoadIndicator(getChildFragmentManager());
   }
 
   @Override
@@ -183,5 +193,25 @@ public class RecipientBuilderFragment extends Fragment {
   public void onDestroyView() {
     super.onDestroyView();
     unbinder.unbind();
+  }
+
+  @Override
+  public void onDismiss(boolean succeeded) {
+    if (Objects.isNotNull(result)) {
+      if (result.isSuccessful()) {
+        final Activity activity = getActivity();
+        activity.setResult(
+          Activity.RESULT_OK,
+          AddRecipientActivity.serializeResult(result.getData()));
+        activity.finish();
+      } else {
+        Dialogs.builder(getContext())
+          .setTitle(R.string.error_title)
+          .setMessage(result.getError())
+          .setPositiveButton(R.string.error_positive_button_text, null)
+          .create()
+          .show();
+      }
+    }
   }
 }

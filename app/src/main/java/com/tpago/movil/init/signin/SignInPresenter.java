@@ -9,6 +9,7 @@ import com.tpago.movil.api.ApiBridge;
 import com.tpago.movil.api.ApiData;
 import com.tpago.movil.api.ApiError;
 import com.tpago.movil.app.Presenter;
+import com.tpago.movil.dep.domain.pos.PosBridge;
 import com.tpago.movil.init.InitComponent;
 import com.tpago.movil.init.InitData;
 import com.tpago.movil.net.HttpResult;
@@ -43,6 +44,8 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
   @Inject InitData initData;
   @Inject Session.Builder sessionBuilder;
   @Inject ApiBridge apiBridge;
+
+  @Inject PosBridge posBridge;
 
   private static String sanitize(String content) {
     return Objects.isNull(content) ? "" : content.trim();
@@ -114,10 +117,12 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
             stopLoading();
             final ApiData<String> data = result.getData();
             if (result.isSuccessful()) {
-              // TODO: Both first and last name must be provided by the API.
+              // TODO: Fetch the first and last name from the API.
               sessionBuilder.setToken(data.getValue());
-              userStore.set(phoneNumber, email, "First", "Last");
+              userStore.set(phoneNumber, email, "Usuario", "tPago");
               view.moveToInitScreen();
+
+              posBridge.unregisterSync(phoneNumber.getValue());
             } else {
               final ApiError error = data.getError();
               if (error.getCode().equals(ApiError.Code.ALREADY_ASSOCIATED_DEVICE)) {

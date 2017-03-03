@@ -17,9 +17,9 @@ interface PhoneNumberTransactionCreationScreen extends Screen {
 
   void setPaymentOptionCurrency(@NonNull String currency);
 
-  void clearAmount();
-
   void setPaymentResult(boolean succeeded, String message);
+
+  void requestPin();
 
   void requestBankAndAccountNumber();
 

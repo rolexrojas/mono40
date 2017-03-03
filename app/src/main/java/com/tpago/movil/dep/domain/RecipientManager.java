@@ -118,7 +118,11 @@ public final class RecipientManager implements RecipientProvider {
       .flatMap(new Func1<Recipient, Observable<Recipient>>() {
         @Override
         public Observable<Recipient> call(Recipient recipient) {
-          return recipientRepo.remove(recipient);
+          if (recipient.getType().equals(RecipientType.BILL)) {
+            return Observable.error(new UnsupportedOperationException("Cannot remove bills"));
+          } else {
+            return recipientRepo.remove(recipient);
+          }
         }
       })
       .toList();

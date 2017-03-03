@@ -229,33 +229,46 @@ class CubePosBridge implements PosBridge {
 
   @Override
   public Observable<PosResult> reset(final String phoneNumber) {
-    final Observable<PosResult> observable;
-    if (sharedPreferences.getInt(KEY_COUNT, 0) == 0) {
-      observable = Observable.just(createResult(phoneNumber));
-    } else {
-      observable = Observable.create(new Observable.OnSubscribe<PosResult>() {
-        @Override
-        public void call(final Subscriber<? super PosResult> subscriber) {
-          cubeSdk.Unregister(phoneNumber, new CubeSdkCallback<String, CubeError>() {
-            @Override
-            public void success(String message) {
-              sharedPreferences.edit()
-                .clear()
-                .apply();
-              subscriber.onNext(createResult(message));
-              subscriber.onCompleted();
-            }
+    return Observable.create(new Observable.OnSubscribe<PosResult>() {
+      @Override
+      public void call(final Subscriber<? super PosResult> subscriber) {
+        cubeSdk.Unregister(phoneNumber, new CubeSdkCallback<String, CubeError>() {
+          @Override
+          public void success(String message) {
+            sharedPreferences.edit()
+              .clear()
+              .apply();
+            subscriber.onNext(createResult(message));
+            subscriber.onCompleted();
+          }
 
-            @Override
-            public void failure(CubeError error) {
-              subscriber.onNext(createResult(error));
-              subscriber.onCompleted();
-            }
-          });
-        }
-      });
-    }
-    return observable.doOnNext(new LogAction1("reset", phoneNumber));
+          @Override
+          public void failure(CubeError error) {
+            subscriber.onNext(createResult(error));
+            subscriber.onCompleted();
+          }
+        });
+      }
+    })
+      .doOnNext(new LogAction1("Unregister", phoneNumber));
+  }
+
+  @Override
+  public void unregisterSync(String phoneNumber) {
+    cubeSdk.Unregister(phoneNumber, new CubeSdkCallback<String, CubeError>() {
+      @Override
+      public void success(String message) {
+        sharedPreferences.edit()
+          .clear()
+          .apply();
+        Timber.d("Unregister -> %1$s", createResult(message));
+      }
+
+      @Override
+      public void failure(CubeError error) {
+        Timber.d("Unregister -> %1$s", createResult(error));
+      }
+    });
   }
 
   private class LogAction1 implements Action1<PosResult> {

@@ -5,8 +5,6 @@ import android.support.v4.view.ViewPager;
 import com.tpago.movil.util.Objects;
 import com.tpago.movil.util.Preconditions;
 
-import timber.log.Timber;
-
 /**
  * @author hecvasro
  */
@@ -55,11 +53,6 @@ public final class AutoTabSwitcher extends ViewPager.SimpleOnPageChangeListener 
         removeRunnable();
       }
     }
-  }
-
-  @Override
-  public void onPageSelected(final int position) {
-    Timber.d("onPageSelected(%1$d)", position);
   }
 
   private static final class Runnable implements java.lang.Runnable {

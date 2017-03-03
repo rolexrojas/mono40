@@ -45,8 +45,11 @@ import timber.log.Timber;
  * @author hecvasro
  */
 @Deprecated
-public class PinConfirmationDialogFragment extends FullScreenDialogFragment
-  implements DialogInterface.OnShowListener, PinView.Listener, DepNumPad.OnDigitClickedListener,
+public class PinConfirmationDialogFragment
+  extends FullScreenDialogFragment
+  implements DialogInterface.OnShowListener,
+  PinView.Listener,
+  DepNumPad.OnDigitClickedListener,
   DepNumPad.OnDeleteClickedListener {
   private static final String KEY_CENTER_X = "centerX";
   private static final String KEY_CENTER_Y = "centerY";

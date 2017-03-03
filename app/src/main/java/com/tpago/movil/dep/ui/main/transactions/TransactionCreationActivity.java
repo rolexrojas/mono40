@@ -192,6 +192,11 @@ public class TransactionCreationActivity
   }
 
   @Override
+  public void setChildFragment(ChildFragment<TransactionCreationContainer> fragment) {
+    setChildFragment(fragment, true, true);
+  }
+
+  @Override
   public void finish(boolean succeeded, String transactionId) {
     if (succeeded) {
       setResult(RESULT_OK, serializeResult(recipient, transactionId));

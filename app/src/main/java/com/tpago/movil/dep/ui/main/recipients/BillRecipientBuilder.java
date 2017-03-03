@@ -11,14 +11,13 @@ import rx.functions.Func1;
 /**
  * @author hecvasro
  */
-
-public class BillRecipientBuilder extends RecipientBuilder {
+class BillRecipientBuilder extends RecipientBuilder {
   private final String authToken;
   private final DepApiBridge apiBridge;
 
   private final Partner partner;
 
-  public BillRecipientBuilder(String authToken, DepApiBridge apiBridge, Partner partner) {
+  BillRecipientBuilder(String authToken, DepApiBridge apiBridge, Partner partner) {
     this.authToken = authToken;
     this.apiBridge = apiBridge;
     this.partner = partner;
@@ -35,13 +34,13 @@ public class BillRecipientBuilder extends RecipientBuilder {
   }
 
   @Override
-  public Observable<Result> build(String number) {
-    return apiBridge.addBill(authToken, partner, number)
-      .map(new Func1<ApiResult<BillRecipient>, Result>() {
+  public Observable<Result> build(final String number, final String pin) {
+    return apiBridge.addBill(authToken, partner, number, pin)
+      .map(new Func1<ApiResult<Void>, Result>() {
         @Override
-        public Result call(ApiResult<BillRecipient> result) {
+        public Result call(ApiResult<Void> result) {
           if (result.isSuccessful()) {
-            return new Result(result.getData());
+            return new Result(new BillRecipient(partner, number));
           } else {
             return new Result(result.getError().getDescription());
           }

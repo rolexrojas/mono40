@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import com.tpago.movil.Partner;
 import com.tpago.movil.dep.domain.Balance;
 import com.tpago.movil.Bank;
-import com.tpago.movil.dep.domain.BillRecipient;
 import com.tpago.movil.dep.domain.InitialData;
 import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.dep.domain.PhoneNumberRecipient;
@@ -36,6 +35,13 @@ import rx.functions.Func1;
  */
 @Deprecated
 class RetrofitApiBridge implements DepApiBridge {
+  private static final Func1<Void, Void> MAP_FUNC_VOID = new Func1<Void, Void>() {
+    @Override
+    public Void call(Void aVoid) {
+      return aVoid;
+    }
+  };
+
   private final ApiService apiService;
   private final Converter<ResponseBody, ApiError> errorConverter;
 
@@ -256,13 +262,23 @@ class RetrofitApiBridge implements DepApiBridge {
   }
 
   @Override
-  public Observable<ApiResult<BillRecipient>> addBill(
+  public Observable<ApiResult<Void>> addBill(
     String authToken,
     Partner partner,
-    String contractNumber) {
-    return Observable.just(new ApiResult<>(
-      ApiCode.OK,
-      new BillRecipient(partner, contractNumber),
-      null));
+    String contractNumber,
+    String pin) {
+    return apiService.addBill(
+      authToken,
+      BillAdditionRequestBody.create(partner, contractNumber, pin))
+      .flatMap(mapToApiResult(MAP_FUNC_VOID));
+  }
+
+  @Override
+  public Observable<ApiResult<Void>> removeBill(
+    String authToken,
+    Partner partner,
+    String contractNumber,
+    String pin) {
+    return Observable.error(new UnsupportedOperationException("Not implemented"));
   }
 }

@@ -3,7 +3,6 @@ package com.tpago.movil.dep.ui;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
-import com.tpago.movil.dep.ui.main.PinConfirmator;
 import com.tpago.movil.dep.ui.view.widget.FullScreenLoadIndicator;
 import com.tpago.movil.dep.ui.view.widget.LoadIndicator;
 import com.tbruyelle.rxpermissions.RxPermissions;
@@ -62,11 +61,5 @@ public class ActivityModule {
   @ActivityScope
   RxPermissions providePermissionManager() {
     return new RxPermissions(activity);
-  }
-
-  @Provides
-  @ActivityScope
-  PinConfirmator providePinConfirmator() {
-    return new PinConfirmator(activity.getSupportFragmentManager());
   }
 }

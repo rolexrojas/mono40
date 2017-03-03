@@ -1,7 +1,5 @@
 package com.tpago.movil.dep.ui.main.transactions.contacts;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,7 +12,6 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.tpago.movil.R;
-import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.data.Formatter;
 import com.tpago.movil.dep.data.res.AssetProvider;
@@ -23,7 +20,6 @@ import com.tpago.movil.dep.domain.Recipient;
 import com.tpago.movil.dep.ui.ChildFragment;
 import com.tpago.movil.dep.ui.Dialogs;
 import com.tpago.movil.dep.ui.main.PinConfirmationDialogFragment;
-import com.tpago.movil.dep.ui.main.recipients.NonAffiliatedPhoneNumberRecipientAdditionActivity;
 import com.tpago.movil.dep.ui.main.transactions.PaymentOptionAdapter;
 import com.tpago.movil.dep.ui.main.transactions.TransactionCreationContainer;
 import com.tpago.movil.dep.ui.view.widget.pad.Digit;
@@ -31,11 +27,11 @@ import com.tpago.movil.dep.ui.view.widget.pad.Dot;
 import com.tpago.movil.dep.ui.view.widget.pad.DepNumPad;
 import com.tpago.movil.dep.ui.view.widget.PrefixableTextView;
 import com.tpago.movil.text.Texts;
-import com.tpago.movil.util.Objects;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
 
@@ -45,8 +41,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 public class PhoneNumberTransactionCreationFragment
@@ -59,8 +53,6 @@ public class PhoneNumberTransactionCreationFragment
   PinConfirmationDialogFragment.OnDismissListener {
   private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
 
-  private static final int REQUEST_CODE = 0;
-
   private static final BigDecimal ZERO = BigDecimal.ZERO;
   private static final BigDecimal ONE = BigDecimal.ONE;
   private static final BigDecimal TEN = BigDecimal.TEN;
@@ -72,6 +64,10 @@ public class PhoneNumberTransactionCreationFragment
   PhoneNumberTransactionCreationPresenter presenter;
   @Inject
   Recipient recipient;
+  @Inject
+  AtomicReference<Product> fundingAccount;
+  @Inject
+  AtomicReference<BigDecimal> value;
 
   private Unbinder unbinder;
 
@@ -87,13 +83,9 @@ public class PhoneNumberTransactionCreationFragment
   Button transferActionButton;
 
   private boolean mustShowDot = false;
-  private BigDecimal amount = ZERO;
   private BigDecimal fractionOffset = ONE;
 
   private String resultMessage = null;
-
-  private boolean shouldBeClosed = false;
-  private Recipient requestResult = null;
 
   @NonNull
   public static PhoneNumberTransactionCreationFragment newInstance() {
@@ -126,7 +118,7 @@ public class PhoneNumberTransactionCreationFragment
   }
 
   private void updateAmountText() {
-    amountTextView.setContent(getFormattedValue(amount, fractionOffset, mustShowDot));
+    amountTextView.setContent(getFormattedValue(value.get(), fractionOffset, mustShowDot));
   }
 
   @OnClick(R.id.action_recharge)
@@ -136,41 +128,8 @@ public class PhoneNumberTransactionCreationFragment
   }
 
   @OnClick(R.id.action_transfer)
-  void onTransferButtonClicked(View view) {
-    if (amount.compareTo(ZERO) > 0) {
-      final int[] location = new int[2];
-      view.getLocationOnScreen(location);
-      final int x = location[0] + (view.getWidth() / 2);
-      final int y = location[1];
-      final String description = String.format(
-        getString(R.string.format_transfer_to),
-        Formatter.amount(amountTextView.getPrefix().toString(), amount),
-        recipient.getIdentifier());
-      PinConfirmationDialogFragment.newInstance(x, y, description,
-        new PinConfirmationDialogFragment.Callback() {
-          @Override
-          public void confirm(@NonNull String pin) {
-            presenter.transferTo(amount, pin);
-          }
-        }).show(getChildFragmentManager(), TAG_PIN_CONFIRMATION);
-    } else {
-      // TODO: Let the user know that he must insert an amount greater than zero.
-    }
-  }
-
-  @Override
-  public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    if (requestCode == REQUEST_CODE) {
-      shouldBeClosed = resultCode != Activity.RESULT_OK;
-      if (!shouldBeClosed) {
-        final Recipient recipient = NonAffiliatedPhoneNumberRecipientAdditionActivity
-          .deserializeResult(data);
-        if (Objects.isNotNull(recipient)) {
-          requestResult = recipient;
-        }
-      }
-    }
+  void onTransferButtonClicked() {
+    presenter.onTransferButtonClicked();
   }
 
   @Override
@@ -213,7 +172,13 @@ public class PhoneNumberTransactionCreationFragment
   public void onStart() {
     super.onStart();
     // Starts the presenter.
-    presenter.start(shouldBeClosed, requestResult);
+    presenter.start();
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    updateAmountText();
   }
 
   @Override
@@ -251,7 +216,7 @@ public class PhoneNumberTransactionCreationFragment
 
   @Override
   public void clearAmount() {
-    amount = ZERO;
+    value.set(ZERO);
     mustShowDot = false;
     updateAmountText();
   }
@@ -266,12 +231,35 @@ public class PhoneNumberTransactionCreationFragment
   }
 
   @Override
+  public void requestPin() {
+    if (value.get().compareTo(ZERO) > 0) {
+      final int[] location = new int[2];
+      transferActionButton.getLocationOnScreen(location);
+      final int x = location[0] + (transferActionButton.getWidth() / 2);
+      final int y = location[1];
+      final String description = String.format(
+        getString(R.string.format_transfer_to),
+        Formatter.amount(amountTextView.getPrefix().toString(), value.get()),
+        recipient.getIdentifier());
+      PinConfirmationDialogFragment.newInstance(
+        x,
+        y,
+        description,
+        new PinConfirmationDialogFragment.Callback() {
+          @Override
+          public void confirm(@NonNull String pin) {
+            presenter.transferTo(value.get(), pin);
+          }
+        })
+        .show(getChildFragmentManager(), TAG_PIN_CONFIRMATION);
+    } else {
+      // TODO: Let the user know that he must insert an amount greater than zero.
+    }
+  }
+
+  @Override
   public void requestBankAndAccountNumber() {
-    startActivityForResult(
-      NonAffiliatedPhoneNumberRecipientAdditionActivity.getLaunchIntent(
-        getContext(),
-        (NonAffiliatedPhoneNumberRecipient) recipient),
-      REQUEST_CODE);
+    getContainer().setChildFragment(new NonAffiliatedPhoneNumberTransactionCreation1Fragment());
   }
 
   @Override
@@ -283,6 +271,7 @@ public class PhoneNumberTransactionCreationFragment
   public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
     final Product product = paymentOptionAdapter.getItem(position);
     if (Utils.isNotNull(product)) {
+      fundingAccount.set(product);
       presenter.setPaymentOption(product);
     }
   }
@@ -296,12 +285,15 @@ public class PhoneNumberTransactionCreationFragment
   public void onDigitClicked(@NonNull Digit digit) {
     BigDecimal addition = BigDecimal.valueOf(digit.getValue());
     if (mustShowDot && fractionOffset.compareTo(HUNDRED) < 0) {
-      amount = amount.add(addition.divide(TEN.multiply(fractionOffset), 2,
-        BigDecimal.ROUND_CEILING));
+      value.set(
+        value.get()
+          .add(addition.divide(TEN.multiply(fractionOffset),
+            2,
+            BigDecimal.ROUND_CEILING)));
       fractionOffset = fractionOffset.multiply(TEN);
       updateAmountText();
     } else if (!mustShowDot) {
-      amount = amount.multiply(TEN).add(addition);
+      value.set(value.get().multiply(TEN).add(addition));
       updateAmountText();
     }
   }
@@ -316,17 +308,20 @@ public class PhoneNumberTransactionCreationFragment
 
   @Override
   public void onDeleteClicked() {
-    final int result = amount.compareTo(ZERO);
+    final int result = value.get().compareTo(ZERO);
     if (result > 0) {
-      final BigDecimal fraction = getFraction(amount);
+      final BigDecimal fraction = getFraction(value.get());
       if (isFraction(fraction)) {
-        amount = amount.subtract(fraction.multiply(fractionOffset).remainder(TEN)
-          .divide(fractionOffset, 2, BigDecimal.ROUND_CEILING));
+        value.set(
+          value.get()
+            .subtract(fraction.multiply(fractionOffset)
+              .remainder(TEN)
+              .divide(fractionOffset, 2, BigDecimal.ROUND_CEILING)));
         fractionOffset = fractionOffset.divide(TEN, 2, RoundingMode.CEILING);
       } else if (mustShowDot) {
         mustShowDot = false;
       } else {
-        amount = amount.divideToIntegralValue(TEN);
+        value.set(value.get().divideToIntegralValue(TEN));
       }
       updateAmountText();
     } else if (mustShowDot) {

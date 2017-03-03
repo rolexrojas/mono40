@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import com.tpago.movil.Partner;
 import com.tpago.movil.dep.domain.Balance;
 import com.tpago.movil.Bank;
-import com.tpago.movil.dep.domain.BillRecipient;
 import com.tpago.movil.dep.domain.InitialData;
 import com.tpago.movil.dep.domain.Product;
 import com.tpago.movil.dep.domain.Recipient;
@@ -115,8 +114,12 @@ public interface DepApiBridge {
    * @return TODO
    */
   @NonNull
-  Observable<ApiResult<String>> transferTo(@NonNull String authToken, @NonNull Product product,
-    @NonNull Recipient recipient, @NonNull BigDecimal amount, @NonNull String pin);
+  Observable<ApiResult<String>> transferTo(
+    @NonNull String authToken,
+    @NonNull Product product,
+    @NonNull Recipient recipient,
+    @NonNull BigDecimal amount,
+    @NonNull String pin);
 
   /**
    * TODO
@@ -137,8 +140,15 @@ public interface DepApiBridge {
 
   Observable<ApiResult<List<Partner>>> partners(String authToken);
 
-  Observable<ApiResult<BillRecipient>> addBill(
+  Observable<ApiResult<Void>> addBill(
     String authToken,
     Partner partner,
-    String contractNumber);
+    String contractNumber,
+    String pin);
+
+  Observable<ApiResult<Void>> removeBill(
+    String authToken,
+    Partner partner,
+    String contractNumber,
+    String pin);
 }
