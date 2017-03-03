@@ -17,9 +17,9 @@ import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.domain.Recipient;
 import com.tpago.movil.dep.ui.main.list.ListItemHolderBinder;
 import com.tpago.movil.graphics.CircleTransformation;
+import com.tpago.movil.util.Objects;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Locale;
 
 /**
@@ -46,6 +46,12 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
   public void bind(@NonNull Recipient item, @NonNull RecipientListItemHolder holder) {
     final String label = item.getLabel();
     final String identifier = item.getIdentifier();
+    final RecipientType type = item.getType();
+    Uri imageUri = Uri.EMPTY;
+    boolean shouldBeCropped = false;
+    String dueDate = null;
+    String totalOwedCurrency = null;
+    String totalOwedValue = null;
     if (Utils.isNotNull(label)) {
       holder.recipientLabelTextView.setText(label);
       holder.recipientLabelTextView.setGravity(Gravity.START | Gravity.BOTTOM);
@@ -58,12 +64,6 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
       holder.recipientExtraTextView.setText(null);
       holder.recipientExtraTextView.setVisibility(View.GONE);
     }
-    holder.dueDateTextView.setText(null);
-    holder.totalOwedPrefixableTextView.setPrefix(null);
-    holder.totalOwedPrefixableTextView.setContent(null);
-    final RecipientType type = item.getType();
-    Uri imageUri = Uri.EMPTY;
-    boolean shouldBeCropped = false;
     if (type.equals(RecipientType.NON_AFFILIATED_PHONE_NUMBER)) {
       holder.totalOwedPrefixableTextView.setVisibility(View.GONE);
       holder.dueDateTextView.setVisibility(View.GONE);
@@ -80,12 +80,17 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
         ((BillRecipient) item).getPartner(),
         AssetProvider.STYLE_24_PRIMARY);
       final BillBalance b = r.getBalance();
-      holder.dueDateTextView.setText(new SimpleDateFormat("dd MMMM", new Locale("es", "DO"))
-        .format(b.getDate())
-        .toUpperCase());
-      holder.totalOwedPrefixableTextView.setPrefix(r.getCurrency());
-      holder.totalOwedPrefixableTextView.setContent(Formatter.amount(b.getTotal()));
+      if (Objects.isNotNull(b)) {
+        dueDate = new SimpleDateFormat("dd MMMM", new Locale("es", "DO"))
+          .format(b.getDate())
+          .toUpperCase();
+        totalOwedCurrency = r.getCurrency();
+        totalOwedValue = Formatter.amount(b.getTotal());
+      }
     }
+    holder.dueDateTextView.setText(dueDate);
+    holder.totalOwedPrefixableTextView.setPrefix(totalOwedCurrency);
+    holder.totalOwedPrefixableTextView.setContent(totalOwedValue);
     if (!imageUri.equals(Uri.EMPTY)) {
       final RequestCreator creator = Picasso.with(holder.getContext())
         .load(imageUri);
