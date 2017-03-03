@@ -1,6 +1,7 @@
 package com.tpago.movil.dep.data.api;
 
 import com.tpago.movil.dep.domain.AccountBalance;
+import com.tpago.movil.dep.domain.BillBalance;
 import com.tpago.movil.dep.domain.CreditCard;
 import com.tpago.movil.dep.domain.Account;
 import com.tpago.movil.dep.domain.CreditCardBalance;
@@ -91,5 +92,14 @@ interface ApiService {
   @POST("payments/invoices")
   Observable<Response<Void>> addBill(
     @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body BillAdditionRequestBody body);
+    @Body BillRequestBody body);
+
+  @POST("payments/invoices/balance")
+  Observable<Response<BillBalance>> queryBalance(
+    @Header(Api.Header.AUTHORIZATION) String authToken,
+    @Body BillRequestBody body);
+
+  @GET("payments/invoices")
+  Observable<Response<List<BillResponseBody>>> getBills(
+    @Header(Api.Header.AUTHORIZATION) String authToken);
 }

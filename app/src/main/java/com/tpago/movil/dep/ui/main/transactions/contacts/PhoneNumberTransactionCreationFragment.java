@@ -215,13 +215,6 @@ public class PhoneNumberTransactionCreationFragment
   }
 
   @Override
-  public void clearAmount() {
-    value.set(ZERO);
-    mustShowDot = false;
-    updateAmountText();
-  }
-
-  @Override
   public void setPaymentResult(boolean succeeded, String message) {
     this.resultMessage = message;
     final Fragment fragment = getChildFragmentManager().findFragmentByTag(TAG_PIN_CONFIRMATION);

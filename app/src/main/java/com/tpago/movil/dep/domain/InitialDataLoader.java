@@ -9,8 +9,6 @@ import rx.Observable;
 import rx.functions.Func1;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 @Deprecated
@@ -20,7 +18,9 @@ public final class InitialDataLoader {
   private final RecipientManager recipientManager;
   private final com.tpago.movil.dep.domain.session.SessionManager sessionManager;
 
-  public InitialDataLoader(@NonNull DepApiBridge apiBridge, @NonNull ProductManager productManager,
+  public InitialDataLoader(
+    @NonNull DepApiBridge apiBridge,
+    @NonNull ProductManager productManager,
     @NonNull RecipientManager recipientManager,
     @NonNull com.tpago.movil.dep.domain.session.SessionManager sessionManager) {
     this.apiBridge = apiBridge;
@@ -29,11 +29,6 @@ public final class InitialDataLoader {
     this.sessionManager = sessionManager;
   }
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
   @NonNull
   public final Observable<Object> load() {
     return apiBridge.initialLoad(sessionManager.getSession().getAuthToken())

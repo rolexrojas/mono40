@@ -34,6 +34,7 @@ public class ApiModule {
   @DepQualifier
   Gson provideGson() {
     return new GsonBuilder()
+      .setDateFormat("dd/MM/yyyy")
       .registerTypeAdapterFactory(AppTypeAdapterFactory.create())
       .registerTypeAdapter(ApiError.class, new ApiErrorTypeAdapter())
       .registerTypeAdapter(Transaction.class, new TransactionJsonDeserializer())

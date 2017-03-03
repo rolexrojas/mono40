@@ -35,21 +35,19 @@ public final class RecipientManager implements RecipientProvider {
     this.sessionManager = sessionManager;
   }
 
-  @NonNull
-  final Observable<List<Recipient>> syncRecipients(@NonNull List<Recipient> recipients) {
-    return recipientRepo.saveAll(recipients);
+  private Observable<Recipient> queryBalance(Recipient recipient) {
+    if (recipient instanceof BillRecipient) {
+      return apiBridge.queryBalance(
+        sessionManager.getSession().getAuthToken(),
+        (BillRecipient) recipient);
+    } else {
+      return Observable.just(recipient);
+    }
   }
 
-  @NonNull
-  public final Observable<Boolean> checkIfAffiliated(@NonNull String phoneNumber) {
-    return apiBridge.checkIfAffiliated(sessionManager.getSession().getAuthToken(), phoneNumber)
-      .compose(ApiUtils.<Boolean>handleApiResult(true));
-  }
-
-  @NonNull
-  public final Observable<Pair<Boolean, Recipient>> addRecipient(
-    @NonNull final String phoneNumber,
-    @Nullable final String label) {
+  private Observable<Pair<Boolean, Recipient>> addRecipient(
+    final String phoneNumber,
+    final String label) {
     return checkIfAffiliated(phoneNumber)
       .flatMap(new Func1<Boolean, Observable<Pair<Boolean, Recipient>>>() {
         @Override
@@ -70,6 +68,31 @@ public final class RecipientManager implements RecipientProvider {
   }
 
   @NonNull
+  final Observable<List<Recipient>> syncRecipients(@NonNull List<Recipient> recipients) {
+    return Observable.from(recipients)
+      .flatMap(new Func1<Recipient, Observable<Recipient>>() {
+        @Override
+        public Observable<Recipient> call(Recipient recipient) {
+          return queryBalance(recipient);
+        }
+      })
+      .flatMap(new Func1<Recipient, Observable<Recipient>>() {
+        @Override
+        public Observable<Recipient> call(Recipient recipient) {
+          return recipientRepo.save(recipient);
+
+        }
+      })
+      .compose(Recipient.toSortedListByIdentifier());
+  }
+
+  @NonNull
+  public final Observable<Boolean> checkIfAffiliated(@NonNull String phoneNumber) {
+    return apiBridge.checkIfAffiliated(sessionManager.getSession().getAuthToken(), phoneNumber)
+      .compose(ApiUtils.<Boolean>handleApiResult(true));
+  }
+
+  @NonNull
   public final Observable<Pair<Boolean, Recipient>> addRecipient(@NonNull String phoneNumber) {
     return addRecipient(phoneNumber, null);
   }
@@ -81,7 +104,13 @@ public final class RecipientManager implements RecipientProvider {
 
   @NonNull
   public final Observable<Recipient> updateRecipient(@NonNull Recipient recipient) {
-    return recipientRepo.save(recipient);
+    return queryBalance(recipient)
+      .flatMap(new Func1<Recipient, Observable<Recipient>>() {
+        @Override
+        public Observable<Recipient> call(Recipient recipient) {
+          return recipientRepo.save(recipient);
+        }
+      });
   }
 
   /**
@@ -90,27 +119,36 @@ public final class RecipientManager implements RecipientProvider {
   @NonNull
   @Override
   public Observable<List<Recipient>> getAll(@Nullable final String query) {
-    return Observable.concat(
-      recipientRepo.getAll(query)
-        .compose(RxUtils.<Recipient>fromCollection()),
-      apiBridge.recipients(sessionManager.getSession().getAuthToken())
-        .compose(ApiUtils.<List<Recipient>>handleApiResult(true))
-        .compose(RxUtils.<Recipient>fromCollection())
-        .flatMap(new Func1<Recipient, Observable<Recipient>>() {
-          @Override
-          public Observable<Recipient> call(Recipient recipient) {
-            return recipientRepo.save(recipient);
-          }
-        })
-        .filter(new Func1<Recipient, Boolean>() {
-          @Override
-          public Boolean call(Recipient recipient) {
-            return recipient.matches(query);
-          }
-        }))
-      .onErrorResumeNext(recipientRepo.getAll(query).compose(RxUtils.<Recipient>fromCollection()))
-      .distinct()
+    return recipientRepo.getAll(query)
+      .compose(RxUtils.<Recipient>fromCollection())
+      .filter(new Func1<Recipient, Boolean>() {
+        @Override
+        public Boolean call(Recipient recipient) {
+          return recipient.matches(query);
+        }
+      })
       .compose(Recipient.toSortedListByIdentifier());
+//    return Observable.concat(
+//      recipientRepo.getAll(query)
+//        .compose(RxUtils.<Recipient>fromCollection()),
+//      apiBridge.recipients(sessionManager.getSession().getAuthToken())
+//        .compose(ApiUtils.<List<Recipient>>handleApiResult(true))
+//        .compose(RxUtils.<Recipient>fromCollection())
+//        .flatMap(new Func1<Recipient, Observable<Recipient>>() {
+//          @Override
+//          public Observable<Recipient> call(Recipient recipient) {
+//            return recipientRepo.save(recipient);
+//          }
+//        })
+//        .filter(new Func1<Recipient, Boolean>() {
+//          @Override
+//          public Boolean call(Recipient recipient) {
+//            return recipient.matches(query);
+//          }
+//        }))
+//      .onErrorResumeNext(recipientRepo.getAll(query).compose(RxUtils.<Recipient>fromCollection()))
+//      .distinct()
+//      .compose(Recipient.toSortedListByIdentifier());
   }
 
   public final Observable<List<Recipient>> remove(List<Recipient> recipients) {

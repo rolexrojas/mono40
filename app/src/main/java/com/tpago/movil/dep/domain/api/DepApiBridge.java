@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.tpago.movil.Partner;
 import com.tpago.movil.dep.domain.Balance;
 import com.tpago.movil.Bank;
+import com.tpago.movil.dep.domain.BillRecipient;
 import com.tpago.movil.dep.domain.InitialData;
 import com.tpago.movil.dep.domain.Product;
 import com.tpago.movil.dep.domain.Recipient;
@@ -151,4 +152,6 @@ public interface DepApiBridge {
     Partner partner,
     String contractNumber,
     String pin);
+
+  Observable<Recipient> queryBalance(String authToken, BillRecipient recipient);
 }

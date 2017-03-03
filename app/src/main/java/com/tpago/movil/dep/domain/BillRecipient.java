@@ -3,7 +3,6 @@ package com.tpago.movil.dep.domain;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.google.common.base.Strings;
 import com.tpago.movil.Partner;
 import com.tpago.movil.dep.domain.util.StringUtils;
 import com.tpago.movil.text.Texts;
@@ -14,6 +13,9 @@ import com.tpago.movil.text.Texts;
 public class BillRecipient extends Recipient {
   private final Partner partner;
   private final String contractNumber;
+  private final String currency = "RD$";
+
+  private BillBalance balance;
 
   public BillRecipient(Partner partner, String contractNumber, @Nullable String label) {
     super(RecipientType.BILL, label);
@@ -33,6 +35,18 @@ public class BillRecipient extends Recipient {
     return contractNumber;
   }
 
+  public final String getCurrency() {
+    return currency;
+  }
+
+  public final BillBalance getBalance() {
+    return balance;
+  }
+
+  public final void setBalance(BillBalance balance) {
+    this.balance = balance;
+  }
+
   @Override
   public String getId() {
     return Texts.join("-", getType(), getPartner().getId(), getContractNumber());
@@ -44,11 +58,22 @@ public class BillRecipient extends Recipient {
     return contractNumber;
   }
 
+  @Nullable
+  @Override
+  public String getLabel() {
+    String label = super.getLabel();
+    if (Texts.isEmpty(label)) {
+      label = String.format("Factura de %1$s", partner.getName());
+    }
+    return label;
+  }
+
   @Override
   public String toString() {
     return PhoneNumberRecipient.class.getSimpleName() + ":{super=" + super.toString()
       + ",partner=" + partner
       + ",contractNumber='" + contractNumber + "'"
+      + ",balance=" + balance
       + "}";
   }
 

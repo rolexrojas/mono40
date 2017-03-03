@@ -8,6 +8,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.tpago.movil.dep.domain.Recipient;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -23,9 +24,13 @@ class InitialDataDeserializer implements JsonDeserializer<InitialData> {
   private static final String PROPERTY_ACCOUNTS = "accounts";
   private static final String PROPERTY_CREDIT_CARDS = "credit-cards";
   private static final String PROPERTY_LOANS = "loans";
+  private static final String PROPERTY_PAYMENT = "payment";
+  private static final String PROPERTY_INVOICES = "invoices";
 
   @Override
-  public InitialData deserialize(JsonElement json, Type typeOfT,
+  public InitialData deserialize(
+    JsonElement json,
+    Type typeOfT,
     JsonDeserializationContext context) throws JsonParseException {
     final JsonObject jsonObject = json.getAsJsonObject();
     if (!jsonObject.has(PROPERTY_QUERY)) {
@@ -72,6 +77,20 @@ class InitialDataDeserializer implements JsonDeserializer<InitialData> {
       products.add((Product) context.deserialize(loansArray.get(i).getAsJsonObject(),
         Product.class));
     }
-    return new InitialData(products);
+    final List<Recipient> recipientList = new ArrayList<>();
+    if (jsonObject.has(PROPERTY_PAYMENT)) {
+      final JsonObject paymentJsonElement = jsonObject.getAsJsonObject(PROPERTY_PAYMENT);
+      if (paymentJsonElement.has(PROPERTY_INVOICES)) {
+        final JsonArray ia = paymentJsonElement.getAsJsonArray(PROPERTY_INVOICES);
+        for (int i = 0; i < ia.size(); i++) {
+          final BillResponseBody brp = context.deserialize(
+            ia.get(i)
+              .getAsJsonObject(),
+            BillResponseBody.class);
+          recipientList.add(BillResponseBody.map(brp));
+        }
+      }
+    }
+    return new InitialData(products, recipientList);
   }
 }

@@ -61,6 +61,7 @@ final class AppModule {
   @Singleton
   Gson provideGson() {
     return new GsonBuilder()
+      .setDateFormat("dd/MM/yyyy")
       .registerTypeAdapterFactory(AppTypeAdapterFactory.create())
       .create();
   }

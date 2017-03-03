@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.tpago.movil.R;
 import com.tpago.movil.dep.ui.main.list.ListItemHolder;
+import com.tpago.movil.dep.ui.view.widget.PrefixableTextView;
 
 import butterknife.BindView;
 
@@ -21,10 +22,14 @@ class RecipientListItemHolder extends ListItemHolder {
   TextView recipientLabelTextView;
   @BindView(R.id.recipient_extra)
   TextView recipientExtraTextView;
-  @BindView(R.id.action_proceed)
+  @BindView(R.id.proceed_action)
   View proceedActionView;
   @BindView(R.id.checkbox_delete)
   CheckBox deleteCheckbox;
+  @BindView(R.id.prefixable_text_view_total_owed)
+  PrefixableTextView totalOwedPrefixableTextView;
+  @BindView(R.id.text_view_due_date)
+  TextView dueDateTextView;
 
   RecipientListItemHolder(@NonNull View rootView, @NonNull OnClickListener listener) {
     super(rootView, listener);

@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.tpago.movil.Bank;
 import com.tpago.movil.Partner;
+import com.tpago.movil.dep.domain.BillBalance;
 import com.tpago.movil.dep.domain.BillRecipient;
 import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.dep.domain.PhoneNumberRecipient;
@@ -34,6 +35,7 @@ class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSerialize
   private static final String PROPERTY_PARTNER = "partner";
   private static final String PROPERTY_CONTRACT_NUMBER = "contractNumber";
   private static final String PROPERTY_PRODUCT = "product";
+  private static final String PROPERTY_BALANCE = "balance";
 
   @Override
   public Recipient deserialize(
@@ -82,7 +84,11 @@ class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSerialize
         throw new JsonParseException("Property '" + PROPERTY_CONTRACT_NUMBER + "' is missing");
       }
       final String contractNumber = jo.get(PROPERTY_CONTRACT_NUMBER).getAsString();
-      return new BillRecipient(partner, contractNumber, label);
+      final BillRecipient b = new BillRecipient(partner, contractNumber, label);
+      if (jo.has(PROPERTY_BALANCE)) {
+        b.setBalance((BillBalance) context.deserialize(jo.get(PROPERTY_BALANCE), BillBalance.class));
+      }
+      return b;
     } else {
       return null;
     }
@@ -115,6 +121,10 @@ class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSerialize
       final BillRecipient r = (BillRecipient) src;
       jsonObject.add(PROPERTY_PARTNER, context.serialize(r.getPartner()));
       jsonObject.addProperty(PROPERTY_CONTRACT_NUMBER, r.getContractNumber());
+      final BillBalance b = r.getBalance();
+      if (Objects.isNotNull(b)) {
+        jsonObject.add(PROPERTY_BALANCE, context.serialize(b));
+      }
     }
     return jsonObject;
   }

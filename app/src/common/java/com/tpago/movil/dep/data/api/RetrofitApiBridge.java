@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import com.tpago.movil.Partner;
 import com.tpago.movil.dep.domain.Balance;
 import com.tpago.movil.Bank;
+import com.tpago.movil.dep.domain.BillBalance;
+import com.tpago.movil.dep.domain.BillRecipient;
 import com.tpago.movil.dep.domain.InitialData;
 import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.dep.domain.PhoneNumberRecipient;
@@ -19,7 +21,6 @@ import com.tpago.movil.dep.domain.api.ApiResult;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,15 @@ class RetrofitApiBridge implements DepApiBridge {
 
   private final ApiService apiService;
   private final Converter<ResponseBody, ApiError> errorConverter;
+
+  private static <T> Func1<T, T> identityMapFunc() {
+    return new Func1<T, T>() {
+      @Override
+      public T call(T t) {
+        return t;
+      }
+    };
+  }
 
   RetrofitApiBridge(ApiService apiService, Converter<ResponseBody, ApiError> errorConverter) {
     this.apiService = apiService;
@@ -170,7 +180,8 @@ class RetrofitApiBridge implements DepApiBridge {
   @NonNull
   @Override
   public Observable<ApiResult<List<Recipient>>> recipients(@NonNull String authToken) {
-    return Observable.just(new ApiResult<List<Recipient>>(ApiCode.OK, new ArrayList<Recipient>(), null));
+    return apiService.getBills(authToken)
+      .flatMap(mapToApiResult(BillResponseBody.mapFunc()));
   }
 
   @NonNull
@@ -269,7 +280,7 @@ class RetrofitApiBridge implements DepApiBridge {
     String pin) {
     return apiService.addBill(
       authToken,
-      BillAdditionRequestBody.create(partner, contractNumber, pin))
+      BillRequestBody.create(partner, contractNumber, pin))
       .flatMap(mapToApiResult(MAP_FUNC_VOID));
   }
 
@@ -280,5 +291,24 @@ class RetrofitApiBridge implements DepApiBridge {
     String contractNumber,
     String pin) {
     return Observable.error(new UnsupportedOperationException("Not implemented"));
+  }
+
+  @Override
+  public Observable<Recipient> queryBalance(
+    String authToken,
+    final BillRecipient recipient) {
+    return apiService.queryBalance(
+      authToken,
+      BillRequestBody.create(recipient.getPartner(), recipient.getContractNumber(), null))
+      .flatMap(mapToApiResult(RetrofitApiBridge.<BillBalance>identityMapFunc()))
+      .map(new Func1<ApiResult<BillBalance>, Recipient>() {
+        @Override
+        public Recipient call(ApiResult<BillBalance> result) {
+          if (result.isSuccessful()) {
+            recipient.setBalance(result.getData());
+          }
+          return recipient;
+        }
+      });
   }
 }
