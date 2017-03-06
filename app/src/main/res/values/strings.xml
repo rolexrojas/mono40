@@ -75,6 +75,9 @@
   <string name="register_form_phone_number_error_incorrect_number_message">Debes de ingresar un número de diez dígitos.</string>
   <string name="register_form_phone_number_error_incorrect_number_positive_button_text">@string/ok</string>
   <string name="register_form_phone_number_error_incorrect_number_title">Número incorrecto</string>
+  <string name="register_form_phone_number_error_not_affiliated_message">Debes de ingresar un número de teléfono que esté afiliado a tPago.</string>
+  <string name="register_form_phone_number_error_not_affiliated_positive_button_text">@string/ok</string>
+  <string name="register_form_phone_number_error_not_affiliated_title">Número no afiliado</string>
   <string name="register_form_phone_number_label_description">Ingresa el número de celular para verificar tu perfil</string>
   <string name="register_form_phone_number_label_title">¡Listo, empecemos!</string>
   <string name="register_form_pin_label_description">Vinculación al celular, creación de perfil e inicio de sesión</string>
