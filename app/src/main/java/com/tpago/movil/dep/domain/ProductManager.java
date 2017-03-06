@@ -28,7 +28,9 @@ public final class ProductManager implements ProductProvider {
   private final EventBus eventBus;
   private final com.tpago.movil.dep.domain.session.SessionManager sessionManager;
 
-  public ProductManager(@NonNull ProductRepo productRepo, @NonNull Lazy<PosBridge> posBridge,
+  public ProductManager(
+    @NonNull ProductRepo productRepo,
+    @NonNull Lazy<PosBridge> posBridge,
     @NonNull EventBus eventBus,
     @NonNull com.tpago.movil.dep.domain.session.SessionManager sessionManager) {
     this.productRepo = productRepo;
@@ -78,11 +80,10 @@ public final class ProductManager implements ProductProvider {
           final Product product = pair.second;
           final Observable<Object> observable;
           if (action == Action.ADD || action == Action.UPDATE) {
-            observable = productRepo.save(product)
-              .cast(Object.class);
+            observable = productRepo.save(product).cast(Object.class);
           } else {
-            observable = Observable
-              .concat(productRepo.remove(product), posBridge.get().removeCard(product.getAlias()));
+            observable = productRepo.remove(product).cast(Object.class)
+              .concatWith(posBridge.get().removeCard(product.getAlias()));
           }
           return observable;
         }

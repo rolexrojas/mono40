@@ -10,7 +10,7 @@ import com.tpago.movil.R;
 import com.tpago.movil.app.ActivityQualifier;
 import com.tpago.movil.app.FragmentReplacer;
 import com.tpago.movil.init.InitFragment;
-import com.tpago.movil.init.onboarding.OnboardingFragment;
+import com.tpago.movil.init.tutorial.TutorialFragment;
 
 import javax.inject.Inject;
 
@@ -32,7 +32,7 @@ public final class SummaryRegisterFragment extends BaseRegisterFragment {
 
   @OnClick(R.id.button_continue)
   void onContinueButtonClicked() {
-    fragmentReplacer.begin(OnboardingFragment.create())
+    fragmentReplacer.begin(TutorialFragment.create())
       .setTransition(FragmentReplacer.Transition.SRFO)
       .commit();
   }

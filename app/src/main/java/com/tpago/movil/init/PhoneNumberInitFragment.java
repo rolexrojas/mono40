@@ -29,14 +29,14 @@ import butterknife.Unbinder;
 /**
  * @author hecvasro
  */
-public final class PhoneNumberFormFragment
+public final class PhoneNumberInitFragment
   extends BaseInitFragment
-  implements PhoneNumberFormPresenter.View,
+  implements PhoneNumberInitPresenter.View,
   NumPad.OnDigitClickedListener,
   NumPad.OnDeleteClickedListener {
   private Unbinder unbinder;
   private LoadIndicator loadIndicator;
-  private PhoneNumberFormPresenter presenter;
+  private PhoneNumberInitPresenter presenter;
 
   @BindView(R.id.text_input) TextInput textInput;
   @BindView(R.id.num_pad) NumPad numPad;
@@ -45,8 +45,8 @@ public final class PhoneNumberFormFragment
   @Inject LogoAnimator logoAnimator;
   @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
 
-  public static PhoneNumberFormFragment create() {
-    return new PhoneNumberFormFragment();
+  public static PhoneNumberInitFragment create() {
+    return new PhoneNumberInitFragment();
   }
 
   @OnClick(R.id.button_move_to_next_screen)
@@ -67,7 +67,7 @@ public final class PhoneNumberFormFragment
     LayoutInflater inflater,
     @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_register_form_phone_number, container, false);
+    return inflater.inflate(R.layout.fragment_init_phone_number, container, false);
   }
 
   @Override
@@ -78,7 +78,7 @@ public final class PhoneNumberFormFragment
     // Creates the load indicator.
     loadIndicator = new FullSizeLoadIndicator(getChildFragmentManager());
     // Creates presenter.
-    presenter = new PhoneNumberFormPresenter(this, getInitComponent());
+    presenter = new PhoneNumberInitPresenter(this, getInitComponent());
   }
 
   @Override

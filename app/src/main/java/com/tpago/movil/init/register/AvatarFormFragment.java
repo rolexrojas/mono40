@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -31,14 +32,11 @@ import butterknife.Unbinder;
 public final class AvatarFormFragment extends BaseRegisterFragment {
   private Unbinder unbinder;
 
-  @Inject
-  Avatar avatar;
-  @Inject
-  @FragmentQualifier
-  FragmentReplacer fragmentReplacer;
+  @Inject Avatar avatar;
+  @Inject @FragmentQualifier FragmentReplacer fragmentReplacer;
 
-  @BindView(R.id.image_view_avatar)
-  ImageView avatarImageView;
+  @BindView(R.id.image_view_avatar) ImageView avatarImageView;
+  @BindView(R.id.button_move_to_next_screen) Button moveToNextScreenButton;
 
   static AvatarFormFragment create() {
     return new AvatarFormFragment();
@@ -84,17 +82,23 @@ public final class AvatarFormFragment extends BaseRegisterFragment {
   @Override
   public void onResume() {
     super.onResume();
-    final File file = avatar.getFile();
-    final Context context = getActivity();
-    Picasso.with(context).invalidate(file);
-    Picasso.with(context)
-      .load(file)
-      .resizeDimen(R.dimen.widget_image_avatar_large, R.dimen.widget_image_avatar_large)
-      .transform(new CircleTransformation())
-      .placeholder(R.drawable.widget_image_dark_avatar_placeholder_large)
-      .error(R.drawable.widget_image_dark_avatar_placeholder_large)
-      .noFade()
-      .into(avatarImageView);
+    if (avatar.exists()) {
+      final File file = avatar.getFile();
+      final Context context = getActivity();
+      moveToNextScreenButton.setText(R.string.next);
+      Picasso.with(context).invalidate(file);
+      Picasso.with(context)
+        .load(file)
+        .resizeDimen(R.dimen.widget_image_avatar_large, R.dimen.widget_image_avatar_large)
+        .transform(new CircleTransformation())
+        .placeholder(R.drawable.widget_image_dark_avatar_placeholder_large)
+        .error(R.drawable.widget_image_dark_avatar_placeholder_large)
+        .noFade()
+        .into(avatarImageView);
+    } else {
+      avatarImageView.setImageResource(R.drawable.widget_image_dark_avatar_placeholder_large);
+      moveToNextScreenButton.setText(R.string.later);
+    }
   }
 
   @Override

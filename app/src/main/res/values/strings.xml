@@ -9,6 +9,7 @@
   <string name="first_name">Nombre</string>
   <string name="last_name">Apellido</string>
   <string name="later">Mas Tarde</string>
+  <string name="learn_more">Aprende más</string>
   <string name="next">Continuar</string>
   <string name="ok">Ok</string>
   <string name="password">Contraseña</string>
@@ -34,6 +35,17 @@
   <string name="dialog_avatar_creation_label_title_create">Establecer foto de perfil</string>
   <string name="dialog_avatar_creation_label_title_replace">Actualizar foto de perfil</string>
 
+  <!-- Init strings -->
+  <string name="init_phone_number_button_move_to_next_screen">@string/next</string>
+  <string name="init_phone_number_error_incorrect_number_message">Debes de ingresar un número de diez dígitos.</string>
+  <string name="init_phone_number_error_incorrect_number_positive_button_text">@string/ok</string>
+  <string name="init_phone_number_error_incorrect_number_title">Número incorrecto</string>
+  <string name="init_phone_number_error_not_affiliated_message">Debes de ingresar un número de teléfono que esté afiliado a tPago.</string>
+  <string name="init_phone_number_error_not_affiliated_positive_button_text">@string/ok</string>
+  <string name="init_phone_number_error_not_affiliated_title">Número no afiliado</string>
+  <string name="init_phone_number_label_description">Ingresa el número de celular para verificar tu perfil</string>
+  <string name="init_phone_number_label_title">¡Listo, empecemos!</string>
+
   <!-- Intro strings -->
   <string name="intro_button_start">@string/start</string>
   <string name="intro_tab_description_first">Paga, compra, recarga y transfiere rápido y seguro.</string>
@@ -44,7 +56,6 @@
   <string name="intro_tab_title_third">Pagos al instante</string>
 
   <!-- Register strings -->
-  <string name="register_form_avatar_button_move_to_next_screen">@string/later</string>
   <string name="register_form_avatar_label_description">Se usa para identificar tus cuentas más fácil</string>
   <string name="register_form_avatar_label_title">¿Establecer tu foto?</string>
   <string name="register_form_email_button_move_to_next_screen">@string/next</string>
@@ -71,15 +82,6 @@
   <string name="register_form_password_input_hint_confirmation">Confirmar contraseña</string>
   <string name="register_form_password_label_description">Ahora crea una contraseña</string>
   <string name="register_form_password_label_title">¡Perfecto!</string>
-  <string name="register_form_phone_number_button_move_to_next_screen">@string/next</string>
-  <string name="register_form_phone_number_error_incorrect_number_message">Debes de ingresar un número de diez dígitos.</string>
-  <string name="register_form_phone_number_error_incorrect_number_positive_button_text">@string/ok</string>
-  <string name="register_form_phone_number_error_incorrect_number_title">Número incorrecto</string>
-  <string name="register_form_phone_number_error_not_affiliated_message">Debes de ingresar un número de teléfono que esté afiliado a tPago.</string>
-  <string name="register_form_phone_number_error_not_affiliated_positive_button_text">@string/ok</string>
-  <string name="register_form_phone_number_error_not_affiliated_title">Número no afiliado</string>
-  <string name="register_form_phone_number_label_description">Ingresa el número de celular para verificar tu perfil</string>
-  <string name="register_form_phone_number_label_title">¡Listo, empecemos!</string>
   <string name="register_form_pin_label_description">Vinculación al celular, creación de perfil e inicio de sesión</string>
   <string name="register_form_pin_label_title">Confirma con tu PIN</string>
   <string name="register_summary_button_continue">@string/next</string>
@@ -89,14 +91,14 @@
   
   <!-- Onboarding strings -->
   <string name="onboarding_button_skip">@string/skip</string>
-  <string name="onboarding_first_label_description">Envia dinero o recargas minutos a tu familia y amigos. ¡Además pagas facturas en segundos!</string>
-  <string name="onboarding_first_label_title">Paga más rápido</string>
-  <string name="onboarding_fourth_label_description">En Comprar, configura tus cuentas para usar con Tocar y Pagar. Es la forma más rápida de pagar en comercios.</string>
-  <string name="onboarding_fourth_label_title">Tocar y pagar</string>
-  <string name="onboarding_second_label_description">Toca arriba para agregar amigos. Utiliza tus contactos para agregar a las personas más rapido.</string>
-  <string name="onboarding_second_label_title">Agrega amigos</string>
-  <string name="onboarding_third_label_description">Encuentra todo desde el menú. Consulta cuánto dinero tienes en tus cuentas, ajustas, buscas ayuda y más.</string>
-  <string name="onboarding_third_label_title">Abre el menú</string>
+  <string name="tutorial_tab_label_description_01">Envia dinero o recargas minutos a tu familia y amigos. ¡Además pagas facturas en segundos!</string>
+  <string name="tutorial_tab_label_title_01">Paga más rápido</string>
+  <string name="tutorial_tab_label_description_04">En Comprar, configura tus cuentas para usar con Tocar y Pagar. Es la forma más rápida de pagar en comercios.</string>
+  <string name="tutorial_tab_label_title_04">Tocar y pagar</string>
+  <string name="tutorial_tab_label_description_02">Toca arriba para agregar amigos. Utiliza tus contactos para agregar a las personas más rapido.</string>
+  <string name="tutorial_tab_label_title_02">Agrega amigos</string>
+  <string name="tutorial_tab_label_description_03">Encuentra todo desde el menú. Consulta cuánto dinero tienes en tus cuentas, ajustas, buscas ayuda y más.</string>
+  <string name="tutorial_tab_label_title_03">Abre el menú</string>
   
   <!-- Sign in strings -->
   <string name="sign_in_button">@string/sign_in</string>
@@ -112,6 +114,12 @@
   <string name="unlock_button">@string/unlock</string>
   <string name="unlock_input_hint_password">@string/password</string>
   <string name="unlock_label_title">¡Bienvenido, %1$s!</string>
+
+  <!-- Purchase strings -->
+  <string name="purchase_non_nfc_button_learn_more">@string/learn_more</string>
+  <string name="purchase_non_nfc_label_01">Solo dale tu número de celular al cajero. Cuando recibas el mensaje de la compra, confirma con tu PIN. ¡Y listo!</string>
+  <string name="purchase_non_nfc_label_02">O Tocar y Pagar al instante.</string>
+  <string name="purchase_non_nfc_label_title">Al momento de comprar</string>
 
   <!-- Deprecated strings -->
   <string name="about">Acerca de</string>

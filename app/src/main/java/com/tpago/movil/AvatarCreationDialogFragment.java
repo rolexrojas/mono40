@@ -149,13 +149,9 @@ public final class AvatarCreationDialogFragment extends DialogFragment {
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    if (requestCode == REQUEST_CODE_GALLERY) {
+    if (requestCode == REQUEST_CODE_GALLERY || requestCode == REQUEST_CODE_CAMERA) {
       if (resultCode == RESULT_CODE_OK) {
         startEditor(data.getData());
-      }
-    } else if (requestCode == REQUEST_CODE_CAMERA) {
-      if (resultCode == RESULT_CODE_OK) {
-        startEditor(Uri.fromFile(temporaryFile));
       }
     } else if (requestCode == REQUEST_CODE_EDITOR) {
       if (resultCode == RESULT_CODE_OK) {

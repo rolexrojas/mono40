@@ -27,7 +27,7 @@ import timber.log.Timber;
 /**
  * @author hecvasro
  */
-public final class PhoneNumberFormPresenter extends Presenter<PhoneNumberFormPresenter.View> {
+public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPresenter.View> {
   @Inject ApiBridge apiBridge;
   @Inject InitData initData;
 
@@ -36,7 +36,7 @@ public final class PhoneNumberFormPresenter extends Presenter<PhoneNumberFormPre
 
   private Disposable disposable = Disposables.disposed();
 
-  PhoneNumberFormPresenter(View view, InitComponent component) {
+  PhoneNumberInitPresenter(View view, InitComponent component) {
     super(view);
     // Injects all the annotated dependencies.
     Preconditions.checkNotNull(component, "component == null")
@@ -100,19 +100,19 @@ public final class PhoneNumberFormPresenter extends Presenter<PhoneNumberFormPre
             final ApiData<PhoneNumber.State> apiData = result.getData();
             if (result.isSuccessful()) {
               final PhoneNumber.State state = apiData.getValue();
-              if (state.equals(PhoneNumber.State.NONE)) {
-                view.showDialog(
-                  R.string.register_form_phone_number_error_not_affiliated_title,
-                  R.string.register_form_phone_number_error_not_affiliated_message,
-                  R.string.register_form_phone_number_error_not_affiliated_positive_button_text);
-              } else {
+//              if (state.equals(PhoneNumber.State.NONE)) {
+//                view.showDialog(
+//                  R.string.init_phone_number_error_not_affiliated_title,
+//                  R.string.init_phone_number_error_not_affiliated_message,
+//                  R.string.init_phone_number_error_not_affiliated_positive_button_text);
+//              } else {
                 initData.setPhoneNumber(phoneNumber, state);
                 if (state.equals(PhoneNumber.State.REGISTERED)) {
                   view.moveToSignInScreen();
                 } else {
                   view.moveToSignUpScreen();
                 }
-              }
+//              }
             } else {
               final ApiError error = apiData.getError();
               view.showDialog(
@@ -134,9 +134,9 @@ public final class PhoneNumberFormPresenter extends Presenter<PhoneNumberFormPre
         });
     } else {
       view.showDialog(
-        R.string.register_form_phone_number_error_incorrect_number_title,
-        R.string.register_form_phone_number_error_incorrect_number_message,
-        R.string.register_form_phone_number_error_incorrect_number_positive_button_text);
+        R.string.init_phone_number_error_incorrect_number_title,
+        R.string.init_phone_number_error_incorrect_number_message,
+        R.string.init_phone_number_error_incorrect_number_positive_button_text);
       view.showTextInputAsErratic(true);
     }
   }

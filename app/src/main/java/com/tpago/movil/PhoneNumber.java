@@ -46,11 +46,11 @@ public abstract class PhoneNumber {
 
   public static PhoneNumber create(String value) {
     if (Objects.isNull(value)) {
-      throw new NullPointerException("Null value");
+      throw new NullPointerException("value == null");
     }
     final String sanitizedValue = sanitize(value);
     if (!isValid(sanitizedValue, false)) {
-      throw new IllegalArgumentException("Invalid value");
+      throw new IllegalArgumentException("isValid(sanitizedValue, false) == false");
     }
     return new AutoValue_PhoneNumber(sanitizedValue);
   }

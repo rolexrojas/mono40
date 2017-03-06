@@ -3,8 +3,8 @@ package com.tpago.movil.content;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.tpago.movil.util.Objects;
 import com.tpago.movil.text.Texts;
+import com.tpago.movil.util.Preconditions;
 
 /**
  * @author hecvasro
@@ -13,18 +13,12 @@ public final class SharedPreferencesCreator {
   private final Context context;
 
   public SharedPreferencesCreator(Context context) {
-    if (Objects.isNull(context)) {
-      throw new NullPointerException("Null context");
-    }
-    this.context = context;
+    this.context = Preconditions.checkNotNull(context, "context == null");
   }
 
   public final SharedPreferences create(String fileName) {
-    if (Objects.isNull(fileName)) {
-      throw new NullPointerException("Null fileName");
-    }
     if (Texts.isEmpty(fileName)) {
-      throw new IllegalArgumentException("Invalid fileName");
+      throw new IllegalArgumentException("Texts.isEmpty(fileName) == true");
     }
     return context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
   }

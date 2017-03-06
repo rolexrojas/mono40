@@ -9,7 +9,7 @@
     style="@style/Label.Dark.Primary"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="@string/register_form_phone_number_label_title"/>
+    android:text="@string/init_phone_number_label_title"/>
   <TextView
     style="@style/Label.Dark.Secondary"
     android:layout_width="match_parent"
@@ -17,7 +17,7 @@
     android:layout_marginEnd="60dp"
     android:layout_marginStart="60dp"
     android:layout_marginTop="10dp"
-    android:text="@string/register_form_phone_number_label_description"/>
+    android:text="@string/init_phone_number_label_description"/>
   <com.tpago.movil.widget.NotEditableTextInput
     android:id="@+id/text_input"
     style="@style/Widget.NotEditableTextInput.Dark"
@@ -41,5 +41,5 @@
     style="@style/Widget.Button.Dark.Gradient"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:text="@string/register_form_phone_number_button_move_to_next_screen"/>
+    android:text="@string/init_phone_number_button_move_to_next_screen"/>
 </LinearLayout>

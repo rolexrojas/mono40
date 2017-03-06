@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.tpago.movil.util.Objects;
+import com.tpago.movil.util.Preconditions;
 
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
@@ -14,10 +15,7 @@ import timber.log.Timber;
  */
 final class CrashlyticsLogTree extends Timber.Tree {
   CrashlyticsLogTree(Context context) {
-    if (Objects.isNull(context)) {
-      throw new NullPointerException("Null context");
-    }
-    Fabric.with(context, new Crashlytics());
+    Fabric.with(Preconditions.checkNotNull(context, "context == null"), new Crashlytics());
   }
 
   @Override

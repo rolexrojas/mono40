@@ -42,15 +42,15 @@ import timber.log.Timber;
  *
  * @author hecvasro
  */
-public class PurchaseFragment extends ChildFragment<MainContainer>
-  implements PurchaseContainer, PurchaseScreen, ListItemHolder.OnClickListener,
+public class PurchaseFragment
+  extends ChildFragment<MainContainer>
+  implements PurchaseContainer,
+  PurchaseScreen,
+  ListItemHolder.OnClickListener,
   SelectedItemDecoration.Provider {
   private static final String TAG_PAYMENT_SCREEN = "paymentScreen";
   private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
 
-  /**
-   * TODO
-   */
   private static final String KEY_ACTIVATE_AUTOMATICALLY = "activeAutomatically";
 
   PurchaseComponent component;
@@ -59,18 +59,13 @@ public class PurchaseFragment extends ChildFragment<MainContainer>
   private ListItemAdapter adapter;
   private boolean activateAutomatically;
 
-  @Inject
-  StringHelper stringHelper;
-  @Inject
-  PurchasePaymentOptionBinder paymentOptionBinder;
-  @Inject
-  PurchasePresenter presenter;
+  @Inject StringHelper stringHelper;
+  @Inject PurchasePaymentOptionBinder paymentOptionBinder;
+  @Inject PurchasePresenter presenter;
 
-  @BindString(R.string.commerce_payment_option_ready_text_value)
-  String readyMessage;
+  @BindString(R.string.commerce_payment_option_ready_text_value) String readyMessage;
 
-  @BindView(R.id.recycler_view)
-  RecyclerView recyclerView;
+  @BindView(R.id.recycler_view) RecyclerView recyclerView;
 
   @NonNull
   public static PurchaseFragment newInstance(boolean activeAutomatically) {
@@ -100,7 +95,9 @@ public class PurchaseFragment extends ChildFragment<MainContainer>
 
   @Nullable
   @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+  public View onCreateView(
+    LayoutInflater inflater,
+    @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_payments_commerce, container, false);
   }

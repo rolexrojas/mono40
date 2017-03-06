@@ -1,4 +1,4 @@
-package com.tpago.movil.init.onboarding;
+package com.tpago.movil.init.tutorial;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,7 +18,7 @@ import butterknife.Unbinder;
 /**
  * @author hecvasro
  */
-public final class OnboardingTabFragment extends Fragment {
+public final class TutorialTabFragment extends Fragment {
   private static final String KEY_TITLE_ID = "titleId";
   private static final String KEY_DESCRIPTION_ID = "descriptionId";
 
@@ -27,11 +27,11 @@ public final class OnboardingTabFragment extends Fragment {
   @BindView(R.id.label_title) TextView titleTextView;
   @BindView(R.id.label_description) TextView descriptionTextView;
 
-  static OnboardingTabFragment create(int titleId, int descriptionId) {
+  static TutorialTabFragment create(int titleId, int descriptionId) {
     final Bundle args = new Bundle();
     args.putInt(KEY_TITLE_ID, titleId);
     args.putInt(KEY_DESCRIPTION_ID, descriptionId);
-    final OnboardingTabFragment fragment = new OnboardingTabFragment();
+    final TutorialTabFragment fragment = new TutorialTabFragment();
     fragment.setArguments(args);
     return fragment;
   }

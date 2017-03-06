@@ -28,7 +28,8 @@
     android:layout_below="@+id/label_description"
     android:layout_marginEnd="60dp"
     android:layout_marginStart="60dp"
-    android:layout_marginTop="16dp"/>
+    android:layout_marginTop="16dp"
+    android:textSize="50sp"/>
   <com.tpago.movil.widget.NumPad
     android:id="@+id/num_pad"
     style="@style/Widget.NumPad.Dark"

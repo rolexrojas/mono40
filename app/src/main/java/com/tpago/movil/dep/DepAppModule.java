@@ -48,8 +48,11 @@ public final class DepAppModule {
 
   @Provides
   @Singleton
-  ProductManager provideProductManager(ProductRepo productRepo, Lazy<PosBridge> posBridge,
-    EventBus eventBus, SessionManager sessionManager) {
+  ProductManager provideProductManager(
+    ProductRepo productRepo,
+    Lazy<PosBridge> posBridge,
+    EventBus eventBus,
+    SessionManager sessionManager) {
     return new ProductManager(productRepo, posBridge, eventBus, sessionManager);
   }
 

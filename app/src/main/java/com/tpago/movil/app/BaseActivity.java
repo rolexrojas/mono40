@@ -11,8 +11,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  * @author hecvasro
  */
 public abstract class BaseActivity extends AppCompatActivity {
-  @Inject
-  BackEventHandler backButtonHandler;
+  @Inject BackEventHandler backButtonHandler;
 
   @Override
   protected void attachBaseContext(Context newBase) {

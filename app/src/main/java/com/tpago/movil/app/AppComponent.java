@@ -2,7 +2,6 @@ package com.tpago.movil.app;
 
 import android.content.Context;
 
-import com.tpago.movil.AvatarCreationDialogFragment;
 import com.tpago.movil.UserStore;
 import com.tpago.movil.dep.DepAppModule;
 import com.tpago.movil.api.ApiModule;
@@ -26,6 +25,7 @@ import com.tpago.movil.dep.ui.main.recipients.NonAffiliatedPhoneNumberRecipientA
 import com.tpago.movil.init.InitComponent;
 import com.tpago.movil.init.InitModule;
 import com.tpago.movil.net.NetModule;
+import com.tpago.movil.nfc.NfcModule;
 
 import javax.inject.Singleton;
 
@@ -39,6 +39,7 @@ import dagger.Component;
   AppModule.class,
   NetModule.class,
   ApiModule.class,
+  NfcModule.class,
   // Deprecated modules
   DepAppModule.class,
   DepDataModule.class
@@ -46,17 +47,15 @@ import dagger.Component;
 public interface AppComponent {
   InitComponent plus(InitModule module);
 
-  void inject(AvatarCreationDialogFragment fragment);
-
   // Deprecated injects
   void inject(NonAffiliatedPhoneNumberRecipientAddition1Fragment fragment);
   void inject(NonAffiliatedPhoneNumberRecipientAddition2Fragment fragment);
 
   // Deprecated provides
-  DepApiBridge provideApiBridge();
   AssetProvider provideResourceProvider();
   BalanceManager provideBalanceManager();
   Context provideContext();
+  DepApiBridge provideApiBridge();
   EventBus provideEventBus();
   InitialDataLoader provideInitialDataLoader();
   NfcHandler provideNfcHandler();

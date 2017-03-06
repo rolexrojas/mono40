@@ -2,6 +2,9 @@
   package="com.tpago.movil"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools">
+  <uses-feature
+    android:name="android.hardware.nfc"
+    android:required="false"/>
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
   <uses-permission android:name="android.permission.CAMERA"/>
   <uses-permission android:name="android.permission.INTERNET"/>
@@ -9,6 +12,7 @@
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
   <uses-permission android:name="android.permission.READ_SMS"/>
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
   <application
     android:name="com.tpago.movil.app.App"
     android:allowBackup="true"
@@ -33,6 +37,7 @@
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
+    <!-- [START] Deprecated -->
     <activity
       android:name="com.tpago.movil.dep.ui.main.MainActivity"
       android:screenOrientation="portrait"/>
@@ -48,5 +53,6 @@
     <activity
       android:name=".dep.ui.main.recipients.NonAffiliatedPhoneNumberRecipientAdditionActivity"
       android:screenOrientation="portrait"/>
+    <!-- [END] Deprecated -->
   </application>
 </manifest>

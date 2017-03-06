@@ -184,8 +184,7 @@
 
   <style name="Widget.Button.Dark.Gradient" parent="Base.Widget.Button.Dark.Gradient"/>
   <style name="Widget.Button.Dark.Solid.Rounded" parent="Base.Widget.Button.Dark.Solid.Rounded"/>
-  <style name="Widget.Button.Dark.Transparent.Rounded"
-    parent="Base.Widget.Button.Dark.Transparent.Rounded"/>
+  <style name="Widget.Button.Dark.Transparent.Rounded" parent="Base.Widget.Button.Dark.Transparent.Rounded"/>
   <style name="Widget.Button.Light.Solid" parent="Base.Widget.Button.Light.Solid"/>
 
   <style name="Widget.TextInput.Dark" parent="Base.Widget.TextInput.Dark"/>

@@ -1,7 +1,6 @@
 package com.tpago.movil.init.register;
 
 import com.tpago.movil.app.FragmentScope;
-import com.tpago.movil.init.PhoneNumberFormFragment;
 
 import dagger.Subcomponent;
 

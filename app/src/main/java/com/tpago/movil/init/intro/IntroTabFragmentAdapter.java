@@ -19,7 +19,7 @@ final class IntroTabFragmentAdapter extends FragmentPagerAdapter {
   IntroTabFragmentAdapter(FragmentManager fragmentManager) {
     super(fragmentManager);
     arts = new int[] {
-      R.drawable.intro_tab_art_first,
+      R.drawable.intro_tab_art_01,
       R.drawable.intro_tab_art_second,
       R.drawable.intro_tab_art_third
     };
