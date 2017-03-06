@@ -244,7 +244,6 @@ public final class AvatarCreationDialogFragment extends DialogFragment {
   public void onDestroy() {
     super.onDestroy();
     // Clears the temporary file.
-    Timber.d("Clearing the temporary file");
     if (Objects.isNotNull(temporaryFile)) {
       if (temporaryFile.exists()) {
         temporaryFile.delete();
