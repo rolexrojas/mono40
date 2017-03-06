@@ -19,15 +19,10 @@ import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 public abstract class RecipientCandidateListPresenter
   extends Presenter<RecipientCandidateListScreen> {
-  /**
-   * TODO
-   */
   private static final long DEFAULT_TIME_SPAN_QUERY = 300L; // 0.3 seconds.
 
   protected final SchedulerProvider schedulerProvider;
@@ -35,37 +30,15 @@ public abstract class RecipientCandidateListPresenter
   private Subscription querySubscription = Subscriptions.unsubscribed();
   private Subscription searchSubscription = Subscriptions.unsubscribed();
 
-  /**
-   * TODO
-   *
-   * @param schedulerProvider
-   *   TODO
-   */
   public RecipientCandidateListPresenter(@NonNull SchedulerProvider schedulerProvider) {
     this.schedulerProvider = schedulerProvider;
   }
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
   protected abstract boolean canStartListeningQueryChangeEvents();
 
-  /**
-   * TODO
-   *
-   * @param query
-   *   TODO
-   *
-   * @return TODO
-   */
   @NonNull
   protected abstract Observable<Object> search(@Nullable String query);
 
-  /**
-   * TODO
-   */
   protected final void startListeningQueryChangeEvents() {
     if (querySubscription.isUnsubscribed()) {
       querySubscription = screen.onQueryChanged()
@@ -115,18 +88,12 @@ public abstract class RecipientCandidateListPresenter
     }
   }
 
-  /**
-   * TODO
-   */
   void start() {
     if (canStartListeningQueryChangeEvents()) {
       startListeningQueryChangeEvents();
     }
   }
 
-  /**
-   * TODO
-   */
   void stop() {
     assertScreen();
     RxUtils.unsubscribe(searchSubscription);

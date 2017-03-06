@@ -16,8 +16,6 @@ import rx.functions.Action1;
 import rx.subscriptions.Subscriptions;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 class ContactListPresenter extends RecipientCandidateListPresenter {
@@ -26,18 +24,10 @@ class ContactListPresenter extends RecipientCandidateListPresenter {
 
   private Subscription permissionSubscription = Subscriptions.unsubscribed();
 
-  /**
-   * TODO
-   *
-   * @param schedulerProvider
-   *   TODO
-   * @param permissionManager
-   *   TODO
-   * @param contactProvider
-   *   TODO
-   */
-  ContactListPresenter(@NonNull SchedulerProvider schedulerProvider,
-    @NonNull RxPermissions permissionManager, @NonNull ContactProvider contactProvider) {
+  ContactListPresenter(
+    @NonNull SchedulerProvider schedulerProvider,
+    @NonNull RxPermissions permissionManager,
+    @NonNull ContactProvider contactProvider) {
     super(schedulerProvider);
     this.permissionManager = permissionManager;
     this.contactProvider = contactProvider;
@@ -62,9 +52,6 @@ class ContactListPresenter extends RecipientCandidateListPresenter {
       .cast(Object.class);
   }
 
-  /**
-   * TODO
-   */
   void create() {
     assertScreen();
     permissionSubscription = permissionManager.request(Manifest.permission.READ_CONTACTS)
@@ -81,9 +68,6 @@ class ContactListPresenter extends RecipientCandidateListPresenter {
       });
   }
 
-  /**
-   * TODO
-   */
   void destroy() {
     assertScreen();
     RxUtils.unsubscribe(permissionSubscription);

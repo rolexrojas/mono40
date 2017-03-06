@@ -13,13 +13,13 @@ import android.widget.FrameLayout;
 import com.tpago.movil.Partner;
 import com.tpago.movil.app.App;
 import com.tpago.movil.R;
+import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.dep.domain.api.DepApiBridge;
 import com.tpago.movil.dep.domain.session.SessionManager;
 import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.domain.Recipient;
 import com.tpago.movil.dep.ui.ActivityModule;
 import com.tpago.movil.dep.ui.SwitchableContainerActivity;
-import com.tpago.movil.dep.ui.misc.UiUtils;
 import com.tpago.movil.dep.ui.view.widget.FullScreenLoadIndicator;
 import com.tpago.movil.dep.ui.view.widget.LoadIndicator;
 import com.tpago.movil.util.Objects;
@@ -31,8 +31,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 public class AddRecipientActivity
@@ -40,6 +38,8 @@ public class AddRecipientActivity
   implements AddRecipientContainer,
   AddRecipientScreen {
   private static final String EXTRA_RECIPIENT = "recipient";
+
+  private static final int REQUEST_CODE = 0;
 
   private AddRecipientComponent component;
   private Unbinder unbinder;
@@ -51,6 +51,8 @@ public class AddRecipientActivity
 
   @BindView(R.id.toolbar) Toolbar toolbar;
   @BindView(R.id.container) FrameLayout containerFrameLayout;
+
+  private Recipient requestResult = null;
 
   @NonNull
   protected static Intent serializeResult(Recipient recipient) {
@@ -72,6 +74,14 @@ public class AddRecipientActivity
       return null;
     } else {
       return (Recipient) intent.getSerializableExtra(EXTRA_RECIPIENT);
+    }
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == REQUEST_CODE) {
+      requestResult = NonAffiliatedPhoneNumberRecipientAdditionActivity.deserializeResult(data);
     }
   }
 
@@ -100,6 +110,15 @@ public class AddRecipientActivity
     setChildFragment(SearchOrChooseRecipientFragment.newInstance(), false, false);
     // Attaches the presenter to the fragment.
     presenter.attachScreen(this);
+  }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+    if (Objects.isNotNull(requestResult)) {
+      finish(requestResult);
+      requestResult = null;
+    }
   }
 
   @Override
@@ -161,15 +180,15 @@ public class AddRecipientActivity
   }
 
   @Override
-  public void finish(@Nullable Recipient recipient) {
-    setResult(Utils.isNotNull(recipient) ? RESULT_OK : RESULT_CANCELED, serializeResult(recipient));
-    finish();
+  public void startNonAffiliatedProcess(NonAffiliatedPhoneNumberRecipient recipient) {
+    startActivityForResult(
+      NonAffiliatedPhoneNumberRecipientAdditionActivity.getLaunchIntent(this, recipient),
+      REQUEST_CODE);
   }
 
   @Override
-  public void showNotSupportedOperationMessage() {
-    UiUtils.createDialog(this, getString(R.string.sorry),
-      getString(R.string.info_not_available_unaffiliated_contact_recipient_addition),
-      getString(R.string.ok), null, null, null).show();
+  public void finish(Recipient recipient) {
+    setResult(Utils.isNotNull(recipient) ? RESULT_OK : RESULT_CANCELED, serializeResult(recipient));
+    finish();
   }
 }
