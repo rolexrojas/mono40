@@ -136,9 +136,7 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
     commerceTextView.setEnabled(enabled);
     commerceTextView.setAlpha(enabled ? 1F : 0.3F);
     // Sets the startup screen.
-    getSupportFragmentManager().beginTransaction()
-      .replace(R.id.container, PaymentsFragment.newInstance())
-      .commit();
+    setChildFragment(PaymentsFragment.newInstance(), false, false);
     // Attaches the screen to the presenter.
     presenter.attachScreen(this);
     // Creates the presenter.
