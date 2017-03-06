@@ -31,6 +31,7 @@ import com.tpago.movil.dep.ui.main.purchase.PurchaseFragment;
 import com.tpago.movil.dep.ui.main.products.ProductsFragment;
 import com.tpago.movil.dep.ui.main.payments.PaymentsFragment;
 import com.tpago.movil.dep.ui.view.widget.SlidingPaneLayout;
+import com.tpago.movil.util.Objects;
 
 import javax.inject.Inject;
 
@@ -44,14 +45,13 @@ import rx.functions.Action1;
 import rx.subscriptions.Subscriptions;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 public class MainActivity extends SwitchableContainerActivity<MainComponent>
   implements MainContainer, MainScreen {
   private Unbinder unbinder;
   private MainComponent component;
+  private OnBackPressedListener onBackPressedListener;
 
   private Subscription expirationSubscription = Subscriptions.unsubscribed();
 
@@ -181,12 +181,6 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
     RxUtils.unsubscribe(expirationSubscription);
   }
 
-  /**
-   * TODO
-   *
-   * @param view
-   *   TODO
-   */
   @OnClick({ R.id.text_view_payments, R.id.text_view_commerce, R.id.text_view_accounts,
     R.id.text_view_profile, R.id.text_view_preferences, R.id.text_view_about, R.id.text_view_help,
     R.id.text_view_add_another_account })
@@ -224,7 +218,7 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
   public void onBackPressed() {
     if (slidingPaneLayout.isOpen()) {
       slidingPaneLayout.closePane();
-    } else {
+    } else if (Objects.isNull(onBackPressedListener) || !onBackPressedListener.onBackPressed()) {
       super.onBackPressed();
     }
   }
@@ -250,7 +244,8 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
 
   public void showDeleteLinearLayout() {
     deleteLinearLayout.setVisibility(View.VISIBLE);
-    toolbar.setVisibility(View.GONE);
+    toolbar.setVisibility(View.INVISIBLE);
+    toolbar.setEnabled(false);
   }
 
   public void setOnCancelButtonClickedListener(View.OnClickListener listener) {
@@ -267,7 +262,16 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
   }
 
   public void hideDeleteLinearLayout() {
+    toolbar.setEnabled(true);
     toolbar.setVisibility(View.VISIBLE);
     deleteLinearLayout.setVisibility(View.GONE);
+  }
+
+  public void setOnBackPressedListener(OnBackPressedListener onBackPressedListener) {
+    this.onBackPressedListener = onBackPressedListener;
+  }
+
+  public interface OnBackPressedListener {
+    boolean onBackPressed();
   }
 }

@@ -204,8 +204,6 @@ public class PaymentsFragment
         return true;
       case R.id.payments_menu_option_remove_recipient:
         presenter.startDeleting();
-        recipientBinder.setDeleting(true);
-        adapter.notifyDataSetChanged();
         return true;
       case R.id.menu_item_sign_out:
         presenter.signOut();
@@ -345,13 +343,22 @@ public class PaymentsFragment
           presenter.stopDeleting();
         }
       });
+      activity.setOnBackPressedListener(new MainActivity.OnBackPressedListener() {
+        @Override
+        public boolean onBackPressed() {
+          presenter.stopDeleting();
+          return true;
+        }
+      });
     } else {
       recipientBinder.setDeleting(false);
       activity.hideDeleteLinearLayout();
       activity.setDeleteButtonEnabled(false);
       activity.setOnDeleteButtonClickListener(null);
       activity.setOnCancelButtonClickedListener(null);
+      activity.setOnBackPressedListener(null);
     }
+    adapter.notifyDataSetChanged();
   }
 
   @Override
