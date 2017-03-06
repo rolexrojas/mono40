@@ -25,6 +25,7 @@ import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.data.util.BinderFactory;
 import com.tpago.movil.dep.domain.Recipient;
+import com.tpago.movil.dep.ui.Dialogs;
 import com.tpago.movil.dep.ui.main.MainActivity;
 import com.tpago.movil.dep.ui.main.MainContainer;
 import com.tpago.movil.dep.ui.main.PinConfirmationDialogFragment;
@@ -431,6 +432,15 @@ public class PaymentsFragment
     if (Objects.isNotNull(f)) {
       ((PinConfirmationDialogFragment) f).resolve(true);
     }
+  }
+
+  @Override
+  public void showGenericErrorDialog() {
+    Dialogs.builder(getContext())
+      .setTitle(R.string.error_title)
+      .setMessage(R.string.error_message)
+      .setPositiveButton(R.string.error_positive_button_text, null)
+      .show();
   }
 
 

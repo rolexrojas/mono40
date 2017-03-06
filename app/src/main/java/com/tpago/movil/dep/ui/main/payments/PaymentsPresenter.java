@@ -9,7 +9,6 @@ import com.tpago.movil.dep.domain.PhoneNumber;
 import com.tpago.movil.dep.domain.PhoneNumberRecipient;
 import com.tpago.movil.dep.domain.ProductManager;
 import com.tpago.movil.dep.domain.pos.PosBridge;
-import com.tpago.movil.dep.domain.pos.PosResult;
 import com.tpago.movil.dep.domain.session.SessionManager;
 import com.tpago.movil.dep.misc.rx.RxUtils;
 import com.tpago.movil.dep.data.SchedulerProvider;
@@ -22,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import rx.Completable;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -243,38 +243,46 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   }
 
   final void signOut() {
-    posBridge.reset(sessionManager.getSession().getPhoneNumber())
-      .subscribeOn(Schedulers.io())
-      .observeOn(AndroidSchedulers.mainThread())
-      .doOnSubscribe(new Action0() {
+    if (signOutSubscription.isUnsubscribed()) {
+      Completable.defer(new Func0<Completable>() {
         @Override
-        public void call() {
-          screen.showLoadIndicator(true);
+        public Completable call() {
+          recipientManager.clear();
+          posBridge.unregisterSync(userStore.get().getPhoneNumber().getValue());
+          productManager.clear();
+          sessionManager.deactivate();
+          userStore.clear();
+          return Completable.complete();
         }
       })
-      .subscribe(new Action1<PosResult>() {
-        @Override
-        public void call(PosResult result) {
-          screen.hideLoadIndicator();
-          if (result.isSuccessful()) {
-            sessionManager.deactivate();
-            productManager.clear();
-            recipientManager.clear();
-            userStore.clear();
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnSubscribe(new Action1<Subscription>() {
+          @Override
+          public void call(Subscription subscription) {
+            screen.showLoadIndicator(true);
+          }
+        })
+        .doOnUnsubscribe(new Action0() {
+          @Override
+          public void call() {
+            screen.showLoadIndicator(false);
+          }
+        })
+        .subscribe(new Action0() {
+          @Override
+          public void call() {
             screen.openInitScreen();
             screen.finish();
-          } else {
-            screen.showMessage(result.getData());
           }
-        }
-      }, new Action1<Throwable>() {
-        @Override
-        public void call(Throwable throwable) {
-          Timber.e(throwable, "Signing out");
-          screen.hideLoadIndicator();
-          screen.showMessage(stringHelper.cannotProcessYourRequestAtTheMoment());
-        }
-      });
+        }, new Action1<Throwable>() {
+          @Override
+          public void call(Throwable throwable) {
+            Timber.e(throwable);
+            screen.showGenericErrorDialog();
+          }
+        });
+    }
   }
 
   final void startDeleting() {

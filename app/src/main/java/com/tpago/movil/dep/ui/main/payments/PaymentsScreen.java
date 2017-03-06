@@ -60,4 +60,5 @@ interface PaymentsScreen extends Screen {
 
   void requestPin();
   void dismissPinConfirmator();
+  void showGenericErrorDialog();
 }
