@@ -25,7 +25,7 @@ import rx.subscriptions.Subscriptions;
  */
 @Deprecated
 public final class SessionManager {
-  private static final long MAX_IDLE_TIME = 2L * 60L * 1000L; // Two (2) minutes.
+  private static final long MAX_IDLE_TIME = 1L * 30L * 1000L; // Two (2) minutes.
 
   private final DepDeviceManager deviceManager;
   private final SessionRepo sessionRepo;
@@ -37,14 +37,11 @@ public final class SessionManager {
   private Subscription expirationSubscription = Subscriptions.unsubscribed();
   private Subscription resettingSubscription = Subscriptions.unsubscribed();
 
-  /**
-   * TODO
-   *
-   * @param sessionRepo
-   *   TODO
-   */
-  public SessionManager(@NonNull DepDeviceManager deviceManager, @NonNull SessionRepo sessionRepo,
-    @NonNull SessionService sessionService, EventBus eventBus) {
+  public SessionManager(
+    @NonNull DepDeviceManager deviceManager,
+    @NonNull SessionRepo sessionRepo,
+    @NonNull SessionService sessionService,
+    EventBus eventBus) {
     this.deviceManager = deviceManager;
     this.sessionRepo = sessionRepo;
     this.sessionService = sessionService;
@@ -71,16 +68,6 @@ public final class SessionManager {
     };
   }
 
-  /**
-   * TODO
-   *
-   * @param email
-   *   TODO
-   * @param password
-   *   TODO
-   *
-   * @return TODO
-   */
   @NonNull
   public final Observable<ApiResult<String>> signIn(
     final String phoneNumber,
@@ -91,18 +78,6 @@ public final class SessionManager {
       .doOnNext(authAction1(phoneNumber, email));
   }
 
-  /**
-   * TODO
-   *
-   * @param email
-   *   TODO
-   * @param password
-   *   TODO
-   * @param pin
-   *   TODO
-   *
-   * @return TODO
-   */
   @NonNull
   public final Observable<ApiResult<String>> signUp(final String phoneNumber, final String email,
     final String password, final String pin) {
@@ -110,20 +85,10 @@ public final class SessionManager {
       .doOnNext(authAction1(phoneNumber, email));
   }
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
   public final Session getSession() {
     return isActive() ? sessionRepo.getSession() : null;
   }
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
   public final boolean isActive() {
     return sessionRepo.hasSession();
   }
@@ -144,9 +109,6 @@ public final class SessionManager {
       });
   }
 
-  /**
-   * TODO
-   */
   public final void deactivate() {
     RxUtils.unsubscribe(resettingSubscription);
     RxUtils.unsubscribe(expirationSubscription);

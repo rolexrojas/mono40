@@ -31,6 +31,7 @@ import com.tpago.movil.dep.ui.main.purchase.PurchaseFragment;
 import com.tpago.movil.dep.ui.main.products.ProductsFragment;
 import com.tpago.movil.dep.ui.main.payments.PaymentsFragment;
 import com.tpago.movil.dep.ui.view.widget.SlidingPaneLayout;
+import com.tpago.movil.init.InitActivity;
 import com.tpago.movil.util.Objects;
 
 import javax.inject.Inject;
@@ -105,7 +106,7 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
       .subscribe(new Action1<Object>() {
         @Override
         public void call(Object notification) {
-          final Intent intent = IndexActivity.getLaunchIntent(MainActivity.this);
+          final Intent intent = InitActivity.getLaunchIntent(MainActivity.this);
           intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
           startActivity(intent);
         }

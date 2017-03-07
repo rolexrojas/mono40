@@ -82,7 +82,7 @@ public final class AvatarCreationDialogFragment extends DialogFragment {
       // TODO: Let the user know that the temporary image couldn't be created.
     } else {
       final Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-      i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(temporaryFile));
+      i.putExtra(MediaStore.EXTRA_OUTPUT, Files.getFileUri(getContext(), temporaryFile));
       startActivityForResult(i, REQUEST_CODE_CAMERA);
     }
   }
@@ -123,7 +123,7 @@ public final class AvatarCreationDialogFragment extends DialogFragment {
       }
     } else if (requestCode == REQUEST_CODE_CAMERA) {
       if (resultCode == RESULT_CODE_OK) {
-        startEditor(Uri.fromFile(temporaryFile));
+        startEditor(Files.getFileUri(temporaryFile));
       }
     } else if (requestCode == REQUEST_CODE_EDITOR) {
       if (resultCode == RESULT_CODE_OK) {
