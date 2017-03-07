@@ -13,8 +13,6 @@ public abstract class Avatar {
     return new AutoValue_Avatar(file);
   }
 
-  public abstract File getFile();
-
   public final boolean exists() {
     return getFile().exists();
   }
@@ -24,4 +22,6 @@ public abstract class Avatar {
       getFile().delete();
     }
   }
+
+  public abstract File getFile();
 }

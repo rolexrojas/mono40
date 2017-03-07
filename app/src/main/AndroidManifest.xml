@@ -48,7 +48,7 @@
     </activity>
     <!-- [START] Deprecated -->
     <activity
-      android:name="com.tpago.movil.dep.ui.main.MainActivity"
+      android:name="com.tpago.movil.dep.ui.main.DepMainActivity"
       android:screenOrientation="portrait"/>
     <activity
       android:name="com.tpago.movil.dep.ui.main.recipients.AddRecipientActivity"

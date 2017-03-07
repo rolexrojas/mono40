@@ -2,8 +2,8 @@ package com.tpago.movil.dep.ui.main.recipients.contacts;
 
 import android.content.Context;
 
+import com.tpago.movil.app.FragmentScope;
 import com.tpago.movil.dep.data.SchedulerProvider;
-import com.tpago.movil.dep.ui.FragmentScope;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import dagger.Module;

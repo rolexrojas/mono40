@@ -85,7 +85,7 @@ public class PurchaseFragment
     super.onCreate(savedInstanceState);
     // Injects all the annotated dependencies.
     component = DaggerPurchaseComponent.builder()
-      .mainComponent(getContainer().getComponent())
+      .depMainComponent(getContainer().getComponent())
       .build();
     component.inject(this);
     final Bundle bundle = Utils.isNotNull(savedInstanceState) ? savedInstanceState : getArguments();

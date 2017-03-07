@@ -5,6 +5,7 @@ package com.tpago.movil.dep.domain.util;
  *
  * @author hecvasro
  */
+@Deprecated
 public enum EventType {
   PRODUCT_ADDITION,
   PRODUCT_REMOVAL,

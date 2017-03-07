@@ -1,9 +1,9 @@
 package com.tpago.movil.dep.ui.main.recipients.partners;
 
+import com.tpago.movil.app.FragmentScope;
 import com.tpago.movil.dep.data.SchedulerProvider;
 import com.tpago.movil.dep.domain.api.DepApiBridge;
 import com.tpago.movil.dep.domain.session.SessionManager;
-import com.tpago.movil.dep.ui.FragmentScope;
 
 import dagger.Module;
 import dagger.Provides;

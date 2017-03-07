@@ -203,7 +203,7 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
   }
 
   @Override
-  public void checkIfUseWantsToForceSignIn() {
+  public void checkIfUserWantsToForceSignIn() {
     new AlertDialog.Builder(getActivity())
       .setTitle(R.string.dialog_title_already_associated_device)
       .setMessage(R.string.dialog_message_already_associated_device)

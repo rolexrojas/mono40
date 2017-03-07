@@ -9,7 +9,7 @@ import com.tpago.movil.dep.ui.SwitchableContainer;
  *
  * @author hecvasro
  */
-public interface MainContainer extends SwitchableContainer<MainComponent> {
+public interface MainContainer extends SwitchableContainer<DepMainComponent> {
   /**
    * TODO
    *

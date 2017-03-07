@@ -58,9 +58,13 @@ public class NonAffiliatedPhoneNumberRecipientAdditionActivity extends BaseActiv
   }
 
   @Override
+  protected int layoutResourceIdentifier() {
+    return R.layout.activity_non_affiliated_phone_number_recipient_addition;
+  }
+
+  @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_non_affiliated_phone_number_recipient_addition);
     unbinder = ButterKnife.bind(this);
     setSupportActionBar(toolbar);
     final ActionBar actionBar = getSupportActionBar();

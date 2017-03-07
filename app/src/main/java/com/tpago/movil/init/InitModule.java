@@ -2,11 +2,10 @@ package com.tpago.movil.init;
 
 import com.tpago.movil.R;
 import com.tpago.movil.Session;
-import com.tpago.movil.app.ActivityModule;
 import com.tpago.movil.app.ActivityQualifier;
 import com.tpago.movil.app.ActivityScope;
+import com.tpago.movil.app.BaseActivity;
 import com.tpago.movil.app.FragmentReplacer;
-import com.tpago.movil.app.BackEventHandler;
 
 import dagger.Module;
 import dagger.Provides;
@@ -15,11 +14,7 @@ import dagger.Provides;
  * @author hecvasro
  */
 @Module
-public final class InitModule extends ActivityModule<InitActivity> {
-  InitModule(InitActivity activity) {
-    super(activity);
-  }
-
+public final class InitModule {
   @Provides
   @ActivityScope
   InitData provideInitData() {
@@ -34,23 +29,17 @@ public final class InitModule extends ActivityModule<InitActivity> {
 
   @Provides
   @ActivityScope
-  BackEventHandler provideBackEventHandler() {
-    return new BackEventHandler();
-  }
-
-  @Provides
-  @ActivityScope
   @ActivityQualifier
-  FragmentReplacer provideFragmentReplacer() {
+  FragmentReplacer provideFragmentReplacer(BaseActivity activity) {
     return new FragmentReplacer(activity.getSupportFragmentManager(), R.id.view_container);
   }
 
   @Provides
   @ActivityScope
-  LogoAnimator provideLogoAnimator() {
+  LogoAnimator provideLogoAnimator(BaseActivity activity) {
     return new LogoAnimator(
-      activity.logo,
-      activity.placeholderView,
+      ((InitActivity) activity).logo,
+      ((InitActivity) activity).placeholderView,
       activity.getResources().getInteger(R.integer.anim_duration_test));
   }
 }

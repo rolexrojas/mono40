@@ -121,12 +121,10 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
               sessionBuilder.setToken(data.getValue());
               userStore.set(phoneNumber, email, "Usuario", "tPago");
               view.moveToInitScreen();
-
-              posBridge.unregisterSync(phoneNumber.getValue());
             } else {
               final ApiError error = data.getError();
               if (error.getCode().equals(ApiError.Code.ALREADY_ASSOCIATED_DEVICE)) {
-                view.checkIfUseWantsToForceSignIn();
+                view.checkIfUserWantsToForceSignIn();
               } else {
                 view.showDialog(
                   R.string.error_title,
@@ -196,7 +194,7 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
 
     void stopLoading();
 
-    void checkIfUseWantsToForceSignIn();
+    void checkIfUserWantsToForceSignIn();
 
     void moveToInitScreen();
   }

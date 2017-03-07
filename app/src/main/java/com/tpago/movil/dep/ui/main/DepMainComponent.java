@@ -2,8 +2,12 @@ package com.tpago.movil.dep.ui.main;
 
 import android.content.Context;
 
+import com.tpago.movil.TimeOutManager;
 import com.tpago.movil.UserStore;
+import com.tpago.movil.app.ActivityModule;
+import com.tpago.movil.app.ActivityScope;
 import com.tpago.movil.app.AppComponent;
+import com.tpago.movil.app.BackEventHandler;
 import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.data.SchedulerProvider;
 import com.tpago.movil.dep.data.res.AssetProvider;
@@ -15,32 +19,36 @@ import com.tpago.movil.dep.domain.session.SessionManager;
 import com.tpago.movil.dep.domain.util.EventBus;
 import com.tpago.movil.dep.domain.RecipientManager;
 import com.tpago.movil.dep.ui.ActivityComponent;
-import com.tpago.movil.dep.ui.ActivityModule;
-import com.tpago.movil.dep.ui.ActivityScope;
+import com.tpago.movil.dep.ui.DepActivityModule;
+import com.tpago.movil.main.MainModule;
 
 import dagger.Component;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
+@Deprecated
 @ActivityScope
-@Component(dependencies = AppComponent.class, modules = { ActivityModule.class, MainModule.class })
-public interface MainComponent extends ActivityComponent {
-  void inject(MainActivity activity);
+@Component(
+  dependencies = AppComponent.class,
+  modules = {
+    DepActivityModule.class,
+    MainModule.class,
+    DepMainModule.class
+  })
+public interface DepMainComponent extends ActivityComponent {
+  void inject(DepMainActivity activity);
 
-  SessionManager provideSessionManager();
-
-  DepApiBridge provideApiBridge();
   AssetProvider provideResourceProvider();
   BalanceManager provideBalanceManager();
   Context provideContext();
+  DepApiBridge provideApiBridge();
   EventBus provideEventBus();
   PosBridge providePosBridge();
   ProductManager provideAccountManager();
   RecipientManager provideRecipientManager();
   SchedulerProvider provideSchedulerProvider();
+  SessionManager provideSessionManager();
   StringHelper provideMessageHelper();
   UserStore provideUserStore();
 }

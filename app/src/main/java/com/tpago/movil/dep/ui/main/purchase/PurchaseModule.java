@@ -2,12 +2,12 @@ package com.tpago.movil.dep.ui.main.purchase;
 
 import android.content.Context;
 
+import com.tpago.movil.app.FragmentScope;
 import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.data.res.AssetProvider;
 import com.tpago.movil.dep.domain.ProductManager;
 import com.tpago.movil.dep.domain.pos.PosBridge;
 import com.tpago.movil.dep.domain.util.EventBus;
-import com.tpago.movil.dep.ui.FragmentScope;
 import com.tpago.movil.dep.ui.AppDialog;
 
 import dagger.Module;

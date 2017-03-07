@@ -1,7 +1,7 @@
 package com.tpago.movil.dep.ui.main.products.transactions;
 
 import com.tpago.movil.app.AppComponent;
-import com.tpago.movil.dep.ui.FragmentScope;
+import com.tpago.movil.app.FragmentScope;
 
 import dagger.Component;
 

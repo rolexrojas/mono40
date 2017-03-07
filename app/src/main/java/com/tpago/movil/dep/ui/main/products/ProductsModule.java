@@ -1,10 +1,10 @@
 package com.tpago.movil.dep.ui.main.products;
 
+import com.tpago.movil.app.FragmentScope;
 import com.tpago.movil.dep.data.SchedulerProvider;
 import com.tpago.movil.dep.domain.ProductManager;
 import com.tpago.movil.dep.domain.BalanceManager;
 import com.tpago.movil.dep.domain.util.EventBus;
-import com.tpago.movil.dep.ui.FragmentScope;
 
 import dagger.Module;
 import dagger.Provides;

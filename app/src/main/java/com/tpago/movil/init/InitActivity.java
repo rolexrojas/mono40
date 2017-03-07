@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
+import com.tpago.movil.app.ActivityModule;
 import com.tpago.movil.app.ActivityQualifier;
 import com.tpago.movil.app.App;
 import com.tpago.movil.R;
@@ -19,16 +20,16 @@ import javax.inject.Inject;
 
 import butterknife.BindColor;
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * @author hecvasro
  */
 public final class InitActivity extends BaseActivity implements InitContainer {
-  private InitComponent component;
+  public static Intent getLaunchIntent(Context context) {
+    return new Intent(context, InitActivity.class);
+  }
 
-  private Unbinder unbinder;
+  private InitComponent component;
 
   @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
 
@@ -40,20 +41,17 @@ public final class InitActivity extends BaseActivity implements InitContainer {
   @BindView(R.id.view_container) View screenContainerView;
   @BindView(R.id.logo) Logo logo;
 
-  public static Intent getLaunchIntent(Context context) {
-    return new Intent(context, InitActivity.class);
+  @Override
+  protected int layoutResourceIdentifier() {
+    return R.layout.activity_init;
   }
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    // Sets the layout of the activity.
-    setContentView(R.layout.activity_init);
-    // Binds all annotated views and methods.
-    unbinder = ButterKnife.bind(this);
     // Initializes the dependency injector.
     component = App.get(this).getAppComponent()
-      .plus(new InitModule(this));
+      .plus(new ActivityModule(this), new InitModule());
     // Injects all the annotated dependencies.
     component.inject(this);
     // Adds a listener that gets notified when all the views has been laid out.
@@ -79,13 +77,6 @@ public final class InitActivity extends BaseActivity implements InitContainer {
         }
       });
     }
-  }
-
-  @Override
-  protected void onDestroy() {
-    super.onDestroy();
-    // Unbinds all annotated views and methods.
-    unbinder.unbind();
   }
 
   @Override

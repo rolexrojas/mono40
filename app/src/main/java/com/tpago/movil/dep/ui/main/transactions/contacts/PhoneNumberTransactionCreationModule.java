@@ -1,10 +1,10 @@
 package com.tpago.movil.dep.ui.main.transactions.contacts;
 
+import com.tpago.movil.app.FragmentScope;
 import com.tpago.movil.dep.data.SchedulerProvider;
 import com.tpago.movil.dep.domain.ProductManager;
 import com.tpago.movil.dep.domain.Recipient;
 import com.tpago.movil.dep.domain.TransactionManager;
-import com.tpago.movil.dep.ui.FragmentScope;
 
 import dagger.Module;
 import dagger.Provides;

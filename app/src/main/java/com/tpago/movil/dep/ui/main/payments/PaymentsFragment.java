@@ -26,7 +26,7 @@ import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.data.util.BinderFactory;
 import com.tpago.movil.dep.domain.Recipient;
 import com.tpago.movil.dep.ui.Dialogs;
-import com.tpago.movil.dep.ui.main.MainActivity;
+import com.tpago.movil.dep.ui.main.DepMainActivity;
 import com.tpago.movil.dep.ui.main.MainContainer;
 import com.tpago.movil.dep.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.dep.ui.main.list.ListItemAdapter;
@@ -114,7 +114,7 @@ public class PaymentsFragment
     setHasOptionsMenu(true);
     // Injects all the annotated dependencies.
     final PaymentsComponent component = DaggerPaymentsComponent.builder()
-      .mainComponent(getContainer().getComponent())
+      .depMainComponent(getContainer().getComponent())
       .build();
     component.inject(this);
   }
@@ -327,7 +327,7 @@ public class PaymentsFragment
 
   @Override
   public void setDeleting(boolean deleting) {
-    final MainActivity activity = (MainActivity) getActivity();
+    final DepMainActivity activity = (DepMainActivity) getActivity();
     if (deleting) {
       recipientBinder.setDeleting(true);
       activity.showDeleteLinearLayout();
@@ -344,7 +344,7 @@ public class PaymentsFragment
           presenter.stopDeleting();
         }
       });
-      activity.setOnBackPressedListener(new MainActivity.OnBackPressedListener() {
+      activity.setOnBackPressedListener(new DepMainActivity.OnBackPressedListener() {
         @Override
         public boolean onBackPressed() {
           presenter.stopDeleting();
@@ -381,7 +381,7 @@ public class PaymentsFragment
 
   @Override
   public void setDeleteButtonEnabled(boolean enabled) {
-    ((MainActivity) getActivity()).setDeleteButtonEnabled(enabled);
+    ((DepMainActivity) getActivity()).setDeleteButtonEnabled(enabled);
   }
 
   @Override

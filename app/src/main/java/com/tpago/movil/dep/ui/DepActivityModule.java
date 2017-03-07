@@ -3,6 +3,7 @@ package com.tpago.movil.dep.ui;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
+import com.tpago.movil.app.ActivityScope;
 import com.tpago.movil.dep.ui.view.widget.FullScreenLoadIndicator;
 import com.tpago.movil.dep.ui.view.widget.LoadIndicator;
 import com.tbruyelle.rxpermissions.RxPermissions;
@@ -16,7 +17,8 @@ import dagger.Provides;
  * @author hecvasro
  */
 @Module
-public class ActivityModule {
+@Deprecated
+public class DepActivityModule {
   private final AppCompatActivity activity;
 
   /**
@@ -25,7 +27,7 @@ public class ActivityModule {
    * @param activity
    *   TODO
    */
-  public ActivityModule(@NonNull AppCompatActivity activity) {
+  public DepActivityModule(@NonNull AppCompatActivity activity) {
     this.activity = activity;
   }
 

@@ -1,5 +1,7 @@
 package com.tpago.movil;
 
+import android.os.Parcelable;
+
 import com.google.auto.value.AutoValue;
 import com.tpago.movil.text.Texts;
 
@@ -7,7 +9,7 @@ import com.tpago.movil.text.Texts;
  * @author hecvasro
  */
 @AutoValue
-public abstract class Session {
+public abstract class Session implements Parcelable {
   private static Session create(String token) {
     return new AutoValue_Session(token);
   }
@@ -20,19 +22,15 @@ public abstract class Session {
   public static final class Builder {
     private String token;
 
-    private static String checkNotEmpty(String token) {
-      if (Texts.isEmpty(token)) {
-        throw new IllegalStateException("Texts.isEmpty(token) == true");
-      }
-      return token;
-    }
-
     public final boolean canBuild() {
       return Texts.isNotEmpty(token);
     }
 
     public final Builder setToken(String token) {
-      this.token = checkNotEmpty(token);
+      if (Texts.isEmpty(token)) {
+        throw new IllegalStateException("Texts.isEmpty(token) == true");
+      }
+      this.token = token;
       return this;
     }
 

@@ -17,7 +17,7 @@ import com.tpago.movil.app.FragmentReplacer;
 import com.tpago.movil.app.Permissions;
 import com.tpago.movil.dep.domain.InitialDataLoader;
 import com.tpago.movil.dep.domain.session.SessionRepo;
-import com.tpago.movil.dep.ui.main.MainActivity;
+import com.tpago.movil.dep.ui.main.DepMainActivity;
 import com.tpago.movil.init.intro.IntroFragment;
 import com.tpago.movil.init.unlock.UnlockFragment;
 
@@ -87,7 +87,7 @@ public final class InitFragment extends BaseInitFragment {
           @Override
           public void call(Object notification) {
             final Activity activity = getActivity();
-            activity.startActivity(MainActivity.getLaunchIntent(activity));
+            activity.startActivity(DepMainActivity.getLaunchIntent(activity, session));
             activity.finish();
           }
         }, new Action1<Throwable>() {

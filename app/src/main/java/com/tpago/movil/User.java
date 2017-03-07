@@ -10,11 +10,6 @@ import com.tpago.movil.util.Preconditions;
  */
 @AutoValue
 public abstract class User {
-  private String firstName;
-  private String lastName;
-
-  private OnNameChangedListener onNameChangedListener;
-
   static User create(
     PhoneNumber phoneNumber,
     Email email,
@@ -25,6 +20,11 @@ public abstract class User {
     user.setName(firstName, lastName);
     return user;
   }
+
+  private String firstName;
+  private String lastName;
+
+  private OnNameChangedListener onNameChangedListener;
 
   void setOnNameChangedListener(OnNameChangedListener listener) {
     onNameChangedListener = listener;

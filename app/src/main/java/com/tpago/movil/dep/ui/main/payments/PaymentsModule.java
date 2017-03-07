@@ -1,13 +1,13 @@
 package com.tpago.movil.dep.ui.main.payments;
 
 import com.tpago.movil.UserStore;
+import com.tpago.movil.app.FragmentScope;
 import com.tpago.movil.dep.data.SchedulerProvider;
 import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.domain.ProductManager;
 import com.tpago.movil.dep.domain.RecipientManager;
 import com.tpago.movil.dep.domain.pos.PosBridge;
 import com.tpago.movil.dep.domain.session.SessionManager;
-import com.tpago.movil.dep.ui.FragmentScope;
 
 import dagger.Module;
 import dagger.Provides;

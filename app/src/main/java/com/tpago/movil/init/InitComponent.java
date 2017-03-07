@@ -1,5 +1,6 @@
 package com.tpago.movil.init;
 
+import com.tpago.movil.app.ActivityModule;
 import com.tpago.movil.app.ActivityScope;
 import com.tpago.movil.init.intro.IntroFragment;
 import com.tpago.movil.init.tutorial.TutorialFragment;
@@ -16,7 +17,10 @@ import dagger.Subcomponent;
  * @author hecvasro
  */
 @ActivityScope
-@Subcomponent(modules = InitModule.class)
+@Subcomponent(modules = {
+  ActivityModule.class,
+  InitModule.class
+})
 public interface InitComponent {
   RegisterComponent plus(RegisterModule module);
 

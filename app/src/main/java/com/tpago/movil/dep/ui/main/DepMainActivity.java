@@ -13,6 +13,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.tpago.movil.Session;
+import com.tpago.movil.TimeOutManager;
 import com.tpago.movil.app.App;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.data.NfcHandler;
@@ -21,17 +23,16 @@ import com.tpago.movil.dep.domain.session.SessionManager;
 import com.tpago.movil.dep.domain.util.EventBus;
 import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.data.StringHelper;
-import com.tpago.movil.dep.misc.rx.RxUtils;
-import com.tpago.movil.dep.ui.ActivityModule;
+import com.tpago.movil.dep.ui.DepActivityModule;
 import com.tpago.movil.dep.ui.ChildFragment;
 import com.tpago.movil.dep.ui.Dialogs;
 import com.tpago.movil.dep.ui.SwitchableContainerActivity;
-import com.tpago.movil.dep.ui.index.IndexActivity;
 import com.tpago.movil.dep.ui.main.purchase.PurchaseFragment;
 import com.tpago.movil.dep.ui.main.products.ProductsFragment;
 import com.tpago.movil.dep.ui.main.payments.PaymentsFragment;
 import com.tpago.movil.dep.ui.view.widget.SlidingPaneLayout;
 import com.tpago.movil.init.InitActivity;
+import com.tpago.movil.main.MainModule;
 import com.tpago.movil.util.Objects;
 
 import javax.inject.Inject;
@@ -40,21 +41,23 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.subscriptions.Subscriptions;
 
 /**
  * @author hecvasro
  */
-public class MainActivity extends SwitchableContainerActivity<MainComponent>
-  implements MainContainer, MainScreen {
+@Deprecated
+public class DepMainActivity
+  extends SwitchableContainerActivity<DepMainComponent>
+  implements MainContainer,
+  MainScreen,
+  TimeOutManager.TimeOutHandler {
+  private static final String KEY_SESSION = "session";
+
   private Unbinder unbinder;
-  private MainComponent component;
+  private DepMainComponent component;
   private OnBackPressedListener onBackPressedListener;
 
-  private Subscription expirationSubscription = Subscriptions.unsubscribed();
+  @Inject TimeOutManager timeOutManager;
 
   @Inject
   StringHelper stringHelper;
@@ -81,8 +84,12 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
   ImageButton deleteImageButton;
 
   @NonNull
-  public static Intent getLaunchIntent(@NonNull Context context) {
-    return new Intent(context, MainActivity.class);
+  public static Intent getLaunchIntent(
+    Context context,
+    Session session) {
+    final Intent i = new Intent(context, DepMainActivity.class);
+    i.putExtra(KEY_SESSION, session);
+    return i;
   }
 
   @Override
@@ -92,29 +99,21 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
   }
 
   @Override
+  protected int layoutResourceIdentifier() {
+    return R.layout.activity_main;
+  }
+
+  @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    unbinder = ButterKnife.bind(this);
     // Injects all the annotated dependencies.
-    component = DaggerMainComponent.builder()
+    component = DaggerDepMainComponent.builder()
       .appComponent(((App) getApplication()).getComponent())
-      .activityModule(new ActivityModule(this))
+      .mainModule(new MainModule(((Session) getIntent().getParcelableExtra(KEY_SESSION)), this))
+      .depActivityModule(new DepActivityModule(this))
       .build();
     component.inject(this);
-    // Starts listening session expiration events.
-    expirationSubscription = sessionManager.expiration()
-      .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(new Action1<Object>() {
-        @Override
-        public void call(Object notification) {
-          final Intent intent = InitActivity.getLaunchIntent(MainActivity.this);
-          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-          startActivity(intent);
-        }
-      });
-    // Sets the content layout identifier.
-    setContentView(R.layout.activity_main);
-    // Binds all the annotated views and methods.
-    unbinder = ButterKnife.bind(this);
     // Prepares the action bar.
     setSupportActionBar(toolbar);
     final ActionBar actionBar = getSupportActionBar();
@@ -142,20 +141,13 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
     presenter.attachScreen(this);
     // Creates the presenter.
     presenter.create();
+
+    timeOutManager.start();
   }
 
   @Override
   protected void onStart() {
     super.onStart();
-    expirationSubscription = sessionManager.expiration()
-      .doOnNext(new Action1<Object>() {
-        @Override
-        public void call(Object notification) {
-          startActivity(IndexActivity.getLaunchIntent(MainActivity.this));
-          finish();
-        }
-      })
-      .subscribe();
     // Starts the presenter.
     presenter.start();
   }
@@ -170,14 +162,14 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
   @Override
   protected void onDestroy() {
     super.onDestroy();
+    timeOutManager.stop();
+
     // Destroys the presenter.
     presenter.destroy();
     // Detaches the screen from the presenter.
     presenter.detachScreen();
-    // Unbinds all the annotated views and methods.
+
     unbinder.unbind();
-    // Stops listening session expiration events.
-    RxUtils.unsubscribe(expirationSubscription);
   }
 
   @OnClick({ R.id.text_view_payments, R.id.text_view_commerce, R.id.text_view_accounts,
@@ -224,7 +216,7 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
 
   @Nullable
   @Override
-  public MainComponent getComponent() {
+  public DepMainComponent getComponent() {
     return component;
   }
 
@@ -268,6 +260,18 @@ public class MainActivity extends SwitchableContainerActivity<MainComponent>
 
   public void setOnBackPressedListener(OnBackPressedListener onBackPressedListener) {
     this.onBackPressedListener = onBackPressedListener;
+  }
+
+  @Override
+  public void onUserInteraction() {
+    super.onUserInteraction();
+    timeOutManager.reset();
+  }
+
+  @Override
+  public void handleTimeOut() {
+    startActivity(InitActivity.getLaunchIntent(this));
+    finish();
   }
 
   public interface OnBackPressedListener {

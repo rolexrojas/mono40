@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.tpago.movil.app.ActivityModule;
 import com.tpago.movil.app.App;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
@@ -40,12 +41,11 @@ public class TransactionCreationActivity
   private static final String KEY_RECIPIENT = "recipient";
   private static final String KEY_TRANSACTION_ID = "transactionId";
 
+  private Unbinder unbinder;
   private TransactionCreationComponent component;
 
   @Inject
   Recipient recipient;
-
-  private Unbinder unbinder;
 
   @BindView(R.id.toolbar)
   Toolbar toolbar;
@@ -94,8 +94,14 @@ public class TransactionCreationActivity
   }
 
   @Override
+  protected int layoutResourceIdentifier() {
+    return R.layout.activity_transaction_creation;
+  }
+
+  @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    unbinder = ButterKnife.bind(this);
     // Asserts all the required arguments.
     final Bundle bundle = Utils.isNotNull(savedInstanceState) ? savedInstanceState : getIntent()
       .getExtras();
@@ -109,10 +115,6 @@ public class TransactionCreationActivity
         .transactionCreationModule(new TransactionCreationModule(recipient))
         .build();
       component.inject(this);
-      // Sets the content layout identifier.
-      setContentView(R.layout.activity_transaction_creation);
-      // Binds all the annotated views and methods.
-      unbinder = ButterKnife.bind(this);
       // Prepares the app bar.
       setSupportActionBar(toolbar);
       final ActionBar actionBar = getSupportActionBar();
@@ -177,7 +179,6 @@ public class TransactionCreationActivity
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    // Unbinds all the annotated views and methods.
     unbinder.unbind();
   }
 

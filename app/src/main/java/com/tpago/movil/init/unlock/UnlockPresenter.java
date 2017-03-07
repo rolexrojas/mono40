@@ -31,6 +31,10 @@ import timber.log.Timber;
  * @author hecvasro
  */
 public final class UnlockPresenter extends Presenter<UnlockPresenter.View> {
+  private static String sanitize(String content) {
+    return Objects.isNull(content) ? "" : content.trim();
+  }
+
   private String passwordTextInputContent;
   private boolean isPasswordTextInputContentValid = false;
 
@@ -40,11 +44,7 @@ public final class UnlockPresenter extends Presenter<UnlockPresenter.View> {
   @Inject Session.Builder sessionBuilder;
   @Inject ApiBridge apiBridge;
 
-  private static String sanitize(String content) {
-    return Objects.isNull(content) ? "" : content.trim();
-  }
-
-  public UnlockPresenter(View view, InitComponent component) {
+  UnlockPresenter(View view, InitComponent component) {
     super(view);
     // Injects all the annotated dependencies.
     Preconditions.checkNotNull(component, "component == null")

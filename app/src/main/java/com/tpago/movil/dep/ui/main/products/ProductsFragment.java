@@ -117,7 +117,7 @@ public class ProductsFragment extends ChildFragment<MainContainer> implements Pr
     super.onCreate(savedInstanceState);
     // Injects all the annotated dependencies.
     final ProductsComponent component = DaggerProductsComponent.builder()
-      .mainComponent(getContainer().getComponent())
+      .depMainComponent(getContainer().getComponent())
       .build();
     component.inject(this);
     setHasOptionsMenu(true);

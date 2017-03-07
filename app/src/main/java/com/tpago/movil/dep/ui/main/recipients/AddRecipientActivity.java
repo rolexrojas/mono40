@@ -18,7 +18,7 @@ import com.tpago.movil.dep.domain.api.DepApiBridge;
 import com.tpago.movil.dep.domain.session.SessionManager;
 import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.domain.Recipient;
-import com.tpago.movil.dep.ui.ActivityModule;
+import com.tpago.movil.dep.ui.DepActivityModule;
 import com.tpago.movil.dep.ui.SwitchableContainerActivity;
 import com.tpago.movil.dep.ui.view.widget.FullScreenLoadIndicator;
 import com.tpago.movil.dep.ui.view.widget.LoadIndicator;
@@ -27,8 +27,6 @@ import com.tpago.movil.util.Objects;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * @author hecvasro
@@ -42,7 +40,6 @@ public class AddRecipientActivity
   private static final int REQUEST_CODE = 0;
 
   private AddRecipientComponent component;
-  private Unbinder unbinder;
   private LoadIndicator loadIndicator;
 
   @Inject SessionManager sessionManager;
@@ -86,18 +83,19 @@ public class AddRecipientActivity
   }
 
   @Override
+  protected int layoutResourceIdentifier() {
+    return R.layout.activity_add_recipient;
+  }
+
+  @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    // Sets the content layout identifier.
-    setContentView(R.layout.activity_add_recipient);
     // Injects all the annotated dependencies.
     component = DaggerAddRecipientComponent.builder()
       .appComponent(((App) getApplication()).getComponent())
-      .activityModule(new ActivityModule(this))
+      .depActivityModule(new DepActivityModule(this))
       .build();
     component.inject(this);
-    // Binds all the annotated views and methods.
-    unbinder = ButterKnife.bind(this);
     // Prepares the action bar.
     setSupportActionBar(toolbar);
     final ActionBar actionBar = getSupportActionBar();
@@ -133,8 +131,6 @@ public class AddRecipientActivity
     super.onDestroy();
     // Detaches the presenter for the fragment.
     presenter.detachScreen();
-    // Unbinds all the annotated views and methods.
-    unbinder.unbind();
   }
 
   @Override

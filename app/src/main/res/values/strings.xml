@@ -51,7 +51,7 @@
   <string name="intro_tab_description_02">Cuando estés de compras, al pagar toca tu celular y listo.</string>
   <string name="intro_tab_description_03">Transfiere a tu amigo el serrucho del almuerzo o paga tu factura de luz al instante.</string>
   <string name="intro_tab_title_01">¡Bienvenidos a tPago!</string>
-  <string name="intro_tab_title_02">Tocar y pagar</string>
+  <string name="intro_tab_title_02">Tocar y Pagar</string>
   <string name="intro_tab_title_03">Pagos al instante</string>
 
   <!-- Register strings -->
@@ -85,7 +85,7 @@
   <string name="register_form_pin_label_title">Confirma con tu PIN</string>
   <string name="register_summary_button_continue">@string/next</string>
   <string name="register_summary_button_later">@string/later</string>
-  <string name="register_summary_label_description">Empecemos con mostrarte lo más básico de la nueva App</string>
+  <string name="register_summary_label_description">Empecemos con mostrarte lo más básico de la nueva App.</string>
   <string name="register_summary_label_title">¡tPago esta listo!</string>
   
   <!-- Onboarding strings -->

@@ -41,7 +41,9 @@ import butterknife.Unbinder;
  *
  * @author hecvasro
  */
-public class RecentTransactionsActivity extends BaseActivity implements RecentTransactionsScreen,
+public class RecentTransactionsActivity
+  extends BaseActivity
+  implements RecentTransactionsScreen,
   SwipeRefreshLayout.OnRefreshListener {
   private Unbinder unbinder;
   private Adapter adapter;
@@ -67,8 +69,6 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    // Sets the content layout identifier.
-    setContentView(R.layout.activity_recent_transactions);
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this);
     // Prepares the toolbar.
@@ -166,6 +166,11 @@ public class RecentTransactionsActivity extends BaseActivity implements RecentTr
   @Override
   public void onRefresh() {
     presenter.refresh();
+  }
+
+  @Override
+  protected int layoutResourceIdentifier() {
+    return R.layout.activity_recent_transactions;
   }
 
   /**

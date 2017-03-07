@@ -2,9 +2,9 @@ package com.tpago.movil.dep.ui.main.transactions;
 
 import android.support.annotation.NonNull;
 
+import com.tpago.movil.app.ActivityScope;
 import com.tpago.movil.dep.domain.Product;
 import com.tpago.movil.dep.domain.Recipient;
-import com.tpago.movil.dep.ui.ActivityScope;
 
 import java.math.BigDecimal;
 import java.util.concurrent.atomic.AtomicReference;

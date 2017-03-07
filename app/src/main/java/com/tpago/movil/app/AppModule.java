@@ -5,6 +5,7 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.tpago.movil.Avatar;
+import com.tpago.movil.ConfigManager;
 import com.tpago.movil.content.SharedPreferencesCreator;
 import com.tpago.movil.UserStore;
 import com.tpago.movil.content.StringResolver;
@@ -49,6 +50,12 @@ final class AppModule {
   @Singleton
   SharedPreferencesCreator provideSharedPreferencesCreator(Context context) {
     return new SharedPreferencesCreator(context);
+  }
+
+  @Provides
+  @Singleton
+  ConfigManager provideConfigManager(SharedPreferencesCreator sharedPreferencesCreator) {
+    return new ConfigManager(sharedPreferencesCreator);
   }
 
   @Provides
