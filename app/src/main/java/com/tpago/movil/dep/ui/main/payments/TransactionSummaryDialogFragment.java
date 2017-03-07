@@ -101,15 +101,19 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
     if (alreadyExists) {
       ButterKnife.findById(dialog, R.id.inclusion).setVisibility(View.GONE);
     } else {
-      final TextView textView = ButterKnife.findById(dialog, R.id.text_view);
-      final TextInputLayout textInputLayout = ButterKnife.findById(dialog, R.id.text_input_layout);
+      final String textValue;
+      final String hintValue;
       if (recipient.getType().equals(RecipientType.BILL)) {
-        textView.setText(R.string.recipient_addition_message_bill);
-        textInputLayout.setHint(getString(R.string.recipient_addition_hint_bill));
+        textValue = getString(R.string.recipient_addition_message_bill);
+        hintValue = getString(R.string.recipient_addition_hint_bill);
       } else {
-        textView.setText(R.string.recipient_addition_message_phone_number);
-        textInputLayout.setHint(getString(R.string.recipient_addition_hint_phone_number));
+        textValue = getString(R.string.recipient_addition_message_phone_number);
+        hintValue = getString(R.string.recipient_addition_hint_phone_number);
       }
+      ButterKnife.<TextView>findById(dialog, R.id.text_view)
+        .setText(textValue);
+      ButterKnife.<TextInputLayout>findById(dialog, R.id.text_input_layout)
+        .setHint(hintValue.toUpperCase());
       final EditText editText = ButterKnife.findById(dialog, R.id.edit_text);
       editText.setText(recipient.getLabel());
     }

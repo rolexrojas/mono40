@@ -27,6 +27,8 @@ import com.tpago.movil.util.Objects;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * @author hecvasro
@@ -39,6 +41,7 @@ public class AddRecipientActivity
 
   private static final int REQUEST_CODE = 0;
 
+  private Unbinder unbinder;
   private AddRecipientComponent component;
   private LoadIndicator loadIndicator;
 
@@ -90,6 +93,7 @@ public class AddRecipientActivity
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    unbinder = ButterKnife.bind(this);
     // Injects all the annotated dependencies.
     component = DaggerAddRecipientComponent.builder()
       .appComponent(((App) getApplication()).getComponent())
@@ -131,6 +135,7 @@ public class AddRecipientActivity
     super.onDestroy();
     // Detaches the presenter for the fragment.
     presenter.detachScreen();
+    unbinder.unbind();
   }
 
   @Override

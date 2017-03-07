@@ -13,6 +13,7 @@
     android:layout_height="wrap_content"
     android:layout_marginEnd="24dp"
     android:layout_marginStart="24dp"
+    android:layout_marginTop="12dp"
     android:lineSpacingExtra="8sp"
     android:textColor="@color/black_alpha_27"
     android:textSize="16sp"/>
