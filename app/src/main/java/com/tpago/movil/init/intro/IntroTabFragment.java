@@ -1,7 +1,5 @@
 package com.tpago.movil.init.intro;
 
-import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tpago.movil.R;
-import com.tpago.movil.util.Objects;
+import com.tpago.movil.graphics.Drawables;
 import com.tpago.movil.util.Preconditions;
 
 import butterknife.BindView;
@@ -67,19 +65,13 @@ public final class IntroTabFragment extends Fragment {
   @Override
   public void onResume() {
     super.onResume();
-    final Drawable drawable = artImageView.getDrawable();
-    if (Objects.isNotNull(drawable) && drawable instanceof AnimationDrawable) {
-      ((AnimationDrawable) drawable).start();
-    }
+    Drawables.startAnimationDrawable(artImageView);
   }
 
   @Override
   public void onPause() {
     super.onPause();
-    final Drawable drawable = artImageView.getDrawable();
-    if (Objects.isNotNull(drawable) && drawable instanceof AnimationDrawable) {
-      ((AnimationDrawable) drawable).stop();
-    }
+    Drawables.stopAnimationDrawable(artImageView);
   }
 
   @Override

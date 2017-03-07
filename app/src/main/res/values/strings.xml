@@ -17,7 +17,6 @@
   <string name="skip">Saltar</string>
   <string name="start">Comenzar</string>
   <string name="unlock">Desbloquear</string>
-  <string name="using">Usando &#8230;</string>
   <string name="welcome">¡Bienvenido!</string>
 
   <!-- Font strings -->
@@ -48,12 +47,12 @@
 
   <!-- Intro strings -->
   <string name="intro_button_start">@string/start</string>
-  <string name="intro_tab_description_first">Paga, compra, recarga y transfiere rápido y seguro.</string>
-  <string name="intro_tab_description_second">Cuando estés de compras, al pagar toca tu celular y listo.</string>
-  <string name="intro_tab_description_third">Transfiere a tu amigo el serrucho del almuerzo o paga tu factura de luz al instante.</string>
-  <string name="intro_tab_title_first">¡Bienvenidos a tPago!</string>
-  <string name="intro_tab_title_second">Tocar y pagar</string>
-  <string name="intro_tab_title_third">Pagos al instante</string>
+  <string name="intro_tab_description_01">Paga, compra, recarga y transfiere rápido y seguro.</string>
+  <string name="intro_tab_description_02">Cuando estés de compras, al pagar toca tu celular y listo.</string>
+  <string name="intro_tab_description_03">Transfiere a tu amigo el serrucho del almuerzo o paga tu factura de luz al instante.</string>
+  <string name="intro_tab_title_01">¡Bienvenidos a tPago!</string>
+  <string name="intro_tab_title_02">Tocar y pagar</string>
+  <string name="intro_tab_title_03">Pagos al instante</string>
 
   <!-- Register strings -->
   <string name="register_form_avatar_label_description">Se usa para identificar tus cuentas más fácil</string>
@@ -116,10 +115,10 @@
   <string name="unlock_label_title">¡Bienvenido, %1$s!</string>
 
   <!-- Purchase strings -->
-  <string name="purchase_non_nfc_button_learn_more">@string/learn_more</string>
-  <string name="purchase_non_nfc_label_01">Solo dale tu número de celular al cajero. Cuando recibas el mensaje de la compra, confirma con tu PIN. ¡Y listo!</string>
-  <string name="purchase_non_nfc_label_02">O Tocar y Pagar al instante.</string>
-  <string name="purchase_non_nfc_label_title">Al momento de comprar</string>
+  <string name="purchase_non_nfc_button_01">@string/learn_more</string>
+  <string name="purchase_non_nfc_label_primary_01">Al momento de comprar</string>
+  <string name="purchase_non_nfc_label_secondary_01">Solo dale tu número de celular al cajero. Cuando recibas el mensaje de la compra, confirma con tu PIN. ¡Y listo!</string>
+  <string name="purchase_non_nfc_label_secondary_02">O Tocar y Pagar al instante.</string>
 
   <!-- Deprecated strings -->
   <string name="about">Acerca de</string>

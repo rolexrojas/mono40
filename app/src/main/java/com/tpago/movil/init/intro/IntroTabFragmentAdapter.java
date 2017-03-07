@@ -12,32 +12,35 @@ import com.tpago.movil.R;
 final class IntroTabFragmentAdapter extends FragmentPagerAdapter {
   private static final int COUNT = 3;
 
-  private final int[] arts;
-  private final int[] titles;
-  private final int[] descriptions;
+  private final int[] artArray;
+  private final int[] titleArray;
+  private final int[] descriptionArray;
 
   IntroTabFragmentAdapter(FragmentManager fragmentManager) {
     super(fragmentManager);
-    arts = new int[] {
+    artArray = new int[] {
       R.drawable.intro_tab_art_01,
-      R.drawable.intro_tab_art_second,
-      R.drawable.intro_tab_art_third
+      R.drawable.intro_tab_art_02,
+      R.drawable.intro_tab_art_03
     };
-    titles = new int[] {
-      R.string.intro_tab_title_first,
-      R.string.intro_tab_title_second,
-      R.string.intro_tab_title_third
+    titleArray = new int[] {
+      R.string.intro_tab_title_01,
+      R.string.intro_tab_title_02,
+      R.string.intro_tab_title_03
     };
-    descriptions = new int[] {
-      R.string.intro_tab_description_first,
-      R.string.intro_tab_description_second,
-      R.string.intro_tab_description_third
+    descriptionArray = new int[] {
+      R.string.intro_tab_description_01,
+      R.string.intro_tab_description_02,
+      R.string.intro_tab_description_03
     };
   }
 
   @Override
   public Fragment getItem(int position) {
-    return IntroTabFragment.create(arts[position], titles[position], descriptions[position]);
+    return IntroTabFragment.create(
+      artArray[position],
+      titleArray[position],
+      descriptionArray[position]);
   }
 
   @Override

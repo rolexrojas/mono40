@@ -38,10 +38,9 @@ import butterknife.Unbinder;
 import timber.log.Timber;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
+@Deprecated
 public class PurchaseFragment
   extends ChildFragment<MainContainer>
   implements PurchaseContainer,

@@ -1,5 +1,7 @@
 package com.tpago.movil.main.purchase;
 
+import android.support.v4.app.Fragment;
+
 import com.tpago.movil.nfc.NfcHelper;
 import com.tpago.movil.util.Preconditions;
 
@@ -13,7 +15,11 @@ public final class PurchaseFragmentCreator {
     this.nfcHelper = Preconditions.checkNotNull(nfcHelper, "nfcHelper == null");
   }
 
-  public final PurchaseFragment create() {
-    throw new UnsupportedOperationException("Not implemented");
+  public final Fragment create() {
+    if (nfcHelper.isNfcAvailable()) {
+      return com.tpago.movil.dep.ui.main.purchase.PurchaseFragment.newInstance();
+    } else {
+      return NonNfcPurchaseFragment.create();
+    }
   }
 }

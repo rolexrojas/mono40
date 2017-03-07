@@ -100,19 +100,19 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
             final ApiData<PhoneNumber.State> apiData = result.getData();
             if (result.isSuccessful()) {
               final PhoneNumber.State state = apiData.getValue();
-//              if (state.equals(PhoneNumber.State.NONE)) {
-//                view.showDialog(
-//                  R.string.init_phone_number_error_not_affiliated_title,
-//                  R.string.init_phone_number_error_not_affiliated_message,
-//                  R.string.init_phone_number_error_not_affiliated_positive_button_text);
-//              } else {
+              if (state.equals(PhoneNumber.State.NONE)) {
+                view.showDialog(
+                  R.string.init_phone_number_error_not_affiliated_title,
+                  R.string.init_phone_number_error_not_affiliated_message,
+                  R.string.init_phone_number_error_not_affiliated_positive_button_text);
+              } else {
                 initData.setPhoneNumber(phoneNumber, state);
                 if (state.equals(PhoneNumber.State.REGISTERED)) {
                   view.moveToSignInScreen();
                 } else {
                   view.moveToSignUpScreen();
                 }
-//              }
+              }
             } else {
               final ApiError error = apiData.getError();
               view.showDialog(
@@ -124,7 +124,7 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
         }, new Consumer<Throwable>() {
           @Override
           public void accept(Throwable throwable) throws Exception {
-            Timber.e(throwable, "Validating phone number");
+            Timber.e(throwable);
             stopLoading();
             view.showDialog(
               R.string.error_title,

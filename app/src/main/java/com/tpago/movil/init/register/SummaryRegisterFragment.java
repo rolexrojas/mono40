@@ -5,15 +5,18 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.tpago.movil.R;
 import com.tpago.movil.app.ActivityQualifier;
 import com.tpago.movil.app.FragmentReplacer;
+import com.tpago.movil.graphics.Drawables;
 import com.tpago.movil.init.InitFragment;
 import com.tpago.movil.init.tutorial.TutorialFragment;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
@@ -22,13 +25,15 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 public final class SummaryRegisterFragment extends BaseRegisterFragment {
+  static SummaryRegisterFragment create() {
+    return new SummaryRegisterFragment();
+  }
+
   private Unbinder unbinder;
 
   @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
 
-  static SummaryRegisterFragment create() {
-    return new SummaryRegisterFragment();
-  }
+  @BindView(R.id.image_view_art) ImageView artImageView;
 
   @OnClick(R.id.button_continue)
   void onContinueButtonClicked() {
@@ -65,6 +70,18 @@ public final class SummaryRegisterFragment extends BaseRegisterFragment {
     super.onViewCreated(view, savedInstanceState);
     // Binds all the annotated resources, views and methods.
     unbinder = ButterKnife.bind(this, view);
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    Drawables.startAnimationDrawable(artImageView);
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    Drawables.stopAnimationDrawable(artImageView);
   }
 
   @Override
