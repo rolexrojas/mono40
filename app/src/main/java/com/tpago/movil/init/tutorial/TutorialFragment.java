@@ -50,6 +50,10 @@ public final class TutorialFragment extends BaseInitFragment {
     R.string.tutorial_tab_label_description_04
   };
 
+  public static TutorialFragment create() {
+    return new TutorialFragment();
+  }
+
   private Unbinder unbinder;
   private AutoTabSwitcher autoTabSwitcher;
   private AutoArtSetter autoArtSetter;
@@ -59,10 +63,6 @@ public final class TutorialFragment extends BaseInitFragment {
   @BindView(R.id.image_view_art) ImageView artImageView;
   @BindView(R.id.tab_layout) TabLayout tabLayout;
   @BindView(R.id.view_pager) ViewPager viewPager;
-
-  public static TutorialFragment create() {
-    return new TutorialFragment();
-  }
 
   @OnClick(R.id.button_skip)
   void onSkipButtonClicked() {
@@ -146,7 +146,7 @@ public final class TutorialFragment extends BaseInitFragment {
 
     final void start() {
       viewPager.addOnPageChangeListener(this);
-      onPageSelected(viewPager.getCurrentItem());
+      imageView.setImageResource(artArray[viewPager.getCurrentItem()]);
     }
 
     final void stop() {
@@ -154,13 +154,12 @@ public final class TutorialFragment extends BaseInitFragment {
     }
 
     @Override
-    public void onPageSelected(int position) {
-      if (position < 0 || position >= artArray.length) {
-        throw new IllegalArgumentException("position < 0 || position >= artArray.length");
+    public void onPageScrollStateChanged(int state) {
+      if (state == ViewPager.SCROLL_STATE_SETTLING) {
+        Picasso.with(viewPager.getContext())
+          .load(artArray[viewPager.getCurrentItem()])
+          .into(imageView);
       }
-      Picasso.with(viewPager.getContext())
-        .load(artArray[position])
-        .into(imageView);
     }
   }
 }
