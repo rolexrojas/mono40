@@ -23,5 +23,5 @@ public abstract class Bank implements Serializable {
   @SerializedName("bank-code") public abstract int getCode();
   @SerializedName("bank-id") public abstract String getId();
   @SerializedName("bank-name") public abstract String getName();
-  @SerializedName("bank-logo-uri") public abstract String logoUri();
+  @SerializedName("bank-logo-uri") public abstract String getLogoUri();
 }

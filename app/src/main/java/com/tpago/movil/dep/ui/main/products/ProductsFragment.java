@@ -93,7 +93,6 @@ public class ProductsFragment extends ChildFragment<MainContainer> implements Pr
     if (Utils.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
       ((PinConfirmationDialogFragment) fragment).dismiss();
     }
-    Timber.d("X = %1$d, Y = %2$d", x, y);
     PinConfirmationDialogFragment.newInstance(x, y,
       stringHelper.feeForTransaction(product.getCurrency(), product.getQueryFee()),
       new PinConfirmationDialogFragment.Callback() {

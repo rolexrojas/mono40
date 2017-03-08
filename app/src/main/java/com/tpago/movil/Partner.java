@@ -23,5 +23,5 @@ public abstract class Partner implements Serializable {
   @SerializedName("partner-code") public abstract int getCode();
   @SerializedName("partner-id") public abstract String getId();
   @SerializedName("partner-name") public abstract String getName();
-  @SerializedName("image-url") public abstract String logoUri();
+  @SerializedName("image-url") public abstract String getLogoUri();
 }
