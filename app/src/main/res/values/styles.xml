@@ -568,6 +568,8 @@
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_width">match_parent</item>
     <item name="android:theme">@style/Dep.ToolbarTheme</item>
+    <item name="contentInsetStart">0dp</item>
+    <item name="contentInsetStartWithNavigation">0dp</item>
     <item name="subtitleTextAppearance">@style/Dep.App.Text.Widget.Toolbar.Subtitle</item>
     <item name="titleTextAppearance">@style/Dep.App.Text.Widget.Toolbar.Title</item>
   </style>

@@ -16,7 +16,6 @@ import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func2;
-import timber.log.Timber;
 
 /**
  * @author hecvasro
@@ -130,7 +129,6 @@ public final class ProductManager implements ProductProvider {
       .reduce(false, new Func2<Boolean, Boolean, Boolean>() {
         @Override
         public Boolean call(Boolean flag, Boolean result) {
-          Timber.d("Reducing -> %1$s || %2$s", flag, result);
           return flag || result;
         }
       });
@@ -151,13 +149,7 @@ public final class ProductManager implements ProductProvider {
 
   @Override
   public Observable<List<Product>> getAll() {
-    return productRepo.getAll()
-      .doOnNext(new Action1<List<Product>>() {
-        @Override
-        public void call(List<Product> productList) {
-          Timber.d("productList.size() == %1$d", productList.size());
-        }
-      });
+    return productRepo.getAll();
   }
 
   public void clear() {
