@@ -96,8 +96,7 @@ public abstract class Product implements Serializable {
    * @return True if it can be used as a payment option, false otherwise.
    */
   public static boolean isPaymentOption(@NonNull Product product) {
-    return (product.category.equals(ProductCategory.ACCOUNT)
-      || product.category.equals(ProductCategory.CREDIT_CARD)) && product.paymentOption;
+    return !product.category.equals(ProductCategory.LOAN) && product.paymentOption;
   }
 
   /**
