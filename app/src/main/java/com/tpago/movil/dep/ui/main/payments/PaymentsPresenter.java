@@ -329,6 +329,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
           public void call(List<Recipient> recipientList) {
             screen.dismissPinConfirmator();
             screen.clearQuery();
+            stopDeleting();
           }
         }, new Action1<Throwable>() {
           @Override

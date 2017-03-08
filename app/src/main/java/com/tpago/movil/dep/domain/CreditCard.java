@@ -11,6 +11,7 @@ import java.math.BigDecimal;
  *
  * @author hecvasro
  */
+@Deprecated
 public class CreditCard extends Product {
   CreditCard(@NonNull ProductType type, @NonNull String alias, @NonNull String number,
     @NonNull Bank bank, @NonNull String currency, @NonNull BigDecimal queryFee,

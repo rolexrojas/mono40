@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 
 import com.tpago.movil.Bank;
 import com.tpago.movil.Partner;
+import com.tpago.movil.dep.domain.Product;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -28,6 +29,8 @@ public interface DepAssetProvider {
 
   Uri getLogoUri(Bank bank, @Style int style);
   Uri getLogoUri(Partner partner, @Style int style);
+
+  Uri getImageUri(Product product);
 
   @Retention(RetentionPolicy.SOURCE)
   @IntDef({ STYLE_20_GRAY, STYLE_24_PRIMARY, STYLE_36_GRAY, STYLE_36_WHITE })

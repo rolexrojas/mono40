@@ -10,8 +10,6 @@ import android.widget.TextView;
 import com.tpago.movil.dep.ui.main.list.ListItemHolder;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 class PurchasePaymentOptionListItemHolder extends ListItemHolder implements PurchasePaymentOptionHolder {
@@ -26,6 +24,12 @@ class PurchasePaymentOptionListItemHolder extends ListItemHolder implements Purc
   @Override
   public Drawable getRootViewBackground() {
     return holder.getRootViewBackground();
+  }
+
+  @NonNull
+  @Override
+  public ImageView getImageView() {
+    return holder.getImageView();
   }
 
   @NonNull

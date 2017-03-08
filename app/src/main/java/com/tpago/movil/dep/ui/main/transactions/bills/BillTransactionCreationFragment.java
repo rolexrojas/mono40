@@ -185,7 +185,7 @@ public class BillTransactionCreationFragment
   @Override
   public void setPayButtonEnabled(boolean enabled) {
     button.setEnabled(enabled);
-    button.setAlpha(enabled ? 1F : 0F);
+    button.setAlpha(enabled ? 1.00F : 0.50F);
   }
 
   @Override

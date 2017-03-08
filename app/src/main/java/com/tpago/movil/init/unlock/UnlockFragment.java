@@ -34,12 +34,17 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
  * @author hecvasro
  */
 public final class UnlockFragment extends BaseInitFragment implements UnlockPresenter.View {
+  public static UnlockFragment create() {
+    return new UnlockFragment();
+  }
+
   private Unbinder unbinder;
   private LoadIndicator loadIndicator;
 
@@ -55,8 +60,9 @@ public final class UnlockFragment extends BaseInitFragment implements UnlockPres
   @BindView(R.id.text_input_password) TextInput passwordTextInput;
   @BindView(R.id.button_unlock) Button unlockButton;
 
-  public static UnlockFragment create() {
-    return new UnlockFragment();
+  @OnClick(R.id.button_unlock)
+  void onUnlockButtonClicked() {
+    presenter.onUnlockButtonClicked();
   }
 
   @Override
@@ -110,7 +116,7 @@ public final class UnlockFragment extends BaseInitFragment implements UnlockPres
       @Override
       public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
-          presenter.onSignInButtonClicked();
+          presenter.onUnlockButtonClicked();
         }
         return false;
       }

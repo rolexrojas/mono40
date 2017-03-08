@@ -3,12 +3,18 @@
   style="@style/Dep.App.Widget.CommercePaymentOption"
   xmlns:android="http://schemas.android.com/apk/res/android">
   <ImageView
+    android:id="@+id/image_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
+  <ImageView
     android:id="@+id/bank_logo"
     android:layout_width="@dimen/bank_logo_size_large"
     android:layout_height="@dimen/bank_logo_size_large"
     android:layout_alignParentStart="true"
     android:layout_alignParentTop="true"
     android:layout_marginEnd="12dp"
+    android:layout_marginStart="20dp"
+    android:layout_marginTop="20dp"
     android:contentDescription="@string/bank_logo"/>
   <TextView
     android:id="@+id/product_identifier"
@@ -17,6 +23,7 @@
     android:layout_height="match_parent"
     android:layout_alignBottom="@+id/bank_logo"
     android:layout_alignTop="@+id/bank_logo"
+    android:layout_marginEnd="20dp"
     android:layout_toEndOf="@+id/bank_logo"/>
   <TextView
     android:id="@+id/product_owner_name"
@@ -24,6 +31,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
+    android:layout_marginBottom="20dp"
+    android:layout_marginEnd="20dp"
+    android:layout_marginStart="20dp"
     android:layout_marginTop="12dp"/>
   <TextView
     android:id="@+id/product_number"
@@ -31,5 +41,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_above="@+id/product_owner_name"
-    android:layout_alignParentStart="true"/>
+    android:layout_alignParentStart="true"
+    android:layout_marginEnd="20dp"
+    android:layout_marginStart="20dp"/>
 </RelativeLayout>

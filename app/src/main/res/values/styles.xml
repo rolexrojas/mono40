@@ -391,7 +391,6 @@
     <item name="android:background">@drawable/purchase_payment_option_background</item>
     <item name="android:layout_height">@dimen/commerce_payment_option_height</item>
     <item name="android:layout_width">match_parent</item>
-    <item name="android:padding">@dimen/commerce_payment_option_padding</item>
   </style>
 
   <style name="Dep.Base.Widget.CommercePaymentOptionProductIdentifier">

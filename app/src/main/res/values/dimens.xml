@@ -51,6 +51,7 @@
   <dimen name="commerce_payment_message_text_default_line_extra_spacing">5sp</dimen>
   <dimen name="commerce_payment_message_text_size">10sp</dimen>
   <dimen name="commerce_payment_option_border_radius">10dp</dimen>
+  <dimen name="commerce_payment_option_border_radius_extra">12dp</dimen>
   <dimen name="commerce_payment_option_border_width">2dp</dimen>
   <dimen name="commerce_payment_option_height">200dp</dimen>
   <dimen name="commerce_payment_option_margin">20dp</dimen>

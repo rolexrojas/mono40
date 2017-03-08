@@ -11,6 +11,7 @@ import java.math.BigDecimal;
  *
  * @author hecvasro
  */
+@Deprecated
 public class Loan extends Product {
   Loan(@NonNull ProductType type, @NonNull String alias, @NonNull String number, @NonNull Bank bank,
     @NonNull String currency, @NonNull BigDecimal queryFee, boolean paymentOption,

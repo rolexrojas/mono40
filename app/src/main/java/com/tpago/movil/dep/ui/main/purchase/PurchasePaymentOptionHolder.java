@@ -22,6 +22,8 @@ interface PurchasePaymentOptionHolder extends Holder {
   @Nullable
   Drawable getRootViewBackground();
 
+  @NonNull ImageView getImageView();
+
   /**
    * TODO
    *

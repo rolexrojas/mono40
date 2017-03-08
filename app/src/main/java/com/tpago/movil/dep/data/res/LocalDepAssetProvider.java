@@ -10,6 +10,7 @@ import com.tpago.movil.BuildConfig;
 import com.tpago.movil.Partner;
 import com.tpago.movil.R;
 import com.tpago.movil.Bank;
+import com.tpago.movil.dep.domain.Product;
 
 /**
  * @author hecvasro
@@ -505,5 +506,10 @@ public final class LocalDepAssetProvider implements DepAssetProvider {
         break;
     }
     return drawableId == -1 ? Uri.EMPTY : createUri(drawableId);
+  }
+
+  @Override
+  public Uri getImageUri(Product product) {
+    return Uri.EMPTY;
   }
 }

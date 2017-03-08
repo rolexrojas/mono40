@@ -23,6 +23,8 @@ class PurchasePaymentOptionItemHolder implements PurchasePaymentOptionHolder {
    */
   private final View rootView;
 
+  @BindView(R.id.image_view)
+  ImageView imageView;
   /**
    * TODO
    */
@@ -59,6 +61,12 @@ class PurchasePaymentOptionItemHolder implements PurchasePaymentOptionHolder {
   @Override
   public Drawable getRootViewBackground() {
     return rootView.getBackground();
+  }
+
+  @NonNull
+  @Override
+  public ImageView getImageView() {
+    return imageView;
   }
 
   @NonNull

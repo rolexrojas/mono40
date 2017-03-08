@@ -112,9 +112,7 @@ public class BillTransactionCreationPresenter
     view.setDueDateValue(dueDate);
     view.setTotalValue(Formatter.amount(totalValue));
     view.setMinimumValue(Formatter.amount(minimumValue));
-    view.setPayButtonEnabled(
-      totalValue.compareTo(BigDecimal.ZERO) > 0
-        && minimumValue.compareTo(BigDecimal.ZERO) > 0);
+    view.setPayButtonEnabled(totalValue.compareTo(BigDecimal.ZERO) > 0);
     paymentOptionSubscription = productManager.getAllPaymentOptions()
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())

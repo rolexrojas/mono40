@@ -5,6 +5,7 @@ import java.util.List;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class InitialData {
   private final List<Product> products;
   private final List<Recipient> recipients;

@@ -79,7 +79,7 @@ public final class UnlockPresenter extends Presenter<UnlockPresenter.View> {
     }
   }
 
-  final void onSignInButtonClicked() {
+  final void onUnlockButtonClicked() {
     if (isPasswordTextInputContentValid) {
       final User user = userStore.get();
       final PhoneNumber phoneNumber = user.getPhoneNumber();

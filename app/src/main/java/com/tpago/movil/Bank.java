@@ -1,5 +1,7 @@
 package com.tpago.movil;
 
+import android.os.Parcelable;
+
 import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
@@ -11,7 +13,7 @@ import java.io.Serializable;
  * @author hecvasro
  */
 @AutoValue
-public abstract class Bank implements Serializable {
+public abstract class Bank implements Serializable, Parcelable {
   public static Bank create(int code, String id, String name, String logoUri) {
     return new AutoValue_Bank(code, id, name, logoUri);
   }

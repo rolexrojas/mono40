@@ -14,6 +14,7 @@ import java.math.BigDecimal;
  *
  * @author hecvasro
  */
+@Deprecated
 public abstract class Product implements Serializable {
   /**
    * Product's {@link ProductCategory category}.
@@ -52,6 +53,8 @@ public abstract class Product implements Serializable {
    * Cost of querying the balance.
    */
   private BigDecimal queryFee;
+
+  private String imageUriTemplate;
 
   /**
    * Constructs a new account.
@@ -206,6 +209,14 @@ public abstract class Product implements Serializable {
       queryFee = BigDecimal.ZERO;
     }
     this.queryFee = queryFee;
+  }
+
+  public String getImageUriTemplate() {
+    return imageUriTemplate;
+  }
+
+  public void setImageUriTemplate(String imageUriTemplate) {
+    this.imageUriTemplate = imageUriTemplate;
   }
 
   @Override

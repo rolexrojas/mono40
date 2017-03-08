@@ -6,10 +6,9 @@ import android.support.annotation.NonNull;
 import com.tpago.movil.Bank;
 import com.tpago.movil.Partner;
 import com.tpago.movil.app.DisplayDensity;
+import com.tpago.movil.dep.domain.Product;
 import com.tpago.movil.text.Texts;
 import com.tpago.movil.util.Preconditions;
-
-import timber.log.Timber;
 
 /**
  * @author hecvasro
@@ -23,10 +22,16 @@ public final class RemoteDepAssetProvider implements DepAssetProvider {
     this.displayDensity = Preconditions.checkNotNull(displayDensity, "displayDensity == null");
   }
 
+  private String applySize(String uri) {
+    return uri.replace("{size}", displayDensity.name().toLowerCase());
+  }
+
+  private Uri createUri(String uri) {
+    return Uri.parse(uri);
+  }
+
   private Uri createUri(String url, String code, @Style int style) {
-    final String sanitizedUrl = url
-      .substring(0, url.lastIndexOf('/') + 1)
-      .replace("{size}", displayDensity.name().toLowerCase());
+    final String sanitizedUrl = applySize(url.substring(0, url.lastIndexOf('/') + 1));
     final StringBuilder builder = new StringBuilder(sanitizedUrl);
     final String styleName;
     if (style == STYLE_20_GRAY) {
@@ -40,7 +45,7 @@ public final class RemoteDepAssetProvider implements DepAssetProvider {
     }
     builder.append(Texts.join("_", code, styleName));
     builder.append(".png");
-    return Uri.parse(builder.toString());
+    return createUri(builder.toString());
   }
 
   @Override
@@ -61,5 +66,15 @@ public final class RemoteDepAssetProvider implements DepAssetProvider {
   @Override
   public Uri getLogoUri(Partner partner, @Style int style) {
     return createUri(partner.getLogoUri(), partner.getId(), style);
+  }
+
+  @Override
+  public Uri getImageUri(Product product) {
+    final String uri = product.getImageUriTemplate();
+    if (Texts.isEmpty(uri)) {
+      return Uri.EMPTY;
+    } else {
+      return createUri(applySize(uri));
+    }
   }
 }
