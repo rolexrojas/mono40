@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.tpago.movil.app.FragmentScope;
 import com.tpago.movil.dep.data.StringHelper;
-import com.tpago.movil.dep.data.res.AssetProvider;
+import com.tpago.movil.dep.data.res.DepAssetProvider;
 import com.tpago.movil.dep.domain.ProductManager;
 import com.tpago.movil.dep.domain.pos.PosBridge;
 import com.tpago.movil.dep.domain.util.EventBus;
@@ -33,7 +33,7 @@ class PurchaseModule {
   @Provides
   @FragmentScope
   PurchasePaymentOptionBinder providePaymentOptionBinder(Context context, StringHelper stringHelper,
-    AssetProvider assetProvider) {
+    DepAssetProvider assetProvider) {
     return new PurchasePaymentOptionBinder(context, stringHelper, assetProvider);
   }
 

@@ -8,7 +8,7 @@ import android.view.View;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.tpago.movil.dep.data.Formatter;
-import com.tpago.movil.dep.data.res.AssetProvider;
+import com.tpago.movil.dep.data.res.DepAssetProvider;
 import com.tpago.movil.dep.domain.BillBalance;
 import com.tpago.movil.dep.domain.BillRecipient;
 import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
@@ -19,16 +19,13 @@ import com.tpago.movil.dep.ui.main.list.ListItemHolderBinder;
 import com.tpago.movil.graphics.CircleTransformation;
 import com.tpago.movil.util.Objects;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
 /**
  * @author hecvasro
  */
 class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, RecipientListItemHolder> {
-  private final AssetProvider assetProvider;
+  private final DepAssetProvider assetProvider;
 
-  RecipientListItemHolderBinder(AssetProvider assetProvider) {
+  RecipientListItemHolderBinder(DepAssetProvider assetProvider) {
     this.assetProvider = assetProvider;
   }
 
@@ -52,11 +49,11 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
     if (type.equals(RecipientType.NON_AFFILIATED_PHONE_NUMBER)) {
       imageUri = assetProvider.getLogoUri(
         ((NonAffiliatedPhoneNumberRecipient) item).getBank(),
-        AssetProvider.STYLE_24_PRIMARY);
+        DepAssetProvider.STYLE_24_PRIMARY);
     } else if (type.equals(RecipientType.BILL)) {
       imageUri = assetProvider.getLogoUri(
         ((BillRecipient) item).getPartner(),
-        AssetProvider.STYLE_24_PRIMARY);
+        DepAssetProvider.STYLE_24_PRIMARY);
     }
     if (!imageUri.equals(Uri.EMPTY)) {
       final RequestCreator creator = Picasso.with(holder.getContext())
@@ -99,9 +96,10 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
         final BillRecipient r = (BillRecipient) item;
         final BillBalance b = r.getBalance();
         if (Objects.isNotNull(b)) {
-          dueDate = new SimpleDateFormat("dd MMMM", new Locale("es", "DO"))
-            .format(b.getDate())
-            .toUpperCase();
+//          dueDate = new SimpleDateFormat("dd MMMM", new Locale("es", "DO"))
+//            .format(b.getDate())
+//            .toUpperCase();
+          dueDate = b.getDate().trim();
           totalOwedCurrency = r.getCurrency();
           totalOwedValue = Formatter.amount(b.getTotal());
         }

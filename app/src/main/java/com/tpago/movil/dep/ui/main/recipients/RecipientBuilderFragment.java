@@ -16,13 +16,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.tpago.movil.Partner;
 import com.tpago.movil.R;
+import com.tpago.movil.dep.data.res.DepAssetProvider;
+import com.tpago.movil.dep.domain.api.DepApiBridge;
+import com.tpago.movil.dep.domain.session.SessionManager;
 import com.tpago.movil.dep.ui.Dialogs;
 import com.tpago.movil.dep.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.text.Texts;
 import com.tpago.movil.util.Objects;
 import com.tpago.movil.util.Preconditions;
 import com.tpago.movil.widget.TextInput;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,9 +50,10 @@ public class RecipientBuilderFragment
   private static final String KEY_PIN_CONFIRMATION = "pinConfirmation";
 
   private static final String KEY_KEYWORD = "keyword";
-  private static final String KEY_BUILDER = "builder";
+  private static final String KEY_PARTNER = "partner";
 
   private String keyword;
+  private Partner partner;
   private RecipientBuilder builder;
 
   private Unbinder unbinder;
@@ -55,10 +62,14 @@ public class RecipientBuilderFragment
 
   private RecipientBuilder.Result result = null;
 
-  public static RecipientBuilderFragment create(String keyword, RecipientBuilder builder) {
+  @Inject SessionManager sessionManager;
+  @Inject DepApiBridge apiBridge;
+  @Inject DepAssetProvider assetProvider;
+
+  public static RecipientBuilderFragment create(String keyword, Partner partner) {
     final Bundle bundle = new Bundle();
     bundle.putString(KEY_KEYWORD, keyword);
-    bundle.putSerializable(KEY_BUILDER, builder);
+    bundle.putSerializable(KEY_PARTNER, partner);
     final RecipientBuilderFragment fragment = new RecipientBuilderFragment();
     fragment.setArguments(bundle);
     return fragment;
@@ -135,9 +146,15 @@ public class RecipientBuilderFragment
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    ((AddRecipientActivity) getActivity()).getComponent().inject(this);
     final Bundle bundle = Preconditions.checkNotNull(getArguments(), "getArguments() == null");
     keyword = bundle.getString(KEY_KEYWORD);
-    builder = (RecipientBuilder) bundle.getSerializable(KEY_BUILDER);
+    partner = (Partner) bundle.getSerializable(KEY_PARTNER);
+    builder = new BillRecipientBuilder(
+      sessionManager.getSession().getAuthToken(),
+      apiBridge,
+      partner,
+      assetProvider);
   }
 
   @Nullable
@@ -162,7 +179,7 @@ public class RecipientBuilderFragment
   public void onResume() {
     super.onResume();
     Picasso.with(getContext())
-      .load(builder.getImagePath())
+      .load(builder.getImageUri())
       .into(imageView);
     textView.setText(
       String.format(

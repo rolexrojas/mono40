@@ -16,7 +16,7 @@ import com.squareup.picasso.Picasso;
 import com.tpago.movil.Bank;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.data.Formatter;
-import com.tpago.movil.dep.data.res.AssetProvider;
+import com.tpago.movil.dep.data.res.DepAssetProvider;
 import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.dep.domain.Product;
 import com.tpago.movil.dep.domain.Recipient;
@@ -68,7 +68,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment
   @Inject
   DepApiBridge apiBridge;
   @Inject
-  AssetProvider assetProvider;
+  DepAssetProvider assetProvider;
   @Inject
   SessionManager sessionManager;
   @Inject
@@ -229,7 +229,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment
     super.onResume();
     final Bank bank = ((NonAffiliatedPhoneNumberRecipient) recipient).getBank();
     Picasso.with(getContext())
-      .load(assetProvider.getLogoUri(bank, AssetProvider.STYLE_24_PRIMARY))
+      .load(assetProvider.getLogoUri(bank, DepAssetProvider.STYLE_24_PRIMARY))
       .into(imageView);
     textView.setText(String.format(getString(R.string.transaction), bank.getName()));
     textInput.requestFocus();

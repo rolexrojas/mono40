@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.tpago.movil.UserStore;
 import com.tpago.movil.dep.data.StringHelper;
+import com.tpago.movil.dep.domain.BillRecipient;
 import com.tpago.movil.dep.domain.PhoneNumber;
 import com.tpago.movil.dep.domain.PhoneNumberRecipient;
 import com.tpago.movil.dep.domain.ProductManager;
@@ -16,6 +17,7 @@ import com.tpago.movil.dep.domain.Recipient;
 import com.tpago.movil.dep.domain.RecipientManager;
 import com.tpago.movil.dep.ui.Presenter;
 import com.tpago.movil.dep.ui.main.list.NoResultsListItemItem;
+import com.tpago.movil.util.Objects;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -301,19 +303,19 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
     }
   }
 
-  final void resolve(Recipient recipient) {
+  final void resolve(Recipient r) {
     if (deleting) {
-      if (!selectedRecipients.contains(recipient)) {
-        recipient.setSelected(true);
-        selectedRecipients.add(recipient);
+      if (!selectedRecipients.contains(r)) {
+        r.setSelected(true);
+        selectedRecipients.add(r);
       } else {
-        recipient.setSelected(false);
-        selectedRecipients.remove(recipient);
+        r.setSelected(false);
+        selectedRecipients.remove(r);
       }
-      screen.update(recipient);
+      screen.update(r);
       screen.setDeleteButtonEnabled(!selectedRecipients.isEmpty());
-    } else {
-      screen.startTransfer(recipient);
+    } else if (!(r instanceof BillRecipient) || Objects.isNotNull(((BillRecipient) r).getBalance())) {
+      screen.startTransfer(r);
     }
   }
 

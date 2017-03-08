@@ -6,8 +6,8 @@ import com.tpago.movil.dep.data.api.ApiModule;
 import com.tpago.movil.dep.data.net.NetModule;
 import com.tpago.movil.dep.data.pos.PosModule;
 import com.tpago.movil.dep.data.repo.RepoModule;
-import com.tpago.movil.dep.data.res.AssetProvider;
-import com.tpago.movil.dep.data.res.LocalAssetProvider;
+import com.tpago.movil.dep.data.res.DepAssetProvider;
+import com.tpago.movil.dep.data.res.LocalDepAssetProvider;
 import com.tpago.movil.dep.data.session.SessionModule;
 import com.tpago.movil.dep.domain.DepDeviceManager;
 
@@ -54,7 +54,7 @@ public final class DepDataModule {
 
   @Provides
   @Singleton
-  AssetProvider provideAssetProvider() {
-    return new LocalAssetProvider();
+  DepAssetProvider provideAssetProvider() {
+    return new LocalDepAssetProvider();
   }
 }

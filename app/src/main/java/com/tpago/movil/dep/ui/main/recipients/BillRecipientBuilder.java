@@ -1,6 +1,9 @@
 package com.tpago.movil.dep.ui.main.recipients;
 
+import android.net.Uri;
+
 import com.tpago.movil.Partner;
+import com.tpago.movil.dep.data.res.DepAssetProvider;
 import com.tpago.movil.dep.domain.BillRecipient;
 import com.tpago.movil.dep.domain.api.ApiResult;
 import com.tpago.movil.dep.domain.api.DepApiBridge;
@@ -14,18 +17,24 @@ import rx.functions.Func1;
 class BillRecipientBuilder extends RecipientBuilder {
   private final String authToken;
   private final DepApiBridge apiBridge;
+  private final DepAssetProvider assetProvider;
 
   private final Partner partner;
 
-  BillRecipientBuilder(String authToken, DepApiBridge apiBridge, Partner partner) {
+  BillRecipientBuilder(
+    String authToken,
+    DepApiBridge apiBridge,
+    Partner partner,
+    DepAssetProvider assetProvider) {
     this.authToken = authToken;
     this.apiBridge = apiBridge;
     this.partner = partner;
+    this.assetProvider = assetProvider;
   }
 
   @Override
-  public String getImagePath() {
-    return null;
+  public Uri getImageUri() {
+    return assetProvider.getLogoUri(partner, DepAssetProvider.STYLE_24_PRIMARY);
   }
 
   @Override

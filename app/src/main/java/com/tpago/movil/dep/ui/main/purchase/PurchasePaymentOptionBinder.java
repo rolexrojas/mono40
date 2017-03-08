@@ -6,9 +6,9 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.widget.TextView;
 
+import com.tpago.movil.dep.data.res.DepAssetProvider;
 import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.data.StringHelper;
-import com.tpago.movil.dep.data.res.AssetProvider;
 import com.tpago.movil.dep.data.util.Binder;
 import com.tpago.movil.Bank;
 import com.tpago.movil.dep.domain.Product;
@@ -22,7 +22,7 @@ import com.squareup.picasso.Picasso;
 final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePaymentOptionHolder> {
   private final Context context;
   private final StringHelper stringHelper;
-  private final AssetProvider assetProvider;
+  private final DepAssetProvider assetProvider;
 
   /**
    * TODO
@@ -31,7 +31,7 @@ final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePayme
    *   TODO
    */
   PurchasePaymentOptionBinder(@NonNull Context context, @NonNull StringHelper stringHelper,
-    @NonNull AssetProvider assetProvider) {
+    @NonNull DepAssetProvider assetProvider) {
     this.context = context;
     this.stringHelper = stringHelper;
     this.assetProvider = assetProvider;
@@ -45,7 +45,7 @@ final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePayme
       drawable.mutate().setColorFilter(assetProvider.getPrimaryColor(bank), PorterDuff.Mode.SRC_IN);
     }
     Picasso.with(context)
-      .load(assetProvider.getLogoUri(bank, AssetProvider.STYLE_36_WHITE))
+      .load(assetProvider.getLogoUri(bank, DepAssetProvider.STYLE_36_WHITE))
       .into(holder.getBankLogoImageView());
     final int textColor = assetProvider.getTextColor(bank);
     final TextView productIdentifierTextView = holder.getProductIdentifierTextView();

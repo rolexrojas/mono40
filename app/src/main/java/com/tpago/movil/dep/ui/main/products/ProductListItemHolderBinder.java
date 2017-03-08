@@ -5,7 +5,7 @@ import android.view.View;
 
 import com.tpago.movil.dep.data.Formatter;
 import com.tpago.movil.dep.data.StringHelper;
-import com.tpago.movil.dep.data.res.AssetProvider;
+import com.tpago.movil.dep.data.res.DepAssetProvider;
 import com.tpago.movil.dep.domain.Balance;
 import com.tpago.movil.Bank;
 import com.tpago.movil.dep.domain.Product;
@@ -19,13 +19,13 @@ import com.squareup.picasso.Picasso;
  */
 class ProductListItemHolderBinder implements ListItemHolderBinder<ProductItem, ProductListItemHolder> {
   private final StringHelper stringHelper;
-  private final AssetProvider assetProvider;
+  private final DepAssetProvider assetProvider;
 
   /**
    * TODO
    */
   ProductListItemHolderBinder(@NonNull StringHelper stringHelper,
-    @NonNull AssetProvider assetProvider) {
+    @NonNull DepAssetProvider assetProvider) {
     this.stringHelper = stringHelper;
     this.assetProvider = assetProvider;
   }
@@ -35,7 +35,7 @@ class ProductListItemHolderBinder implements ListItemHolderBinder<ProductItem, P
     final Product product = item.getProduct();
     final Bank bank = product.getBank();
     Picasso.with(holder.getContext())
-      .load(assetProvider.getLogoUri(bank, AssetProvider.STYLE_36_GRAY))
+      .load(assetProvider.getLogoUri(bank, DepAssetProvider.STYLE_36_GRAY))
       .into(holder.bankLogoImageView);
     holder.productNumberTextView.setText(stringHelper.productNumber(product));
     holder.bankNameTextView.setText(bank.getName());

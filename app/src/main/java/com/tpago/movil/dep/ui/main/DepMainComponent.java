@@ -2,15 +2,12 @@ package com.tpago.movil.dep.ui.main;
 
 import android.content.Context;
 
-import com.tpago.movil.TimeOutManager;
 import com.tpago.movil.UserStore;
-import com.tpago.movil.app.ActivityModule;
 import com.tpago.movil.app.ActivityScope;
 import com.tpago.movil.app.AppComponent;
-import com.tpago.movil.app.BackEventHandler;
 import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.data.SchedulerProvider;
-import com.tpago.movil.dep.data.res.AssetProvider;
+import com.tpago.movil.dep.data.res.DepAssetProvider;
 import com.tpago.movil.dep.domain.ProductManager;
 import com.tpago.movil.dep.domain.BalanceManager;
 import com.tpago.movil.dep.domain.api.DepApiBridge;
@@ -39,7 +36,7 @@ import dagger.Component;
 public interface DepMainComponent extends ActivityComponent {
   void inject(DepMainActivity activity);
 
-  AssetProvider provideResourceProvider();
+  DepAssetProvider provideResourceProvider();
   BalanceManager provideBalanceManager();
   Context provideContext();
   DepApiBridge provideApiBridge();

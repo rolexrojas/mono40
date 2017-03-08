@@ -17,8 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.tpago.movil.dep.data.res.DepAssetProvider;
 import com.tpago.movil.dep.misc.Utils;
-import com.tpago.movil.dep.data.res.AssetProvider;
 import com.tpago.movil.dep.data.util.BinderFactory;
 import com.tpago.movil.dep.ui.Dialogs;
 import com.tpago.movil.dep.ui.main.MainContainer;
@@ -60,7 +60,7 @@ public class ProductsFragment extends ChildFragment<MainContainer> implements Pr
   @Inject
   StringHelper stringHelper;
   @Inject
-  AssetProvider assetProvider;
+  DepAssetProvider assetProvider;
   @Inject
   ProductsPresenter presenter;
 

@@ -14,7 +14,7 @@ import com.tpago.movil.Bank;
 /**
  * @author hecvasro
  */
-public final class LocalAssetProvider implements AssetProvider {
+public final class LocalDepAssetProvider implements DepAssetProvider {
   private static final int BANK_ADEMI = 38;
   private static final int BANK_ADOPEM = 44;
   private static final int BANK_ALAVER = 35;
@@ -52,7 +52,7 @@ public final class LocalAssetProvider implements AssetProvider {
   private static final int PARTNER_VIVA = 29;
   private static final int PARTNER_WIND = 33;
 
-  public LocalAssetProvider() {
+  public LocalDepAssetProvider() {
   }
 
   @NonNull

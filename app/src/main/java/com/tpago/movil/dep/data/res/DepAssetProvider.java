@@ -17,7 +17,7 @@ import java.lang.annotation.RetentionPolicy;
  * @author hecvasro
  */
 @Deprecated
-public interface AssetProvider {
+public interface DepAssetProvider {
   int STYLE_20_GRAY = 0;
   int STYLE_24_PRIMARY = 1;
   int STYLE_36_GRAY = 2;

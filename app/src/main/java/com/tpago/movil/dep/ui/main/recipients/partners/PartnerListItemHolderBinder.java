@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.Partner;
-import com.tpago.movil.dep.data.res.AssetProvider;
+import com.tpago.movil.dep.data.res.DepAssetProvider;
 import com.tpago.movil.dep.ui.main.list.ListItemHolderBinder;
 
 /**
@@ -13,16 +13,16 @@ import com.tpago.movil.dep.ui.main.list.ListItemHolderBinder;
  * @author hecvasro
  */
 class PartnerListItemHolderBinder implements ListItemHolderBinder<Partner, PartnerListItemHolder> {
-  private final AssetProvider assetProvider;
+  private final DepAssetProvider assetProvider;
 
-  PartnerListItemHolderBinder(AssetProvider assetProvider) {
+  PartnerListItemHolderBinder(DepAssetProvider assetProvider) {
     this.assetProvider = assetProvider;
   }
 
   @Override
   public void bind(@NonNull Partner item, @NonNull PartnerListItemHolder holder) {
     Picasso.with(holder.getContext())
-      .load(assetProvider.getLogoUri(item, AssetProvider.STYLE_24_PRIMARY))
+      .load(assetProvider.getLogoUri(item, DepAssetProvider.STYLE_24_PRIMARY))
       .into(holder.imageView);
     holder.textView.setText(item.getName());
   }

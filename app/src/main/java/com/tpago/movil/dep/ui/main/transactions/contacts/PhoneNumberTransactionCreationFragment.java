@@ -12,9 +12,9 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.tpago.movil.R;
+import com.tpago.movil.dep.data.res.DepAssetProvider;
 import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.data.Formatter;
-import com.tpago.movil.dep.data.res.AssetProvider;
 import com.tpago.movil.dep.domain.Product;
 import com.tpago.movil.dep.domain.Recipient;
 import com.tpago.movil.dep.ui.ChildFragment;
@@ -59,7 +59,7 @@ public class PhoneNumberTransactionCreationFragment
   private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
 
   @Inject
-  AssetProvider assetProvider;
+  DepAssetProvider assetProvider;
   @Inject
   PhoneNumberTransactionCreationPresenter presenter;
   @Inject

@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.tpago.movil.Partner;
-import com.tpago.movil.dep.data.res.AssetProvider;
+import com.tpago.movil.dep.data.res.DepAssetProvider;
 import com.tpago.movil.dep.data.util.BinderFactory;
 import com.tpago.movil.dep.ui.main.list.ListItemHolderCreatorFactory;
 import com.tpago.movil.dep.ui.main.recipients.RecipientCandidateListFragment;
@@ -19,7 +19,8 @@ import javax.inject.Inject;
 public class PartnerListFragment
   extends RecipientCandidateListFragment<PartnerListPresenter>
   implements PartnerListScreen {
-  @Inject AssetProvider assetProvider;
+  @Inject
+  DepAssetProvider assetProvider;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {

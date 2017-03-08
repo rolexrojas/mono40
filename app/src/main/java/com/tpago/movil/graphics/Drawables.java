@@ -12,9 +12,10 @@ import com.tpago.movil.util.Preconditions;
  */
 public final class Drawables {
   private static void setAnimationDrawableState(ImageView imageView, boolean flag) {
-    final Drawable drawable = Preconditions.checkNotNull(imageView, "imageView == null")
+    final Drawable drawable = Preconditions
+      .checkNotNull(imageView, "imageView == null")
       .getDrawable();
-    if (Objects.isNotNull(drawable)) {
+    if (Objects.isNotNull(drawable) && drawable instanceof AnimationDrawable) {
       final AnimationDrawable animationDrawable = (AnimationDrawable) drawable;
       if (flag) {
         animationDrawable.start();

@@ -10,7 +10,7 @@ import com.tpago.movil.dep.data.DepDataModule;
 import com.tpago.movil.dep.data.NfcHandler;
 import com.tpago.movil.dep.data.SchedulerProvider;
 import com.tpago.movil.dep.data.StringHelper;
-import com.tpago.movil.dep.data.res.AssetProvider;
+import com.tpago.movil.dep.data.res.DepAssetProvider;
 import com.tpago.movil.dep.domain.BalanceManager;
 import com.tpago.movil.dep.domain.InitialDataLoader;
 import com.tpago.movil.dep.domain.ProductManager;
@@ -56,7 +56,7 @@ public interface AppComponent {
   void inject(NonAffiliatedPhoneNumberRecipientAddition2Fragment fragment);
 
   // Deprecated provides
-  AssetProvider provideResourceProvider();
+  DepAssetProvider provideResourceProvider();
   BalanceManager provideBalanceManager();
   ConfigManager provideConfigManager();
   Context provideContext();

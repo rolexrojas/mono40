@@ -74,7 +74,8 @@ public final class RecipientManager implements RecipientProvider {
       .flatMap(new Func1<Recipient, Observable<Recipient>>() {
         @Override
         public Observable<Recipient> call(Recipient recipient) {
-          return queryBalance(recipient);
+          return queryBalance(recipient)
+            .onErrorResumeNext(Observable.just(recipient));
         }
       })
       .flatMap(new Func1<Recipient, Observable<Recipient>>() {

@@ -15,9 +15,7 @@ import com.tpago.movil.util.Objects;
 import com.tpago.movil.util.Preconditions;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -103,9 +101,10 @@ public class BillTransactionCreationPresenter
     BigDecimal minimumValue = BigDecimal.ZERO;
     final BillBalance b = r.getBalance();
     if (Objects.isNotNull(b)) {
-      dueDate = new SimpleDateFormat("dd MMMM", new Locale("es", "DO"))
-        .format(b.getDate())
-        .toUpperCase();
+      dueDate = b.getDate();
+//      dueDate = new SimpleDateFormat("dd MMMM", new Locale("es", "DO"))
+//        .format(b.getDate())
+//        .toUpperCase();
       totalValue = b.getTotal();
       minimumValue = b.getMinimum();
     }

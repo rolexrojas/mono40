@@ -167,7 +167,7 @@ public class AddRecipientActivity
         R.id.container,
         RecipientBuilderFragment.create(
           getString(R.string.contract).toLowerCase(),
-          new BillRecipientBuilder(sessionManager.getSession().getAuthToken(), apiBridge, partner)))
+          partner))
       .addToBackStack(null)
       .commit();
   }

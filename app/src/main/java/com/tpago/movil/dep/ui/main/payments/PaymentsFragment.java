@@ -20,7 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.tpago.movil.R;
-import com.tpago.movil.dep.data.res.AssetProvider;
+import com.tpago.movil.dep.data.res.DepAssetProvider;
 import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.data.util.BinderFactory;
@@ -95,7 +95,7 @@ public class PaymentsFragment
   @Inject
   PaymentsPresenter presenter;
   @Inject
-  AssetProvider assetProvider;
+  DepAssetProvider assetProvider;
 
   /**
    * Creates a new instance of the {@link PaymentsFragment screen}.

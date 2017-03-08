@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.tpago.movil.R;
 import com.tpago.movil.dep.misc.Utils;
-import com.tpago.movil.dep.data.res.AssetProvider;
+import com.tpago.movil.dep.data.res.DepAssetProvider;
 import com.tpago.movil.Bank;
 import com.tpago.movil.dep.domain.Product;
 import com.squareup.picasso.Picasso;
@@ -24,10 +24,10 @@ import butterknife.ButterKnife;
  * @author hecvasro
  */
 public class PaymentOptionAdapter extends ArrayAdapter<Product> {
-  private final AssetProvider assetProvider;
+  private final DepAssetProvider assetProvider;
 
   public PaymentOptionAdapter(@NonNull Context context,
-    @NonNull AssetProvider assetProvider) {
+    @NonNull DepAssetProvider assetProvider) {
     super(context, R.layout.list_item_payment_option, R.id.bank_name);
     this.assetProvider = assetProvider;
   }
@@ -55,7 +55,7 @@ public class PaymentOptionAdapter extends ArrayAdapter<Product> {
       final Bank bank = product.getBank();
       final ImageView imageView = ButterKnife.findById(convertView, R.id.bank_logo);
       Picasso.with(convertView.getContext())
-        .load(assetProvider.getLogoUri(bank, AssetProvider.STYLE_20_GRAY))
+        .load(assetProvider.getLogoUri(bank, DepAssetProvider.STYLE_20_GRAY))
         .into(imageView);
       final TextView textView = ButterKnife.findById(convertView, R.id.bank_name);
       textView.setText(bank.getName());

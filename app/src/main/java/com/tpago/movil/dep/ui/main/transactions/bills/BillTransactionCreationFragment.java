@@ -12,7 +12,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.tpago.movil.R;
-import com.tpago.movil.dep.data.res.AssetProvider;
+import com.tpago.movil.dep.data.res.DepAssetProvider;
 import com.tpago.movil.dep.domain.BillRecipient;
 import com.tpago.movil.dep.domain.Product;
 import com.tpago.movil.dep.ui.ChildFragment;
@@ -52,7 +52,7 @@ public class BillTransactionCreationFragment
   private String resultMessage = null;
 
   @Inject
-  AssetProvider assetProvider;
+  DepAssetProvider assetProvider;
 
   @BindView(R.id.button)
   Button button;

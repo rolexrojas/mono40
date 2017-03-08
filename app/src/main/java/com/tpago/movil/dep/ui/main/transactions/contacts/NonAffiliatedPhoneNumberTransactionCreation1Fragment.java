@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,7 +15,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.Bank;
 import com.tpago.movil.R;
-import com.tpago.movil.dep.data.res.AssetProvider;
+import com.tpago.movil.dep.data.res.DepAssetProvider;
 import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.dep.domain.Recipient;
 import com.tpago.movil.dep.domain.api.ApiResult;
@@ -62,7 +61,8 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment
   private Subscription subscription = Subscriptions.unsubscribed();
 
   @Inject DepApiBridge apiBridge;
-  @Inject AssetProvider assetProvider;
+  @Inject
+  DepAssetProvider assetProvider;
   @Inject SessionManager sessionManager;
   @Inject Recipient recipient;
 
@@ -203,7 +203,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment
     public void onBindViewHolder(ViewHolder holder, int position) {
       final Bank bank = bankList.get(position);
       Picasso.with(getContext())
-        .load(assetProvider.getLogoUri(bank, AssetProvider.STYLE_24_PRIMARY))
+        .load(assetProvider.getLogoUri(bank, DepAssetProvider.STYLE_24_PRIMARY))
         .into(holder.imageView);
       holder.textView.setText(bank.getName());
     }
