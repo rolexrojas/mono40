@@ -1,5 +1,6 @@
 package com.tpago.movil.dep.data.api;
 
+import com.tpago.movil.api.Currencies;
 import com.tpago.movil.dep.domain.Transaction;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -37,10 +38,12 @@ class TransactionJsonDeserializer implements JsonDeserializer<Transaction> {
     } else if (!jsonObject.has(PROPERTY_VALUE)) {
       throw new JsonParseException("Property '" + PROPERTY_VALUE + "' is missing");
     } else {
-      return new Transaction(jsonObject.get(PROPERTY_TYPE).getAsString(),
-        jsonObject.get(PROPERTY_NAME).getAsString(), jsonObject.get(PROPERTY_DATE).getAsLong(),
+      return new Transaction(
+        jsonObject.get(PROPERTY_TYPE).getAsString(),
+        jsonObject.get(PROPERTY_NAME).getAsString(),
+        jsonObject.get(PROPERTY_DATE).getAsLong(),
         Transaction.RequestType.valueOf(jsonObject.get(PROPERTY_REQUEST_TYPE).getAsString()),
-        jsonObject.get(PROPERTY_CURRENCY).getAsString(),
+        Currencies.map(jsonObject.get(PROPERTY_CURRENCY).getAsString()),
         jsonObject.get(PROPERTY_VALUE).getAsBigDecimal());
     }
   }

@@ -127,11 +127,9 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
         .subscribe(new Action1<ApiResult<Balance>>() {
           @Override
           public void call(ApiResult<Balance> result) {
-            screen.onBalanceQueried(
-              result.isSuccessful(),
-              product,
-              result.getData(),
-              result.getError().getDescription());
+            final boolean b = result.isSuccessful();
+            final String m = b ? null : result.getError().getDescription();
+            screen.onBalanceQueried(b, product, result.getData(), m);
           }
         }, new Action1<Throwable>() {
           @Override
