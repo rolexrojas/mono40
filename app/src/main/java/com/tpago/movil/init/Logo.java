@@ -1,8 +1,6 @@
 package com.tpago.movil.init;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,16 +76,13 @@ public final class Logo extends FrameLayout {
     outAnimation.setDuration(FRAME_DURATION_CROSS);
     imageSwitcher.setOutAnimation(outAnimation);
     // Initializes the frame switcher.
-    final DrawableIterator drawableIterator = new DrawableIterator.Builder()
-      .push(ContextCompat.getDrawable(context, R.drawable.logo_white_state_0))
-      .push(ContextCompat.getDrawable(context, R.drawable.logo_white_state_1))
-      .push(ContextCompat.getDrawable(context, R.drawable.logo_white_state_2))
-      .push(ContextCompat.getDrawable(context, R.drawable.logo_white_state_3))
+    final DrawableIdIterator drawableIterator = new DrawableIdIterator.Builder()
+      .push(R.drawable.logo_white_state_0)
+      .push(R.drawable.logo_white_state_1)
+      .push(R.drawable.logo_white_state_2)
+      .push(R.drawable.logo_white_state_3)
       .build();
-    drawableSwitcher = new DrawableSwitcher(
-      imageSwitcher,
-      ContextCompat.getDrawable(context, R.drawable.logo_white),
-      drawableIterator);
+    drawableSwitcher = new DrawableSwitcher(imageSwitcher, R.drawable.logo_white, drawableIterator);
   }
 
   public final void start() {
@@ -98,68 +93,68 @@ public final class Logo extends FrameLayout {
     drawableSwitcher.stop();
   }
 
-  private static final class DrawableIterator {
-    private final Drawable[] drawables;
+  private static final class DrawableIdIterator {
+    private final Integer[] drawableIdArray;
 
     private int current = 0;
 
-    private DrawableIterator(Drawable[] drawables) {
-      if (Objects.isNull(drawables)) {
+    private DrawableIdIterator(Integer[] drawableIdArray) {
+      if (Objects.isNull(drawableIdArray)) {
         throw new NullPointerException("drawable == null");
       }
-      if (drawables.length < 2) {
+      if (drawableIdArray.length < 2) {
         throw new IllegalArgumentException("drawable.length < 2");
       }
-      this.drawables = drawables;
+      this.drawableIdArray = drawableIdArray;
     }
 
-    final Drawable getCurrent() {
-      return drawables[current];
+    final int getCurrent() {
+      return drawableIdArray[current];
     }
 
-    final Drawable moveToStart() {
+    final int moveToStart() {
       current = 0;
       return getCurrent();
     }
 
-    final Drawable moveToNext() {
-      current = (current + 1) % drawables.length;
+    final int moveToNext() {
+      current = (current + 1) % drawableIdArray.length;
       return getCurrent();
     }
 
     static final class Builder {
-      private final List<Drawable> drawables;
+      private final List<Integer> drawableIdList;
 
       Builder() {
-        drawables = new ArrayList<>();
+        drawableIdList = new ArrayList<>();
       }
 
-      final Builder push(Drawable drawable) {
-        if (!drawables.contains(drawable)) {
-          drawables.add(drawable);
+      final Builder push(int drawableId) {
+        if (!drawableIdList.contains(drawableId)) {
+          drawableIdList.add(drawableId);
         }
         return this;
       }
 
-      final DrawableIterator build() {
-        return new DrawableIterator(drawables.toArray(new Drawable[drawables.size()]));
+      final DrawableIdIterator build() {
+        return new DrawableIdIterator(drawableIdList.toArray(new Integer[drawableIdList.size()]));
       }
     }
   }
 
   private static final class DrawableSwitcher {
-    private final Drawable cover;
-    private final DrawableIterator iterator;
+    private final int coverId;
+    private final DrawableIdIterator iterator;
 
     private final ImageSwitcher switcher;
 
     private Disposable disposable = Disposables.disposed();
 
-    DrawableSwitcher(ImageSwitcher switcher, Drawable cover, DrawableIterator iterator) {
-      this.cover = cover;
+    DrawableSwitcher(ImageSwitcher switcher, int coverId, DrawableIdIterator iterator) {
+      this.coverId = coverId;
       this.iterator = iterator;
       this.switcher = switcher;
-      this.switcher.setImageDrawable(this.cover);
+      this.switcher.setImageResource(this.coverId);
     }
 
     final boolean isRunning() {
@@ -175,13 +170,13 @@ public final class Logo extends FrameLayout {
             @Override
             public void run() throws Exception {
               iterator.moveToStart();
-              switcher.setImageDrawable(cover);
+              switcher.setImageResource(coverId);
             }
           })
           .subscribe(new Consumer<Long>() {
             @Override
             public void accept(Long aLong) throws Exception {
-              switcher.setImageDrawable(iterator.moveToNext());
+              switcher.setImageResource(iterator.moveToNext());
             }
           });
       }
