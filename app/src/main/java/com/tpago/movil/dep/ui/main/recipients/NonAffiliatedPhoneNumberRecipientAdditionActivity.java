@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.tpago.movil.R;
 import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
@@ -76,6 +77,16 @@ public class NonAffiliatedPhoneNumberRecipientAdditionActivity extends BaseActiv
     getSupportFragmentManager().beginTransaction()
       .replace(R.id.container, new NonAffiliatedPhoneNumberRecipientAddition1Fragment())
       .commit();
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      onBackPressed();
+      return true;
+    } else {
+      return super.onOptionsItemSelected(item);
+    }
   }
 
   @Override
