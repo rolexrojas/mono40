@@ -33,6 +33,7 @@ import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.domain.Product;
 import com.tpago.movil.dep.domain.Balance;
 import com.tpago.movil.dep.ui.ChildFragment;
+import com.tpago.movil.text.Texts;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import javax.inject.Inject;
@@ -44,18 +45,20 @@ import butterknife.Unbinder;
 import timber.log.Timber;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
-public class ProductsFragment extends ChildFragment<MainContainer> implements ProductsScreen,
+@Deprecated
+public class ProductsFragment extends ChildFragment<MainContainer>
+  implements ProductsScreen,
   ProductListItemHolder.OnQueryActionButtonClickedListener,
-  ShowRecentTransactionsListItemHolder.OnShowRecentTransactionsButtonClickedListener {
+  ShowRecentTransactionsListItemHolder.OnShowRecentTransactionsButtonClickedListener,
+  PinConfirmationDialogFragment.OnDismissListener {
   private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
 
   private Unbinder unbinder;
   private ListItemAdapter adapter;
   private LoadIndicator loadIndicator;
+  private String requestMessage = null;
 
   @Inject
   StringHelper stringHelper;
@@ -71,22 +74,11 @@ public class ProductsFragment extends ChildFragment<MainContainer> implements Pr
   @BindView(R.id.button_add_another_account)
   Button addAnotherAccountButton;
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
   @NonNull
   public static ProductsFragment newInstance() {
     return new ProductsFragment();
   }
 
-  /**
-   * TODO
-   *
-   * @param product
-   *   {@link Product} that will be queried.
-   */
   private void queryBalance(@NonNull final Product product, final int x, final int y) {
     final FragmentManager manager = getChildFragmentManager();
     final Fragment fragment = manager.findFragmentByTag(TAG_PIN_CONFIRMATION);
@@ -103,9 +95,6 @@ public class ProductsFragment extends ChildFragment<MainContainer> implements Pr
       }).show(manager, TAG_PIN_CONFIRMATION);
   }
 
-  /**
-   * TODO
-   */
   @OnClick(R.id.button_add_another_account)
   void onAddAnotherAccountButtonClicked() {
     getContainer().setChildFragment(AddAnotherProductFragment.newInstance(), true, true);
@@ -234,8 +223,11 @@ public class ProductsFragment extends ChildFragment<MainContainer> implements Pr
   }
 
   @Override
-  public void onBalanceQueried(boolean succeeded, @NonNull Product product,
-    @Nullable Balance balance) {
+  public void onBalanceQueried(
+    boolean succeeded,
+    @NonNull Product product,
+    @Nullable Balance balance,
+    @Nullable String message) {
     final Fragment fragment = getChildFragmentManager().findFragmentByTag(TAG_PIN_CONFIRMATION);
     if (Utils.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
       ((PinConfirmationDialogFragment) fragment).resolve(succeeded);
@@ -270,5 +262,18 @@ public class ProductsFragment extends ChildFragment<MainContainer> implements Pr
   @Override
   public void onShowRecentTransactionsButtonClicked() {
     Dialogs.featureNotAvailable(getActivity()).show();
+  }
+
+  @Override
+  public void onDismiss(boolean succeeded) {
+    if (!succeeded) {
+      final String m = Texts.isEmpty(requestMessage) ? getString(R.string.error_message) : requestMessage;
+      Dialogs.builder(getContext())
+        .setTitle(R.string.error_title)
+        .setMessage(m)
+        .setPositiveButton(R.string.error_positive_button_text, null)
+        .show();
+      requestMessage = null;
+    }
   }
 }

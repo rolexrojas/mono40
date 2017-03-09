@@ -1,8 +1,8 @@
 package com.tpago.movil.dep.ui.main.products;
 
 import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
 
+import com.tpago.movil.dep.domain.api.ApiResult;
 import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.misc.rx.RxUtils;
 import com.tpago.movil.dep.data.SchedulerProvider;
@@ -26,10 +26,9 @@ import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
+@Deprecated
 class ProductsPresenter extends Presenter<ProductsScreen> {
   private final SchedulerProvider schedulerProvider;
   private final EventBus eventBus;
@@ -38,17 +37,17 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
 
   private CompositeSubscription compositeSubscription;
 
-  ProductsPresenter(@NonNull SchedulerProvider schedulerProvider, @NonNull EventBus eventBus,
-    @NonNull ProductManager productManager, @NonNull BalanceManager balanceManager) {
+  ProductsPresenter(
+    @NonNull SchedulerProvider schedulerProvider,
+    @NonNull EventBus eventBus,
+    @NonNull ProductManager productManager,
+    @NonNull BalanceManager balanceManager) {
     this.schedulerProvider = schedulerProvider;
     this.eventBus = eventBus;
     this.productManager = productManager;
     this.balanceManager = balanceManager;
   }
 
-  /**
-   * TODO
-   */
   void start() {
     assertScreen();
     compositeSubscription = new CompositeSubscription();
@@ -109,9 +108,6 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
     compositeSubscription.add(subscription);
   }
 
-  /**
-   * TODO
-   */
   void stop() {
     assertScreen();
     if (Utils.isNotNull(compositeSubscription)) {
@@ -120,14 +116,6 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
     }
   }
 
-  /**
-   * TODO
-   *
-   * @param product
-   *   TODO
-   * @param pin
-   *   TODO
-   */
   void queryBalance(@NonNull final Product product, @NonNull final String pin) {
     assertScreen();
     if (balanceManager.hasValidBalance(product)) {
@@ -136,17 +124,20 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
       final Subscription subscription = balanceManager.queryBalance(product, pin)
         .subscribeOn(schedulerProvider.io())
         .observeOn(schedulerProvider.ui())
-        .subscribe(new Action1<Pair<Boolean, Balance>>() {
+        .subscribe(new Action1<ApiResult<Balance>>() {
           @Override
-          public void call(Pair<Boolean, Balance> result) {
-            screen.onBalanceQueried(result.first, product, result.second);
+          public void call(ApiResult<Balance> result) {
+            screen.onBalanceQueried(
+              result.isSuccessful(),
+              product,
+              result.getData(),
+              result.getError().getDescription());
           }
         }, new Action1<Throwable>() {
           @Override
           public void call(Throwable throwable) {
             Timber.e(throwable, "Querying the balance of an account (%1$s)", product);
-            screen.onBalanceQueried(false, product, null);
-            // TODO: Let the user know that an error occurred.
+            screen.onBalanceQueried(false, product, null, null);
           }
         });
       compositeSubscription.add(subscription);

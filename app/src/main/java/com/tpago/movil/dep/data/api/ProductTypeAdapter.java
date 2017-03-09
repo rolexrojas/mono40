@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.tpago.movil.text.Texts;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -27,6 +28,7 @@ class ProductTypeAdapter implements JsonDeserializer<Product>, JsonSerializer<Pr
   private static final String PROPERTY_QUERY_FEE = "query-fee";
   private static final String PROPERTY_PAYMENT_OPTION = "payable";
   private static final String PROPERTY_IS_DEFAULT = "default-account";
+  private static final String PROPERTY_IMAGE_URL = "image-url";
 
   @Override
   public Product deserialize(JsonElement json, Type typeOfT,
@@ -54,6 +56,10 @@ class ProductTypeAdapter implements JsonDeserializer<Product>, JsonSerializer<Pr
       final boolean paymentOption = !json.isJsonNull() && je.getAsBoolean();
       je = jsonObject.get(PROPERTY_IS_DEFAULT);
       final boolean isDefault = !je.isJsonNull() && je.getAsBoolean();
+      String imageUrl = null;
+      if (jsonObject.has(PROPERTY_IMAGE_URL) && !jsonObject.get(PROPERTY_IMAGE_URL).isJsonNull()) {
+        imageUrl = jsonObject.get(PROPERTY_IMAGE_URL).getAsString();
+      }
       return ProductCreator.create(
         ProductType.valueOf(jsonObject.get(PROPERTY_TYPE).getAsString()),
         jsonObject.get(PROPERTY_ALIAS).getAsString(),
@@ -62,7 +68,8 @@ class ProductTypeAdapter implements JsonDeserializer<Product>, JsonSerializer<Pr
         currency,
         queryFee,
         paymentOption,
-        isDefault);
+        isDefault,
+        imageUrl);
     }
   }
 
@@ -81,6 +88,10 @@ class ProductTypeAdapter implements JsonDeserializer<Product>, JsonSerializer<Pr
     jsonObject.addProperty(PROPERTY_QUERY_FEE, src.getQueryFee());
     jsonObject.addProperty(PROPERTY_PAYMENT_OPTION, Product.isPaymentOption(src));
     jsonObject.addProperty(PROPERTY_IS_DEFAULT, Product.isDefaultPaymentOption(src));
+    String imageUrl = src.getImageUriTemplate();
+    if (Texts.isNotEmpty(imageUrl)) {
+      jsonObject.addProperty(PROPERTY_IMAGE_URL, imageUrl);
+    }
     return jsonObject;
   }
 }

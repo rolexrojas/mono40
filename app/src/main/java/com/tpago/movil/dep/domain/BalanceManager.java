@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
 import com.tpago.movil.dep.domain.api.ApiCode;
+import com.tpago.movil.dep.domain.api.ApiResult;
 import com.tpago.movil.dep.domain.api.ApiUtils;
 import com.tpago.movil.dep.domain.api.DepApiBridge;
 import com.tpago.movil.dep.domain.util.EventBus;
@@ -136,27 +137,15 @@ public final class BalanceManager {
    * @return TODO
    */
   @NonNull
-  public final Observable<Pair<Boolean, Balance>> queryBalance(
+  public final Observable<ApiResult<Balance>> queryBalance(
     @NonNull final Product product, @NonNull String pin) {
     return apiBridge.queryBalance(sessionManager.getSession().getAuthToken(), product, pin)
-      .compose(ApiUtils.handleApiResult(true, new Func1<ApiCode, Observable<Balance>>() {
+      .doOnNext(new Action1<ApiResult<Balance>>() {
         @Override
-        public Observable<Balance> call(ApiCode code) {
-          if (code.equals(ApiCode.FORBIDDEN)) {
-            return Observable.just(null);
-          } else {
-            Timber.d("Failed to query the balance of a product (%1$s, %2$s)", product, code);
-            return Observable.error(new Exception("Failed to query the balance of a product"));
+        public void call(ApiResult<Balance> result) {
+          if (result.isSuccessful()) {
+            balances.put(product, Pair.create(System.currentTimeMillis(), result.getData()));
           }
-        }
-      }))
-      .map(new Func1<Balance, Pair<Boolean, Balance>>() {
-        @Override
-        public Pair<Boolean, Balance> call(Balance balance) {
-          if (Utils.isNotNull(balance)) {
-            balances.put(product, Pair.create(System.currentTimeMillis(), balance));
-          }
-          return Pair.create(Utils.isNotNull(balance), balance);
         }
       });
   }
