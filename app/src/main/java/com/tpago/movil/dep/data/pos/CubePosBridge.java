@@ -17,6 +17,8 @@ import com.tpago.movil.dep.domain.pos.PosCode;
 import com.tpago.movil.dep.domain.pos.PosResult;
 
 import rx.Observable;
+import rx.Single;
+import rx.SingleSubscriber;
 import rx.Subscriber;
 import rx.functions.Action1;
 import timber.log.Timber;
@@ -228,47 +230,35 @@ class CubePosBridge implements PosBridge {
   }
 
   @Override
-  public Observable<PosResult> reset(final String phoneNumber) {
-    return Observable.create(new Observable.OnSubscribe<PosResult>() {
-      @Override
-      public void call(final Subscriber<? super PosResult> subscriber) {
-        cubeSdk.Unregister(phoneNumber, new CubeSdkCallback<String, CubeError>() {
-          @Override
-          public void success(String message) {
-            sharedPreferences.edit()
-              .clear()
-              .apply();
-            subscriber.onNext(createResult(message));
-            subscriber.onCompleted();
+  public Single<PosResult> unregister(final String phoneNumber) {
+    if (sharedPreferences.getInt(KEY_COUNT, 0) > 0) {
+      return Single.create(new Single.OnSubscribe<PosResult>() {
+        @Override
+        public void call(final SingleSubscriber<? super PosResult> subscriber) {
+          try {
+            cubeSdk.Unregister(phoneNumber, new CubeSdkCallback<String, CubeError>() {
+              @Override
+              public void success(String message) {
+                sharedPreferences.edit()
+                  .clear()
+                  .apply();
+                subscriber.onSuccess(createResult(message));
+              }
+
+              @Override
+              public void failure(CubeError error) {
+                subscriber.onSuccess(createResult(error));
+              }
+            });
+          } catch (Exception exception) {
+            subscriber.onError(exception);
           }
-
-          @Override
-          public void failure(CubeError error) {
-            subscriber.onNext(createResult(error));
-            subscriber.onCompleted();
-          }
-        });
-      }
-    })
-      .doOnNext(new LogAction1("Unregister", phoneNumber));
-  }
-
-  @Override
-  public void unregisterSync(String phoneNumber) {
-    cubeSdk.Unregister(phoneNumber, new CubeSdkCallback<String, CubeError>() {
-      @Override
-      public void success(String message) {
-        sharedPreferences.edit()
-          .clear()
-          .apply();
-        Timber.d("Unregister -> %1$s", createResult(message));
-      }
-
-      @Override
-      public void failure(CubeError error) {
-        Timber.d("Unregister -> %1$s", createResult(error));
-      }
-    });
+        }
+      })
+        .doOnSuccess(new LogAction1("unregister", phoneNumber));
+    } else {
+      return Single.just(createResult("No need to unregister"));
+    }
   }
 
   private class LogAction1 implements Action1<PosResult> {

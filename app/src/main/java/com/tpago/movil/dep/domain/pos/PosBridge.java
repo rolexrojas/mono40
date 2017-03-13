@@ -1,6 +1,7 @@
 package com.tpago.movil.dep.domain.pos;
 
 import rx.Observable;
+import rx.Single;
 
 /**
  * @author hecvasro
@@ -11,7 +12,6 @@ public interface PosBridge {
   Observable<PosResult> addCard(String phoneNumber, String pin, String alias);
   Observable<PosResult> selectCard(String alias);
   Observable<PosResult> removeCard(String alias);
-  Observable<PosResult> reset(String phoneNumber);
 
-  void unregisterSync(String phoneNumber);
+  Single<PosResult> unregister(String phoneNumber);
 }
