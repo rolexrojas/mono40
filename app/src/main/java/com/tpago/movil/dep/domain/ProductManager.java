@@ -122,7 +122,7 @@ public final class ProductManager implements ProductProvider {
                 if (Objects.isNull(o)) {
                   o = b.addCard(pn, pin, p.getAlias());
                 } else {
-                  o.concatWith(b.addCard(pn, pin, p.getAlias()));
+                  o = o.concatWith(b.addCard(pn, pin, p.getAlias()));
                 }
               }
             }
