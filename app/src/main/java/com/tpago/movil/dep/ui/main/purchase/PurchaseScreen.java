@@ -52,4 +52,7 @@ interface PurchaseScreen extends Screen {
    *   TODO
    */
   void startActivity(@NonNull Intent intent);
+
+  void showGenericErrorDialog(String message);
+  void showGenericErrorDialog();
 }

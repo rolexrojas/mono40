@@ -51,6 +51,8 @@ public interface AppComponent {
   InitComponent plus(ActivityModule activityModule, InitModule initModule);
   MainComponent plus(ActivityModule activityModule, MainModule mainModule);
 
+  void inject(App app);
+
   // Deprecated injects
   void inject(NonAffiliatedPhoneNumberRecipientAddition1Fragment fragment);
   void inject(NonAffiliatedPhoneNumberRecipientAddition2Fragment fragment);

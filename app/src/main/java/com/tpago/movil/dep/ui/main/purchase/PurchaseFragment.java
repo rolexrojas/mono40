@@ -23,6 +23,7 @@ import com.tpago.movil.dep.data.util.BinderFactory;
 import com.tpago.movil.dep.domain.Product;
 import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.ui.ChildFragment;
+import com.tpago.movil.dep.ui.Dialogs;
 import com.tpago.movil.dep.ui.main.MainContainer;
 import com.tpago.movil.dep.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.dep.ui.main.list.ListItemAdapter;
@@ -229,6 +230,20 @@ public class PurchaseFragment
     if (Utils.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
       ((PinConfirmationDialogFragment) fragment).resolve(succeeded);
     }
+  }
+
+  @Override
+  public void showGenericErrorDialog(String message) {
+    Dialogs.builder(getContext())
+      .setTitle(R.string.error_title)
+      .setMessage(message)
+      .setPositiveButton(R.string.error_positive_button_text, null)
+      .show();
+  }
+
+  @Override
+  public void showGenericErrorDialog() {
+    showGenericErrorDialog(getString(R.string.error_message));
   }
 
   @Override

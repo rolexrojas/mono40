@@ -36,6 +36,7 @@ class ProductListItemHolderBinder implements ListItemHolderBinder<ProductItem, P
     final Bank bank = product.getBank();
     Picasso.with(holder.getContext())
       .load(assetProvider.getLogoUri(bank, DepAssetProvider.STYLE_36_GRAY))
+      .noFade()
       .into(holder.bankLogoImageView);
     holder.productNumberTextView.setText(stringHelper.productNumber(product));
     holder.bankNameTextView.setText(bank.getName());

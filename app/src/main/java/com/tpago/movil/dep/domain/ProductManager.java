@@ -103,7 +103,7 @@ public final class ProductManager implements ProductProvider {
       .toList();
   }
 
-  public final Observable<Boolean> activateAllProducts(final String pin) {
+  public final Observable<List<PosResult>> activateAllProducts(final String pin) {
     return productRepo.getAll()
       .compose(RxUtils.<Product>fromCollection())
       .filter(new Func1<Product, Boolean>() {
@@ -113,25 +113,14 @@ public final class ProductManager implements ProductProvider {
             && !posBridge.get().isRegistered(product.getAlias());
         }
       })
-      .concatMap(new Func1<Product, Observable<PosResult>>() {
+      .flatMap(new Func1<Product, Observable<PosResult>>() {
         @Override
         public Observable<PosResult> call(Product product) {
           return posBridge.get()
             .addCard(sessionManager.getSession().getPhoneNumber(), pin, product.getAlias());
         }
       })
-      .map(new Func1<PosResult, Boolean>() {
-        @Override
-        public Boolean call(PosResult result) {
-          return result.isSuccessful();
-        }
-      })
-      .reduce(false, new Func2<Boolean, Boolean, Boolean>() {
-        @Override
-        public Boolean call(Boolean flag, Boolean result) {
-          return flag || result;
-        }
-      });
+      .toList();
   }
 
   @NonNull

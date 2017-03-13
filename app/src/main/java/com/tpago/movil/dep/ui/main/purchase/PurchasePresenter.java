@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.domain.pos.PosBridge;
+import com.tpago.movil.dep.domain.pos.PosResult;
 import com.tpago.movil.dep.domain.util.Event;
 import com.tpago.movil.dep.domain.util.EventBus;
 import com.tpago.movil.dep.domain.util.EventType;
@@ -27,6 +28,7 @@ import timber.log.Timber;
 /**
  * @author hecvasro
  */
+@Deprecated
 class PurchasePresenter extends Presenter<PurchaseScreen> {
   private final StringHelper stringHelper;
   private final ProductManager productManager;
@@ -145,19 +147,31 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
       activationSubscription = productManager.activateAllProducts(pin)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Action1<Boolean>() {
+        .subscribe(new Action1<List<PosResult>>() {
           @Override
-          public void call(Boolean flag) {
+          public void call(List<PosResult> resultList) {
+            boolean flag = true;
+            final StringBuilder builder = new StringBuilder();
+            for (PosResult r : resultList) {
+              flag &= r.isSuccessful();
+              builder.append(r.getData());
+              builder.append("\n");
+            }
+            final String resultMessage = builder.toString();
             screen.onActivationFinished(flag);
+            Timber.d(resultMessage);
             if (flag) {
               loadPaymentOptions();
+            } else {
+              screen.showGenericErrorDialog(resultMessage);
             }
           }
         }, new Action1<Throwable>() {
           @Override
           public void call(Throwable throwable) {
-            Timber.e(throwable, "Activating all payment options");
+            Timber.e(throwable);
             screen.onActivationFinished(false);
+            screen.showGenericErrorDialog();
           }
         });
     }
