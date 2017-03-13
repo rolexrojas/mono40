@@ -150,10 +150,10 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
         .subscribe(new Action1<List<PosResult>>() {
           @Override
           public void call(List<PosResult> resultList) {
-            boolean flag = true;
+            boolean flag = false;
             final StringBuilder builder = new StringBuilder();
             for (PosResult r : resultList) {
-              flag &= r.isSuccessful();
+              flag |= r.isSuccessful();
               builder.append(r.getData());
               builder.append("\n");
             }
