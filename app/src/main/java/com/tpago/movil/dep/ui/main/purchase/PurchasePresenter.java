@@ -159,7 +159,6 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
             }
             final String resultMessage = builder.toString();
             screen.onActivationFinished(flag);
-            Timber.d(resultMessage);
             if (flag) {
               loadPaymentOptions();
             } else {

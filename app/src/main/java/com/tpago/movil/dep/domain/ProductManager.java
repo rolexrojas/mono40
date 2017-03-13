@@ -5,8 +5,10 @@ import android.support.v4.util.Pair;
 
 import com.tpago.movil.dep.domain.pos.PosBridge;
 import com.tpago.movil.dep.domain.pos.PosResult;
+import com.tpago.movil.dep.domain.session.Session;
 import com.tpago.movil.dep.domain.util.EventBus;
 import com.tpago.movil.dep.misc.rx.RxUtils;
+import com.tpago.movil.util.Objects;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,19 +107,27 @@ public final class ProductManager implements ProductProvider {
 
   public final Observable<List<PosResult>> activateAllProducts(final String pin) {
     return productRepo.getAll()
-      .compose(RxUtils.<Product>fromCollection())
-      .filter(new Func1<Product, Boolean>() {
+      .flatMap(new Func1<List<Product>, Observable<PosResult>>() {
         @Override
-        public Boolean call(Product product) {
-          return Product.isPaymentOption(product)
-            && !posBridge.get().isRegistered(product.getAlias());
-        }
-      })
-      .flatMap(new Func1<Product, Observable<PosResult>>() {
-        @Override
-        public Observable<PosResult> call(Product product) {
-          return posBridge.get()
-            .addCard(sessionManager.getSession().getPhoneNumber(), pin, product.getAlias());
+        public Observable<PosResult> call(List<Product> productList) {
+          final Session s = sessionManager.getSession();
+          if (Objects.isNull(s)) {
+            return Observable.error(new NullPointerException("s == null"));
+          } else {
+            final PosBridge b = posBridge.get();
+            final String pn = s.getPhoneNumber();
+            Observable<PosResult> o = null;
+            for (Product p : productList) {
+              if (Product.isPaymentOption(p) && !b.isRegistered(p.getAlias())) {
+                if (Objects.isNull(o)) {
+                  o = b.addCard(pn, pin, p.getAlias());
+                } else {
+                  o.concatWith(b.addCard(pn, pin, p.getAlias()));
+                }
+              }
+            }
+            return o;
+          }
         }
       })
       .toList();

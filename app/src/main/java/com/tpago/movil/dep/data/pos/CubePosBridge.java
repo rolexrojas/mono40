@@ -15,12 +15,14 @@ import com.cube.sdk.storage.operation.SelectCardParams;
 import com.tpago.movil.dep.domain.pos.PosBridge;
 import com.tpago.movil.dep.domain.pos.PosCode;
 import com.tpago.movil.dep.domain.pos.PosResult;
+import com.tpago.movil.util.Objects;
 
 import rx.Observable;
 import rx.Single;
 import rx.SingleSubscriber;
 import rx.Subscriber;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import timber.log.Timber;
 
 /**
@@ -30,6 +32,8 @@ class CubePosBridge implements PosBridge {
   private static final String FILE_NAME = PosBridge.class.getCanonicalName();
 
   private static final String KEY_COUNT = "count";
+
+  private static final String PLACEHOLDER = "placeholder";
 
   private final CubeSdkImpl cubeSdk;
   private final SharedPreferences sharedPreferences;
@@ -88,8 +92,51 @@ class CubePosBridge implements PosBridge {
     return createResult(error);
   }
 
-  private String getAltPan(String alias) {
-    return sharedPreferences.getString(alias, null);
+  private Observable<String> getAltPan(final String alias) {
+    final String altPan = sharedPreferences.getString(alias, PLACEHOLDER);
+    if (altPan.equals(PLACEHOLDER)) {
+      return Observable.create(new Observable.OnSubscribe<String>() {
+        @Override
+        public void call(final Subscriber<? super String> subscriber) {
+          try {
+            cubeSdk.ListCard(new CubeSdkCallback<ListCards, CubeError>() {
+              @Override
+              public void success(ListCards data) {
+                String n = null;
+                for (Card c : data.getCards()) {
+                  if (c.getAlias().equals(alias)) {
+                    n = c.getAltpan();
+                  }
+                }
+                if (Objects.isNull(n)) {
+                  subscriber.onError(new NullPointerException("altPan == null"));
+                } else {
+                  subscriber.onNext(n);
+                  subscriber.onCompleted();
+                }
+              }
+
+              @Override
+              public void failure(CubeError error) {
+                subscriber.onError(new NullPointerException("altPan == null"));
+              }
+            });
+          } catch (Exception exception) {
+            subscriber.onError(exception);
+          }
+        }
+      })
+        .doOnNext(new Action1<String>() {
+          @Override
+          public void call(String altPan) {
+            sharedPreferences.edit()
+              .putString(alias, altPan)
+              .apply();
+          }
+        });
+    } else {
+      return Observable.just(altPan);
+    }
   }
 
   @Override
@@ -104,7 +151,7 @@ class CubePosBridge implements PosBridge {
     final String alias) {
     final Observable<PosResult> observable;
     if (isRegistered(alias)) {
-      observable = Observable.just(new PosResult(PosCode.OK, getAltPan(alias)));
+      observable = Observable.just(createResult(alias));
     } else {
       observable = Observable.create(new Observable.OnSubscribe<PosResult>() {
         @Override
@@ -114,35 +161,12 @@ class CubePosBridge implements PosBridge {
             new CubeSdkCallback<String, CubeError>() {
               @Override
               public void success(String message) {
-                cubeSdk.ListCard(new CubeSdkCallback<ListCards, CubeError>() {
-                  @Override
-                  public void success(ListCards data) {
-                    String altPan = null;
-                    for (Card card : data.getCards()) {
-                      if (card.getAlias().equals(alias)) {
-                        altPan = card.getAltpan();
-                      }
-                    }
-                    final PosResult result;
-                    if (altPan == null) {
-                      result = createResult("addCard", phoneNumber, pin, alias);
-                    } else {
-                      sharedPreferences.edit()
-                        .putString(alias, altPan)
-                        .putInt(KEY_COUNT, sharedPreferences.getInt(KEY_COUNT, 0) + 1)
-                        .apply();
-                      result = createResult(altPan);
-                    }
-                    subscriber.onNext(result);
-                    subscriber.onCompleted();
-                  }
-
-                  @Override
-                  public void failure(CubeError error) {
-                    subscriber.onNext(createResult(error));
-                    subscriber.onCompleted();
-                  }
-                });
+                sharedPreferences.edit()
+                  .putString(alias, PLACEHOLDER)
+                  .putInt(KEY_COUNT, sharedPreferences.getInt(KEY_COUNT, 0) + 1)
+                  .apply();
+                subscriber.onNext(createResult(message));
+                subscriber.onCompleted();
               }
 
               @Override
@@ -161,34 +185,40 @@ class CubePosBridge implements PosBridge {
   public Observable<PosResult> selectCard(final String alias) {
     final Observable<PosResult> observable;
     if (isRegistered(alias)) {
-      observable = Observable.create(new Observable.OnSubscribe<PosResult>() {
-        @Override
-        public void call(final Subscriber<? super PosResult> subscriber) {
-          cubeSdk.SelectCard(
-            createSelectCardParams(alias, getAltPan(alias)),
-            new CubeSdkCallback<PaymentInfo, CubeError>() {
+      observable = getAltPan(alias)
+        .flatMap(new Func1<String, Observable<PosResult>>() {
+          @Override
+          public Observable<PosResult> call(final String altPan) {
+            return Observable.create(new Observable.OnSubscribe<PosResult>() {
               @Override
-              public void success(PaymentInfo data) {
-                subscriber.onNext(createResult(stringify(
-                  data.getValue(),
-                  data.getDate(),
-                  data.getReference(),
-                  data.getTime(),
-                  data.getCrypto(),
-                  data.getAtc()
-                )));
-                subscriber.onCompleted();
-              }
+              public void call(final Subscriber<? super PosResult> subscriber) {
+                cubeSdk.SelectCard(
+                  createSelectCardParams(alias, altPan),
+                  new CubeSdkCallback<PaymentInfo, CubeError>() {
+                    @Override
+                    public void success(PaymentInfo data) {
+                      subscriber.onNext(createResult(stringify(
+                        data.getValue(),
+                        data.getDate(),
+                        data.getReference(),
+                        data.getTime(),
+                        data.getCrypto(),
+                        data.getAtc()
+                      )));
+                      subscriber.onCompleted();
+                    }
 
-              @Override
-              public void failure(CubeError error) {
-                subscriber.onNext(createResult(error));
-                subscriber.onCompleted();
+                    @Override
+                    public void failure(CubeError error) {
+                      subscriber.onNext(createResult(error));
+                      subscriber.onCompleted();
+                    }
+                  }
+                );
               }
-            }
-          );
-        }
-      });
+            });
+          }
+        });
     } else {
       observable = Observable.just(createResult("selectCard", alias));
     }
@@ -199,30 +229,36 @@ class CubePosBridge implements PosBridge {
   public Observable<PosResult> removeCard(final String alias) {
     final Observable<PosResult> observable;
     if (isRegistered(alias)) {
-      observable = Observable.create(new Observable.OnSubscribe<PosResult>() {
-        @Override
-        public void call(final Subscriber<? super PosResult> subscriber) {
-          cubeSdk.DeleteCard(
-            createSelectCardParams(alias, getAltPan(alias)),
-            new CubeSdkCallback<String, CubeError>() {
+      observable = getAltPan(alias)
+        .flatMap(new Func1<String, Observable<PosResult>>() {
+          @Override
+          public Observable<PosResult> call(final String altPan) {
+            return Observable.create(new Observable.OnSubscribe<PosResult>() {
               @Override
-              public void success(String message) {
-                sharedPreferences.edit()
-                  .remove(alias)
-                  .putInt(KEY_COUNT, sharedPreferences.getInt(KEY_COUNT, 0) - 1)
-                  .apply();
-                subscriber.onNext(createResult(message));
-                subscriber.onCompleted();
-              }
+              public void call(final Subscriber<? super PosResult> subscriber) {
+                cubeSdk.DeleteCard(
+                  createSelectCardParams(alias, altPan),
+                  new CubeSdkCallback<String, CubeError>() {
+                    @Override
+                    public void success(String message) {
+                      sharedPreferences.edit()
+                        .remove(alias)
+                        .putInt(KEY_COUNT, sharedPreferences.getInt(KEY_COUNT, 0) - 1)
+                        .apply();
+                      subscriber.onNext(createResult(message));
+                      subscriber.onCompleted();
+                    }
 
-              @Override
-              public void failure(CubeError error) {
-                subscriber.onNext(createResult(error));
-                subscriber.onCompleted();
+                    @Override
+                    public void failure(CubeError error) {
+                      subscriber.onNext(createResult(error));
+                      subscriber.onCompleted();
+                    }
+                  });
               }
             });
-        }
-      });
+          }
+        });
     } else {
       observable = Observable.just(createResult(alias));
     }
