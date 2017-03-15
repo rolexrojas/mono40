@@ -16,6 +16,7 @@ import com.tpago.movil.R;
 import com.tpago.movil.content.StringResolver;
 import com.tpago.movil.text.BaseTextWatcher;
 import com.tpago.movil.util.Objects;
+import com.tpago.movil.widget.Keyboard;
 import com.tpago.movil.widget.TextInput;
 
 import javax.inject.Inject;
@@ -28,24 +29,20 @@ import butterknife.BindView;
 public final class PasswordRegisterFormFragment
   extends RegisterFormFragment<PasswordRegisterFormPresenter>
   implements PasswordRegisterFormPresenter.View {
+  static PasswordRegisterFormFragment create() {
+    return new PasswordRegisterFormFragment();
+  }
+
   private PasswordRegisterFormPresenter presenter;
 
   private TextWatcher textInputTextWatcher;
   private TextWatcher confirmationTextInputTextWatcher;
 
-  @Inject
-  StringResolver stringResolver;
-  @Inject
-  RegisterData registerData;
+  @Inject StringResolver stringResolver;
+  @Inject RegisterData registerData;
 
-  @BindView(R.id.text_input)
-  TextInput textInput;
-  @BindView(R.id.text_input_confirmation)
-  TextInput confirmationTextInput;
-
-  static PasswordRegisterFormFragment create() {
-    return new PasswordRegisterFormFragment();
-  }
+  @BindView(R.id.text_input) TextInput textInput;
+  @BindView(R.id.text_input_confirmation) TextInput confirmationTextInput;
 
   @Override
   protected PasswordRegisterFormPresenter getPresenter() {
@@ -79,6 +76,8 @@ public final class PasswordRegisterFormFragment
   @Override
   public void onResume() {
     super.onResume();
+    // Shows the keyboard.
+    Keyboard.show(textInput);
     // Attaches the text input to the presenter.
     textInputTextWatcher = new BaseTextWatcher() {
       @Override

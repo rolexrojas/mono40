@@ -23,6 +23,7 @@ import com.tpago.movil.init.InitFragment;
 import com.tpago.movil.init.LogoAnimator;
 import com.tpago.movil.text.BaseTextWatcher;
 import com.tpago.movil.widget.FullSizeLoadIndicator;
+import com.tpago.movil.widget.Keyboard;
 import com.tpago.movil.widget.LoadIndicator;
 import com.tpago.movil.widget.TextInput;
 
@@ -36,6 +37,10 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 public final class SignInFragment extends BaseInitFragment implements SignInPresenter.View {
+  public static SignInFragment create() {
+    return new SignInFragment();
+  }
+
   private Unbinder unbinder;
   private LoadIndicator loadIndicator;
 
@@ -50,10 +55,6 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
   @BindView(R.id.text_input_email) TextInput emailTextInput;
   @BindView(R.id.text_input_password) TextInput passwordTextInput;
   @BindView(R.id.button_unlock) Button signInButton;
-
-  public static SignInFragment create() {
-    return new SignInFragment();
-  }
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -94,6 +95,8 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
     super.onResume();
     // Moves the logo out of the screen.
     logoAnimator.moveOutOfScreen();
+    // Shows the keyboard.
+    Keyboard.show(emailTextInput);
     // Attaches the email text input to the presenter.
     emailTextInputTextWatcher = new BaseTextWatcher() {
       @Override

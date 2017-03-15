@@ -25,6 +25,7 @@ import com.tpago.movil.init.InitFragment;
 import com.tpago.movil.init.LogoAnimator;
 import com.tpago.movil.text.BaseTextWatcher;
 import com.tpago.movil.widget.FullSizeLoadIndicator;
+import com.tpago.movil.widget.Keyboard;
 import com.tpago.movil.widget.LoadIndicator;
 import com.tpago.movil.widget.TextInput;
 
@@ -104,6 +105,8 @@ public final class UnlockFragment extends BaseInitFragment implements UnlockPres
     super.onResume();
     // Moves the logo out of the screen.
     logoAnimator.moveOutOfScreen();
+    // Shows the keyboard.
+    Keyboard.show(passwordTextInput);
     // Attaches the password text input to the presenter.
     passwordTextInputTextWatcher = new BaseTextWatcher() {
       @Override

@@ -16,6 +16,7 @@ import com.tpago.movil.R;
 import com.tpago.movil.content.StringResolver;
 import com.tpago.movil.text.BaseTextWatcher;
 import com.tpago.movil.util.Objects;
+import com.tpago.movil.widget.Keyboard;
 import com.tpago.movil.widget.TextInput;
 
 import javax.inject.Inject;
@@ -28,24 +29,20 @@ import butterknife.BindView;
 public final class NameRegisterFormFragment
   extends RegisterFormFragment<NameRegisterFormPresenter>
   implements NameRegisterFormPresenter.View {
+  static NameRegisterFormFragment create() {
+    return new NameRegisterFormFragment();
+  }
+
   private NameRegisterFormPresenter presenter;
 
   private TextWatcher firstNameTextWatcher;
   private TextWatcher lastNameTextWatcher;
 
-  @BindView(R.id.text_input_first_name)
-  TextInput firstNameTextInput;
-  @BindView(R.id.text_input_last_name)
-  TextInput lastNameTextInput;
+  @BindView(R.id.text_input_first_name) TextInput firstNameTextInput;
+  @BindView(R.id.text_input_last_name) TextInput lastNameTextInput;
 
-  @Inject
-  StringResolver stringResolver;
-  @Inject
-  RegisterData registerData;
-
-  static NameRegisterFormFragment create() {
-    return new NameRegisterFormFragment();
-  }
+  @Inject StringResolver stringResolver;
+  @Inject RegisterData registerData;
 
   @Override
   protected NameRegisterFormPresenter getPresenter() {
@@ -79,6 +76,8 @@ public final class NameRegisterFormFragment
   @Override
   public void onResume() {
     super.onResume();
+    // Shows the keyboard.
+    Keyboard.show(firstNameTextInput);
     // Attaches the first name text input to the presenter.
     firstNameTextWatcher = new BaseTextWatcher() {
       @Override
