@@ -43,7 +43,7 @@ android {
       minor: 0,
       patch: 0,
       extra: [name: 'beta', major: 0],
-      build: 28
+      build: 29
     ]
     versionCode createVersionCode(versionData)
     versionName createVersionName(versionData)
