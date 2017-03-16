@@ -4,20 +4,13 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:background="@color/black_alpha_40">
-  <FrameLayout
+  <ImageView
+    android:id="@+id/image_view_art"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingEnd="20dp"
-    android:paddingStart="20dp"
-    android:paddingTop="@dimen/init_container_padding_top_normal">
-    <ImageView
-      android:id="@+id/image_view_art"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:background="@drawable/tutorial_tab_art_01"
-      android:scaleType="center"/>
-  </FrameLayout>
-  <LinearLayout
+    android:layout_margin="30dp"
+    android:scaleType="center"/>
+  <com.tpago.movil.dep.ui.view.widget.PercentLinearLayout
     android:layout_width="match_parent"
     android:layout_height="200dp"
     android:layout_alignParentBottom="true"
@@ -27,25 +20,23 @@
       android:id="@+id/view_pager"
       android:layout_width="match_parent"
       android:layout_height="0dp"
-      android:layout_weight="0.6"/>
-    <RelativeLayout
-      android:id="@+id/view_anchor"
+      android:layout_weight="1"/>
+    <FrameLayout
       android:layout_width="match_parent"
-      android:layout_height="0dp"
-      android:layout_marginTop="30dp"
-      android:layout_weight="0.4">
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="18dp">
       <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
         style="@style/Widget.TabLayout.Dark"
-        android:layout_centerVertical="true"/>
+        android:layout_gravity="center_vertical"/>
       <Button
         android:id="@+id/button_skip"
         style="@style/Widget.Button.Dark.Transparent.Rounded"
         android:layout_width="87dp"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
+        android:layout_height="36dp"
+        android:layout_gravity="center_vertical|end"
         android:layout_marginEnd="30dp"
-        android:text="@string/skip"/>
-    </RelativeLayout>
-  </LinearLayout>
+        android:text="@string/ok"/>
+    </FrameLayout>
+  </com.tpago.movil.dep.ui.view.widget.PercentLinearLayout>
 </RelativeLayout>

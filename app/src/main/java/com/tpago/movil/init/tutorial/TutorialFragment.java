@@ -158,6 +158,7 @@ public final class TutorialFragment extends BaseInitFragment {
       if (state == ViewPager.SCROLL_STATE_SETTLING) {
         Picasso.with(viewPager.getContext())
           .load(artArray[viewPager.getCurrentItem()])
+          .noFade()
           .into(imageView);
       }
     }
