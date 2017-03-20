@@ -10,6 +10,7 @@
   <color name="black_alpha_87">#DE000000</color>
   <color name="transparent">@android:color/transparent</color>
   <color name="white">#FFF</color>
+  <color name="white_alpha_20">#33FFFFFF</color>
   <color name="white_alpha_50">#7FFFFFFF</color>
   <color name="white_alpha_90">#E5FFFFFF</color>
 
@@ -105,7 +106,6 @@
   <color name="transaction_creation_text_widget_amount_value">@color/app_text_widget_prefixable_text_view_content</color>
   <color name="transaction_type_credit">#347A57</color>
   <color name="transaction_type_debit">#A5464E</color>
-  <color name="white_alpha_20">#33FFFFFF</color>
   <color name="white_alpha_40">#66FFFFFF</color>
   <color name="window_background_default">#EFEFEF</color>
 </resources>

@@ -8,11 +8,14 @@
     android:id="@+id/image_view_art"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_centerInParent="true"
     android:layout_margin="30dp"
-    android:scaleType="center"/>
-  <com.tpago.movil.dep.ui.view.widget.PercentLinearLayout
+    android:adjustViewBounds="true"
+    android:scaleType="fitXY"
+    android:src="@drawable/tutorial_tab_art_01"/>
+  <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="190dp"
     android:layout_alignParentBottom="true"
     android:background="@color/app_primary"
     android:orientation="vertical">
@@ -36,7 +39,13 @@
         android:layout_height="36dp"
         android:layout_gravity="center_vertical|end"
         android:layout_marginEnd="30dp"
-        android:text="@string/ok"/>
+        android:text="@string/ready"/>
     </FrameLayout>
-  </com.tpago.movil.dep.ui.view.widget.PercentLinearLayout>
+  </LinearLayout>
+  <View
+    android:id="@+id/view_highlight"
+    android:layout_width="80dp"
+    android:layout_height="80dp"
+    android:layout_centerInParent="true"
+    android:background="@drawable/tutorial_highlight_indicator"/>
 </RelativeLayout>

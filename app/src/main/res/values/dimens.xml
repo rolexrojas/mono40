@@ -30,6 +30,10 @@
   <dimen name="init_container_padding_top_large">64dp</dimen>
   <dimen name="init_container_padding_top_normal">30dp</dimen>
 
+  <!-- Tutorial dimensions -->
+  <dimen name="tutorial_tab_highlight_offset_x">15dp</dimen>
+  <dimen name="tutorial_tab_highlight_offset_y">15dp</dimen>
+
   <!-- Deprecated dimensions -->
   <dimen name="app_text_widget_auto_resizeable_prefixable_text_view_content_max">@dimen/app_text_widget_prefixable_text_view_content</dimen>
   <dimen name="app_text_widget_auto_resizeable_prefixable_text_view_content_min">@dimen/app_text_widget_prefixable_text_view_content</dimen>
