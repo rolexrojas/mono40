@@ -182,7 +182,7 @@ public class Product implements Serializable {
    */
   @NonNull
   public final String getIdentifier() {
-    return String.format("%1$s %2$s", bank.getName(), type);
+    return String.format("%1$s %2$s", Bank.getName(bank), type);
   }
 
   /**

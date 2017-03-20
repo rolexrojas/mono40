@@ -39,7 +39,7 @@ class ProductListItemHolderBinder implements ListItemHolderBinder<ProductItem, P
       .noFade()
       .into(holder.bankLogoImageView);
     holder.productNumberTextView.setText(stringHelper.productNumber(product));
-    holder.bankNameTextView.setText(bank.getName());
+    holder.bankNameTextView.setText(Bank.getName(bank));
     final Balance balance = item.getBalance();
     if (balance != null) {
       holder.productBalanceTextView.setVisibility(View.VISIBLE);

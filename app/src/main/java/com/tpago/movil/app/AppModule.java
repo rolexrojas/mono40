@@ -2,8 +2,6 @@ package com.tpago.movil.app;
 
 import android.content.Context;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.tpago.movil.Avatar;
 import com.tpago.movil.ConfigManager;
 import com.tpago.movil.content.SharedPreferencesCreator;
@@ -68,15 +66,6 @@ final class AppModule {
   @Singleton
   UserStore provideUserStore(SharedPreferencesCreator sharedPreferencesCreator, Avatar avatar) {
     return new UserStore(sharedPreferencesCreator, avatar);
-  }
-
-  @Provides
-  @Singleton
-  Gson provideGson() {
-    return new GsonBuilder()
-      .setDateFormat("dd/MM/yyyy")
-      .registerTypeAdapterFactory(AppTypeAdapterFactory.create())
-      .create();
   }
 
   @Provides

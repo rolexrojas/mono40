@@ -23,6 +23,7 @@ import com.tpago.movil.dep.domain.session.SessionManager;
 import com.tpago.movil.dep.domain.util.EventBus;
 import com.tpago.movil.dep.ui.main.recipients.NonAffiliatedPhoneNumberRecipientAddition1Fragment;
 import com.tpago.movil.dep.ui.main.recipients.NonAffiliatedPhoneNumberRecipientAddition2Fragment;
+import com.tpago.movil.gson.GsonModule;
 import com.tpago.movil.init.InitComponent;
 import com.tpago.movil.init.InitModule;
 import com.tpago.movil.main.MainComponent;
@@ -41,6 +42,7 @@ import dagger.Component;
 @Component(modules = {
   AppModule.class,
   NetModule.class,
+  GsonModule.class,
   ApiModule.class,
   NfcModule.class,
   // Deprecated modules

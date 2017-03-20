@@ -68,7 +68,7 @@ final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePayme
         .into(bankLogoImageView);
 
       bankNameTextView.setVisibility(View.VISIBLE);
-      bankNameTextView.setText(bank.getName());
+      bankNameTextView.setText(Bank.getName(bank));
 
       if (isCreditCard) {
         issuerImageView.setVisibility(View.VISIBLE);

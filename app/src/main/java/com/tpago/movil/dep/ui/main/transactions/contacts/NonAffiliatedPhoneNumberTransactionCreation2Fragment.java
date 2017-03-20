@@ -231,7 +231,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment
     Picasso.with(getContext())
       .load(assetProvider.getLogoUri(bank, DepAssetProvider.STYLE_24_PRIMARY))
       .into(imageView);
-    textView.setText(String.format(getString(R.string.transaction), bank.getName()));
+    textView.setText(String.format(getString(R.string.transaction), Bank.getName(bank)));
     textInput.requestFocus();
     textInput.setText(((NonAffiliatedPhoneNumberRecipient) recipient).getAccountNumber());
     textInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {

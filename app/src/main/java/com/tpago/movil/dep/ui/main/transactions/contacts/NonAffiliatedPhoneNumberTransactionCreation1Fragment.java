@@ -205,7 +205,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment
       Picasso.with(getContext())
         .load(assetProvider.getLogoUri(bank, DepAssetProvider.STYLE_24_PRIMARY))
         .into(holder.imageView);
-      holder.textView.setText(bank.getName());
+      holder.textView.setText(Bank.getName(bank));
     }
 
     @Override

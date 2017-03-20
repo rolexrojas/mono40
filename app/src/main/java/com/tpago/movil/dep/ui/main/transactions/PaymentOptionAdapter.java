@@ -58,7 +58,7 @@ public class PaymentOptionAdapter extends ArrayAdapter<Product> {
         .load(assetProvider.getLogoUri(bank, DepAssetProvider.STYLE_20_GRAY))
         .into(imageView);
       final TextView textView = ButterKnife.findById(convertView, R.id.bank_name);
-      textView.setText(bank.getName());
+      textView.setText(Bank.getName(bank));
     }
     return convertView;
   }
