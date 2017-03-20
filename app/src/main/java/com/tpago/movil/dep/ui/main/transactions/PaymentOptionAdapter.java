@@ -28,7 +28,7 @@ public class PaymentOptionAdapter extends ArrayAdapter<Product> {
 
   public PaymentOptionAdapter(@NonNull Context context,
     @NonNull DepAssetProvider assetProvider) {
-    super(context, R.layout.list_item_payment_option, R.id.bank_name);
+    super(context, R.layout.list_item_payment_option, R.id.text_view_bank_name);
     this.assetProvider = assetProvider;
   }
 
@@ -57,7 +57,7 @@ public class PaymentOptionAdapter extends ArrayAdapter<Product> {
       Picasso.with(convertView.getContext())
         .load(assetProvider.getLogoUri(bank, DepAssetProvider.STYLE_20_GRAY))
         .into(imageView);
-      final TextView textView = ButterKnife.findById(convertView, R.id.bank_name);
+      final TextView textView = ButterKnife.findById(convertView, R.id.text_view_bank_name);
       textView.setText(Bank.getName(bank));
     }
     return convertView;

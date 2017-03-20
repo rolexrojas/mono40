@@ -2,38 +2,27 @@
 <RelativeLayout
   style="@style/ListItem.Large"
   xmlns:android="http://schemas.android.com/apk/res/android">
-  <LinearLayout
-    android:id="@+id/linear_layout_anchor"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
+  <ImageView
+    android:id="@+id/image_view_bank_logo"
+    android:layout_width="36dp"
+    android:layout_height="36dp"
+    android:layout_centerVertical="true"
+    android:layout_marginBottom="5dp"
     android:layout_marginEnd="20dp"
-    android:gravity="center"
-    android:orientation="vertical">
-    <ImageView
-      android:id="@+id/image_view_bank_logo"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="5dp"
-      android:contentDescription="@string/logo"/>
-    <TextView
-      android:id="@+id/text_view_product_number"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:textAppearance="@style/ProductAliasText"/>
-  </LinearLayout>
+    android:contentDescription="@string/logo"/>
   <FrameLayout
     android:id="@+id/frame_layout_anchor"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:layout_alignParentEnd="true"
-    android:layout_marginStart="25dp">
+    android:layout_marginStart="20dp">
     <Button
-      android:id="@+id/action.query"
+      android:id="@+id/button_query_balance"
       style="@style/ListItemButton"
       android:layout_gravity="center"
       android:text="@string/balance"/>
     <com.tpago.movil.dep.ui.view.widget.PrefixableTextView
-      android:id="@+id/product.balance"
+      android:id="@+id/prefixable_text_view_product_balance"
       style="@style/Screen.Products.Text.Widget.Amount.Content"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -41,11 +30,19 @@
       android:visibility="gone"/>
   </FrameLayout>
   <TextView
-    android:id="@+id/bank.name"
+    android:id="@+id/text_view_bank_name"
+    style="@style/Products.Label.Primary"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_centerVertical="true"
-    android:layout_toEndOf="@+id/linear_layout_anchor"
-    android:layout_toStartOf="@+id/frame_layout_anchor"
-    android:textAppearance="@style/Dep.App.Text.Bank.Name"/>
+    android:layout_alignTop="@+id/image_view_bank_logo"
+    android:layout_toEndOf="@+id/image_view_bank_logo"
+    android:layout_toStartOf="@+id/frame_layout_anchor"/>
+  <TextView
+    android:id="@+id/text_view_product_identifier"
+    style="@style/Products.Label.Secondary"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignBottom="@+id/image_view_bank_logo"
+    android:layout_toEndOf="@+id/image_view_bank_logo"
+    android:layout_toStartOf="@+id/frame_layout_anchor"/>
 </RelativeLayout>

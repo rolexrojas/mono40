@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <!-- Private styles -->
+  <!-- [START] App styles -->
   <style name="Base"/>
 
   <style name="Base.App.Theme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -36,7 +36,7 @@
     <item name="android:lineSpacingExtra">10sp</item>
     <item name="fontPath">@string/font_gotham_round_book</item>
   </style>
-
+  
   <style name="Base.Widget"/>
 
   <style name="Base.Widget.Button">
@@ -172,7 +172,7 @@
     <item name="android:windowTitleStyle">@style/Dialog.Title</item>
   </style>
 
-  <!-- Public styles -->
+
   <style name="App.Theme" parent="Base.App.Theme"/>
   <style name="App.ThemeOverlay.Dark" parent="Base.App.ThemeOverlay.Dark"/>
   <style name="App.ThemeOverlay.Light" parent="Base.App.ThemeOverlay.Light"/>
@@ -208,6 +208,28 @@
   <style name="Dialog.Title.Appearance" parent="Base.Dialog.Title.Appearance"/>
   <style name="Dialog.Title" parent="Base.Dialog.Title"/>
   <style name="Dialog.Theme" parent="Base.Dialog.Theme"/>
+  <!-- [END] App styles -->
+
+  <!-- [START] Product screen styles -->
+  <style name="Base.Products"/>
+
+  <style name="Base.Products.Label">
+    <item name="android:ellipsize">end</item>
+    <item name="android:textColor">#333</item>
+  </style>
+  <style name="Base.Products.Label.Primary">
+    <item name="android:textSize">16sp</item>
+    <item name="fontPath">@string/font_gotham_round_book</item>
+  </style>
+  <style name="Base.Products.Label.Secondary">
+    <item name="android:textSize">12sp</item>
+    <item name="fontPath">@string/font_gotham_round_light</item>
+  </style>
+
+
+  <style name="Products.Label.Primary" parent="Base.Products.Label.Primary"/>
+  <style name="Products.Label.Secondary" parent="Base.Products.Label.Secondary"/>
+  <!-- [END] Product screen styles -->
 
 
   <!-- Deprecated styles -->

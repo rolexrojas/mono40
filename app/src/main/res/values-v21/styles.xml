@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <!-- [START] App styles -->
   <style name="Widget.Button.Dark.Gradient" parent="Base.Widget.Button.Dark.Gradient">
     <item name="android:background">@drawable/widget_button_dark_gradient</item>
   </style>
@@ -12,7 +13,13 @@
   <style name="Widget.Button.Light.Solid" parent="Base.Widget.Button.Light.Solid">
     <item name="android:background">@drawable/widget_button_light_solid</item>
   </style>
+  <!-- [END] App styles -->
 
+  <!-- [START] Product screen styles -->
+  <style name="Products.Label.Secondary" parent="Base.Products.Label.Secondary">
+    <item name="android:letterSpacing">0.07</item>
+  </style>
+  <!-- [END] Product screen styles -->
 
   <!-- Deprecated styles -->
     <style name="Dep.App.Widget.Button.Colored" parent="Dep.Base.Widget.Button.Colored">
