@@ -2,6 +2,7 @@ package com.tpago.movil.dep.ui.main.purchase;
 
 import android.content.Context;
 
+import com.tpago.movil.User;
 import com.tpago.movil.app.FragmentScope;
 import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.data.res.DepAssetProvider;
@@ -32,9 +33,12 @@ class PurchaseModule {
    */
   @Provides
   @FragmentScope
-  PurchasePaymentOptionBinder providePaymentOptionBinder(Context context, StringHelper stringHelper,
+  PurchasePaymentOptionBinder providePaymentOptionBinder(
+    User user,
+    Context context,
+    StringHelper stringHelper,
     DepAssetProvider assetProvider) {
-    return new PurchasePaymentOptionBinder(context, stringHelper, assetProvider);
+    return new PurchasePaymentOptionBinder(user, context, stringHelper, assetProvider);
   }
 
   /**

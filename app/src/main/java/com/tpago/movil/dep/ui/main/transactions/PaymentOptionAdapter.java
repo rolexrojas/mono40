@@ -53,7 +53,7 @@ public class PaymentOptionAdapter extends ArrayAdapter<Product> {
     final Product product = getItem(position);
     if (Utils.isNotNull(product)) {
       final Bank bank = product.getBank();
-      final ImageView imageView = ButterKnife.findById(convertView, R.id.bank_logo);
+      final ImageView imageView = ButterKnife.findById(convertView, R.id.image_view_bank_logo);
       Picasso.with(convertView.getContext())
         .load(assetProvider.getLogoUri(bank, DepAssetProvider.STYLE_20_GRAY))
         .into(imageView);

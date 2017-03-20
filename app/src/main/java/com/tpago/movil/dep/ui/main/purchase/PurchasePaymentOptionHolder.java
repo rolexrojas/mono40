@@ -9,50 +9,15 @@ import android.widget.TextView;
 import com.tpago.movil.dep.data.util.Holder;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 interface PurchasePaymentOptionHolder extends Holder {
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
-  @Nullable
-  Drawable getRootViewBackground();
-
-  @NonNull ImageView getImageView();
-
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
-  @NonNull
-  ImageView getBankLogoImageView();
-
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
-  @NonNull
-  TextView getProductIdentifierTextView();
-
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
-  @NonNull
-  TextView getProductNumberTextView();
-
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
-  @NonNull
-  TextView getProductOwnerNameTextView();
+  @NonNull ImageView getBackgroundImageView();
+  @NonNull ImageView getBankLogoImageView();
+  @NonNull ImageView getIssuerImageView();
+  @NonNull TextView getBankNameTextView();
+  @NonNull TextView getProductNumberTextView();
+  @NonNull TextView getOwnerNameTextView();
+  @NonNull TextView getProductTypeTextView();
+  @Nullable Drawable getRootViewBackground();
 }

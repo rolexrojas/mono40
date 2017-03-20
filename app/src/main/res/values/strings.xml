@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!-- Common strings -->
+  <string name="credit">Crédito</string>
+  <string name="current">Corriente</string>
+  <string name="debit">Débito</string>
   <string name="edit">Editar</string>
   <string name="email">Correo electrónico</string>
   <string name="error_message">En estos momentos no podemos procesar esta solicitud. Favor intentar nuevamente.</string>
@@ -10,13 +13,17 @@
   <string name="last_name">Apellido</string>
   <string name="later">Mas Tarde</string>
   <string name="learn_more">Aprende más</string>
+  <string name="loan">Préstamo</string>
   <string name="next">Continuar</string>
   <string name="ok">Ok</string>
   <string name="password">Contraseña</string>
+  <string name="prepay">Prepago</string>
   <string name="ready">Listo</string>
+  <string name="savings">Ahorro</string>
   <string name="sign_in">Iniciar sesión</string>
   <string name="skip">Saltar</string>
   <string name="start">Comenzar</string>
+  <string name="unknown">Desconicido</string>
   <string name="unlock">Desbloquear</string>
   <string name="welcome">¡Bienvenido!</string>
 

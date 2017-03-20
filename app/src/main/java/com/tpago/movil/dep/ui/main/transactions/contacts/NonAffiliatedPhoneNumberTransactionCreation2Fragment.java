@@ -78,7 +78,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment
   @Inject
   AtomicReference<BigDecimal> value;
 
-  @BindView(R.id.image_view)
+  @BindView(R.id.image_view_background)
   ImageView imageView;
   @BindView(R.id.text_view)
   TextView textView;

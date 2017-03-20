@@ -21,9 +21,9 @@ import butterknife.OnClick;
 class ProductListItemHolder extends ListItemHolder {
   private OnQueryActionButtonClickedListener listener;
 
-  @BindView(R.id.bank_logo)
+  @BindView(R.id.image_view_bank_logo)
   ImageView bankLogoImageView;
-  @BindView(R.id.product_number)
+  @BindView(R.id.text_view_product_number)
   TextView productNumberTextView;
   @BindView(R.id.bank_name)
   TextView bankNameTextView;

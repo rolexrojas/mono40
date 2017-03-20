@@ -12,36 +12,38 @@ import com.tpago.movil.dep.ui.main.list.ListItemHolder;
 /**
  * @author hecvasro
  */
-class PurchasePaymentOptionListItemHolder extends ListItemHolder implements PurchasePaymentOptionHolder {
+class PurchasePaymentOptionListItemHolder
+  extends ListItemHolder
+  implements PurchasePaymentOptionHolder {
   private final PurchasePaymentOptionItemHolder holder;
 
-  PurchasePaymentOptionListItemHolder(@NonNull View rootView, @NonNull OnClickListener onClickListener) {
+  PurchasePaymentOptionListItemHolder(View rootView, OnClickListener onClickListener) {
     super(rootView, onClickListener);
     this.holder = new PurchasePaymentOptionItemHolder(this.rootView);
   }
 
-  @Nullable
-  @Override
-  public Drawable getRootViewBackground() {
-    return holder.getRootViewBackground();
-  }
-
   @NonNull
   @Override
-  public ImageView getImageView() {
-    return holder.getImageView();
+  public ImageView getBackgroundImageView() {
+    return holder.getBackgroundImageView();
   }
 
   @NonNull
   @Override
   public ImageView getBankLogoImageView() {
-    return holder.bankLogoImageView;
+    return holder.getBankLogoImageView();
   }
 
   @NonNull
   @Override
-  public TextView getProductIdentifierTextView() {
-    return holder.getProductIdentifierTextView();
+  public ImageView getIssuerImageView() {
+    return holder.getIssuerImageView();
+  }
+
+  @NonNull
+  @Override
+  public TextView getBankNameTextView() {
+    return holder.getBankNameTextView();
   }
 
   @NonNull
@@ -52,7 +54,19 @@ class PurchasePaymentOptionListItemHolder extends ListItemHolder implements Purc
 
   @NonNull
   @Override
-  public TextView getProductOwnerNameTextView() {
-    return holder.getProductOwnerNameTextView();
+  public TextView getOwnerNameTextView() {
+    return holder.getOwnerNameTextView();
+  }
+
+  @NonNull
+  @Override
+  public TextView getProductTypeTextView() {
+    return holder.getProductTypeTextView();
+  }
+
+  @Nullable
+  @Override
+  public Drawable getRootViewBackground() {
+    return holder.getRootViewBackground();
   }
 }

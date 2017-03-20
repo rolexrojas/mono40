@@ -3,7 +3,7 @@
   style="@style/ListItem.Normal"
   xmlns:android="http://schemas.android.com/apk/res/android">
   <ImageView
-    android:id="@+id/bank_logo"
+    android:id="@+id/image_view_bank_logo"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_centerVertical="true"
@@ -13,7 +13,7 @@
     android:id="@+id/bank.name"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_toEndOf="@+id/bank_logo"
+    android:layout_toEndOf="@+id/image_view_bank_logo"
     android:gravity="center_vertical"
     android:textAppearance="@style/Dep.App.Text.Bank.Name.Bold"/>
 </RelativeLayout>

@@ -186,7 +186,7 @@ public class NonAffiliatedPhoneNumberRecipientAddition1Fragment extends Fragment
     ViewHolder(View itemView) {
       super(itemView);
       itemView.setOnClickListener(this);
-      imageView = ButterKnife.findById(itemView, R.id.image_view);
+      imageView = ButterKnife.findById(itemView, R.id.image_view_background);
       textView = ButterKnife.findById(itemView, R.id.text_view);
     }
 

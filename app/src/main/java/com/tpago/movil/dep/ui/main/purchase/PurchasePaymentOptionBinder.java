@@ -7,16 +7,19 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tpago.movil.R;
+import com.tpago.movil.User;
 import com.tpago.movil.dep.data.res.DepAssetProvider;
-import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.data.util.Binder;
 import com.tpago.movil.Bank;
 import com.tpago.movil.dep.domain.Product;
 import com.squareup.picasso.Picasso;
+import com.tpago.movil.util.Objects;
+import com.tpago.movil.util.Preconditions;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
@@ -24,58 +27,92 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
  * @author hecvasro
  */
 final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePaymentOptionHolder> {
+  private final User user;
   private final Context context;
+
   private final StringHelper stringHelper;
   private final DepAssetProvider assetProvider;
 
   PurchasePaymentOptionBinder(
-    @NonNull Context context,
-    @NonNull StringHelper stringHelper,
-    @NonNull DepAssetProvider assetProvider) {
-    this.context = context;
+    User user,
+    Context context,
+    StringHelper stringHelper,
+    DepAssetProvider assetProvider) {
+    this.user = Preconditions.checkNotNull(user, "user == null");
+    this.context = Preconditions.checkNotNull(context, "context == null");
     this.stringHelper = stringHelper;
     this.assetProvider = assetProvider;
   }
 
   @Override
   public void bind(@NonNull Product item, @NonNull PurchasePaymentOptionHolder holder) {
+    final boolean isCreditCard = Product.checkIfCreditCard(item);
     final Bank bank = item.getBank();
-    final int textColor = assetProvider.getTextColor(bank);
-    final Uri paymentOptionUri = assetProvider.getImageUri(item);
-    if (paymentOptionUri.equals(Uri.EMPTY)) {
-      final Drawable drawable = holder.getRootViewBackground();
-      if (Utils.isNotNull(drawable)) {
-        drawable.mutate()
-          .setColorFilter(assetProvider.getPrimaryColor(bank), PorterDuff.Mode.SRC_IN);
-      }
-      holder.getImageView().setVisibility(View.GONE);
-      holder.getBankLogoImageView().setEnabled(true);
-      holder.getBankLogoImageView().setVisibility(View.VISIBLE);
+    final Uri backgroundUri = assetProvider.getImageUri(item);
+    final boolean shouldShowGeneric = backgroundUri.equals(Uri.EMPTY);
+
+    final int backgroundColor;
+    final ImageView backgroundImageView = holder.getBackgroundImageView();
+    final ImageView bankLogoImageView = holder.getBankLogoImageView();
+    final ImageView issuerImageView = holder.getIssuerImageView();
+    final TextView bankNameTextView = holder.getBankNameTextView();
+    final TextView productTypeTextView = holder.getProductTypeTextView();
+    if (shouldShowGeneric) {
+      backgroundColor = assetProvider.getPrimaryColor(bank);
+      backgroundImageView.setVisibility(View.GONE);
+
+      bankLogoImageView.setVisibility(View.VISIBLE);
       Picasso.with(context)
         .load(assetProvider.getLogoUri(bank, DepAssetProvider.STYLE_36_WHITE))
         .noFade()
-        .into(holder.getBankLogoImageView());
-      holder.getProductIdentifierTextView().setVisibility(View.VISIBLE);
-    } else {
-      final Drawable drawable = holder.getRootViewBackground();
-      if (Utils.isNotNull(drawable)) {
-        drawable.mutate()
-          .setColorFilter(ContextCompat.getColor(context, R.color.transparent), PorterDuff.Mode.SRC_IN);
+        .into(bankLogoImageView);
+
+      bankNameTextView.setVisibility(View.VISIBLE);
+      bankNameTextView.setText(bank.getName());
+
+      if (isCreditCard) {
+        issuerImageView.setVisibility(View.VISIBLE);
+        // TODO: Load the Visa or MasterCard logo.
+      } else {
+        issuerImageView.setVisibility(View.GONE);
       }
-      holder.getImageView().setVisibility(View.VISIBLE);
-      holder.getBankLogoImageView().setEnabled(false);
-      holder.getBankLogoImageView().setVisibility(View.INVISIBLE);
+
+      productTypeTextView.setVisibility(View.VISIBLE);
+      productTypeTextView.setText(stringHelper.productTypeName(item));
+    } else {
+      backgroundColor = ContextCompat.getColor(context, R.color.transparent);
+      backgroundImageView.setVisibility(View.VISIBLE);
       Picasso.with(context)
-        .load(paymentOptionUri)
+        .load(backgroundUri)
         .transform(new RoundedCornersTransformation(context.getResources().getDimensionPixelOffset(R.dimen.commerce_payment_option_border_radius_extra), 0)) // TODO: Remove once images are updated on the API.
         .noFade()
-        .into(holder.getImageView());
-      holder.getProductIdentifierTextView().setVisibility(View.INVISIBLE);
+        .into(backgroundImageView);
+
+      bankLogoImageView.setVisibility(View.GONE);
+      bankNameTextView.setVisibility(View.GONE);
+
+      issuerImageView.setVisibility(View.GONE);
+
+      productTypeTextView.setVisibility(View.GONE);
     }
-    holder.getProductIdentifierTextView().setText(item.getIdentifier());
-    holder.getProductIdentifierTextView().setTextColor(textColor);
-    final TextView productAliasTextView = holder.getProductNumberTextView();
-    productAliasTextView.setText(stringHelper.maskedProductNumber(item));
-    productAliasTextView.setTextColor(textColor);
+
+    final Drawable backgroundDrawable = holder.getRootViewBackground();
+    if (Objects.isNotNull(backgroundDrawable)) {
+      backgroundDrawable
+        .mutate()
+        .setColorFilter(backgroundColor, PorterDuff.Mode.SRC_IN);
+    }
+
+    final TextView productNumberTextView = holder.getProductNumberTextView();
+    final String productNumber;
+    if (Product.checkIfCreditCard(item)) {
+      productNumber = stringHelper.maskedProductNumber(item);
+    } else {
+      productNumber = item.getAlias();
+    }
+    productNumberTextView.setText(productNumber);
+
+    final TextView ownerTextView = holder.getOwnerNameTextView();
+    ownerTextView.setText(user.getName());
   }
 }

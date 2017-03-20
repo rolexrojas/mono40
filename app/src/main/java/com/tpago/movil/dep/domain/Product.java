@@ -15,11 +15,15 @@ import java.math.BigDecimal;
  * @author hecvasro
  */
 @Deprecated
-public abstract class Product implements Serializable {
-  /**
-   * Product's {@link ProductCategory category}.
-   */
-  private final ProductCategory category;
+public class Product implements Serializable {
+  public static boolean checkIfCreditCard(Product product) {
+    return product.getType().equals(ProductType.CC) || product.getType().equals(ProductType.AMEX);
+  }
+
+  public static boolean checkIfLoan(Product product) {
+    return product.getType().equals(ProductType.LOAN);
+  }
+
   /**
    * Product's {@link ProductType type}.
    */
@@ -59,8 +63,6 @@ public abstract class Product implements Serializable {
   /**
    * Constructs a new account.
    *
-   * @param category
-   *   Product's {@link ProductCategory category}.
    * @param type
    *   Product's {@link ProductType type}.
    * @param alias
@@ -76,10 +78,15 @@ public abstract class Product implements Serializable {
    * @param paymentOption
    *   Indicates whether can be used as a payment option or not.
    */
-  Product(@NonNull ProductCategory category, @NonNull ProductType type, @NonNull String alias,
-    @NonNull String number, @NonNull Bank bank, @NonNull String currency,
-    @NonNull BigDecimal queryFee, boolean paymentOption, boolean isDefault) {
-    this.category = category;
+  Product(
+    @NonNull ProductType type,
+    @NonNull String alias,
+    @NonNull String number,
+    @NonNull Bank bank,
+    @NonNull String currency,
+    @NonNull BigDecimal queryFee,
+    boolean paymentOption,
+    boolean isDefault) {
     this.type = type;
     this.alias = alias;
     this.number = number;
@@ -99,7 +106,7 @@ public abstract class Product implements Serializable {
    * @return True if it can be used as a payment option, false otherwise.
    */
   public static boolean isPaymentOption(@NonNull Product product) {
-    return !product.category.equals(ProductCategory.LOAN) && product.paymentOption;
+    return !checkIfLoan(product) && product.paymentOption;
   }
 
   /**
@@ -115,17 +122,7 @@ public abstract class Product implements Serializable {
   }
 
   public final String getId() {
-    return Texts.join("-", bank.getId(), category, type, alias, number, currency);
-  }
-
-  /**
-   * Gets the {@link ProductCategory category} of the product.
-   *
-   * @return Product's {@link ProductCategory category}.
-   */
-  @NonNull
-  public final ProductCategory getCategory() {
-    return category;
+    return Texts.join("-", bank.getId(), type, alias, number, currency);
   }
 
   /**
@@ -222,7 +219,6 @@ public abstract class Product implements Serializable {
   @Override
   public boolean equals(Object object) {
     return super.equals(object) || (Utils.isNotNull(object) && object instanceof Product
-      && ((Product) object).category.equals(category)
       && ((Product) object).type.equals(type) && ((Product) object).alias.equals(alias))
       && ((Product) object).bank.equals(bank);
   }
@@ -234,7 +230,7 @@ public abstract class Product implements Serializable {
 
   @Override
   public String toString() {
-    return Product.class.getSimpleName() + ":{category='" + category + "', type='"
+    return Product.class.getSimpleName() + ":{type='"
       + type + "',alias='" + alias + "',number='" + number + "',currency='" + currency
       + "',bank=" + bank + ",queryFee=" + queryFee + "}";
   }

@@ -11,7 +11,6 @@ import com.tpago.movil.dep.domain.InitialData;
 import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.dep.domain.PhoneNumberRecipient;
 import com.tpago.movil.dep.domain.Product;
-import com.tpago.movil.dep.domain.ProductCategory;
 import com.tpago.movil.dep.domain.Recipient;
 import com.tpago.movil.dep.domain.Transaction;
 import com.tpago.movil.dep.domain.api.DepApiBridge;
@@ -153,14 +152,13 @@ class RetrofitApiBridge implements DepApiBridge {
         }
       }
     };
-    final ProductCategory category = product.getCategory();
     final BalanceQueryRequestBody request = BalanceQueryRequestBody.create(product, pin);
-    if (category.equals(ProductCategory.ACCOUNT)) {
-      return apiService.accountBalance(authToken, request).flatMap(func1);
-    } else if (category.equals(ProductCategory.CREDIT_CARD)) {
+    if (Product.checkIfCreditCard(product)) {
       return apiService.creditCardBalance(authToken, request).flatMap(func1);
-    } else {
+    } else if (Product.checkIfLoan(product)) {
       return apiService.loanBalance(authToken, request).flatMap(func1);
+    } else {
+      return apiService.accountBalance(authToken, request).flatMap(func1);
     }
   }
 

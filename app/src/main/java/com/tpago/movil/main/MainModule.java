@@ -3,6 +3,8 @@ package com.tpago.movil.main;
 import com.tpago.movil.ConfigManager;
 import com.tpago.movil.Session;
 import com.tpago.movil.TimeOutManager;
+import com.tpago.movil.User;
+import com.tpago.movil.UserStore;
 import com.tpago.movil.app.ActivityScope;
 import com.tpago.movil.util.Preconditions;
 
@@ -20,6 +22,12 @@ public final class MainModule {
   public MainModule(Session session, TimeOutManager.TimeOutHandler timeOutHandler) {
     this.session = Preconditions.checkNotNull(session, "session == null");
     this.timeOutHandler = Preconditions.checkNotNull(timeOutHandler, "timeOutHandler == null");
+  }
+
+  @Provides
+  @ActivityScope
+  User provideUser(UserStore userStore) {
+    return userStore.get();
   }
 
   @Provides

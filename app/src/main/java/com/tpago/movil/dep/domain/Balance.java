@@ -11,10 +11,6 @@ import java.math.BigDecimal;
  */
 public abstract class Balance {
   /**
-   * Balance's {@link ProductCategory category}.
-   */
-  private final ProductCategory category;
-  /**
    * Balance's value.
    */
   private final BigDecimal value;
@@ -22,24 +18,11 @@ public abstract class Balance {
   /**
    * Constructs a new balance.
    *
-   * @param category
-   *   Balance's {@link ProductCategory category}.
    * @param value
    *   Balance's value.
    */
-  Balance(@NonNull ProductCategory category, @NonNull BigDecimal value) {
-    this.category = category;
+  Balance(@NonNull BigDecimal value) {
     this.value = value;
-  }
-
-  /**
-   * Gets the {@link ProductCategory category} of the balance.
-   *
-   * @return Balance's {@link ProductCategory category}.
-   */
-  @NonNull
-  public final ProductCategory getCategory() {
-    return category;
   }
 
   /**
@@ -54,6 +37,6 @@ public abstract class Balance {
 
   @Override
   public String toString() {
-    return Balance.class.getSimpleName() + ":{category='" + category + "',value=" + value + "'}";
+    return Balance.class.getSimpleName() + ":{value=" + value + "'}";
   }
 }

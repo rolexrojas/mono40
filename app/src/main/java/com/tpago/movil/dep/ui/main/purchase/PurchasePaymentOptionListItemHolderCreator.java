@@ -17,12 +17,6 @@ class PurchasePaymentOptionListItemHolderCreator
   implements ListItemHolderCreator<PurchasePaymentOptionListItemHolder> {
   private final ListItemHolder.OnClickListener onClickListener;
 
-  /**
-   * TODO
-   *
-   * @param onClickListener
-   *   TODO
-   */
   PurchasePaymentOptionListItemHolderCreator(@NonNull ListItemHolder.OnClickListener onClickListener) {
     this.onClickListener = onClickListener;
   }

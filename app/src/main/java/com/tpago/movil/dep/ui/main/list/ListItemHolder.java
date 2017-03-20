@@ -12,24 +12,11 @@ import com.tpago.movil.dep.data.util.Holder;
 import butterknife.ButterKnife;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 public abstract class ListItemHolder extends RecyclerView.ViewHolder implements Holder {
-  /**
-   * TODO
-   */
   protected final View rootView;
 
-  /**
-   * TODO
-   *
-   * @param rootView
-   *   TODO
-   * @param onClickListener
-   *   TODO
-   */
   protected ListItemHolder(@NonNull final View rootView,
     @Nullable final OnClickListener onClickListener) {
     super(rootView);
@@ -47,46 +34,21 @@ public abstract class ListItemHolder extends RecyclerView.ViewHolder implements 
     }
   }
 
-  /**
-   * TODO
-   *
-   * @param rootView
-   *   TODO
-   */
   public ListItemHolder(@NonNull View rootView) {
     this(rootView, null);
   }
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
   @NonNull
   public final Context getContext() {
     return getRootView().getContext();
   }
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
   @NonNull
   public final View getRootView() {
     return rootView;
   }
 
-  /**
-   * TODO
-   */
   public interface OnClickListener {
-    /**
-     * TODO
-     *
-     * @param position
-     *   TODO
-     */
     void onClick(int position);
   }
 }

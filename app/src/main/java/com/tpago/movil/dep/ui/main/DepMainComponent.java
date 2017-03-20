@@ -2,6 +2,7 @@ package com.tpago.movil.dep.ui.main;
 
 import android.content.Context;
 
+import com.tpago.movil.User;
 import com.tpago.movil.UserStore;
 import com.tpago.movil.app.ActivityScope;
 import com.tpago.movil.app.AppComponent;
@@ -36,10 +37,10 @@ import dagger.Component;
 public interface DepMainComponent extends ActivityComponent {
   void inject(DepMainActivity activity);
 
-  DepAssetProvider provideResourceProvider();
   BalanceManager provideBalanceManager();
   Context provideContext();
   DepApiBridge provideApiBridge();
+  DepAssetProvider provideResourceProvider();
   EventBus provideEventBus();
   PosBridge providePosBridge();
   ProductManager provideAccountManager();
@@ -47,5 +48,6 @@ public interface DepMainComponent extends ActivityComponent {
   SchedulerProvider provideSchedulerProvider();
   SessionManager provideSessionManager();
   StringHelper provideMessageHelper();
+  User provideUser();
   UserStore provideUserStore();
 }

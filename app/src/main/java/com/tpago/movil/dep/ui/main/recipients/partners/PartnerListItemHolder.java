@@ -14,7 +14,7 @@ import butterknife.BindView;
  * @author hecvasro
  */
 class PartnerListItemHolder extends ListItemHolder {
-  @BindView(R.id.image_view) ImageView imageView;
+  @BindView(R.id.image_view_background) ImageView imageView;
   @BindView(R.id.text_view) TextView textView;
 
   PartnerListItemHolder(@NonNull View rootView, @NonNull OnClickListener onClickListener) {

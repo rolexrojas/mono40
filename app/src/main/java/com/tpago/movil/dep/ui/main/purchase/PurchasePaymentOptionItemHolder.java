@@ -18,55 +18,25 @@ import butterknife.ButterKnife;
  * @author hecvasro
  */
 class PurchasePaymentOptionItemHolder implements PurchasePaymentOptionHolder {
-  /**
-   * TODO
-   */
   private final View rootView;
 
-  @BindView(R.id.image_view)
-  ImageView imageView;
-  /**
-   * TODO
-   */
-  @BindView(R.id.bank_logo)
-  ImageView bankLogoImageView;
-  /**
-   * TODO
-   */
-  @BindView(R.id.product_identifier)
-  TextView productIdentifierTextView;
-  /**
-   * TODO
-   */
-  @BindView(R.id.product_number)
-  TextView productNumberTextView;
-  /**
-   * TODO
-   */
-  @BindView(R.id.product_owner_name)
-  TextView productOwnerNameTextView;
+  @BindView(R.id.image_view_background) ImageView backgroundImageView;
+  @BindView(R.id.image_view_bank_logo) ImageView bankLogoImageView;
+  @BindView(R.id.image_view_issuer) ImageView issuerImageView;
+  @BindView(R.id.text_view_bank_name) TextView bankNameTextView;
+  @BindView(R.id.text_view_owner_name) TextView ownerNameTextView;
+  @BindView(R.id.text_view_product_number) TextView productNumberTextView;
+  @BindView(R.id.text_view_product_type) TextView productTypeTextView;
 
-  /**
-   * TODO
-   *
-   * @param rootView
-   *   TODO
-   */
   PurchasePaymentOptionItemHolder(@NonNull View rootView) {
     this.rootView = rootView;
     ButterKnife.bind(this, this.rootView);
   }
 
-  @Nullable
-  @Override
-  public Drawable getRootViewBackground() {
-    return rootView.getBackground();
-  }
-
   @NonNull
   @Override
-  public ImageView getImageView() {
-    return imageView;
+  public ImageView getBackgroundImageView() {
+    return backgroundImageView;
   }
 
   @NonNull
@@ -77,8 +47,14 @@ class PurchasePaymentOptionItemHolder implements PurchasePaymentOptionHolder {
 
   @NonNull
   @Override
-  public TextView getProductIdentifierTextView() {
-    return productIdentifierTextView;
+  public ImageView getIssuerImageView() {
+    return issuerImageView;
+  }
+
+  @NonNull
+  @Override
+  public TextView getBankNameTextView() {
+    return bankNameTextView;
   }
 
   @NonNull
@@ -89,7 +65,19 @@ class PurchasePaymentOptionItemHolder implements PurchasePaymentOptionHolder {
 
   @NonNull
   @Override
-  public TextView getProductOwnerNameTextView() {
-    return productOwnerNameTextView;
+  public TextView getOwnerNameTextView() {
+    return ownerNameTextView;
+  }
+
+  @NonNull
+  @Override
+  public TextView getProductTypeTextView() {
+    return productTypeTextView;
+  }
+
+  @Nullable
+  @Override
+  public Drawable getRootViewBackground() {
+    return rootView.getBackground();
   }
 }

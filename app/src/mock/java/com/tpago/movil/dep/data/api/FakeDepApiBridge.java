@@ -13,7 +13,6 @@ import com.tpago.movil.dep.domain.LoanBalance;
 import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.dep.domain.PhoneNumberRecipient;
 import com.tpago.movil.dep.domain.Product;
-import com.tpago.movil.dep.domain.ProductCategory;
 import com.tpago.movil.dep.domain.ProductCreator;
 import com.tpago.movil.dep.domain.ProductType;
 import com.tpago.movil.dep.domain.Recipient;
