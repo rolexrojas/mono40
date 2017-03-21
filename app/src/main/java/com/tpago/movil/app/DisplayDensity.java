@@ -1,5 +1,9 @@
 package com.tpago.movil.app;
 
+import android.content.Context;
+
+import com.tpago.movil.util.Preconditions;
+
 /**
  * @author hecvasro
  */
@@ -11,7 +15,9 @@ public enum DisplayDensity {
   XXHDPI(3.00F),
   XXXHDPI(4.00F);
 
-  public static DisplayDensity find(float value) {
+  public static DisplayDensity find(Context context) {
+    Preconditions.checkNotNull(context, "context == null");
+    final float value = context.getResources().getDisplayMetrics().density;
     if (value <= LDPI.getValue()) {
       return LDPI;
     } else if (value <= MDPI.getValue()) {

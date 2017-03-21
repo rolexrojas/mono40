@@ -208,34 +208,4 @@ public final class StringHelper {
   public final String add(@NonNull String phoneNumber) {
     return String.format(getString(R.string.payments_action_phone_number_add), phoneNumber);
   }
-
-  public final String productTypeName(Product product) {
-    final int stringId;
-    switch (product.getType()) {
-      case LOAN:
-        stringId = R.string.loan;
-        break;
-      case SAV:
-      case SAVELLA:
-      case SAVCLARO:
-        stringId = R.string.savings;
-        break;
-      case TBD:
-        stringId = R.string.debit;
-        break;
-      case PPA:
-        stringId = R.string.prepay;
-        break;
-      case DDA:
-        stringId = R.string.current;
-        break;
-      case CC:
-      case AMEX:
-        stringId = R.string.credit;
-        break;
-      default:
-        stringId = R.string.unknown;
-    }
-    return getString(stringId);
-  }
 }

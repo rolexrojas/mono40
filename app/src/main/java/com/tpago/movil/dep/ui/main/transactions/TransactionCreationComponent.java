@@ -4,7 +4,7 @@ import com.tpago.movil.app.ActivityModule;
 import com.tpago.movil.app.ActivityScope;
 import com.tpago.movil.app.AppComponent;
 import com.tpago.movil.dep.data.SchedulerProvider;
-import com.tpago.movil.dep.data.res.DepAssetProvider;
+import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.domain.Product;
 import com.tpago.movil.dep.domain.ProductManager;
 import com.tpago.movil.dep.domain.Recipient;
@@ -36,11 +36,11 @@ public interface TransactionCreationComponent {
   void inject(BillTransactionCreationFragment fragment);
   void inject(BillTransactionCreationPresenter presenter);
 
-  DepAssetProvider provideResourceProvider();
   AtomicReference<BigDecimal> provideAmount();
   AtomicReference<Product> provideFundingAccount();
   ProductManager provideProductManager();
   Recipient provideRecipient();
   SchedulerProvider provideSchedulerProvider();
+  StringHelper provideStringHelper();
   TransactionManager provideTransactionManager();
 }

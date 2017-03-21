@@ -17,8 +17,8 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.Bank;
 import com.tpago.movil.R;
+import com.tpago.movil.api.ApiImageUriBuilder;
 import com.tpago.movil.app.App;
-import com.tpago.movil.dep.data.res.DepAssetProvider;
 import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.dep.domain.api.ApiResult;
 import com.tpago.movil.dep.domain.api.DepApiBridge;
@@ -59,8 +59,6 @@ public class NonAffiliatedPhoneNumberRecipientAddition1Fragment extends Fragment
   private Subscription subscription = Subscriptions.unsubscribed();
 
   @Inject DepApiBridge apiBridge;
-  @Inject
-  DepAssetProvider assetProvider;
   @Inject SessionManager sessionManager;
 
   @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
@@ -218,7 +216,7 @@ public class NonAffiliatedPhoneNumberRecipientAddition1Fragment extends Fragment
     public void onBindViewHolder(ViewHolder holder, int position) {
       final Bank bank = bankList.get(position);
       Picasso.with(getContext())
-        .load(assetProvider.getLogoUri(bank, DepAssetProvider.STYLE_24_PRIMARY))
+        .load(ApiImageUriBuilder.build(getContext(), bank, ApiImageUriBuilder.Style.PRIMARY_24))
         .into(holder.imageView);
       holder.textView.setText(Bank.getName(bank));
     }

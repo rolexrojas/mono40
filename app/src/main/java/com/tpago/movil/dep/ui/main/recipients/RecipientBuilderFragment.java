@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.Partner;
 import com.tpago.movil.R;
-import com.tpago.movil.dep.data.res.DepAssetProvider;
 import com.tpago.movil.dep.domain.api.DepApiBridge;
 import com.tpago.movil.dep.domain.session.SessionManager;
 import com.tpago.movil.dep.ui.Dialogs;
@@ -64,7 +63,6 @@ public class RecipientBuilderFragment
 
   @Inject SessionManager sessionManager;
   @Inject DepApiBridge apiBridge;
-  @Inject DepAssetProvider assetProvider;
 
   public static RecipientBuilderFragment create(String keyword, Partner partner) {
     final Bundle bundle = new Bundle();
@@ -153,8 +151,7 @@ public class RecipientBuilderFragment
     builder = new BillRecipientBuilder(
       sessionManager.getSession().getAuthToken(),
       apiBridge,
-      partner,
-      assetProvider);
+      partner);
   }
 
   @Nullable
@@ -179,7 +176,7 @@ public class RecipientBuilderFragment
   public void onResume() {
     super.onResume();
     Picasso.with(getContext())
-      .load(builder.getImageUri())
+      .load(builder.getImageUri(getContext()))
       .into(imageView);
     textView.setText(
       String.format(

@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.tpago.movil.dep.data.res.DepAssetProvider;
 import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.data.util.BinderFactory;
 import com.tpago.movil.dep.ui.Dialogs;
@@ -62,8 +61,6 @@ public class ProductsFragment extends ChildFragment<MainContainer>
 
   @Inject
   StringHelper stringHelper;
-  @Inject
-  DepAssetProvider assetProvider;
   @Inject
   ProductsPresenter presenter;
 
@@ -130,8 +127,7 @@ public class ProductsFragment extends ChildFragment<MainContainer>
       .addCreator(ProductItem.class, new ProductListItemHolderCreator(this))
       .build();
     final BinderFactory holderBinderFactory = new BinderFactory.Builder()
-      .addBinder(ProductItem.class, ProductListItemHolder.class,
-        new ProductListItemHolderBinder(stringHelper, assetProvider))
+      .addBinder(ProductItem.class, ProductListItemHolder.class, new ProductListItemHolderBinder(stringHelper))
       .build();
     adapter = new ListItemAdapter(holderCreatorFactory, holderBinderFactory);
     recyclerView.setAdapter(adapter);

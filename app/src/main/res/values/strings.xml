@@ -10,6 +10,7 @@
   <string name="error_positive_button_text">@string/ok</string>
   <string name="error_title">¡Lo sentimos!</string>
   <string name="first_name">Nombre</string>
+  <string name="from">Desde</string>
   <string name="last_name">Apellido</string>
   <string name="later">Mas Tarde</string>
   <string name="learn_more">Aprende más</string>
@@ -19,7 +20,7 @@
   <string name="password">Contraseña</string>
   <string name="prepay">Prepago</string>
   <string name="ready">Listo</string>
-  <string name="savings">Ahorro</string>
+  <string name="savings">Ahorros</string>
   <string name="sign_in">Iniciar sesión</string>
   <string name="skip">Saltar</string>
   <string name="start">Comenzar</string>

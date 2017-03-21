@@ -34,12 +34,6 @@ final class AppModule {
 
   @Provides
   @Singleton
-  DisplayDensity provideDisplayDensity(Context context) {
-    return DisplayDensity.find(context.getResources().getDisplayMetrics().density);
-  }
-
-  @Provides
-  @Singleton
   DeviceManager provideDeviceManager(Context context) {
     return new DeviceManager(context);
   }

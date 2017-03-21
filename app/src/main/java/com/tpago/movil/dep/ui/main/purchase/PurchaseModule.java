@@ -5,7 +5,6 @@ import android.content.Context;
 import com.tpago.movil.User;
 import com.tpago.movil.app.FragmentScope;
 import com.tpago.movil.dep.data.StringHelper;
-import com.tpago.movil.dep.data.res.DepAssetProvider;
 import com.tpago.movil.dep.domain.ProductManager;
 import com.tpago.movil.dep.domain.pos.PosBridge;
 import com.tpago.movil.dep.domain.util.EventBus;
@@ -26,8 +25,6 @@ class PurchaseModule {
    *
    * @param context
    *   TODO
-   * @param assetProvider
-   *   TODO
    *
    * @return TODO
    */
@@ -36,9 +33,8 @@ class PurchaseModule {
   PurchasePaymentOptionBinder providePaymentOptionBinder(
     User user,
     Context context,
-    StringHelper stringHelper,
-    DepAssetProvider assetProvider) {
-    return new PurchasePaymentOptionBinder(user, context, stringHelper, assetProvider);
+    StringHelper stringHelper) {
+    return new PurchasePaymentOptionBinder(user, context, stringHelper);
   }
 
   /**

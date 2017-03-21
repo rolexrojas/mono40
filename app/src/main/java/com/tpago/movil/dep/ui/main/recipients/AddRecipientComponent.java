@@ -6,7 +6,6 @@ import com.tpago.movil.app.ActivityModule;
 import com.tpago.movil.app.ActivityScope;
 import com.tpago.movil.app.AppComponent;
 import com.tpago.movil.dep.data.SchedulerProvider;
-import com.tpago.movil.dep.data.res.DepAssetProvider;
 import com.tpago.movil.dep.domain.api.DepApiBridge;
 import com.tpago.movil.dep.domain.session.SessionManager;
 import com.tpago.movil.dep.ui.ActivityComponent;
@@ -30,7 +29,6 @@ public interface AddRecipientComponent extends ActivityComponent {
 
   void inject(RecipientBuilderFragment fragment);
 
-  DepAssetProvider provideAssetProvider();
   Context provideContext();
   DepApiBridge provideApiBridge();
   SchedulerProvider provideSchedulerProvider();

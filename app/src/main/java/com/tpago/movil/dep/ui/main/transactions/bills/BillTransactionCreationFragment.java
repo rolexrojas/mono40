@@ -8,22 +8,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.tpago.movil.R;
-import com.tpago.movil.dep.data.res.DepAssetProvider;
+import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.domain.BillRecipient;
 import com.tpago.movil.dep.domain.Product;
 import com.tpago.movil.dep.ui.ChildFragment;
 import com.tpago.movil.dep.ui.Dialogs;
 import com.tpago.movil.dep.ui.main.PinConfirmationDialogFragment;
-import com.tpago.movil.dep.ui.main.transactions.PaymentOptionAdapter;
 import com.tpago.movil.dep.ui.main.transactions.TransactionCreationComponent;
 import com.tpago.movil.dep.ui.main.transactions.TransactionCreationContainer;
 import com.tpago.movil.dep.ui.view.widget.PrefixableTextView;
 import com.tpago.movil.text.Texts;
 import com.tpago.movil.util.Objects;
+import com.tpago.movil.main.transactions.PaymentMethodChooser;
 
 import java.util.List;
 
@@ -47,12 +46,10 @@ public class BillTransactionCreationFragment
   private BillTransactionCreationPresenter presenter;
 
   private Unbinder unbinder;
-  private PaymentOptionAdapter paymentOptionAdapter;
 
   private String resultMessage = null;
 
-  @Inject
-  DepAssetProvider assetProvider;
+  @Inject StringHelper stringHelper;
 
   @BindView(R.id.button)
   Button button;
@@ -60,8 +57,6 @@ public class BillTransactionCreationFragment
   PrefixableTextView totalOwedPrefixableTextView;
   @BindView(R.id.text_view_due_date)
   TextView dueDateTextView;
-  @BindView(R.id.transaction_creation_payment_option_chooser)
-  Spinner paymentOptionChooser;
   @BindView(R.id.prefixable_text_view_total)
   PrefixableTextView totalPrefixableTextView;
   @BindView(R.id.prefixable_text_view_minimum)
@@ -70,6 +65,8 @@ public class BillTransactionCreationFragment
   RadioButton totalRadioButton;
   @BindView(R.id.radio_button_pay_minimum)
   RadioButton minimumRadioButton;
+
+  @BindView(R.id.payment_method_chooser) PaymentMethodChooser paymentMethodChooser;
 
   public static BillTransactionCreationFragment create() {
     return new BillTransactionCreationFragment();
@@ -112,8 +109,6 @@ public class BillTransactionCreationFragment
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     unbinder = ButterKnife.bind(this, view);
-    paymentOptionAdapter = new PaymentOptionAdapter(getContext(), assetProvider);
-    paymentOptionChooser.setAdapter(paymentOptionAdapter);
   }
 
   @Override
@@ -164,9 +159,8 @@ public class BillTransactionCreationFragment
   }
 
   @Override
-  public void setPaymentOptions(List<Product> paymentOptions) {
-    paymentOptionAdapter.clear();
-    paymentOptionAdapter.addAll(paymentOptions);
+  public void setPaymentOptions(List<Product> paymentOptionList) {
+    paymentMethodChooser.setPaymentMethodList(paymentOptionList);
   }
 
   @Override
@@ -199,9 +193,7 @@ public class BillTransactionCreationFragment
       new PinConfirmationDialogFragment.Callback() {
         @Override
         public void confirm(String pin) {
-          presenter.onPinRequestFinished(
-            paymentOptionAdapter.getItem(paymentOptionChooser.getSelectedItemPosition()),
-            pin);
+          presenter.onPinRequestFinished(paymentMethodChooser.getSelectedItem(), pin);
         }
       })
       .show(getChildFragmentManager(), TAG_PIN_CONFIRMATION);

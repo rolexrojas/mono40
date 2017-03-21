@@ -1,5 +1,6 @@
 package com.tpago.movil.dep.ui.main.payments;
 
+import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.view.Gravity;
@@ -7,8 +8,8 @@ import android.view.View;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
+import com.tpago.movil.api.ApiImageUriBuilder;
 import com.tpago.movil.dep.data.Formatter;
-import com.tpago.movil.dep.data.res.DepAssetProvider;
 import com.tpago.movil.dep.domain.BillBalance;
 import com.tpago.movil.dep.domain.BillRecipient;
 import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
@@ -23,12 +24,6 @@ import com.tpago.movil.util.Objects;
  * @author hecvasro
  */
 class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, RecipientListItemHolder> {
-  private final DepAssetProvider assetProvider;
-
-  RecipientListItemHolderBinder(DepAssetProvider assetProvider) {
-    this.assetProvider = assetProvider;
-  }
-
   private boolean deleting = false;
 
   boolean isDeleting() {
@@ -46,14 +41,17 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
     final RecipientType type = item.getType();
     Uri imageUri = Uri.EMPTY;
     boolean shouldBeCropped = false;
+    final Context context = holder.getContext();
     if (type.equals(RecipientType.NON_AFFILIATED_PHONE_NUMBER)) {
-      imageUri = assetProvider.getLogoUri(
+      imageUri = ApiImageUriBuilder.build(
+        context,
         ((NonAffiliatedPhoneNumberRecipient) item).getBank(),
-        DepAssetProvider.STYLE_24_PRIMARY);
+        ApiImageUriBuilder.Style.PRIMARY_24);
     } else if (type.equals(RecipientType.BILL)) {
-      imageUri = assetProvider.getLogoUri(
+      imageUri = ApiImageUriBuilder.build(
+        context,
         ((BillRecipient) item).getPartner(),
-        DepAssetProvider.STYLE_24_PRIMARY);
+        ApiImageUriBuilder.Style.PRIMARY_24);
     }
     if (!imageUri.equals(Uri.EMPTY)) {
       final RequestCreator creator = Picasso.with(holder.getContext())

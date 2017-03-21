@@ -1,5 +1,6 @@
 package com.tpago.movil.dep.ui.main.recipients;
 
+import android.content.Context;
 import android.net.Uri;
 
 import com.tpago.movil.dep.domain.Recipient;
@@ -11,7 +12,7 @@ import rx.Observable;
  * @author hecvasro
  */
 abstract class RecipientBuilder {
-  public abstract Uri getImageUri();
+  public abstract Uri getImageUri(Context context);
   public abstract String getTitle();
 
   public abstract Observable<Result> build(String number, String pin);

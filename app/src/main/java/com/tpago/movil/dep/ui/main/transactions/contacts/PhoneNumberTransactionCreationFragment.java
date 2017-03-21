@@ -7,12 +7,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.Spinner;
 
 import com.tpago.movil.R;
-import com.tpago.movil.dep.data.res.DepAssetProvider;
+import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.misc.Utils;
 import com.tpago.movil.dep.data.Formatter;
 import com.tpago.movil.dep.domain.Product;
@@ -20,13 +18,13 @@ import com.tpago.movil.dep.domain.Recipient;
 import com.tpago.movil.dep.ui.ChildFragment;
 import com.tpago.movil.dep.ui.Dialogs;
 import com.tpago.movil.dep.ui.main.PinConfirmationDialogFragment;
-import com.tpago.movil.dep.ui.main.transactions.PaymentOptionAdapter;
 import com.tpago.movil.dep.ui.main.transactions.TransactionCreationContainer;
 import com.tpago.movil.dep.ui.view.widget.pad.Digit;
 import com.tpago.movil.dep.ui.view.widget.pad.Dot;
 import com.tpago.movil.dep.ui.view.widget.pad.DepNumPad;
 import com.tpago.movil.dep.ui.view.widget.PrefixableTextView;
 import com.tpago.movil.text.Texts;
+import com.tpago.movil.main.transactions.PaymentMethodChooser;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -46,7 +44,7 @@ import butterknife.Unbinder;
 public class PhoneNumberTransactionCreationFragment
   extends ChildFragment<TransactionCreationContainer>
   implements PhoneNumberTransactionCreationScreen,
-  Spinner.OnItemSelectedListener,
+  PaymentMethodChooser.OnPaymentMethodChosenListener,
   DepNumPad.OnDigitClickedListener,
   DepNumPad.OnDotClickedListener,
   DepNumPad.OnDeleteClickedListener,
@@ -59,7 +57,7 @@ public class PhoneNumberTransactionCreationFragment
   private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
 
   @Inject
-  DepAssetProvider assetProvider;
+  StringHelper stringHelper;
   @Inject
   PhoneNumberTransactionCreationPresenter presenter;
   @Inject
@@ -71,16 +69,14 @@ public class PhoneNumberTransactionCreationFragment
 
   private Unbinder unbinder;
 
-  private PaymentOptionAdapter paymentOptionAdapter;
-
-  @BindView(R.id.transaction_creation_payment_option_chooser)
-  Spinner paymentOptionChooser;
   @BindView(R.id.transaction_creation_amount)
   PrefixableTextView amountTextView;
   @BindView(R.id.transaction_creation_num_pad)
   DepNumPad numPad;
   @BindView(R.id.action_transfer)
   Button transferActionButton;
+
+  @BindView(R.id.payment_method_chooser) PaymentMethodChooser paymentMethodChooser;
 
   private boolean mustShowDot = false;
   private BigDecimal fractionOffset = ONE;
@@ -155,11 +151,8 @@ public class PhoneNumberTransactionCreationFragment
     super.onViewCreated(view, savedInstanceState);
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
-    // Prepares the list of payment options.
-    paymentOptionAdapter = new PaymentOptionAdapter(getContext(), assetProvider);
-    paymentOptionChooser.setAdapter(paymentOptionAdapter);
     // Adds a listener that gets notified every time a payment option is chosen.
-    paymentOptionChooser.setOnItemSelectedListener(this);
+    paymentMethodChooser.setOnPaymentMethodChosenListener(this);
     // Adds a listener that gets notified every time a num pad button is pressed.
     numPad.setOnDigitClickedListener(this);
     numPad.setOnDotClickedListener(this);
@@ -196,7 +189,7 @@ public class PhoneNumberTransactionCreationFragment
     numPad.setOnDotClickedListener(null);
     numPad.setOnDigitClickedListener(null);
     // Removes the listener that gets notified every time a payment option is chosen.
-    paymentOptionChooser.setOnItemSelectedListener(null);
+    paymentMethodChooser.setOnPaymentMethodChosenListener(null);
     // Detaches the screen from the presenter.
     presenter.detachScreen();
     // Unbinds all the annotated views and methods.
@@ -204,9 +197,8 @@ public class PhoneNumberTransactionCreationFragment
   }
 
   @Override
-  public void setPaymentOptions(@NonNull List<Product> paymentOptions) {
-    paymentOptionAdapter.clear();
-    paymentOptionAdapter.addAll(paymentOptions);
+  public void setPaymentOptions(@NonNull List<Product> paymentMethodList) {
+    paymentMethodChooser.setPaymentMethodList(paymentMethodList);
   }
 
   @Override
@@ -258,20 +250,6 @@ public class PhoneNumberTransactionCreationFragment
   @Override
   public void finish() {
     getContainer().finish(false, null);
-  }
-
-  @Override
-  public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-    final Product product = paymentOptionAdapter.getItem(position);
-    if (Utils.isNotNull(product)) {
-      fundingAccount.set(product);
-      presenter.setPaymentOption(product);
-    }
-  }
-
-  @Override
-  public void onNothingSelected(AdapterView<?> parent) {
-    // Ignored, there will be always a payment option selected.
   }
 
   @Override
@@ -336,5 +314,11 @@ public class PhoneNumberTransactionCreationFragment
         .create()
         .show();
     }
+  }
+
+  @Override
+  public void onPaymentMethodChosen(Product product) {
+    fundingAccount.set(product);
+    presenter.setPaymentOption(product);
   }
 }

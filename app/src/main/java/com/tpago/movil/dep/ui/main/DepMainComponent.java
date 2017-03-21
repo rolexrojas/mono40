@@ -8,7 +8,6 @@ import com.tpago.movil.app.ActivityScope;
 import com.tpago.movil.app.AppComponent;
 import com.tpago.movil.dep.data.StringHelper;
 import com.tpago.movil.dep.data.SchedulerProvider;
-import com.tpago.movil.dep.data.res.DepAssetProvider;
 import com.tpago.movil.dep.domain.ProductManager;
 import com.tpago.movil.dep.domain.BalanceManager;
 import com.tpago.movil.dep.domain.api.DepApiBridge;
@@ -40,7 +39,6 @@ public interface DepMainComponent extends ActivityComponent {
   BalanceManager provideBalanceManager();
   Context provideContext();
   DepApiBridge provideApiBridge();
-  DepAssetProvider provideResourceProvider();
   EventBus provideEventBus();
   PosBridge providePosBridge();
   ProductManager provideAccountManager();
