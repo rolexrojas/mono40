@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.tpago.movil.BuildConfig;
 import com.tpago.movil.Session;
 import com.tpago.movil.TimeOutManager;
 import com.tpago.movil.app.App;
@@ -153,6 +154,13 @@ public class DepMainActivity
   }
 
   @Override
+  protected void onResume() {
+    super.onResume();
+    ButterKnife.<TextView>findById(slidingPaneLayout, R.id.text_view_add_another_account)
+      .setText(String.format("%1$s (%2$s)", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
+  }
+
+  @Override
   protected void onStop() {
     super.onStop();
     // Stops the presenter.
@@ -189,9 +197,6 @@ public class DepMainActivity
         break;
       case R.id.text_view_accounts:
         childFragment = ProductsFragment.newInstance();
-        break;
-      case R.id.text_view_add_another_account:
-        childFragment = AddAnotherProductFragment.newInstance();
         break;
       default:
         childFragment = null;

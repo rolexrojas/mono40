@@ -40,6 +40,12 @@
   <dimen name="payment_method_chooser_item_selected_padding_vertical">20dp</dimen>
   <!-- [END] Payment method chooser dimensions -->
 
+  <!-- [START] Purchase dimensions -->
+  <dimen name="purchase_payment_method_border_radius">10dp</dimen>
+  <dimen name="purchase_payment_method_height">200dp</dimen>
+  <dimen name="purchase_payment_method_width">320dp</dimen>
+  <!-- [END] Purchase dimensions -->
+
   <!-- Deprecated dimensions -->
   <dimen name="app_text_widget_auto_resizeable_prefixable_text_view_content_max">@dimen/app_text_widget_prefixable_text_view_content</dimen>
   <dimen name="app_text_widget_auto_resizeable_prefixable_text_view_content_min">@dimen/app_text_widget_prefixable_text_view_content</dimen>
