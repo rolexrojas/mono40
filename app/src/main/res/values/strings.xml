@@ -13,7 +13,7 @@
   <string name="from">Desde</string>
   <string name="last_name">Apellido</string>
   <string name="later">Mas Tarde</string>
-  <string name="learn_more">Aprende más</string>
+  <string name="learn_more">Aprende mas</string>
   <string name="loan">Préstamo</string>
   <string name="next">Continuar</string>
   <string name="ok">Ok</string>
@@ -171,7 +171,7 @@
   <string name="dialog_positive_text_already_associated_device">Continuar</string>
   <string name="dialog_positive_text_feature_not_available">@string/ok</string>
   <string name="dialog_product_addition_message">Tu cuenta ya se agregó a %1$s. Actívala para tocar y pagar en tiendas y comercios.</string>
-  <string name="dialog_product_addition_negative_action">Más tarde</string>
+  <string name="dialog_product_addition_negative_action">@string/later</string>
   <string name="dialog_product_addition_positive_action">Activar</string>
   <string name="dialog_product_addition_title">¡Listo para activar!</string>
   <string name="dialog_title_already_associated_device">Cuenta vinculada a otro celular</string>

@@ -31,6 +31,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -54,7 +55,12 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
 
   @BindView(R.id.text_input_email) TextInput emailTextInput;
   @BindView(R.id.text_input_password) TextInput passwordTextInput;
-  @BindView(R.id.button_unlock) Button signInButton;
+  @BindView(R.id.button_sign_in) Button signInButton;
+
+  @OnClick(R.id.button_sign_in)
+  void onSignInButtonClicked() {
+    presenter.onSignInButtonClicked();
+  }
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {

@@ -48,7 +48,6 @@ public final class TutorialFragment extends BaseInitFragment {
   @BindView(R.id.image_view_art) ImageView artImageView;
   @BindView(R.id.tab_layout) TabLayout tabLayout;
   @BindView(R.id.view_pager) ViewPager viewPager;
-  @BindView(R.id.view_highlight) View highlightView;
 
   @OnClick(R.id.button_skip)
   void onSkipButtonClicked() {
@@ -83,7 +82,7 @@ public final class TutorialFragment extends BaseInitFragment {
     // Creates the auto tab switcher.
     autoTabSwitcher = new AutoTabSwitcher(viewPager);
     // Creates the auto art setter.
-    autoTabUpdater = new AutoTabUpdater(viewPager, artImageView, highlightView);
+    autoTabUpdater = new AutoTabUpdater(viewPager, artImageView);
   }
 
   @Override
@@ -145,67 +144,38 @@ public final class TutorialFragment extends BaseInitFragment {
     }
   }
 
-  private static class AutoTabUpdater extends ViewPager.SimpleOnPageChangeListener
-    implements View.OnClickListener {
+  private static class AutoTabUpdater extends ViewPager.SimpleOnPageChangeListener {
     private static final List<Integer> TAB_LIST_ART = Arrays.asList(
       R.drawable.tutorial_tab_art_01,
-      R.drawable.tutorial_tab_art_01,
-      R.drawable.tutorial_tab_art_01,
+      R.drawable.tutorial_tab_art_02,
+      R.drawable.tutorial_tab_art_03,
       R.drawable.tutorial_tab_art_04);
 
     private final ViewPager viewPager;
     private final ImageView imageView;
-    private final View highlightView;
 
-    AutoTabUpdater(ViewPager viewPager, ImageView imageView, View highlightView) {
+    AutoTabUpdater(ViewPager viewPager, ImageView imageView) {
       this.viewPager = Preconditions.checkNotNull(viewPager, "viewPager == null");
       this.imageView = Preconditions.checkNotNull(imageView, "imageView == null");
-      this.highlightView = Preconditions.checkNotNull(highlightView, "highlightView");
     }
 
     private void update(int position) {
       imageView.setImageResource(TAB_LIST_ART.get(position));
-//      if (position == 0 || position == 3) {
-        highlightView.setVisibility(View.GONE);
-//      } else {
-//        final int x;
-//        final Resources r = highlightView.getResources();
-//        final int xOffset = r.getDimensionPixelOffset(R.dimen.tutorial_tab_highlight_offset_x);
-//        if (position == 1) {
-//          x = imageView.getRight() - highlightView.getWidth() - xOffset;
-//        } else {
-//          x = imageView.getLeft() + xOffset;
-//        }
-//        highlightView.setX(x);
-//        final int yOffset = r.getDimensionPixelOffset(R.dimen.tutorial_tab_highlight_offset_y);
-//        highlightView.setY(imageView.getTop() + yOffset);
-//        highlightView.setVisibility(View.VISIBLE);
-//      }
     }
 
     final void start() {
-      highlightView.setOnClickListener(this);
       viewPager.addOnPageChangeListener(this);
       update(viewPager.getCurrentItem());
     }
 
     final void stop() {
       viewPager.removeOnPageChangeListener(this);
-      highlightView.setOnClickListener(null);
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
       if (state == ViewPager.SCROLL_STATE_SETTLING) {
         update(viewPager.getCurrentItem());
-      }
-    }
-
-    @Override
-    public void onClick(View view) {
-      if (view.equals(highlightView)) {
-        final int position = viewPager.getCurrentItem();
-        viewPager.setCurrentItem((position + 1) % TAB_COUNT);
       }
     }
   }

@@ -19,10 +19,9 @@ import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
+@Deprecated
 final class MainPresenter extends Presenter<MainScreen> {
   private final StringHelper stringHelper;
   private final EventBus eventBus;
