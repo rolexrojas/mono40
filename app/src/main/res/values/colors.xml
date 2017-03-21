@@ -63,7 +63,7 @@
   <color name="load_indicator_full_size_primary_dark">#AD77A8</color>
 
   <!-- Payment method chooser colors -->
-  <color name="payment_method_chooser_popup_background">#FAFAFA</color>
+  <color name="payment_method_chooser_popup_item_background">#FAFAFA</color>
 
   <!-- Dialog colors -->
   <color name="dialog_label_action">@color/black</color>

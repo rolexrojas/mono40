@@ -232,10 +232,10 @@
   <style name="Base.Transactions.Widget"/>
   <style name="Base.Transactions.Widget.PaymentMethodChooser">
     <item name="android:background">?attr/selectableItemBackground</item>
-    <item name="android:paddingBottom">@dimen/payment_method_chooser_item_selected_padding_vertical</item>
+    <item name="android:layout_height">@dimen/payment_method_chooser_height</item>
+    <item name="android:layout_width">match_parent</item>
     <item name="android:paddingEnd">@dimen/payment_method_chooser_item_padding_horizontal</item>
     <item name="android:paddingStart">@dimen/payment_method_chooser_item_padding_horizontal</item>
-    <item name="android:paddingTop">@dimen/payment_method_chooser_item_selected_padding_vertical</item>
   </style>
 
 

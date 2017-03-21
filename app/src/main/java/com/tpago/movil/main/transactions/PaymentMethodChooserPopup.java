@@ -12,6 +12,8 @@ import com.tpago.movil.R;
 import com.tpago.movil.util.Objects;
 import com.tpago.movil.util.Preconditions;
 
+import butterknife.ButterKnife;
+
 /**
  * @author hecvasro
  */

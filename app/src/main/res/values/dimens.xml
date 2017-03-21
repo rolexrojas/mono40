@@ -35,9 +35,12 @@
   <dimen name="tutorial_tab_highlight_offset_y">15dp</dimen>
 
   <!-- [START] Payment method chooser dimensions -->
+  <dimen name="payment_method_chooser_height">64dp</dimen>
   <dimen name="payment_method_chooser_item_padding_horizontal">20dp</dimen>
   <dimen name="payment_method_chooser_item_padding_vertical">10dp</dimen>
   <dimen name="payment_method_chooser_item_selected_padding_vertical">20dp</dimen>
+  <dimen name="payment_method_chooser_popup_item_height">40dp</dimen>
+  <dimen name="payment_method_chooser_popup_item_selected_height">@dimen/payment_method_chooser_height</dimen>
   <!-- [END] Payment method chooser dimensions -->
 
   <!-- [START] Purchase dimensions -->
