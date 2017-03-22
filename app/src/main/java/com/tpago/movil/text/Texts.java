@@ -14,8 +14,8 @@ public final class Texts {
     return !isEmpty(s);
   }
 
-  public static String nullIfEmpty(String s) {
-    return isNotEmpty(s) ? s : null;
+  public static String getDefaultIfEmpty(String s, String d) {
+    return isEmpty(s) ? d : s;
   }
 
   public static String join(String delimiter, Object... tokens) {

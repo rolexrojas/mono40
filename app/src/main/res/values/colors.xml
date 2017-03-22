@@ -62,8 +62,15 @@
   <color name="load_indicator_full_size_primary">@color/app_primary</color>
   <color name="load_indicator_full_size_primary_dark">#AD77A8</color>
 
-  <!-- Payment method chooser colors -->
+  <!-- [START] Amount text colors -->
+  <color name="amount_text">#333333</color>
+  <color name="amount_text_currency">@color/amount_text</color>
+  <color name="amount_text_value">@color/amount_text</color>
+  <!-- [END] Amount text colors -->
+
+  <!-- [START] Payment method chooser colors -->
   <color name="payment_method_chooser_popup_item_background">#FAFAFA</color>
+  <!-- [END] Payment method chooser colors -->
 
   <!-- Dialog colors -->
   <color name="dialog_label_action">@color/black</color>

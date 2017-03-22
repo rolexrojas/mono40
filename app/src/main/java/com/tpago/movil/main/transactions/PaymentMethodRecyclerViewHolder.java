@@ -5,8 +5,8 @@ import android.view.View;
 /**
  * @author hecvasro
  */
-final class PaymentMethodViewHolder extends BasePaymentMethodViewHolder<PaymentMethodHolder> {
-  PaymentMethodViewHolder(
+final class PaymentMethodRecyclerViewHolder extends BasePaymentMethodRecyclerViewHolder<PaymentMethodHolder> {
+  PaymentMethodRecyclerViewHolder(
     View itemView,
     OnPaymentMethodViewHolderClickedListener onClickedListener) {
     super(itemView, new PaymentMethodHolder(itemView), onClickedListener);

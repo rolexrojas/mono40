@@ -313,14 +313,14 @@ public class SlidingPaneLayout extends ViewGroup {
    * Set the color used to fade the sliding pane out when it is slid most of the way offscreen.
    *
    * @param color
-   *   An ARGB-packed color getValue
+   *   An ARGB-packed color getValueContent
    */
   public void setSliderFadeColor(@ColorInt int color) {
     mSliderFadeColor = color;
   }
 
   /**
-   * @return The ARGB-packed color getValue used to fade the sliding pane
+   * @return The ARGB-packed color getValueContent used to fade the sliding pane
    */
   @ColorInt
   public int getSliderFadeColor() {
@@ -332,14 +332,14 @@ public class SlidingPaneLayout extends ViewGroup {
    * fully covered in the closed state.
    *
    * @param color
-   *   An ARGB-packed color getValue
+   *   An ARGB-packed color getValueContent
    */
   public void setCoveredFadeColor(@ColorInt int color) {
     mCoveredFadeColor = color;
   }
 
   /**
-   * @return The ARGB-packed color getValue used to fade the fixed pane
+   * @return The ARGB-packed color getValueContent used to fade the fixed pane
    */
   @ColorInt
   public int getCoveredFadeColor() {
@@ -482,7 +482,7 @@ public class SlidingPaneLayout extends ViewGroup {
           widthSize = 300;
         }
       } else {
-        throw new IllegalStateException("Width must have an exact getValue or MATCH_PARENT");
+        throw new IllegalStateException("Width must have an exact getValueContent or MATCH_PARENT");
       }
     } else if (heightMode == MeasureSpec.UNSPECIFIED) {
       if (isInEditMode()) {
@@ -1616,7 +1616,7 @@ public class SlidingPaneLayout extends ViewGroup {
       for (int i = 0; i < childCount; i++) {
         final View child = getChildAt(i);
         if (!filter(child) && (child.getVisibility() == View.VISIBLE)) {
-          // Force importance to "yes" since we can't read the getValue.
+          // Force importance to "yes" since we can't read the getValueContent.
           ViewCompat.setImportantForAccessibility(
             child, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_YES);
           info.addChild(child);

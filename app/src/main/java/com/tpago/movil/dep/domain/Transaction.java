@@ -31,7 +31,7 @@ public class Transaction {
    */
   private final String currency;
   /**
-   * Transaction's getValue.
+   * Transaction's getValueContent.
    */
   private final BigDecimal value;
 
@@ -49,7 +49,7 @@ public class Transaction {
    * @param currency
    *   Transaction's currency code.
    * @param value
-   *   Transaction's getValue.
+   *   Transaction's getValueContent.
    */
   public Transaction(@NonNull String type, @NonNull String name, long date,
     RequestType requestType, @NonNull String currency, BigDecimal value) {
@@ -111,9 +111,9 @@ public class Transaction {
   }
 
   /**
-   * Gets the getValue of the transaction.
+   * Gets the getValueContent of the transaction.
    *
-   * @return Transaction's getValue.
+   * @return Transaction's getValueContent.
    */
   @NonNull
   public final BigDecimal getValue() {
@@ -134,7 +134,7 @@ public class Transaction {
   @Override
   public String toString() {
     return Transaction.class.getSimpleName() + ":{type='" + type + "',name='" + name + "',date='"
-      + date + "'requestType=" + requestType + ",currency='" + currency + "',getValue=" + value
+      + date + "'requestType=" + requestType + ",currency='" + currency + "',getValueContent=" + value
       + "}";
   }
 

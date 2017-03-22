@@ -13,9 +13,9 @@ import com.tpago.movil.util.Preconditions;
  * @author hecvasro
  */
 final class PaymentMethodChooserRecyclerViewAdapter
-  extends RecyclerView.Adapter<BasePaymentMethodViewHolder<? extends BasePaymentMethodHolder>>
+  extends RecyclerView.Adapter<BasePaymentMethodRecyclerViewHolder<? extends BasePaymentMethodHolder>>
   implements PaymentMethodChooserAdapter.Observer,
-    BasePaymentMethodViewHolder.OnPaymentMethodViewHolderClickedListener {
+    BasePaymentMethodRecyclerViewHolder.OnPaymentMethodViewHolderClickedListener {
   private static final int TYPE_ITEM = 0;
   private static final int TYPE_ITEM_SELECTED = 1;
 
@@ -36,16 +36,16 @@ final class PaymentMethodChooserRecyclerViewAdapter
   }
 
   @Override
-  public BasePaymentMethodViewHolder<? extends BasePaymentMethodHolder> onCreateViewHolder(
+  public BasePaymentMethodRecyclerViewHolder<? extends BasePaymentMethodHolder> onCreateViewHolder(
     ViewGroup parent,
     int viewType) {
     final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
     if (viewType == TYPE_ITEM) {
-      return new PaymentMethodViewHolder(
+      return new PaymentMethodRecyclerViewHolder(
         inflater.inflate(R.layout.payment_method_chooser_popup_item, parent, false),
         this);
     } else {
-      return new SelectedPaymentMethodViewHolder(
+      return new SelectedPaymentMethodRecyclerViewHolder(
         inflater.inflate(R.layout.payment_method_chooser_popup_item_selected, parent, false),
         this);
     }
@@ -53,17 +53,17 @@ final class PaymentMethodChooserRecyclerViewAdapter
 
   @Override
   public void onBindViewHolder(
-    BasePaymentMethodViewHolder<? extends BasePaymentMethodHolder> holder,
+    BasePaymentMethodRecyclerViewHolder<? extends BasePaymentMethodHolder> holder,
     int position) {
     final Product item = paymentMethodChooserAdapter.getItem(position);
     if (getItemViewType(position) == TYPE_ITEM) {
       paymentMethodHolderBinder.bind(
         item,
-        ((PaymentMethodViewHolder) holder).internalHolder);
+        ((PaymentMethodRecyclerViewHolder) holder).internalHolder);
     } else {
       selectedPaymentMethodHolderBinder.bind(
         item,
-        ((SelectedPaymentMethodViewHolder) holder).internalHolder);
+        ((SelectedPaymentMethodRecyclerViewHolder) holder).internalHolder);
     }
   }
 

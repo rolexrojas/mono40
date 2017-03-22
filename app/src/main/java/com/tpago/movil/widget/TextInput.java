@@ -1,15 +1,15 @@
 package com.tpago.movil.widget;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
-import android.widget.EditText;
 
 import com.tpago.movil.R;
 
 /**
  * @author hecvasro
  */
-public class TextInput extends EditText {
+public class TextInput extends AppCompatEditText {
   private static final int[] STATE_ERRATIC = new int[] { R.attr.state_erratic };
 
   private boolean erraticStateEnabled = false;
@@ -33,11 +33,6 @@ public class TextInput extends EditText {
       mergeDrawableStates(state, STATE_ERRATIC);
     }
     return state;
-  }
-
-  @Override
-  protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
-    super.onTextChanged(text, start, lengthBefore, lengthAfter);
   }
 
   public boolean isErraticStateEnabled() {

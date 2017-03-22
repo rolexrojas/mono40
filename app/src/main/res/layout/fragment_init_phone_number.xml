@@ -39,7 +39,5 @@
   <Button
     android:id="@+id/button_move_to_next_screen"
     style="@style/Widget.Button.Dark.Gradient"
-    android:layout_width="match_parent"
-    android:layout_height="50dp"
     android:text="@string/init_phone_number_button_move_to_next_screen"/>
 </LinearLayout>

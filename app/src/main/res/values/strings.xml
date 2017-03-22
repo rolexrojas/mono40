@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <!-- Common strings -->
+  <!-- [START] Common strings -->
   <string name="credit">Crédito</string>
   <string name="current">Corriente</string>
   <string name="debit">Débito</string>
@@ -27,6 +27,12 @@
   <string name="unknown">Desconicido</string>
   <string name="unlock">Desbloquear</string>
   <string name="welcome">¡Bienvenido!</string>
+  <!-- [END] Common strings -->
+
+  <!-- [START] Amount text strings -->
+  <string name="amount_text_currency_font">@string/font_gotham_round_book</string>
+  <string name="amount_text_value_font">@string/font_gotham_round_book</string>
+  <!-- [END] Amount text strings -->
 
   <!-- Font strings -->
   <string name="font_gotham_round_bold">fonts/GothamRounded/Bold.otf</string>

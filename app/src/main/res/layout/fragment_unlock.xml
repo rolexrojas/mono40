@@ -42,8 +42,6 @@
   <Button
     android:id="@+id/button_unlock"
     style="@style/Widget.Button.Dark.Gradient"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:text="@string/unlock_button"/>
 </RelativeLayout>

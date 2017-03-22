@@ -8,21 +8,18 @@ import com.tpago.movil.util.Preconditions;
 /**
  * @author hecvasro
  */
-abstract class BasePaymentMethodViewHolder<H extends BasePaymentMethodHolder>
+abstract class BasePaymentMethodRecyclerViewHolder<H extends BasePaymentMethodHolder>
   extends RecyclerView.ViewHolder {
-  private final OnPaymentMethodViewHolderClickedListener onClickedListener;
 
   final H internalHolder;
 
-  BasePaymentMethodViewHolder(
-    View itemView,
-    H internalHolder,
+  BasePaymentMethodRecyclerViewHolder(
+    final View itemView,
+    final H internalHolder,
     final OnPaymentMethodViewHolderClickedListener onClickedListener) {
     super(itemView);
-    this.internalHolder = Preconditions
-      .checkNotNull(internalHolder, "internalHolder == null");
-    this.onClickedListener = Preconditions
-      .checkNotNull(onClickedListener, "onClickedListener == null");
+    this.internalHolder = Preconditions.checkNotNull(internalHolder, "internalHolder == null");
+    Preconditions.checkNotNull(onClickedListener, "onClickedListener == null");
     this.itemView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {

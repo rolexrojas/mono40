@@ -2,12 +2,15 @@
 <resources>
   <!-- [START] App styles -->
   <style name="Base"/>
+  <style name="Base.App"/>
 
   <style name="Base.App.Theme" parent="Theme.AppCompat.Light.NoActionBar">
     <item name="android:alertDialogTheme">@style/Dialog.Theme</item>
     <item name="colorAccent">@color/app_accent</item>
     <item name="colorPrimary">@color/app_primary</item>
     <item name="colorPrimaryDark">@color/app_primary_dark</item>
+
+    <item name="amountTextViewStyle">@style/App.Widget.AmountTextView</item>
   </style>
   <style name="Base.App.ThemeOverlay.Dark" parent="ThemeOverlay.AppCompat.Dark">
     <item name="colorAccent">@color/white</item>
@@ -54,6 +57,8 @@
   </style>
   <style name="Base.Widget.Button.Dark.Gradient">
     <item name="android:background">@drawable/widget_button_dark_gradient_shape</item>
+    <item name="android:layout_height">@dimen/widget_button_dark_gradient_height</item>
+    <item name="android:layout_width">match_parent</item>
   </style>
   <style name="Base.Widget.Button.Dark.Solid"/>
   <style name="Base.Widget.Button.Dark.Solid.Rounded">
@@ -95,6 +100,16 @@
     <item name="android:maxLines">1</item>
     <item name="android:textSize">34sp</item>
     <item name="fontPath">@string/font_gotham_round_light</item>
+  </style>
+
+  <style name="Base.App.Widget"/>
+  <style name="Base.App.Widget.AmountTextView">
+    <item name="currencyFontPath">@string/font_gotham_round_book</item>
+    <item name="currencyTextSize">@dimen/amount_text_currency</item>
+    <item name="currencyTextColor">@color/amount_text_currency</item>
+    <item name="valueFontPath">@string/font_gotham_round_book</item>
+    <item name="valueTextSize">@dimen/amount_text_value</item>
+    <item name="valueTextColor">@color/amount_text_value</item>
   </style>
 
   <style name="Base.Widget.NumPadRow">
@@ -181,6 +196,8 @@
 
   <style name="Label.Dark.Primary" parent="Base.Label.Dark.Primary"/>
   <style name="Label.Dark.Secondary" parent="Base.Label.Dark.Secondary"/>
+
+  <style name="App.Widget.AmountTextView" parent="Base.App.Widget.AmountTextView"/>
 
   <style name="Widget.Button.Dark.Gradient" parent="Base.Widget.Button.Dark.Gradient"/>
   <style name="Widget.Button.Dark.Solid.Rounded" parent="Base.Widget.Button.Dark.Solid.Rounded"/>

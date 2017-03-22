@@ -13,20 +13,20 @@ import com.tpago.movil.text.BaseTextWatcher;
 public class NotEditableTextInput extends TextInput {
   public NotEditableTextInput(Context context) {
     super(context);
-    initializeNotEditableTextInput(context, null, 0);
+    initializeNotEditableTextInput();
   }
 
   public NotEditableTextInput(Context context, AttributeSet attrs) {
     super(context, attrs);
-    initializeNotEditableTextInput(context, attrs, 0);
+    initializeNotEditableTextInput();
   }
 
   public NotEditableTextInput(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    initializeNotEditableTextInput(context, attrs, defStyleAttr);
+    initializeNotEditableTextInput();
   }
 
-  private void initializeNotEditableTextInput(Context c, AttributeSet attrs, int defStyleAttr) {
+  private void initializeNotEditableTextInput() {
     // Sets the input type.
     setInputType(InputType.TYPE_NULL);
     setRawInputType(InputType.TYPE_CLASS_TEXT);

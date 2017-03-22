@@ -1,7 +1,6 @@
 package com.tpago.movil.main.transactions;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.Bank;
@@ -30,7 +29,7 @@ abstract class BasePaymentMethodHolderBinder<H extends BasePaymentMethodHolder> 
   }
 
   @Override
-  public void bind(@NonNull Product product, @NonNull H holder) {
+  public void bind(Product product, H holder) {
     Picasso.with(context)
       .load(ApiImageUriBuilder.build(context, product.getBank(), ApiImageUriBuilder.Style.PRIMARY_24))
       .noFade()
