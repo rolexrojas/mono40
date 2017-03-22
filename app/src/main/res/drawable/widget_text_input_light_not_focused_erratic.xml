@@ -7,13 +7,4 @@
       <solid android:color="@color/widget_text_input_dark_erratic_alpha_50"/>
     </shape>
   </item>
-  <item>
-    <shape android:shape="rectangle">
-      <padding
-        android:bottom="@dimen/widget_text_input_background_padding"
-        android:left="@dimen/widget_text_input_background_padding"
-        android:right="@dimen/widget_text_input_background_padding"
-        android:top="@dimen/widget_text_input_background_padding"/>
-    </shape>
-  </item>
 </layer-list>

@@ -4,6 +4,11 @@
     <attr name="state_erratic" format="boolean"/>
   </declare-styleable>
 
+  <declare-styleable name="TextFitterLayout">
+    <attr name="minTextSize" format="dimension|reference"/>
+    <attr name="maxTextSize" format="dimension|reference"/>
+  </declare-styleable>
+
   <declare-styleable name="AmountText">
     <attr name="currencyContent" format="string|reference"/>
     <attr name="currencyFontPath" format="string|reference"/>
@@ -18,6 +23,7 @@
   <declare-styleable name="App.Theme">
     <attr name="textInputStyle" format="reference"/>
     <attr name="notEditableTextInputStyle" format="reference"/>
+    <attr name="textFitterLayoutStyle" format="reference"/>
     <attr name="amountTextViewStyle" format="reference"/>
     <attr name="amountTextInputStyle" format="reference"/>
   </declare-styleable>
@@ -48,12 +54,8 @@
       format="dimension|reference"/>
   </declare-styleable>
   <declare-styleable name="DepAutoResizeablePrefixableTextView">
-    <attr
-      name="maxTextSize"
-      format="dimension|reference"/>
-    <attr
-      name="minTextSize"
-      format="dimension|reference"/>
+    <attr name="maxTextSize"/>
+    <attr name="minTextSize"/>
     <attr
       name="prefixMaxTextSize"
       format="dimension|reference"/>

@@ -2,7 +2,9 @@
 <resources>
   <dimen name="widget_logo_tiny_height">34dp</dimen>
   <dimen name="widget_logo_tiny_width">68dp</dimen>
-  <dimen name="widget_text_input_background_padding">12dp</dimen>
+  <dimen name="widget_text_fitter_layout_size_max">16sp</dimen>
+  <dimen name="widget_text_fitter_layout_size_min">10sp</dimen>
+  <dimen name="widget_text_input_padding">12dp</dimen>
   <dimen name="widget_text_input_background_shape_height">1dp</dimen>
   <dimen name="widget_text_input_background_shape_radius">11dp</dimen>
   <dimen name="widget_text_input_content_size">16sp</dimen>

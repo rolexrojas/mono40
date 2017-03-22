@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
-def createVersionCode(data) {
+static def createVersionCode(data) {
   def code = (data.major * 10000000) + data.build
   if (data.extra == null) {
     code += 1000000
@@ -11,7 +11,7 @@ def createVersionCode(data) {
   return code
 }
 
-def createVersionName(data) {
+static def createVersionName(data) {
   def name = "${data.major}.${data.minor}.${data.patch}"
   if (data.extra != null) {
     name = "${name}-${data.extra.name}.${data.extra.major}"
