@@ -30,6 +30,6 @@ class ContactListItemHolderCreator implements ListItemHolderCreator<ContactListI
   @Override
   public ContactListItemHolder create(@NonNull ViewGroup parent) {
     return new ContactListItemHolder(LayoutInflater.from(parent.getContext())
-      .inflate(R.layout.list_item_contact, parent, false), onClickListener);
+      .inflate(R.layout.d_list_item_contact, parent, false), onClickListener);
   }
 }

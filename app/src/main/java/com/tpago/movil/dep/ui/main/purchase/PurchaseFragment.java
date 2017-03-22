@@ -99,7 +99,7 @@ public class PurchaseFragment
     LayoutInflater inflater,
     @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_payments_commerce, container, false);
+    return inflater.inflate(R.layout.d_fragment_payments_commerce, container, false);
   }
 
   @Override
@@ -130,7 +130,7 @@ public class PurchaseFragment
     final int borderWidth = resources.getDimensionPixelOffset(
       R.dimen.commerce_payment_option_border_width);
     final int borderColor = ContextCompat.getColor(context,
-      R.color.commerce_payment_option_border);
+      R.color.d_commerce_payment_option_border);
     final int borderRadius = resources.getDimensionPixelOffset(
       R.dimen.commerce_payment_option_border_radius);
     recyclerView.addItemDecoration(new SelectedItemDecoration(this, borderWidth, borderColor,

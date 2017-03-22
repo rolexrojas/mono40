@@ -90,7 +90,7 @@ public class RecentTransactionsActivity
     recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,
       false));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(this)
-      .drawable(R.drawable.divider)
+      .drawable(R.drawable.d_divider)
       .marginResId(R.dimen.space_horizontal_normal)
       .visibilityProvider(new FlexibleDividerDecoration.VisibilityProvider() {
         @Override
@@ -170,7 +170,7 @@ public class RecentTransactionsActivity
 
   @Override
   protected int layoutResourceIdentifier() {
-    return R.layout.activity_recent_transactions;
+    return R.layout.d_activity_recent_transactions;
   }
 
   /**
@@ -219,10 +219,10 @@ public class RecentTransactionsActivity
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
       final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
       if (viewType == TYPE_GROUP_TITLE) {
-        return new GroupItemViewHolder(inflater.inflate(R.layout.list_item_group_title, parent,
+        return new GroupItemViewHolder(inflater.inflate(R.layout.d_list_item_group_title, parent,
           false));
       } else {
-        return new TransactionItemViewHolder(inflater.inflate(R.layout.list_item_transaction,
+        return new TransactionItemViewHolder(inflater.inflate(R.layout.d_list_item_transaction,
           parent, false));
       }
     }
@@ -239,7 +239,7 @@ public class RecentTransactionsActivity
         transactionHolder.nameTextView.setText(transaction.getName());
         transactionHolder.typeTextView.setText(transaction.getType());
         final int colorId = transaction.getRequestType() == Transaction.RequestType.C ?
-          R.color.transaction_type_credit : R.color.transaction_type_debit;
+          R.color.d_transaction_type_credit : R.color.d_transaction_type_debit;
         final String currency = transaction.getCurrency();
         transactionHolder.amountTextView.setPrefix(currency);
         transactionHolder.amountTextView.setPrefixTextColorFromResource(colorId);

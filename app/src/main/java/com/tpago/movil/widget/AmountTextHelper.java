@@ -71,7 +71,7 @@ public final class AmountTextHelper implements AmountText {
         this.context.getString(R.string.amount_text_currency_font));
       currencyTextColor = a.getColor(
         R.styleable.AmountText_currencyTextColor,
-        ContextCompat.getColor(this.context, R.color.amount_text_currency));
+        ContextCompat.getColor(this.context, R.color.widget_amount_text_currency));
       currencyTextSize = a.getDimensionPixelOffset(
         R.styleable.AmountText_currencyTextSize,
         resources.getDimensionPixelOffset(R.dimen.amount_text_currency));
@@ -81,7 +81,7 @@ public final class AmountTextHelper implements AmountText {
         this.context.getString(R.string.amount_text_value_font));
       valueTextColor = a.getColor(
         R.styleable.AmountText_valueTextColor,
-        ContextCompat.getColor(this.context, R.color.amount_text_value));
+        ContextCompat.getColor(this.context, R.color.widget_amount_text_value));
       valueTextSize = a.getDimensionPixelOffset(
         R.styleable.AmountText_valueTextSize,
         resources.getDimensionPixelOffset(R.dimen.amount_text_value));

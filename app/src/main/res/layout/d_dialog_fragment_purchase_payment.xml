@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+  <FrameLayout
+    android:id="@+id/commerce_payment_indicator"
+    style="@style/Dep.App.Widget.CommercePaymentIndicator">
+    <ImageView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:src="@drawable/d_app_glyph"/>
+    <ImageView
+      android:id="@+id/purchase_payment_indicator_confirmation"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:alpha="0.0"
+      android:src="@drawable/d_purchase_payment_option_foreground"/>
+  </FrameLayout>
+  <TextView
+    android:id="@+id/commerce_payment_message"
+    style="@style/Dep.App.Widget.CommercePaymentMessage"
+    android:layout_below="@+id/commerce_payment_indicator"/>
+  <include
+    android:id="@+id/commerce_payment_option"
+    style="@style/Dep.App.Widget.CommercePaymentOption.Standalone"
+    layout="@layout/d_commerce_payment_option"/>
+</RelativeLayout>

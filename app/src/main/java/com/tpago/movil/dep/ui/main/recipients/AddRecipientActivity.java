@@ -87,7 +87,7 @@ public class AddRecipientActivity
 
   @Override
   protected int layoutResourceIdentifier() {
-    return R.layout.activity_add_recipient;
+    return R.layout.d_activity_add_recipient;
   }
 
   @Override

@@ -28,7 +28,7 @@
     android:layout_below="@+id/label_description"
     android:layout_centerHorizontal="true"
     android:layout_marginTop="48dp"
-    app:srcCompat="@drawable/widget_image_dark_avatar_placeholder_large"/>
+    app:srcCompat="@drawable/d_widget_image_dark_avatar_placeholder_large"/>
   <Button
     android:id="@+id/button_move_to_next_screen"
     style="@style/Widget.Button.Dark.Gradient"

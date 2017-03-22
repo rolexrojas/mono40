@@ -40,6 +40,6 @@ public class ShowRecentTransactionsListItemHolderCreator
   @Override
   public ShowRecentTransactionsListItemHolder create(@NonNull ViewGroup parent) {
     return new ShowRecentTransactionsListItemHolder(LayoutInflater.from(parent.getContext())
-      .inflate(R.layout.list_item_show_recent_transactions, parent, false), listener);
+      .inflate(R.layout.d_list_item_show_recent_transactions, parent, false), listener);
   }
 }

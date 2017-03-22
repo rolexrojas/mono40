@@ -29,6 +29,6 @@ class ProductListItemHolderCreator implements ListItemHolderCreator<ProductListI
   @Override
   public ProductListItemHolder create(@NonNull ViewGroup parent) {
     return new ProductListItemHolder(LayoutInflater.from(parent.getContext())
-      .inflate(R.layout.list_item_product, parent, false), listener);
+      .inflate(R.layout.d_list_item_product, parent, false), listener);
   }
 }

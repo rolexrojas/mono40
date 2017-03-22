@@ -19,6 +19,6 @@ public class NoResultsListItemHolderCreator implements ListItemHolderCreator<NoR
   @Override
   public NoResultsListItemHolder create(@NonNull ViewGroup parent) {
     return new NoResultsListItemHolder(LayoutInflater.from(parent.getContext())
-      .inflate(R.layout.list_item_no_results, parent, false));
+      .inflate(R.layout.d_list_item_no_results, parent, false));
   }
 }

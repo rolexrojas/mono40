@@ -1,33 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+  <!-- TODO: Remove every dimension from this point downwards -->
   <!-- [START] App styles -->
   <style name="Base"/>
   <style name="Base.App"/>
 
   <style name="Base.App.Theme" parent="Theme.AppCompat.Light.NoActionBar">
     <item name="android:alertDialogTheme">@style/Dialog.Theme</item>
-    <item name="colorAccent">@color/app_accent</item>
-    <item name="colorPrimary">@color/app_primary</item>
-    <item name="colorPrimaryDark">@color/app_primary_dark</item>
+    <item name="colorAccent">@color/common_accent</item>
+    <item name="colorPrimary">@color/common_primary</item>
+    <item name="colorPrimaryDark">@color/common_primary_dark</item>
 
     <item name="amountTextViewStyle">@style/App.Widget.AmountTextView</item>
   </style>
   <style name="Base.App.ThemeOverlay.Dark" parent="ThemeOverlay.AppCompat.Dark">
-    <item name="colorAccent">@color/white</item>
+    <item name="colorAccent">@color/common_white</item>
   </style>
   <style name="Base.App.ThemeOverlay.Light" parent="ThemeOverlay.AppCompat.Light"/>
 
   <style name="Base.CropImage.Theme" parent="Theme.AppCompat.Light">
-    <item name="actionMenuTextColor">@color/white</item>
-    <item name="android:textColorPrimary">@color/white</item>
-    <item name="colorPrimary">@color/app_primary</item>
-    <item name="colorPrimaryDark">@color/app_primary_dark</item>
-    <item name="titleTextColor">@color/white</item>
+    <item name="actionMenuTextColor">@color/common_white</item>
+    <item name="android:textColorPrimary">@color/common_white</item>
+    <item name="colorPrimary">@color/common_primary</item>
+    <item name="colorPrimaryDark">@color/common_primary_dark</item>
+    <item name="titleTextColor">@color/common_white</item>
   </style>
 
   <style name="Base.Label"/>
   <style name="Base.Label.Dark">
-    <item name="android:textColor">@color/white</item>
+    <item name="android:textColor">@color/common_white</item>
     <item name="android:gravity">center</item>
   </style>
   <style name="Base.Label.Dark.Primary">
@@ -48,7 +50,7 @@
     <item name="android:gravity">center</item>
     <item name="android:layout_height">36dp</item>
     <item name="android:layout_width">125dp</item>
-    <item name="android:textColor">@color/app_primary</item>
+    <item name="android:textColor">@color/common_primary</item>
     <item name="android:textSize">14sp</item>
     <item name="fontPath">@string/font_gotham_round_bold</item>
   </style>
@@ -56,24 +58,24 @@
     <item name="android:theme">@style/App.ThemeOverlay.Dark</item>
   </style>
   <style name="Base.Widget.Button.Dark.Gradient">
-    <item name="android:background">@drawable/widget_button_dark_gradient_shape</item>
+    <item name="android:background">@drawable/d_widget_button_dark_gradient_shape</item>
     <item name="android:layout_height">@dimen/widget_button_dark_gradient_height</item>
     <item name="android:layout_width">match_parent</item>
   </style>
   <style name="Base.Widget.Button.Dark.Solid"/>
   <style name="Base.Widget.Button.Dark.Solid.Rounded">
-    <item name="android:background">@drawable/widget_button_dark_solid_rounded_shape</item>
+    <item name="android:background">@drawable/d_widget_button_dark_solid_rounded_shape</item>
   </style>
   <style name="Base.Widget.Button.Dark.Transparent"/>
   <style name="Base.Widget.Button.Dark.Transparent.Rounded">
-    <item name="android:background">@drawable/widget_button_dark_transparent_rounded_shape</item>
-    <item name="android:textColor">@color/widget_button_dark_transparent_text</item>
+    <item name="android:background">@drawable/d_widget_button_dark_transparent_rounded_shape</item>
+    <item name="android:textColor">@color/d_widget_button_dark_transparent_text</item>
   </style>
   <style name="Base.Widget.Button.Light">
     <item name="android:theme">@style/App.ThemeOverlay.Light</item>
   </style>
   <style name="Base.Widget.Button.Light.Solid">
-    <item name="android:background">@drawable/widget_button_light_solid_shape</item>
+    <item name="android:background">@drawable/d_widget_button_light_solid_shape</item>
   </style>
 
   <style name="Base.Widget.TextInput" parent="Widget.AppCompat.EditText">
@@ -81,17 +83,17 @@
     <item name="fontPath">@string/font_gotham_round_book</item>
   </style>
   <style name="Base.Widget.TextInput.Dark">
-    <item name="android:background">@drawable/widget_text_input_dark</item>
+    <item name="android:background">@drawable/d_widget_text_input_dark</item>
     <item name="android:textColor">@color/widget_text_input_dark</item>
-    <item name="android:textColorHint">@color/widget_text_input_dark_text_alpha_50</item>
-    <item name="android:textCursorDrawable">@drawable/widget_text_input_dark_cursor</item>
+    <item name="android:textColorHint">@color/d_widget_text_input_dark_text_alpha_50</item>
+    <item name="android:textCursorDrawable">@drawable/d_widget_text_input_dark_cursor</item>
     <item name="android:theme">@style/App.ThemeOverlay.Dark</item>
   </style>
   <style name="Base.Widget.TextInput.Light">
-    <item name="android:background">@drawable/widget_text_input_light</item>
+    <item name="android:background">@drawable/d_widget_text_input_light</item>
     <item name="android:textColor">@color/widget_text_input_light</item>
-    <item name="android:textColorHint">@color/widget_text_input_light_text_alpha_50</item>
-    <item name="android:textCursorDrawable">@drawable/widget_text_input_light_cursor</item>
+    <item name="android:textColorHint">@color/d_widget_text_input_light_text_alpha_50</item>
+    <item name="android:textCursorDrawable">@drawable/d_widget_text_input_light_cursor</item>
     <item name="android:theme">@style/App.ThemeOverlay.Light</item>
   </style>
 
@@ -106,10 +108,10 @@
   <style name="Base.App.Widget.AmountTextView">
     <item name="currencyFontPath">@string/font_gotham_round_book</item>
     <item name="currencyTextSize">@dimen/amount_text_currency</item>
-    <item name="currencyTextColor">@color/amount_text_currency</item>
+    <item name="currencyTextColor">@color/widget_amount_text_currency</item>
     <item name="valueFontPath">@string/font_gotham_round_book</item>
     <item name="valueTextSize">@dimen/amount_text_value</item>
-    <item name="valueTextColor">@color/amount_text_value</item>
+    <item name="valueTextColor">@color/widget_amount_text_value</item>
   </style>
 
   <style name="Base.Widget.NumPadRow">
@@ -135,19 +137,19 @@
     <item name="deleteDrawable">@drawable/ic_backspace_black_24dp</item>
   </style>
   <style name="Base.Widget.NumPad.Dark">
-    <item name="color">@color/widget_num_pad_dark_color</item>
+    <item name="color">@color/d_widget_num_pad_dark_color</item>
     <item name="android:theme">@style/App.ThemeOverlay.Dark</item>
   </style>
   <style name="Base.Widget.NumPad.Light">
-    <item name="color">@color/widget_num_pad_light_color</item>
+    <item name="color">@color/d_widget_num_pad_light_color</item>
   </style>
 
   <style name="Base.Widget.FullSizeLoadIndicator" parent="Theme.AppCompat"/>
   <style name="Base.Widget.FullSizeLoadIndicator.Light">
-    <item name="android:windowBackground">@color/load_indicator_full_size_background_window</item>
-    <item name="colorAccent">@color/load_indicator_full_size_accent</item>
-    <item name="colorPrimary">@color/load_indicator_full_size_primary</item>
-    <item name="colorPrimaryDark">@color/load_indicator_full_size_primary_dark</item>
+    <item name="android:windowBackground">@color/d_load_indicator_full_size_background_window</item>
+    <item name="colorAccent">@color/d_load_indicator_full_size_accent</item>
+    <item name="colorPrimary">@color/d_load_indicator_full_size_primary</item>
+    <item name="colorPrimaryDark">@color/d_load_indicator_full_size_primary_dark</item>
   </style>
 
   <style name="Base.Widget.TabLayout" parent="Widget.Design.TabLayout"/>
@@ -155,7 +157,7 @@
     <item name="android:clickable">false</item>
     <item name="android:layout_height">16dp</item>
     <item name="android:layout_width">match_parent</item>
-    <item name="tabBackground">@drawable/widget_tab_layout_indicator</item>
+    <item name="tabBackground">@drawable/d_widget_tab_layout_indicator</item>
     <item name="tabGravity">center</item>
     <item name="tabIndicatorHeight">0dp</item>
   </style>
@@ -168,13 +170,13 @@
     <item name="android:lineSpacingExtra">@dimen/dialog_label_line_extra_space</item>
   </style>
   <style name="Base.Dialog.Label.Action">
-    <item name="android:textColor">@color/dialog_label_action</item>
+    <item name="android:textColor">@color/d_dialog_label_action</item>
   </style>
   <style name="Base.Dialog.Label.Message">
-    <item name="android:textColor">@color/dialog_label_message</item>
+    <item name="android:textColor">@color/d_dialog_label_message</item>
   </style>
   <style name="Base.Dialog.Title.Appearance" parent="TextAppearance.AppCompat.Title">
-    <item name="android:textColor">@color/dialog_title</item>
+    <item name="android:textColor">@color/d_dialog_title</item>
     <item name="android:textSize">@dimen/dialog_label_title_text_size</item>
   </style>
   <style name="Base.Dialog.Title" parent="Base.DialogWindowTitle.AppCompat">
@@ -183,7 +185,7 @@
     <item name="fontPath">@string/font_roboto_medium</item>
   </style>
   <style name="Base.Dialog.Theme" parent="Theme.AppCompat.Light.Dialog.Alert">
-    <item name="android:textColorPrimary">@color/dialog_label_message</item>
+    <item name="android:textColorPrimary">@color/d_dialog_label_message</item>
     <item name="android:windowTitleStyle">@style/Dialog.Title</item>
   </style>
 
@@ -233,7 +235,7 @@
   <style name="Base.Transactions.Label.PaymentMethodChooser">
     <item name="android:ellipsize">end</item>
     <item name="android:maxLines">1</item>
-    <item name="android:textColor">@color/black_alpha_87</item>
+    <item name="android:textColor">@color/common_black_alpha_87</item>
   </style>
   <style name="Base.Transactions.Label.PaymentMethodChooser.Primary">
     <item name="android:textColor">#333</item>
@@ -293,7 +295,7 @@
     parent="TextAppearance.AppCompat"/>
   <style name="Dep.Base.Text.Label">
     <item name="android:textAllCaps">true</item>
-    <item name="android:textColor">@color/primary</item>
+    <item name="android:textColor">@color/d_primary</item>
     <item name="android:textSize">14sp</item>
     <item name="fontPath">@string/font_gotham_rounded_bold</item>
   </style>
@@ -306,16 +308,16 @@
     <item name="android:textAppearance">@style/Dep.App.Text.Label</item>
   </style>
   <style name="Dep.Base.Widget.Button.Colored">
-    <item name="android:background">@drawable/button_colored_shape</item>
+    <item name="android:background">@drawable/d_button_colored_shape</item>
   </style>
   <style name="Dep.Base.Widget.Button.Colored.Rounded">
-    <item name="android:background">@drawable/button_colored_rounded_shape</item>
+    <item name="android:background">@drawable/d_button_colored_rounded_shape</item>
   </style>
   <style name="Dep.Base.Widget.EditText">
-    <item name="android:background">@drawable/edit_text_background</item>
+    <item name="android:background">@drawable/d_edit_text_background</item>
     <item name="android:textColor">@color/edit_text_content</item>
-    <item name="android:textColorHint">@color/edit_text_hint</item>
-    <item name="android:textCursorDrawable">@drawable/edit_text_cursor</item>
+    <item name="android:textColorHint">@color/d_edit_text_hint</item>
+    <item name="android:textCursorDrawable">@drawable/d_edit_text_cursor</item>
     <item name="android:textSize">@dimen/edit_text_content_size</item>
     <item name="fontPath">@string/edit_text_content_font</item>
   </style>
@@ -324,13 +326,13 @@
     parent="Theme.AppCompat.Light.NoActionBar">
     <!--<item name="android:buttonStyle">@style/Dep.App.Widget.Button</item>-->
     <!--<item name="android:editTextStyle">@style/Dep.App.Widget.EditText</item>-->
-    <item name="android:windowBackground">@color/window_background_default</item>
+    <item name="android:windowBackground">@color/d_window_background_default</item>
     <item name="autoResizeablePrefixableTextViewStyle">
       @style/Dep.App.Widget.AutoResizeablePrefixableTextView
     </item>
-    <item name="colorAccent">@color/accent</item>
-    <item name="colorPrimary">@color/primary</item>
-    <item name="colorPrimaryDark">@color/primary_dark</item>
+    <item name="colorAccent">@color/d_accent</item>
+    <item name="colorPrimary">@color/d_primary</item>
+    <item name="colorPrimaryDark">@color/d_primary_dark</item>
     <item name="numPadStyle">@style/Dep.App.Widget.NumPad</item>
     <item name="prefixableTextViewStyle">@style/Dep.App.Widget.PrefixableTextView</item>
     <item name="searchViewStyle">@style/Dep.App.Widget.SearchView</item>
@@ -363,14 +365,14 @@
 
   <style name="FullScreenLoadIndicator.Theme">
     <item name="colorPrimaryDark">#AC78A7</item>
-    <item name="android:windowBackground">@color/white_alpha_50</item>
+    <item name="android:windowBackground">@color/common_white_alpha_50</item>
   </style>
 
   <!-- Styles of the auth index screen -->
   <style name="AuthIndex"/>
   <style name="AuthIndex.Widget"/>
   <style name="AuthIndex.Widget.Label">
-    <item name="android:textColor">@color/white</item>
+    <item name="android:textColor">@color/common_white</item>
     <item name="android:gravity">center_horizontal</item>
   </style>
   <style name="AuthIndex.Widget.Label.Primary">
@@ -389,7 +391,7 @@
   <style name="SignIn"/>
   <style name="SignIn.Widget"/>
   <style name="SignIn.Widget.Container">
-    <item name="android:background">@drawable/container_background_dark</item>
+    <item name="android:background">@drawable/d_container_background_dark</item>
   </style>
   <style name="SignIn.Widget.Button"
     parent="Dep.App.Widget.Button.Colored"/>
@@ -399,7 +401,7 @@
   </style>
   <style name="SignIn.Widget.Label">
     <item name="android:lineSpacingExtra">5sp</item>
-    <item name="android:textColor">@color/white_alpha_50</item>
+    <item name="android:textColor">@color/common_white_alpha_50</item>
     <item name="android:textSize">15sp</item>
     <item name="fontPath">@string/font_gotham_rounded_book</item>
   </style>
@@ -408,12 +410,12 @@
   <style name="SignUp"/>
   <style name="SignUp.Widget"/>
   <style name="SignUp.Widget.Container">
-    <item name="android:background">@drawable/container_background_dark</item>
+    <item name="android:background">@drawable/d_container_background_dark</item>
   </style>
   <style name="SignUp.Widget.Button"
     parent="Dep.App.Widget.Button.Colored"/>
   <style name="SignUp.Widget.Label">
-    <item name="android:textColor">@color/white</item>
+    <item name="android:textColor">@color/common_white</item>
     <item name="android:gravity">center_horizontal</item>
   </style>
   <style name="SignUp.Widget.Label.Primary">
@@ -428,7 +430,7 @@
 
   <!-- TODO: Dep.Apply standards from these point downward -->
   <style name="Dep.Base.Text.CommercePaymentOption">
-    <item name="android:textColor">@color/commerce_payment_option_text_default</item>
+    <item name="android:textColor">@color/d_commerce_payment_option_text_default</item>
   </style>
   <style name="Dep.Base.Text.CommercePaymentOption.ProductIdentifier">
     <item name="android:textSize">
@@ -457,13 +459,13 @@
       @dimen/commerce_payment_message_text_default_line_extra_spacing
     </item>
     <item name="android:textAllCaps">true</item>
-    <item name="android:textColor">@color/commerce_payment_message_text_color</item>
+    <item name="android:textColor">@color/d_commerce_payment_message_text_color</item>
     <item name="android:textSize">@dimen/commerce_payment_message_text_size</item>
     <item name="fontPath">@string/commerce_payment_message_text_font</item>
   </style>
 
   <style name="Dep.Base.Widget.CommercePaymentOption">
-    <item name="android:background">@drawable/purchase_payment_option_background</item>
+    <item name="android:background">@drawable/d_purchase_payment_option_background</item>
     <item name="android:layout_height">@dimen/commerce_payment_option_height</item>
     <item name="android:layout_width">match_parent</item>
   </style>
@@ -488,9 +490,7 @@
     <item name="android:shadowDy">
       @dimen/commerce_payment_option_product_number_default_text_shadow_dy
     </item>
-    <item name="android:shadowColor">
-      @color/commerce_payment_option_product_number_default_text_shadow
-    </item>
+    <item name="android:shadowColor">@color/d_commerce_payment_option_product_number_default_text_shadow</item>
   </style>
 
   <style name="Dep.Base.Widget.CommercePaymentOptionProductOwnerName">
@@ -507,7 +507,7 @@
   </style>
 
   <style name="Dep.Base.Widget.CommercePaymentIndicator">
-    <item name="android:background">@drawable/purchase_payment_indicator_background</item>
+    <item name="android:background">@drawable/d_purchase_payment_indicator_background</item>
     <item name="android:layout_centerHorizontal">true</item>
     <item name="android:layout_height">@dimen/commerce_payment_indicator_default_height</item>
     <item name="android:layout_marginTop">@dimen/commerce_payment_indicator_default_margin_top
@@ -587,12 +587,6 @@
     name="Dep.App.Widget.CommercePaymentMessage"
     parent="Dep.Base.Widget.CommercePaymentMessage"/>
 
-  <style
-    name="Screen.Theme.Index"
-    parent="Dep.App.Theme">
-    <item name="android:background">@drawable/background_screen_index</item>
-  </style>
-
   <style name="PurchasePaymentAnimation">
     <item name="android:windowEnterAnimation">@anim/fade_in</item>
     <item name="android:windowExitAnimation">@anim/fade_out</item>
@@ -600,12 +594,12 @@
   <style
     name="PurchasePaymentTheme"
     parent="Dep.App.Theme">
-    <item name="android:windowBackground">@color/commerce_payment_window_default_background</item>
-    <item name="colorPrimaryDark">@color/commerce_payment_status_bar_default_background</item>
+    <item name="android:windowBackground">@color/d_commerce_payment_window_default_background</item>
+    <item name="colorPrimaryDark">@color/d_commerce_payment_status_bar_default_background</item>
   </style>
   <style name="Dep.Base.Text.Widget"/>
   <style name="Dep.Base.Text.Widget.Toolbar">
-    <item name="android:textColor">@color/white</item>
+    <item name="android:textColor">@color/common_white</item>
     <item name="fontPath">@string/font_gotham_rounded_book</item>
   </style>
   <style name="Dep.Base.Text.Widget.Toolbar.Title">
@@ -618,11 +612,11 @@
     <item name="fontPath">@string/app_text_widget_prefixable_text_view_font</item>
   </style>
   <style name="Dep.Base.Text.Widget.PrefixableTextView.Content">
-    <item name="android:textColor">@color/app_text_widget_prefixable_text_view_content</item>
+    <item name="android:textColor">@color/d_app_text_widget_prefixable_text_view_content</item>
     <item name="android:textSize">@dimen/app_text_widget_prefixable_text_view_content</item>
   </style>
   <style name="Dep.Base.Text.Widget.NumPadCell">
-    <item name="android:textColor">@color/app_widget_num_pad_tint</item>
+    <item name="android:textColor">@color/d_app_widget_num_pad_tint</item>
     <item name="android:textSize">@dimen/app_text_widget_num_pad_cell_size</item>
     <item name="fontPath">@string/app_text_widget_num_pad_cell_font</item>
   </style>
@@ -659,16 +653,16 @@
     <item name="android:layout_width">match_parent</item>
   </style>
   <style name="Dep.Base.Widget.Container.Colored">
-    <item name="android:background">@drawable/background_colored</item>
+    <item name="android:background">@drawable/d_background_colored</item>
   </style>
   <style name="Dep.Base.Widget.Button.Blurred">
-    <item name="android:background">@drawable/app_widget_button_blurred_shape</item>
+    <item name="android:background">@drawable/d_app_widget_button_blurred_shape</item>
   </style>
   <style name="Dep.Base.Widget.PrefixableTextView">
     <item name="android:gravity">center_vertical</item>
     <item name="android:maxLines">1</item>
     <item name="android:textAppearance">@style/Dep.App.Text.Widget.PrefixableTextView.Content</item>
-    <item name="prefixTextColor">@color/app_text_widget_prefixable_text_view_prefix</item>
+    <item name="prefixTextColor">@color/d_app_text_widget_prefixable_text_view_prefix</item>
   </style>
   <style
     name="Dep.Base.Widget.AutoResizeablePrefixableTextView"
@@ -699,10 +693,10 @@
   </style>
   <style name="Dep.Base.Widget.NumPadCell.Image"/>
   <style name="Dep.Base.Widget.NumPad">
-    <item name="tintColor">@color/app_widget_num_pad_tint</item>
+    <item name="tintColor">@color/d_app_widget_num_pad_tint</item>
     <item name="dotEnabled">false</item>
     <item name="deleteEnabled">true</item>
-    <item name="deleteDrawable">@drawable/app_widget_num_pad_delete</item>
+    <item name="deleteDrawable">@drawable/d_app_widget_num_pad_delete</item>
   </style>
 
   <style
@@ -809,7 +803,7 @@
   <style
     name="TransactionCreation.Text.Widget.Amount.Value"
     parent="Dep.App.Text.Widget.PrefixableTextView.Content">
-    <item name="android:textColor">@color/transaction_creation_text_widget_amount_value</item>
+    <item name="android:textColor">@color/d_transaction_creation_text_widget_amount_value</item>
     <item name="android:textSize">@dimen/transaction_creation_text_widget_amount_value_max</item>
     <item name="fontPath">@string/transaction_creation.text.widget.amount.value.font</item>
   </style>
@@ -823,7 +817,7 @@
     <item name="android:textAppearance">@style/TransactionCreation.Text.Widget.Amount.Value</item>
     <item name="maxTextSize">@dimen/transaction_creation_text_widget_amount_value_max</item>
     <item name="minTextSize">@dimen/transaction_creation_text_widget_amount_value_min</item>
-    <item name="prefixTextColor">@color/transaction_creation_text_widget_amount_prefix</item>
+    <item name="prefixTextColor">@color/d_transaction_creation_text_widget_amount_prefix</item>
     <item name="prefixFontPath">@string/transaction_creation.text.widget.amount.currency.font</item>
   </style>
 
@@ -895,8 +889,8 @@
   <style name="Dep.App.Text.Widget"/>
   <style name="Dep.App.Text.Widget.SearchView"/>
   <style name="Dep.App.Text.Widget.SearchView.Query">
-    <item name="android:textColor">@color/search_view_text</item>
-    <item name="android:textColorHint">@color/search_view_hint</item>
+    <item name="android:textColor">@color/d_search_view_text</item>
+    <item name="android:textColorHint">@color/d_search_view_hint</item>
     <item name="android:textSize">16sp</item>
     <item name="fontPath">@string/font_gotham_rounded_medium</item>
   </style>
@@ -909,7 +903,7 @@
   </style>
   <!-- List styles -->
   <style name="List">
-    <item name="android:background">@color/white</item>
+    <item name="android:background">@color/common_white</item>
   </style>
   <style name="List.Vertical"/>
   <style name="ListItem">
@@ -929,7 +923,7 @@
     <item name="android:background">?attr/selectableItemBackground</item>
     <item name="android:clickable">true</item>
     <item name="android:gravity">center_vertical</item>
-    <item name="android:textColor">@color/white</item>
+    <item name="android:textColor">@color/common_white</item>
   </style>
   <style name="Dep.BaseMenuItem.Small">
     <item name="android:paddingBottom">6dp</item>
@@ -955,7 +949,7 @@
     <item name="fontPath">@string/font_gotham_rounded_medium</item>
   </style>
   <style name="Menu">
-    <item name="android:background">@color/background_menu</item>
+    <item name="android:background">@color/d_background_menu</item>
     <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark</item>
   </style>
   <style name="MenuHeader">
@@ -979,7 +973,7 @@
   </style>
   <style name="PinConfirmationTitle">
     <item name="android:gravity">center</item>
-    <item name="android:textColor">@color/white</item>
+    <item name="android:textColor">@color/common_white</item>
     <item name="android:textSize">20sp</item>
     <item name="fontPath">@string/font_gotham_rounded_medium</item>
   </style>
@@ -1032,7 +1026,7 @@
     parent="ListItem.Normal"/>
   <style name="ListItemTransactionText">
     <item name="android:ellipsize">end</item>
-    <item name="android:textColor">@color/black</item>
+    <item name="android:textColor">@color/common_black</item>
     <item name="fontPath">@string/font_gotham_rounded_book</item>
   </style>
   <style
@@ -1083,7 +1077,7 @@
   <style
     name="ListItemButton"
     parent="Dep.App.Widget.Button">
-    <item name="android:background">@drawable/item_button</item>
+    <item name="android:background">@drawable/d_item_button</item>
     <item name="android:layout_height">@dimen/list.item.button.height</item>
     <item name="android:layout_width">@dimen/list.item.button.width</item>
   </style>

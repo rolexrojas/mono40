@@ -128,7 +128,7 @@ public class ConfirmationDialogFragment extends DialogFragment {
         }
       });
     final View view = LayoutInflater.from(activity)
-      .inflate(R.layout.dialog_recipient_addition_confirmation, null);
+      .inflate(R.layout.d_dialog_recipient_addition_confirmation, null);
     unbinder = ButterKnife.bind(this, view);
     if (identifierEditText != null) {
       identifierEditText.setText(recipient.getLabel());

@@ -60,7 +60,7 @@ public class PinView extends LinearLayout {
   public PinView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     setOrientation(VERTICAL);
-    LayoutInflater.from(context).inflate(R.layout.pin_view, this);
+    LayoutInflater.from(context).inflate(R.layout.d_pin_view, this);
   }
 
   private boolean isCursorVisible() {
@@ -285,13 +285,13 @@ public class PinView extends LinearLayout {
     View view;
     final LayoutInflater inflater = LayoutInflater.from(getContext());
     for (int i = 0; i < DEFAULT_MAX_LENGTH; i++) {
-      view = inflater.inflate(R.layout.pin_dot, containerLinearLayout, false);
+      view = inflater.inflate(R.layout.d_pin_dot, containerLinearLayout, false);
       view.setId(View.generateViewId());
       containerLinearLayout.addView(view);
       dots[i] = view;
     }
     // Adds the cursor to the container.
-    cursor = inflater.inflate(R.layout.pin_cursor, containerLinearLayout, false);
+    cursor = inflater.inflate(R.layout.d_pin_cursor, containerLinearLayout, false);
     cursor.setId(View.generateViewId());
     containerLinearLayout.addView(cursor);
     // Shows and starts animating the cursor.

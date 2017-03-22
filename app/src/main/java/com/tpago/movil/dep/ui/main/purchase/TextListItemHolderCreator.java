@@ -17,6 +17,6 @@ class TextListItemHolderCreator implements ListItemHolderCreator<TextListItemHol
   @Override
   public TextListItemHolder create(@NonNull ViewGroup parent) {
     return new TextListItemHolder(LayoutInflater.from(parent.getContext())
-      .inflate(R.layout.list_item_text, parent, false));
+      .inflate(R.layout.d_list_item_text, parent, false));
   }
 }

@@ -152,7 +152,7 @@ public final class AvatarCreationDialogFragment extends DialogFragment {
     } else {
       builder.setTitle(R.string.dialog_avatar_creation_label_title_create);
     }
-    builder.setView(R.layout.dialog_avatar_creation);
+    builder.setView(R.layout.d_dialog_avatar_creation);
     return builder.create();
   }
 

@@ -146,7 +146,7 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
     @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
     return inflater.inflate(
-      R.layout.fragment_non_affiliated_phone_number_recipient_addition_2,
+      R.layout.d_fragment_non_affiliated_phone_number_recipient_addition_2,
       container,
       false);
   }

@@ -20,7 +20,7 @@
     android:layout_marginStart="60dp"
     android:layout_marginTop="10dp"
     android:text="@string/register_form_pin_label_description"/>
-  <com.tpago.movil.widget.NotEditableTextInput
+  <com.tpago.movil.widget.DNotEditableTextInput
     android:id="@+id/text_input"
     style="@style/Widget.NotEditableTextInput.Dark"
     android:layout_width="match_parent"

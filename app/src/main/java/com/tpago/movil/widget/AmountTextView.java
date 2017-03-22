@@ -38,7 +38,7 @@ public final class AmountTextView extends LinearLayout implements AmountText {
   private void initializeAmountTextView(Context context, AttributeSet attrs, int defStyleAttr) {
     setOrientation(HORIZONTAL);
     amountTextHelper = new AmountTextHelper(context, attrs, defStyleAttr);
-    LayoutInflater.from(context).inflate(R.layout.amount_text_view, this);
+    LayoutInflater.from(context).inflate(R.layout.widget_text_view_amount, this);
   }
 
   @Override

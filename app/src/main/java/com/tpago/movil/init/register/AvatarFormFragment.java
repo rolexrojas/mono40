@@ -91,12 +91,12 @@ public final class AvatarFormFragment extends BaseRegisterFragment {
         .load(file)
         .resizeDimen(R.dimen.widget_image_avatar_large, R.dimen.widget_image_avatar_large)
         .transform(new CircleTransformation())
-        .placeholder(R.drawable.widget_image_dark_avatar_placeholder_large)
-        .error(R.drawable.widget_image_dark_avatar_placeholder_large)
+        .placeholder(R.drawable.d_widget_image_dark_avatar_placeholder_large)
+        .error(R.drawable.d_widget_image_dark_avatar_placeholder_large)
         .noFade()
         .into(avatarImageView);
     } else {
-      avatarImageView.setImageResource(R.drawable.widget_image_dark_avatar_placeholder_large);
+      avatarImageView.setImageResource(R.drawable.d_widget_image_dark_avatar_placeholder_large);
       moveToNextScreenButton.setText(R.string.later);
     }
   }

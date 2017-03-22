@@ -22,6 +22,6 @@ class RecipientListItemHolderCreator implements ListItemHolderCreator<RecipientL
   @Override
   public RecipientListItemHolder create(@NonNull ViewGroup parent) {
     return new RecipientListItemHolder(LayoutInflater.from(parent.getContext())
-      .inflate(R.layout.list_item_recipient, parent, false), onClickListener);
+      .inflate(R.layout.d_list_item_recipient, parent, false), onClickListener);
   }
 }

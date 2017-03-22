@@ -71,7 +71,7 @@ public final class RecipientAdditionDialogFragment extends DialogFragment {
         }
       })
       .setNegativeButton(R.string.skip, null)
-      .setView(R.layout.dialog_recipient_addition)
+      .setView(R.layout.d_dialog_recipient_addition)
       .create();
   }
 

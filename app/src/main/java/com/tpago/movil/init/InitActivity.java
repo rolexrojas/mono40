@@ -33,8 +33,8 @@ public final class InitActivity extends BaseActivity implements InitContainer {
 
   @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
 
-  @BindColor(R.color.app_background_gradient_dark_start) int backgroundStartColor;
-  @BindColor(R.color.app_background_gradient_dark_end) int backgroundEndColor;
+  @BindColor(R.color.common_background_gradient_dark_start) int backgroundStartColor;
+  @BindColor(R.color.common_background_gradient_dark_end) int backgroundEndColor;
 
   @BindView(android.R.id.content) View rootView;
   @BindView(R.id.view_placeholder) View placeholderView;

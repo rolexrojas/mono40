@@ -74,7 +74,7 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
     final AlertDialog.Builder builder = Dialogs.builder(getContext())
       .setCancelable(false)
       .setTitle(R.string.transaction_confirmation_title)
-      .setView(R.layout.dialog_transaction_summary);
+      .setView(R.layout.d_dialog_transaction_summary);
     if (alreadyExists) {
       builder.setPositiveButton(R.string.ok, null);
     } else {

@@ -94,15 +94,15 @@ public class DepNumPad extends LinearLayout {
       defStyleAttr, 0);
     try {
       tintColor = array.getColor(R.styleable.DepNumPad_tintColor,
-        ContextCompat.getColor(context, R.color.app_widget_num_pad_tint));
+        ContextCompat.getColor(context, R.color.d_app_widget_num_pad_tint));
       dotEnabled = array.getBoolean(R.styleable.DepNumPad_dotEnabled, false);
       deleteEnabled = array.getBoolean(R.styleable.DepNumPad_deleteEnabled, true);
       deleteDrawable = array.getResourceId(R.styleable.DepNumPad_deleteDrawable,
-        R.drawable.app_widget_num_pad_delete);
+        R.drawable.d_app_widget_num_pad_delete);
     } finally {
       array.recycle();
     }
-    LayoutInflater.from(context).inflate(R.layout.widget_dep_num_pad, this);
+    LayoutInflater.from(context).inflate(R.layout.d_widget_dep_num_pad, this);
   }
 
   @Override

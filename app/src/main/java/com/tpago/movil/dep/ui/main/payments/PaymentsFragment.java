@@ -120,7 +120,7 @@ public class PaymentsFragment
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_payments, container, false);
+    return inflater.inflate(R.layout.d_fragment_payments, container, false);
   }
 
   @Override
@@ -149,7 +149,7 @@ public class PaymentsFragment
     recyclerView.setHasFixedSize(true);
     recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
-      .drawable(R.drawable.divider)
+      .drawable(R.drawable.d_divider)
       .marginResId(R.dimen.space_horizontal_normal)
       .showLastDivider()
       .build();
@@ -189,7 +189,7 @@ public class PaymentsFragment
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     // Inflates the menu of the fragment.
-    inflater.inflate(R.menu.payments, menu);
+    inflater.inflate(R.menu.d_payments, menu);
   }
 
   @Override

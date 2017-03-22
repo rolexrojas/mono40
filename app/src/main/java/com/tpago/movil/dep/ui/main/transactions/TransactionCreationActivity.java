@@ -10,7 +10,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.tpago.movil.app.ActivityModule;
 import com.tpago.movil.app.App;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
@@ -95,7 +94,7 @@ public class TransactionCreationActivity
 
   @Override
   protected int layoutResourceIdentifier() {
-    return R.layout.activity_transaction_creation;
+    return R.layout.d_activity_transaction_creation;
   }
 
   @Override

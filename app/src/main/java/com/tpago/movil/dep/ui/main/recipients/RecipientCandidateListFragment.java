@@ -75,7 +75,7 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_recipient_candidate_list, container, false);
+    return inflater.inflate(R.layout.d_fragment_recipient_candidate_list, container, false);
   }
 
   @Override
@@ -98,7 +98,7 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
     recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL,
       false));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
-      .drawable(R.drawable.divider)
+      .drawable(R.drawable.d_divider)
       .marginResId(R.dimen.space_horizontal_normal)
       .showLastDivider()
       .build();

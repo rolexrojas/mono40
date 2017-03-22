@@ -25,6 +25,6 @@ class PurchasePaymentOptionListItemHolderCreator
   @Override
   public PurchasePaymentOptionListItemHolder create(@NonNull ViewGroup parent) {
     return new PurchasePaymentOptionListItemHolder(LayoutInflater.from(parent.getContext()).inflate(
-      R.layout.commerce_payment_option, parent, false), onClickListener);
+      R.layout.d_commerce_payment_option, parent, false), onClickListener);
   }
 }

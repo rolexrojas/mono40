@@ -112,7 +112,7 @@ public final class InformationalDialogFragment extends DialogFragment {
           }
         }
       })
-      .setView(R.layout.dialog_informational);
+      .setView(R.layout.d_dialog_informational);
     if (Texts.isNotEmpty(negativeButtonText)) {
       builder.setNegativeButton(negativeButtonText, new DialogInterface.OnClickListener() {
         @Override

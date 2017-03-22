@@ -29,8 +29,8 @@ public final class NonNfcPurchaseFragment extends Fragment {
 
   private Unbinder unbinder;
 
-  @BindColor(R.color.app_background_gradient_dark_end) int backgroundEndColor;
-  @BindColor(R.color.app_background_gradient_dark_start) int backgroundStartColor;
+  @BindColor(R.color.common_background_gradient_dark_end) int backgroundEndColor;
+  @BindColor(R.color.common_background_gradient_dark_start) int backgroundStartColor;
 
   @BindView(R.id.view_root) View rootView;
   @BindView(R.id.image_view_art) ImageView artImageView;
@@ -46,7 +46,7 @@ public final class NonNfcPurchaseFragment extends Fragment {
     LayoutInflater inflater,
     @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_purchase_fragment_non_nfc, container, false);
+    return inflater.inflate(R.layout.d_fragment_purchase_fragment_non_nfc, container, false);
   }
 
   @Override

@@ -101,7 +101,7 @@ public class DepMainActivity
 
   @Override
   protected int layoutResourceIdentifier() {
-    return R.layout.activity_main;
+    return R.layout.d_activity_main;
   }
 
   @Override

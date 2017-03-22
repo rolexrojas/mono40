@@ -42,7 +42,7 @@ public class SearchView extends LinearLayout {
   private Subscription queryChangedSubscription = Subscriptions.unsubscribed();
   private Subscription containerFrameLayoutClickedSubscription = Subscriptions.unsubscribed();
 
-  @BindColor(R.color.search_view_drawable)
+  @BindColor(R.color.d_search_view_drawable)
   int drawableColor;
 
   @BindView(R.id.edit_text_query)
@@ -72,7 +72,7 @@ public class SearchView extends LinearLayout {
     } finally {
       array.recycle();
     }
-    LayoutInflater.from(context).inflate(R.layout.search_view, this);
+    LayoutInflater.from(context).inflate(R.layout.d_search_view, this);
   }
 
   @Override

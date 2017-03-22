@@ -79,7 +79,7 @@ public class FullScreenLoadIndicator implements LoadIndicator {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-      return inflater.inflate(R.layout.full_screen_load_indicator, container, false);
+      return inflater.inflate(R.layout.d_full_screen_load_indicator, container, false);
     }
   }
 }

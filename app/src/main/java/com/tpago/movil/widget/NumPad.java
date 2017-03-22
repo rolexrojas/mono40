@@ -73,7 +73,7 @@ public final class NumPad extends LinearLayout {
     // Initializes the attributes from the given replace or from the default one.
     final TypedArray a = c.obtainStyledAttributes(attrs, R.styleable.NumPad, defStyleAttr, 0);
     try {
-      color = a.getColor(R.styleable.NumPad_color, ContextCompat.getColor(c, R.color.white));
+      color = a.getColor(R.styleable.NumPad_color, ContextCompat.getColor(c, R.color.common_white));
       dotEnabled = a.getBoolean(R.styleable.DepNumPad_dotEnabled, false);
     } finally {
       a.recycle();

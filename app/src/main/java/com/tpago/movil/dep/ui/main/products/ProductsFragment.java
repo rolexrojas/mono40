@@ -112,7 +112,7 @@ public class ProductsFragment extends ChildFragment<MainContainer>
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_products, container, false);
+    return inflater.inflate(R.layout.d_fragment_products, container, false);
   }
 
   @Override
@@ -159,7 +159,7 @@ public class ProductsFragment extends ChildFragment<MainContainer>
     };
     recyclerView.setLayoutManager(layoutManager);
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
-      .drawable(R.drawable.divider)
+      .drawable(R.drawable.d_divider)
       .marginResId(R.dimen.space_horizontal_normal)
       .build();
     recyclerView.addItemDecoration(divider);
@@ -179,7 +179,7 @@ public class ProductsFragment extends ChildFragment<MainContainer>
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.products, menu);
+    inflater.inflate(R.menu.d_products, menu);
   }
 
   @Override

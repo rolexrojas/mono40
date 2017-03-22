@@ -42,11 +42,11 @@ final class PaymentMethodChooserRecyclerViewAdapter
     final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
     if (viewType == TYPE_ITEM) {
       return new PaymentMethodRecyclerViewHolder(
-        inflater.inflate(R.layout.payment_method_chooser_popup_item, parent, false),
+        inflater.inflate(R.layout.widget_payment_method_chooser_popup_item, parent, false),
         this);
     } else {
       return new SelectedPaymentMethodRecyclerViewHolder(
-        inflater.inflate(R.layout.payment_method_chooser_popup_item_selected, parent, false),
+        inflater.inflate(R.layout.widget_payment_method_chooser_popup_item_selected, parent, false),
         this);
     }
   }

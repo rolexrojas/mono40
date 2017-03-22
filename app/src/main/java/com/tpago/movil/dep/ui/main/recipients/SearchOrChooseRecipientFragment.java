@@ -48,7 +48,7 @@ public class SearchOrChooseRecipientFragment
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_search_or_choose_recipient, container, false);
+    return inflater.inflate(R.layout.d_fragment_search_or_choose_recipient, container, false);
   }
 
   @Override

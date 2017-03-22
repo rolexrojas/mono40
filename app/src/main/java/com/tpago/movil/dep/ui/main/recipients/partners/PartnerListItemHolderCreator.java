@@ -30,6 +30,6 @@ class PartnerListItemHolderCreator implements ListItemHolderCreator<PartnerListI
   @Override
   public PartnerListItemHolder create(@NonNull ViewGroup parent) {
     return new PartnerListItemHolder(LayoutInflater.from(parent.getContext())
-      .inflate(R.layout.list_item_bank, parent, false), onClickListener);
+      .inflate(R.layout.d_list_item_bank, parent, false), onClickListener);
   }
 }

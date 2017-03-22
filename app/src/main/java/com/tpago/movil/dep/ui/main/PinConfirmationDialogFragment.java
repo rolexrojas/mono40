@@ -177,7 +177,7 @@ public class PinConfirmationDialogFragment
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.dep_fragment_pin_confirmation, container, false);
+    return inflater.inflate(R.layout.d_fragment_pin_confirmation, container, false);
   }
 
   @Override

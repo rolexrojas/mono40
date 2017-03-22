@@ -85,7 +85,7 @@ public class PrefixableTextView extends TextView {
       prefix = array.getString(R.styleable.DepPrefixableTextView_prefix);
       final Resources resources = getResources();
       final int defaultPrefixTextColor = ContextCompat.getColor(context,
-        R.color.app_text_widget_prefixable_text_view_content);
+        R.color.d_app_text_widget_prefixable_text_view_content);
       prefixTextColor = array.getColor(R.styleable.DepPrefixableTextView_prefixTextColor,
         defaultPrefixTextColor);
       prefixFontPath = array.getString(R.styleable.DepPrefixableTextView_prefixFontPath);

@@ -53,7 +53,7 @@ public final class Logo extends FrameLayout {
   }
 
   private void initializeAnimatedLogo() {
-    LayoutInflater.from(getContext()).inflate(R.layout.widget_logo, this);
+    LayoutInflater.from(getContext()).inflate(R.layout.d_widget_logo, this);
   }
 
   @Override
@@ -77,12 +77,12 @@ public final class Logo extends FrameLayout {
     imageSwitcher.setOutAnimation(outAnimation);
     // Initializes the frame switcher.
     final DrawableIdIterator drawableIterator = new DrawableIdIterator.Builder()
-      .push(R.drawable.logo_white_state_0)
-      .push(R.drawable.logo_white_state_1)
-      .push(R.drawable.logo_white_state_2)
-      .push(R.drawable.logo_white_state_3)
+      .push(R.drawable.logo_state_0)
+      .push(R.drawable.logo_state_1)
+      .push(R.drawable.logo_state_2)
+      .push(R.drawable.logo_state_3)
       .build();
-    drawableSwitcher = new DrawableSwitcher(imageSwitcher, R.drawable.logo_white, drawableIterator);
+    drawableSwitcher = new DrawableSwitcher(imageSwitcher, R.drawable.logo, drawableIterator);
   }
 
   public final void start() {

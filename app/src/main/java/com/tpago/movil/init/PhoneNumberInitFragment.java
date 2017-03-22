@@ -67,7 +67,7 @@ public final class PhoneNumberInitFragment
     LayoutInflater inflater,
     @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_init_phone_number, container, false);
+    return inflater.inflate(R.layout.d_fragment_init_phone_number, container, false);
   }
 
   @Override

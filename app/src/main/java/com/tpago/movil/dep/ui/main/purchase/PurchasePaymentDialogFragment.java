@@ -99,7 +99,7 @@ public class PurchasePaymentDialogFragment
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.dialog_fragment_purchase_payment, container, false);
+    return inflater.inflate(R.layout.d_dialog_fragment_purchase_payment, container, false);
   }
 
   @Override

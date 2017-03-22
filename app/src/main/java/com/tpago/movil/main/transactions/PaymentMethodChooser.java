@@ -42,7 +42,7 @@ public class PaymentMethodChooser
   }
 
   private void initializePaymentMethodChooser(Context context) {
-    LayoutInflater.from(context).inflate(R.layout.payment_method_chooser, this);
+    LayoutInflater.from(context).inflate(R.layout.widget_payment_method_chooser, this);
   }
 
   public final void setPaymentMethodList(List<Product> paymentMethodList) {

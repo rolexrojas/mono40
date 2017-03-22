@@ -78,7 +78,7 @@ final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePayme
       productTypeTextView.setVisibility(View.VISIBLE);
       productTypeTextView.setText(ProductType.findStringId(item));
     } else {
-      backgroundColor = ContextCompat.getColor(context, R.color.transparent);
+      backgroundColor = ContextCompat.getColor(context, R.color.common_transparent);
       backgroundImageView.setVisibility(View.VISIBLE);
       Picasso.with(context)
         .load(backgroundUri)

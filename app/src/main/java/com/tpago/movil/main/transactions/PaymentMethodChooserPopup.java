@@ -12,8 +12,6 @@ import com.tpago.movil.R;
 import com.tpago.movil.util.Objects;
 import com.tpago.movil.util.Preconditions;
 
-import butterknife.ButterKnife;
-
 /**
  * @author hecvasro
  */
@@ -36,7 +34,7 @@ final class PaymentMethodChooserPopup {
       final Context context = parentView.getContext();
       final RecyclerView recyclerView = (RecyclerView) LayoutInflater
         .from(context)
-        .inflate(R.layout.payment_method_chooser_popup, null);
+        .inflate(R.layout.widget_payment_method_chooser_popup, null);
       recyclerView.setLayoutManager(new LinearLayoutManager(
         context,
         LinearLayoutManager.VERTICAL,

@@ -60,7 +60,7 @@ public class NonAffiliatedPhoneNumberRecipientAdditionActivity extends BaseActiv
 
   @Override
   protected int layoutResourceIdentifier() {
-    return R.layout.activity_non_affiliated_phone_number_recipient_addition;
+    return R.layout.d_activity_non_affiliated_phone_number_recipient_addition;
   }
 
   @Override

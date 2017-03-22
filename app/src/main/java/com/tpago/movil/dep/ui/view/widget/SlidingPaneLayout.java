@@ -283,7 +283,7 @@ public class SlidingPaneLayout extends ViewGroup {
     mDragHelper.setMinVelocity(MIN_FLING_VELOCITY * density);
 
     // Disables all the fade effects.
-    final int transparentColor = ContextCompat.getColor(context, R.color.transparent);
+    final int transparentColor = ContextCompat.getColor(context, R.color.common_transparent);
     setSliderFadeColor(transparentColor);
     setCoveredFadeColor(transparentColor);
   }

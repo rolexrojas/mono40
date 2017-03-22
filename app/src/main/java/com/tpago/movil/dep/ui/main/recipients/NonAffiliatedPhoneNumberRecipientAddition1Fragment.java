@@ -83,7 +83,7 @@ public class NonAffiliatedPhoneNumberRecipientAddition1Fragment extends Fragment
     @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
     return inflater.inflate(
-      R.layout.fragment_non_affiliated_phone_number_recipient_addition_1,
+      R.layout.d_fragment_non_affiliated_phone_number_recipient_addition_1,
       container,
       false);
   }
@@ -102,7 +102,7 @@ public class NonAffiliatedPhoneNumberRecipientAddition1Fragment extends Fragment
       LinearLayoutManager.VERTICAL,
       false));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
-      .drawable(R.drawable.divider)
+      .drawable(R.drawable.d_divider)
       .marginResId(R.dimen.space_horizontal_normal)
       .showLastDivider()
       .build();
@@ -209,7 +209,7 @@ public class NonAffiliatedPhoneNumberRecipientAddition1Fragment extends Fragment
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
       return new ViewHolder(
         LayoutInflater.from(parent.getContext())
-          .inflate(R.layout.list_item_bank, parent, false));
+          .inflate(R.layout.d_list_item_bank, parent, false));
     }
 
     @Override

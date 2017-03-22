@@ -210,7 +210,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment
     @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
     return inflater.inflate(
-      R.layout.fragment_non_affiliated_phone_number_transaction_creation_2,
+      R.layout.d_fragment_non_affiliated_phone_number_transaction_creation_2,
       container,
       false);
   }
