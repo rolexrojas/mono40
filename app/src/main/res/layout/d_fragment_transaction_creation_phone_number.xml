@@ -8,10 +8,10 @@
   tools:ignore="MissingPrefix">
   <com.tpago.movil.main.transactions.PaymentMethodChooser
     android:id="@+id/payment_method_chooser"
-    style="@style/Transactions.Widget.PaymentMethodChooser"
+    style="@style/D.Transactions.Widget.PaymentMethodChooser"
     android:layout_marginEnd="32dp"
     android:layout_marginStart="32dp"/>
-  <com.tpago.movil.dep.ui.view.widget.AutoResizeablePrefixableTextView
+  <com.tpago.movil.d.ui.view.widget.AutoResizeablePrefixableTextView
     android:id="@+id/transaction_creation.amount"
     style="@style/TransactionCreation.Widget.Amount"
     android:layout_width="match_parent"
@@ -25,7 +25,7 @@
     android:layout_marginStart="32dp"
     android:alpha="0.1"
     android:background="@color/common_black"/>
-  <com.tpago.movil.dep.ui.view.widget.pad.DepNumPad
+  <com.tpago.movil.d.ui.view.widget.pad.DepNumPad
     android:id="@+id/transaction_creation.num_pad"
     android:layout_width="match_parent"
     android:layout_height="0dp"

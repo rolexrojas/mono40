@@ -6,7 +6,7 @@ import android.content.Context;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.BuildConfig;
-import com.tpago.movil.dep.DepAppModule;
+import com.tpago.movil.d.DepAppModule;
 import com.tpago.movil.util.Objects;
 import com.tpago.movil.util.Preconditions;
 

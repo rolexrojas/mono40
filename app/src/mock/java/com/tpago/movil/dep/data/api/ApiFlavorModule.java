@@ -1,6 +1,6 @@
-package com.tpago.movil.dep.data.api;
+package com.tpago.movil.d.data.api;
 
-import com.tpago.movil.dep.domain.api.DepApiBridge;
+import com.tpago.movil.d.domain.api.DepApiBridge;
 
 import javax.inject.Singleton;
 

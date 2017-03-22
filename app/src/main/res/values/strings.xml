@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <!-- [START] Common strings -->
   <string name="credit">Crédito</string>
   <string name="current">Corriente</string>
   <string name="debit">Débito</string>
@@ -10,6 +9,12 @@
   <string name="error_positive_button_text">@string/ok</string>
   <string name="error_title">¡Lo sentimos!</string>
   <string name="first_name">Nombre</string>
+  <string name="font_gotham_round_bold">fonts/GothamRounded/Bold.otf</string>
+  <string name="font_gotham_round_book">fonts/GothamRounded/Book.otf</string>
+  <string name="font_gotham_round_light">fonts/GothamRounded/Light.otf</string>
+  <string name="font_gotham_round_medium">fonts/GothamRounded/Medium.otf</string>
+  <string name="font_roboto_medium">fonts/Roboto/Medium.ttf</string>
+  <string name="font_roboto_regular">fonts/Roboto/Regular.ttf</string>
   <string name="from">Desde</string>
   <string name="last_name">Apellido</string>
   <string name="later">Mas Tarde</string>
@@ -27,29 +32,18 @@
   <string name="unknown">Desconicido</string>
   <string name="unlock">Desbloquear</string>
   <string name="welcome">¡Bienvenido!</string>
-  <!-- [END] Common strings -->
 
-  <!-- [START] Amount text strings -->
+  <string name="widget_text_input_content_font">@string/font_gotham_round_book</string>
+  <string name="widget_text_input_not_editable_content_font">@string/font_gotham_round_light</string>
+
+  <!-- TODO: Remove every string from this point downwards -->
   <string name="amount_text_currency_font">@string/font_gotham_round_book</string>
   <string name="amount_text_value_font">@string/font_gotham_round_book</string>
-  <!-- [END] Amount text strings -->
-
-  <!-- Font strings -->
-  <string name="font_gotham_round_bold">fonts/GothamRounded/Bold.otf</string>
-  <string name="font_gotham_round_book">fonts/GothamRounded/Book.otf</string>
-  <string name="font_gotham_round_light">fonts/GothamRounded/Light.otf</string>
-  <string name="font_gotham_round_medium">fonts/GothamRounded/Medium.otf</string>
-  <string name="font_roboto_medium">fonts/Roboto/Medium.ttf</string>
-  <string name="font_roboto_regular">fonts/Roboto/Regular.ttf</string>
-
-  <!-- Avatar creation dialog strings -->
   <string name="dialog_avatar_creation_editor_title">@string/edit</string>
   <string name="dialog_avatar_creation_label_action_choose_from_gallery">Seleccionar de la galería</string>
   <string name="dialog_avatar_creation_label_action_use_the_camera">Usar la cámara</string>
   <string name="dialog_avatar_creation_label_title_create">Establecer foto de perfil</string>
   <string name="dialog_avatar_creation_label_title_replace">Actualizar foto de perfil</string>
-
-  <!-- Init strings -->
   <string name="init_phone_number_button_move_to_next_screen">@string/next</string>
   <string name="init_phone_number_error_incorrect_number_message">Debes de ingresar un número de diez dígitos.</string>
   <string name="init_phone_number_error_incorrect_number_positive_button_text">@string/ok</string>
@@ -59,8 +53,6 @@
   <string name="init_phone_number_error_not_affiliated_title">Número no afiliado</string>
   <string name="init_phone_number_label_description">Ingresa el número de celular para verificar tu perfil</string>
   <string name="init_phone_number_label_title">¡Listo, empecemos!</string>
-
-  <!-- Intro strings -->
   <string name="intro_button_start">@string/start</string>
   <string name="intro_tab_description_01">Paga, compra, recarga y transfiere rápido y seguro.</string>
   <string name="intro_tab_description_02">Cuando estés de compras, al pagar toca tu celular y listo.</string>
@@ -68,8 +60,6 @@
   <string name="intro_tab_title_01">¡Bienvenidos a tPago!</string>
   <string name="intro_tab_title_02">Tocar y Pagar</string>
   <string name="intro_tab_title_03">Pagos al instante</string>
-
-  <!-- Register strings -->
   <string name="register_form_avatar_label_description">Se usa para identificar tus cuentas más fácil</string>
   <string name="register_form_avatar_label_title">¿Establecer tu foto?</string>
   <string name="register_form_email_button_move_to_next_screen">@string/next</string>
@@ -102,8 +92,6 @@
   <string name="register_summary_button_later">@string/later</string>
   <string name="register_summary_label_description">Empecemos con mostrarte lo más básico de la nueva App.</string>
   <string name="register_summary_label_title">¡tPago esta listo!</string>
-  
-  <!-- Onboarding strings -->
   <string name="onboarding_button_skip">@string/skip</string>
   <string name="tutorial_tab_label_description_01">Envia dinero o recargas minutos a tu familia y amigos. ¡Además pagas facturas en segundos!</string>
   <string name="tutorial_tab_label_title_01">Paga más rápido</string>
@@ -113,8 +101,6 @@
   <string name="tutorial_tab_label_title_02">Agrega amigos</string>
   <string name="tutorial_tab_label_description_03">Encuentra todo desde el menú. Consulta cuánto dinero tienes en tus cuentas, ajustas, buscas ayuda y más.</string>
   <string name="tutorial_tab_label_title_03">Abre el menú</string>
-  
-  <!-- Sign in strings -->
   <string name="sign_in_button">@string/sign_in</string>
   <string name="sign_in_error_positive_button_text">@string/ok</string>
   <string name="sign_in_error_description">Tanto el correo electrónico como la contraseña son requeridos.</string>
@@ -123,22 +109,14 @@
   <string name="sign_in_input_hint_password">@string/password</string>
   <string name="sign_in_label_description">Iniciar sesión con usuario y contraseña de tPago</string>
   <string name="sign_in_label_title">@string/welcome</string>
-
-  <!-- Unlock screen strings -->
   <string name="unlock_button">@string/unlock</string>
   <string name="unlock_input_hint_password">@string/password</string>
   <string name="unlock_label_title">¡Bienvenido, %1$s!</string>
-
-  <!-- Purchase strings -->
   <string name="purchase_non_nfc_button_01">@string/learn_more</string>
   <string name="purchase_non_nfc_label_primary_01">Al momento de comprar</string>
   <string name="purchase_non_nfc_label_secondary_01">Solo dale tu número de celular al cajero. Cuando recibas el mensaje de la compra, confirma con tu PIN. ¡Y listo!</string>
   <string name="purchase_non_nfc_label_secondary_02">O Tocar y Pagar al instante.</string>
-
-  <!-- Crop image strings -->
   <string name="crop_image_menu_crop">@string/ok</string>
-
-  <!-- Deprecated strings -->
   <string name="about">Acerca de</string>
   <string name="accounts">Cuentas</string>
   <string name="action.add">Agregar</string>

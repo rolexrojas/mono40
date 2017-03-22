@@ -2,6 +2,12 @@
 <resources>
   <dimen name="widget_logo_tiny_height">34dp</dimen>
   <dimen name="widget_logo_tiny_width">68dp</dimen>
+  <dimen name="widget_text_input_background_padding">12dp</dimen>
+  <dimen name="widget_text_input_background_shape_height">1dp</dimen>
+  <dimen name="widget_text_input_background_shape_radius">11dp</dimen>
+  <dimen name="widget_text_input_content_size">16sp</dimen>
+  <dimen name="widget_text_input_cursor_width">1dp</dimen>
+  <dimen name="widget_text_input_not_editable_content_size">34sp</dimen>
 
   <!-- TODO: Remove every dimension from this point downwards -->
   <dimen name="amount_text_currency">10sp</dimen>
@@ -92,9 +98,7 @@
   <dimen name="widget_button_radius">2dp</dimen>
   <dimen name="widget_button_width">125dp</dimen>
   <dimen name="widget_image_avatar_large">80dp</dimen>
-  <dimen name="widget_text_input_background_padding">12dp</dimen>
-  <dimen name="widget_text_input_background_shape_height">1dp</dimen>
-  <dimen name="widget_text_input_background_shape_radius">11dp</dimen>
+  <dimen name="d_widget_text_input_background_padding">12dp</dimen>
   <item name="commerce_payment_message_text_default_letter_spacing" type="dimen" format="float">0.083</item> <!-- letter_spacing_em = letter_spacing_sp / text_size_sp -->
   <item name="commerce_payment_option_product_number_default_text_letter_spacing" type="dimen" format="float">0.17</item> <!-- letter_spacing_em = letter_spacing_sp / text_size_sp -->
   <item name="commerce_payment_option_product_number_default_text_shadow_dx" type="dimen" format="float">0.0</item>

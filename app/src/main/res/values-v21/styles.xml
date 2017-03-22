@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!-- [START] App styles -->
-  <style name="Widget.Button.Dark.Gradient" parent="Base.Widget.Button.Dark.Gradient">
+  <style name="D.Widget.Button.Dark.Gradient" parent="D.Base.Widget.Button.Dark.Gradient">
     <item name="android:background">@drawable/d_widget_button_dark_gradient</item>
   </style>
-  <style name="Widget.Button.Dark.Solid.Rounded" parent="Base.Widget.Button.Dark.Solid.Rounded">
+  <style name="D.Widget.Button.Dark.Solid.Rounded" parent="D.Base.Widget.Button.Dark.Solid.Rounded">
     <item name="android:background">@drawable/d_widget_button_dark_solid_rounded</item>
   </style>
-  <style name="Widget.Button.Dark.Transparent.Rounded" parent="Base.Widget.Button.Dark.Transparent.Rounded">
+  <style name="D.Widget.Button.Dark.Transparent.Rounded" parent="D.Base.Widget.Button.Dark.Transparent.Rounded">
     <item name="android:background">@drawable/d_widget_button_dark_transparent_rounded</item>
   </style>
-  <style name="Widget.Button.Light.Solid" parent="Base.Widget.Button.Light.Solid">
+  <style name="D.Widget.Button.Light.Solid" parent="D.Base.Widget.Button.Light.Solid">
     <item name="android:background">@drawable/d_widget_button_light_solid</item>
   </style>
   <!-- [END] App styles -->
 
   <!-- [START] Product screen styles -->
-  <style name="Products.Label.Secondary" parent="Base.Products.Label.Secondary">
+  <style name="D.Products.Label.Secondary" parent="D.Base.Products.Label.Secondary">
     <item name="android:letterSpacing">0.07</item>
   </style>
   <!-- [END] Product screen styles -->

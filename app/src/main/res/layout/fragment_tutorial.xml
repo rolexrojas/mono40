@@ -30,11 +30,11 @@
       android:layout_marginBottom="18dp">
       <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
-        style="@style/Widget.TabLayout.Dark"
+        style="@style/D.Widget.TabLayout.Dark"
         android:layout_gravity="center_vertical"/>
       <Button
         android:id="@+id/button_skip"
-        style="@style/Widget.Button.Dark.Transparent.Rounded"
+        style="@style/D.Widget.Button.Dark.Transparent.Rounded"
         android:layout_width="87dp"
         android:layout_height="36dp"
         android:layout_gravity="center_vertical|end"

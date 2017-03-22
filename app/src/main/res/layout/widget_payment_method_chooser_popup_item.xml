@@ -15,7 +15,7 @@
     android:layout_centerVertical="true"/>
   <TextView
     android:id="@+id/text_view_product_number"
-    style="@style/Transactions.Label.PaymentMethodChooser.Secondary"
+    style="@style/D.Transactions.Label.PaymentMethodChooser.Secondary"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentEnd="true"
@@ -25,7 +25,7 @@
     android:maxLines="1"/>
   <TextView
     android:id="@+id/text_view_product_identifier"
-    style="@style/Transactions.Label.PaymentMethodChooser.Secondary"
+    style="@style/D.Transactions.Label.PaymentMethodChooser.Secondary"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerVertical="true"

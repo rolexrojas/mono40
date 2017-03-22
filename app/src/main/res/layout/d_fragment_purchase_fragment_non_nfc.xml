@@ -11,14 +11,14 @@
     android:layout_alignParentBottom="true"
     android:orientation="vertical">
     <TextView
-      style="@style/Label.Dark.Primary"
+      style="@style/D.Label.Dark.Primary"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginEnd="60dp"
       android:layout_marginStart="60dp"
       android:text="@string/purchase_non_nfc_label_primary_01"/>
     <TextView
-      style="@style/Label.Dark.Secondary"
+      style="@style/D.Label.Dark.Secondary"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginEnd="60dp"
@@ -26,7 +26,7 @@
       android:layout_marginTop="8dp"
       android:text="@string/purchase_non_nfc_label_secondary_01"/>
     <TextView
-      style="@style/Label.Dark.Secondary"
+      style="@style/D.Label.Dark.Secondary"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginEnd="60dp"
@@ -35,7 +35,7 @@
       android:text="@string/purchase_non_nfc_label_secondary_02"/>
     <Button
       android:id="@+id/button_learn_more"
-      style="@style/Widget.Button.Dark.Transparent.Rounded"
+      style="@style/D.Widget.Button.Dark.Transparent.Rounded"
       android:layout_gravity="center_horizontal"
       android:layout_marginBottom="32dp"
       android:text="@string/purchase_non_nfc_button_01"/>

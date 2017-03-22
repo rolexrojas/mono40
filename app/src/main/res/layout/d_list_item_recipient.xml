@@ -32,9 +32,9 @@
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:layout_weight="1">
-      <com.tpago.movil.dep.ui.view.widget.PrefixableTextView
+      <com.tpago.movil.d.ui.view.widget.PrefixableTextView
         android:id="@+id/prefixable_text_view_total_owed"
-        style="@style/Screen.Products.Text.Widget.Amount.Content"
+        style="@style/D.Screen.Products.Text.Widget.Amount.Content"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"

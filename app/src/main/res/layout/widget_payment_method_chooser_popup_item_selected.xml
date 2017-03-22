@@ -23,7 +23,7 @@
     app:srcCompat="@drawable/ic_arrow_drop_up_black_alpha_54_24dp"/>
   <TextView
     android:id="@+id/text_view_product_identifier"
-    style="@style/Transactions.Label.PaymentMethodChooser.Primary"
+    style="@style/D.Transactions.Label.PaymentMethodChooser.Primary"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerVertical="true"

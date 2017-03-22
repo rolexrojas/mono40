@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.tpago.movil.dep.ui.view.widget.SlidingPaneLayout
+<com.tpago.movil.d.ui.view.widget.SlidingPaneLayout
   android:id="@+id/sliding_pane_layout"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
@@ -65,4 +65,4 @@
       android:layout_height="match_parent"
       android:layout_below="@+id/app_bar_layout"/>
   </RelativeLayout>
-</com.tpago.movil.dep.ui.view.widget.SlidingPaneLayout>
+</com.tpago.movil.d.ui.view.widget.SlidingPaneLayout>

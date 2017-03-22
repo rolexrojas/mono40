@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.tpago.movil.R;
-import com.tpago.movil.dep.domain.Product;
+import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.util.Preconditions;
 
 /**

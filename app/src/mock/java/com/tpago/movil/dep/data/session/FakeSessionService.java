@@ -1,10 +1,10 @@
-package com.tpago.movil.dep.data.session;
+package com.tpago.movil.d.data.session;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.dep.domain.api.ApiCode;
-import com.tpago.movil.dep.domain.api.ApiResult;
-import com.tpago.movil.dep.domain.session.SessionService;
+import com.tpago.movil.d.domain.api.ApiCode;
+import com.tpago.movil.d.domain.api.ApiResult;
+import com.tpago.movil.d.domain.session.SessionService;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;

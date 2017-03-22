@@ -38,7 +38,7 @@
     android:textSize="20sp"/>
   <Button
     android:id="@+id/button"
-    style="@style/Widget.Button.Light.Solid"
+    style="@style/D.Widget.Button.Light.Solid"
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:layout_alignParentBottom="true"

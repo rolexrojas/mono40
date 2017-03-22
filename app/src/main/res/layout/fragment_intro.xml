@@ -6,13 +6,13 @@
   android:paddingTop="@dimen/init_container_padding_top_large">
   <android.support.design.widget.TabLayout
     android:id="@+id/tab_layout"
-    style="@style/Widget.TabLayout.Dark"
+    style="@style/D.Widget.TabLayout.Dark"
     android:layout_alignParentBottom="true"
     android:layout_centerHorizontal="true"
     android:layout_marginBottom="32dp"/>
   <Button
     android:id="@+id/button_start"
-    style="@style/Widget.Button.Dark.Solid.Rounded"
+    style="@style/D.Widget.Button.Dark.Solid.Rounded"
     android:layout_above="@+id/tab_layout"
     android:layout_centerHorizontal="true"
     android:layout_marginBottom="32dp"

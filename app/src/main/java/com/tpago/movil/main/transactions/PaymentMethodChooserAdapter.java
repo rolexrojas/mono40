@@ -1,6 +1,6 @@
 package com.tpago.movil.main.transactions;
 
-import com.tpago.movil.dep.domain.Product;
+import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.util.Objects;
 import com.tpago.movil.util.Preconditions;
 

@@ -1,6 +1,6 @@
-package com.tpago.movil.dep.data.session;
+package com.tpago.movil.d.data.session;
 
-import com.tpago.movil.dep.domain.session.SessionService;
+import com.tpago.movil.d.domain.session.SessionService;
 
 import javax.inject.Singleton;
 

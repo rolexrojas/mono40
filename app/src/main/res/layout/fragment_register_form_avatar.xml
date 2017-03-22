@@ -7,13 +7,13 @@
   android:paddingTop="@dimen/init_container_padding_top_normal">
   <TextView
     android:id="@+id/label_title"
-    style="@style/Label.Dark.Primary"
+    style="@style/D.Label.Dark.Primary"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="@string/register_form_avatar_label_title"/>
   <TextView
     android:id="@+id/label_description"
-    style="@style/Label.Dark.Secondary"
+    style="@style/D.Label.Dark.Secondary"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_below="@+id/label_title"
@@ -31,6 +31,6 @@
     app:srcCompat="@drawable/d_widget_image_dark_avatar_placeholder_large"/>
   <Button
     android:id="@+id/button_move_to_next_screen"
-    style="@style/Widget.Button.Dark.Gradient"
+    style="@style/D.Widget.Button.Dark.Gradient"
     android:layout_alignParentBottom="true"/>
 </RelativeLayout>

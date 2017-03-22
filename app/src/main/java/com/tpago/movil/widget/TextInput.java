@@ -35,7 +35,7 @@ public class TextInput extends AppCompatEditText {
     return state;
   }
 
-  public boolean isErraticStateEnabled() {
+  public boolean checkIfErraticStateEnabled() {
     return erraticStateEnabled;
   }
 

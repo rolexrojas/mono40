@@ -14,7 +14,7 @@ public final class Objects {
     return !isNull(reference);
   }
 
-  public static <T> T defaultIfNull(T reference, T defaultValue) {
+  public static <T> T getDefaultIfNull(T reference, T defaultValue) {
     return isNotNull(reference) ? reference : defaultValue;
   }
 

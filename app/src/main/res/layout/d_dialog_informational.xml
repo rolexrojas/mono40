@@ -7,7 +7,7 @@
   android:paddingTop="@dimen/dialog_padding_top">
   <TextView
     android:id="@+id/label_message"
-    style="@style/Dialog.Label.Message"
+    style="@style/D.Dialog.Label.Message"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingEnd="@dimen/dialog_padding_horizontal"

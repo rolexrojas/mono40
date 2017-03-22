@@ -17,7 +17,7 @@ public final class PurchaseFragmentCreator {
 
   public final Fragment create() {
     if (nfcHelper.isNfcAvailable()) {
-      return com.tpago.movil.dep.ui.main.purchase.PurchaseFragment.newInstance();
+      return com.tpago.movil.d.ui.main.purchase.PurchaseFragment.newInstance();
     } else {
       return NonNfcPurchaseFragment.create();
     }

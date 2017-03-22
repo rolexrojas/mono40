@@ -1,25 +1,25 @@
-package com.tpago.movil.dep.data.api;
+package com.tpago.movil.d.data.api;
 
 import android.support.annotation.NonNull;
 
 import com.tpago.movil.Bank;
 import com.tpago.movil.Partner;
-import com.tpago.movil.dep.domain.AccountBalance;
-import com.tpago.movil.dep.domain.Balance;
-import com.tpago.movil.dep.domain.BillRecipient;
-import com.tpago.movil.dep.domain.CreditCardBalance;
-import com.tpago.movil.dep.domain.InitialData;
-import com.tpago.movil.dep.domain.LoanBalance;
-import com.tpago.movil.dep.domain.NonAffiliatedPhoneNumberRecipient;
-import com.tpago.movil.dep.domain.PhoneNumberRecipient;
-import com.tpago.movil.dep.domain.Product;
-import com.tpago.movil.dep.domain.ProductCreator;
-import com.tpago.movil.dep.domain.ProductType;
-import com.tpago.movil.dep.domain.Recipient;
-import com.tpago.movil.dep.domain.Transaction;
-import com.tpago.movil.dep.domain.api.ApiCode;
-import com.tpago.movil.dep.domain.api.ApiResult;
-import com.tpago.movil.dep.domain.api.DepApiBridge;
+import com.tpago.movil.d.domain.AccountBalance;
+import com.tpago.movil.d.domain.Balance;
+import com.tpago.movil.d.domain.BillRecipient;
+import com.tpago.movil.d.domain.CreditCardBalance;
+import com.tpago.movil.d.domain.InitialData;
+import com.tpago.movil.d.domain.LoanBalance;
+import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
+import com.tpago.movil.d.domain.PhoneNumberRecipient;
+import com.tpago.movil.d.domain.Product;
+import com.tpago.movil.d.domain.ProductCreator;
+import com.tpago.movil.d.domain.ProductType;
+import com.tpago.movil.d.domain.Recipient;
+import com.tpago.movil.d.domain.Transaction;
+import com.tpago.movil.d.domain.api.ApiCode;
+import com.tpago.movil.d.domain.api.ApiResult;
+import com.tpago.movil.d.domain.api.DepApiBridge;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

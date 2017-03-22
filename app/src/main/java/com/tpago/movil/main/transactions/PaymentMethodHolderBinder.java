@@ -3,7 +3,7 @@ package com.tpago.movil.main.transactions;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.dep.domain.Product;
+import com.tpago.movil.d.domain.Product;
 
 /**
  * @author hecvasro

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+  <item
+    android:drawable="@drawable/widget_text_input_light_not_enabled"
+    android:state_enabled="false"/>
+  <item
+    android:drawable="@drawable/widget_text_input_light_focused_erratic"
+    android:state_focused="true"
+    app:state_erratic="true"/>
+  <item
+    android:drawable="@drawable/widget_text_input_light_focused_not_erratic"
+    android:state_focused="true"
+    app:state_erratic="false"/>
+  <item
+    android:drawable="@drawable/widget_text_input_light_not_focused_erratic"
+    android:state_focused="false"
+    app:state_erratic="true"/>
+  <item
+    android:drawable="@drawable/widget_text_input_light_not_focused_not_erratic"
+    android:state_focused="false"
+    app:state_erratic="false"/>
+</selector>

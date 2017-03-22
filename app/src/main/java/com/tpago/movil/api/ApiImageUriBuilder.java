@@ -6,7 +6,7 @@ import android.net.Uri;
 import com.tpago.movil.Bank;
 import com.tpago.movil.Partner;
 import com.tpago.movil.app.DisplayDensity;
-import com.tpago.movil.dep.domain.Product;
+import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.text.Texts;
 
 /**

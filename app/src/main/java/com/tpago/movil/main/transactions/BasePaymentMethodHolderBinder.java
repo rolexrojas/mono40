@@ -5,9 +5,9 @@ import android.content.Context;
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.Bank;
 import com.tpago.movil.api.ApiImageUriBuilder;
-import com.tpago.movil.dep.data.util.Binder;
-import com.tpago.movil.dep.domain.Product;
-import com.tpago.movil.dep.domain.ProductType;
+import com.tpago.movil.d.data.util.Binder;
+import com.tpago.movil.d.domain.Product;
+import com.tpago.movil.d.domain.ProductType;
 import com.tpago.movil.util.Preconditions;
 
 /**

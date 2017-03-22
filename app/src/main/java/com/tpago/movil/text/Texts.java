@@ -1,6 +1,12 @@
 package com.tpago.movil.text;
 
+import android.content.Context;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
+
 import com.tpago.movil.util.Objects;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
 
 /**
  * @author hecvasro
@@ -12,10 +18,6 @@ public final class Texts {
 
   public static boolean isNotEmpty(CharSequence s) {
     return !isEmpty(s);
-  }
-
-  public static String getDefaultIfEmpty(String s, String d) {
-    return isEmpty(s) ? d : s;
   }
 
   public static String join(String delimiter, Object... tokens) {
@@ -30,6 +32,24 @@ public final class Texts {
       builder.append(token.toString());
     }
     return builder.toString();
+  }
+
+  public static CharSequence createContent(
+    Context context,
+    String content,
+    String fontPath,
+    int textColor,
+    int textSize) {
+    if (Texts.isEmpty(content)) {
+      return null;
+    } else {
+      return Truss.create()
+        .pushSpan(new ForegroundColorSpan(textColor))
+        .pushSpan(new AbsoluteSizeSpan(textSize))
+        .pushSpan(new CalligraphyTypefaceSpan(Typefaces.load(context, fontPath)))
+        .append(content)
+        .build();
+    }
   }
 
   private Texts() {

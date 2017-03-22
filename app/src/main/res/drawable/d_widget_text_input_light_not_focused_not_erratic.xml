@@ -10,10 +10,10 @@
   <item>
     <shape android:shape="rectangle">
       <padding
-        android:bottom="@dimen/widget_text_input_background_padding"
-        android:left="@dimen/widget_text_input_background_padding"
-        android:right="@dimen/widget_text_input_background_padding"
-        android:top="@dimen/widget_text_input_background_padding"/>
+        android:bottom="@dimen/d_widget_text_input_background_padding"
+        android:left="@dimen/d_widget_text_input_background_padding"
+        android:right="@dimen/d_widget_text_input_background_padding"
+        android:top="@dimen/d_widget_text_input_background_padding"/>
     </shape>
   </item>
 </layer-list>

@@ -28,7 +28,7 @@
       android:textSize="15sp"/>
     <com.tpago.movil.widget.TextInput
       android:id="@+id/text_input_password"
-      style="@style/Widget.TextInput.Dark"
+      style="@style/D.Widget.TextInput.Dark"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginEnd="60dp"
@@ -41,7 +41,7 @@
   </LinearLayout>
   <Button
     android:id="@+id/button_unlock"
-    style="@style/Widget.Button.Dark.Gradient"
+    style="@style/D.Widget.Button.Dark.Gradient"
     android:layout_alignParentBottom="true"
     android:text="@string/unlock_button"/>
 </RelativeLayout>

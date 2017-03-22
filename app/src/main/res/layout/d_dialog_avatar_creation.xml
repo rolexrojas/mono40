@@ -24,7 +24,7 @@
       android:layout_centerVertical="true"
       app:srcCompat="@drawable/ic_insert_photo_black_18dp"/>
     <TextView
-      style="@style/Dialog.Label.Action"
+      style="@style/D.Dialog.Label.Action"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_marginStart="16dp"
@@ -47,7 +47,7 @@
       android:layout_centerVertical="true"
       app:srcCompat="@drawable/ic_camera_alt_black_18dp"/>
     <TextView
-      style="@style/Dialog.Label.Action"
+      style="@style/D.Dialog.Label.Action"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_marginStart="16dp"

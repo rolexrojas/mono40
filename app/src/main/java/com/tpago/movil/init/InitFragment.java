@@ -15,9 +15,9 @@ import com.tpago.movil.UserStore;
 import com.tpago.movil.app.ActivityQualifier;
 import com.tpago.movil.app.FragmentReplacer;
 import com.tpago.movil.app.Permissions;
-import com.tpago.movil.dep.domain.InitialDataLoader;
-import com.tpago.movil.dep.domain.session.SessionRepo;
-import com.tpago.movil.dep.ui.main.DepMainActivity;
+import com.tpago.movil.d.domain.InitialDataLoader;
+import com.tpago.movil.d.domain.session.SessionRepo;
+import com.tpago.movil.d.ui.main.DepMainActivity;
 import com.tpago.movil.init.intro.IntroFragment;
 import com.tpago.movil.init.unlock.UnlockFragment;
 
@@ -67,8 +67,8 @@ public final class InitFragment extends BaseInitFragment {
     } else {
       final User user = userStore.get();
       final Session session = sessionBuilder.build();
-      final com.tpago.movil.dep.domain.session.Session s
-        = new com.tpago.movil.dep.domain.session.Session(
+      final com.tpago.movil.d.domain.session.Session s
+        = new com.tpago.movil.d.domain.session.Session(
         user.getPhoneNumber().getValue(),
         user.getEmail().getValue(),
         session.getToken());
