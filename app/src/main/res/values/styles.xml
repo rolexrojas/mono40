@@ -17,7 +17,7 @@
   </style>
   <style name="Base.Widget"/>
   <style name="Base.Widget.Label"/>
-  <style name="Base.Widget.EditableLabel" parent="Widget.Label">
+  <style name="Base.Widget.EditableLabel">
     <item name="android:focusable">true</item>
     <item name="android:focusableInTouchMode">true</item>
     <item name="android:gravity">center</item>
@@ -53,8 +53,6 @@
   <style name="App.ThemeOverlay.Dark" parent="Base.App.ThemeOverlay.Dark"/>
   <style name="App.ThemeOverlay.Light" parent="Base.App.ThemeOverlay.Light"/>
   <style name="Widget" parent="Base.Widget"/>
-  <style name="Widget.Label" parent="Base.Widget.Label"/>
-  <style name="Widget.EditableLabel" parent="Base.Widget.EditableLabel"/>
   <style name="Widget.EditableLabel.Dark" parent="Base.Widget.EditableLabel.Dark"/>
   <style name="Widget.LabelFitterLayout" parent="Base.Widget.LabelFitterLayout"/>
   <style name="Widget.TextInput.Dark" parent="Base.Widget.TextInput.Dark"/>
