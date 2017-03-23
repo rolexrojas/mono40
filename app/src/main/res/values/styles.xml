@@ -519,7 +519,7 @@
   <style name="Dep.Base.Widget.CommercePaymentOption">
     <item name="android:background">@drawable/d_purchase_payment_option_background</item>
     <item name="android:layout_height">@dimen/commerce_payment_option_height</item>
-    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_width">@dimen/commerce_payment_option_width</item>
   </style>
 
   <style name="Dep.Base.Widget.CommercePaymentOptionProductIdentifier">
@@ -608,11 +608,8 @@
 
   <style name="Dep.App.Widget.CommercePaymentOption.Standalone">
     <item name="android:layout_alignParentBottom">true</item>
-    <item name="android:layout_marginBottom">
-      @dimen/commerce_payment_option_standalone_margin_bottom
-    </item>
-    <item name="android:layout_marginEnd">@dimen/commerce_payment_option_margin</item>
-    <item name="android:layout_marginStart">@dimen/commerce_payment_option_margin</item>
+    <item name="android:layout_centerHorizontal">true</item>
+    <item name="android:layout_marginBottom">@dimen/commerce_payment_option_standalone_margin_bottom</item>
   </style>
 
   <style

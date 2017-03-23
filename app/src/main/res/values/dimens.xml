@@ -41,6 +41,7 @@
   <dimen name="commerce_payment_option_border_radius_extra">12dp</dimen>
   <dimen name="commerce_payment_option_border_width">2dp</dimen>
   <dimen name="commerce_payment_option_height">200dp</dimen>
+  <dimen name="commerce_payment_option_width">320dp</dimen>
   <dimen name="commerce_payment_option_margin">20dp</dimen>
   <dimen name="commerce_payment_option_padding">20dp</dimen>
   <dimen name="commerce_payment_option_product_identifier_default_text_size">16sp</dimen>
