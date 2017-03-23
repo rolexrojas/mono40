@@ -54,6 +54,7 @@ class PartnerListPresenter extends RecipientCandidateListPresenter {
         @Override
         public List<Partner> call(ApiResult<List<Partner>> result) {
           if (result.isSuccessful()) {
+            Partner.sort(result.getData());
             return result.getData();
           } else {
             return new ArrayList<>();

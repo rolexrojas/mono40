@@ -19,6 +19,7 @@ import java.util.List;
 import rx.Observable;
 import rx.functions.Func0;
 import rx.functions.Func1;
+import rx.functions.Func2;
 
 /**
  * TODO
@@ -100,6 +101,16 @@ final class ContactProvider {
           return contact.matches(query);
         }
       })
-      .toList();
+      .toSortedList(new Func2<Contact, Contact, Integer>() {
+        @Override
+        public Integer call(Contact ca, Contact cb) {
+          final int r = ca.getName().compareTo(cb.getName());
+          if (r == 0) {
+            return ca.getPhoneNumber().toString().compareTo(cb.getPhoneNumber().toString());
+          } else {
+            return r;
+          }
+        }
+      });
   }
 }

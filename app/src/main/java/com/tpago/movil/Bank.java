@@ -9,6 +9,9 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author hecvasro
@@ -32,6 +35,7 @@ public abstract class Bank implements Serializable, Parcelable {
   /**
    * Temporary fix for: <a href="https://trello.com/c/09CG3iLy">https://trello.com/c/09CG3iLy</a>
    */
+  @Deprecated
   public static String getName(Bank bank) {
     switch (bank.getCode()) {
       case BANK_POPULAR: return "Popular";
@@ -42,6 +46,7 @@ public abstract class Bank implements Serializable, Parcelable {
   /**
    * Temporary fix for: TODO
    */
+  @Deprecated
   public static int getColor(Bank bank) {
     switch (bank.getCode()) {
       case BANK_ADEMI: return Color.parseColor("#008286");
@@ -55,6 +60,16 @@ public abstract class Bank implements Serializable, Parcelable {
       case BANK_UNION: return Color.parseColor("#FD4F57");
       default: return Color.parseColor("#D8D8D8");
     }
+  }
+
+  @Deprecated
+  public static void sort(List<Bank> bankList) {
+    Collections.sort(bankList, new Comparator<Bank>() {
+      @Override
+      public int compare(Bank ba, Bank bb) {
+        return getName(ba).compareTo(getName(bb));
+      }
+    });
   }
 
   public static TypeAdapter<Bank> typeAdapter(Gson gson) {

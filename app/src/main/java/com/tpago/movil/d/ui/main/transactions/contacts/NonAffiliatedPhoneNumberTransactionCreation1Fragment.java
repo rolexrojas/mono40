@@ -129,6 +129,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment
             if (result.isSuccessful()) {
               adapter.notifyItemRangeRemoved(0, bankList.size());
               bankList.addAll(result.getData());
+              Bank.sort(bankList);
               adapter.notifyItemRangeInserted(0, bankList.size());
             } else {
               Dialogs.builder(getContext())

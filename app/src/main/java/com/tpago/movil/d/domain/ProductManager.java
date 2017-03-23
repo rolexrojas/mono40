@@ -3,6 +3,7 @@ package com.tpago.movil.d.domain;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
+import com.tpago.movil.Bank;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.pos.PosResult;
 import com.tpago.movil.d.domain.session.Session;
@@ -11,6 +12,8 @@ import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.util.Objects;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import dagger.Lazy;
@@ -93,20 +96,29 @@ public final class ProductManager implements ProductProvider {
   }
 
   public final Observable<List<Product>> getAllPaymentOptions() {
-    // TODO: Change order in a way that the primary payment option is the first one.
     return getAll()
-      .compose(RxUtils.<Product>fromCollection())
-      .filter(new Func1<Product, Boolean>() {
+      .map(new Func1<List<Product>, List<Product>>() {
         @Override
-        public Boolean call(Product product) {
-          return Product.isPaymentOption(product);
+        public List<Product> call(List<Product> productList) {
+          Product defaultPaymentMethod = null;
+          List<Product> paymentMethodList = new ArrayList<>();
+          for (Product product : productList) {
+            if (Product.isDefaultPaymentOption(product)) {
+              defaultPaymentMethod = product;
+            } else if (Product.isPaymentOption(product)) {
+              paymentMethodList.add(product);
+            }
+          }
+          if (Objects.isNotNull(defaultPaymentMethod)) {
+            paymentMethodList.add(0, defaultPaymentMethod);
+          }
+          return paymentMethodList;
         }
-      })
-      .toList();
+      });
   }
 
   public final Observable<List<PosResult>> activateAllProducts(final String pin) {
-    return productRepo.getAll()
+    return getAllPaymentOptions()
       .flatMap(new Func1<List<Product>, Observable<PosResult>>() {
         @Override
         public Observable<PosResult> call(List<Product> productList) {
@@ -118,12 +130,10 @@ public final class ProductManager implements ProductProvider {
             final String pn = s.getPhoneNumber();
             Observable<PosResult> o = null;
             for (Product p : productList) {
-              if (Product.isPaymentOption(p) && !b.isRegistered(p.getAlias())) {
-                if (Objects.isNull(o)) {
-                  o = b.addCard(pn, pin, p.getAlias());
-                } else {
-                  o = o.concatWith(b.addCard(pn, pin, p.getAlias()));
-                }
+              if (Objects.isNull(o)) {
+                o = b.addCard(pn, pin, p.getAlias());
+              } else {
+                o = o.concatWith(b.addCard(pn, pin, p.getAlias()));
               }
             }
             return o;
@@ -148,7 +158,19 @@ public final class ProductManager implements ProductProvider {
 
   @Override
   public Observable<List<Product>> getAll() {
-    return productRepo.getAll();
+    return productRepo.getAll()
+      .compose(RxUtils.<Product>fromCollection())
+      .toSortedList(new Func2<Product, Product, Integer>() {
+        @Override
+        public Integer call(Product pa, Product pb) {
+          final int r = Bank.getName(pa.getBank()).compareTo(Bank.getName(pb.getBank()));
+          if (r == 0) {
+            return pa.getAlias().compareTo(pb.getAlias());
+          } else {
+            return r;
+          }
+        }
+      });
   }
 
   public void clear() {
