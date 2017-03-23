@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,13 +91,15 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
             loadIndicator.start();
           }
         })
-        .subscribe(new Action1<ApiResult<Product>>() {
+        .subscribe(new Action1<ApiResult<Pair<String, Product>>>() {
           @Override
-          public void call(ApiResult<Product> result) {
+          public void call(ApiResult<Pair<String, Product>> result) {
             loadIndicator.stop();
             if (result.isSuccessful()) {
+              final Pair<String, Product> data = result.getData();
+              recipient.setLabel(data.first);
+              recipient.setProduct(data.second);
               recipient.setAccountNumber(content);
-              recipient.setProduct(result.getData());
               final Activity activity = getActivity();
               activity.setResult(
                 Activity.RESULT_OK,

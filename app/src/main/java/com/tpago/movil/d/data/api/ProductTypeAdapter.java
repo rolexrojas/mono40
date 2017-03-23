@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 /**
  * @author hecvasro
  */
+@Deprecated
 class ProductTypeAdapter implements JsonDeserializer<Product>, JsonSerializer<Product> {
   private static final String PROPERTY_TYPE = "account-type";
   private static final String PROPERTY_ALIAS = "account-alias";

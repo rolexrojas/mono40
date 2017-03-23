@@ -3,6 +3,7 @@ package com.tpago.movil.d.ui.main.transactions.contacts;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -147,21 +148,25 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment
             loadIndicator.start();
           }
         })
-        .subscribe(new Action1<ApiResult<Product>>() {
+        .subscribe(new Action1<ApiResult<Pair<String, Product>>>() {
           @Override
-          public void call(ApiResult<Product> result) {
+          public void call(ApiResult<Pair<String, Product>> result) {
             loadIndicator.stop();
             if (result.isSuccessful()) {
+              final Pair<String, Product> data = result.getData();
+              ((NonAffiliatedPhoneNumberRecipient) recipient).setLabel(data.first);
+              ((NonAffiliatedPhoneNumberRecipient) recipient).setProduct(data.second);
               ((NonAffiliatedPhoneNumberRecipient) recipient).setAccountNumber(content);
-              ((NonAffiliatedPhoneNumberRecipient) recipient).setProduct(result.getData());
               final int x = Math.round((button.getRight() - button.getLeft()) / 2);
               final int y = Math.round((button.getBottom() - button.getTop()) / 2);
               PinConfirmationDialogFragment.newInstance(
                 x,
                 y,
-                getString(R.string.format_transfer_to,
+                String.format(
+                  "Transferir %1$s a %2$s mas %3$s",
                   Formatter.amount(fundingAccount.get().getCurrency(), value.get()),
-                  recipient.getIdentifier()),
+                  data.first,
+                  Formatter.amount(data.second.getCurrency(), data.second.getQueryFee())),
                 new PinConfirmationDialogFragment.Callback() {
                   @Override
                   public void confirm(@NonNull String pin) {

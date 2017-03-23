@@ -1,6 +1,7 @@
 package com.tpago.movil.d.domain.api;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 
 import com.tpago.movil.Partner;
 import com.tpago.movil.d.domain.Balance;
@@ -134,7 +135,7 @@ public interface DepApiBridge {
   Observable<ApiResult<Void>> setDefaultPaymentOption(@NonNull String authToken,
     @NonNull Product product);
 
-  Observable<ApiResult<Product>> checkAccountNumber(
+  Observable<ApiResult<Pair<String, Product>>> checkAccountNumber(
     String authToken,
     Bank bank,
     String accountNumber);

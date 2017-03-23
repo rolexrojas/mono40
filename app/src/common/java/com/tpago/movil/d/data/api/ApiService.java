@@ -5,7 +5,7 @@ import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.CreditCardBalance;
 import com.tpago.movil.d.domain.InitialData;
 import com.tpago.movil.d.domain.LoanBalance;
-import com.tpago.movil.d.domain.Product;
+import com.tpago.movil.d.domain.ProductInfo;
 import com.tpago.movil.d.domain.Transaction;
 
 import java.util.List;
@@ -68,7 +68,7 @@ interface ApiService {
     @Header(Api.Header.AUTHORIZATION) String authToken);
 
   @POST("transfer/recipient-account-info")
-  Observable<Response<Product>> checkAccountNumber(
+  Observable<Response<ProductInfo>> checkAccountNumber(
     @Header(Api.Header.AUTHORIZATION) String authToken,
     @Body RecipientAccountInfoRequestBody body);
 

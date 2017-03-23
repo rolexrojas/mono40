@@ -1,8 +1,10 @@
 package com.tpago.movil.d.data.api;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 
 import com.tpago.movil.Partner;
+import com.tpago.movil.api.Currencies;
 import com.tpago.movil.d.domain.Balance;
 import com.tpago.movil.Bank;
 import com.tpago.movil.d.domain.BillBalance;
@@ -11,6 +13,8 @@ import com.tpago.movil.d.domain.InitialData;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.Product;
+import com.tpago.movil.d.domain.ProductCreator;
+import com.tpago.movil.d.domain.ProductInfo;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.Transaction;
 import com.tpago.movil.d.domain.api.DepApiBridge;
@@ -249,17 +253,28 @@ class RetrofitApiBridge implements DepApiBridge {
   }
 
   @Override
-  public Observable<ApiResult<Product>> checkAccountNumber(
+  public Observable<ApiResult<Pair<String, Product>>> checkAccountNumber(
     String authToken,
     Bank bank,
     String accountNumber) {
     return apiService.checkAccountNumber(
       authToken,
       RecipientAccountInfoRequestBody.create(bank, accountNumber))
-      .flatMap(mapToApiResult(new Func1<Product, Product>() {
+      .flatMap(mapToApiResult(new Func1<ProductInfo, Pair<String, Product>>() {
         @Override
-        public Product call(Product product) {
-          return product;
+        public Pair<String, Product> call(ProductInfo productInfo) {
+          return Pair.create(
+            productInfo.getRecipientName(),
+            ProductCreator.create(
+              productInfo.getType(),
+              productInfo.getAlias(),
+              productInfo.getNumber(),
+              productInfo.getBank(),
+              Currencies.map(productInfo.getCurrency()),
+              productInfo.getQueryFee(),
+              false,
+              false,
+              null));
         }
       }));
   }
