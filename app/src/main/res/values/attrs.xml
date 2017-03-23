@@ -4,9 +4,10 @@
     <attr name="state_erratic" format="boolean"/>
   </declare-styleable>
 
-  <declare-styleable name="TextFitterLayout">
+  <declare-styleable name="NotEditableTextInput">
     <attr name="minTextSize" format="dimension|reference"/>
     <attr name="maxTextSize" format="dimension|reference"/>
+    <attr name="cursorDrawable" format="reference"/>
   </declare-styleable>
 
   <declare-styleable name="AmountText">

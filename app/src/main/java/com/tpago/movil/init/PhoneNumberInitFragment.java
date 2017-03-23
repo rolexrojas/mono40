@@ -16,8 +16,8 @@ import com.tpago.movil.init.register.RegisterFragment;
 import com.tpago.movil.init.signin.SignInFragment;
 import com.tpago.movil.widget.FullSizeLoadIndicator;
 import com.tpago.movil.widget.LoadIndicator;
+import com.tpago.movil.widget.NotEditableTextInput;
 import com.tpago.movil.widget.NumPad;
-import com.tpago.movil.widget.TextInput;
 
 import javax.inject.Inject;
 
@@ -38,7 +38,7 @@ public final class PhoneNumberInitFragment
   private LoadIndicator loadIndicator;
   private PhoneNumberInitPresenter presenter;
 
-  @BindView(R.id.text_input) TextInput textInput;
+  @BindView(R.id.text_input) NotEditableTextInput textInput;
   @BindView(R.id.num_pad) NumPad numPad;
   @BindView(R.id.button_move_to_next_screen) Button nextButton;
 

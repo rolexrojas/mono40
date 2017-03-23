@@ -30,14 +30,28 @@
     <item name="android:textCursorDrawable">@drawable/widget_text_input_dark_cursor</item>
     <item name="android:theme">@style/App.ThemeOverlay.Dark</item>
   </style>
-  <style name="Base.Widget.NotEditableTextInput.Dark" parent="Widget.TextInput.Dark">
+  <style name="Base.Widget.NotEditableTextInput">
+    <item name="android:focusable">true</item>
+    <item name="android:focusableInTouchMode">true</item>
     <item name="android:gravity">center</item>
+    <item name="android:layout_height">@dimen/widget_text_fitter_layout_height</item>
+    <item name="android:layout_marginEnd">@dimen/common_margin_horizontal_large</item>
+    <item name="android:layout_marginStart">@dimen/common_margin_horizontal_large</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:maxLines">1</item>
+    <item name="android:padding">@dimen/widget_not_editable_text_input_padding</item>
     <item name="android:textSize">@dimen/widget_text_input_not_editable_content_size</item>
     <item name="fontPath">@string/widget_text_input_not_editable_content_font</item>
+    <item name="maxTextSize">@dimen/widget_not_editable_text_input_text_size_max</item>
+    <item name="minTextSize">@dimen/widget_not_editable_text_input_text_size_min</item>
+  </style>
+  <style name="Base.Widget.NotEditableTextInput.Dark">
+    <item name="android:background">@drawable/widget_text_input_dark</item>
+    <item name="android:textColor">@color/widget_text_input_dark_content_list</item>
+    <item name="android:theme">@style/App.ThemeOverlay.Dark</item>
+    <item name="cursorDrawable">@drawable/widget_text_input_dark_cursor</item>
   </style>
   <style name="Base.Widget.TextFitterLayout">
-    <item name="minTextSize">@dimen/widget_text_fitter_layout_size_min</item>
-    <item name="maxTextSize">@dimen/widget_text_fitter_layout_size_max</item>
   </style>
   <style name="Base.Screen"/>
   <style name="App" parent="Base.App"/>
