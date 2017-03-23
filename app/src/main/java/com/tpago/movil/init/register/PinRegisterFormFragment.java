@@ -11,10 +11,10 @@ import com.tpago.movil.R;
 import com.tpago.movil.app.FragmentQualifier;
 import com.tpago.movil.app.FragmentReplacer;
 import com.tpago.movil.app.InformationalDialogFragment;
+import com.tpago.movil.widget.EditableLabel;
 import com.tpago.movil.widget.FullSizeLoadIndicator;
 import com.tpago.movil.widget.LoadIndicator;
 import com.tpago.movil.widget.NumPad;
-import com.tpago.movil.widget.TextInput;
 
 import javax.inject.Inject;
 
@@ -36,7 +36,7 @@ public final class PinRegisterFormFragment
 
   @Inject @FragmentQualifier FragmentReplacer fragmentReplacer;
 
-  @BindView(R.id.text_input) TextInput textInput;
+  @BindView(R.id.editable_label_pin) EditableLabel pinEditableLabel;
   @BindView(R.id.num_pad) NumPad numPad;
 
   static PinRegisterFormFragment create() {
@@ -80,8 +80,6 @@ public final class PinRegisterFormFragment
   @Override
   public void onResume() {
     super.onResume();
-    // Sets focus on the num pad text input.
-    textInput.requestFocus();
     // Adds a listener that gets notified each time a digit button of the num pad is clicked.
     numPad.setOnDigitClickedListener(this);
     // Adds a listener that gets notified each time the delete button of the num pad is clicked.
@@ -141,7 +139,7 @@ public final class PinRegisterFormFragment
 
   @Override
   public void setTextInputContent(String content) {
-    textInput.setText(content);
+    pinEditableLabel.setText(content);
   }
 
   @Override

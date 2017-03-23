@@ -7,16 +7,33 @@
     <item name="colorPrimary">@color/common_primary</item>
     <item name="colorPrimaryDark">@color/common_primary_dark</item>
 
+    <item name="labelFitterLayoutStyle">@style/Widget.LabelFitterLayout</item>
+
     <item name="textInputStyle">@style/Widget.TextInput.Dark</item>
-    <item name="notEditableTextInputStyle">@style/Widget.NotEditableTextInput.Dark</item>
-    <item name="textFitterLayoutStyle">@style/Widget.TextFitterLayout</item>
   </style>
   <style name="Base.App.ThemeOverlay.Light" parent="ThemeOverlay.AppCompat.Light"/>
   <style name="Base.App.ThemeOverlay.Dark" parent="ThemeOverlay.AppCompat.Dark">
     <item name="colorAccent">@color/common_white</item>
   </style>
-  <style name="Base.Label"/>
   <style name="Base.Widget"/>
+  <style name="Base.Widget.Label"/>
+  <style name="Base.Widget.EditableLabel" parent="Widget.Label">
+    <item name="android:focusable">true</item>
+    <item name="android:focusableInTouchMode">true</item>
+    <item name="android:gravity">center</item>
+    <item name="android:padding">@dimen/widget_editable_label_padding</item>
+    <item name="fontPath">@string/widget_editable_label_content_font</item>
+  </style>
+  <style name="Base.Widget.EditableLabel.Dark">
+    <item name="android:background">@drawable/widget_editable_label_dark</item>
+    <item name="android:textColor">@color/widget_editable_label_dark_content_list</item>
+  </style>
+  <style name="Base.Widget.LabelFitterLayout">
+    <item name="android:layout_height">@dimen/widget_label_fitter_layout_height</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="maxTextSize">@dimen/widget_label_fitter_layout_text_size_max</item>
+    <item name="minTextSize">@dimen/widget_label_fitter_layout_text_size_min</item>
+  </style>
   <style name="Base.Widget.TextInput">
     <item name="android:maxLines">1</item>
     <item name="android:padding">@dimen/widget_text_input_padding</item>
@@ -30,39 +47,17 @@
     <item name="android:textCursorDrawable">@drawable/widget_text_input_dark_cursor</item>
     <item name="android:theme">@style/App.ThemeOverlay.Dark</item>
   </style>
-  <style name="Base.Widget.NotEditableTextInput">
-    <item name="android:focusable">true</item>
-    <item name="android:focusableInTouchMode">true</item>
-    <item name="android:gravity">center</item>
-    <item name="android:layout_height">@dimen/widget_text_fitter_layout_height</item>
-    <item name="android:layout_marginEnd">@dimen/common_margin_horizontal_large</item>
-    <item name="android:layout_marginStart">@dimen/common_margin_horizontal_large</item>
-    <item name="android:layout_width">match_parent</item>
-    <item name="android:maxLines">1</item>
-    <item name="android:padding">@dimen/widget_not_editable_text_input_padding</item>
-    <item name="android:textSize">@dimen/widget_text_input_not_editable_content_size</item>
-    <item name="fontPath">@string/widget_text_input_not_editable_content_font</item>
-    <item name="maxTextSize">@dimen/widget_not_editable_text_input_text_size_max</item>
-    <item name="minTextSize">@dimen/widget_not_editable_text_input_text_size_min</item>
-  </style>
-  <style name="Base.Widget.NotEditableTextInput.Dark">
-    <item name="android:background">@drawable/widget_text_input_dark</item>
-    <item name="android:textColor">@color/widget_text_input_dark_content_list</item>
-    <item name="android:theme">@style/App.ThemeOverlay.Dark</item>
-    <item name="cursorDrawable">@drawable/widget_text_input_dark_cursor</item>
-  </style>
-  <style name="Base.Widget.TextFitterLayout">
-  </style>
   <style name="Base.Screen"/>
   <style name="App" parent="Base.App"/>
   <style name="App.Theme" parent="Base.App.Theme"/>
   <style name="App.ThemeOverlay.Dark" parent="Base.App.ThemeOverlay.Dark"/>
   <style name="App.ThemeOverlay.Light" parent="Base.App.ThemeOverlay.Light"/>
-  <style name="Label" parent="Base.Label"/>
   <style name="Widget" parent="Base.Widget"/>
+  <style name="Widget.Label" parent="Base.Widget.Label"/>
+  <style name="Widget.EditableLabel" parent="Base.Widget.EditableLabel"/>
+  <style name="Widget.EditableLabel.Dark" parent="Base.Widget.EditableLabel.Dark"/>
+  <style name="Widget.LabelFitterLayout" parent="Base.Widget.LabelFitterLayout"/>
   <style name="Widget.TextInput.Dark" parent="Base.Widget.TextInput.Dark"/>
-  <style name="Widget.NotEditableTextInput.Dark" parent="Base.Widget.NotEditableTextInput.Dark"/>
-  <style name="Widget.TextFitterLayout" parent="Base.Widget.TextFitterLayout"/>
   <style name="Screen" parent="Base.Screen"/>
 
   <!-- TODO: Remove every dimension from this point downwards -->

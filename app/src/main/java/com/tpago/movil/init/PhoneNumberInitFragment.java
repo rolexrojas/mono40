@@ -14,9 +14,9 @@ import com.tpago.movil.app.FragmentReplacer;
 import com.tpago.movil.app.InformationalDialogFragment;
 import com.tpago.movil.init.register.RegisterFragment;
 import com.tpago.movil.init.signin.SignInFragment;
+import com.tpago.movil.widget.EditableLabel;
 import com.tpago.movil.widget.FullSizeLoadIndicator;
 import com.tpago.movil.widget.LoadIndicator;
-import com.tpago.movil.widget.NotEditableTextInput;
 import com.tpago.movil.widget.NumPad;
 
 import javax.inject.Inject;
@@ -34,20 +34,20 @@ public final class PhoneNumberInitFragment
   implements PhoneNumberInitPresenter.View,
   NumPad.OnDigitClickedListener,
   NumPad.OnDeleteClickedListener {
+  public static PhoneNumberInitFragment create() {
+    return new PhoneNumberInitFragment();
+  }
+
   private Unbinder unbinder;
   private LoadIndicator loadIndicator;
   private PhoneNumberInitPresenter presenter;
 
-  @BindView(R.id.text_input) NotEditableTextInput textInput;
+  @BindView(R.id.editable_label_phone_number) EditableLabel phoneNumberEditableLabel;
   @BindView(R.id.num_pad) NumPad numPad;
   @BindView(R.id.button_move_to_next_screen) Button nextButton;
 
   @Inject LogoAnimator logoAnimator;
   @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
-
-  public static PhoneNumberInitFragment create() {
-    return new PhoneNumberInitFragment();
-  }
 
   @OnClick(R.id.button_move_to_next_screen)
   void onNextButtonClicked() {
@@ -97,8 +97,6 @@ public final class PhoneNumberInitFragment
     super.onResume();
     // Moves the logo out of the screen.
     logoAnimator.moveOutOfScreen();
-    // Sets focus on the num pad text input.
-    textInput.requestFocus();
   }
 
   @Override
@@ -136,12 +134,12 @@ public final class PhoneNumberInitFragment
 
   @Override
   public void setTextInputContent(String text) {
-    textInput.setText(text);
+    phoneNumberEditableLabel.setText(text);
   }
 
   @Override
   public void showTextInputAsErratic(boolean showAsErratic) {
-    textInput.setErraticStateEnabled(showAsErratic);
+    phoneNumberEditableLabel.setErraticStateEnabled(showAsErratic);
   }
 
   @Override

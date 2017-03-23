@@ -4,10 +4,9 @@
     <attr name="state_erratic" format="boolean"/>
   </declare-styleable>
 
-  <declare-styleable name="NotEditableTextInput">
+  <declare-styleable name="LabelFitterLayout">
     <attr name="minTextSize" format="dimension|reference"/>
     <attr name="maxTextSize" format="dimension|reference"/>
-    <attr name="cursorDrawable" format="reference"/>
   </declare-styleable>
 
   <declare-styleable name="AmountText">
@@ -22,9 +21,10 @@
   </declare-styleable>
 
   <declare-styleable name="App.Theme">
+    <attr name="labelFitterLayoutStyle" format="reference"/>
+
+    <attr name="autoResizableLabelStyle" format="reference"/>
     <attr name="textInputStyle" format="reference"/>
-    <attr name="notEditableTextInputStyle" format="reference"/>
-    <attr name="textFitterLayoutStyle" format="reference"/>
     <attr name="amountTextViewStyle" format="reference"/>
     <attr name="amountTextInputStyle" format="reference"/>
   </declare-styleable>

@@ -34,7 +34,7 @@
   <string name="welcome">¡Bienvenido!</string>
 
   <string name="widget_text_input_content_font">@string/font_gotham_round_book</string>
-  <string name="widget_text_input_not_editable_content_font">@string/font_gotham_round_light</string>
+  <string name="widget_editable_label_content_font">@string/font_gotham_round_light</string>
 
   <!-- TODO: Remove every string from this point downwards -->
   <string name="amount_text_currency_font">@string/font_gotham_round_book</string>
