@@ -125,8 +125,9 @@ public class PurchaseFragment
     recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL,
       false));
     final Resources resources = getResources();
-    recyclerView.addItemDecoration(new SpaceDividerItemDecoration(resources.getDimensionPixelSize(
-      R.dimen.commerce_payment_option_margin)));
+    recyclerView.addItemDecoration(
+      new SpaceDividerItemDecoration(
+        resources.getDimensionPixelSize(R.dimen.commerce_payment_option_margin)));
     final int borderWidth = resources.getDimensionPixelOffset(
       R.dimen.commerce_payment_option_border_width);
     final int borderColor = ContextCompat.getColor(context,

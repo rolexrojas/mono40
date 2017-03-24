@@ -6,23 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 class SpaceDividerItemDecoration extends RecyclerView.ItemDecoration {
-  /**
-   * TODO
-   */
   @Dimension
   private final int size;
 
-  /**
-   * TODO
-   *
-   * @param size
-   *   TODO
-   */
   SpaceDividerItemDecoration(@Dimension int size) {
     this.size = size;
   }
@@ -45,9 +34,7 @@ class SpaceDividerItemDecoration extends RecyclerView.ItemDecoration {
         top = size / 2;
         bottom = size / 2;
       }
-      outRect.left = size;
       outRect.top = top;
-      outRect.right = size;
       outRect.bottom = bottom;
     }
   }
