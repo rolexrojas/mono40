@@ -7,6 +7,7 @@ import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.domain.util.StringUtils;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 
 import rx.Observable;
@@ -17,7 +18,21 @@ import rx.functions.Func2;
  *
  * @author hecvasro
  */
+@Deprecated
 public abstract class Recipient implements Serializable, Matchable {
+  @Deprecated public static Comparator<Recipient> comparator() {
+    return new Comparator<Recipient>() {
+      @Override
+      public int compare(Recipient ra, Recipient rb) {
+        return ra.getIdentifier().compareTo(rb.getIdentifier());
+      }
+    };
+  }
+
+  @Deprecated public static boolean checkIfBill(Recipient recipient) {
+    return recipient.getType().equals(RecipientType.BILL);
+  }
+
   /**
    * Recipient's {@link RecipientType type}.
    */
@@ -51,27 +66,6 @@ public abstract class Recipient implements Serializable, Matchable {
    */
   protected Recipient(@NonNull RecipientType type) {
     this(type, null);
-  }
-
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
-  @NonNull
-  public static Observable.Transformer<Recipient, List<Recipient>> toSortedListByIdentifier() {
-    return new Observable.Transformer<Recipient, List<Recipient>>() {
-      @Override
-      public Observable<List<Recipient>> call(Observable<Recipient> observable) {
-        return observable
-          .toSortedList(new Func2<Recipient, Recipient, Integer>() {
-            @Override
-            public Integer call(Recipient a, Recipient b) {
-              return a.getIdentifier().compareTo(b.getIdentifier());
-            }
-          });
-      }
-    };
   }
 
   public abstract String getId();

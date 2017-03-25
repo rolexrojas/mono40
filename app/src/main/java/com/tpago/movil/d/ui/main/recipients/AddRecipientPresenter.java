@@ -2,7 +2,7 @@ package com.tpago.movil.d.ui.main.recipients;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.d.data.SchedulerProvider;
+import com.tpago.movil.Session;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.Recipient;
@@ -10,6 +10,7 @@ import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.ui.Presenter;
 import com.tpago.movil.d.ui.misc.UiUtils;
+import com.tpago.movil.util.Preconditions;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -20,19 +21,17 @@ import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 class AddRecipientPresenter extends Presenter<AddRecipientScreen> {
+  private final String authToken;
   private final RecipientManager recipientManager;
 
   private Subscription checkIfAffiliatedSubscription = Subscriptions.unsubscribed();
 
-  AddRecipientPresenter(
-    @NonNull SchedulerProvider schedulerProvider,
-    @NonNull RecipientManager recipientManager) {
-    this.recipientManager = recipientManager;
+  AddRecipientPresenter(String authToken, RecipientManager recipientManager) {
+    this.authToken = Preconditions.checkNotNull(authToken, "authToken == null");
+    this.recipientManager = Preconditions.checkNotNull(recipientManager, "recipientManager == null");
   }
 
   void stop() {
@@ -44,7 +43,8 @@ class AddRecipientPresenter extends Presenter<AddRecipientScreen> {
     assertScreen();
     if (checkIfAffiliatedSubscription.isUnsubscribed()) {
       final String phoneNumber = contact.getPhoneNumber().toString();
-      checkIfAffiliatedSubscription = recipientManager.checkIfAffiliated(phoneNumber)
+      checkIfAffiliatedSubscription = recipientManager
+        .checkIfAffiliated(authToken, phoneNumber)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(new Action0() {
@@ -61,7 +61,7 @@ class AddRecipientPresenter extends Presenter<AddRecipientScreen> {
             final String contactName = contact.getName();
             if (isAffiliated) {
               final Recipient recipient = new PhoneNumberRecipient(contactPhoneNumber, contactName);
-              recipientManager.addSync(recipient);
+              recipientManager.add(recipient);
               screen.finish(recipient);
             } else {
               screen.startNonAffiliatedProcess(new NonAffiliatedPhoneNumberRecipient(

@@ -1,195 +1,230 @@
 package com.tpago.movil.d.domain;
 
-import android.support.annotation.NonNull;
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
-import android.support.v4.util.Pair;
 
+import com.google.gson.Gson;
+import com.tpago.movil.content.SharedPreferencesCreator;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.api.ApiUtils;
-import com.tpago.movil.d.domain.session.SessionManager;
-import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.ui.main.recipients.Contact;
+import com.tpago.movil.util.Objects;
+import com.tpago.movil.util.Preconditions;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import rx.Completable;
 import rx.Observable;
+import rx.Subscription;
+import rx.functions.Action1;
 import rx.functions.Func1;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 @Deprecated
-public final class RecipientManager implements RecipientProvider {
-  private final RecipientRepo recipientRepo;
+public final class RecipientManager {
+  private static final String KEY_INDEX_SET = "indexSet";
+
+  private final SharedPreferences sharedPreferences;
+  private final Gson gson;
+
   private final DepApiBridge apiBridge;
-  private final com.tpago.movil.d.domain.session.SessionManager sessionManager;
+
+  private final Set<String> indexSet;
+
+  private List<Recipient> recipientList;
 
   public RecipientManager(
-    @NonNull RecipientRepo recipientRepo,
-    @NonNull DepApiBridge apiBridge,
-    @NonNull SessionManager sessionManager) {
-    this.recipientRepo = recipientRepo;
-    this.apiBridge = apiBridge;
-    this.sessionManager = sessionManager;
+    SharedPreferencesCreator sharedPreferencesCreator,
+    Gson gson,
+    DepApiBridge apiBridge) {
+    this.sharedPreferences = Preconditions
+      .checkNotNull(sharedPreferencesCreator, "sharedPreferencesCreator == null")
+      .create(RecipientManager.class.getCanonicalName());
+    this.gson = Preconditions
+      .checkNotNull(gson, "gson == null");
+
+    this.apiBridge = Preconditions
+      .checkNotNull(apiBridge, "apiBridge == null");
+
+    this.indexSet = this.sharedPreferences.getStringSet(KEY_INDEX_SET, new HashSet<String>());
   }
 
-  private Observable<Recipient> queryBalance(Recipient recipient) {
+  @Deprecated private void queryBalance(final String authToken, final Recipient recipient) {
     if (recipient instanceof BillRecipient) {
-      return apiBridge.queryBalance(
-        sessionManager.getSession().getAuthToken(),
-        (BillRecipient) recipient);
-    } else {
-      return Observable.just(recipient);
+      final ApiResult<BillBalance> result = apiBridge
+        .queryBalance(authToken, (BillRecipient) recipient);
+      if (result.isSuccessful()) {
+        ((BillRecipient) recipient).setBalance(result.getData());
+      }
     }
   }
 
-  private Observable<Pair<Boolean, Recipient>> addRecipient(
+  @Deprecated final void syncRecipients(
+    final String authToken,
+    final List<Recipient> remoteRecipientList) {
+    if (Objects.isNull(recipientList)) {
+      recipientList = new ArrayList<>();
+    }
+    recipientList.clear();
+    for (String id : indexSet) {
+      recipientList.add(gson.fromJson(sharedPreferences.getString(id, null), Recipient.class));
+    }
+
+    final List<Recipient> recipientToAddList = new ArrayList<>(remoteRecipientList);
+    final List<Recipient> recipientToRemoveList = new ArrayList<>();
+    for (Recipient recipient : recipientList) {
+      if (recipient instanceof BillRecipient && !remoteRecipientList.contains(recipient)) {
+        recipientToRemoveList.add(recipient);
+      }
+    }
+
+    final SharedPreferences.Editor editor = sharedPreferences.edit();
+
+    recipientList.clear();
+    for (Recipient recipient : recipientToAddList) {
+      queryBalance(authToken, recipient);
+      recipientList.add(recipient);
+      indexSet.add(recipient.getId());
+      editor.putString(recipient.getId(), gson.toJson(recipient));
+    }
+    for (Recipient recipient : recipientToRemoveList) {
+      indexSet.remove(recipient.getId());
+      editor.remove(recipient.getId());
+    }
+
+    editor
+      .putStringSet(KEY_INDEX_SET, indexSet)
+      .apply();
+
+    Collections.sort(recipientList, Recipient.comparator());
+  }
+
+  @Deprecated public final void clear() {
+    recipientList.clear();
+    indexSet.clear();
+    sharedPreferences.edit()
+      .clear()
+      .apply();
+  }
+
+  @Deprecated public final List<Recipient> getAll(@Nullable final String query) {
+    final List<Recipient> resultList = new ArrayList<>();
+    for (Recipient recipient : recipientList) {
+      if (recipient.matches(query)) {
+        resultList.add(recipient);
+      }
+    }
+    return resultList;
+  }
+
+  @Deprecated
+  private Observable<Recipient> create(
+    final String authToken,
     final String phoneNumber,
     final String label) {
-    return checkIfAffiliated(phoneNumber)
-      .flatMap(new Func1<Boolean, Observable<Pair<Boolean, Recipient>>>() {
+    return checkIfAffiliated(authToken, phoneNumber)
+      .map(new Func1<Boolean, Recipient>() {
         @Override
-        public Observable<Pair<Boolean, Recipient>> call(Boolean affiliated) {
-          if (affiliated) {
-            return recipientRepo.save(new PhoneNumberRecipient(phoneNumber, label))
-              .map(new Func1<Recipient, Pair<Boolean, Recipient>>() {
-                @Override
-                public Pair<Boolean, Recipient> call(Recipient recipient) {
-                  return Pair.create(true, recipient);
-                }
-              });
+        public Recipient call(Boolean isAffiliated) {
+          final Recipient recipient;
+          if (isAffiliated) {
+            recipient = new PhoneNumberRecipient(phoneNumber, label);
+            recipientList.add(recipient);
+            indexSet.add(recipient.getId());
+            sharedPreferences.edit()
+              .putStringSet(KEY_INDEX_SET, indexSet)
+              .putString(recipient.getId(), gson.toJson(recipient))
+              .apply();
+            Collections.sort(recipientList, Recipient.comparator());
           } else {
-            return Observable.just(Pair.<Boolean, Recipient>create(false, null));
+            recipient = null;
           }
+          return recipient;
         }
       });
   }
 
-  @NonNull
-  final Observable<List<Recipient>> syncRecipients(@NonNull List<Recipient> recipients) {
-    return Observable.from(recipients)
-      .flatMap(new Func1<Recipient, Observable<Recipient>>() {
-        @Override
-        public Observable<Recipient> call(Recipient recipient) {
-          return queryBalance(recipient)
-            .onErrorResumeNext(Observable.just(recipient));
-        }
-      })
-      .flatMap(new Func1<Recipient, Observable<Recipient>>() {
-        @Override
-        public Observable<Recipient> call(Recipient recipient) {
-          return recipientRepo.save(recipient);
-
-        }
-      })
-      .compose(Recipient.toSortedListByIdentifier());
+  @Deprecated public final boolean checkIfExists(Recipient recipient) {
+    return recipientList.contains(recipient);
   }
 
-  @NonNull
-  public final Observable<Boolean> checkIfAffiliated(@NonNull String phoneNumber) {
-    return apiBridge.checkIfAffiliated(sessionManager.getSession().getAuthToken(), phoneNumber)
+  @Deprecated public final Observable<Boolean> checkIfAffiliated(
+    final String authToken,
+    final String phoneNumber) {
+    return apiBridge.checkIfAffiliated(authToken, phoneNumber)
       .compose(ApiUtils.<Boolean>handleApiResult(true));
   }
 
-  @NonNull
-  public final Observable<Pair<Boolean, Recipient>> addRecipient(@NonNull String phoneNumber) {
-    return addRecipient(phoneNumber, null);
+  @Deprecated public final Observable<Recipient> create(
+    final String authToken,
+    final String phoneNumber) {
+    return create(authToken, phoneNumber, null);
   }
 
-  @NonNull
-  public final Observable<Pair<Boolean, Recipient>> addRecipient(@NonNull Contact contact) {
-    return addRecipient(contact.getPhoneNumber().toString(), contact.getName());
+  @Deprecated public final Observable<Recipient> create(
+    final String authToken,
+    final Contact contact) {
+    return create(contact.getPhoneNumber().toString(), contact.getName());
   }
 
-  @NonNull
-  public final Observable<Recipient> updateRecipient(@NonNull Recipient recipient) {
-    return queryBalance(recipient)
-      .flatMap(new Func1<Recipient, Observable<Recipient>>() {
+  @Deprecated public final void add(Recipient recipient) {
+    if (!checkIfExists(recipient)) {
+      recipientList.add(recipient);
+      indexSet.add(recipient.getId());
+      sharedPreferences.edit()
+        .putStringSet(KEY_INDEX_SET, indexSet)
+        .putString(recipient.getId(), gson.toJson(recipient))
+        .apply();
+      Collections.sort(recipientList, Recipient.comparator());
+    }
+  }
+
+  @Deprecated public final void update(final Recipient recipient) {
+    if (!checkIfExists(recipient)) {
+      recipientList.add(recipient);
+      indexSet.add(recipient.getId());
+    }
+    sharedPreferences.edit()
+      .putStringSet(KEY_INDEX_SET, indexSet)
+      .putString(recipient.getId(), gson.toJson(recipient))
+      .apply();
+    Collections.sort(recipientList, Recipient.comparator());
+  }
+
+  @Deprecated public final Completable remove(
+    final String authToken,
+    final String pin,
+    final List<Recipient> recipientToRemoveList) {
+    return Completable.complete()
+      .doOnSubscribe(new Action1<Subscription>() {
         @Override
-        public Observable<Recipient> call(Recipient recipient) {
-          return recipientRepo.save(recipient);
+        public void call(Subscription subscription) {
+          final SharedPreferences.Editor editor = sharedPreferences.edit();
+          for (Recipient recipient : recipientToRemoveList) {
+            boolean shouldBeRemoved = true;
+            if (Recipient.checkIfBill(recipient)) {
+              final ApiResult<Void> result = apiBridge
+                .removeBill(authToken, (BillRecipient) recipient, pin);
+              shouldBeRemoved = result.isSuccessful();
+            }
+            if (shouldBeRemoved) {
+              recipientList.remove(recipient);
+              indexSet.remove(recipient.getId());
+              editor.remove(recipient.getId());
+            }
+          }
+          editor
+            .putStringSet(KEY_INDEX_SET, indexSet)
+            .apply();
+          Collections.sort(recipientList, Recipient.comparator());
         }
       });
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @NonNull
-  @Override
-  public Observable<List<Recipient>> getAll(@Nullable final String query) {
-    return recipientRepo.getAll(query)
-      .compose(RxUtils.<Recipient>fromCollection())
-      .filter(new Func1<Recipient, Boolean>() {
-        @Override
-        public Boolean call(Recipient recipient) {
-          return recipient.matches(query);
-        }
-      })
-      .compose(Recipient.toSortedListByIdentifier());
-//    return Observable.concat(
-//      recipientRepo.getAll(query)
-//        .compose(RxUtils.<Recipient>fromCollection()),
-//      apiBridge.recipients(sessionManager.getSession().getAuthToken())
-//        .compose(ApiUtils.<List<Recipient>>handleApiResult(true))
-//        .compose(RxUtils.<Recipient>fromCollection())
-//        .flatMap(new Func1<Recipient, Observable<Recipient>>() {
-//          @Override
-//          public Observable<Recipient> call(Recipient recipient) {
-//            return recipientRepo.save(recipient);
-//          }
-//        })
-//        .filter(new Func1<Recipient, Boolean>() {
-//          @Override
-//          public Boolean call(Recipient recipient) {
-//            return recipient.matches(query);
-//          }
-//        }))
-//      .onErrorResumeNext(recipientRepo.getAll(query).compose(RxUtils.<Recipient>fromCollection()))
-//      .distinct()
-//      .compose(Recipient.toSortedListByIdentifier());
-  }
-
-  public final Observable<List<Recipient>> remove(List<Recipient> recipients, final String pin) {
-    return Observable.from(recipients)
-      .flatMap(new Func1<Recipient, Observable<Recipient>>() {
-        @Override
-        public Observable<Recipient> call(final Recipient recipient) {
-          if (recipient.getType().equals(RecipientType.BILL)) {
-            return apiBridge.removeBill(
-              sessionManager.getSession().getAuthToken(),
-              (BillRecipient) recipient,
-              pin)
-              .flatMap(new Func1<ApiResult<Recipient>, Observable<Recipient>>() {
-                @Override
-                public Observable<Recipient> call(ApiResult<Recipient> result) {
-                  if (result.isSuccessful()) {
-                    return recipientRepo.remove(result.getData());
-                  } else {
-                    return Observable.just(result.getData());
-                  }
-                }
-              });
-          } else {
-            return recipientRepo.remove(recipient);
-          }
-        }
-      })
-      .toList();
-  }
-
-  public void clear() {
-    recipientRepo.clear();
-  }
-
-  public final boolean checkIfExists(Recipient recipient) {
-    return recipientRepo.checkIfExists(recipient);
-  }
-
-  public final void addSync(Recipient recipient) {
-    recipientRepo.saveSync(recipient);
   }
 }

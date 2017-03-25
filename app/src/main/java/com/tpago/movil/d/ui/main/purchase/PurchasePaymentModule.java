@@ -2,12 +2,11 @@ package com.tpago.movil.d.ui.main.purchase;
 
 import android.support.annotation.NonNull;
 
+import com.tpago.movil.Session;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
-import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.pos.PosBridge;
-import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.ChildFragmentScope;
 
 import dagger.Lazy;
@@ -27,10 +26,16 @@ class PurchasePaymentModule {
 
   @Provides
   @ChildFragmentScope
-  PurchasePaymentPresenter providePresenter(StringHelper stringHelper,
-    ProductManager productManager, Lazy<PosBridge> posBridge, DepApiBridge apiBridge,
-    SessionManager sessionManager) {
-    return new PurchasePaymentPresenter(stringHelper, paymentOption, productManager, posBridge,
-      apiBridge, sessionManager);
+  PurchasePaymentPresenter providePresenter(
+    StringHelper stringHelper,
+    ProductManager productManager,
+    Lazy<PosBridge> posBridge,
+    Session session) {
+    return new PurchasePaymentPresenter(
+      stringHelper,
+      paymentOption,
+      productManager,
+      posBridge,
+      session);
   }
 }

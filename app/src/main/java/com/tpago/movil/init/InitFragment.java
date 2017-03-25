@@ -73,19 +73,19 @@ public final class InitFragment extends BaseInitFragment {
         user.getEmail().getValue(),
         session.getToken());
       sessionRepo.setSession(s);
-      subscription = initialDataLoader.load()
+      subscription = initialDataLoader.load(session)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe(new Action0() {
+        .doOnSubscribe(new Action1<Subscription>() {
           @Override
-          public void call() {
+          public void call(Subscription subscription) {
             logoAnimator.reset();
             logoAnimator.start();
           }
         })
-        .subscribe(new Action1<Object>() {
+        .subscribe(new Action0() {
           @Override
-          public void call(Object notification) {
+          public void call() {
             final Activity activity = getActivity();
             activity.startActivity(DepMainActivity.getLaunchIntent(activity, session));
             activity.finish();

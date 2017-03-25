@@ -61,7 +61,8 @@ interface ApiService {
 
   @POST("payments/change-default-account")
   Observable<Response<Void>> setDefaultPaymentOption(
-    @Header(Api.Header.AUTHORIZATION) String authToken, @Body Map<String, String> body);
+    @Header(Api.Header.AUTHORIZATION) String authToken,
+    @Body Map<String, String> body);
 
   @GET("banks")
   Observable<Response<BankListRequestResponse>> banks(

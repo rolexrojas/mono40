@@ -39,7 +39,6 @@ public class BillTransactionCreationPresenter
 
   private BillRecipient.Option option = BillRecipient.Option.TOTAL;
 
-  private Subscription paymentOptionSubscription = Subscriptions.unsubscribed();
   private Subscription paymentSubscription = Subscriptions.unsubscribed();
 
   BillTransactionCreationPresenter(View view, TransactionCreationComponent component) {
@@ -113,22 +112,7 @@ public class BillTransactionCreationPresenter
     view.setTotalValue(Formatter.amount(totalValue));
     view.setMinimumValue(Formatter.amount(minimumValue));
     view.setPayButtonEnabled(totalValue.compareTo(BigDecimal.ZERO) > 0);
-    paymentOptionSubscription = productManager.getAllPaymentOptions()
-      .subscribeOn(Schedulers.io())
-      .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(
-        new Action1<List<Product>>() {
-          @Override
-          public void call(List<Product> paymentOptions) {
-            view.setPaymentOptions(paymentOptions);
-          }
-        },
-        new Action1<Throwable>() {
-          @Override
-          public void call(Throwable throwable) {
-            Timber.e(throwable, "Loading all payment options");
-          }
-        });
+    view.setPaymentOptions(productManager.getPaymentOptionList());
   }
 
   @Override
@@ -136,9 +120,6 @@ public class BillTransactionCreationPresenter
     super.onViewStopped();
     if (!paymentSubscription.isUnsubscribed()) {
       paymentSubscription.unsubscribe();
-    }
-    if (!paymentOptionSubscription.isUnsubscribed()) {
-      paymentOptionSubscription.unsubscribe();
     }
   }
 

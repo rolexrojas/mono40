@@ -242,14 +242,14 @@ class RetrofitApiBridge implements DepApiBridge {
     return observable.flatMap(mapToApiResult(TransferResponseBody.mapFunc()));
   }
 
-  @NonNull
   @Override
-  public Observable<ApiResult<Void>> setDefaultPaymentOption(@NonNull String authToken,
-    @NonNull Product product) {
+  public ApiResult<Void> setDefaultPaymentOption(String authToken, Product product) {
     final Map<String, String> body = new HashMap<>();
     body.put("alias", product.getAlias());
     return apiService.setDefaultPaymentOption(authToken, body)
-      .compose(this.<Void>transformToApiResult());
+      .flatMap(mapToApiResult(MAP_FUNC_VOID))
+      .toBlocking()
+      .single();
   }
 
   @Override
@@ -298,38 +298,25 @@ class RetrofitApiBridge implements DepApiBridge {
   }
 
   @Override
-  public Observable<ApiResult<Recipient>> removeBill(
-    String authToken,
-    final BillRecipient bill,
-    String pin) {
+  public ApiResult<Void> removeBill(String authToken, BillRecipient bill, String pin) {
     return apiService.removeBill(
       authToken,
       BillRequestBody.create(bill.getPartner(), bill.getContractNumber(), pin))
-      .flatMap(mapToApiResult(new Func1<Void, Recipient>() {
-        @Override
-        public Recipient call(Void aVoid) {
-          return bill;
-        }
-      }));
+      .flatMap(mapToApiResult(MAP_FUNC_VOID))
+      .toBlocking()
+      .single();
   }
 
   @Override
-  public Observable<Recipient> queryBalance(
+  public ApiResult<BillBalance> queryBalance(
     String authToken,
-    final BillRecipient recipient) {
+    BillRecipient recipient) {
     return apiService.queryBalance(
       authToken,
       BillRequestBody.create(recipient.getPartner(), recipient.getContractNumber(), null))
       .flatMap(mapToApiResult(RetrofitApiBridge.<BillBalance>identityMapFunc()))
-      .map(new Func1<ApiResult<BillBalance>, Recipient>() {
-        @Override
-        public Recipient call(ApiResult<BillBalance> result) {
-          if (result.isSuccessful()) {
-            recipient.setBalance(result.getData());
-          }
-          return recipient;
-        }
-      });
+      .toBlocking()
+      .single();
   }
 
   @Override

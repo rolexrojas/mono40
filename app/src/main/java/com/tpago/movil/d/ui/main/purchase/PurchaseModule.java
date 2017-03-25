@@ -37,16 +37,21 @@ class PurchaseModule {
     return new PurchasePaymentOptionBinder(user, context, stringHelper);
   }
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
   @Provides
   @FragmentScope
-  PurchasePresenter providePresenter(StringHelper stringHelper,
-    ProductManager productManager, EventBus eventBus, AppDialog.Creator screenDialogCreator,
-    PosBridge posBridge) {
-    return new PurchasePresenter(stringHelper, productManager, eventBus, screenDialogCreator, posBridge);
+  PurchasePresenter providePresenter(
+    StringHelper stringHelper,
+    ProductManager productManager,
+    EventBus eventBus,
+    AppDialog.Creator screenDialogCreator,
+    PosBridge posBridge,
+    User user) {
+    return new PurchasePresenter(
+      stringHelper,
+      productManager,
+      eventBus,
+      screenDialogCreator,
+      posBridge,
+      user);
   }
 }

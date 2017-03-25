@@ -68,44 +68,14 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
         }
       });
     compositeSubscription.add(subscription);
-    subscription = productManager.getAll()
-      .subscribeOn(schedulerProvider.io())
-      .observeOn(schedulerProvider.ui())
-      .doOnSubscribe(new Action0() {
-        @Override
-        public void call() {
-          UiUtils.showRefreshIndicator(screen);
-        }
-      })
-      .doOnNext(new Action1<List<Product>>() {
-        @Override
-        public void call(List<Product> products) {
-          screen.clear();
-        }
-      })
-      .doOnUnsubscribe(new Action0() {
-        @Override
-        public void call() {
-          UiUtils.hideRefreshIndicator(screen);
-          screen.add(new ShowRecentTransactionsItem());
-        }
-      })
-      .compose(RxUtils.<Product>fromCollection())
-      .subscribe(new Action1<Product>() {
-        @Override
-        public void call(Product product) {
-          screen.add(new ProductItem(product));
-          if (balanceManager.hasValidBalance(product)) {
-            screen.setBalance(product, balanceManager.getBalance(product));
-          }
-        }
-      }, new Action1<Throwable>() {
-        @Override
-        public void call(Throwable throwable) {
-          Timber.e(throwable, "Loading all registered accounts");
-        }
-      });
-    compositeSubscription.add(subscription);
+    screen.clear();
+    for (Product product : productManager.getProductList()) {
+      screen.add(new ProductItem(product));
+      if (balanceManager.hasValidBalance(product)) {
+        screen.setBalance(product, balanceManager.getBalance(product));
+      }
+    }
+    screen.add(new ShowRecentTransactionsItem());
   }
 
   void stop() {

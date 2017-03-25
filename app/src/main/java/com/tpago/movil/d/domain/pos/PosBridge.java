@@ -9,9 +9,10 @@ import rx.Single;
 @Deprecated
 public interface PosBridge {
   boolean isRegistered(String alias);
-  Observable<PosResult> addCard(String phoneNumber, String pin, String alias);
   Observable<PosResult> selectCard(String alias);
-  Observable<PosResult> removeCard(String alias);
+
+  PosResult addCard(String phoneNumber, String pin, String alias);
+  PosResult removeCard(String alias);
 
   Single<PosResult> unregister(String phoneNumber);
 }

@@ -13,7 +13,6 @@ import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.ui.Presenter;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import rx.Subscription;
 import rx.functions.Action1;
@@ -34,7 +33,6 @@ class PhoneNumberTransactionCreationPresenter
 
   private Product paymentOption;
 
-  private Subscription paymentOptionSubscription = Subscriptions.unsubscribed();
   private Subscription paymentSubscription = Subscriptions.unsubscribed();
 
   PhoneNumberTransactionCreationPresenter(
@@ -50,27 +48,12 @@ class PhoneNumberTransactionCreationPresenter
 
   void start() {
     assertScreen();
-    paymentOptionSubscription = productManager.getAllPaymentOptions()
-      .subscribeOn(schedulerProvider.io())
-      .observeOn(schedulerProvider.ui())
-      .subscribe(new Action1<List<Product>>() {
-        @Override
-        public void call(List<Product> paymentOptions) {
-          screen.setPaymentOptions(paymentOptions);
-        }
-      }, new Action1<Throwable>() {
-        @Override
-        public void call(Throwable throwable) {
-          Timber.e(throwable, "Loading all payment options");
-          // TODO: Let the user know that loading all the payment options failed.
-        }
-      });
+    screen.setPaymentOptions(productManager.getPaymentOptionList());
   }
 
   void stop() {
     assertScreen();
     RxUtils.unsubscribe(paymentSubscription);
-    RxUtils.unsubscribe(paymentOptionSubscription);
   }
 
   void setPaymentOption(@NonNull Product paymentOption) {

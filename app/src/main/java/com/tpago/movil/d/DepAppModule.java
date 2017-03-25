@@ -2,10 +2,11 @@ package com.tpago.movil.d;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.tpago.movil.app.App;
+import com.tpago.movil.content.SharedPreferencesCreator;
 import com.tpago.movil.d.domain.InitialDataLoader;
 import com.tpago.movil.d.domain.ProductManager;
-import com.tpago.movil.d.domain.ProductRepo;
 import com.tpago.movil.d.domain.BalanceManager;
 import com.tpago.movil.d.domain.TransactionManager;
 import com.tpago.movil.d.domain.api.DepApiBridge;
@@ -13,7 +14,6 @@ import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.domain.util.EventBus;
 import com.tpago.movil.d.domain.RecipientManager;
-import com.tpago.movil.d.domain.RecipientRepo;
 
 import javax.inject.Singleton;
 
@@ -35,9 +35,11 @@ public final class DepAppModule {
 
   @Provides
   @Singleton
-  InitialDataLoader provideInitialDataLoader(DepApiBridge apiBridge, ProductManager productManager,
-    RecipientManager recipientManager, SessionManager sessionManager) {
-    return new InitialDataLoader(apiBridge, productManager, recipientManager, sessionManager);
+  InitialDataLoader provideInitialDataLoader(
+    DepApiBridge apiBridge,
+    ProductManager productManager,
+    RecipientManager recipientManager) {
+    return new InitialDataLoader(apiBridge, productManager, recipientManager);
   }
 
   @Provides
@@ -48,26 +50,31 @@ public final class DepAppModule {
 
   @Provides
   @Singleton
-  ProductManager provideProductManager(
-    ProductRepo productRepo,
-    Lazy<PosBridge> posBridge,
+  BalanceManager provideBalanceManager(
     EventBus eventBus,
-    SessionManager sessionManager) {
-    return new ProductManager(productRepo, posBridge, eventBus, sessionManager);
-  }
-
-  @Provides
-  @Singleton
-  BalanceManager provideBalanceManager(EventBus eventBus, DepApiBridge apiBridge,
+    DepApiBridge apiBridge,
     SessionManager sessionManager) {
     return new BalanceManager(eventBus, apiBridge, sessionManager);
   }
 
   @Provides
   @Singleton
-  RecipientManager provideRecipientManager(RecipientRepo recipientRepo, DepApiBridge apiBridge,
-    SessionManager sessionManager) {
-    return new RecipientManager(recipientRepo, apiBridge, sessionManager);
+  ProductManager provideProductManager(
+    SharedPreferencesCreator sharedPreferencesCreator,
+    Gson gson,
+    EventBus eventBus,
+    DepApiBridge apiBridge,
+    Lazy<PosBridge> posBridge) {
+    return new ProductManager(sharedPreferencesCreator, gson, eventBus, apiBridge, posBridge);
+  }
+
+  @Provides
+  @Singleton
+  RecipientManager provideRecipientManager(
+    SharedPreferencesCreator sharedPreferencesCreator,
+    Gson gson,
+    DepApiBridge apiBridge) {
+    return new RecipientManager(sharedPreferencesCreator, gson, apiBridge);
   }
 
   @Provides

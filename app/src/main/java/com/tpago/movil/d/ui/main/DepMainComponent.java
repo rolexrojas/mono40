@@ -2,6 +2,7 @@ package com.tpago.movil.d.ui.main;
 
 import android.content.Context;
 
+import com.tpago.movil.Session;
 import com.tpago.movil.User;
 import com.tpago.movil.UserStore;
 import com.tpago.movil.app.ActivityScope;
@@ -44,6 +45,7 @@ public interface DepMainComponent extends ActivityComponent {
   ProductManager provideAccountManager();
   RecipientManager provideRecipientManager();
   SchedulerProvider provideSchedulerProvider();
+  Session provideSession();
   SessionManager provideSessionManager();
   StringHelper provideMessageHelper();
   User provideUser();

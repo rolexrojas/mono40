@@ -1,7 +1,9 @@
 package com.tpago.movil.d.ui.main.purchase;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 
+import com.tpago.movil.User;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.pos.PosResult;
@@ -14,13 +16,16 @@ import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.ui.AppDialog;
 import com.tpago.movil.d.ui.Presenter;
+import com.tpago.movil.util.Objects;
+import com.tpago.movil.util.Preconditions;
 
 import java.util.List;
+import java.util.concurrent.Callable;
 
+import rx.Single;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
@@ -36,8 +41,9 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
   private final AppDialog.Creator screenDialogCreator;
   private final PosBridge posBridge;
 
+  private final User user;
+
   private Subscription productAdditionEventSubscription = Subscriptions.unsubscribed();
-  private Subscription paymentOptionsSubscription = Subscriptions.unsubscribed();
   private Subscription activationSubscription = Subscriptions.unsubscribed();
 
   private Product selectedProduct;
@@ -47,47 +53,28 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
     ProductManager productManager,
     EventBus eventBus,
     AppDialog.Creator screenDialogCreator,
-    PosBridge posBridge) {
+    PosBridge posBridge,
+    User user) {
     this.stringHelper = stringHelper;
     this.productManager = productManager;
     this.eventBus = eventBus;
     this.screenDialogCreator = screenDialogCreator;
     this.posBridge = posBridge;
+
+    this.user = Preconditions.checkNotNull(user, "user == null");
   }
 
   private void loadPaymentOptions() {
-    paymentOptionsSubscription = productManager.getAllPaymentOptions()
-      .subscribeOn(Schedulers.io())
-      .observeOn(AndroidSchedulers.mainThread())
-      .doOnNext(new Action1<List<Product>>() {
-        @Override
-        public void call(List<Product> products) {
-          screen.clearPaymentOptions();
-        }
-      })
-      .compose(RxUtils.<Product>fromCollection())
-      .filter(new Func1<Product, Boolean>() {
-        @Override
-        public Boolean call(Product product) {
-          return posBridge.isRegistered(product.getAlias());
-        }
-      })
-      .subscribe(new Action1<Product>() {
-        @Override
-        public void call(Product product) {
-          screen.addPaymentOption(product);
-          if (Product.isDefaultPaymentOption(product)) {
-            selectedProduct = product;
-            screen.markAsSelected(selectedProduct);
-          }
-        }
-      }, new Action1<Throwable>() {
-        @Override
-        public void call(Throwable throwable) {
-          Timber.e(throwable, "Loading all the payment options");
-          // TODO: Let the user know that loading all the payment options failed.
-        }
-      });
+    screen.clearPaymentOptions();
+    for (Product paymentOption : productManager.getPaymentOptionList()) {
+      if (posBridge.isRegistered(paymentOption.getAlias())) {
+        screen.addPaymentOption(paymentOption);
+      }
+    }
+    selectedProduct = productManager.getDefaultPaymentOption();
+    if (Objects.isNotNull(selectedProduct)) {
+      screen.markAsSelected(selectedProduct);
+    }
   }
 
   void start() {
@@ -122,7 +109,6 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
 
   void stop() {
     assertScreen();
-    RxUtils.unsubscribe(paymentOptionsSubscription);
     RxUtils.unsubscribe(productAdditionEventSubscription);
   }
 
@@ -141,20 +127,27 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
     }
   }
 
-  void activateCards(@NonNull String pin) {
+  @Deprecated void activateCards(final String pin) {
     assertScreen();
     if (activationSubscription.isUnsubscribed()) {
-      activationSubscription = productManager.activateAllProducts(pin)
+      activationSubscription = Single.defer(new Callable<Single<List<Pair<Product, PosResult>>>>() {
+        @Override
+        public Single<List<Pair<Product, PosResult>>> call() throws Exception {
+          final List<Pair<Product, PosResult>> resultList = productManager
+            .registerPaymentOptionList(user.getPhoneNumber().toString(), pin);
+          return Single.just(resultList);
+        }
+      })
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Action1<List<PosResult>>() {
+        .subscribe(new Action1<List<Pair<Product, PosResult>>>() {
           @Override
-          public void call(List<PosResult> resultList) {
+          public void call(List<Pair<Product, PosResult>> resultList) {
             boolean flag = false;
             final StringBuilder builder = new StringBuilder();
-            for (PosResult r : resultList) {
-              flag |= r.isSuccessful();
-              builder.append(r.getData());
+            for (Pair<Product, PosResult> result : resultList) {
+              flag |= result.second.isSuccessful();
+              builder.append(result.second.getData());
               builder.append("\n");
             }
             final String resultMessage = builder.toString();

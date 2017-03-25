@@ -30,7 +30,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func0;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
@@ -84,14 +83,10 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
         @Override
         public void call(final String query) {
           RxUtils.unsubscribe(searchSubscription);
-          final Observable<Object> recipientsObservable = recipientManager.getAll(query)
+          final Observable<Object> recipientsObservable = Observable
+            .just(recipientManager.getAll(query))
             .compose(RxUtils.<Recipient>fromCollection())
-            .map(new Func1<Recipient, Object>() {
-              @Override
-              public Object call(Recipient recipient) {
-                return recipient;
-              }
-            });
+            .cast(Object.class);
           final Observable<Object> actionsObservable = Observable
             .defer(new Func0<Observable<Object>>() {
               @Override
@@ -168,7 +163,9 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   void addRecipient(@NonNull final String phoneNumber) {
     assertScreen();
     if (subscription.isUnsubscribed()) {
-      subscription = recipientManager.checkIfAffiliated(phoneNumber)
+      subscription = recipientManager.checkIfAffiliated(
+        sessionManager.getSession().getAuthToken(),
+        phoneNumber)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(new Action0() {
@@ -201,14 +198,16 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   void updateRecipient(@NonNull Recipient recipient, @Nullable String label) {
     assertScreen();
     recipient.setLabel(label);
-    recipientManager.addSync(recipient);
+    recipientManager.update(recipient);
     screen.clearQuery();
   }
 
   void startTransfer(@NonNull final String phoneNumber) {
     assertScreen();
     if (subscription.isUnsubscribed()) {
-      subscription = recipientManager.checkIfAffiliated(phoneNumber)
+      subscription = recipientManager.checkIfAffiliated(
+        sessionManager.getSession().getAuthToken(),
+        phoneNumber)
         .subscribeOn(schedulerProvider.io())
         .observeOn(schedulerProvider.ui())
         .doOnSubscribe(new Action0() {
@@ -315,12 +314,15 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
 
   final void onPinRequestFinished(String pin) {
     if (deleting && deleteSubscription.isUnsubscribed()) {
-      deleteSubscription = recipientManager.remove(selectedRecipients, pin)
+      deleteSubscription = recipientManager.remove(
+        sessionManager.getSession().getAuthToken(),
+        pin,
+        selectedRecipients)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Action1<List<Recipient>>() {
+        .subscribe(new Action0() {
           @Override
-          public void call(List<Recipient> recipientList) {
+          public void call() {
             screen.dismissPinConfirmator();
             screen.clearQuery();
             stopDeleting();

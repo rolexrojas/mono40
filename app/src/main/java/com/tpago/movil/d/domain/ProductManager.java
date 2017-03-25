@@ -1,185 +1,256 @@
 package com.tpago.movil.d.domain;
 
-import android.support.annotation.NonNull;
+import android.content.SharedPreferences;
 import android.support.v4.util.Pair;
 
-import com.tpago.movil.Bank;
+import com.google.gson.Gson;
+import com.tpago.movil.content.SharedPreferencesCreator;
+import com.tpago.movil.d.domain.api.ApiResult;
+import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.pos.PosResult;
-import com.tpago.movil.d.domain.session.Session;
 import com.tpago.movil.d.domain.util.EventBus;
-import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.util.Objects;
+import com.tpago.movil.util.Preconditions;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import dagger.Lazy;
-import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.functions.Func2;
+import timber.log.Timber;
 
 /**
  * @author hecvasro
  */
 @Deprecated
-public final class ProductManager implements ProductProvider {
-  private final ProductRepo productRepo;
+public final class ProductManager {
+  private static final String KEY_INDEX_SET = "indexSet";
+  private static final String KEY_DEFAULT_PAYMENT_OPTION_ID = "defaultPaymentOption";
+  private static final String KEY_TEMPORARY_DEFAULT_PAYMENT_OPTION_ID = "temporaryDefaultPaymentOption";
+
   private final Lazy<PosBridge> posBridge;
   private final EventBus eventBus;
-  private final com.tpago.movil.d.domain.session.SessionManager sessionManager;
+  private final DepApiBridge apiBridge;
+
+  private final SharedPreferences sharedPreferences;
+  private final Gson gson;
+
+  private final Set<String> indexSet;
+
+  private List<Product> productList;
+
+  private Product defaultPaymentOption;
+  private List<Product> paymentOptionList;
 
   public ProductManager(
-    @NonNull ProductRepo productRepo,
-    @NonNull Lazy<PosBridge> posBridge,
-    @NonNull EventBus eventBus,
-    @NonNull com.tpago.movil.d.domain.session.SessionManager sessionManager) {
-    this.productRepo = productRepo;
-    this.posBridge = posBridge;
+    SharedPreferencesCreator sharedPreferencesCreator,
+    Gson gson,
+    EventBus eventBus,
+    DepApiBridge apiBridge,
+    Lazy<PosBridge> posBridge) {
+
+    this.sharedPreferences = Preconditions
+      .checkNotNull(sharedPreferencesCreator, "sharedPreferencesCreator == null")
+      .create(ProductManager.class.getCanonicalName());
+    this.gson = Preconditions
+      .checkNotNull(gson, "gson == null");
+
+    this.indexSet = this.sharedPreferences.getStringSet(KEY_INDEX_SET, new HashSet<String>());
+
     this.eventBus = eventBus;
-    this.sessionManager = sessionManager;
+    this.apiBridge = apiBridge;
+    this.posBridge = posBridge;
   }
 
-  @NonNull
-  final Observable<Object> syncProducts(@NonNull List<Product> products) {
-    return getAll().zipWith(Observable.just(products),
-      new Func2<List<Product>, List<Product>, List<Pair<Action, Product>>>() {
-        @Override
-        public List<Pair<Action, Product>> call(List<Product> local, List<Product> remote) {
-          final List<Pair<Action, Product>> actions = new ArrayList<>();
-          for (Product product : remote) {
-            if (!local.contains(product)) {
-              actions.add(Pair.create(Action.ADD, product));
-            } else {
-              actions.add(Pair.create(Action.UPDATE, product));
-            }
-          }
-          for (Product product : local) {
-            if (!remote.contains(product)) {
-              actions.add(Pair.create(Action.REMOVE, product));
-            }
-          }
-          return actions;
+  @Deprecated
+  final void syncProducts(
+    final String authToken,
+    final List<Product> remoteProductList) {
+    if (Objects.isNull(productList)) {
+      productList = new ArrayList<>();
+    }
+    productList.clear();
+    for (String id : indexSet) {
+      productList.add(gson.fromJson(sharedPreferences.getString(id, null), Product.class));
+    }
+
+    Product rdpo = null;
+    final List<Product> ptal = new ArrayList<>();
+    final List<Product> ptul = new ArrayList<>();
+    final List<Product> ptrl = new ArrayList<>();
+
+    for (Product remoteProduct : remoteProductList) {
+      if (!productList.contains(remoteProduct)) {
+        ptal.add(remoteProduct);
+      } else {
+        ptul.add(remoteProduct);
+      }
+      if (Product.isDefaultPaymentOption(remoteProduct)) {
+        rdpo = remoteProduct;
+      }
+    }
+
+    for (Product localProduct : productList) {
+      if (!remoteProductList.contains(localProduct)) {
+        ptrl.add(localProduct);
+      }
+    }
+
+    final SharedPreferences.Editor editor = sharedPreferences.edit();
+
+    productList.clear();
+    for (Product p : ptal) {
+      productList.add(p);
+      indexSet.add(p.getId());
+      editor.putString(p.getId(), gson.toJson(p));
+    }
+    for (Product p : ptul) {
+      productList.add(p);
+      indexSet.add(p.getId());
+      editor.putString(p.getId(), gson.toJson(p));
+    }
+    for (Product p : ptrl) {
+      final PosResult r = posBridge.get().removeCard(p.getAlias());
+      Timber.d(r.toString());
+      indexSet.remove(p.getId());
+      editor.remove(p.getId());
+    }
+
+    editor.putStringSet(KEY_INDEX_SET, indexSet);
+
+    //  if [not remote.default] then
+    //    clear local.default
+    //    clear local.temporary
+    //  else if [not local.temporary] then
+    //    set local.default remote.default
+    //  else if [remote.default equals to local.temporary] then
+    //    set local.default local.temporary
+    //    set remote.default local.temporary
+    //    clear local.temporary
+    Product tdpo = null;
+    if (sharedPreferences.contains(KEY_TEMPORARY_DEFAULT_PAYMENT_OPTION_ID)) {
+      final String tdpoid = sharedPreferences
+        .getString(KEY_TEMPORARY_DEFAULT_PAYMENT_OPTION_ID, null);
+      for (Product p : remoteProductList) {
+        if (p.getId().equals(tdpoid)) {
+          tdpo = p;
+          break;
         }
-      })
-      .compose(RxUtils.<Pair<Action, Product>>fromCollection())
-      .doOnNext(new Action1<Pair<Action, Product>>() {
-        @Override
-        public void call(Pair<Action, Product> pair) {
-          final Action action = pair.first;
-          if (action == Action.ADD) {
-            eventBus.dispatch(new ProductAdditionEvent());
-          } else if (action == Action.REMOVE) {
-            eventBus.dispatch(new ProductRemovalEvent());
-          }
-        }
-      })
-      .flatMap(new Func1<Pair<Action, Product>, Observable<Object>>() {
-        @Override
-        public Observable<Object> call(Pair<Action, Product> pair) {
-          final Action action = pair.first;
-          final Product product = pair.second;
-          final Observable<Object> observable;
-          if (action == Action.ADD || action == Action.UPDATE) {
-            observable = productRepo.save(product).cast(Object.class);
-          } else {
-            observable = productRepo.remove(product).cast(Object.class)
-              .concatWith(posBridge.get().removeCard(product.getAlias()));
-          }
-          return observable;
-        }
-      })
-      .last();
+      }
+    }
+    if (Objects.isNull(rdpo)) {
+      defaultPaymentOption = null;
+      editor.remove(KEY_DEFAULT_PAYMENT_OPTION_ID);
+      editor.remove(KEY_TEMPORARY_DEFAULT_PAYMENT_OPTION_ID);
+    } else if (Objects.isNull(tdpo)) {
+      defaultPaymentOption = rdpo;
+      editor.putString(KEY_DEFAULT_PAYMENT_OPTION_ID, defaultPaymentOption.getId());
+    } else if (rdpo.equals(tdpo)) {
+      defaultPaymentOption = tdpo;
+      editor.putString(KEY_DEFAULT_PAYMENT_OPTION_ID, defaultPaymentOption.getId());
+      final ApiResult<Void> r = apiBridge.setDefaultPaymentOption(authToken, defaultPaymentOption);
+      Timber.d(r.toString());
+      if (r.isSuccessful()) {
+        editor.remove(KEY_TEMPORARY_DEFAULT_PAYMENT_OPTION_ID);
+      }
+    }
+
+    editor.apply();
+
+    if (!ptal.isEmpty()) {
+      eventBus.dispatch(new ProductAdditionEvent());
+    }
+    if (!ptrl.isEmpty()) {
+      eventBus.dispatch(new ProductRemovalEvent());
+    }
+
+    Collections.sort(productList, Product.comparator());
+    if (Objects.isNull(paymentOptionList)) {
+      paymentOptionList = new ArrayList<>();
+    }
+    paymentOptionList.clear();
+    if (Objects.isNotNull(defaultPaymentOption)) {
+      paymentOptionList.add(defaultPaymentOption);
+    }
+    for (Product p : productList) {
+      if (Product.isPaymentOption(p) && !paymentOptionList.contains(p)) {
+        paymentOptionList.add(p);
+      }
+    }
   }
 
-  public final Observable<List<Product>> getAllPaymentOptions() {
-    return getAll()
-      .map(new Func1<List<Product>, List<Product>>() {
-        @Override
-        public List<Product> call(List<Product> productList) {
-          Product defaultPaymentMethod = null;
-          List<Product> paymentMethodList = new ArrayList<>();
-          for (Product product : productList) {
-            if (Product.isDefaultPaymentOption(product)) {
-              defaultPaymentMethod = product;
-            } else if (Product.isPaymentOption(product)) {
-              paymentMethodList.add(product);
-            }
-          }
-          if (Objects.isNotNull(defaultPaymentMethod)) {
-            paymentMethodList.add(0, defaultPaymentMethod);
-          }
-          return paymentMethodList;
+  public final void clear() {
+    productList.clear();
+    defaultPaymentOption = null;
+    paymentOptionList.clear();
+    sharedPreferences.edit()
+      .clear()
+      .apply();
+  }
+
+  public final List<Product> getProductList() {
+    return productList;
+  }
+
+  public final Product getDefaultPaymentOption() {
+    return defaultPaymentOption;
+  }
+
+  public final List<Product> getPaymentOptionList() {
+    return paymentOptionList;
+  }
+
+  public final List<Pair<Product, PosResult>> registerPaymentOptionList(
+    final String phoneNumber,
+    final String pin) {
+    final PosBridge b = posBridge.get();
+    final List<Pair<Product, PosResult>> resultList = new ArrayList<>();
+    for (Product po : paymentOptionList) {
+      resultList.add(Pair.create(po, b.addCard(phoneNumber, pin, po.getAlias())));
+    }
+    return resultList;
+  }
+
+  public final boolean setTemporaryDefaultPaymentOption(
+    final String authToken,
+    final Product paymentOption) {
+    if (paymentOption.equals(defaultPaymentOption)) {
+      return true;
+    } else {
+      final ApiResult<Void> result = apiBridge.setDefaultPaymentOption(authToken, paymentOption);
+      if (result.isSuccessful()) {
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (Objects.isNull(defaultPaymentOption)) {
+          defaultPaymentOption = paymentOption;
+          editor.putString(KEY_DEFAULT_PAYMENT_OPTION_ID, defaultPaymentOption.getId());
+        } else {
+          editor.putString(KEY_TEMPORARY_DEFAULT_PAYMENT_OPTION_ID, paymentOption.getId());
         }
-      });
+        editor.apply();
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 
-  public final Observable<List<PosResult>> activateAllProducts(final String pin) {
-    return getAllPaymentOptions()
-      .flatMap(new Func1<List<Product>, Observable<PosResult>>() {
-        @Override
-        public Observable<PosResult> call(List<Product> productList) {
-          final Session s = sessionManager.getSession();
-          if (Objects.isNull(s)) {
-            return Observable.error(new NullPointerException("s == null"));
-          } else {
-            final PosBridge b = posBridge.get();
-            final String pn = s.getPhoneNumber();
-            Observable<PosResult> o = null;
-            for (Product p : productList) {
-              if (Objects.isNull(o)) {
-                o = b.addCard(pn, pin, p.getAlias());
-              } else {
-                o = o.concatWith(b.addCard(pn, pin, p.getAlias()));
-              }
-            }
-            return o;
-          }
-        }
-      })
-      .toList();
-  }
-
-  @NonNull
-  public final Observable<Product> getDefaultPaymentOption() {
-    return getAllPaymentOptions()
-      .compose(RxUtils.<Product>fromCollection())
-      .filter(new Func1<Product, Boolean>() {
-        @Override
-        public Boolean call(Product product) {
-          return Product.isDefaultPaymentOption(product);
-        }
-      })
-      .switchIfEmpty(Observable.just((Product) null));
-  }
-
-  @Override
-  public Observable<List<Product>> getAll() {
-    return productRepo.getAll()
-      .compose(RxUtils.<Product>fromCollection())
-      .toSortedList(new Func2<Product, Product, Integer>() {
-        @Override
-        public Integer call(Product pa, Product pb) {
-          final int r = Bank.getName(pa.getBank()).compareTo(Bank.getName(pb.getBank()));
-          if (r == 0) {
-            return pa.getAlias().compareTo(pb.getAlias());
-          } else {
-            return r;
-          }
-        }
-      });
-  }
-
-  public void clear() {
-    productRepo.clear();
-  }
-
-  private enum Action {
-    ADD,
-    UPDATE,
-    REMOVE
+  public final boolean clearTemporaryDefaultPaymentOption(final String authToken) {
+    if (!sharedPreferences.contains(KEY_TEMPORARY_DEFAULT_PAYMENT_OPTION_ID)) {
+      return true;
+    } else {
+      final ApiResult<Void> result = apiBridge
+        .setDefaultPaymentOption(authToken, defaultPaymentOption);
+      if (result.isSuccessful()) {
+        sharedPreferences.edit()
+          .remove(KEY_TEMPORARY_DEFAULT_PAYMENT_OPTION_ID)
+          .apply();
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 }

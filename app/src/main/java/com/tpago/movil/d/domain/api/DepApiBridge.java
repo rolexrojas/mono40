@@ -6,6 +6,7 @@ import android.support.v4.util.Pair;
 import com.tpago.movil.Partner;
 import com.tpago.movil.d.domain.Balance;
 import com.tpago.movil.Bank;
+import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.InitialData;
 import com.tpago.movil.d.domain.Product;
@@ -15,6 +16,7 @@ import com.tpago.movil.d.domain.Transaction;
 import java.math.BigDecimal;
 import java.util.List;
 
+import retrofit2.Call;
 import rx.Observable;
 
 /**
@@ -123,17 +125,7 @@ public interface DepApiBridge {
     @NonNull BigDecimal amount,
     @NonNull String pin);
 
-  /**
-   * TODO
-   *
-   * @param product
-   *   TODO
-   *
-   * @return TODO
-   */
-  @NonNull
-  Observable<ApiResult<Void>> setDefaultPaymentOption(@NonNull String authToken,
-    @NonNull Product product);
+  ApiResult<Void> setDefaultPaymentOption(String authToken, Product paymentOption);
 
   Observable<ApiResult<Pair<String, Product>>> checkAccountNumber(
     String authToken,
@@ -148,12 +140,12 @@ public interface DepApiBridge {
     String contractNumber,
     String pin);
 
-  Observable<ApiResult<Recipient>> removeBill(
+  ApiResult<Void> removeBill(
     String authToken,
     BillRecipient bill,
     String pin);
 
-  Observable<Recipient> queryBalance(String authToken, BillRecipient recipient);
+  ApiResult<BillBalance> queryBalance(String authToken, BillRecipient recipient);
 
   Observable<ApiResult<String>> payBill(
     String authToken,

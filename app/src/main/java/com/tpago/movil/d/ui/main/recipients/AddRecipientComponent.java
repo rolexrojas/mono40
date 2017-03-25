@@ -2,6 +2,7 @@ package com.tpago.movil.d.ui.main.recipients;
 
 import android.content.Context;
 
+import com.tpago.movil.Session;
 import com.tpago.movil.app.ActivityModule;
 import com.tpago.movil.app.ActivityScope;
 import com.tpago.movil.app.AppComponent;

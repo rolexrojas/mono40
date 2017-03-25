@@ -8,6 +8,7 @@ import com.tpago.movil.text.Texts;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Comparator;
 
 /**
  * Abstract product representation.
@@ -22,6 +23,20 @@ public class Product implements Serializable {
 
   public static boolean checkIfLoan(Product product) {
     return product.getType().equals(ProductType.LOAN);
+  }
+
+  public static Comparator<Product> comparator() {
+    return new Comparator<Product>() {
+      @Override
+      public int compare(Product pa, Product pb) {
+        final int r = pa.getBank().getName().compareTo(pb.getBank().getName());
+        if (r == 0) {
+          return pa.getAlias().compareTo(pb.getAlias());
+        } else {
+          return r;
+        }
+      }
+    };
   }
 
   /**

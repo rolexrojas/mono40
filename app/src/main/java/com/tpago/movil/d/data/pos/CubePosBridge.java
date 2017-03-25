@@ -145,7 +145,7 @@ class CubePosBridge implements PosBridge {
   }
 
   @Override
-  public Observable<PosResult> addCard(
+  public PosResult addCard(
     final String phoneNumber,
     final String pin,
     final String alias) {
@@ -178,7 +178,10 @@ class CubePosBridge implements PosBridge {
         }
       });
     }
-    return observable.doOnNext(new LogAction1("addCard", phoneNumber, pin, alias));
+    return observable
+      .doOnNext(new LogAction1("addCard", phoneNumber, pin, alias))
+      .toBlocking()
+      .single();
   }
 
   @Override
@@ -226,7 +229,7 @@ class CubePosBridge implements PosBridge {
   }
 
   @Override
-  public Observable<PosResult> removeCard(final String alias) {
+  public PosResult removeCard(final String alias) {
     final Observable<PosResult> observable;
     if (isRegistered(alias)) {
       observable = getAltPan(alias)
@@ -262,7 +265,10 @@ class CubePosBridge implements PosBridge {
     } else {
       observable = Observable.just(createResult(alias));
     }
-    return observable.doOnNext(new LogAction1("removeCard", alias));
+    return observable
+      .doOnNext(new LogAction1("removeCard", alias))
+      .toBlocking()
+      .single();
   }
 
   @Override
