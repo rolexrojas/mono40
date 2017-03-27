@@ -59,9 +59,6 @@ final class PaymentMethodChooserAdapter {
   }
 
   void setSelectedItem(int position) {
-    if (position == POSITION_SELECTED) {
-      return;
-    }
     final List<Product> paymentMethodListCopy = new ArrayList<>(paymentMethodList);
     if (selectedItemPreviousPosition != POSITION_INVALID) {
       final Product pm = paymentMethodListCopy.get(POSITION_SELECTED);
