@@ -47,7 +47,8 @@ public class PurchaseFragment
   implements PurchaseContainer,
   PurchaseScreen,
   ListItemHolder.OnClickListener,
-  SelectedItemDecoration.Provider {
+  SelectedItemDecoration.Provider,
+  PurchasePaymentDialogFragment.OnDismissedListener {
   private static final String TAG_PAYMENT_SCREEN = "paymentScreen";
   private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
 
@@ -154,6 +155,12 @@ public class PurchaseFragment
   }
 
   @Override
+  public void onResume() {
+    super.onResume();
+    presenter.resume();
+  }
+
+  @Override
   public void onStop() {
     super.onStop();
     // Stops the presenter.
@@ -197,7 +204,8 @@ public class PurchaseFragment
 
   @Override
   public void openPaymentScreen(@NonNull Product paymentOption) {
-    final FragmentTransaction transaction = getChildFragmentManager().beginTransaction()
+    final FragmentTransaction transaction = getChildFragmentManager()
+      .beginTransaction()
       .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
     PurchasePaymentDialogFragment.newInstance(paymentOption)
       .show(transaction, TAG_PAYMENT_SCREEN);
@@ -258,5 +266,10 @@ public class PurchaseFragment
   @Override
   public int getSelectedItemPosition() {
     return adapter.indexOf(presenter.getSelectedPaymentOption());
+  }
+
+  @Override
+  public void onDismissed() {
+    presenter.resume();
   }
 }

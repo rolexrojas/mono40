@@ -61,7 +61,7 @@ public final class DepAppModule {
   @Singleton
   ProductManager provideProductManager(
     SharedPreferencesCreator sharedPreferencesCreator,
-    Gson gson,
+    @DepQualifier Gson gson,
     EventBus eventBus,
     DepApiBridge apiBridge,
     Lazy<PosBridge> posBridge) {
@@ -72,14 +72,16 @@ public final class DepAppModule {
   @Singleton
   RecipientManager provideRecipientManager(
     SharedPreferencesCreator sharedPreferencesCreator,
-    Gson gson,
+    @DepQualifier Gson gson,
     DepApiBridge apiBridge) {
     return new RecipientManager(sharedPreferencesCreator, gson, apiBridge);
   }
 
   @Provides
   @Singleton
-  TransactionManager provideTransactionManager(DepApiBridge apiBridge, SessionManager sessionManager) {
+  TransactionManager provideTransactionManager(
+    DepApiBridge apiBridge,
+    SessionManager sessionManager) {
     return new TransactionManager(apiBridge, sessionManager);
   }
 }

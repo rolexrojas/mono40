@@ -53,7 +53,6 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
 
   void start() {
     assertScreen();
-
     subscription = Observable.defer(new Func0<Observable<Boolean>>() {
       @Override
       public Observable<Boolean> call() {
@@ -86,7 +85,15 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
         }
       })
       .subscribeOn(Schedulers.io())
+      .unsubscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
+      .doOnSubscribe(new Action0() {
+        @Override
+        public void call() {
+          screen.setMessage(stringHelper.bringDeviceCloserToTerminal());
+          screen.setPaymentOption(paymentOption);
+        }
+      })
       .subscribe(new Action1<Boolean>() {
         @Override
         public void call(Boolean result) {

@@ -4,9 +4,11 @@ import com.google.gson.TypeAdapterFactory;
 import com.tpago.movil.d.DepQualifier;
 import com.tpago.movil.d.domain.AccountBalance;
 import com.tpago.movil.d.domain.Balance;
+import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.CreditCardBalance;
 import com.tpago.movil.d.domain.InitialData;
 import com.tpago.movil.d.domain.LoanBalance;
+import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Recipient;
@@ -43,6 +45,8 @@ public class ApiModule {
       .registerTypeAdapter(LoanBalance.class, new BalanceTypeAdapter())
       .registerTypeAdapter(Recipient.class, new RecipientTypeAdapter())
       .registerTypeAdapter(PhoneNumberRecipient.class, new RecipientTypeAdapter())
+      .registerTypeAdapter(NonAffiliatedPhoneNumberRecipient.class, new RecipientTypeAdapter())
+      .registerTypeAdapter(BillRecipient.class, new RecipientTypeAdapter())
       .create();
   }
 }

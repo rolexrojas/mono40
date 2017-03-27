@@ -33,7 +33,9 @@ class ProductTypeAdapter implements JsonDeserializer<Product>, JsonSerializer<Pr
   private static final String PROPERTY_IMAGE_URL = "image-url";
 
   @Override
-  public Product deserialize(JsonElement json, Type typeOfT,
+  public Product deserialize(
+    JsonElement json,
+    Type typeOfT,
     JsonDeserializationContext context) throws JsonParseException {
     final JsonObject jsonObject = json.getAsJsonObject();
     if (!jsonObject.has(PROPERTY_TYPE)) {

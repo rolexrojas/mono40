@@ -1,12 +1,17 @@
 package com.tpago.movil.d.ui.main.purchase;
 
 import android.animation.Animator;
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +20,7 @@ import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.ui.FullScreenChildDialogFragment;
 import com.tpago.movil.d.ui.view.BaseAnimatorListener;
+import com.tpago.movil.util.Objects;
 
 import javax.inject.Inject;
 
@@ -24,44 +30,28 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 public class PurchasePaymentDialogFragment
-  extends FullScreenChildDialogFragment<PurchaseContainer> implements PurchasePaymentScreen {
-  /**
-   * TODO
-   */
+  extends FullScreenChildDialogFragment<PurchaseContainer>
+  implements PurchasePaymentScreen {
   private static final String EXTRA_PAYMENT_OPTION = "paymentOption";
 
   private Unbinder unbinder;
 
   private PurchasePaymentOptionHolder paymentOptionHolder;
 
-  @Inject
-  PurchasePaymentOptionBinder paymentOptionBinder;
-  @Inject
-  PurchasePaymentPresenter presenter;
+  @Inject PurchasePaymentOptionBinder paymentOptionBinder;
+  @Inject PurchasePaymentPresenter presenter;
 
-  @BindInt(android.R.integer.config_shortAnimTime)
-  int terminateDuration;
+  @BindInt(android.R.integer.config_shortAnimTime) int terminateDuration;
 
-  @BindView(R.id.commerce_payment_option)
-  View paymentOptionContainerView;
-  @BindView(R.id.commerce_payment_message)
-  TextView commercePaymentMessageTextView;
-  @BindView(R.id.purchase_payment_indicator_confirmation)
-  ImageView purchasePaymentIndicatorConfirmationImageView;
+  @BindView(R.id.commerce_payment_option) View paymentOptionContainerView;
+  @BindView(R.id.commerce_payment_message) TextView commercePaymentMessageTextView;
+  @BindView(R.id.purchase_payment_indicator_confirmation) ImageView purchasePaymentIndicatorConfirmationImageView;
 
-  /**
-   * TODO
-   *
-   * @param paymentOption
-   *   TODO
-   *
-   * @return TODO
-   */
+  private OnDismissedListener onDismissedListener;
+
   @NonNull
   public static PurchasePaymentDialogFragment newInstance(@NonNull Product paymentOption) {
     final Bundle bundle = new Bundle();
@@ -74,6 +64,18 @@ public class PurchasePaymentDialogFragment
   @Override
   protected int getCustomTheme() {
     return R.style.PurchasePaymentTheme;
+  }
+
+  @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+    if (Objects.isNotNull(getTargetFragment()) && getTargetFragment() instanceof OnDismissedListener) {
+      onDismissedListener = (OnDismissedListener) getTargetFragment();
+    } else if (Objects.isNotNull(getParentFragment()) && getParentFragment() instanceof OnDismissedListener) {
+      onDismissedListener = (OnDismissedListener) getParentFragment();
+    } else if (getActivity() instanceof OnDismissedListener) {
+      onDismissedListener = (OnDismissedListener) getActivity();
+    }
   }
 
   @Override
@@ -116,15 +118,16 @@ public class PurchasePaymentDialogFragment
   @Override
   public void onStart() {
     super.onStart();
-    getDialog().getWindow().setWindowAnimations(R.style.PurchasePaymentAnimation);
-    // Starts the presenter.
+    final Window window = getDialog().getWindow();
+    if (Objects.isNotNull(window)) {
+      window.setWindowAnimations(R.style.PurchasePaymentAnimation);
+    }
     presenter.start();
   }
 
   @Override
   public void onStop() {
     super.onStop();
-    // Stops the presenter.
     presenter.stop();
   }
 
@@ -159,5 +162,17 @@ public class PurchasePaymentDialogFragment
         }
       })
       .start();
+  }
+
+  @Override
+  public void onDismiss(DialogInterface dialog) {
+    super.onDismiss(dialog);
+    if (Objects.isNotNull(onDismissedListener)) {
+      onDismissedListener.onDismissed();
+    }
+  }
+
+  interface OnDismissedListener {
+    void onDismissed();
   }
 }

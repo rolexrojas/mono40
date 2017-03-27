@@ -31,7 +31,6 @@ public final class InitialDataLoader {
       .doOnNext(new Action1<ApiResult<InitialData>>() {
         @Override
         public void call(ApiResult<InitialData> result) {
-          Timber.d(result.toString());
           if (result.isSuccessful()) {
             final InitialData data = result.getData();
             productManager.syncProducts(session.getToken(), data.getProducts());

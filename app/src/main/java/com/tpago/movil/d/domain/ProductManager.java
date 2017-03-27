@@ -187,10 +187,11 @@ public final class ProductManager {
     }
   }
 
-  public final void clear() {
+  @Deprecated public final void clear() {
     productList.clear();
     defaultPaymentOption = null;
     paymentOptionList.clear();
+    indexSet.clear();
     sharedPreferences.edit()
       .clear()
       .apply();

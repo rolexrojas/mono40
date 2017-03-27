@@ -34,7 +34,7 @@ import timber.log.Timber;
  * @author hecvasro
  */
 @Deprecated
-class PurchasePresenter extends Presenter<PurchaseScreen> {
+final class PurchasePresenter extends Presenter<PurchaseScreen> {
   private final StringHelper stringHelper;
   private final ProductManager productManager;
   private final EventBus eventBus;
@@ -64,20 +64,7 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
     this.user = Preconditions.checkNotNull(user, "user == null");
   }
 
-  private void loadPaymentOptions() {
-    screen.clearPaymentOptions();
-    for (Product paymentOption : productManager.getPaymentOptionList()) {
-      if (posBridge.isRegistered(paymentOption.getAlias())) {
-        screen.addPaymentOption(paymentOption);
-      }
-    }
-    selectedProduct = productManager.getDefaultPaymentOption();
-    if (Objects.isNotNull(selectedProduct)) {
-      screen.markAsSelected(selectedProduct);
-    }
-  }
-
-  void start() {
+  final void start() {
     assertScreen();
     productAdditionEventSubscription = eventBus.onEventDispatched(EventType.PRODUCT_ADDITION)
       .observeOn(AndroidSchedulers.mainThread())
@@ -104,10 +91,22 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
           Timber.e(throwable, "Listening to product addition events");
         }
       });
-    loadPaymentOptions();
   }
 
-  void stop() {
+  final void resume() {
+    screen.clearPaymentOptions();
+    for (Product paymentOption : productManager.getPaymentOptionList()) {
+      if (posBridge.isRegistered(paymentOption.getAlias())) {
+        screen.addPaymentOption(paymentOption);
+      }
+    }
+    selectedProduct = productManager.getDefaultPaymentOption();
+    if (Objects.isNotNull(selectedProduct)) {
+      screen.markAsSelected(selectedProduct);
+    }
+  }
+
+  final void stop() {
     assertScreen();
     RxUtils.unsubscribe(productAdditionEventSubscription);
   }
@@ -127,14 +126,14 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
     }
   }
 
-  @Deprecated void activateCards(final String pin) {
+  final void activateCards(final String pin) {
     assertScreen();
     if (activationSubscription.isUnsubscribed()) {
       activationSubscription = Single.defer(new Callable<Single<List<Pair<Product, PosResult>>>>() {
         @Override
         public Single<List<Pair<Product, PosResult>>> call() throws Exception {
           final List<Pair<Product, PosResult>> resultList = productManager
-            .registerPaymentOptionList(user.getPhoneNumber().toString(), pin);
+            .registerPaymentOptionList(user.getPhoneNumber().getValue(), pin);
           return Single.just(resultList);
         }
       })
@@ -153,7 +152,7 @@ class PurchasePresenter extends Presenter<PurchaseScreen> {
             final String resultMessage = builder.toString();
             screen.onActivationFinished(flag);
             if (flag) {
-              loadPaymentOptions();
+              resume();
             } else {
               screen.showGenericErrorDialog(resultMessage);
             }
