@@ -38,21 +38,12 @@ android {
 
     applicationId 'com.tpago.movil'
 
-    def versionData = [
-      major: 2,
-      minor: 0,
-      patch: 0,
-      extra: [name: 'beta', major: 0],
-      build: 32
-    ]
+    def versionData = [major: 2, minor: 0, patch: 0, extra: [name: 'beta', major: 0], build: 32]
     versionCode createVersionCode(versionData)
     versionName createVersionName(versionData)
 
     minSdkVersion 19
     targetSdkVersion 24
-
-    resValue 'string', 'app_name', 'tPago'
-    buildConfigField 'boolean', 'CRASHLYTICS', 'false'
   }
 
   buildTypes {
@@ -66,13 +57,10 @@ android {
   }
 
   productFlavors {
-    mock {
-      applicationIdSuffix '.mock'
-      resValue 'string', 'app_name', 'tPago-mock'
-    }
     development {
       applicationIdSuffix '.dev'
       resValue 'string', 'app_name', 'tPago-dev'
+      buildConfigField 'boolean', 'CRASHLYTICS', 'false'
     }
     staging {
       applicationIdSuffix '.stag'
@@ -80,14 +68,9 @@ android {
       buildConfigField 'boolean', 'CRASHLYTICS', 'true'
     }
     production {
+      resValue 'string', 'app_name', 'tPago'
       buildConfigField 'boolean', 'CRASHLYTICS', 'true'
     }
-  }
-
-  sourceSets {
-    development.java.srcDir 'src/common/java'
-    staging.java.srcDir 'src/common/java'
-    production.java.srcDir 'src/common/java'
   }
 }
 
@@ -123,15 +106,14 @@ dependencies {
   provided "com.ryanharter.auto.value:auto-value-gson:${autoValueGsonVersion}"
   annotationProcessor "com.ryanharter.auto.value:auto-value-gson:${autoValueGsonVersion}"
 
-  def retrofitVersion = '2.1.0'
+  def retrofitVersion = '2.2.0'
   compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"
   compile "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
-//  compile "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}"
-  compile 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
+  compile "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}"
 
   testCompile 'junit:junit:4.12'
 
-  def supportLibraryVersion = '25.1.1'
+  def supportLibraryVersion = '25.3.0'
   compile "com.android.support:appcompat-v7:${supportLibraryVersion}"
   compile "com.android.support:design:${supportLibraryVersion}"
   compile "com.android.support:percent:${supportLibraryVersion}"
