@@ -38,7 +38,7 @@ android {
 
     applicationId 'com.tpago.movil'
 
-    def versionData = [major: 2, minor: 0, patch: 0, extra: [name: 'beta', major: 0], build: 32]
+    def versionData = [major: 2, minor: 0, patch: 0, extra: [name: 'beta', major: 0], build: 33]
     versionCode createVersionCode(versionData)
     versionName createVersionName(versionData)
 
