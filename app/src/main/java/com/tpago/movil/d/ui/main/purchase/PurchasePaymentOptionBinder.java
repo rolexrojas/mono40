@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.tpago.Banks;
 import com.tpago.movil.R;
 import com.tpago.movil.User;
 import com.tpago.movil.api.ApiImageUriBuilder;
@@ -56,7 +57,7 @@ final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePayme
     final TextView bankNameTextView = holder.getBankNameTextView();
     final TextView productTypeTextView = holder.getProductTypeTextView();
     if (shouldShowGeneric) {
-      backgroundColor = Bank.getColor(bank);
+      backgroundColor = Banks.getColor(bank);
       backgroundImageView.setVisibility(View.GONE);
 
       bankLogoImageView.setVisibility(View.VISIBLE);
@@ -66,7 +67,7 @@ final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePayme
         .into(bankLogoImageView);
 
       bankNameTextView.setVisibility(View.VISIBLE);
-      bankNameTextView.setText(Bank.getName(bank));
+      bankNameTextView.setText(Banks.getName(bank));
 
       if (isCreditCard) {
         issuerImageView.setVisibility(View.VISIBLE);

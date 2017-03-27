@@ -3,6 +3,7 @@ package com.tpago.movil.main.transactions;
 import android.content.Context;
 
 import com.squareup.picasso.Picasso;
+import com.tpago.Banks;
 import com.tpago.movil.Bank;
 import com.tpago.movil.api.ApiImageUriBuilder;
 import com.tpago.movil.d.data.util.Binder;
@@ -25,7 +26,7 @@ abstract class BasePaymentMethodHolderBinder<H extends BasePaymentMethodHolder> 
   }
 
   protected String formatIdentifier(Product product) {
-    return Bank.getName(product.getBank()) + " " + getString(ProductType.findStringId(product));
+    return Banks.getName(product.getBank()) + " " + getString(ProductType.findStringId(product));
   }
 
   @Override

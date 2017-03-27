@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
 
+import com.tpago.Banks;
 import com.tpago.movil.api.ApiImageUriBuilder;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.data.StringHelper;
@@ -33,7 +34,7 @@ class ProductListItemHolderBinder implements ListItemHolderBinder<ProductItem, P
       .load(ApiImageUriBuilder.build(c, b, ApiImageUriBuilder.Style.GRAY_36))
       .noFade()
       .into(holder.bankLogoImageView);
-    holder.bankNameTextView.setText(Bank.getName(b) + " " + c.getString(ProductType.findStringId(p)));
+    holder.bankNameTextView.setText(Banks.getName(b) + " " + c.getString(ProductType.findStringId(p)));
     final String productIdentifier;
     if (Product.checkIfCreditCard(p)) {
       productIdentifier = stringHelper.maskedProductNumber(p);

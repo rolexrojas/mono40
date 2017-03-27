@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.tpago.Banks;
 import com.tpago.movil.Bank;
 import com.tpago.movil.R;
 import com.tpago.movil.api.ApiImageUriBuilder;
@@ -168,7 +169,7 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
     Picasso.with(getContext())
       .load(ApiImageUriBuilder.build(getContext(), bank, ApiImageUriBuilder.Style.PRIMARY_24))
       .into(imageView);
-    textView.setText(String.format(getString(R.string.transaction), Bank.getName(bank)));
+    textView.setText(String.format(getString(R.string.transaction), Banks.getName(bank)));
     textInput.requestFocus();
     textInput.setText(recipient.getAccountNumber());
     textInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {

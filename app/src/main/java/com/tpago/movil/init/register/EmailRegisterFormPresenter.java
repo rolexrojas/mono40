@@ -55,7 +55,7 @@ final class EmailRegisterFormPresenter
     final String sanitizedContent = sanitize(content);
     if (!sanitizedContent.equals(textInputContent)) {
       textInputContent = sanitizedContent;
-      isTextInputContentValid = Email.isValid(textInputContent);
+      isTextInputContentValid = Email.checkIfValue(textInputContent);
       updateView();
     }
   }
@@ -64,7 +64,7 @@ final class EmailRegisterFormPresenter
     final String sanitizedContent = sanitize(content);
     if (!sanitizedContent.equals(confirmationTextInputContent)) {
       confirmationTextInputContent = sanitizedContent;
-      isConfirmationTextInputContentValid = Email.isValid(confirmationTextInputContent);
+      isConfirmationTextInputContentValid = Email.checkIfValue(confirmationTextInputContent);
       updateView();
     }
   }

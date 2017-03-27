@@ -3,8 +3,8 @@ package com.tpago.movil;
 import android.util.Patterns;
 
 import com.google.auto.value.AutoValue;
-import com.tpago.movil.util.Objects;
 import com.tpago.movil.text.Texts;
+import com.tpago.movil.util.Preconditions;
 
 import java.util.regex.Pattern;
 
@@ -21,21 +21,19 @@ public abstract class Email {
     return SANITIZER.matcher(value).replaceAll("");
   }
 
-  private static boolean isValid(String email, boolean sanitize) {
+  private static boolean checkIfValue(String email, boolean sanitize) {
     return PATTERN.matcher(sanitize ? sanitize(email) : email).matches();
   }
 
-  public static boolean isValid(String email) {
-    return Texts.isNotEmpty(email) && isValid(email, true);
+  public static boolean checkIfValue(String email) {
+    return Texts.isNotEmpty(email) && checkIfValue(email, true);
   }
 
   public static Email create(String value) {
-    if (Objects.isNull(value)) {
-      throw new NullPointerException("value == null");
-    }
+    Preconditions.checkNotNull(value, "value == null");
     final String sanitizedValue = sanitize(value);
-    if (!isValid(sanitizedValue, false)) {
-      throw new IllegalArgumentException("isValid(sanitizedValue, false) == false");
+    if (!checkIfValue(sanitizedValue, false)) {
+      throw new IllegalArgumentException("checkIfValid(sanitizedValue, false) == false");
     }
     return new AutoValue_Email(sanitizedValue);
   }

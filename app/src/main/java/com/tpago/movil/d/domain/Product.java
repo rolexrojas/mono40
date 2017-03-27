@@ -2,6 +2,7 @@ package com.tpago.movil.d.domain;
 
 import android.support.annotation.NonNull;
 
+import com.tpago.Banks;
 import com.tpago.movil.Bank;
 import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.text.Texts;
@@ -197,7 +198,7 @@ public class Product implements Serializable {
    */
   @NonNull
   public final String getIdentifier() {
-    return String.format("%1$s %2$s", Bank.getName(bank), type);
+    return String.format("%1$s %2$s", Banks.getName(bank), type);
   }
 
   /**

@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.tpago.Banks;
 import com.tpago.movil.Bank;
 import com.tpago.movil.R;
 import com.tpago.movil.api.ApiImageUriBuilder;
@@ -129,7 +130,7 @@ public class NonAffiliatedPhoneNumberRecipientAddition1Fragment extends Fragment
             if (result.isSuccessful()) {
               adapter.notifyItemRangeRemoved(0, bankList.size());
               bankList.addAll(result.getData());
-              Bank.sort(bankList);
+              Banks.sort(bankList);
               adapter.notifyItemRangeInserted(0, bankList.size());
             } else {
               Dialogs.builder(getContext())
@@ -219,7 +220,7 @@ public class NonAffiliatedPhoneNumberRecipientAddition1Fragment extends Fragment
       Picasso.with(getContext())
         .load(ApiImageUriBuilder.build(getContext(), bank, ApiImageUriBuilder.Style.PRIMARY_24))
         .into(holder.imageView);
-      holder.textView.setText(Bank.getName(bank));
+      holder.textView.setText(Banks.getName(bank));
     }
 
     @Override

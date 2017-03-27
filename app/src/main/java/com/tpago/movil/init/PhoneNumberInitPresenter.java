@@ -45,7 +45,7 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
 
   private void updateView() {
     final String phoneNumber = Digits.stringify(phoneNumberDigits);
-    isPhoneNumberValid = PhoneNumber.isValid(phoneNumber);
+    isPhoneNumberValid = PhoneNumber.checkIfValid(phoneNumber);
     if (Objects.isNotNull(view)) {
       view.setTextInputContent(PhoneNumber.format(phoneNumber));
       view.showNextButtonAsEnabled(isPhoneNumberValid);

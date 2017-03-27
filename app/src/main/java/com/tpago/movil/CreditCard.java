@@ -4,6 +4,8 @@ import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 
+import java.math.BigDecimal;
+
 /**
  * @author hecvasro
  */
@@ -14,11 +16,19 @@ public abstract class CreditCard extends Product {
     Type type,
     String alias,
     String number,
-    String currency) {
-    return new AutoValue_CreditCard(bank, type, alias, number, currency);
+    String currency,
+    BigDecimal queryFee) {
+    return new AutoValue_CreditCard(
+      bank,
+      type,
+      alias,
+      number,
+      currency,
+      queryFee);
   }
 
   public static TypeAdapter<CreditCard> typeAdapter(Gson gson) {
-    return new AutoValue_CreditCard.GsonTypeAdapter(gson);
+    return new AutoValue_CreditCard.GsonTypeAdapter(gson)
+      .setDefaultQueryFee(BigDecimal.ZERO);
   }
 }

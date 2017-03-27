@@ -2,7 +2,10 @@ package com.tpago.movil;
 
 import android.os.Parcelable;
 
+import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
+
+import java.math.BigDecimal;
 
 /**
  * @author hecvasro
@@ -13,6 +16,7 @@ public abstract class Product implements Parcelable {
   @SerializedName("account-alias") public abstract String getAlias();
   @SerializedName("account-number") public abstract String getNumber();
   @SerializedName("currency") public abstract String getCurrency();
+  @SerializedName("query-fee") public abstract BigDecimal getQueryFee();
 
   public enum Type {
     LOAN, // PRESTAMO
