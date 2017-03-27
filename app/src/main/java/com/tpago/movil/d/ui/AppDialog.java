@@ -23,6 +23,7 @@ public final class AppDialog {
     @Nullable final String negativeActionText,
     @Nullable final OnActionClickedListener negativeActionListener) {
     final AlertDialog.Builder builder = new AlertDialog.Builder(context)
+      .setCancelable(false)
       .setTitle(title);
     if (!TextUtils.isEmpty(message)) {
       builder.setMessage(message);
@@ -50,31 +51,16 @@ public final class AppDialog {
     alertDialog = builder.create();
   }
 
-  /**
-   * TODO
-   */
   public final void show() {
     alertDialog.show();
   }
 
-  /**
-   * TODO
-   */
   public enum Action {
     POSITIVE,
     NEGATIVE
   }
 
-  /**
-   * TODO
-   */
   public interface OnActionClickedListener {
-    /**
-     * TODO
-     *
-     * @param action
-     *   TODO
-     */
     void onActionClicked(@NonNull Action action);
   }
 
@@ -124,43 +110,29 @@ public final class AppDialog {
       return negativeAction(text, null);
     }
 
-    /**
-     * TODO
-     *
-     * @return TODO
-     */
     @NonNull
     public final AppDialog build() {
-      return new AppDialog(context, title, message, positiveActionText, positiveActionListener,
-        negativeActionText, negativeActionListener);
+      return new AppDialog(
+        context,
+        title,
+        message,
+        positiveActionText,
+        positiveActionListener,
+        negativeActionText,
+        negativeActionListener);
     }
   }
 
-  /**
-   * TODO
-   */
+  @Deprecated
   public static final class Creator {
     private final Context context;
 
-    /**
-     * TODO
-     *
-     * @param context
-     *   TODO
-     */
     public Creator(@NonNull Context context) {
       this.context = context;
     }
 
-    /**
-     * TODO
-     *
-     * @param title
-     *   TODO
-     *
-     * @return TODO
-     */
     @NonNull
+    @Deprecated
     public final Builder create(@NonNull String title) {
       return new Builder(context, title);
     }
