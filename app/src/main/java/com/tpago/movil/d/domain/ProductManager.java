@@ -112,11 +112,16 @@ public final class ProductManager {
       indexSet.add(p.getId());
       editor.putString(p.getId(), gson.toJson(p));
     }
-    for (Product p : ptrl) {
-      final PosResult r = posBridge.get().removeCard(p.getAlias());
-      Timber.d(r.toString());
-      indexSet.remove(p.getId());
-      editor.remove(p.getId());
+    if (!ptrl.isEmpty()) {
+      final PosBridge bridge = posBridge.get();
+      for (Product p : ptrl) {
+        if (bridge.isRegistered(p.getAlias())) {
+          final PosResult r = bridge.removeCard(p.getAlias());
+          Timber.d(r.toString());
+        }
+        indexSet.remove(p.getId());
+        editor.remove(p.getId());
+      }
     }
 
     editor.putStringSet(KEY_INDEX_SET, indexSet);
