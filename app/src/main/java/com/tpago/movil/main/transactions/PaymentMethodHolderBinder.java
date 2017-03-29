@@ -16,6 +16,6 @@ final class PaymentMethodHolderBinder extends BasePaymentMethodHolderBinder<Paym
   @Override
   public void bind(@NonNull Product product, @NonNull PaymentMethodHolder holder) {
     super.bind(product, holder);
-    holder.getProductNumberTextView().setText(product.getNumber());
+    holder.getProductNumberTextView().setText(product.getNumber().replaceAll("[\\D]", ""));
   }
 }

@@ -63,7 +63,7 @@ class ProductTypeAdapter implements JsonDeserializer<Product>, JsonSerializer<Pr
       return ProductCreator.create(
         ProductType.valueOf(jsonObject.get(PROPERTY_TYPE).getAsString()),
         jsonObject.get(PROPERTY_ALIAS).getAsString(),
-        jsonObject.get(PROPERTY_NUMBER).getAsString().replaceAll("[\\D]", ""),
+        jsonObject.get(PROPERTY_NUMBER).getAsString(),
         (Bank) context.deserialize(jsonObject.get(PROPERTY_BANK), Bank.class),
         Currencies.map(jsonObject.get(PROPERTY_CURRENCY).getAsString()),
         queryFee,
