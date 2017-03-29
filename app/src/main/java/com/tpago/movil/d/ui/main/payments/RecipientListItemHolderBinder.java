@@ -7,7 +7,6 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
 import com.tpago.movil.api.ApiImageUriBuilder;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.domain.BillBalance;
@@ -17,7 +16,6 @@ import com.tpago.movil.d.domain.RecipientType;
 import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
-import com.tpago.movil.graphics.CircleTransformation;
 import com.tpago.movil.util.Objects;
 
 /**
@@ -25,10 +23,6 @@ import com.tpago.movil.util.Objects;
  */
 class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, RecipientListItemHolder> {
   private boolean deleting = false;
-
-  boolean isDeleting() {
-    return deleting;
-  }
 
   void setDeleting(boolean deleting) {
     this.deleting = deleting;
@@ -40,7 +34,6 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
     final String identifier = item.getIdentifier();
     final RecipientType type = item.getType();
     Uri imageUri = Uri.EMPTY;
-    boolean shouldBeCropped = false;
     final Context context = holder.getContext();
     if (type.equals(RecipientType.NON_AFFILIATED_PHONE_NUMBER)) {
       imageUri = ApiImageUriBuilder.build(
@@ -53,13 +46,12 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
         ((BillRecipient) item).getPartner(),
         ApiImageUriBuilder.Style.PRIMARY_24);
     }
-    if (!imageUri.equals(Uri.EMPTY)) {
-      final RequestCreator creator = Picasso.with(holder.getContext())
-        .load(imageUri);
-      if (shouldBeCropped) {
-        creator.transform(new CircleTransformation());
-      }
-      creator.into(holder.recipientPictureImageView);
+    if (imageUri.equals(Uri.EMPTY)) {
+      holder.recipientPictureImageView.setImageDrawable(null);
+    } else {
+      Picasso.with(context)
+        .load(imageUri)
+        .into(holder.recipientPictureImageView);
     }
     if (Utils.isNotNull(label)) {
       holder.recipientLabelTextView.setText(label);
@@ -76,7 +68,7 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
     String dueDate = null;
     String totalOwedCurrency = null;
     String totalOwedValue = null;
-    if (isDeleting()) {
+    if (deleting) {
       holder.deleteCheckbox.setVisibility(View.VISIBLE);
       holder.deleteCheckbox.setChecked(item.isSelected());
       holder.proceedActionView.setVisibility(View.GONE);
@@ -94,10 +86,7 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
         final BillRecipient r = (BillRecipient) item;
         final BillBalance b = r.getBalance();
         if (Objects.isNotNull(b)) {
-//          dueDate = new SimpleDateFormat("dd MMMM", new Locale("es", "DO"))
-//            .format(b.getDate())
-//            .toUpperCase();
-          dueDate = b.getDate().trim();
+          dueDate = b.getDate();
           totalOwedCurrency = r.getCurrency();
           totalOwedValue = Formatter.amount(b.getTotal());
         }
