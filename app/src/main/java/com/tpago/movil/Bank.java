@@ -7,11 +7,13 @@ import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * @author hecvasro
  */
 @AutoValue
-public abstract class Bank implements Parcelable {
+public abstract class Bank implements Serializable, Parcelable {
   public static Bank create(int code, String id, String name, String imageUriTemplate) {
     return new AutoValue_Bank(code, id, name, imageUriTemplate);
   }

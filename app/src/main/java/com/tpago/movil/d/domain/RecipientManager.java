@@ -87,7 +87,6 @@ public final class RecipientManager {
 
     final SharedPreferences.Editor editor = sharedPreferences.edit();
 
-    recipientList.clear();
     for (Recipient recipient : recipientToAddList) {
       queryBalance(authToken, recipient);
       recipientList.add(recipient);
