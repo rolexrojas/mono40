@@ -146,6 +146,7 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
     super.onViewStarted();
     final PhoneNumber phoneNumber = initData.getPhoneNumber();
     if (Objects.isNotNull(phoneNumber)) {
+      phoneNumberDigits.clear();
       phoneNumberDigits.addAll(Digits.getDigits(phoneNumber));
     }
     updateView();

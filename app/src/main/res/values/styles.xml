@@ -21,6 +21,7 @@
     <item name="android:focusable">true</item>
     <item name="android:focusableInTouchMode">true</item>
     <item name="android:gravity">center</item>
+    <item name="android:maxLines">1</item>
     <item name="android:padding">@dimen/widget_editable_label_padding</item>
     <item name="fontPath">@string/widget_editable_label_content_font</item>
   </style>

@@ -115,7 +115,8 @@ public final class LabelFitterLayout extends FrameLayout {
     if (!shouldFitText) {
       return;
     }
-    final int width = childLabel.getWidth()
+    final int width = childLabel.getRight()
+      - childLabel.getLeft()
       - childLabel.getCompoundPaddingStart()
       - childLabel.getCompoundPaddingEnd();
     if (width <= 0) {
@@ -155,10 +156,10 @@ public final class LabelFitterLayout extends FrameLayout {
 
   @Override
   protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+    super.onLayout(changed, left, top, right, bottom);
     if (changed || shouldFitText) {
       fitText();
     }
-    super.onLayout(changed, left, top, right, bottom);
   }
 
   @Override
