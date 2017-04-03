@@ -1,24 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
-static def createVersionCode(data) {
-  def code = (data.major * 10000000) + data.build
-  if (data.extra == null) {
-    code += 1000000
-  } else {
-    code += (data.extra.major * 10000)
-  }
-  return code
-}
-
-static def createVersionName(data) {
-  def name = "${data.major}.${data.minor}.${data.patch}"
-  if (data.extra != null) {
-    name = "${name}-${data.extra.name}.${data.extra.major}"
-  }
-  return name
-}
-
 android {
   packagingOptions {
     exclude 'META-INF/rxjava.properties'
@@ -38,9 +20,8 @@ android {
 
     applicationId 'com.tpago.movil'
 
-    def versionData = [major: 2, minor: 0, patch: 0, extra: [name: 'beta', major: 0], build: 35]
-    versionCode createVersionCode(versionData)
-    versionName createVersionName(versionData)
+    versionCode 20_000_036
+    versionName '2.0.0-beta.0'
 
     minSdkVersion 19
     targetSdkVersion 24
