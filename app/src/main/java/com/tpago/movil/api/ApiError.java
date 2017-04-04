@@ -34,6 +34,7 @@ public abstract class ApiError {
     @SerializedName("0055") ALREADY_REGISTERED_EMAIL,
     @SerializedName("0112") ALREADY_ASSOCIATED_DEVICE,
     @SerializedName("0144") UNASSOCIATED_PROFILE,
-    @SerializedName("0216") UNASSOCIATED_PHONE_NUMBER
+    @SerializedName("0216") UNASSOCIATED_PHONE_NUMBER,
+    @SerializedName("1618") INVALID_PASSWORD
   }
 }

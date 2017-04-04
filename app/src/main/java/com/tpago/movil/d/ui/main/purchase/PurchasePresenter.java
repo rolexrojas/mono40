@@ -96,7 +96,7 @@ final class PurchasePresenter extends Presenter<PurchaseScreen> {
   final void resume() {
     screen.clearPaymentOptions();
     for (Product paymentOption : productManager.getPaymentOptionList()) {
-      if (posBridge.isRegistered(paymentOption.getAlias())) {
+      if (posBridge.isRegistered(paymentOption.getSanitizedNumber())) {
         screen.addPaymentOption(paymentOption);
       }
     }

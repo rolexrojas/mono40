@@ -66,7 +66,7 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
         public Observable<Boolean> call(Boolean result) {
           if (result) {
             return posBridge.get()
-              .selectCard(paymentOption.getAlias())
+              .selectCard(paymentOption.getSanitizedNumber())
               .map(new Func1<PosResult, Boolean>() {
                 @Override
                 public Boolean call(PosResult posResult) {

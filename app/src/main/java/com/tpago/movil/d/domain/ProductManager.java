@@ -115,8 +115,8 @@ public final class ProductManager {
     if (!ptrl.isEmpty()) {
       final PosBridge bridge = posBridge.get();
       for (Product p : ptrl) {
-        if (bridge.isRegistered(p.getAlias())) {
-          final PosResult r = bridge.removeCard(p.getAlias());
+        if (bridge.isRegistered(p.getSanitizedNumber())) {
+          final PosResult r = bridge.removeCard(p.getSanitizedNumber());
           Timber.d(r.toString());
         }
         indexSet.remove(p.getId());
@@ -215,7 +215,7 @@ public final class ProductManager {
     final PosBridge b = posBridge.get();
     final List<Pair<Product, PosResult>> resultList = new ArrayList<>();
     for (Product po : paymentOptionList) {
-      resultList.add(Pair.create(po, b.addCard(phoneNumber, pin, po.getAlias())));
+      resultList.add(Pair.create(po, b.addCard(phoneNumber, pin, po.getSanitizedNumber())));
     }
     return resultList;
   }

@@ -171,6 +171,10 @@ public class Product implements Serializable {
     return number;
   }
 
+  public final String getSanitizedNumber() {
+    return getNumber().replaceAll("[\\D]", "");
+  }
+
   /**
    * Gets the {@link Bank holder} of the product.
    *
