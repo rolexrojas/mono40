@@ -16,7 +16,7 @@ public enum DisplayDensity {
   XXXHDPI(4.00F);
 
   public static DisplayDensity find(Context context) {
-    Preconditions.checkNotNull(context, "context == null");
+    Preconditions.assertNotNull(context, "context == null");
     final float value = context.getResources().getDisplayMetrics().density;
     if (value <= LDPI.getValue()) {
       return LDPI;

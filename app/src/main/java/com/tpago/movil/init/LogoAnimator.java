@@ -17,9 +17,9 @@ public final class LogoAnimator {
   private final float movedAndScaledTranslationY;
 
   LogoAnimator(Logo logo, View anchor, long duration) {
-    this.logo = Preconditions.checkNotNull(logo, "logo == null");
+    this.logo = Preconditions.assertNotNull(logo, "logo == null");
     this.duration = duration;
-    Preconditions.checkNotNull(anchor, "anchor == null");
+    Preconditions.assertNotNull(anchor, "anchor == null");
     final float aY = anchor.getY();
     final float aH = anchor.getHeight();
     final float lY = logo.getY();

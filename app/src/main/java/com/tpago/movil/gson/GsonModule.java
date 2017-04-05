@@ -2,7 +2,10 @@ package com.tpago.movil.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
+import com.tpago.movil.data.AssetUriBuilder;
+import com.tpago.movil.domain.Bank;
 
 import javax.inject.Singleton;
 
@@ -22,8 +25,11 @@ public final class GsonModule {
 
   @Provides
   @Singleton
-  Gson provideGson(TypeAdapterFactory typeAdapterFactory) {
+  Gson provideGson(AssetUriBuilder assetUriBuilder, TypeAdapterFactory typeAdapterFactory) {
+    final TypeAdapter<Bank> bankTypeAdapter = new BankTypeAdapter(assetUriBuilder);
+
     return new GsonBuilder()
+      .registerTypeAdapter(Bank.class, bankTypeAdapter)
       .registerTypeAdapterFactory(typeAdapterFactory)
       .create();
   }

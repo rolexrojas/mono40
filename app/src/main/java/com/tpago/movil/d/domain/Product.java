@@ -3,7 +3,7 @@ package com.tpago.movil.d.domain;
 import android.support.annotation.NonNull;
 
 import com.tpago.Banks;
-import com.tpago.movil.Bank;
+import com.tpago.movil.domain.Bank;
 import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.text.Texts;
 

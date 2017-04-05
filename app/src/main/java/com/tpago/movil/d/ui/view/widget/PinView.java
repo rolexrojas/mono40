@@ -90,13 +90,13 @@ public class PinView extends LinearLayout {
   }
 
 //  private boolean isLoading() {
-//    return Utils.isNotNull(loadAnimator) && loadAnimator.isRunning();
+//    return Utils.checkIfNotNull(loadAnimator) && loadAnimator.isRunning();
 //  }
 
 //  private void startLoading() {
 //    if (!isLoading() && !isResolving()) {
 //      mustRestartLoading = true;
-//      if (Utils.isNull(loadAnimator)) {
+//      if (Utils.checkIfNull(loadAnimator)) {
 //        View dot;
 //        Animator currentFadeInAnimator;
 //        Animator currentFadeOutAnimator;
@@ -108,7 +108,7 @@ public class PinView extends LinearLayout {
 //          dot = dots[i];
 //          currentFadeInAnimator = ObjectAnimator.ofFloat(dot, ANIMATION_PROPERTY_ALPHA, 1F);
 //          currentFadeOutAnimator = ObjectAnimator.ofFloat(dot, ANIMATION_PROPERTY_ALPHA, 0F);
-//          if (Utils.isNull(previousFadeInAnimator) && Utils.isNull(previousFadeOutAnimator)) {
+//          if (Utils.checkIfNull(previousFadeInAnimator) && Utils.checkIfNull(previousFadeOutAnimator)) {
 //            blinkAnimator.play(currentFadeInAnimator);
 //          } else {
 //            blinkAnimator.play(currentFadeInAnimator).after(previousFadeInAnimator);
@@ -117,7 +117,7 @@ public class PinView extends LinearLayout {
 //              blinkAnimator.play(currentFadeOutAnimator).after(previousFadeOutAnimator);
 //            }
 //          }
-//          if (Utils.isNull(previousFadeOutAnimator)) {
+//          if (Utils.checkIfNull(previousFadeOutAnimator)) {
 //            fadeOutAnimator.play(currentFadeOutAnimator);
 //          } else {
 //            fadeOutAnimator.play(currentFadeOutAnimator).after(previousFadeOutAnimator);
@@ -139,7 +139,7 @@ public class PinView extends LinearLayout {
 //        loadAnimator.addListener(new BaseAnimatorListener() {
 //          @Override
 //          public void onAnimationStart(Animator animator) {
-//            if (Utils.isNotNull(listener)) {
+//            if (Utils.checkIfNotNull(listener)) {
 //              listener.onConfirmationStarted(TextUtils.join("", digits));
 //            }
 //          }
@@ -216,7 +216,7 @@ public class PinView extends LinearLayout {
 //  }
 
 //  private void initializeFailureResolveAnimator() {
-//    if (Utils.isNull(failureResolveAnimator)) {
+//    if (Utils.checkIfNull(failureResolveAnimator)) {
 //      int i;
 //      View dot;
 //      Animator currentFadeInAnimator;
@@ -225,7 +225,7 @@ public class PinView extends LinearLayout {
 //      for (i = 0; i < DEFAULT_MAX_LENGTH; i++) {
 //        dot = dots[i];
 //        currentFadeInAnimator = ObjectAnimator.ofFloat(dot, ANIMATION_PROPERTY_ALPHA, 1F);
-//        if (Utils.isNull(previousFadeInAnimator)) {
+//        if (Utils.checkIfNull(previousFadeInAnimator)) {
 //          fadeInAnimator.play(currentFadeInAnimator);
 //        } else {
 //          fadeInAnimator.play(currentFadeInAnimator).after(previousFadeInAnimator);
@@ -264,7 +264,7 @@ public class PinView extends LinearLayout {
 //  }
 
 //  private boolean isResolving() {
-//    return Utils.isNotNull(resolveAnimator) && resolveAnimator.isRunning();
+//    return Utils.checkIfNotNull(resolveAnimator) && resolveAnimator.isRunning();
 //  }
 
   private void setDotVisibility(@NonNull final View dot, final boolean visible) {
@@ -309,7 +309,7 @@ public class PinView extends LinearLayout {
       setDotVisibility(dots[size - 1], true);
       if (size == DEFAULT_MAX_LENGTH) {
         hideCursor();
-        if (Objects.isNotNull(listener)) {
+        if (Objects.checkIfNotNull(listener)) {
           listener.onConfirmationStarted(TextUtils.join("", digits));
         }
       }
@@ -331,7 +331,7 @@ public class PinView extends LinearLayout {
 
 //  public void setPaymentResult(final boolean succeeded) {
 //    if (!isResolving()) {
-//      if (Utils.isNotNull(resolveAnimator)) {
+//      if (Utils.checkIfNotNull(resolveAnimator)) {
 //        if (resolveAnimator.isRunning()) {
 //          resolveAnimator.cancel();
 //        }
@@ -348,7 +348,7 @@ public class PinView extends LinearLayout {
 //        @Override
 //        public void onAnimationEnd(Animator animator) {
 //          digits.clear();
-//          if (Utils.isNotNull(listener)) {
+//          if (Utils.checkIfNotNull(listener)) {
 //            listener.onConfirmationFinished(succeeded);
 //          }
 //          if (!succeeded) {

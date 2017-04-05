@@ -2,7 +2,6 @@ package com.tpago.movil.d.ui.main.recipients;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.Session;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.Recipient;
@@ -30,8 +29,8 @@ class AddRecipientPresenter extends Presenter<AddRecipientScreen> {
   private Subscription checkIfAffiliatedSubscription = Subscriptions.unsubscribed();
 
   AddRecipientPresenter(String authToken, RecipientManager recipientManager) {
-    this.authToken = Preconditions.checkNotNull(authToken, "authToken == null");
-    this.recipientManager = Preconditions.checkNotNull(recipientManager, "recipientManager == null");
+    this.authToken = Preconditions.assertNotNull(authToken, "authToken == null");
+    this.recipientManager = Preconditions.assertNotNull(recipientManager, "recipientManager == null");
   }
 
   void stop() {

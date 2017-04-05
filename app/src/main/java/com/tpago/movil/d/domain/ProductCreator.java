@@ -2,7 +2,7 @@ package com.tpago.movil.d.domain;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.Bank;
+import com.tpago.movil.domain.Bank;
 
 import java.math.BigDecimal;
 

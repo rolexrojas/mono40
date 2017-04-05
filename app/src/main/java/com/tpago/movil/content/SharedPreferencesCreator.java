@@ -13,7 +13,7 @@ public final class SharedPreferencesCreator {
   private final Context context;
 
   public SharedPreferencesCreator(Context context) {
-    this.context = Preconditions.checkNotNull(context, "context == null");
+    this.context = Preconditions.assertNotNull(context, "context == null");
   }
 
   public final SharedPreferences create(String fileName) {

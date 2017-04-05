@@ -83,7 +83,7 @@ public class TransactionCreationActivity
   }
 
   public static Pair<Recipient, String> deserializeResult(Intent intent) {
-    if (Objects.isNull(intent)) {
+    if (Objects.checkIfNull(intent)) {
       return null;
     } else {
       final Recipient recipient = (Recipient) intent.getSerializableExtra(KEY_RECIPIENT);
@@ -138,7 +138,7 @@ public class TransactionCreationActivity
           fragment = null;
           break;
       }
-      if (Objects.isNull(fragment)) {
+      if (Objects.checkIfNull(fragment)) {
         finish();
       } else {
         setChildFragment(fragment, false, false);

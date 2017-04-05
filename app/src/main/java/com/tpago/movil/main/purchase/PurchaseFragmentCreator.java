@@ -12,7 +12,7 @@ public final class PurchaseFragmentCreator {
   private final NfcHelper nfcHelper;
 
   public PurchaseFragmentCreator(NfcHelper nfcHelper) {
-    this.nfcHelper = Preconditions.checkNotNull(nfcHelper, "nfcHelper == null");
+    this.nfcHelper = Preconditions.assertNotNull(nfcHelper, "nfcHelper == null");
   }
 
   public final Fragment create() {

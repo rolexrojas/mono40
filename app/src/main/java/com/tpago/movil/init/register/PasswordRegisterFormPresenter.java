@@ -16,7 +16,7 @@ final class PasswordRegisterFormPresenter
   private boolean isConfirmationTextInputContentValid = false;
 
   private static String sanitize(String content) {
-    return Objects.isNull(content) ? "" : content.trim();
+    return Objects.checkIfNull(content) ? "" : content.trim();
   }
 
   PasswordRegisterFormPresenter(View view, StringResolver stringResolver, RegisterData registerData) {

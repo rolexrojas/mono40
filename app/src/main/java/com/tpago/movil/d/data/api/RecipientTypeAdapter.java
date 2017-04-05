@@ -2,7 +2,7 @@ package com.tpago.movil.d.data.api;
 
 import android.text.TextUtils;
 
-import com.tpago.movil.Bank;
+import com.tpago.movil.domain.Bank;
 import com.tpago.movil.Partner;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
@@ -108,13 +108,13 @@ class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSerialize
     } else if (type.equals(RecipientType.NON_AFFILIATED_PHONE_NUMBER)) {
       final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) src;
       jsonObject.addProperty(PROPERTY_PHONE_NUMBER, r.getPhoneNumber());
-      if (Objects.isNotNull(r.getBank())) {
+      if (Objects.checkIfNotNull(r.getBank())) {
         jsonObject.add(PROPERTY_BANK, context.serialize(r.getBank()));
       }
       if (Texts.isNotEmpty(r.getAccountNumber())) {
         jsonObject.addProperty(PROPERTY_ACCOUNT_NUMBER, r.getAccountNumber());
       }
-      if (Objects.isNotNull(r.getProduct())) {
+      if (Objects.checkIfNotNull(r.getProduct())) {
         jsonObject.add(PROPERTY_PRODUCT, context.serialize(r.getProduct()));
       }
     } else if (type.equals(RecipientType.BILL)) {
@@ -122,7 +122,7 @@ class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSerialize
       jsonObject.add(PROPERTY_PARTNER, context.serialize(r.getPartner()));
       jsonObject.addProperty(PROPERTY_CONTRACT_NUMBER, r.getContractNumber());
       final BillBalance b = r.getBalance();
-      if (Objects.isNotNull(b)) {
+      if (Objects.checkIfNotNull(b)) {
         jsonObject.add(PROPERTY_BALANCE, context.serialize(b));
       }
     }

@@ -14,9 +14,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.Banks;
-import com.tpago.movil.Bank;
+import com.tpago.movil.domain.Bank;
 import com.tpago.movil.R;
-import com.tpago.movil.api.ApiImageUriBuilder;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.api.ApiResult;
@@ -28,6 +27,7 @@ import com.tpago.movil.d.ui.main.transactions.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transactions.TransactionCreationContainer;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
+import com.tpago.movil.domain.LogoStyle;
 import com.tpago.movil.util.Objects;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
@@ -72,7 +72,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final TransactionCreationComponent c = getContainer().getComponent();
-    if (Objects.isNotNull(c)) {
+    if (Objects.checkIfNotNull(c)) {
       c.inject(this);
     }
   }
@@ -203,7 +203,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment
     public void onBindViewHolder(ViewHolder holder, int position) {
       final Bank bank = bankList.get(position);
       Picasso.with(getContext())
-        .load(ApiImageUriBuilder.build(getContext(), bank, ApiImageUriBuilder.Style.PRIMARY_24))
+        .load(bank.getLogoUri(LogoStyle.PRIMARY_24))
         .into(holder.imageView);
       holder.textView.setText(Banks.getName(bank));
     }

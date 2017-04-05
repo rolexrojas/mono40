@@ -16,18 +16,18 @@ public final class Keyboard {
   }
 
   public static void show(View view) {
-    Preconditions.checkNotNull(view, "view == null");
+    Preconditions.assertNotNull(view, "view == null");
     view.requestFocus();
     final InputMethodManager imm = getInputMethodManager(view);
-    if (Objects.isNotNull(imm)) {
+    if (Objects.checkIfNotNull(imm)) {
       imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
     }
   }
 
   public static void hide(View view) {
-    Preconditions.checkNotNull(view, "view == null");
+    Preconditions.assertNotNull(view, "view == null");
     final InputMethodManager imm = getInputMethodManager(view);
-    if (Objects.isNotNull(imm)) {
+    if (Objects.checkIfNotNull(imm)) {
       imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
   }

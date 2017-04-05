@@ -16,9 +16,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.Banks;
-import com.tpago.movil.Bank;
+import com.tpago.movil.domain.Bank;
 import com.tpago.movil.R;
-import com.tpago.movil.api.ApiImageUriBuilder;
 import com.tpago.movil.app.App;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.api.ApiResult;
@@ -27,6 +26,7 @@ import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
+import com.tpago.movil.domain.LogoStyle;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.ArrayList;
@@ -218,7 +218,8 @@ public class NonAffiliatedPhoneNumberRecipientAddition1Fragment extends Fragment
     public void onBindViewHolder(ViewHolder holder, int position) {
       final Bank bank = bankList.get(position);
       Picasso.with(getContext())
-        .load(ApiImageUriBuilder.build(getContext(), bank, ApiImageUriBuilder.Style.PRIMARY_24))
+        .load(bank.getLogoUri(LogoStyle.PRIMARY_24))
+        .noFade()
         .into(holder.imageView);
       holder.textView.setText(Banks.getName(bank));
     }

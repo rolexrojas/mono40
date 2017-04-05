@@ -4,7 +4,7 @@ import com.tpago.movil.api.Currencies;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductCreator;
 import com.tpago.movil.d.domain.ProductType;
-import com.tpago.movil.Bank;
+import com.tpago.movil.domain.Bank;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;

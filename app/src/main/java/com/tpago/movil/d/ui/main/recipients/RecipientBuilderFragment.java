@@ -86,7 +86,7 @@ public class RecipientBuilderFragment
     this.result = result;
     final FragmentManager fm = getChildFragmentManager();
     final Fragment f = fm.findFragmentByTag(KEY_PIN_CONFIRMATION);
-    if (Objects.isNotNull(f)) {
+    if (Objects.checkIfNotNull(f)) {
       ((PinConfirmationDialogFragment) f).resolve(this.result.isSuccessful());
     }
   }
@@ -145,7 +145,7 @@ public class RecipientBuilderFragment
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     ((AddRecipientActivity) getActivity()).getComponent().inject(this);
-    final Bundle bundle = Preconditions.checkNotNull(getArguments(), "getArguments() == null");
+    final Bundle bundle = Preconditions.assertNotNull(getArguments(), "getArguments() == null");
     keyword = bundle.getString(KEY_KEYWORD);
     partner = (Partner) bundle.getSerializable(KEY_PARTNER);
     builder = new BillRecipientBuilder(
@@ -211,7 +211,7 @@ public class RecipientBuilderFragment
 
   @Override
   public void onDismiss(boolean succeeded) {
-    if (Objects.isNotNull(result)) {
+    if (Objects.checkIfNotNull(result)) {
       if (result.isSuccessful()) {
         final Activity activity = getActivity();
         activity.setResult(

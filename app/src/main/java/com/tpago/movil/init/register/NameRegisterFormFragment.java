@@ -46,7 +46,7 @@ public final class NameRegisterFormFragment
 
   @Override
   protected NameRegisterFormPresenter getPresenter() {
-    if (Objects.isNull(presenter)) {
+    if (Objects.checkIfNull(presenter)) {
       presenter = new NameRegisterFormPresenter(this, stringResolver, registerData);
     }
     return presenter;

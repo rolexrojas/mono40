@@ -11,6 +11,6 @@ public final class Dialog {
   private final AlertDialog internalDialog;
 
   private Dialog(AlertDialog internalDialog) {
-    this.internalDialog = Preconditions.checkNotNull(internalDialog, "internalDialog == null");
+    this.internalDialog = Preconditions.assertNotNull(internalDialog, "internalDialog == null");
   }
 }

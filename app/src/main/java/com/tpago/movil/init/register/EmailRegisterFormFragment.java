@@ -46,7 +46,7 @@ public final class EmailRegisterFormFragment
 
   @Override
   protected EmailRegisterFormPresenter getPresenter() {
-    if (Objects.isNull(presenter)) {
+    if (Objects.checkIfNull(presenter)) {
       presenter = new EmailRegisterFormPresenter(this, stringResolver, registerData);
     }
     return presenter;

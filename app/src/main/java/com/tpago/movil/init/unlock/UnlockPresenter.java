@@ -32,7 +32,7 @@ import timber.log.Timber;
  */
 public final class UnlockPresenter extends Presenter<UnlockPresenter.View> {
   private static String sanitize(String content) {
-    return Objects.isNull(content) ? "" : content.trim();
+    return Objects.checkIfNull(content) ? "" : content.trim();
   }
 
   private String passwordTextInputContent;
@@ -47,7 +47,7 @@ public final class UnlockPresenter extends Presenter<UnlockPresenter.View> {
   UnlockPresenter(View view, InitComponent component) {
     super(view);
     // Injects all the annotated dependencies.
-    Preconditions.checkNotNull(component, "component == null")
+    Preconditions.assertNotNull(component, "component == null")
       .inject(this);
   }
 

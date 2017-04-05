@@ -12,8 +12,8 @@ import java.util.Map;
 @AutoValue
 public abstract class PermissionRequestResult {
   public static PermissionRequestResult create(String[] permissions, int[] results) {
-    Preconditions.checkNotNull(permissions, "permissions == null");
-    Preconditions.checkNotNull(results, "results == null");
+    Preconditions.assertNotNull(permissions, "permissions == null");
+    Preconditions.assertNotNull(results, "results == null");
     if (permissions.length != results.length) {
       throw new IllegalArgumentException("permissions.length != results.length");
     }

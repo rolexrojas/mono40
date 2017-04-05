@@ -51,7 +51,7 @@ public final class TutorialTabFragment extends Fragment {
     // Binds all annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
     // Populates the art, title and description fields.
-    final Bundle args = Preconditions.checkNotNull(getArguments(), "getArguments() == null");
+    final Bundle args = Preconditions.assertNotNull(getArguments(), "getArguments() == null");
     titleTextView.setText(args.getInt(KEY_TITLE_ID));
     descriptionTextView.setText(args.getInt(KEY_DESCRIPTION_ID));
   }

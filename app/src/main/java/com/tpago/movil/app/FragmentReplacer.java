@@ -16,7 +16,7 @@ public final class FragmentReplacer {
   private final int viewContainerId;
 
   public FragmentReplacer(FragmentManager fragmentManager, int viewContainerId) {
-    this.fragmentManager = Preconditions.checkNotNull(fragmentManager, "fragmentManager == null");
+    this.fragmentManager = Preconditions.assertNotNull(fragmentManager, "fragmentManager == null");
     this.viewContainerId = viewContainerId;
   }
 
@@ -46,9 +46,9 @@ public final class FragmentReplacer {
     private Transition transition = Transition.NONE;
 
     private Transaction(FragmentManager fragmentManager, int viewContainerId, Fragment fragment) {
-      this.fragmentManager = Preconditions.checkNotNull(fragmentManager, "fragmentManager == null");
+      this.fragmentManager = Preconditions.assertNotNull(fragmentManager, "fragmentManager == null");
       this.viewContainerId = viewContainerId;
-      this.fragment = Preconditions.checkNotNull(fragment, "fragment == null");
+      this.fragment = Preconditions.assertNotNull(fragment, "fragment == null");
     }
 
     public final Transaction addToBackStack() {
@@ -63,7 +63,7 @@ public final class FragmentReplacer {
     }
 
     public final Transaction setTransition(Transition transition) {
-      if (Objects.isNotNull(transition)) {
+      if (Objects.checkIfNotNull(transition)) {
         this.transition = transition;
       }
       return this;

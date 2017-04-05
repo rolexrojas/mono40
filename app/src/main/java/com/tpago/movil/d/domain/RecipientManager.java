@@ -45,13 +45,13 @@ public final class RecipientManager {
     Gson gson,
     DepApiBridge apiBridge) {
     this.sharedPreferences = Preconditions
-      .checkNotNull(sharedPreferencesCreator, "sharedPreferencesCreator == null")
+      .assertNotNull(sharedPreferencesCreator, "sharedPreferencesCreator == null")
       .create(RecipientManager.class.getCanonicalName());
     this.gson = Preconditions
-      .checkNotNull(gson, "gson == null");
+      .assertNotNull(gson, "gson == null");
 
     this.apiBridge = Preconditions
-      .checkNotNull(apiBridge, "apiBridge == null");
+      .assertNotNull(apiBridge, "apiBridge == null");
 
     this.indexSet = this.sharedPreferences.getStringSet(KEY_INDEX_SET, new HashSet<String>());
   }
@@ -69,7 +69,7 @@ public final class RecipientManager {
   @Deprecated final void syncRecipients(
     final String authToken,
     final List<Recipient> remoteRecipientList) {
-    if (Objects.isNull(recipientList)) {
+    if (Objects.checkIfNull(recipientList)) {
       recipientList = new ArrayList<>();
     }
     recipientList.clear();

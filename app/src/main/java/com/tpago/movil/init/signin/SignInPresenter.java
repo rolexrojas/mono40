@@ -47,13 +47,13 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
   @Inject ApiBridge apiBridge;
 
   private static String sanitize(String content) {
-    return Objects.isNull(content) ? "" : content.trim();
+    return Objects.checkIfNull(content) ? "" : content.trim();
   }
 
   public SignInPresenter(View view, InitComponent component) {
     super(view);
     // Injects all the annotated dependencies.
-    Preconditions.checkNotNull(component, "component == null")
+    Preconditions.assertNotNull(component, "component == null")
       .inject(this);
   }
 

@@ -15,7 +15,7 @@ final class NameRegisterFormPresenter extends RegisterFormPresenter<NameRegister
   private boolean isLastNameValid = false;
 
   private static String sanitize(String value) {
-    return Objects.isNull(value) ? "" : value.trim();
+    return Objects.checkIfNull(value) ? "" : value.trim();
   }
 
   NameRegisterFormPresenter(

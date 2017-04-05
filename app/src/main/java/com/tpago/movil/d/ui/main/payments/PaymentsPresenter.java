@@ -307,7 +307,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
       }
       screen.update(r);
       screen.setDeleteButtonEnabled(!selectedRecipients.isEmpty());
-    } else if (!(r instanceof BillRecipient) || Objects.isNotNull(((BillRecipient) r).getBalance())) {
+    } else if (!(r instanceof BillRecipient) || Objects.checkIfNotNull(((BillRecipient) r).getBalance())) {
       screen.startTransfer(r);
     }
   }

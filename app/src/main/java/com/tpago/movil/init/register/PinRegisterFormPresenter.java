@@ -38,7 +38,7 @@ public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPre
   PinRegisterFormPresenter(View view, RegisterComponent component) {
     super(view);
     // Injects all annotated dependencies.
-    Preconditions.checkNotNull(component, "component == null")
+    Preconditions.assertNotNull(component, "component == null")
       .inject(this);
     // Initializes the presenter.
     builder = new Pin.Builder();

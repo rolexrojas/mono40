@@ -6,16 +6,16 @@ package com.tpago.movil.util;
 public final class Objects {
   private static final Object NOTIFICATION = new Object();
 
-  public static <T> boolean isNull(T reference) {
+  public static <T> boolean checkIfNull(T reference) {
     return reference == null;
   }
 
-  public static <T> boolean isNotNull(T reference) {
-    return !isNull(reference);
+  public static <T> boolean checkIfNotNull(T reference) {
+    return !checkIfNull(reference);
   }
 
   public static <T> T getDefaultIfNull(T reference, T defaultValue) {
-    return isNotNull(reference) ? reference : defaultValue;
+    return checkIfNotNull(reference) ? reference : defaultValue;
   }
 
   public static Object notification() {

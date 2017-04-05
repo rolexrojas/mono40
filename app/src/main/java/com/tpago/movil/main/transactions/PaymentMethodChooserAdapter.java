@@ -24,7 +24,7 @@ final class PaymentMethodChooserAdapter {
 
   PaymentMethodChooserAdapter(OnItemSelectedListener onItemSelectedListener) {
     this.onItemSelectedListener = Preconditions
-      .checkNotNull(onItemSelectedListener, "onItemSelectedChangedListener == null");
+      .assertNotNull(onItemSelectedListener, "onItemSelectedChangedListener == null");
   }
 
   final void setObserver(Observer observer) {
@@ -32,15 +32,15 @@ final class PaymentMethodChooserAdapter {
   }
 
   final void setItemList(List<Product> paymentMethodList) {
-    Preconditions.checkNotNull(paymentMethodList, "paymentMethodLister == null");
+    Preconditions.assertNotNull(paymentMethodList, "paymentMethodLister == null");
     this.selectedItemPreviousPosition = POSITION_INVALID;
-    if (Objects.isNull(this.paymentMethodList)) {
+    if (Objects.checkIfNull(this.paymentMethodList)) {
       this.paymentMethodList = new ArrayList<>();
     } else {
       this.paymentMethodList.clear();
     }
     this.paymentMethodList.addAll(paymentMethodList);
-    if (Objects.isNotNull(this.observer)) {
+    if (Objects.checkIfNotNull(this.observer)) {
       this.observer.onDataSetChanged();
     }
     this.onItemSelectedListener.onItemSelectedChanged(this.paymentMethodList.get(POSITION_SELECTED));
@@ -70,7 +70,7 @@ final class PaymentMethodChooserAdapter {
     final Product pm = paymentMethodListCopy.get(selectedItemPreviousPosition);
     paymentMethodList.remove(pm);
     paymentMethodList.add(POSITION_SELECTED, pm);
-    if (Objects.isNotNull(observer)) {
+    if (Objects.checkIfNotNull(observer)) {
       observer.onDataSetChanged();
     }
     onItemSelectedListener.onItemSelectedChanged(pm);

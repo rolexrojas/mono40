@@ -16,13 +16,13 @@ final class EmailRegisterFormPresenter
   private boolean isConfirmationTextInputContentValid = false;
 
   private static String sanitize(String content) {
-    return Objects.isNull(content) ? "" : content.trim();
+    return Objects.checkIfNull(content) ? "" : content.trim();
   }
 
   EmailRegisterFormPresenter(View view, StringResolver stringResolver, RegisterData registerData) {
     super(view, stringResolver, registerData);
     final Email email = this.registerData.getEmail();
-    if (Objects.isNull(email)) {
+    if (Objects.checkIfNull(email)) {
       this.textInputContent = null;
       this.isTextInputContentValid = false;
       this.confirmationTextInputContent = null;

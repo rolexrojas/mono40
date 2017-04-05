@@ -16,9 +16,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.Banks;
-import com.tpago.movil.Bank;
+import com.tpago.movil.domain.Bank;
 import com.tpago.movil.R;
-import com.tpago.movil.api.ApiImageUriBuilder;
 import com.tpago.movil.app.App;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.Product;
@@ -26,6 +25,7 @@ import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.Dialogs;
+import com.tpago.movil.domain.LogoStyle;
 import com.tpago.movil.text.Texts;
 import com.tpago.movil.widget.FullSizeLoadIndicator;
 import com.tpago.movil.widget.LoadIndicator;
@@ -167,7 +167,8 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
     super.onResume();
     final Bank bank = recipient.getBank();
     Picasso.with(getContext())
-      .load(ApiImageUriBuilder.build(getContext(), bank, ApiImageUriBuilder.Style.PRIMARY_24))
+      .load(bank.getLogoUri(LogoStyle.PRIMARY_24))
+      .noFade()
       .into(imageView);
     textView.setText(String.format(getString(R.string.transaction), Banks.getName(bank)));
     textInput.requestFocus();

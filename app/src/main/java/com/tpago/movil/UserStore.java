@@ -24,9 +24,9 @@ public final class UserStore {
 
   public UserStore(SharedPreferencesCreator sharedPreferencesCreator, Avatar avatar) {
     this.sharedPreferences = Preconditions
-      .checkNotNull(sharedPreferencesCreator, "sharedPreferencesCreator == null")
+      .assertNotNull(sharedPreferencesCreator, "sharedPreferencesCreator == null")
       .create(UserStore.class.getCanonicalName());
-    this.avatar = Preconditions.checkNotNull(avatar, "avatar == null");
+    this.avatar = Preconditions.assertNotNull(avatar, "avatar == null");
   }
 
   private void createUser(
@@ -68,7 +68,7 @@ public final class UserStore {
   }
 
   public final User get() {
-    if (isSet() && Objects.isNull(user)) {
+    if (isSet() && Objects.checkIfNull(user)) {
       createUser(
         PhoneNumber.create(sharedPreferences.getString(KEY_PHONE_NUMBER, null)),
         Email.create(sharedPreferences.getString(KEY_EMAIL, null)),
@@ -81,7 +81,7 @@ public final class UserStore {
 
   public final void clear() {
     if (isSet()) {
-      if (Objects.isNotNull(user)) {
+      if (Objects.checkIfNotNull(user)) {
         user.setOnNameChangedListener(null);
         user = null;
       }

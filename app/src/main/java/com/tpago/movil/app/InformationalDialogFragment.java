@@ -71,7 +71,7 @@ public final class InformationalDialogFragment extends DialogFragment {
     super.onAttach(context);
     // Attaches the result handler.
     final Fragment targetFragment = getTargetFragment();
-    if (Objects.isNotNull(targetFragment) && targetFragment instanceof ResultHandler) {
+    if (Objects.checkIfNotNull(targetFragment) && targetFragment instanceof ResultHandler) {
       resultHandler = (ResultHandler) targetFragment;
     }
   }
@@ -79,7 +79,7 @@ public final class InformationalDialogFragment extends DialogFragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    final Bundle args = Preconditions.checkNotNull(getArguments(), "getArguments() == null");
+    final Bundle args = Preconditions.assertNotNull(getArguments(), "getArguments() == null");
     if (!args.containsKey(KEY_TITLE)) {
       throw new IllegalArgumentException("args.containsKey(KEY_TITLE) == false");
     }
@@ -107,7 +107,7 @@ public final class InformationalDialogFragment extends DialogFragment {
       .setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-          if (Objects.isNotNull(resultHandler)) {
+          if (Objects.checkIfNotNull(resultHandler)) {
             resultHandler.onPositiveResult();
           }
         }
@@ -117,7 +117,7 @@ public final class InformationalDialogFragment extends DialogFragment {
       builder.setNegativeButton(negativeButtonText, new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-          if (Objects.isNotNull(resultHandler)) {
+          if (Objects.checkIfNotNull(resultHandler)) {
             resultHandler.onNegativeResult();
           }
         }

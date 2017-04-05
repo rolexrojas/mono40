@@ -12,7 +12,7 @@ public final class DeviceManager {
   private final TelephonyManager telephonyManager;
 
   public DeviceManager(Context context) {
-    telephonyManager = (TelephonyManager) Preconditions.checkNotNull(context, "context == null")
+    telephonyManager = (TelephonyManager) Preconditions.assertNotNull(context, "context == null")
       .getSystemService(Context.TELEPHONY_SERVICE);
   }
 

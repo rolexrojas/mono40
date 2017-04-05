@@ -51,7 +51,7 @@ public class NonAffiliatedPhoneNumberRecipientAdditionActivity extends BaseActiv
   }
 
   public static Recipient deserializeResult(Intent data) {
-    if (Objects.isNull(data)) {
+    if (Objects.checkIfNull(data)) {
       return null;
     } else {
       return (Recipient) data.getSerializableExtra(KEY_RECIPIENT);
@@ -69,7 +69,7 @@ public class NonAffiliatedPhoneNumberRecipientAdditionActivity extends BaseActiv
     unbinder = ButterKnife.bind(this);
     setSupportActionBar(toolbar);
     final ActionBar actionBar = getSupportActionBar();
-    if (Objects.isNotNull(actionBar)) {
+    if (Objects.checkIfNotNull(actionBar)) {
       actionBar.setDisplayHomeAsUpEnabled(true);
       actionBar.setTitle(R.string.add_recipient_title);
     }

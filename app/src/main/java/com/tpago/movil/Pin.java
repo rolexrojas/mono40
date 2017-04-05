@@ -41,7 +41,7 @@ public abstract class Pin {
     }
 
     public final Builder addDigit(Digit digit) {
-      Preconditions.checkNotNull(digit, "digit == null");
+      Preconditions.assertNotNull(digit, "digit == null");
       if (!canBuild()) {
         digits.add(digit);
       }

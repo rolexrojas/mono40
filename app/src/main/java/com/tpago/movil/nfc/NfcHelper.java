@@ -12,7 +12,7 @@ public final class NfcHelper {
   private final NfcAdapter adapter;
 
   NfcHelper(Context context) {
-    adapter = NfcAdapter.getDefaultAdapter(Preconditions.checkNotNull(context, "context == null"));
+    adapter = NfcAdapter.getDefaultAdapter(Preconditions.assertNotNull(context, "context == null"));
   }
 
   public final boolean isNfcAvailable() {

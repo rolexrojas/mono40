@@ -5,15 +5,15 @@ import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.tpago.Banks;
-import com.tpago.movil.api.ApiImageUriBuilder;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Balance;
-import com.tpago.movil.Bank;
+import com.tpago.movil.domain.Bank;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductType;
 import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
 import com.squareup.picasso.Picasso;
+import com.tpago.movil.domain.LogoStyle;
 
 /**
  * @author hecvasro
@@ -31,7 +31,7 @@ class ProductListItemHolderBinder implements ListItemHolderBinder<ProductItem, P
     final Bank b = p.getBank();
     final Context c = holder.getContext();
     Picasso.with(c)
-      .load(ApiImageUriBuilder.build(c, b, ApiImageUriBuilder.Style.GRAY_36))
+      .load(b.getLogoUri(LogoStyle.GRAY_36))
       .noFade()
       .into(holder.bankLogoImageView);
     holder.bankNameTextView.setText(Banks.getName(b) + " " + c.getString(ProductType.findStringId(p)));

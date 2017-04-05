@@ -11,7 +11,7 @@ public final class StringResolver {
   private final Context context;
 
   public StringResolver(Context context) {
-    this.context = Preconditions.checkNotNull(context, "context == null");
+    this.context = Preconditions.assertNotNull(context, "context == null");
   }
 
   public final String resolve(int id) {

@@ -155,8 +155,8 @@ public final class TutorialFragment extends BaseInitFragment {
     private final ImageView imageView;
 
     AutoTabUpdater(ViewPager viewPager, ImageView imageView) {
-      this.viewPager = Preconditions.checkNotNull(viewPager, "viewPager == null");
-      this.imageView = Preconditions.checkNotNull(imageView, "imageView == null");
+      this.viewPager = Preconditions.assertNotNull(viewPager, "viewPager == null");
+      this.imageView = Preconditions.assertNotNull(imageView, "imageView == null");
     }
 
     private void update(int position) {

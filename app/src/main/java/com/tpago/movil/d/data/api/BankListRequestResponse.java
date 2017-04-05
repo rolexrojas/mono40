@@ -3,7 +3,7 @@ package com.tpago.movil.d.data.api;
 import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
-import com.tpago.movil.Bank;
+import com.tpago.movil.domain.Bank;
 
 import java.util.List;
 

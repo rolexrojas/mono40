@@ -61,7 +61,7 @@ final class PurchasePresenter extends Presenter<PurchaseScreen> {
     this.screenDialogCreator = screenDialogCreator;
     this.posBridge = posBridge;
 
-    this.user = Preconditions.checkNotNull(user, "user == null");
+    this.user = Preconditions.assertNotNull(user, "user == null");
   }
 
   final void start() {
@@ -101,7 +101,7 @@ final class PurchasePresenter extends Presenter<PurchaseScreen> {
       }
     }
     selectedProduct = productManager.getDefaultPaymentOption();
-    if (Objects.isNotNull(selectedProduct)) {
+    if (Objects.checkIfNotNull(selectedProduct)) {
       screen.markAsSelected(selectedProduct);
     }
   }

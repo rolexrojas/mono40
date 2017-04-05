@@ -32,7 +32,7 @@ abstract class RecipientBuilder {
     }
 
     public final boolean isSuccessful() {
-      return Objects.isNotNull(recipient);
+      return Objects.checkIfNotNull(recipient);
     }
 
     public final Recipient getData() {

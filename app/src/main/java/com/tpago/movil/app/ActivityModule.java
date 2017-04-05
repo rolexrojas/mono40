@@ -13,7 +13,7 @@ public class ActivityModule {
   private final BaseActivity activity;
 
   public ActivityModule(BaseActivity activity) {
-    this.activity = Preconditions.checkNotNull(activity, "activity == null");
+    this.activity = Preconditions.assertNotNull(activity, "activity == null");
   }
 
   @Provides

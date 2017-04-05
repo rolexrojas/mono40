@@ -14,8 +14,8 @@ public final class InitData {
   }
 
   final void setPhoneNumber(PhoneNumber phoneNumber, PhoneNumber.State phoneNumberState) {
-    this.phoneNumber = Preconditions.checkNotNull(phoneNumber, "phoneNumber == null");
-    this.phoneNumberState = Preconditions.checkNotNull(phoneNumberState, "phoneNumberState == null");
+    this.phoneNumber = Preconditions.assertNotNull(phoneNumber, "phoneNumber == null");
+    this.phoneNumberState = Preconditions.assertNotNull(phoneNumberState, "phoneNumberState == null");
   }
 
   public final PhoneNumber getPhoneNumber() {

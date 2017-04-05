@@ -214,7 +214,7 @@ public class DepMainActivity
   public void onBackPressed() {
     if (slidingPaneLayout.isOpen()) {
       slidingPaneLayout.closePane();
-    } else if (Objects.isNull(onBackPressedListener) || !onBackPressedListener.onBackPressed()) {
+    } else if (Objects.checkIfNull(onBackPressedListener) || !onBackPressedListener.onBackPressed()) {
       super.onBackPressed();
     }
   }

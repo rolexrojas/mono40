@@ -62,7 +62,7 @@ public final class InitActivity extends BaseActivity implements InitContainer {
         public void onGlobalLayout() {
           // Removes the listener that gets notified when all the views has been laid out.
           final ViewTreeObserver observer = rootView.getViewTreeObserver();
-          if (Objects.isNotNull(observer)) {
+          if (Objects.checkIfNotNull(observer)) {
             observer.removeOnGlobalLayoutListener(this);
           }
           // Sets the background of the activity.

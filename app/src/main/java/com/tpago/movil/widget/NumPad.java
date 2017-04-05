@@ -96,21 +96,21 @@ public final class NumPad extends LinearLayout {
   })
   void onDigitClicked(Button button) {
     final Digit digit = Digit.find(Integer.parseInt(button.getText().toString()));
-    if (Objects.isNotNull(digitListener)) {
+    if (Objects.checkIfNotNull(digitListener)) {
       digitListener.onDigitClicked(digit);
     }
   }
 
   @OnClick(R.id.num_pad_cell_dot)
   void onDotClicked() {
-    if (Objects.isNotNull(dotListener)) {
+    if (Objects.checkIfNotNull(dotListener)) {
       dotListener.onDotClicked();
     }
   }
 
   @OnClick(R.id.num_pad_cell_delete)
   void onDeleteClicked() {
-    if (Objects.isNotNull(deleteListener)) {
+    if (Objects.checkIfNotNull(deleteListener)) {
       deleteListener.onDeleteClicked();
     }
   }
@@ -131,7 +131,7 @@ public final class NumPad extends LinearLayout {
     dotButton.setVisibility(dotEnabled ? View.VISIBLE : View.INVISIBLE);
     // Sets the color of the delete button.
     final Drawable drawable = deleteButton.getDrawable();
-    if (Objects.isNotNull(drawable)) {
+    if (Objects.checkIfNotNull(drawable)) {
       drawable.mutate().setColorFilter(color, PorterDuff.Mode.SRC_IN);
     }
     deleteButton.setImageDrawable(drawable);

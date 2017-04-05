@@ -53,10 +53,10 @@ public final class ProductManager {
     Lazy<PosBridge> posBridge) {
 
     this.sharedPreferences = Preconditions
-      .checkNotNull(sharedPreferencesCreator, "sharedPreferencesCreator == null")
+      .assertNotNull(sharedPreferencesCreator, "sharedPreferencesCreator == null")
       .create(ProductManager.class.getCanonicalName());
     this.gson = Preconditions
-      .checkNotNull(gson, "gson == null");
+      .assertNotNull(gson, "gson == null");
 
     this.indexSet = this.sharedPreferences.getStringSet(KEY_INDEX_SET, new HashSet<String>());
 
@@ -69,7 +69,7 @@ public final class ProductManager {
   final void syncProducts(
     final String authToken,
     final List<Product> remoteProductList) {
-    if (Objects.isNull(productList)) {
+    if (Objects.checkIfNull(productList)) {
       productList = new ArrayList<>();
     }
     productList.clear();
@@ -146,11 +146,11 @@ public final class ProductManager {
         }
       }
     }
-    if (Objects.isNull(rdpo)) {
+    if (Objects.checkIfNull(rdpo)) {
       defaultPaymentOption = null;
       editor.remove(KEY_DEFAULT_PAYMENT_OPTION_ID);
       editor.remove(KEY_TEMPORARY_DEFAULT_PAYMENT_OPTION_ID);
-    } else if (Objects.isNull(tdpo)) {
+    } else if (Objects.checkIfNull(tdpo)) {
       defaultPaymentOption = rdpo;
       editor.putString(KEY_DEFAULT_PAYMENT_OPTION_ID, defaultPaymentOption.getId());
     } else if (rdpo.equals(tdpo)) {
@@ -173,11 +173,11 @@ public final class ProductManager {
     }
 
     Collections.sort(productList, Product.comparator());
-    if (Objects.isNull(paymentOptionList)) {
+    if (Objects.checkIfNull(paymentOptionList)) {
       paymentOptionList = new ArrayList<>();
     }
     paymentOptionList.clear();
-    if (Objects.isNotNull(defaultPaymentOption)) {
+    if (Objects.checkIfNotNull(defaultPaymentOption)) {
       paymentOptionList.add(defaultPaymentOption);
     }
     for (Product p : productList) {
@@ -229,7 +229,7 @@ public final class ProductManager {
       final ApiResult<Void> result = apiBridge.setDefaultPaymentOption(authToken, paymentOption);
       if (result.isSuccessful()) {
         final SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (Objects.isNull(defaultPaymentOption)) {
+        if (Objects.checkIfNull(defaultPaymentOption)) {
           defaultPaymentOption = paymentOption;
           editor.putString(KEY_DEFAULT_PAYMENT_OPTION_ID, defaultPaymentOption.getId());
         } else {

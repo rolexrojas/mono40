@@ -10,7 +10,7 @@ import java.util.List;
  */
 public final class Digits {
   public static String stringify(List<Digit> digits) {
-    Preconditions.checkNotNull(digits, "digits == null");
+    Preconditions.assertNotNull(digits, "digits == null");
     final StringBuilder builder = new StringBuilder();
     for (Digit digit : digits) {
       builder.append(digit.getValue());
@@ -19,7 +19,7 @@ public final class Digits {
   }
 
   public static List<Digit> getDigits(PhoneNumber phoneNumber) {
-    Preconditions.checkNotNull(phoneNumber, "phoneNumber == null");
+    Preconditions.assertNotNull(phoneNumber, "phoneNumber == null");
     final String phoneNumberValue = phoneNumber.getValue();
     final List<Digit> list = new ArrayList<>();
     for (int i = 0; i < phoneNumberValue.length(); i++) {

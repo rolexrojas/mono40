@@ -19,7 +19,7 @@ public final class ConfigManager {
 
   public ConfigManager(SharedPreferencesCreator sharedPreferencesCreator) {
     this.sharedPreferences = Preconditions
-      .checkNotNull(sharedPreferencesCreator, "sharedPreferencesCreator == null")
+      .assertNotNull(sharedPreferencesCreator, "sharedPreferencesCreator == null")
       .create(ConfigManager.class.getCanonicalName());
     this.onTimeOutChangedListenerList = new ArrayList<>();
   }
@@ -30,14 +30,14 @@ public final class ConfigManager {
   }
 
   public final void addOnTimeOutChangedListener(OnTimeOutChangedListener listener) {
-    Preconditions.checkNotNull(listener, "listener == null");
+    Preconditions.assertNotNull(listener, "listener == null");
     if (!onTimeOutChangedListenerList.contains(listener)) {
       onTimeOutChangedListenerList.add(listener);
     }
   }
 
   public final void removeOnTimeOutChangedListener(OnTimeOutChangedListener listener) {
-    Preconditions.checkNotNull(listener, "listener == null");
+    Preconditions.assertNotNull(listener, "listener == null");
     if (onTimeOutChangedListenerList.contains(listener)) {
       onTimeOutChangedListenerList.remove(listener);
     }
@@ -45,7 +45,7 @@ public final class ConfigManager {
 
   public final void setTimeOut(TimeOut timeOut) {
     sharedPreferences.edit()
-      .putString(KEY_TIME_OUT, Preconditions.checkNotNull(timeOut, "timeOut == null").name())
+      .putString(KEY_TIME_OUT, Preconditions.assertNotNull(timeOut, "timeOut == null").name())
       .apply();
     for (OnTimeOutChangedListener listener : onTimeOutChangedListenerList) {
       listener.onTimeOutChanged(timeOut);

@@ -99,7 +99,7 @@ public final class Logo extends FrameLayout {
     private int current = 0;
 
     private DrawableIdIterator(Integer[] drawableIdArray) {
-      if (Objects.isNull(drawableIdArray)) {
+      if (Objects.checkIfNull(drawableIdArray)) {
         throw new NullPointerException("drawable == null");
       }
       if (drawableIdArray.length < 2) {

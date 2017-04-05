@@ -203,7 +203,7 @@ public class BillTransactionCreationFragment
   public void setPaymentResult(boolean succeeded, String message) {
     resultMessage = message;
     final Fragment f = getChildFragmentManager().findFragmentByTag(TAG_PIN_CONFIRMATION);
-    if (Objects.isNotNull(f)) {
+    if (Objects.checkIfNotNull(f)) {
       ((PinConfirmationDialogFragment) f).resolve(succeeded);
     }
   }

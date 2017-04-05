@@ -16,10 +16,11 @@ import com.tpago.movil.User;
 import com.tpago.movil.api.ApiImageUriBuilder;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.data.util.Binder;
-import com.tpago.movil.Bank;
+import com.tpago.movil.domain.Bank;
 import com.tpago.movil.d.domain.Product;
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.d.domain.ProductType;
+import com.tpago.movil.domain.LogoStyle;
 import com.tpago.movil.util.Objects;
 import com.tpago.movil.util.Preconditions;
 
@@ -38,8 +39,8 @@ final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePayme
     User user,
     Context context,
     StringHelper stringHelper) {
-    this.user = Preconditions.checkNotNull(user, "user == null");
-    this.context = Preconditions.checkNotNull(context, "context == null");
+    this.user = Preconditions.assertNotNull(user, "user == null");
+    this.context = Preconditions.assertNotNull(context, "context == null");
     this.stringHelper = stringHelper;
   }
 
@@ -62,7 +63,7 @@ final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePayme
 
       bankLogoImageView.setVisibility(View.VISIBLE);
       Picasso.with(context)
-        .load(ApiImageUriBuilder.build(context, bank, ApiImageUriBuilder.Style.WHITE_36))
+        .load(bank.getLogoUri(LogoStyle.WHITE_36))
         .noFade()
         .into(bankLogoImageView);
 
@@ -96,7 +97,7 @@ final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePayme
     }
 
     final Drawable backgroundDrawable = holder.getRootViewBackground();
-    if (Objects.isNotNull(backgroundDrawable)) {
+    if (Objects.checkIfNotNull(backgroundDrawable)) {
       backgroundDrawable
         .mutate()
         .setColorFilter(backgroundColor, PorterDuff.Mode.SRC_IN);

@@ -12,9 +12,9 @@ public abstract class BaseRegisterFragment extends Fragment {
   private RegisterComponent component;
 
   protected final RegisterComponent getRegisterComponent() {
-    if (Objects.isNull(component)) {
+    if (Objects.checkIfNull(component)) {
       final Fragment f = Preconditions
-        .checkNotNull(getParentFragment(), "getParentFragment() == null");
+        .assertNotNull(getParentFragment(), "getParentFragment() == null");
       if (!(f instanceof RegisterContainer)) {
         throw new ClassCastException("!(getParentFragment() instanceof OnboardingScreen)");
       }

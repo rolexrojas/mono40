@@ -18,8 +18,8 @@ abstract class BasePaymentMethodRecyclerViewHolder<H extends BasePaymentMethodHo
     final H internalHolder,
     final OnPaymentMethodViewHolderClickedListener onClickedListener) {
     super(itemView);
-    this.internalHolder = Preconditions.checkNotNull(internalHolder, "internalHolder == null");
-    Preconditions.checkNotNull(onClickedListener, "onClickedListener == null");
+    this.internalHolder = Preconditions.assertNotNull(internalHolder, "internalHolder == null");
+    Preconditions.assertNotNull(onClickedListener, "onClickedListener == null");
     this.itemView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {

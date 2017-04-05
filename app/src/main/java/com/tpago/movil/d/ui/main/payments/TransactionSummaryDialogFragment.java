@@ -42,7 +42,7 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
     boolean alreadyExists,
     String transactionId) {
     final Bundle args = new Bundle();
-    args.putSerializable(KEY_RECIPIENT, Preconditions.checkNotNull(recipient, "recipient == null"));
+    args.putSerializable(KEY_RECIPIENT, Preconditions.assertNotNull(recipient, "recipient == null"));
     args.putSerializable(KEY_ALREADY_EXISTS, alreadyExists);
     args.putSerializable(KEY_TRANSACTION_ID, transactionId);
     final TransactionSummaryDialogFragment fragment = new TransactionSummaryDialogFragment();
@@ -54,7 +54,7 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
   public void onAttach(Context context) {
     super.onAttach(context);
     final Fragment f = getParentFragment();
-    if (Objects.isNotNull(f) && f instanceof OnSaveButtonClickedListener) {
+    if (Objects.checkIfNotNull(f) && f instanceof OnSaveButtonClickedListener) {
       listener = (OnSaveButtonClickedListener) f;
     }
   }
@@ -62,7 +62,7 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    final Bundle bundle = Preconditions.checkNotNull(getArguments(), "getArguments() == null");
+    final Bundle bundle = Preconditions.assertNotNull(getArguments(), "getArguments() == null");
     recipient = (Recipient) bundle.getSerializable(KEY_RECIPIENT);
     alreadyExists = bundle.getBoolean(KEY_ALREADY_EXISTS);
     transactionId = bundle.getString(KEY_TRANSACTION_ID);
@@ -81,7 +81,7 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
       builder.setPositiveButton(R.string.action_save, new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-          if (Objects.isNotNull(listener)) {
+          if (Objects.checkIfNotNull(listener)) {
             final EditText editText = ButterKnife.findById(getDialog(), R.id.edit_text);
             listener.onSaveButtonClicked(recipient, editText.getText().toString().trim());
           }

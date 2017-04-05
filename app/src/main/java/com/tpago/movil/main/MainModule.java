@@ -20,8 +20,8 @@ public final class MainModule {
   private final TimeOutManager.TimeOutHandler timeOutHandler;
 
   public MainModule(Session session, TimeOutManager.TimeOutHandler timeOutHandler) {
-    this.session = Preconditions.checkNotNull(session, "session == null");
-    this.timeOutHandler = Preconditions.checkNotNull(timeOutHandler, "timeOutHandler == null");
+    this.session = Preconditions.assertNotNull(session, "session == null");
+    this.timeOutHandler = Preconditions.assertNotNull(timeOutHandler, "timeOutHandler == null");
   }
 
   @Provides

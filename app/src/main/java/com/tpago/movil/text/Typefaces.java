@@ -13,8 +13,8 @@ import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 public final class Typefaces {
   public static Typeface load(Context context, String path) {
     return TypefaceUtils.load(
-      Preconditions.checkNotNull(context, "context == null").getAssets(),
-      Preconditions.checkNotNull(path, "path == null"));
+      Preconditions.assertNotNull(context, "context == null").getAssets(),
+      Preconditions.assertNotNull(path, "path == null"));
   }
 
   private Typefaces() {

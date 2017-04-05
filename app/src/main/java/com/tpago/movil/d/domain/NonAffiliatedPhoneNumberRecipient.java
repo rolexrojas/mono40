@@ -3,7 +3,7 @@ package com.tpago.movil.d.domain;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.tpago.movil.*;
+import com.tpago.movil.domain.Bank;
 import com.tpago.movil.text.Texts;
 import com.tpago.movil.util.Objects;
 
@@ -43,9 +43,9 @@ public class NonAffiliatedPhoneNumberRecipient extends Recipient {
   }
 
   public boolean canBeTransferTo() {
-    return Objects.isNotNull(bank)
+    return Objects.checkIfNotNull(bank)
       && Texts.isNotEmpty(accountNumber)
-      && Objects.isNotNull(product);
+      && Objects.checkIfNotNull(product);
   }
 
   public Bank getBank() {

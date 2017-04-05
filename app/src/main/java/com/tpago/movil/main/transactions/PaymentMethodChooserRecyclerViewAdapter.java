@@ -27,10 +27,10 @@ final class PaymentMethodChooserRecyclerViewAdapter
   PaymentMethodChooserRecyclerViewAdapter(
     Context context,
     PaymentMethodChooserAdapter paymentMethodChooserAdapter) {
-    Preconditions.checkNotNull(context, "context == null");
+    Preconditions.assertNotNull(context, "context == null");
     this.paymentMethodHolderBinder = new PaymentMethodHolderBinder(context);
     this.selectedPaymentMethodHolderBinder = new SelectedPaymentMethodHolderBinder(context);
-    Preconditions.checkNotNull(paymentMethodChooserAdapter, "paymentMethodChooserAdapter == null");
+    Preconditions.assertNotNull(paymentMethodChooserAdapter, "paymentMethodChooserAdapter == null");
     this.paymentMethodChooserAdapter = paymentMethodChooserAdapter;
     this.paymentMethodChooserAdapter.setObserver(this);
   }

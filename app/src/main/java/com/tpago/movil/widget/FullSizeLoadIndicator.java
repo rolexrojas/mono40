@@ -22,13 +22,13 @@ public final class FullSizeLoadIndicator implements LoadIndicator {
   private final FragmentManager fragmentManager;
 
   public FullSizeLoadIndicator(FragmentManager fragmentManager) {
-    this.fragmentManager = Preconditions.checkNotNull(fragmentManager, "fragmentManager == null");
+    this.fragmentManager = Preconditions.assertNotNull(fragmentManager, "fragmentManager == null");
   }
 
   @Override
   public void start() {
     final Fragment fragment = fragmentManager.findFragmentByTag(TAG);
-    if (Objects.isNull(fragment)) {
+    if (Objects.checkIfNull(fragment)) {
       FullSizeLoadIndicatorDialogFragment.create().show(fragmentManager, TAG);
     }
   }
@@ -36,7 +36,7 @@ public final class FullSizeLoadIndicator implements LoadIndicator {
   @Override
   public void stop() {
     final Fragment fragment = fragmentManager.findFragmentByTag(TAG);
-    if (Objects.isNotNull(fragment) && fragment instanceof FullSizeLoadIndicatorDialogFragment) {
+    if (Objects.checkIfNotNull(fragment) && fragment instanceof FullSizeLoadIndicatorDialogFragment) {
       ((DialogFragment) fragment).dismiss();
     }
   }

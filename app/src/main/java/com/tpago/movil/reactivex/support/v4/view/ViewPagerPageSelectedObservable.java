@@ -15,7 +15,7 @@ final class ViewPagerPageSelectedObservable extends Observable<Integer> {
   private final ViewPager viewPager;
 
   ViewPagerPageSelectedObservable(ViewPager viewPager) {
-    this.viewPager = Preconditions.checkNotNull(viewPager, "viewPager == null");
+    this.viewPager = Preconditions.assertNotNull(viewPager, "viewPager == null");
   }
 
   @Override
@@ -31,8 +31,8 @@ final class ViewPagerPageSelectedObservable extends Observable<Integer> {
     private final Observer<? super Integer> observer;
 
     Listener(ViewPager viewPager, Observer<? super Integer> observer) {
-      this.viewPager = Preconditions.checkNotNull(viewPager, "viewPager == null");
-      this.observer = Preconditions.checkNotNull(observer, "observer == null");
+      this.viewPager = Preconditions.assertNotNull(viewPager, "viewPager == null");
+      this.observer = Preconditions.assertNotNull(observer, "observer == null");
     }
 
     @Override

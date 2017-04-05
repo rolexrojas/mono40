@@ -15,13 +15,13 @@ import timber.log.Timber;
  */
 final class CrashlyticsLogTree extends Timber.Tree {
   CrashlyticsLogTree(Context context) {
-    Fabric.with(Preconditions.checkNotNull(context, "context == null"), new Crashlytics());
+    Fabric.with(Preconditions.assertNotNull(context, "context == null"), new Crashlytics());
   }
 
   @Override
   protected void log(int priority, String tag, String message, Throwable throwable) {
     if (priority >= Log.WARN) {
-      if (Objects.isNull(throwable)) {
+      if (Objects.checkIfNull(throwable)) {
         Crashlytics.log(priority, tag, message);
       } else {
         Crashlytics.logException(throwable);

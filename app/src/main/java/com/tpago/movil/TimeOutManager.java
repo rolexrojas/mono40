@@ -32,8 +32,8 @@ public final class TimeOutManager {
   private Disposable disposable = Disposables.disposed();
 
   public TimeOutManager(ConfigManager configManager, TimeOutHandler timeOutHandler) {
-    this.configManager = Preconditions.checkNotNull(configManager, "configManager == null");
-    this.timeOutHandler = Preconditions.checkNotNull(timeOutHandler, "timeOutHandler == null");
+    this.configManager = Preconditions.assertNotNull(configManager, "configManager == null");
+    this.timeOutHandler = Preconditions.assertNotNull(timeOutHandler, "timeOutHandler == null");
   }
 
   private void startInternally() {
@@ -77,7 +77,7 @@ public final class TimeOutManager {
   }
 
   public final void addLock(Object lock) {
-    Preconditions.checkNotNull(lock, "lock == null");
+    Preconditions.assertNotNull(lock, "lock == null");
     if (!lockList.contains(lock)) {
       lockList.add(lock);
       if (started) {
@@ -87,7 +87,7 @@ public final class TimeOutManager {
   }
 
   public final void removeLock(Object lock) {
-    Preconditions.checkNotNull(lock, "lock == null");
+    Preconditions.assertNotNull(lock, "lock == null");
     if (lockList.contains(lock)) {
       lockList.remove(lock);
       if (started && lockList.isEmpty()) {

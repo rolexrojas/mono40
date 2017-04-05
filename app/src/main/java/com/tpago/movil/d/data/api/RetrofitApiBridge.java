@@ -6,7 +6,7 @@ import android.support.v4.util.Pair;
 import com.tpago.movil.Partner;
 import com.tpago.movil.api.Currencies;
 import com.tpago.movil.d.domain.Balance;
-import com.tpago.movil.Bank;
+import com.tpago.movil.domain.Bank;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.InitialData;

@@ -28,7 +28,7 @@ final class ErraticViewHelper implements ErraticView {
   private boolean erraticStateEnabled = false;
 
   ErraticViewHelper(View view) {
-    this.view = Preconditions.checkNotNull(view, "view == null");
+    this.view = Preconditions.assertNotNull(view, "view == null");
   }
 
   final int getExtraSpace(int extraSpace) {

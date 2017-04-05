@@ -13,7 +13,7 @@ public final class Disposables {
   }
 
   public static void dispose(Disposable disposable) {
-    disposable = Preconditions.checkNotNull(disposable, "disposable == null");
+    disposable = Preconditions.assertNotNull(disposable, "disposable == null");
     if (!disposable.isDisposed()) {
       disposable.dispose();
     }

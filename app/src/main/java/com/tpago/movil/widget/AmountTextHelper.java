@@ -31,7 +31,7 @@ public final class AmountTextHelper implements AmountText {
   private TextView valueTextView;
 
   public AmountTextHelper(Context context, AttributeSet attributeSet, int defaultStyleAttribute) {
-    this.context = Preconditions.checkNotNull(context, "context == null");
+    this.context = Preconditions.assertNotNull(context, "context == null");
     final Resources resources = this.context.getResources();
     final TypedArray a = this.context.obtainStyledAttributes(
         attributeSet,
@@ -66,14 +66,14 @@ public final class AmountTextHelper implements AmountText {
 
   public final void setCurrencyTextView(TextView currencyTextView) {
     this.currencyTextView = currencyTextView;
-    if (Objects.isNotNull(this.currencyTextView)) {
+    if (Objects.checkIfNotNull(this.currencyTextView)) {
       this.setCurrencyContent(this.currencyContent);
     }
   }
 
   public final void setValueTextView(TextView valueTextView) {
     this.valueTextView = valueTextView;
-    if (Objects.isNotNull(this.valueTextView)) {
+    if (Objects.checkIfNotNull(this.valueTextView)) {
       this.setValueContent(this.valueContent);
     }
   }
@@ -86,7 +86,7 @@ public final class AmountTextHelper implements AmountText {
   @Override
   public void setCurrencyContent(String content) {
     currencyContent = content;
-    if (Objects.isNotNull(currencyTextView)) {
+    if (Objects.checkIfNotNull(currencyTextView)) {
       currencyTextView.setText(Texts.createContent(
         context,
         currencyContent,
@@ -104,7 +104,7 @@ public final class AmountTextHelper implements AmountText {
   @Override
   public void setValueContent(String content) {
     valueContent = content;
-    if (Objects.isNotNull(valueTextView)) {
+    if (Objects.checkIfNotNull(valueTextView)) {
       valueTextView.setText(Texts.createContent(
         context,
         valueContent,

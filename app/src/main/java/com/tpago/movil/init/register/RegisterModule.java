@@ -18,7 +18,7 @@ public class RegisterModule {
   private final RegisterFragment fragment;
 
   RegisterModule(RegisterFragment fragment) {
-    this.fragment = Preconditions.checkNotNull(fragment, "fragment == null");
+    this.fragment = Preconditions.assertNotNull(fragment, "fragment == null");
   }
 
   @Provides

@@ -19,12 +19,12 @@ public final class ApiData<T> {
   }
 
   private ApiData(T value, ApiError error) {
-    if (Objects.isNull(error)) {
-      this.value = Preconditions.checkNotNull(value, "value == null");
+    if (Objects.checkIfNull(error)) {
+      this.value = Preconditions.assertNotNull(value, "value == null");
       this.error = null;
     } else {
       this.value = null;
-      this.error = Preconditions.checkNotNull(error, "error == null");
+      this.error = Preconditions.assertNotNull(error, "error == null");
     }
   }
 

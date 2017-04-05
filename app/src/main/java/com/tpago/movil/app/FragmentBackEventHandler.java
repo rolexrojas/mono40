@@ -11,7 +11,7 @@ public class FragmentBackEventHandler implements OnBackPressedListener {
   private final FragmentManager fragmentManager;
 
   public FragmentBackEventHandler(FragmentManager fragmentManager) {
-    this.fragmentManager = Preconditions.checkNotNull(fragmentManager, "fragmentManager == null");
+    this.fragmentManager = Preconditions.assertNotNull(fragmentManager, "fragmentManager == null");
   }
 
   @Override

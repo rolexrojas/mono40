@@ -6,7 +6,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.tpago.movil.api.Currencies;
 import com.tpago.movil.d.domain.Product;
-import com.tpago.movil.Bank;
+import com.tpago.movil.domain.Bank;
 
 /**
  * TODO

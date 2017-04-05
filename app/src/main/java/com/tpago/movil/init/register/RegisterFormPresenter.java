@@ -14,8 +14,8 @@ abstract class RegisterFormPresenter<V extends RegisterFormPresenter.View> exten
 
   RegisterFormPresenter(V view, StringResolver stringResolver, RegisterData registerData) {
     super(view);
-    this.stringResolver = Preconditions.checkNotNull(stringResolver, "stringResolver == null");
-    this.registerData = Preconditions.checkNotNull(registerData, "registrationData == null");
+    this.stringResolver = Preconditions.assertNotNull(stringResolver, "stringResolver == null");
+    this.registerData = Preconditions.assertNotNull(registerData, "registrationData == null");
   }
 
   abstract void onMoveToNextScreenButtonClicked();

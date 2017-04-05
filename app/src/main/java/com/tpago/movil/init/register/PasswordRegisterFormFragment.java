@@ -46,7 +46,7 @@ public final class PasswordRegisterFormFragment
 
   @Override
   protected PasswordRegisterFormPresenter getPresenter() {
-    if (Objects.isNull(presenter)) {
+    if (Objects.checkIfNull(presenter)) {
       presenter = new PasswordRegisterFormPresenter(this, stringResolver, registerData);
     }
     return presenter;

@@ -48,7 +48,7 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
     this.productManager = productManager;
     this.posBridge = posBridge;
 
-    this.session = Preconditions.checkNotNull(session, "session == null");
+    this.session = Preconditions.assertNotNull(session, "session == null");
   }
 
   void start() {

@@ -49,17 +49,17 @@ public abstract class User {
   }
 
   public final void setName(String firstName, String lastName) {
-    Preconditions.checkNotNull(firstName, "firstName == null");
+    Preconditions.assertNotNull(firstName, "firstName == null");
     if (Texts.isEmpty(firstName)) {
       throw new IllegalArgumentException("Texts.isEmpty(firstName) == true");
     }
     this.firstName = firstName;
-    Preconditions.checkNotNull(lastName, "lastName == null");
+    Preconditions.assertNotNull(lastName, "lastName == null");
     if (Texts.isEmpty(lastName)) {
       throw new IllegalArgumentException("Texts.isEmpty(lastName) == true");
     }
     this.lastName = lastName;
-    if (Objects.isNotNull(this.onNameChangedListener)) {
+    if (Objects.checkIfNotNull(this.onNameChangedListener)) {
       this.onNameChangedListener.onNameChanged(this.firstName, this.lastName);
     }
   }

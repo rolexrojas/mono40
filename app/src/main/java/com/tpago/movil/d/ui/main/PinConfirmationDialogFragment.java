@@ -267,7 +267,7 @@ public class PinConfirmationDialogFragment
   @Override
   public void onConfirmationStarted(@NonNull String pin) {
     Timber.d("onConfirmationStarted(%1$s)", pin);
-    if (Objects.isNull(loadIndicator)) {
+    if (Objects.checkIfNull(loadIndicator)) {
       loadIndicator = new FullSizeLoadIndicator(getChildFragmentManager());
     }
     loadIndicator.start();

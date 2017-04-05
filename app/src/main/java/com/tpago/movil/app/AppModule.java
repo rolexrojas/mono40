@@ -23,7 +23,7 @@ final class AppModule {
   private final App app;
 
   AppModule(App app) {
-    this.app = Preconditions.checkNotNull(app, "app == null");
+    this.app = Preconditions.assertNotNull(app, "app == null");
   }
 
   @Provides
@@ -34,6 +34,13 @@ final class AppModule {
 
   @Provides
   @Singleton
+  DisplayDensity provideDisplayDensity(Context context) {
+    return DisplayDensity.find(context);
+  }
+
+  // Deprecated providers.
+  @Provides
+  @Singleton
   DeviceManager provideDeviceManager(Context context) {
     return new DeviceManager(context);
   }
@@ -42,12 +49,6 @@ final class AppModule {
   @Singleton
   Avatar provideAvatar(Context context) {
     return Avatar.create(Files.createInternalPictureFile(context, Avatar.class.getSimpleName()));
-  }
-
-  @Provides
-  @Singleton
-  SharedPreferencesCreator provideSharedPreferencesCreator(Context context) {
-    return new SharedPreferencesCreator(context);
   }
 
   @Provides

@@ -2,7 +2,7 @@ package com.tpago;
 
 import android.graphics.Color;
 
-import com.tpago.movil.Bank;
+import com.tpago.movil.domain.Bank;
 
 import java.util.Collections;
 import java.util.Comparator;

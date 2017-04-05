@@ -15,9 +15,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.Banks;
-import com.tpago.movil.Bank;
+import com.tpago.movil.domain.Bank;
 import com.tpago.movil.R;
-import com.tpago.movil.api.ApiImageUriBuilder;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.Product;
@@ -30,6 +29,7 @@ import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.main.transactions.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transactions.TransactionCreationContainer;
+import com.tpago.movil.domain.LogoStyle;
 import com.tpago.movil.text.Texts;
 import com.tpago.movil.util.Objects;
 import com.tpago.movil.widget.FullSizeLoadIndicator;
@@ -204,7 +204,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final TransactionCreationComponent c = getContainer().getComponent();
-    if (Objects.isNotNull(c)) {
+    if (Objects.checkIfNotNull(c)) {
       c.inject(this);
     }
   }
@@ -233,7 +233,8 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment
     super.onResume();
     final Bank bank = ((NonAffiliatedPhoneNumberRecipient) recipient).getBank();
     Picasso.with(getContext())
-      .load(ApiImageUriBuilder.build(getContext(), bank, ApiImageUriBuilder.Style.PRIMARY_24))
+      .load(bank.getLogoUri(LogoStyle.PRIMARY_24))
+      .noFade()
       .into(imageView);
     textView.setText(String.format(getString(R.string.transaction), Banks.getName(bank)));
     textInput.requestFocus();

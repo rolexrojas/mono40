@@ -27,9 +27,9 @@ public final class Files {
   }
 
   public static File createExternalPictureFile(Context context) throws IllegalStateException {
-    Preconditions.checkNotNull(context, "context == null");
+    Preconditions.assertNotNull(context, "context == null");
     final File d = context.getExternalFilesDir(NAME_DIRECTORY_PICTURES);
-    if (Objects.isNull(d)) {
+    if (Objects.checkIfNull(d)) {
       throw new IllegalStateException("context.getExternalFilesDir(NAME_DIRECTORY_PICTURES) == null");
     }
     if (!d.exists()) {
@@ -39,7 +39,7 @@ public final class Files {
   }
 
   public static File createInternalPictureFile(Context context, String name) {
-    Preconditions.checkNotNull(context, "context == null");
+    Preconditions.assertNotNull(context, "context == null");
     final File d = new File(context.getFilesDir(), NAME_DIRECTORY_PICTURES);
     if (!d.exists()) {
       d.mkdirs();
@@ -48,14 +48,14 @@ public final class Files {
   }
 
   public static Uri getFileUri(File file) {
-    return Uri.fromFile(Preconditions.checkNotNull(file, "file == null"));
+    return Uri.fromFile(Preconditions.assertNotNull(file, "file == null"));
   }
 
   public static Uri getFileUri(Context context, File file) {
     return FileProvider.getUriForFile(
-      Preconditions.checkNotNull(context, "context == null"),
+      Preconditions.assertNotNull(context, "context == null"),
       NAME_PROVIDER_FILE,
-      Preconditions.checkNotNull(file, "file == null"));
+      Preconditions.assertNotNull(file, "file == null"));
   }
 
   private Files() {

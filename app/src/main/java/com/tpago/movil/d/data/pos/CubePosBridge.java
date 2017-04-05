@@ -108,7 +108,7 @@ class CubePosBridge implements PosBridge {
                     n = c.getAltpan();
                   }
                 }
-                if (Objects.isNull(n)) {
+                if (Objects.checkIfNull(n)) {
                   subscriber.onError(new NullPointerException("altPan == null"));
                 } else {
                   subscriber.onNext(n);

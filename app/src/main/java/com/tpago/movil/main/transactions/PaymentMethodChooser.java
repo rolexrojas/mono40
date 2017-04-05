@@ -77,7 +77,7 @@ public class PaymentMethodChooser
   @Override
   public void onItemSelectedChanged(Product product) {
     paymentMethodHolderBinder.bind(product, paymentMethodHolder);
-    if (Objects.isNotNull(onPaymentMethodChosenListener)) {
+    if (Objects.checkIfNotNull(onPaymentMethodChosenListener)) {
       onPaymentMethodChosenListener.onPaymentMethodChosen(product);
     }
     paymentMethodChooserPopup.dismiss();

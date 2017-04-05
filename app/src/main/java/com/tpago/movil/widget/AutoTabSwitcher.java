@@ -15,11 +15,11 @@ public final class AutoTabSwitcher extends ViewPager.SimpleOnPageChangeListener 
   private boolean isStarted = false;
 
   public AutoTabSwitcher(ViewPager viewPager) {
-    this.viewPager = Preconditions.checkNotNull(viewPager, "viewPager == null");
+    this.viewPager = Preconditions.assertNotNull(viewPager, "viewPager == null");
   }
 
   private void removeRunnable() {
-    if (Objects.isNotNull(runnable)) {
+    if (Objects.checkIfNotNull(runnable)) {
       viewPager.removeCallbacks(runnable);
       runnable = null;
     }
@@ -60,7 +60,7 @@ public final class AutoTabSwitcher extends ViewPager.SimpleOnPageChangeListener 
     private final int position;
 
     Runnable(ViewPager viewPager, int position) {
-      this.viewPager = Preconditions.checkNotNull(viewPager, "viewPager == null");
+      this.viewPager = Preconditions.assertNotNull(viewPager, "viewPager == null");
       this.position = position;
     }
 

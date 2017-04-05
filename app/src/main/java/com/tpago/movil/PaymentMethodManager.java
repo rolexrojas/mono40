@@ -17,7 +17,7 @@ public final class PaymentMethodManager {
   }
 
   public final boolean checkIfPrimary(PaymentMethod<? extends Product> paymentMethod) {
-    return Preconditions.checkNotNull(paymentMethod, "paymentMethod == null")
+    return Preconditions.assertNotNull(paymentMethod, "paymentMethod == null")
       .equals(getPrimary());
   }
 

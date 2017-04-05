@@ -32,7 +32,7 @@ public class EditableLabel extends Label implements ErraticView {
 
   @Override
   protected int[] onCreateDrawableState(int extraSpace) {
-    if (Objects.isNull(erraticViewHelper)) {
+    if (Objects.checkIfNull(erraticViewHelper)) {
       return super.onCreateDrawableState(extraSpace);
     } else {
       return erraticViewHelper.onCreateDrawableState(

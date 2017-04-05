@@ -4,11 +4,10 @@ import android.content.Context;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.Banks;
-import com.tpago.movil.Bank;
-import com.tpago.movil.api.ApiImageUriBuilder;
 import com.tpago.movil.d.data.util.Binder;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductType;
+import com.tpago.movil.domain.LogoStyle;
 import com.tpago.movil.util.Preconditions;
 
 /**
@@ -18,7 +17,7 @@ abstract class BasePaymentMethodHolderBinder<H extends BasePaymentMethodHolder> 
   private final Context context;
 
   BasePaymentMethodHolderBinder(Context context) {
-    this.context = Preconditions.checkNotNull(context, "context == null");
+    this.context = Preconditions.assertNotNull(context, "context == null");
   }
 
   protected final String getString(int id) {
@@ -32,7 +31,7 @@ abstract class BasePaymentMethodHolderBinder<H extends BasePaymentMethodHolder> 
   @Override
   public void bind(Product product, H holder) {
     Picasso.with(context)
-      .load(ApiImageUriBuilder.build(context, product.getBank(), ApiImageUriBuilder.Style.PRIMARY_24))
+      .load(product.getBank().getLogoUri(LogoStyle.PRIMARY_24))
       .noFade()
       .into(holder.getBankLogoImageView());
     holder.getProductIdentifierTextView().setText(formatIdentifier(product));

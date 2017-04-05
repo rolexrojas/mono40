@@ -70,7 +70,7 @@ public class AddRecipientActivity
 
   @Nullable
   public static Recipient deserializeResult(@Nullable Intent intent) {
-    if (Objects.isNull(intent)) {
+    if (Objects.checkIfNull(intent)) {
       return null;
     } else {
       return (Recipient) intent.getSerializableExtra(EXTRA_RECIPIENT);
@@ -117,7 +117,7 @@ public class AddRecipientActivity
   @Override
   protected void onStart() {
     super.onStart();
-    if (Objects.isNotNull(requestResult)) {
+    if (Objects.checkIfNotNull(requestResult)) {
       finish(requestResult);
       requestResult = null;
     }

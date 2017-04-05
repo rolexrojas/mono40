@@ -2,8 +2,8 @@ package com.tpago.movil;
 
 import android.os.Parcelable;
 
-import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
+import com.tpago.movil.domain.Bank;
 
 import java.math.BigDecimal;
 

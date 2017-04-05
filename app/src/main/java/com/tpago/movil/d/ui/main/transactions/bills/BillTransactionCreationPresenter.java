@@ -44,7 +44,7 @@ public class BillTransactionCreationPresenter
   BillTransactionCreationPresenter(View view, TransactionCreationComponent component) {
     super(view);
     // Injects all the annotated dependencies.
-    Preconditions.checkNotNull(component, "component == null")
+    Preconditions.assertNotNull(component, "component == null")
       .inject(this);
   }
 
@@ -99,7 +99,7 @@ public class BillTransactionCreationPresenter
     BigDecimal totalValue = BigDecimal.ZERO;
     BigDecimal minimumValue = BigDecimal.ZERO;
     final BillBalance b = r.getBalance();
-    if (Objects.isNotNull(b)) {
+    if (Objects.checkIfNotNull(b)) {
       dueDate = b.getDate();
 //      dueDate = new SimpleDateFormat("dd MMMM", new Locale("es", "DO"))
 //        .format(b.getDate())

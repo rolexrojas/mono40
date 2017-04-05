@@ -248,7 +248,7 @@ public class PaymentsFragment
       if (resultCode == Activity.RESULT_OK) {
         final Recipient recipient = NonAffiliatedPhoneNumberRecipientAdditionActivity
           .deserializeResult(data);
-        if (Objects.isNotNull(recipient)) {
+        if (Objects.checkIfNotNull(recipient)) {
           requestResult = Pair.create(requestCode, Pair.create(recipient, (String) null));
         }
       }
@@ -426,7 +426,7 @@ public class PaymentsFragment
   @Override
   public void dismissPinConfirmator() {
     final Fragment f = getChildFragmentManager().findFragmentByTag(TAG_PIN);
-    if (Objects.isNotNull(f)) {
+    if (Objects.checkIfNotNull(f)) {
       ((PinConfirmationDialogFragment) f).resolve(true);
     }
   }

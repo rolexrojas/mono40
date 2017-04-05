@@ -47,7 +47,7 @@ public final class AvatarCreationDialogFragment extends DialogFragment {
   private static final int RESULT_CODE_OK = Activity.RESULT_OK;
 
   public static AvatarCreationDialogFragment create(File outputFile) {
-    Preconditions.checkNotNull(outputFile, "outputFile == null");
+    Preconditions.assertNotNull(outputFile, "outputFile == null");
     final Bundle args = new Bundle();
     args.putSerializable(KEY_OUTPUT_FILE, outputFile);
     final AvatarCreationDialogFragment fragment = new AvatarCreationDialogFragment();
@@ -71,14 +71,14 @@ public final class AvatarCreationDialogFragment extends DialogFragment {
 
   private void requestImageUsingCamera() {
     final Context context = getContext();
-    if (Objects.isNull(temporaryFile)) {
+    if (Objects.checkIfNull(temporaryFile)) {
       try {
         temporaryFile = Files.createExternalPictureFile(context);
       } catch (IllegalStateException exception) {
         Timber.w(exception, "Creating a temporary image file for camera output");
       }
     }
-    if (Objects.isNull(temporaryFile)) {
+    if (Objects.checkIfNull(temporaryFile)) {
       // TODO: Let the user know that the temporary image couldn't be created.
     } else {
       final Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -136,7 +136,7 @@ public final class AvatarCreationDialogFragment extends DialogFragment {
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // Retrieves the avatar file from the arguments.
-    final Bundle args = Preconditions.checkNotNull(getArguments(), "getArguments() == null");
+    final Bundle args = Preconditions.assertNotNull(getArguments(), "getArguments() == null");
     if (!args.containsKey(KEY_OUTPUT_FILE)) {
       throw new IllegalArgumentException("args.containsKey('outputFile') == false");
     }
@@ -224,7 +224,7 @@ public final class AvatarCreationDialogFragment extends DialogFragment {
   public void onDestroy() {
     super.onDestroy();
     // Clears the temporary file.
-    if (Objects.isNotNull(temporaryFile)) {
+    if (Objects.checkIfNotNull(temporaryFile)) {
       if (temporaryFile.exists()) {
         temporaryFile.delete();
       }

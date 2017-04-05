@@ -39,14 +39,14 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
   PhoneNumberInitPresenter(View view, InitComponent component) {
     super(view);
     // Injects all the annotated dependencies.
-    Preconditions.checkNotNull(component, "component == null")
+    Preconditions.assertNotNull(component, "component == null")
       .inject(this);
   }
 
   private void updateView() {
     final String phoneNumber = Digits.stringify(phoneNumberDigits);
     isPhoneNumberValid = PhoneNumber.checkIfValid(phoneNumber);
-    if (Objects.isNotNull(view)) {
+    if (Objects.checkIfNotNull(view)) {
       view.setTextInputContent(PhoneNumber.format(phoneNumber));
       view.showNextButtonAsEnabled(isPhoneNumberValid);
       if (isPhoneNumberValid) {
@@ -145,7 +145,7 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
   public void onViewStarted() {
     super.onViewStarted();
     final PhoneNumber phoneNumber = initData.getPhoneNumber();
-    if (Objects.isNotNull(phoneNumber)) {
+    if (Objects.checkIfNotNull(phoneNumber)) {
       phoneNumberDigits.clear();
       phoneNumberDigits.addAll(Digits.getDigits(phoneNumber));
     }

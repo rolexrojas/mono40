@@ -20,7 +20,7 @@ import timber.log.Timber;
  */
 public final class App extends Application {
   public static App get(Context context) {
-    return (App) Preconditions.checkNotNull(context, "context == null")
+    return (App) Preconditions.assertNotNull(context, "context == null")
       .getApplicationContext();
   }
 
@@ -29,7 +29,7 @@ public final class App extends Application {
   @Inject OkHttpClient httpClient;
 
   public final AppComponent getAppComponent() {
-    if (Objects.isNull(component)) {
+    if (Objects.checkIfNull(component)) {
       component = DaggerAppComponent.builder()
         .appModule(new AppModule(this))
         .depAppModule(new DepAppModule(this))

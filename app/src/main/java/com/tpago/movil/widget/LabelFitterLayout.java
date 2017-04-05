@@ -95,7 +95,7 @@ public final class LabelFitterLayout extends FrameLayout {
   }
 
   private void initializeChildLabel(View childView) {
-    if (Objects.isNotNull(childLabel) && Objects.isNotNull(childLabelTextWatcher)) {
+    if (Objects.checkIfNotNull(childLabel) && Objects.checkIfNotNull(childLabelTextWatcher)) {
       childLabel.removeTextChangedListener(childLabelTextWatcher);
       childLabelTextWatcher = null;
       childLabel = null;
@@ -127,7 +127,7 @@ public final class LabelFitterLayout extends FrameLayout {
       return;
     }
     final TransformationMethod transformationMethod = childLabel.getTransformationMethod();
-    if (Objects.isNotNull(transformationMethod)) {
+    if (Objects.checkIfNotNull(transformationMethod)) {
       currentText = transformationMethod.getTransformation(currentText, this);
     }
     final TextPaint currentTextPaint = childLabel.getPaint();

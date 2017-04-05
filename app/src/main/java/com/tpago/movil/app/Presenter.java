@@ -9,7 +9,7 @@ public abstract class Presenter<V extends Presenter.View> {
   protected final V view;
 
   public Presenter(V view) {
-    this.view = Preconditions.checkNotNull(view, "view == null");
+    this.view = Preconditions.assertNotNull(view, "view == null");
   }
 
   public void onViewStarted() {

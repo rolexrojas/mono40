@@ -3,7 +3,6 @@ package com.tpago.movil.api;
 import android.content.Context;
 import android.net.Uri;
 
-import com.tpago.movil.Bank;
 import com.tpago.movil.Partner;
 import com.tpago.movil.app.DisplayDensity;
 import com.tpago.movil.d.domain.Product;
@@ -36,16 +35,6 @@ public final class ApiImageUriBuilder {
       .append(styleName)
       .append(".png")
       .toString();
-  }
-
-  public static Uri build(Context context, Bank bank, Style style) {
-    return Uri.parse(
-      applyDisplayDensity(
-        context,
-        applyStyle(
-          bank.getImageUriTemplate(),
-          bank.getId(),
-          style)));
   }
 
   public static Uri build(Context context, Partner partner, Style style) {

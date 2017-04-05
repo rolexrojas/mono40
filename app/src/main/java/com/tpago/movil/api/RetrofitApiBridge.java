@@ -43,8 +43,8 @@ final class RetrofitApiBridge implements ApiBridge {
   }
 
   RetrofitApiBridge(DeviceManager deviceManager, Retrofit retrofit) {
-    this.deviceManager = Preconditions.checkNotNull(deviceManager, "deviceManager == null");
-    Preconditions.checkNotNull(retrofit, "retrofit == null");
+    this.deviceManager = Preconditions.assertNotNull(deviceManager, "deviceManager == null");
+    Preconditions.assertNotNull(retrofit, "retrofit == null");
     this.errorConverter = retrofit.responseBodyConverter(ApiErrorResponseBody.class, new Annotation[0]);
     this.apiService = retrofit.create(ApiService.class);
   }

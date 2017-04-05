@@ -24,13 +24,13 @@ final class PaymentMethodChooserPopup {
   PaymentMethodChooserPopup(
     View parentView,
     PaymentMethodChooserAdapter paymentMethodChooserAdapter) {
-    this.parentView = Preconditions.checkNotNull(parentView, "parentView == null");
+    this.parentView = Preconditions.assertNotNull(parentView, "parentView == null");
     this.paymentMethodChooserAdapter = Preconditions
-      .checkNotNull(paymentMethodChooserAdapter, "paymentMethodChooserAdapter == null");
+      .assertNotNull(paymentMethodChooserAdapter, "paymentMethodChooserAdapter == null");
   }
 
   final void show() {
-    if (Objects.isNull(popupWindow)) {
+    if (Objects.checkIfNull(popupWindow)) {
       final Context context = parentView.getContext();
       final RecyclerView recyclerView = (RecyclerView) LayoutInflater
         .from(context)
@@ -51,7 +51,7 @@ final class PaymentMethodChooserPopup {
   }
 
   final void dismiss() {
-    if (Objects.isNotNull(popupWindow)) {
+    if (Objects.checkIfNotNull(popupWindow)) {
       popupWindow.dismiss();
     }
   }

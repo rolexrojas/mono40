@@ -16,6 +16,7 @@ import com.tpago.movil.d.domain.RecipientType;
 import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
+import com.tpago.movil.domain.LogoStyle;
 import com.tpago.movil.util.Objects;
 
 /**
@@ -36,10 +37,7 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
     Uri imageUri = Uri.EMPTY;
     final Context context = holder.getContext();
     if (type.equals(RecipientType.NON_AFFILIATED_PHONE_NUMBER)) {
-      imageUri = ApiImageUriBuilder.build(
-        context,
-        ((NonAffiliatedPhoneNumberRecipient) item).getBank(),
-        ApiImageUriBuilder.Style.PRIMARY_24);
+      imageUri = ((NonAffiliatedPhoneNumberRecipient) item).getBank().getLogoUri(LogoStyle.PRIMARY_24);
     } else if (type.equals(RecipientType.BILL)) {
       imageUri = ApiImageUriBuilder.build(
         context,
@@ -85,7 +83,7 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
         holder.proceedActionView.setVisibility(View.GONE);
         final BillRecipient r = (BillRecipient) item;
         final BillBalance b = r.getBalance();
-        if (Objects.isNotNull(b)) {
+        if (Objects.checkIfNotNull(b)) {
           dueDate = b.getDate();
           totalOwedCurrency = r.getCurrency();
           totalOwedValue = Formatter.amount(b.getTotal());

@@ -45,7 +45,7 @@ public abstract class PhoneNumber {
   }
 
   public static PhoneNumber create(String value) {
-    Preconditions.checkNotNull(value, "value == null");
+    Preconditions.assertNotNull(value, "value == null");
     final String sanitizedValue = sanitize(value);
     if (!checkIfValid(sanitizedValue, false)) {
       throw new IllegalArgumentException("checkIfValid(sanitizedValue, false) == false");

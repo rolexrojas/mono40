@@ -23,7 +23,7 @@ public abstract class SwitchableContainerActivity<C> extends ContainerActivity<C
     boolean animate) {
     final FragmentManager m = getSupportFragmentManager();
     final Fragment cf = m.findFragmentByTag(TAG_CHILD_FRAGMENT);
-    if (Objects.isNull(cf) || !cf.getClass().isAssignableFrom(nf.getClass())) {
+    if (Objects.checkIfNull(cf) || !cf.getClass().isAssignableFrom(nf.getClass())) {
       final FragmentTransaction t = m.beginTransaction();
       if (animate) {
         t.setCustomAnimations(

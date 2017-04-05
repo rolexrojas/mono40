@@ -1,13 +1,11 @@
 package com.tpago.movil.d.ui.main.purchase;
 
 import android.animation.Animator;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,9 +67,9 @@ public class PurchasePaymentDialogFragment
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
-    if (Objects.isNotNull(getTargetFragment()) && getTargetFragment() instanceof OnDismissedListener) {
+    if (Objects.checkIfNotNull(getTargetFragment()) && getTargetFragment() instanceof OnDismissedListener) {
       onDismissedListener = (OnDismissedListener) getTargetFragment();
-    } else if (Objects.isNotNull(getParentFragment()) && getParentFragment() instanceof OnDismissedListener) {
+    } else if (Objects.checkIfNotNull(getParentFragment()) && getParentFragment() instanceof OnDismissedListener) {
       onDismissedListener = (OnDismissedListener) getParentFragment();
     } else if (getActivity() instanceof OnDismissedListener) {
       onDismissedListener = (OnDismissedListener) getActivity();
@@ -119,7 +117,7 @@ public class PurchasePaymentDialogFragment
   public void onStart() {
     super.onStart();
     final Window window = getDialog().getWindow();
-    if (Objects.isNotNull(window)) {
+    if (Objects.checkIfNotNull(window)) {
       window.setWindowAnimations(R.style.PurchasePaymentAnimation);
     }
     presenter.start();
@@ -167,7 +165,7 @@ public class PurchasePaymentDialogFragment
   @Override
   public void onDismiss(DialogInterface dialog) {
     super.onDismiss(dialog);
-    if (Objects.isNotNull(onDismissedListener)) {
+    if (Objects.checkIfNotNull(onDismissedListener)) {
       onDismissedListener.onDismissed();
     }
   }

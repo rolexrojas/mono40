@@ -13,7 +13,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
  */
 public final class Texts {
   public static boolean isEmpty(CharSequence s) {
-    return Objects.isNull(s) || s.length() == 0;
+    return Objects.checkIfNull(s) || s.length() == 0;
   }
 
   public static boolean isNotEmpty(CharSequence s) {
