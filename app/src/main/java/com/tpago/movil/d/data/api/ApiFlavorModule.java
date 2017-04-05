@@ -25,21 +25,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiFlavorModule {
   @Provides
   @Singleton
-  Retrofit provideRetrofit(
+  DepApiBridge provideApiBridge(
     @DepQualifier Gson gson,
     HttpUrl baseUrl,
     OkHttpClient httpClient) {
-    return new Retrofit.Builder()
+    final Retrofit retrofit = new Retrofit.Builder()
       .baseUrl(baseUrl)
       .client(httpClient)
       .addConverterFactory(GsonConverterFactory.create(gson))
       .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
       .build();
-  }
-
-  @Provides
-  @Singleton
-  DepApiBridge provideApiBridge(Retrofit retrofit) {
     return new RetrofitApiBridge(
       retrofit.create(ApiService.class),
       retrofit.<ApiError>responseBodyConverter(ApiError.class, new Annotation[0]));

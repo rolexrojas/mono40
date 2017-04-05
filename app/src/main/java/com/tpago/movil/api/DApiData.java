@@ -6,19 +6,19 @@ import com.tpago.movil.util.Preconditions;
 /**
  * @author hecvasro
  */
-public final class ApiData<T> {
+public final class DApiData<T> {
   private final T value;
-  private final ApiError error;
+  private final DApiError error;
 
-  public static <T> ApiData<T> create(T value) {
-    return new ApiData<>(value, null);
+  public static <T> DApiData<T> create(T value) {
+    return new DApiData<>(value, null);
   }
 
-  public static <T> ApiData<T> create(ApiError error) {
-    return new ApiData<>(null, error);
+  public static <T> DApiData<T> create(DApiError error) {
+    return new DApiData<>(null, error);
   }
 
-  private ApiData(T value, ApiError error) {
+  private DApiData(T value, DApiError error) {
     if (Objects.checkIfNull(error)) {
       this.value = Preconditions.assertNotNull(value, "value == null");
       this.error = null;
@@ -32,7 +32,7 @@ public final class ApiData<T> {
     return value;
   }
 
-  public final ApiError getError() {
+  public final DApiError getError() {
     return error;
   }
 

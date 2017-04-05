@@ -9,13 +9,13 @@ import com.google.gson.TypeAdapter;
  */
 @AutoValue
 public abstract class ApiErrorResponseBody {
-  static ApiErrorResponseBody create(ApiError apiError) {
-    return new AutoValue_ApiErrorResponseBody(apiError);
+  static ApiErrorResponseBody create(DApiError DApiError) {
+    return new AutoValue_ApiErrorResponseBody(DApiError);
   }
 
   public static TypeAdapter<ApiErrorResponseBody> typeAdapter(Gson gson) {
     return new AutoValue_ApiErrorResponseBody.GsonTypeAdapter(gson);
   }
 
-  abstract ApiError getError();
+  abstract DApiError getError();
 }

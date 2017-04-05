@@ -3,7 +3,6 @@ package com.tpago.movil.gson;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
-import com.google.gson.TypeAdapterFactory;
 import com.tpago.movil.data.AssetUriBuilder;
 import com.tpago.movil.domain.Bank;
 
@@ -19,18 +18,12 @@ import dagger.Provides;
 public final class GsonModule {
   @Provides
   @Singleton
-  TypeAdapterFactory provideTypeAdapterFactory() {
-    return GeneratedTypeAdapterFactory.create();
-  }
-
-  @Provides
-  @Singleton
-  Gson provideGson(AssetUriBuilder assetUriBuilder, TypeAdapterFactory typeAdapterFactory) {
+  Gson provideGson(AssetUriBuilder assetUriBuilder) {
     final TypeAdapter<Bank> bankTypeAdapter = new BankTypeAdapter(assetUriBuilder);
 
     return new GsonBuilder()
       .registerTypeAdapter(Bank.class, bankTypeAdapter)
-      .registerTypeAdapterFactory(typeAdapterFactory)
+      .registerTypeAdapterFactory(GeneratedTypeAdapterFactory.create())
       .create();
   }
 }

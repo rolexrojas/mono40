@@ -7,9 +7,9 @@ import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.Session;
 import com.tpago.movil.UserStore;
-import com.tpago.movil.api.ApiBridge;
-import com.tpago.movil.api.ApiData;
-import com.tpago.movil.api.ApiError;
+import com.tpago.movil.api.DApiBridge;
+import com.tpago.movil.api.DApiData;
+import com.tpago.movil.api.DApiError;
 import com.tpago.movil.app.Presenter;
 import com.tpago.movil.init.InitComponent;
 import com.tpago.movil.init.InitData;
@@ -44,7 +44,8 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
   @Inject UserStore userStore;
   @Inject InitData initData;
   @Inject Session.Builder sessionBuilder;
-  @Inject ApiBridge apiBridge;
+  @Inject
+  DApiBridge DApiBridge;
 
   private static String sanitize(String content) {
     return Objects.checkIfNull(content) ? "" : content.trim();
@@ -101,19 +102,19 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
     if (isEmailTextInputContentValid && isPasswordTextInputContentValid) {
       final PhoneNumber phoneNumber = initData.getPhoneNumber();
       final Email email = Email.create(emailTextInputContent);
-      disposable = apiBridge.signIn(phoneNumber, email, passwordTextInputContent, shouldForce)
-        .map(new Function<HttpResult<ApiData<String>>, Pair<Code, String>>() {
+      disposable = DApiBridge.signIn(phoneNumber, email, passwordTextInputContent, shouldForce)
+        .map(new Function<HttpResult<DApiData<String>>, Pair<Code, String>>() {
           @Override
-          public Pair<Code, String> apply(HttpResult<ApiData<String>> result) throws Exception {
+          public Pair<Code, String> apply(HttpResult<DApiData<String>> result) throws Exception {
             final Code code;
             final String data;
-            final ApiData<String> apiData = result.getData();
+            final DApiData<String> DApiData = result.getData();
             if (result.isSuccessful()) {
               code = Code.SUCCESS;
-              data = apiData.getValue();
+              data = DApiData.getValue();
             } else {
-              final ApiError apiError = apiData.getError();
-              if (apiError.getCode().equals(ApiError.Code.ALREADY_ASSOCIATED_DEVICE)) {
+              final DApiError apiError = DApiData.getError();
+              if (apiError.getCode().equals(DApiError.Code.ALREADY_ASSOCIATED_DEVICE)) {
                 code = Code.FAILURE_ALREADY_ASSOCIATED_DEVICE;
               } else {
                 code = Code.FAILURE_UNKNOWN;
@@ -155,7 +156,7 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
             stopLoading();
             view.showDialog(
               R.string.error_title,
-              R.string.error_message,
+              R.string.error_generic,
               R.string.error_positive_button_text);
           }
         });

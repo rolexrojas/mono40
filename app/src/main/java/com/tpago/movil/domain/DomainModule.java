@@ -1,6 +1,10 @@
 package com.tpago.movil.domain;
 
-import com.tpago.movil.domain.api.ApiService;
+import android.content.Context;
+
+import com.squareup.picasso.Picasso;
+import com.tpago.movil.api.ApiService;
+import com.tpago.movil.net.NetworkService;
 
 import javax.inject.Singleton;
 
@@ -17,7 +21,12 @@ public final class DomainModule {
   BankProvider provideBankProvider(
     BankRepo bankRepo,
     NetworkService networkService,
-    ApiService apiService) {
-    return new BankProvider(bankRepo, networkService, apiService);
+    ApiService apiService,
+    Context context) {
+    return new BankProvider(
+      bankRepo,
+      networkService,
+      apiService,
+      Picasso.with(context));
   }
 }

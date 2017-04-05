@@ -20,49 +20,49 @@ import retrofit2.Retrofit;
 /**
  * @author hecvasro
  */
-final class RetrofitApiBridge implements ApiBridge {
+final class DRetrofitApiBridge implements DApiBridge {
   private final DeviceManager deviceManager;
 
-  private final ApiService apiService;
+  private final DApiService DApiService;
   private final Converter<ResponseBody, ApiErrorResponseBody> errorConverter;
 
-  private <A, B> Function<Response<A>, HttpResult<ApiData<B>>> mapToHttpResult(
+  private <A, B> Function<Response<A>, HttpResult<DApiData<B>>> mapToHttpResult(
     final Function<A, B> mapperFunc) {
-    return new Function<Response<A>, HttpResult<ApiData<B>>>() {
+    return new Function<Response<A>, HttpResult<DApiData<B>>>() {
       @Override
-      public HttpResult<ApiData<B>> apply(Response<A> response) throws Exception {
-        final ApiData<B> data;
+      public HttpResult<DApiData<B>> apply(Response<A> response) throws Exception {
+        final DApiData<B> data;
         if (response.isSuccessful()) {
-          data = ApiData.create(mapperFunc.apply(response.body()));
+          data = DApiData.create(mapperFunc.apply(response.body()));
         } else {
-          data = ApiData.create(errorConverter.convert(response.errorBody()).getError());
+          data = DApiData.create(errorConverter.convert(response.errorBody()).getError());
         }
         return HttpResult.create(HttpCode.find(response.code()), data);
       }
     };
   }
 
-  RetrofitApiBridge(DeviceManager deviceManager, Retrofit retrofit) {
+  DRetrofitApiBridge(DeviceManager deviceManager, Retrofit retrofit) {
     this.deviceManager = Preconditions.assertNotNull(deviceManager, "deviceManager == null");
     Preconditions.assertNotNull(retrofit, "retrofit == null");
     this.errorConverter = retrofit.responseBodyConverter(ApiErrorResponseBody.class, new Annotation[0]);
-    this.apiService = retrofit.create(ApiService.class);
+    this.DApiService = retrofit.create(DApiService.class);
   }
 
   @Override
-  public Single<HttpResult<ApiData<PhoneNumber.State>>> validatePhoneNumber(
+  public Single<HttpResult<DApiData<PhoneNumber.State>>> validatePhoneNumber(
     PhoneNumber phoneNumber) {
-    return apiService.validatePhoneNumber(phoneNumber.getValue())
+    return DApiService.validatePhoneNumber(phoneNumber.getValue())
       .map(mapToHttpResult(ValidatePhoneNumberResponseData.mapperFunc()));
   }
 
   @Override
-  public Single<HttpResult<ApiData<String>>> signUp(
+  public Single<HttpResult<DApiData<String>>> signUp(
     PhoneNumber phoneNumber,
     Email email,
     String password,
     Pin pin) {
-    return apiService.signUp(SignUpRequestBody.create(
+    return DApiService.signUp(SignUpRequestBody.create(
       email.getValue(),
       deviceManager.getId(),
       phoneNumber.getValue(),
@@ -72,7 +72,7 @@ final class RetrofitApiBridge implements ApiBridge {
   }
 
   @Override
-  public Single<HttpResult<ApiData<String>>> signIn(
+  public Single<HttpResult<DApiData<String>>> signIn(
     PhoneNumber phoneNumber,
     Email email,
     String password,
@@ -82,9 +82,9 @@ final class RetrofitApiBridge implements ApiBridge {
     final String dId = deviceManager.getId();
     final String pn = phoneNumber.getValue();
     if (shouldForce) {
-      single = apiService.associate(AssociateRequestBody.create(e, pn, dId, password));
+      single = DApiService.associate(AssociateRequestBody.create(e, pn, dId, password));
     } else {
-      single = apiService.signIn(SignInRequestBody.create(e, dId, pn, password));
+      single = DApiService.signIn(SignInRequestBody.create(e, dId, pn, password));
     }
     return single.map(mapToHttpResult(AuthResponseBody.mapperFunc()));
   }

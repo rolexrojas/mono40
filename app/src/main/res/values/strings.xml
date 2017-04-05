@@ -5,9 +5,10 @@
   <string name="debit">Débito</string>
   <string name="edit">Editar</string>
   <string name="email">Correo electrónico</string>
-  <string name="error_message">En estos momentos no podemos procesar esta solicitud. Favor intentar nuevamente.</string>
+  <string name="error_generic">En estos momentos no podemos procesar esta solicitud. Favor intentar nuevamente.</string>
   <string name="error_positive_button_text">@string/ok</string>
   <string name="error_title">¡Lo sentimos!</string>
+  <string name="error_unavailable_network">Sin conexión a Internet</string>
   <string name="first_name">Nombre</string>
   <string name="font_gotham_round_bold">fonts/GothamRounded/Bold.otf</string>
   <string name="font_gotham_round_book">fonts/GothamRounded/Book.otf</string>

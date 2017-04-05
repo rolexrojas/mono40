@@ -97,7 +97,7 @@ public final class InitFragment extends BaseInitFragment {
             final Activity activity = getActivity();
             new AlertDialog.Builder(activity)
               .setTitle(R.string.error_title)
-              .setMessage(R.string.error_message)
+              .setMessage(R.string.error_generic)
               .setPositiveButton(
                 R.string.error_positive_button_text,
                 new DialogInterface.OnClickListener() {

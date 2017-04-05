@@ -24,6 +24,7 @@ import com.tpago.movil.d.domain.util.EventBus;
 import com.tpago.movil.d.ui.main.recipients.NonAffiliatedPhoneNumberRecipientAddition1Fragment;
 import com.tpago.movil.d.ui.main.recipients.NonAffiliatedPhoneNumberRecipientAddition2Fragment;
 import com.tpago.movil.data.DataModule;
+import com.tpago.movil.domain.BankProvider;
 import com.tpago.movil.domain.DomainModule;
 import com.tpago.movil.gson.GsonModule;
 import com.tpago.movil.init.InitComponent;
@@ -66,6 +67,7 @@ public interface AppComponent {
 
   // Deprecated provides
   BalanceManager provideBalanceManager();
+  BankProvider provideBankProvider();
   ConfigManager provideConfigManager();
   Context provideContext();
   DepApiBridge provideApiBridge();

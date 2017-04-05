@@ -4,10 +4,6 @@ import android.graphics.Color;
 
 import com.tpago.movil.domain.Bank;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 /**
  * @author hecvasro
  */
@@ -62,17 +58,6 @@ public final class Banks {
       default:
         return Color.parseColor("#D8D8D8");
     }
-  }
-
-  public static void sort(List<Bank> bankList) {
-    Collections.sort(
-      bankList,
-      new Comparator<Bank>() {
-        @Override
-        public int compare(Bank ba, Bank bb) {
-          return getName(ba).compareTo(getName(bb));
-        }
-      });
   }
 
   private Banks() {

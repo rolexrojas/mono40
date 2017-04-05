@@ -6,9 +6,9 @@ import com.tpago.movil.R;
 import com.tpago.movil.Session;
 import com.tpago.movil.User;
 import com.tpago.movil.UserStore;
-import com.tpago.movil.api.ApiBridge;
-import com.tpago.movil.api.ApiData;
-import com.tpago.movil.api.ApiError;
+import com.tpago.movil.api.DApiBridge;
+import com.tpago.movil.api.DApiData;
+import com.tpago.movil.api.DApiError;
 import com.tpago.movil.app.Presenter;
 import com.tpago.movil.init.InitComponent;
 import com.tpago.movil.net.HttpResult;
@@ -42,7 +42,8 @@ public final class UnlockPresenter extends Presenter<UnlockPresenter.View> {
 
   @Inject UserStore userStore;
   @Inject Session.Builder sessionBuilder;
-  @Inject ApiBridge apiBridge;
+  @Inject
+  DApiBridge DApiBridge;
 
   UnlockPresenter(View view, InitComponent component) {
     super(view);
@@ -84,7 +85,7 @@ public final class UnlockPresenter extends Presenter<UnlockPresenter.View> {
       final User user = userStore.get();
       final PhoneNumber phoneNumber = user.getPhoneNumber();
       final Email email = user.getEmail();
-      disposable = apiBridge.signIn(phoneNumber, email, passwordTextInputContent, false) // TODO: An endpoint for this scenario is required.
+      disposable = DApiBridge.signIn(phoneNumber, email, passwordTextInputContent, false) // TODO: An endpoint for this scenario is required.
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(new Consumer<Disposable>() {
@@ -93,16 +94,16 @@ public final class UnlockPresenter extends Presenter<UnlockPresenter.View> {
             startLoading();
           }
         })
-        .subscribe(new Consumer<HttpResult<ApiData<String>>>() {
+        .subscribe(new Consumer<HttpResult<DApiData<String>>>() {
           @Override
-          public void accept(HttpResult<ApiData<String>> result) throws Exception {
+          public void accept(HttpResult<DApiData<String>> result) throws Exception {
             stopLoading();
-            final ApiData<String> data = result.getData();
+            final DApiData<String> data = result.getData();
             if (result.isSuccessful()) {
               sessionBuilder.setToken(data.getValue());
               view.moveToInitScreen();
             } else {
-              final ApiError error = data.getError();
+              final DApiError error = data.getError();
               view.showDialog(
                 R.string.error_title,
                 error.getDescription(),
@@ -116,7 +117,7 @@ public final class UnlockPresenter extends Presenter<UnlockPresenter.View> {
             stopLoading();
             view.showDialog(
               R.string.error_title,
-              R.string.error_message,
+              R.string.error_generic,
               R.string.error_positive_button_text);
           }
         });

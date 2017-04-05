@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
 
+import com.squareup.picasso.Picasso;
 import com.tpago.Banks;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.data.StringHelper;
@@ -12,8 +13,9 @@ import com.tpago.movil.domain.Bank;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductType;
 import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
-import com.squareup.picasso.Picasso;
 import com.tpago.movil.domain.LogoStyle;
+
+import static com.tpago.movil.util.Preconditions.assertNotNull;
 
 /**
  * @author hecvasro
@@ -22,7 +24,7 @@ class ProductListItemHolderBinder implements ListItemHolderBinder<ProductItem, P
   private final StringHelper stringHelper;
 
   ProductListItemHolderBinder(StringHelper stringHelper) {
-    this.stringHelper = stringHelper;
+    this.stringHelper = assertNotNull(stringHelper, "stringHelper == null");
   }
 
   @Override
@@ -32,7 +34,6 @@ class ProductListItemHolderBinder implements ListItemHolderBinder<ProductItem, P
     final Context c = holder.getContext();
     Picasso.with(c)
       .load(b.getLogoUri(LogoStyle.GRAY_36))
-      .noFade()
       .into(holder.bankLogoImageView);
     holder.bankNameTextView.setText(Banks.getName(b) + " " + c.getString(ProductType.findStringId(p)));
     final String productIdentifier;

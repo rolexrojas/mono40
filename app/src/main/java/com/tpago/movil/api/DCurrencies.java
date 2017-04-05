@@ -3,7 +3,7 @@ package com.tpago.movil.api;
 /**
  * @author hecvasro
  */
-public final class Currencies {
+public final class DCurrencies {
   private static final String DOP_API = "DOP";
   private static final String DOP_APP = "RD$";
 
@@ -15,7 +15,7 @@ public final class Currencies {
     }
   }
 
-  private Currencies() {
+  private DCurrencies() {
     throw new AssertionError("Cannot be instantiated");
   }
 }

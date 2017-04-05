@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
 import com.tpago.movil.Partner;
-import com.tpago.movil.api.Currencies;
+import com.tpago.movil.api.DCurrencies;
 import com.tpago.movil.d.domain.Balance;
 import com.tpago.movil.domain.Bank;
 import com.tpago.movil.d.domain.BillBalance;
@@ -109,16 +109,6 @@ class RetrofitApiBridge implements DepApiBridge {
         }
       }
     };
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @NonNull
-  @Override
-  public Observable<ApiResult<List<Bank>>> banks(@NonNull String authToken) {
-    return apiService.banks(authToken)
-      .flatMap(mapToApiResult(BankListRequestResponse.mapFunc()));
   }
 
   /**
@@ -270,7 +260,7 @@ class RetrofitApiBridge implements DepApiBridge {
               productInfo.getAlias(),
               productInfo.getNumber(),
               productInfo.getBank(),
-              Currencies.map(productInfo.getCurrency()),
+              DCurrencies.map(productInfo.getCurrency()),
               productInfo.getQueryFee(),
               false,
               false,

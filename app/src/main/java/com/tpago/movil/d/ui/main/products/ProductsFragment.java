@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.squareup.picasso.Picasso;
 import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.ui.Dialogs;
@@ -127,7 +128,10 @@ public class ProductsFragment extends ChildFragment<MainContainer>
       .addCreator(ProductItem.class, new ProductListItemHolderCreator(this))
       .build();
     final BinderFactory holderBinderFactory = new BinderFactory.Builder()
-      .addBinder(ProductItem.class, ProductListItemHolder.class, new ProductListItemHolderBinder(stringHelper))
+      .addBinder(
+        ProductItem.class,
+        ProductListItemHolder.class,
+        new ProductListItemHolderBinder(stringHelper))
       .build();
     adapter = new ListItemAdapter(holderCreatorFactory, holderBinderFactory);
     recyclerView.setAdapter(adapter);
@@ -263,7 +267,7 @@ public class ProductsFragment extends ChildFragment<MainContainer>
   @Override
   public void onDismiss(boolean succeeded) {
     if (!succeeded) {
-      final String m = Texts.isEmpty(requestMessage) ? getString(R.string.error_message) : requestMessage;
+      final String m = Texts.isEmpty(requestMessage) ? getString(R.string.error_generic) : requestMessage;
       Dialogs.builder(getContext())
         .setTitle(R.string.error_title)
         .setMessage(m)

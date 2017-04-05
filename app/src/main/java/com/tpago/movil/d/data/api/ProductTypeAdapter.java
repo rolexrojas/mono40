@@ -1,6 +1,6 @@
 package com.tpago.movil.d.data.api;
 
-import com.tpago.movil.api.Currencies;
+import com.tpago.movil.api.DCurrencies;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductCreator;
 import com.tpago.movil.d.domain.ProductType;
@@ -65,7 +65,7 @@ class ProductTypeAdapter implements JsonDeserializer<Product>, JsonSerializer<Pr
         jsonObject.get(PROPERTY_ALIAS).getAsString(),
         jsonObject.get(PROPERTY_NUMBER).getAsString(),
         (Bank) context.deserialize(jsonObject.get(PROPERTY_BANK), Bank.class),
-        Currencies.map(jsonObject.get(PROPERTY_CURRENCY).getAsString()),
+        DCurrencies.map(jsonObject.get(PROPERTY_CURRENCY).getAsString()),
         queryFee,
         paymentOption,
         isDefault,
@@ -80,7 +80,7 @@ class ProductTypeAdapter implements JsonDeserializer<Product>, JsonSerializer<Pr
     jsonObject.addProperty(PROPERTY_ALIAS, src.getAlias());
     jsonObject.addProperty(PROPERTY_NUMBER, src.getNumber());
     jsonObject.add(PROPERTY_BANK, context.serialize(src.getBank(), Bank.class));
-    jsonObject.addProperty(PROPERTY_CURRENCY, Currencies.map(src.getCurrency()));
+    jsonObject.addProperty(PROPERTY_CURRENCY, DCurrencies.map(src.getCurrency()));
     jsonObject.addProperty(PROPERTY_QUERY_FEE, src.getQueryFee());
     jsonObject.addProperty(PROPERTY_PAYMENT_OPTION, Product.isPaymentOption(src));
     jsonObject.addProperty(PROPERTY_IS_DEFAULT, Product.isDefaultPaymentOption(src));

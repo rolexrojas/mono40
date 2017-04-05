@@ -1,6 +1,6 @@
 package com.tpago.movil.domain;
 
-import com.tpago.movil.domain.api.ApiCode;
+import com.tpago.movil.api.ApiCode;
 
 import java.util.Set;
 

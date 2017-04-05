@@ -13,8 +13,8 @@ import java.util.List;
  * @author hecvasro
  */
 @AutoValue
-public abstract class InitialData {
-  public static InitialData create(
+public abstract class DInitialData {
+  public static DInitialData create(
     List<Account> accountList,
     List<CreditCard> creditCardList,
     List<Loan> loanList,

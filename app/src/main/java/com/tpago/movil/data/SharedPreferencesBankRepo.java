@@ -6,10 +6,9 @@ import com.google.gson.Gson;
 import com.tpago.movil.content.SharedPreferencesCreator;
 import com.tpago.movil.domain.Bank;
 import com.tpago.movil.domain.BankRepo;
+import com.tpago.movil.util.Sets;
 
-import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 import static com.tpago.movil.util.Preconditions.assertNotNull;
 
@@ -30,7 +29,7 @@ final class SharedPreferencesBankRepo implements BankRepo {
       sharedPreferencesCreator,
       "sharedPreferencesCreator == null")
       .create(SharedPreferencesBankRepo.class.getCanonicalName());
-    this.idSet = this.sharedPreferences.getStringSet(KEY_ID_SET, new HashSet<String>());
+    this.idSet = this.sharedPreferences.getStringSet(KEY_ID_SET, Sets.<String>createSet());
   }
 
   @Override
@@ -43,7 +42,7 @@ final class SharedPreferencesBankRepo implements BankRepo {
 
   @Override
   public Set<Bank> getAll() {
-    final Set<Bank> bankSet = new TreeSet<>();
+    final Set<Bank> bankSet = Sets.createSortedSet();
     for (String id : idSet) {
       bankSet.add(gson.fromJson(sharedPreferences.getString(id, null), Bank.class));
     }
@@ -60,8 +59,7 @@ final class SharedPreferencesBankRepo implements BankRepo {
       idSet.add(id);
       editor.putString(id, gson.toJson(bank, Bank.class));
     }
-    editor
-      .putStringSet(KEY_ID_SET, idSet)
+    editor.putStringSet(KEY_ID_SET, idSet)
       .apply();
   }
 }

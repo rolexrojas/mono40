@@ -1,6 +1,6 @@
 package com.tpago.movil.d.data.api;
 
-import com.tpago.movil.api.Currencies;
+import com.tpago.movil.api.DCurrencies;
 import com.tpago.movil.d.domain.Transaction;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -43,7 +43,7 @@ class TransactionJsonDeserializer implements JsonDeserializer<Transaction> {
         jsonObject.get(PROPERTY_NAME).getAsString(),
         jsonObject.get(PROPERTY_DATE).getAsLong(),
         Transaction.RequestType.valueOf(jsonObject.get(PROPERTY_REQUEST_TYPE).getAsString()),
-        Currencies.map(jsonObject.get(PROPERTY_CURRENCY).getAsString()),
+        DCurrencies.map(jsonObject.get(PROPERTY_CURRENCY).getAsString()),
         jsonObject.get(PROPERTY_VALUE).getAsBigDecimal());
     }
   }

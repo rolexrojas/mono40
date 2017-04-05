@@ -5,9 +5,9 @@ import com.tpago.movil.Pin;
 import com.tpago.movil.R;
 import com.tpago.movil.Session;
 import com.tpago.movil.UserStore;
-import com.tpago.movil.api.ApiBridge;
-import com.tpago.movil.api.ApiData;
-import com.tpago.movil.api.ApiError;
+import com.tpago.movil.api.DApiBridge;
+import com.tpago.movil.api.DApiData;
+import com.tpago.movil.api.DApiError;
 import com.tpago.movil.app.Presenter;
 import com.tpago.movil.net.HttpResult;
 import com.tpago.movil.reactivex.Disposables;
@@ -30,7 +30,8 @@ public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPre
   private Disposable disposable = Disposables.disposed();
 
   @Inject UserStore userStore;
-  @Inject ApiBridge apiBridge;
+  @Inject
+  DApiBridge DApiBridge;
   @Inject Session.Builder sessionBuilder;
 
   @Inject RegisterData registerData;
@@ -48,7 +49,7 @@ public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPre
     view.setTextInputContent(builder.getMaskedValue());
     if (builder.canBuild()) {
       final Pin pin = builder.build();
-      disposable = apiBridge.signUp(
+      disposable = DApiBridge.signUp(
         registerData.getPhoneNumber(),
         registerData.getEmail(),
         registerData.getPassword(),
@@ -61,13 +62,13 @@ public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPre
             view.startLoading();
           }
         })
-        .subscribe(new Consumer<HttpResult<ApiData<String>>>() {
+        .subscribe(new Consumer<HttpResult<DApiData<String>>>() {
           @Override
-          public void accept(HttpResult<ApiData<String>> result) throws Exception {
+          public void accept(HttpResult<DApiData<String>> result) throws Exception {
             view.stopLoading();
-            final ApiData<String> apiData = result.getData();
+            final DApiData<String> DApiData = result.getData();
             if (result.isSuccessful()) {
-              sessionBuilder.setToken(apiData.getValue());
+              sessionBuilder.setToken(DApiData.getValue());
               userStore.set(
                 registerData.getPhoneNumber(),
                 registerData.getEmail(),
@@ -75,7 +76,7 @@ public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPre
                 registerData.getLastName());
               view.moveToNextScreen();
             } else {
-              final ApiError error = apiData.getError();
+              final DApiError error = DApiData.getError();
               view.showDialog(
                 R.string.error_title,
                 error.getDescription(),
@@ -89,7 +90,7 @@ public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPre
             view.stopLoading();
             view.showDialog(
               R.string.error_title,
-              R.string.error_message,
+              R.string.error_generic,
               R.string.error_positive_button_text);
           }
         });

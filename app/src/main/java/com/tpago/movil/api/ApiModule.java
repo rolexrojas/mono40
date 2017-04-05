@@ -20,17 +20,25 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiModule {
   @Provides
   @Singleton
-  ApiBridge provideApiBridge(
-    DeviceManager deviceManager,
-    Gson gson,
-    HttpUrl baseUrl,
-    OkHttpClient httpClient) {
-    final Retrofit retrofit = new Retrofit.Builder()
-      .baseUrl(baseUrl)
+  ApiService provideApiService(Retrofit retrofit) {
+    return new RetrofitApiService(retrofit);
+  }
+
+  @Provides
+  @Singleton
+  Retrofit provideRetrofit(HttpUrl httpUrl, OkHttpClient httpClient, Gson gson) {
+    return new Retrofit.Builder()
+      .baseUrl(httpUrl)
       .client(httpClient)
-      .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
       .addConverterFactory(GsonConverterFactory.create(gson))
+      .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
       .build();
-    return new RetrofitApiBridge(deviceManager, retrofit);
+  }
+
+  // Deprecated provider methods.
+  @Provides
+  @Singleton
+  DApiBridge provideApiBridge(DeviceManager deviceManager, Retrofit retrofit) {
+    return new DRetrofitApiBridge(deviceManager, retrofit);
   }
 }

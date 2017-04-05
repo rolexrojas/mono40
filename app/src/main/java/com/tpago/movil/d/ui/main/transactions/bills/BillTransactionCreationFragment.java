@@ -214,7 +214,7 @@ public class BillTransactionCreationFragment
       getContainer().finish(true, resultMessage);
     } else {
       final String message = Texts.isEmpty(resultMessage)
-        ? getString(R.string.error_message)
+        ? getString(R.string.error_generic)
         : resultMessage;
       Dialogs.builder(getContext())
         .setTitle(R.string.error_title)

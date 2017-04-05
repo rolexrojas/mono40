@@ -4,9 +4,9 @@ import com.tpago.movil.Digit;
 import com.tpago.movil.Digits;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
-import com.tpago.movil.api.ApiBridge;
-import com.tpago.movil.api.ApiData;
-import com.tpago.movil.api.ApiError;
+import com.tpago.movil.api.DApiBridge;
+import com.tpago.movil.api.DApiData;
+import com.tpago.movil.api.DApiError;
 import com.tpago.movil.app.Presenter;
 import com.tpago.movil.net.HttpResult;
 import com.tpago.movil.reactivex.Disposables;
@@ -28,7 +28,8 @@ import timber.log.Timber;
  * @author hecvasro
  */
 public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPresenter.View> {
-  @Inject ApiBridge apiBridge;
+  @Inject
+  DApiBridge DApiBridge;
   @Inject InitData initData;
 
   private boolean isPhoneNumberValid = false;
@@ -84,7 +85,7 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
   final void validate() {
     if (isPhoneNumberValid) {
       final PhoneNumber phoneNumber = PhoneNumber.create(Digits.stringify(phoneNumberDigits));
-      disposable = apiBridge.validatePhoneNumber(phoneNumber)
+      disposable = DApiBridge.validatePhoneNumber(phoneNumber)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(new Consumer<Disposable>() {
@@ -93,13 +94,13 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
             startLoading();
           }
         })
-        .subscribe(new Consumer<HttpResult<ApiData<PhoneNumber.State>>>() {
+        .subscribe(new Consumer<HttpResult<DApiData<PhoneNumber.State>>>() {
           @Override
-          public void accept(HttpResult<ApiData<PhoneNumber.State>> result) throws Exception {
+          public void accept(HttpResult<DApiData<PhoneNumber.State>> result) throws Exception {
             stopLoading();
-            final ApiData<PhoneNumber.State> apiData = result.getData();
+            final DApiData<PhoneNumber.State> DApiData = result.getData();
             if (result.isSuccessful()) {
-              final PhoneNumber.State state = apiData.getValue();
+              final PhoneNumber.State state = DApiData.getValue();
               if (state.equals(PhoneNumber.State.NONE)) {
                 view.showDialog(
                   R.string.init_phone_number_error_not_affiliated_title,
@@ -114,7 +115,7 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
                 }
               }
             } else {
-              final ApiError error = apiData.getError();
+              final DApiError error = DApiData.getError();
               view.showDialog(
                 R.string.error_title,
                 error.getDescription(),
@@ -128,7 +129,7 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
             stopLoading();
             view.showDialog(
               R.string.error_title,
-              R.string.error_message,
+              R.string.error_generic,
               R.string.error_positive_button_text);
           }
         });

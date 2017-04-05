@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
 import com.tpago.movil.R;
 import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.StringHelper;
@@ -89,10 +90,8 @@ public class PaymentsFragment
   @BindView(R.id.recycler_view)
   RecyclerView recyclerView;
 
-  @Inject
-  StringHelper stringHelper;
-  @Inject
-  PaymentsPresenter presenter;
+  @Inject StringHelper stringHelper;
+  @Inject PaymentsPresenter presenter;
 
   /**
    * Creates a new instance of the {@link PaymentsFragment screen}.
@@ -435,7 +434,7 @@ public class PaymentsFragment
   public void showGenericErrorDialog() {
     Dialogs.builder(getContext())
       .setTitle(R.string.error_title)
-      .setMessage(R.string.error_message)
+      .setMessage(R.string.error_generic)
       .setPositiveButton(R.string.error_positive_button_text, null)
       .show();
   }

@@ -1,6 +1,5 @@
 package com.tpago.movil.d.data.api;
 
-import com.google.gson.TypeAdapterFactory;
 import com.tpago.movil.d.DepQualifier;
 import com.tpago.movil.d.domain.AccountBalance;
 import com.tpago.movil.d.domain.Balance;
@@ -31,10 +30,10 @@ public class ApiModule {
   @Provides
   @Singleton
   @DepQualifier
-  Gson provideGson(TypeAdapterFactory typeAdapterFactory) {
+  Gson provideGson(Gson gson) {
     return new GsonBuilder()
       .setDateFormat("dd/MM/yyyy")
-      .registerTypeAdapterFactory(typeAdapterFactory)
+      .registerTypeAdapterFactory(new GsonTypeAdapterFactory(gson))
       .registerTypeAdapter(ApiError.class, new ApiErrorTypeAdapter())
       .registerTypeAdapter(Transaction.class, new TransactionJsonDeserializer())
       .registerTypeAdapter(InitialData.class, new InitialDataDeserializer())

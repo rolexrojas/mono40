@@ -116,7 +116,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment
           Timber.e(throwable, "Transfer to a non affiliated recipient");
           Dialogs.builder(getContext())
             .setTitle(R.string.error_title)
-            .setMessage(R.string.error_message)
+            .setMessage(R.string.error_generic)
             .setPositiveButton(R.string.error_positive_button_text, null)
             .create()
             .show();
@@ -191,7 +191,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment
             loadIndicator.stop();
             Dialogs.builder(getContext())
               .setTitle(R.string.error_title)
-              .setMessage(R.string.error_message)
+              .setMessage(R.string.error_generic)
               .setPositiveButton(R.string.error_positive_button_text, null)
               .create()
               .show();

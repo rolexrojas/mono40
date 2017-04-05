@@ -252,7 +252,7 @@ public class PurchaseFragment
 
   @Override
   public void showGenericErrorDialog() {
-    showGenericErrorDialog(getString(R.string.error_message));
+    showGenericErrorDialog(getString(R.string.error_generic));
   }
 
   @Override

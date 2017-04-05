@@ -1,4 +1,4 @@
-package com.tpago.movil.domain.api;
+package com.tpago.movil.api;
 
 import com.google.gson.annotations.SerializedName;
 

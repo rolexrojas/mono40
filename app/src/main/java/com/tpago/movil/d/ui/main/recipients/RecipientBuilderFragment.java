@@ -131,7 +131,7 @@ public class RecipientBuilderFragment
                 @Override
                 public void call(Throwable throwable) {
                   Timber.e(throwable, "Building a recipient");
-                  resolve(new RecipientBuilder.Result(getString(R.string.error_message)));
+                  resolve(new RecipientBuilder.Result(getString(R.string.error_generic)));
                 }
               });
           }

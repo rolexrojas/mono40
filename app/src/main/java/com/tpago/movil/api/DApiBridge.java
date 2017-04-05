@@ -10,16 +10,16 @@ import io.reactivex.Single;
 /**
  * @author hecvasro
  */
-public interface ApiBridge {
-  Single<HttpResult<ApiData<PhoneNumber.State>>> validatePhoneNumber(PhoneNumber phoneNumber);
+public interface DApiBridge {
+  Single<HttpResult<DApiData<PhoneNumber.State>>> validatePhoneNumber(PhoneNumber phoneNumber);
 
-  Single<HttpResult<ApiData<String>>> signUp(
+  Single<HttpResult<DApiData<String>>> signUp(
     PhoneNumber phoneNumber,
     Email email,
     String password,
     Pin pin);
 
-  Single<HttpResult<ApiData<String>>> signIn(
+  Single<HttpResult<DApiData<String>>> signIn(
     PhoneNumber phoneNumber,
     Email email,
     String password,

@@ -26,17 +26,6 @@ import rx.Observable;
 @Deprecated
 public interface DepApiBridge {
   /**
-   * Creates an {@link Observable observable} that emits all the associated {@link Bank banks}.
-   * <p>
-   * <em>Note:</em> By default {@link #banks()} does not operates on a particular {@link
-   * rx.Scheduler}.
-   *
-   * @return An {@link Observable observable} that emits all the associated {@link Bank banks}.
-   */
-  @NonNull
-  Observable<ApiResult<List<Bank>>> banks(@NonNull String authToken);
-
-  /**
    * TODO
    *
    * @param authToken
