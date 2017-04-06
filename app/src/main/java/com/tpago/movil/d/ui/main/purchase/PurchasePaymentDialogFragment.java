@@ -53,7 +53,7 @@ public class PurchasePaymentDialogFragment
   @NonNull
   public static PurchasePaymentDialogFragment newInstance(@NonNull Product paymentOption) {
     final Bundle bundle = new Bundle();
-    bundle.putSerializable(EXTRA_PAYMENT_OPTION, paymentOption);
+    bundle.putParcelable(EXTRA_PAYMENT_OPTION, paymentOption);
     final PurchasePaymentDialogFragment fragment = new PurchasePaymentDialogFragment();
     fragment.setArguments(bundle);
     return fragment;
@@ -85,7 +85,7 @@ public class PurchasePaymentDialogFragment
       throw new NullPointerException("Argument " + EXTRA_PAYMENT_OPTION + " is missing");
     } else {
       // Retrieves the payment option from the arguments.
-      final Product paymentOption = (Product) bundle.getSerializable(EXTRA_PAYMENT_OPTION);
+      final Product paymentOption = bundle.getParcelable(EXTRA_PAYMENT_OPTION);
       // Injects all the dependencies.
       final PurchasePaymentComponent component = DaggerPurchasePaymentComponent.builder()
         .purchaseComponent(getContainer().getComponent())

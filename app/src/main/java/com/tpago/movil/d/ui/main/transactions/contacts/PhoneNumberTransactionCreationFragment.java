@@ -3,7 +3,6 @@ package com.tpago.movil.d.ui.main.transactions.contacts;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.Button;
 
 import com.tpago.movil.R;
 import com.tpago.movil.d.data.StringHelper;
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Recipient;
@@ -47,10 +45,7 @@ public class PhoneNumberTransactionCreationFragment
   PaymentMethodChooser.OnPaymentMethodChosenListener,
   DepNumPad.OnDigitClickedListener,
   DepNumPad.OnDotClickedListener,
-  DepNumPad.OnDeleteClickedListener,
-  PinConfirmationDialogFragment.OnDismissListener {
-  private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
-
+  DepNumPad.OnDeleteClickedListener {
   private static final BigDecimal ZERO = BigDecimal.ZERO;
   private static final BigDecimal ONE = BigDecimal.ONE;
   private static final BigDecimal TEN = BigDecimal.TEN;
@@ -208,10 +203,17 @@ public class PhoneNumberTransactionCreationFragment
 
   @Override
   public void setPaymentResult(boolean succeeded, String message) {
-    this.resultMessage = message;
-    final Fragment fragment = getChildFragmentManager().findFragmentByTag(TAG_PIN_CONFIRMATION);
-    if (Utils.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
-      ((PinConfirmationDialogFragment) fragment).resolve(succeeded);
+    PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), succeeded);
+    if (succeeded) {
+      getContainer().finish(true, message);
+    } else {
+      message = Texts.checkIfEmpty(message) ? getString(R.string.error_generic) : message;
+      Dialogs.builder(getContext())
+        .setTitle(R.string.error_title)
+        .setMessage(message)
+        .setPositiveButton(R.string.error_positive_button_text, null)
+        .create()
+        .show();
     }
   }
 
@@ -226,17 +228,17 @@ public class PhoneNumberTransactionCreationFragment
         getString(R.string.format_transfer_to),
         Formatter.amount(amountTextView.getPrefix().toString(), value.get()),
         recipient.getIdentifier());
-      PinConfirmationDialogFragment.newInstance(
-        x,
-        y,
+      PinConfirmationDialogFragment.show(
+        getChildFragmentManager(),
         description,
         new PinConfirmationDialogFragment.Callback() {
           @Override
-          public void confirm(@NonNull String pin) {
+          public void confirm(String pin) {
             presenter.transferTo(value.get(), pin);
           }
-        })
-        .show(getChildFragmentManager(), TAG_PIN_CONFIRMATION);
+        },
+        x,
+        y);
     } else {
       // TODO: Let the user know that he must insert an amount greater than zero.
     }
@@ -298,21 +300,6 @@ public class PhoneNumberTransactionCreationFragment
     } else if (mustShowDot) {
       mustShowDot = false;
       updateAmountText();
-    }
-  }
-
-  @Override
-  public void onDismiss(boolean succeeded) {
-    if (succeeded) {
-      getContainer().finish(true, resultMessage);
-    } else {
-      final String message = Texts.checkIfEmpty(resultMessage) ? getString(R.string.error_generic) : resultMessage;
-      Dialogs.builder(getContext())
-        .setTitle(R.string.error_title)
-        .setMessage(message)
-        .setPositiveButton(R.string.error_positive_button_text, null)
-        .create()
-        .show();
     }
   }
 

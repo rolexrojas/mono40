@@ -54,7 +54,7 @@ public class NonAffiliatedPhoneNumberRecipientAdditionActivity extends BaseActiv
     if (Objects.checkIfNull(data)) {
       return null;
     } else {
-      return (Recipient) data.getSerializableExtra(KEY_RECIPIENT);
+      return data.getParcelableExtra(KEY_RECIPIENT);
     }
   }
 
@@ -73,7 +73,7 @@ public class NonAffiliatedPhoneNumberRecipientAdditionActivity extends BaseActiv
       actionBar.setDisplayHomeAsUpEnabled(true);
       actionBar.setTitle(R.string.add_recipient_title);
     }
-    recipient = (NonAffiliatedPhoneNumberRecipient) getIntent().getSerializableExtra(KEY_RECIPIENT);
+    recipient = getIntent().getParcelableExtra(KEY_RECIPIENT);
     getSupportFragmentManager().beginTransaction()
       .replace(R.id.container, new NonAffiliatedPhoneNumberRecipientAddition1Fragment())
       .commit();

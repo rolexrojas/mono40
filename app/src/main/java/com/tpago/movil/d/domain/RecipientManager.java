@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.tpago.movil.content.SharedPreferencesCreator;
+import com.tpago.movil.d.domain.api.ApiCode;
+import com.tpago.movil.d.domain.api.ApiError;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.api.ApiUtils;
@@ -17,11 +19,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
-import rx.Completable;
 import rx.Observable;
-import rx.Subscription;
-import rx.functions.Action1;
+import rx.Single;
 import rx.functions.Func1;
 
 /**
@@ -56,7 +57,8 @@ public final class RecipientManager {
     this.indexSet = this.sharedPreferences.getStringSet(KEY_INDEX_SET, new HashSet<String>());
   }
 
-  @Deprecated private void queryBalance(final String authToken, final Recipient recipient) {
+  @Deprecated
+  private void queryBalance(final String authToken, final Recipient recipient) {
     if (recipient instanceof BillRecipient) {
       final ApiResult<BillBalance> result = apiBridge
         .queryBalance(authToken, (BillRecipient) recipient);
@@ -66,7 +68,8 @@ public final class RecipientManager {
     }
   }
 
-  @Deprecated final void syncRecipients(
+  @Deprecated
+  final void syncRecipients(
     final String authToken,
     final List<Recipient> remoteRecipientList) {
     if (Objects.checkIfNull(recipientList)) {
@@ -105,7 +108,8 @@ public final class RecipientManager {
     Collections.sort(recipientList, Recipient.comparator());
   }
 
-  @Deprecated public final void clear() {
+  @Deprecated
+  public final void clear() {
     recipientList.clear();
     indexSet.clear();
     sharedPreferences.edit()
@@ -113,7 +117,8 @@ public final class RecipientManager {
       .apply();
   }
 
-  @Deprecated public final List<Recipient> getAll(@Nullable final String query) {
+  @Deprecated
+  public final List<Recipient> getAll(@Nullable final String query) {
     final List<Recipient> resultList = new ArrayList<>();
     for (Recipient recipient : recipientList) {
       if (recipient.matches(query)) {
@@ -150,30 +155,35 @@ public final class RecipientManager {
       });
   }
 
-  @Deprecated public final boolean checkIfExists(Recipient recipient) {
+  @Deprecated
+  public final boolean checkIfExists(Recipient recipient) {
     return recipientList.contains(recipient);
   }
 
-  @Deprecated public final Observable<Boolean> checkIfAffiliated(
+  @Deprecated
+  public final Observable<Boolean> checkIfAffiliated(
     final String authToken,
     final String phoneNumber) {
     return apiBridge.checkIfAffiliated(authToken, phoneNumber)
       .compose(ApiUtils.<Boolean>handleApiResult(true));
   }
 
-  @Deprecated public final Observable<Recipient> create(
+  @Deprecated
+  public final Observable<Recipient> create(
     final String authToken,
     final String phoneNumber) {
     return create(authToken, phoneNumber, null);
   }
 
-  @Deprecated public final Observable<Recipient> create(
+  @Deprecated
+  public final Observable<Recipient> create(
     final String authToken,
     final Contact contact) {
     return create(contact.getPhoneNumber().toString(), contact.getName());
   }
 
-  @Deprecated public final void add(Recipient recipient) {
+  @Deprecated
+  public final void add(Recipient recipient) {
     if (!checkIfExists(recipient)) {
       recipientList.add(recipient);
       indexSet.add(recipient.getId());
@@ -185,7 +195,8 @@ public final class RecipientManager {
     }
   }
 
-  @Deprecated public final void update(final Recipient recipient) {
+  @Deprecated
+  public final void update(final Recipient recipient) {
     if (!checkIfExists(recipient)) {
       recipientList.add(recipient);
       indexSet.add(recipient.getId());
@@ -197,33 +208,46 @@ public final class RecipientManager {
     Collections.sort(recipientList, Recipient.comparator());
   }
 
-  @Deprecated public final Completable remove(
+  public final void remove(Recipient recipient) {
+    if (recipientList.contains(recipient)) {
+      final String id = recipient.getId();
+      indexSet.remove(id);
+      sharedPreferences.edit()
+        .putStringSet(KEY_INDEX_SET, indexSet)
+        .remove(id)
+        .apply();
+      recipientList.remove(recipient);
+      Collections.sort(recipientList, Recipient.comparator());
+    }
+  }
+
+  @Deprecated
+  public final Single<ApiResult<Void>> remove(
     final String authToken,
     final String pin,
     final List<Recipient> recipientToRemoveList) {
-    return Completable.complete()
-      .doOnSubscribe(new Action1<Subscription>() {
-        @Override
-        public void call(Subscription subscription) {
-          final SharedPreferences.Editor editor = sharedPreferences.edit();
-          for (Recipient recipient : recipientToRemoveList) {
-            boolean shouldBeRemoved = true;
-            if (Recipient.checkIfBill(recipient)) {
-              final ApiResult<Void> result = apiBridge
-                .removeBill(authToken, (BillRecipient) recipient, pin);
-              shouldBeRemoved = result.isSuccessful();
-            }
-            if (shouldBeRemoved) {
-              recipientList.remove(recipient);
-              indexSet.remove(recipient.getId());
-              editor.remove(recipient.getId());
+    return Single.defer(new Callable<Single<ApiResult<Void>>>() {
+      @Override
+      public Single<ApiResult<Void>> call() throws Exception {
+        ApiCode apiCode = ApiCode.OK;
+        ApiError apiError = null;
+        for (Recipient recipient : recipientToRemoveList) {
+          if (Recipient.checkIfBill(recipient)) {
+            final ApiResult<Void> result = apiBridge
+              .removeBill(authToken, (BillRecipient) recipient, pin);
+            if (!result.isSuccessful()) {
+              apiCode = result.getCode();
+              apiError = result.getError();
             }
           }
-          editor
-            .putStringSet(KEY_INDEX_SET, indexSet)
-            .apply();
-          Collections.sort(recipientList, Recipient.comparator());
+          if (apiCode.equals(ApiCode.OK)) {
+            remove(recipient);
+          } else {
+            break;
+          }
         }
-      });
+        return Single.just(new ApiResult<Void>(apiCode, null, apiError));
+      }
+    });
   }
 }

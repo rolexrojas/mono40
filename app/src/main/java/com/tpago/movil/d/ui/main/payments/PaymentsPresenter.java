@@ -9,6 +9,7 @@ import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.PhoneNumber;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.ProductManager;
+import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.pos.PosResult;
 import com.tpago.movil.d.domain.session.SessionManager;
@@ -322,18 +323,22 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
         selectedRecipients)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Action0() {
+        .subscribe(new Action1<ApiResult<Void>>() {
           @Override
-          public void call() {
-            screen.dismissPinConfirmator();
-            screen.clearQuery();
-            stopDeleting();
+          public void call(ApiResult<Void> result) {
+            if (result.isSuccessful()) {
+              stopDeleting();
+              screen.clearQuery();
+              screen.setDeletingResult(result.isSuccessful());
+            } else {
+              screen.showMessage(result.getError().getDescription());
+            }
           }
         }, new Action1<Throwable>() {
           @Override
           public void call(Throwable throwable) {
             Timber.e(throwable, "Removing one or more recipients");
-            screen.dismissPinConfirmator();
+            screen.setDeletingResult(false);
             screen.showMessage(stringHelper.cannotProcessYourRequestAtTheMoment());
           }
         });

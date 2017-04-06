@@ -1,5 +1,6 @@
 package com.tpago.movil.d.domain;
 
+import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -11,11 +12,32 @@ import com.tpago.movil.util.Objects;
  * @author hecvasro
  */
 public class NonAffiliatedPhoneNumberRecipient extends Recipient {
+  public static final Creator<NonAffiliatedPhoneNumberRecipient> CREATOR
+    = new Creator<NonAffiliatedPhoneNumberRecipient>() {
+    @Override
+    public NonAffiliatedPhoneNumberRecipient createFromParcel(Parcel source) {
+      return new NonAffiliatedPhoneNumberRecipient(source);
+    }
+
+    @Override
+    public NonAffiliatedPhoneNumberRecipient[] newArray(int size) {
+      return new NonAffiliatedPhoneNumberRecipient[size];
+    }
+  };
+
   private final String phoneNumber;
 
   private Bank bank;
   private String accountNumber;
   private Product product;
+
+  protected NonAffiliatedPhoneNumberRecipient(Parcel source) {
+    super(source);
+    phoneNumber = source.readString();
+    bank = source.readParcelable(Bank.class.getClassLoader());
+    accountNumber = source.readString();
+    product = source.readParcelable(Product.class.getClassLoader());
+  }
 
   public NonAffiliatedPhoneNumberRecipient(
     @NonNull String phoneNumber,
@@ -91,5 +113,19 @@ public class NonAffiliatedPhoneNumberRecipient extends Recipient {
   @Override
   public String getIdentifier() {
     return com.tpago.movil.PhoneNumber.format(phoneNumber);
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    super.writeToParcel(dest, flags);
+    dest.writeString(phoneNumber);
+    dest.writeParcelable(bank, flags);
+    dest.writeString(accountNumber);
+    dest.writeParcelable(product, flags);
   }
 }

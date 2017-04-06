@@ -61,7 +61,7 @@ public class ConfirmationDialogFragment extends DialogFragment {
   public static ConfirmationDialogFragment newInstance(@NonNull Recipient recipient,
     @NonNull String title, @Nullable String message) {
     final Bundle bundle = new Bundle();
-    bundle.putSerializable(EXTRA_RECIPIENT, recipient);
+    bundle.putParcelable(EXTRA_RECIPIENT, recipient);
     if (!TextUtils.isEmpty(title)) {
       bundle.putString(EXTRA_TITLE, title);
     }
@@ -107,7 +107,7 @@ public class ConfirmationDialogFragment extends DialogFragment {
     } else if (!bundle.containsKey(EXTRA_TITLE)) {
       throw new NullPointerException(String.format(FORMAT_ARGUMENT_MISSING, EXTRA_TITLE));
     } else {
-      recipient = (Recipient) bundle.getSerializable(EXTRA_RECIPIENT);
+      recipient = bundle.getParcelable(EXTRA_RECIPIENT);
       title = bundle.getString(EXTRA_TITLE);
       message = bundle.getString(EXTRA_MESSAGE);
     }

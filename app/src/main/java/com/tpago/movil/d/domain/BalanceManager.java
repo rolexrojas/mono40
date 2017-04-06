@@ -122,19 +122,10 @@ public final class BalanceManager {
     }
   }
 
-  /**
-   * TODO
-   *
-   * @param product
-   *   TODO
-   * @param pin
-   *   TODO
-   *
-   * @return TODO
-   */
   @NonNull
   public final Observable<ApiResult<Balance>> queryBalance(
-    @NonNull final Product product, @NonNull String pin) {
+    @NonNull final Product product,
+    @NonNull final String pin) {
     return apiBridge.queryBalance(sessionManager.getSession().getAuthToken(), product, pin)
       .doOnNext(new Action1<ApiResult<Balance>>() {
         @Override

@@ -86,7 +86,7 @@ public class TransactionCreationActivity
     if (Objects.checkIfNull(intent)) {
       return null;
     } else {
-      final Recipient recipient = (Recipient) intent.getSerializableExtra(KEY_RECIPIENT);
+      final Recipient recipient =  intent.getParcelableExtra(KEY_RECIPIENT);
       final String transactionId = intent.getStringExtra(KEY_TRANSACTION_ID);
       return Pair.create(recipient, transactionId);
     }
@@ -107,7 +107,7 @@ public class TransactionCreationActivity
     if (Utils.isNull(bundle) || !bundle.containsKey(KEY_RECIPIENT)) {
       throw new NullPointerException("Argument '" + KEY_RECIPIENT + "' must be provided");
     } else {
-      final Recipient recipient = (Recipient) bundle.getSerializable(KEY_RECIPIENT);
+      final Recipient recipient = bundle.getParcelable(KEY_RECIPIENT);
       // Injects all the annotated dependencies.
       component = DaggerTransactionCreationComponent.builder()
         .appComponent(((App) getApplication()).getComponent())

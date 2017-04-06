@@ -15,12 +15,8 @@ import com.tpago.movil.d.domain.util.Event;
 import com.tpago.movil.d.domain.util.EventBus;
 import com.tpago.movil.d.domain.util.EventType;
 import com.tpago.movil.d.ui.Presenter;
-import com.tpago.movil.d.ui.misc.UiUtils;
-
-import java.util.List;
 
 import rx.Subscription;
-import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;

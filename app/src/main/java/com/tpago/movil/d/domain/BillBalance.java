@@ -1,5 +1,6 @@
 package com.tpago.movil.d.domain;
 
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
@@ -7,14 +8,13 @@ import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  * @author hecvasro
  */
 @AutoValue
-public abstract class BillBalance implements Serializable {
+public abstract class BillBalance implements Parcelable {
   public static TypeAdapter<BillBalance> typeAdapter(Gson gson) {
     return new AutoValue_BillBalance.GsonTypeAdapter(gson);
   }

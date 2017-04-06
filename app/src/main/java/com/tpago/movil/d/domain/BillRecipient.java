@@ -1,5 +1,6 @@
 package com.tpago.movil.d.domain;
 
+import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -12,11 +13,30 @@ import com.tpago.movil.text.Texts;
  * @author hecvasro
  */
 public class BillRecipient extends Recipient {
+  public static final Creator<BillRecipient> CREATOR = new Creator<BillRecipient>() {
+    @Override
+    public BillRecipient createFromParcel(Parcel source) {
+      return new BillRecipient(source);
+    }
+
+    @Override
+    public BillRecipient[] newArray(int size) {
+      return new BillRecipient[size];
+    }
+  };
+
   private final Partner partner;
   private final String contractNumber;
   private final String currency = "RD$";
 
   private BillBalance balance;
+
+  protected BillRecipient(Parcel source) {
+    super(source);
+    partner = source.readParcelable(Partner.class.getClassLoader());
+    contractNumber = source.readString();
+    balance = source.readParcelable(BillBalance.class.getClassLoader());
+  }
 
   public BillRecipient(Partner partner, String contractNumber, @Nullable String label) {
     super(RecipientType.BILL, label);
@@ -83,6 +103,19 @@ public class BillRecipient extends Recipient {
     return super.matches(query)
       || StringUtils.matches(partner.getName(), query)
       || StringUtils.matches(contractNumber, query);
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    super.writeToParcel(dest, flags);
+    dest.writeParcelable(partner, flags);
+    dest.writeString(contractNumber);
+    dest.writeParcelable(balance, flags);
   }
 
   public enum Option {

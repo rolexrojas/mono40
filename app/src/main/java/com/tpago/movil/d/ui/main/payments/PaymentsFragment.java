@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -65,8 +64,6 @@ public class PaymentsFragment
   implements PaymentsScreen,
   ListItemHolder.OnClickListener,
   OnSaveButtonClickedListener {
-  private static final String TAG_PIN = "pin";
-
   private static final int REQUEST_CODE_RECIPIENT_ADDITION = 0;
   private static final int REQUEST_CODE_TRANSACTION_CREATION = 1;
   private static final int REQUEST_CODE_NON_AFFILIATED_RECIPIENT_ADDITION = 2;
@@ -415,25 +412,17 @@ public class PaymentsFragment
     final View rootView = ButterKnife.findById(getActivity(), android.R.id.content);
     final int x = Math.round((rootView.getRight() - rootView.getLeft()) / 2);
     final int y = Math.round((rootView.getBottom() - rootView.getTop()) / 2);
-    PinConfirmationDialogFragment.newInstance(
-      x,
-      y,
-      "Eliminar destinatarios",
+    PinConfirmationDialogFragment.show(
+      getChildFragmentManager(),
+      getString(R.string.remove_recipients),
       new PinConfirmationDialogFragment.Callback() {
         @Override
         public void confirm(@NonNull String pin) {
           presenter.onPinRequestFinished(pin);
         }
-      })
-      .show(getChildFragmentManager(), TAG_PIN);
-  }
-
-  @Override
-  public void dismissPinConfirmator() {
-    final Fragment f = getChildFragmentManager().findFragmentByTag(TAG_PIN);
-    if (Objects.checkIfNotNull(f)) {
-      ((PinConfirmationDialogFragment) f).resolve(true);
-    }
+      },
+      x,
+      y);
   }
 
   @Override
@@ -443,6 +432,11 @@ public class PaymentsFragment
       .setMessage(R.string.error_generic)
       .setPositiveButton(R.string.error_positive_button_text, null)
       .show();
+  }
+
+  @Override
+  public void setDeletingResult(boolean result) {
+    PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), result);
   }
 
 

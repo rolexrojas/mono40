@@ -193,6 +193,8 @@
   <string name="register_form_password_button_move_to_next_screen">@string/next</string>
   <string name="register_form_password_error_message">La contraseña no cumple con los requisitos mínimos. Mínimo 8 caracteres, Alfanuméricos, no puede ser igual al correo electrónico.</string>
   <string name="register_form_password_error_positive_button_text">@string/ok</string>
+  <string name="remove_recipients">Eliminar destinatarios</string>
+  <string name="activate_payment_methods">Activar cuentas y tarjetas de crédito para compras</string>
   <string name="register_form_password_error_title">Contraseña incorrecta</string>
   <string name="register_form_password_input_hint">@string/password</string>
   <string name="register_form_password_input_hint_confirmation">Confirmar contraseña</string>

@@ -6,13 +6,11 @@ import android.os.Parcelable;
 import com.google.auto.value.AutoValue;
 import com.tpago.movil.util.Preconditions;
 
-import java.io.Serializable;
-
 /**
  * @author hecvasro
  */
 @AutoValue
-public abstract class LogoUriMap implements LogoUriProvider, Parcelable, Serializable {
+public abstract class LogoUriMap implements LogoUriProvider, Parcelable {
   public static Builder builder(){
     return new AutoValue_LogoUriMap.Builder();
   }

@@ -1,5 +1,7 @@
 package com.tpago.movil.d.domain;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.tpago.Banks;
@@ -7,7 +9,6 @@ import com.tpago.movil.domain.Bank;
 import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.text.Texts;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Comparator;
 
@@ -17,7 +18,47 @@ import java.util.Comparator;
  * @author hecvasro
  */
 @Deprecated
-public class Product implements Serializable {
+public class Product implements Parcelable {
+  protected Product(Parcel in) {
+    type = ProductType.valueOf(in.readString());
+    alias = in.readString();
+    number = in.readString();
+    bank = in.readParcelable(Bank.class.getClassLoader());
+    currency = in.readString();
+    paymentOption = in.readByte() != 0;
+    isDefault = in.readByte() != 0;
+    imageUriTemplate = in.readString();
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(type.name());
+    dest.writeString(alias);
+    dest.writeString(number);
+    dest.writeParcelable(bank, flags);
+    dest.writeString(currency);
+    dest.writeByte((byte) (paymentOption ? 1 : 0));
+    dest.writeByte((byte) (isDefault ? 1 : 0));
+    dest.writeString(imageUriTemplate);
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  public static final Creator<Product> CREATOR = new Creator<Product>() {
+    @Override
+    public Product createFromParcel(Parcel in) {
+      return new Product(in);
+    }
+
+    @Override
+    public Product[] newArray(int size) {
+      return new Product[size];
+    }
+  };
+
   public static boolean checkIfCreditCard(Product product) {
     return product.getType().equals(ProductType.CC) || product.getType().equals(ProductType.AMEX);
   }

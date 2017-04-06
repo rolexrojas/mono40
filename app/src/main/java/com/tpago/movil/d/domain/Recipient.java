@@ -1,17 +1,14 @@
 package com.tpago.movil.d.domain;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.domain.util.StringUtils;
 
-import java.io.Serializable;
 import java.util.Comparator;
-import java.util.List;
-
-import rx.Observable;
-import rx.functions.Func2;
 
 /**
  * Abstract recipient representation.
@@ -19,7 +16,7 @@ import rx.functions.Func2;
  * @author hecvasro
  */
 @Deprecated
-public abstract class Recipient implements Serializable, Matchable {
+public abstract class Recipient implements Parcelable, Matchable {
   @Deprecated public static Comparator<Recipient> comparator() {
     return new Comparator<Recipient>() {
       @Override
@@ -44,6 +41,11 @@ public abstract class Recipient implements Serializable, Matchable {
   private String label;
 
   private boolean selected = false;
+
+  protected Recipient(Parcel source) {
+    type = RecipientType.valueOf(source.readString());
+    label = source.readString();
+  }
 
   /**
    * Constructs a new recipient.
@@ -134,5 +136,16 @@ public abstract class Recipient implements Serializable, Matchable {
   @Override
   public boolean matches(@Nullable String query) {
     return Utils.isNotNull(label) && StringUtils.matches(label, query);
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(type.name());
+    dest.writeString(label);
   }
 }

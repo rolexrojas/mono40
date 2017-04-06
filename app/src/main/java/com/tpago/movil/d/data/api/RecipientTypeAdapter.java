@@ -26,6 +26,7 @@ import java.lang.reflect.Type;
 /**
  * @author hecvasro
  */
+@Deprecated
 class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSerializer<Recipient> {
   private static final String PROPERTY_TYPE = "type";
   private static final String PROPERTY_LABEL = "label";
@@ -109,21 +110,21 @@ class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSerialize
       final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) src;
       jsonObject.addProperty(PROPERTY_PHONE_NUMBER, r.getPhoneNumber());
       if (Objects.checkIfNotNull(r.getBank())) {
-        jsonObject.add(PROPERTY_BANK, context.serialize(r.getBank()));
+        jsonObject.add(PROPERTY_BANK, context.serialize(r.getBank(), Bank.class));
       }
       if (Texts.checkIfNotEmpty(r.getAccountNumber())) {
         jsonObject.addProperty(PROPERTY_ACCOUNT_NUMBER, r.getAccountNumber());
       }
       if (Objects.checkIfNotNull(r.getProduct())) {
-        jsonObject.add(PROPERTY_PRODUCT, context.serialize(r.getProduct()));
+        jsonObject.add(PROPERTY_PRODUCT, context.serialize(r.getProduct(), Product.class));
       }
     } else if (type.equals(RecipientType.BILL)) {
       final BillRecipient r = (BillRecipient) src;
-      jsonObject.add(PROPERTY_PARTNER, context.serialize(r.getPartner()));
+      jsonObject.add(PROPERTY_PARTNER, context.serialize(r.getPartner(), Partner.class));
       jsonObject.addProperty(PROPERTY_CONTRACT_NUMBER, r.getContractNumber());
       final BillBalance b = r.getBalance();
       if (Objects.checkIfNotNull(b)) {
-        jsonObject.add(PROPERTY_BALANCE, context.serialize(b));
+        jsonObject.add(PROPERTY_BALANCE, context.serialize(b, BillBalance.class));
       }
     }
     return jsonObject;

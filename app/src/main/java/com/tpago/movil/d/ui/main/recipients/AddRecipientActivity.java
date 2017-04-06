@@ -73,7 +73,7 @@ public class AddRecipientActivity
     if (Objects.checkIfNull(intent)) {
       return null;
     } else {
-      return (Recipient) intent.getSerializableExtra(EXTRA_RECIPIENT);
+      return (Recipient) intent.getParcelableExtra(EXTRA_RECIPIENT);
     }
   }
 

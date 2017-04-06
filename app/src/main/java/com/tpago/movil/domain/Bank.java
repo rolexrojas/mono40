@@ -6,13 +6,11 @@ import android.support.annotation.NonNull;
 
 import com.google.auto.value.AutoValue;
 
-import java.io.Serializable;
-
 /**
  * @author hecvasro
  */
 @AutoValue
-public abstract class Bank implements LogoUriProvider, Parcelable, Comparable<Bank>, Serializable {
+public abstract class Bank implements LogoUriProvider, Parcelable, Comparable<Bank> {
   public static Builder builder() {
     return new AutoValue_Bank.Builder();
   }

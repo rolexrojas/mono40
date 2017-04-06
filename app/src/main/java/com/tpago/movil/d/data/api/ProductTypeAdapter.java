@@ -13,6 +13,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.tpago.movil.text.Texts;
+import com.tpago.movil.util.Objects;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -51,7 +52,7 @@ class ProductTypeAdapter implements JsonDeserializer<Product>, JsonSerializer<Pr
     } else {
       JsonElement je;
       je = jsonObject.get(PROPERTY_QUERY_FEE);
-      final BigDecimal queryFee = je.isJsonNull() ? BigDecimal.ZERO : BigDecimal.valueOf(je.getAsDouble());
+      final BigDecimal queryFee = Objects.checkIfNull(je) || je.isJsonNull() ? BigDecimal.ZERO : BigDecimal.valueOf(je.getAsDouble());
       je = jsonObject.get(PROPERTY_PAYMENT_OPTION);
       final boolean paymentOption = !json.isJsonNull() && je.getAsBoolean();
       je = jsonObject.get(PROPERTY_IS_DEFAULT);

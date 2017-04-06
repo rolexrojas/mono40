@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,26 +48,17 @@ import timber.log.Timber;
 public class ProductsFragment extends ChildFragment<MainContainer>
   implements ProductsScreen,
   ProductListItemHolder.OnQueryActionButtonClickedListener,
-  ShowRecentTransactionsListItemHolder.OnShowRecentTransactionsButtonClickedListener,
-  PinConfirmationDialogFragment.OnDismissListener {
-  private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
-
+  ShowRecentTransactionsListItemHolder.OnShowRecentTransactionsButtonClickedListener {
   private Unbinder unbinder;
   private ListItemAdapter adapter;
   private LoadIndicator loadIndicator;
-  private String requestMessage = null;
 
-  @Inject
-  StringHelper stringHelper;
-  @Inject
-  ProductsPresenter presenter;
+  @Inject StringHelper stringHelper;
+  @Inject ProductsPresenter presenter;
 
-  @BindView(R.id.swipe_refresh_layout)
-  SwipeRefreshLayout swipeRefreshLayout;
-  @BindView(R.id.recycler_view)
-  RecyclerView recyclerView;
-  @BindView(R.id.button_add_another_account)
-  Button addAnotherAccountButton;
+  @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
+  @BindView(R.id.recycler_view) RecyclerView recyclerView;
+  @BindView(R.id.button_add_another_account) Button addAnotherAccountButton;
 
   @NonNull
   public static ProductsFragment newInstance() {
@@ -77,19 +66,17 @@ public class ProductsFragment extends ChildFragment<MainContainer>
   }
 
   private void queryBalance(@NonNull final Product product, final int x, final int y) {
-    final FragmentManager manager = getChildFragmentManager();
-    final Fragment fragment = manager.findFragmentByTag(TAG_PIN_CONFIRMATION);
-    if (Utils.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
-      ((PinConfirmationDialogFragment) fragment).dismiss();
-    }
-    PinConfirmationDialogFragment.newInstance(x, y,
+    PinConfirmationDialogFragment.show(
+      getChildFragmentManager(),
       stringHelper.feeForTransaction(product.getCurrency(), product.getQueryFee()),
       new PinConfirmationDialogFragment.Callback() {
         @Override
-        public void confirm(@NonNull String pin) {
+        public void confirm(String pin) {
           presenter.queryBalance(product, pin);
         }
-      }).show(manager, TAG_PIN_CONFIRMATION);
+      },
+      x,
+      y);
   }
 
   @OnClick(R.id.button_add_another_account)
@@ -227,11 +214,16 @@ public class ProductsFragment extends ChildFragment<MainContainer>
     @NonNull Product product,
     @Nullable Balance balance,
     @Nullable String message) {
-    final Fragment fragment = getChildFragmentManager().findFragmentByTag(TAG_PIN_CONFIRMATION);
-    if (Utils.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
-      ((PinConfirmationDialogFragment) fragment).resolve(succeeded);
-    }
+    PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), succeeded);
     setBalance(product, balance);
+    if (!succeeded) {
+      message = Texts.checkIfEmpty(message) ? getString(R.string.error_generic) : message;
+      Dialogs.builder(getContext())
+        .setTitle(R.string.error_title)
+        .setMessage(message)
+        .setPositiveButton(R.string.error_positive_button_text, null)
+        .show();
+    }
   }
 
   @Override
@@ -261,18 +253,5 @@ public class ProductsFragment extends ChildFragment<MainContainer>
   @Override
   public void onShowRecentTransactionsButtonClicked() {
     Dialogs.featureNotAvailable(getActivity()).show();
-  }
-
-  @Override
-  public void onDismiss(boolean succeeded) {
-    if (!succeeded) {
-      final String m = Texts.checkIfEmpty(requestMessage) ? getString(R.string.error_generic) : requestMessage;
-      Dialogs.builder(getContext())
-        .setTitle(R.string.error_title)
-        .setMessage(m)
-        .setPositiveButton(R.string.error_positive_button_text, null)
-        .show();
-      requestMessage = null;
-    }
   }
 }

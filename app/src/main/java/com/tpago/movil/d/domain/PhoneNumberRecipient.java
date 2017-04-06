@@ -1,5 +1,6 @@
 package com.tpago.movil.d.domain;
 
+import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -12,7 +13,24 @@ import com.tpago.movil.text.Texts;
  * @author hecvasro
  */
 public class PhoneNumberRecipient extends Recipient {
+  public static final Creator<PhoneNumberRecipient> CREATOR = new Creator<PhoneNumberRecipient>() {
+    @Override
+    public PhoneNumberRecipient createFromParcel(Parcel source) {
+      return new PhoneNumberRecipient(source);
+    }
+
+    @Override
+    public PhoneNumberRecipient[] newArray(int size) {
+      return new PhoneNumberRecipient[size];
+    }
+  };
+
   private final String phoneNumber;
+
+  protected PhoneNumberRecipient(Parcel source) {
+    super(source);
+    phoneNumber = source.readString();
+  }
 
   /**
    * Constructs a new phone number recipient.
@@ -58,5 +76,11 @@ public class PhoneNumberRecipient extends Recipient {
   @Override
   public boolean matches(@Nullable String query) {
     return super.matches(query) || StringUtils.matches(phoneNumber, query);
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    super.writeToParcel(dest, flags);
+    dest.writeString(phoneNumber);
   }
 }

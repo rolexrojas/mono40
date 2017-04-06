@@ -1,7 +1,6 @@
 package com.tpago.movil.d.ui.main.transactions.contacts;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 import android.view.KeyEvent;
@@ -56,10 +55,7 @@ import timber.log.Timber;
 /**
  * @author hecvasro
  */
-public class NonAffiliatedPhoneNumberTransactionCreation2Fragment
-  extends ChildFragment<TransactionCreationContainer> {
-  private static final String KEY_PIN = "pinConfirmation";
-
+public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends ChildFragment<TransactionCreationContainer> {
   private Unbinder unbinder;
 
   private LoadIndicator loadIndicator;
@@ -160,9 +156,8 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment
               ((NonAffiliatedPhoneNumberRecipient) recipient).setAccountNumber(content);
               final int x = Math.round((button.getRight() - button.getLeft()) / 2);
               final int y = Math.round((button.getBottom() - button.getTop()) / 2);
-              PinConfirmationDialogFragment.newInstance(
-                x,
-                y,
+              PinConfirmationDialogFragment.show(
+                getChildFragmentManager(),
                 String.format(
                   "Transferir %1$s a %2$s mas %3$s",
                   Formatter.amount(fundingAccount.get().getCurrency(), value.get()),
@@ -170,11 +165,12 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment
                   Formatter.amount(data.second.getCurrency(), data.second.getQueryFee())),
                 new PinConfirmationDialogFragment.Callback() {
                   @Override
-                  public void confirm(@NonNull String pin) {
+                  public void confirm(String pin) {
                     transferTo(pin);
                   }
-                })
-                .show(getChildFragmentManager(), KEY_PIN);
+                },
+                x,
+                y);
             } else {
               Dialogs.builder(getContext())
                 .setTitle(R.string.error_title)

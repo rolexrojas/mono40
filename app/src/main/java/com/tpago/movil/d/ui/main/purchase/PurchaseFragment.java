@@ -6,8 +6,6 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,7 +34,6 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import timber.log.Timber;
 
 /**
  * @author hecvasro
@@ -50,7 +47,6 @@ public class PurchaseFragment
   SelectedItemDecoration.Provider,
   PurchasePaymentDialogFragment.OnDismissedListener {
   private static final String TAG_PAYMENT_SCREEN = "paymentScreen";
-  private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
 
   private static final String KEY_ACTIVATE_AUTOMATICALLY = "activeAutomatically";
 
@@ -213,32 +209,27 @@ public class PurchaseFragment
 
   @Override
   public void requestPin() {
-    Timber.d("requestPin()");
-    final FragmentManager manager = getChildFragmentManager();
-    final Fragment fragment = manager.findFragmentByTag(TAG_PIN_CONFIRMATION);
-    if (Utils.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
-      ((PinConfirmationDialogFragment) fragment).dismiss();
-    }
     final Display display = getActivity().getWindowManager().getDefaultDisplay();
     final Point size = new Point();
     display.getSize(size);
-    PinConfirmationDialogFragment.newInstance((size.x / 2), (size.y / 2),
-      "Activar cuenta para comprar", new PinConfirmationDialogFragment.Callback() {
+    final int originX = size.x / 2;
+    final int originY = size.y / 2;
+    PinConfirmationDialogFragment.show(
+      getChildFragmentManager(),
+      getString(R.string.activate_payment_methods),
+      new PinConfirmationDialogFragment.Callback() {
         @Override
-        public void confirm(@NonNull String pin) {
+        public void confirm(String pin) {
           presenter.activateCards(pin);
         }
-      })
-      .show(manager, TAG_PIN_CONFIRMATION);
+      },
+      originX,
+      originY);
   }
 
   @Override
   public void onActivationFinished(boolean succeeded) {
-    Timber.d("onActivationFinished(%1$s)", succeeded);
-    final Fragment fragment = getChildFragmentManager().findFragmentByTag(TAG_PIN_CONFIRMATION);
-    if (Utils.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
-      ((PinConfirmationDialogFragment) fragment).resolve(succeeded);
-    }
+    PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), succeeded);
   }
 
   @Override

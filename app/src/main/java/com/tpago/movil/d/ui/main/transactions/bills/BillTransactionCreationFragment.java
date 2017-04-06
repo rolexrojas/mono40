@@ -2,7 +2,6 @@ package com.tpago.movil.d.ui.main.transactions.bills;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,6 @@ import com.tpago.movil.d.ui.main.transactions.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transactions.TransactionCreationContainer;
 import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
 import com.tpago.movil.text.Texts;
-import com.tpago.movil.util.Objects;
 import com.tpago.movil.main.transactions.PaymentMethodChooser;
 
 import java.util.List;
@@ -37,19 +35,13 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 
-public class BillTransactionCreationFragment
-  extends ChildFragment<TransactionCreationContainer>
-  implements BillTransactionCreationPresenter.View,
-  PinConfirmationDialogFragment.OnDismissListener {
-  private static final String TAG_PIN_CONFIRMATION = "pinConfirmation";
-
+public class BillTransactionCreationFragment extends ChildFragment<TransactionCreationContainer> implements BillTransactionCreationPresenter.View {
   private BillTransactionCreationPresenter presenter;
 
   private Unbinder unbinder;
 
-  private String resultMessage = null;
-
-  @Inject StringHelper stringHelper;
+  @Inject
+  StringHelper stringHelper;
 
   @BindView(R.id.button)
   Button button;
@@ -66,7 +58,8 @@ public class BillTransactionCreationFragment
   @BindView(R.id.radio_button_pay_minimum)
   RadioButton minimumRadioButton;
 
-  @BindView(R.id.payment_method_chooser) PaymentMethodChooser paymentMethodChooser;
+  @BindView(R.id.payment_method_chooser)
+  PaymentMethodChooser paymentMethodChooser;
 
   public static BillTransactionCreationFragment create() {
     return new BillTransactionCreationFragment();
@@ -186,36 +179,26 @@ public class BillTransactionCreationFragment
   public void requestPin(String partnerName, String value) {
     final int x = Math.round((button.getRight() - button.getLeft()) / 2);
     final int y = Math.round(button.getY() + ((button.getBottom() - button.getTop()) / 2));
-    PinConfirmationDialogFragment.newInstance(
-      x,
-      y,
+    PinConfirmationDialogFragment.show(
+      getChildFragmentManager(),
       getString(R.string.transaction_creation_bill_confirmation, value, partnerName),
       new PinConfirmationDialogFragment.Callback() {
         @Override
         public void confirm(String pin) {
           presenter.onPinRequestFinished(paymentMethodChooser.getSelectedItem(), pin);
         }
-      })
-      .show(getChildFragmentManager(), TAG_PIN_CONFIRMATION);
+      },
+      x,
+      y);
   }
 
   @Override
   public void setPaymentResult(boolean succeeded, String message) {
-    resultMessage = message;
-    final Fragment f = getChildFragmentManager().findFragmentByTag(TAG_PIN_CONFIRMATION);
-    if (Objects.checkIfNotNull(f)) {
-      ((PinConfirmationDialogFragment) f).resolve(succeeded);
-    }
-  }
-
-  @Override
-  public void onDismiss(boolean succeeded) {
+    PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), succeeded);
     if (succeeded) {
-      getContainer().finish(true, resultMessage);
+      getContainer().finish(true, message);
     } else {
-      final String message = Texts.checkIfEmpty(resultMessage)
-        ? getString(R.string.error_generic)
-        : resultMessage;
+      message = Texts.checkIfEmpty(message) ? getString(R.string.error_generic) : message;
       Dialogs.builder(getContext())
         .setTitle(R.string.error_title)
         .setMessage(message)

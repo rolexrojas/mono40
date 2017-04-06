@@ -16,6 +16,7 @@ import com.tpago.movil.R;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.RecipientType;
 import com.tpago.movil.d.ui.Dialogs;
+import com.tpago.movil.text.Texts;
 import com.tpago.movil.util.Objects;
 import com.tpago.movil.util.Preconditions;
 
@@ -33,7 +34,7 @@ public final class RecipientAdditionDialogFragment extends DialogFragment {
 
   public static RecipientAdditionDialogFragment create(Recipient recipient) {
     final Bundle args = new Bundle();
-    args.putSerializable(KEY_RECIPIENT, Preconditions.assertNotNull(recipient, "recipient == null"));
+    args.putParcelable(KEY_RECIPIENT, Preconditions.assertNotNull(recipient, "recipient == null"));
     final RecipientAdditionDialogFragment fragment = new RecipientAdditionDialogFragment();
     fragment.setArguments(args);
     return fragment;
@@ -52,7 +53,7 @@ public final class RecipientAdditionDialogFragment extends DialogFragment {
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final Bundle bundle = Preconditions.assertNotNull(getArguments(), "getArguments() == null");
-    recipient = (Recipient) bundle.getSerializable(KEY_RECIPIENT);
+    recipient = bundle.getParcelable(KEY_RECIPIENT);
   }
 
   @NonNull
@@ -66,7 +67,10 @@ public final class RecipientAdditionDialogFragment extends DialogFragment {
         public void onClick(DialogInterface dialog, int which) {
           if (Objects.checkIfNotNull(listener)) {
             final EditText editText = ButterKnife.findById(getDialog(), R.id.edit_text);
-            listener.onSaveButtonClicked(recipient, editText.getText().toString().trim());
+            final String label = editText.getText().toString().trim();
+            listener.onSaveButtonClicked(
+              recipient,
+              Texts.checkIfEmpty(label) ? null : label);
           }
         }
       })

@@ -3,14 +3,13 @@ package com.tpago.movil.d.ui.main;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +26,7 @@ import com.tpago.movil.d.ui.view.widget.pad.Digit;
 import com.tpago.movil.d.ui.view.widget.pad.DepNumPad;
 import com.tpago.movil.d.ui.view.widget.PinView;
 import com.tpago.movil.util.Objects;
+import com.tpago.movil.util.Preconditions;
 import com.tpago.movil.widget.FullSizeLoadIndicator;
 import com.tpago.movil.widget.LoadIndicator;
 
@@ -37,7 +37,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.codetail.animation.ViewAnimationUtils;
-import timber.log.Timber;
 
 /**
  * @author hecvasro
@@ -49,22 +48,50 @@ public class PinConfirmationDialogFragment
   PinView.Listener,
   DepNumPad.OnDigitClickedListener,
   DepNumPad.OnDeleteClickedListener {
-  private static final String KEY_CENTER_X = "centerX";
-  private static final String KEY_CENTER_Y = "centerY";
+  private static final String TAG = PinConfirmationDialogFragment.class.getSimpleName();
+
   private static final String KEY_ACTION_DESCRIPTION = "actionDescription";
+  private static final String KEY_ORIGIN_X = "originX";
+  private static final String KEY_ORIGIN_Y = "originY";
+
+  public static void show(
+    FragmentManager fragmentManager,
+    String actionDescription,
+    Callback callback,
+    int originX,
+    int originY) {
+    Preconditions.assertNotNull(fragmentManager, "fragmentManager == null");
+    Preconditions.assertNotNull(callback, "callback == null");
+    final Bundle argumentBundle = new Bundle();
+    argumentBundle.putString(KEY_ACTION_DESCRIPTION, actionDescription);
+    argumentBundle.putInt(KEY_ORIGIN_X, originX);
+    argumentBundle.putInt(KEY_ORIGIN_Y, originY);
+    final PinConfirmationDialogFragment fragment = new PinConfirmationDialogFragment();
+    fragment.callback = callback;
+    fragment.setArguments(argumentBundle);
+    fragment.show(fragmentManager, TAG);
+  }
+
+  public static void dismiss(FragmentManager fragmentManager, boolean succedded) {
+    Preconditions.assertNotNull(fragmentManager, "fragmentManager == null");
+    final Fragment fragment = fragmentManager.findFragmentByTag(TAG);
+    if (Objects.checkIfNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
+      final PinConfirmationDialogFragment dialogFragment = (PinConfirmationDialogFragment) fragment;
+      dialogFragment.loadIndicator.stop();
+      if (succedded) {
+        dialogFragment.finish();
+      }
+    }
+  }
 
   private Unbinder unbinder;
 
-  private int centerX;
-  private int centerY;
+  private int originX;
+  private int originY;
 
   private String actionDescription;
 
   private Callback callback;
-
-  private boolean succeeded = false;
-  private OnDismissListener onDismissListener;
-
   private LoadIndicator loadIndicator;
 
   @BindInt(android.R.integer.config_shortAnimTime)
@@ -83,25 +110,13 @@ public class PinConfirmationDialogFragment
   @BindView(R.id.num_pad)
   DepNumPad numPad;
 
-  public static PinConfirmationDialogFragment newInstance(int centerX, int centerY,
-    @NonNull String actionDescription, @NonNull Callback callback) {
-    final Bundle bundle = new Bundle();
-    bundle.putInt(KEY_CENTER_X, centerX);
-    bundle.putInt(KEY_CENTER_Y, centerY);
-    bundle.putString(KEY_ACTION_DESCRIPTION, actionDescription);
-    final PinConfirmationDialogFragment fragment = new PinConfirmationDialogFragment();
-    fragment.callback = callback;
-    fragment.setArguments(bundle);
-    return fragment;
-  }
-
   private void finish() {
     if (Utils.isNotNull(containerFrameLayout)) {
       // Prepares the background animator.
       final int radius = (int) Math.hypot(containerFrameLayout.getWidth(),
         containerLinearLayout.getHeight());
       final Animator animator = ViewAnimationUtils
-        .createCircularReveal(containerFrameLayout, centerX, centerY, radius, 0)
+        .createCircularReveal(containerFrameLayout, originX, originY, radius, 0)
         .setDuration(exitDuration);
       animator.addListener(new BaseAnimatorListener() {
         @Override
@@ -119,40 +134,20 @@ public class PinConfirmationDialogFragment
     return R.style.Dep_FullScreenDialogTheme;
   }
 
-  public final void resolve(boolean succeeded) {
-    loadIndicator.stop();
-    this.succeeded = succeeded;
-    this.finish();
-  }
-
-  @Override
-  public void onAttach(Context context) {
-    super.onAttach(context);
-    final Fragment fragment = getParentFragment();
-    if (Utils.isNotNull(fragment) && fragment instanceof OnDismissListener) {
-      onDismissListener = (OnDismissListener) fragment;
-    } else {
-      final Activity activity = getActivity();
-      if (activity instanceof OnDismissListener) {
-        onDismissListener = (OnDismissListener) activity;
-      }
-    }
-  }
-
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final Bundle bundle = Utils.isNotNull(savedInstanceState) ? savedInstanceState : getArguments();
     if (Utils.isNotNull(bundle)) {
-      if (!bundle.containsKey(KEY_CENTER_X)) {
+      if (!bundle.containsKey(KEY_ORIGIN_X)) {
         throw new NullPointerException("Center X must be specified as an argument");
-      } else if (!bundle.containsKey(KEY_CENTER_Y)) {
+      } else if (!bundle.containsKey(KEY_ORIGIN_Y)) {
         throw new NullPointerException("Center Y must be specified as an argument");
       } else if (!bundle.containsKey(KEY_ACTION_DESCRIPTION)) {
         throw new NullPointerException("Action description must be specified as an argument");
       } else {
-        centerX = bundle.getInt(KEY_CENTER_X);
-        centerY = bundle.getInt(KEY_CENTER_Y);
+        originX = bundle.getInt(KEY_ORIGIN_X);
+        originY = bundle.getInt(KEY_ORIGIN_Y);
         actionDescription = bundle.getString(KEY_ACTION_DESCRIPTION);
       }
     } else {
@@ -195,14 +190,6 @@ public class PinConfirmationDialogFragment
   }
 
   @Override
-  public void onDismiss(DialogInterface dialog) {
-    super.onDismiss(dialog);
-    if (Utils.isNotNull(onDismissListener)) {
-      onDismissListener.onDismiss(this.succeeded);
-    }
-  }
-
-  @Override
   public void onDestroyView() {
     super.onDestroyView();
     // Removes the listener that gets notified every time a button of the num pad is clicked.
@@ -219,12 +206,6 @@ public class PinConfirmationDialogFragment
     super.onDestroy();
     // Detaches the callback from the fragment.
     callback = null;
-  }
-
-  @Override
-  public void onDetach() {
-    super.onDetach();
-    onDismissListener = null;
   }
 
   @Override
@@ -245,7 +226,7 @@ public class PinConfirmationDialogFragment
     final int radius = (int) Math.hypot(containerFrameLayout.getWidth(),
       containerLinearLayout.getHeight());
     final Animator backgroundAnimator = ViewAnimationUtils
-      .createCircularReveal(containerFrameLayout, centerX, centerY, 0, radius)
+      .createCircularReveal(containerFrameLayout, originX, originY, 0, radius)
       .setDuration(enterDuration);
     // Prepares the combined animator.
     final AnimatorSet animator = new AnimatorSet();
@@ -266,7 +247,6 @@ public class PinConfirmationDialogFragment
 
   @Override
   public void onConfirmationStarted(@NonNull String pin) {
-    Timber.d("onConfirmationStarted(%1$s)", pin);
     if (Objects.checkIfNull(loadIndicator)) {
       loadIndicator = new FullSizeLoadIndicator(getChildFragmentManager());
     }
@@ -275,10 +255,6 @@ public class PinConfirmationDialogFragment
   }
 
   public interface Callback extends Serializable {
-    void confirm(@NonNull String pin);
-  }
-
-  public interface OnDismissListener {
-    void onDismiss(boolean succeeded);
+    void confirm(String pin);
   }
 }

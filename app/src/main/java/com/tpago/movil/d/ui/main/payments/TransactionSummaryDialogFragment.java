@@ -42,7 +42,7 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
     boolean alreadyExists,
     String transactionId) {
     final Bundle args = new Bundle();
-    args.putSerializable(KEY_RECIPIENT, Preconditions.assertNotNull(recipient, "recipient == null"));
+    args.putParcelable(KEY_RECIPIENT, Preconditions.assertNotNull(recipient, "recipient == null"));
     args.putSerializable(KEY_ALREADY_EXISTS, alreadyExists);
     args.putSerializable(KEY_TRANSACTION_ID, transactionId);
     final TransactionSummaryDialogFragment fragment = new TransactionSummaryDialogFragment();
@@ -63,7 +63,7 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final Bundle bundle = Preconditions.assertNotNull(getArguments(), "getArguments() == null");
-    recipient = (Recipient) bundle.getSerializable(KEY_RECIPIENT);
+    recipient = bundle.getParcelable(KEY_RECIPIENT);
     alreadyExists = bundle.getBoolean(KEY_ALREADY_EXISTS);
     transactionId = bundle.getString(KEY_TRANSACTION_ID);
   }

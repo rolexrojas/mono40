@@ -2,10 +2,8 @@ package com.tpago.movil.d.ui.main.recipients;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +21,6 @@ import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.text.Texts;
-import com.tpago.movil.util.Objects;
 import com.tpago.movil.util.Preconditions;
 import com.tpago.movil.widget.TextInput;
 
@@ -43,11 +40,7 @@ import timber.log.Timber;
 /**
  * @author hecvasro
  */
-public class RecipientBuilderFragment
-  extends Fragment
-  implements PinConfirmationDialogFragment.OnDismissListener {
-  private static final String KEY_PIN_CONFIRMATION = "pinConfirmation";
-
+public class RecipientBuilderFragment extends Fragment {
   private static final String KEY_KEYWORD = "keyword";
   private static final String KEY_PARTNER = "partner";
 
@@ -59,15 +52,15 @@ public class RecipientBuilderFragment
 
   private Subscription subscription = Subscriptions.unsubscribed();
 
-  private RecipientBuilder.Result result = null;
-
-  @Inject SessionManager sessionManager;
-  @Inject DepApiBridge apiBridge;
+  @Inject
+  SessionManager sessionManager;
+  @Inject
+  DepApiBridge apiBridge;
 
   public static RecipientBuilderFragment create(String keyword, Partner partner) {
     final Bundle bundle = new Bundle();
     bundle.putString(KEY_KEYWORD, keyword);
-    bundle.putSerializable(KEY_PARTNER, partner);
+    bundle.putParcelable(KEY_PARTNER, partner);
     final RecipientBuilderFragment fragment = new RecipientBuilderFragment();
     fragment.setArguments(bundle);
     return fragment;
@@ -83,11 +76,20 @@ public class RecipientBuilderFragment
   Button button;
 
   private void resolve(RecipientBuilder.Result result) {
-    this.result = result;
-    final FragmentManager fm = getChildFragmentManager();
-    final Fragment f = fm.findFragmentByTag(KEY_PIN_CONFIRMATION);
-    if (Objects.checkIfNotNull(f)) {
-      ((PinConfirmationDialogFragment) f).resolve(this.result.isSuccessful());
+    PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), result.isSuccessful());
+    if (result.isSuccessful()) {
+      final Activity activity = getActivity();
+      activity.setResult(
+        Activity.RESULT_OK,
+        AddRecipientActivity.serializeResult(result.getData()));
+      activity.finish();
+    } else {
+      Dialogs.builder(getContext())
+        .setTitle(R.string.error_title)
+        .setMessage(result.getError())
+        .setPositiveButton(R.string.error_positive_button_text, null)
+        .create()
+        .show();
     }
   }
 
@@ -105,20 +107,12 @@ public class RecipientBuilderFragment
     } else {
       final int x = Math.round((button.getRight() - button.getLeft()) / 2);
       final int y = Math.round((button.getBottom() - button.getTop()) / 2);
-      Timber.d(
-        "{left:%1%d,top:%2$d,right:%3$d,bottom:%4$d",
-        button.getLeft(),
-        button.getTop(),
-        button.getRight(),
-        button.getBottom());
-      Timber.d("{x:%1$d,y:%2$d}", x, y);
-      PinConfirmationDialogFragment.newInstance(
-        x,
-        y,
+      PinConfirmationDialogFragment.show(
+        getChildFragmentManager(),
         getString(R.string.recipient_addition_confirmation, content, builder.getTitle()),
         new PinConfirmationDialogFragment.Callback() {
           @Override
-          public void confirm(@NonNull String pin) {
+          public void confirm(String pin) {
             subscription = builder.build(content, pin)
               .subscribeOn(Schedulers.io())
               .observeOn(AndroidSchedulers.mainThread())
@@ -135,11 +129,12 @@ public class RecipientBuilderFragment
                 }
               });
           }
-        })
-        .show(getChildFragmentManager(), KEY_PIN_CONFIRMATION);
+        },
+        x,
+        y
+      );
     }
   }
-
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -147,7 +142,7 @@ public class RecipientBuilderFragment
     ((AddRecipientActivity) getActivity()).getComponent().inject(this);
     final Bundle bundle = Preconditions.assertNotNull(getArguments(), "getArguments() == null");
     keyword = bundle.getString(KEY_KEYWORD);
-    partner = (Partner) bundle.getSerializable(KEY_PARTNER);
+    partner = bundle.getParcelable(KEY_PARTNER);
     builder = new BillRecipientBuilder(
       sessionManager.getSession().getAuthToken(),
       apiBridge,
@@ -207,25 +202,5 @@ public class RecipientBuilderFragment
   public void onDestroyView() {
     super.onDestroyView();
     unbinder.unbind();
-  }
-
-  @Override
-  public void onDismiss(boolean succeeded) {
-    if (Objects.checkIfNotNull(result)) {
-      if (result.isSuccessful()) {
-        final Activity activity = getActivity();
-        activity.setResult(
-          Activity.RESULT_OK,
-          AddRecipientActivity.serializeResult(result.getData()));
-        activity.finish();
-      } else {
-        Dialogs.builder(getContext())
-          .setTitle(R.string.error_title)
-          .setMessage(result.getError())
-          .setPositiveButton(R.string.error_positive_button_text, null)
-          .create()
-          .show();
-      }
-    }
   }
 }
