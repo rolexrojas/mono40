@@ -158,7 +158,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   void addRecipient(@NonNull Recipient recipient) {
     assertScreen();
     recipientManager.add(recipient);
-    screen.add(recipient);
+    screen.clearQuery();
     screen.showRecipientAdditionDialog(recipient);
   }
 
@@ -181,7 +181,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
           public void call(Boolean isAffiliated) {
             screen.hideLoadIndicator();
             if (isAffiliated) {
-              screen.showRecipientAdditionDialog(new PhoneNumberRecipient(phoneNumber));
+              addRecipient(new PhoneNumberRecipient(phoneNumber));
             } else {
               screen.startNonAffiliatedPhoneNumberRecipientAddition(phoneNumber);
             }
@@ -201,7 +201,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
     assertScreen();
     recipient.setLabel(label);
     recipientManager.update(recipient);
-    screen.clearQuery();
+    screen.update(recipient);
   }
 
   void startTransfer(@NonNull final String phoneNumber) {

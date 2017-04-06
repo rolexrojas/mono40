@@ -73,11 +73,7 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
     } else {
       holder.deleteCheckbox.setVisibility(View.GONE);
       holder.deleteCheckbox.setChecked(false);
-      if (type.equals(RecipientType.NON_AFFILIATED_PHONE_NUMBER)) {
-        holder.totalOwedPrefixableTextView.setVisibility(View.GONE);
-        holder.dueDateTextView.setVisibility(View.GONE);
-        holder.proceedActionView.setVisibility(View.VISIBLE);
-      } else if (type.equals(RecipientType.BILL)) {
+      if (type.equals(RecipientType.BILL)) {
         holder.totalOwedPrefixableTextView.setVisibility(View.VISIBLE);
         holder.dueDateTextView.setVisibility(View.VISIBLE);
         holder.proceedActionView.setVisibility(View.GONE);
@@ -88,6 +84,10 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
           totalOwedCurrency = r.getCurrency();
           totalOwedValue = Formatter.amount(b.getTotal());
         }
+      } else {
+        holder.totalOwedPrefixableTextView.setVisibility(View.GONE);
+        holder.dueDateTextView.setVisibility(View.GONE);
+        holder.proceedActionView.setVisibility(View.VISIBLE);
       }
     }
     holder.dueDateTextView.setText(dueDate);

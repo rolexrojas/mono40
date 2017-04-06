@@ -136,10 +136,17 @@ public class PaymentsFragment
     final Context context = getContext();
     recipientBinder = new RecipientListItemHolderBinder();
     final BinderFactory binderFactory = new BinderFactory.Builder()
-      .addBinder(Recipient.class, RecipientListItemHolder.class, recipientBinder)
-      .addBinder(Action.class, ActionListItemHolder.class,
+      .addBinder(
+        Recipient.class,
+        RecipientListItemHolder.class,
+        recipientBinder)
+      .addBinder(
+        Action.class,
+        ActionListItemHolder.class,
         new ActionListItemHolderBinder(stringHelper))
-      .addBinder(NoResultsListItemItem.class, NoResultsListItemHolder.class,
+      .addBinder(
+        NoResultsListItemItem.class,
+        NoResultsListItemHolder.class,
         new NoResultsListItemHolderBinder(context))
       .build();
     adapter = new ListItemAdapter(holderCreatorFactory, binderFactory);
