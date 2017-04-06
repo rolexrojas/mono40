@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 
 import com.tpago.movil.BuildConfig;
+import com.tpago.movil.io.Files;
 
 import java.io.IOException;
 
@@ -11,6 +12,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -36,8 +38,9 @@ public final class NetModule {
 
   @Provides
   @Singleton
-  OkHttpClient provideOkHttpClient() {
+  OkHttpClient provideOkHttpClient(Context context) {
     final OkHttpClient.Builder builder = new OkHttpClient.Builder()
+      .cache(new Cache(Files.createInternalCacheDirectory(context), Integer.MAX_VALUE))
       .addInterceptor(new Interceptor() {
         @Override
         public Response intercept(Chain chain) throws IOException {

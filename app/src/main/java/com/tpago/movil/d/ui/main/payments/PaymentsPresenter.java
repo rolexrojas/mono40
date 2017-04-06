@@ -157,6 +157,8 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
 
   void addRecipient(@NonNull Recipient recipient) {
     assertScreen();
+    recipientManager.add(recipient);
+    screen.add(recipient);
     screen.showRecipientAdditionDialog(recipient);
   }
 

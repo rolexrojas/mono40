@@ -11,6 +11,8 @@ import com.tpago.movil.util.Preconditions;
 
 import java.io.File;
 
+import static com.tpago.movil.util.Preconditions.assertNotNull;
+
 /**
  * @author hecvasro
  */
@@ -27,7 +29,7 @@ public final class Files {
   }
 
   public static File createExternalPictureFile(Context context) throws IllegalStateException {
-    Preconditions.assertNotNull(context, "context == null");
+    assertNotNull(context, "context == null");
     final File d = context.getExternalFilesDir(NAME_DIRECTORY_PICTURES);
     if (Objects.checkIfNull(d)) {
       throw new IllegalStateException("context.getExternalFilesDir(NAME_DIRECTORY_PICTURES) == null");
@@ -38,8 +40,12 @@ public final class Files {
     return new File(d, formatName(Long.toString(System.currentTimeMillis())));
   }
 
+  public static File createInternalCacheDirectory(Context context) {
+    return assertNotNull(context, "context == null").getCacheDir();
+  }
+
   public static File createInternalPictureFile(Context context, String name) {
-    Preconditions.assertNotNull(context, "context == null");
+    assertNotNull(context, "context == null");
     final File d = new File(context.getFilesDir(), NAME_DIRECTORY_PICTURES);
     if (!d.exists()) {
       d.mkdirs();
@@ -53,9 +59,9 @@ public final class Files {
 
   public static Uri getFileUri(Context context, File file) {
     return FileProvider.getUriForFile(
-      Preconditions.assertNotNull(context, "context == null"),
+      assertNotNull(context, "context == null"),
       NAME_PROVIDER_FILE,
-      Preconditions.assertNotNull(file, "file == null"));
+      assertNotNull(file, "file == null"));
   }
 
   private Files() {
