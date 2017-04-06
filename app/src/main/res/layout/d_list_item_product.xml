@@ -31,7 +31,7 @@
       android:visibility="gone"/>
   </FrameLayout>
   <TextView
-    android:id="@+id/text_view_bank_name"
+    android:id="@+id/text_view_product_type"
     style="@style/D.Products.Label.Primary"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

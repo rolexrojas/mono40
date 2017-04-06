@@ -15,7 +15,6 @@ interface PurchasePaymentOptionHolder extends Holder {
   @NonNull ImageView getBackgroundImageView();
   @NonNull ImageView getBankLogoImageView();
   @NonNull ImageView getIssuerImageView();
-  @NonNull TextView getBankNameTextView();
   @NonNull TextView getProductNumberTextView();
   @NonNull TextView getOwnerNameTextView();
   @NonNull TextView getProductTypeTextView();

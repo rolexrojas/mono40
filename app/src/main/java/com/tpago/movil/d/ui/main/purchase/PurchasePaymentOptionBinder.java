@@ -55,7 +55,6 @@ final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePayme
     final ImageView backgroundImageView = holder.getBackgroundImageView();
     final ImageView bankLogoImageView = holder.getBankLogoImageView();
     final ImageView issuerImageView = holder.getIssuerImageView();
-    final TextView bankNameTextView = holder.getBankNameTextView();
     final TextView productTypeTextView = holder.getProductTypeTextView();
     if (shouldShowGeneric) {
       backgroundColor = Banks.getColor(bank);
@@ -66,9 +65,6 @@ final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePayme
         .load(bank.getLogoUri(LogoStyle.WHITE_36))
         .noFade()
         .into(bankLogoImageView);
-
-      bankNameTextView.setVisibility(View.VISIBLE);
-      bankNameTextView.setText(Banks.getName(bank));
 
       if (isCreditCard) {
         issuerImageView.setVisibility(View.VISIBLE);
@@ -89,7 +85,6 @@ final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePayme
         .into(backgroundImageView);
 
       bankLogoImageView.setVisibility(View.GONE);
-      bankNameTextView.setVisibility(View.GONE);
 
       issuerImageView.setVisibility(View.GONE);
 

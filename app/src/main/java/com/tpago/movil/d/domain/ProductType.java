@@ -29,14 +29,14 @@ public enum ProductType {
       case SAVCLARO:
         return R.string.savings;
       case TBD:
-        return R.string.debit;
+        return R.string.debit_card;
       case PPA:
         return R.string.prepay;
       case DDA:
         return R.string.current;
       case CC:
       case AMEX:
-        return R.string.credit;
+        return R.string.credit_card;
       default:
         return R.string.unknown;
     }

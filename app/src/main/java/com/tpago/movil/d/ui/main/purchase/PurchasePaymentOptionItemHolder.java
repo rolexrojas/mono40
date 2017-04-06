@@ -23,7 +23,6 @@ class PurchasePaymentOptionItemHolder implements PurchasePaymentOptionHolder {
   @BindView(R.id.image_view_background) ImageView backgroundImageView;
   @BindView(R.id.image_view_bank_logo) ImageView bankLogoImageView;
   @BindView(R.id.image_view_issuer) ImageView issuerImageView;
-  @BindView(R.id.text_view_bank_name) TextView bankNameTextView;
   @BindView(R.id.text_view_owner_name) TextView ownerNameTextView;
   @BindView(R.id.text_view_product_number) TextView productNumberTextView;
   @BindView(R.id.text_view_product_type) TextView productTypeTextView;
@@ -49,12 +48,6 @@ class PurchasePaymentOptionItemHolder implements PurchasePaymentOptionHolder {
   @Override
   public ImageView getIssuerImageView() {
     return issuerImageView;
-  }
-
-  @NonNull
-  @Override
-  public TextView getBankNameTextView() {
-    return bankNameTextView;
   }
 
   @NonNull

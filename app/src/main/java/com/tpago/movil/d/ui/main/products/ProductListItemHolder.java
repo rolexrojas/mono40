@@ -21,7 +21,7 @@ class ProductListItemHolder extends ListItemHolder {
   @BindView(R.id.button_query_balance) Button queryBalanceButton;
   @BindView(R.id.image_view_bank_logo) ImageView bankLogoImageView;
   @BindView(R.id.prefixable_text_view_product_balance) PrefixableTextView productBalanceTextView;
-  @BindView(R.id.text_view_bank_name) TextView bankNameTextView;
+  @BindView(R.id.text_view_product_type) TextView bankNameTextView;
   @BindView(R.id.text_view_product_identifier) TextView productIdentifierTextView;
 
   ProductListItemHolder(View rootView, OnQueryActionButtonClickedListener listener) {

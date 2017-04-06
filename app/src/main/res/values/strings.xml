@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="credit">Crédito</string>
+  <string name="credit_card">Tarjeta de crédito</string>
   <string name="current">Corriente</string>
-  <string name="debit">Débito</string>
+  <string name="debit_card">Tarjeta de débito</string>
   <string name="edit">Editar</string>
   <string name="email">Correo electrónico</string>
   <string name="error_generic">En estos momentos no podemos procesar esta solicitud. Favor intentar nuevamente.</string>

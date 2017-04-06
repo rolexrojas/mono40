@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.squareup.picasso.Picasso;
-import com.tpago.Banks;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Balance;
@@ -35,7 +34,7 @@ class ProductListItemHolderBinder implements ListItemHolderBinder<ProductItem, P
     Picasso.with(c)
       .load(b.getLogoUri(LogoStyle.GRAY_36))
       .into(holder.bankLogoImageView);
-    holder.bankNameTextView.setText(Banks.getName(b) + " " + c.getString(ProductType.findStringId(p)));
+    holder.bankNameTextView.setText(c.getString(ProductType.findStringId(p)));
     final String productIdentifier;
     if (Product.checkIfCreditCard(p)) {
       productIdentifier = stringHelper.maskedProductNumber(p);

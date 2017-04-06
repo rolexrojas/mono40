@@ -42,12 +42,6 @@ class PurchasePaymentOptionListItemHolder
 
   @NonNull
   @Override
-  public TextView getBankNameTextView() {
-    return holder.getBankNameTextView();
-  }
-
-  @NonNull
-  @Override
   public TextView getProductNumberTextView() {
     return holder.getProductNumberTextView();
   }
