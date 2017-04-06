@@ -25,11 +25,11 @@ public abstract class PhoneNumber {
   }
 
   public static boolean checkIfValid(String phoneNumber) {
-    return Texts.isNotEmpty(phoneNumber) && checkIfValid(phoneNumber, true);
+    return Texts.checkIfNotEmpty(phoneNumber) && checkIfValid(phoneNumber, true);
   }
 
   public static String format(String phoneNumber) {
-    if (Texts.isEmpty(phoneNumber)) {
+    if (Texts.checkIfEmpty(phoneNumber)) {
       return phoneNumber;
     } else {
       final StringBuilder builder = new StringBuilder();

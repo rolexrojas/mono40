@@ -71,7 +71,7 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
   @OnClick(R.id.button)
   void onButtonClicked() {
     final String content = textInput.getText().toString().trim();
-    if (Texts.isEmpty(content)) {
+    if (Texts.checkIfEmpty(content)) {
       Dialogs.builder(getContext())
         .setTitle("Número de cuenta incorrecto")
         .setMessage("El número de cuenta es requerido para la adición del destinatario.")

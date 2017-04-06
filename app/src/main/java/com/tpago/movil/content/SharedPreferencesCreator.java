@@ -17,8 +17,8 @@ public final class SharedPreferencesCreator {
   }
 
   public final SharedPreferences create(String fileName) {
-    if (Texts.isEmpty(fileName)) {
-      throw new IllegalArgumentException("Texts.isEmpty(fileName) == true");
+    if (Texts.checkIfEmpty(fileName)) {
+      throw new IllegalArgumentException("Texts.checkIfEmpty(fileName) == true");
     }
     return context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
   }

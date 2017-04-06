@@ -50,13 +50,13 @@ public abstract class User {
 
   public final void setName(String firstName, String lastName) {
     Preconditions.assertNotNull(firstName, "firstName == null");
-    if (Texts.isEmpty(firstName)) {
-      throw new IllegalArgumentException("Texts.isEmpty(firstName) == true");
+    if (Texts.checkIfEmpty(firstName)) {
+      throw new IllegalArgumentException("Texts.checkIfEmpty(firstName) == true");
     }
     this.firstName = firstName;
     Preconditions.assertNotNull(lastName, "lastName == null");
-    if (Texts.isEmpty(lastName)) {
-      throw new IllegalArgumentException("Texts.isEmpty(lastName) == true");
+    if (Texts.checkIfEmpty(lastName)) {
+      throw new IllegalArgumentException("Texts.checkIfEmpty(lastName) == true");
     }
     this.lastName = lastName;
     if (Objects.checkIfNotNull(this.onNameChangedListener)) {

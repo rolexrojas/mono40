@@ -94,7 +94,7 @@ public class RecipientBuilderFragment
   @OnClick(R.id.button)
   void onButtonClicked() {
     final String content = textInput.getText().toString().trim();
-    if (Texts.isEmpty(content)) {
+    if (Texts.checkIfEmpty(content)) {
       Dialogs.builder(getContext())
         .setTitle("Número de " + keyword + " incorrecto")
         .setMessage("El número de " + keyword + " es requerido para adicionar el destinatario.")

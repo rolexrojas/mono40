@@ -44,7 +44,7 @@ public class NonAffiliatedPhoneNumberRecipient extends Recipient {
 
   public boolean canBeTransferTo() {
     return Objects.checkIfNotNull(bank)
-      && Texts.isNotEmpty(accountNumber)
+      && Texts.checkIfNotEmpty(accountNumber)
       && Objects.checkIfNotNull(product);
   }
 

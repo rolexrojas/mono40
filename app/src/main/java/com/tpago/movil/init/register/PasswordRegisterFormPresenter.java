@@ -2,52 +2,56 @@ package com.tpago.movil.init.register;
 
 import com.tpago.movil.R;
 import com.tpago.movil.content.StringResolver;
-import com.tpago.movil.text.Texts;
+import com.tpago.movil.domain.Password;
 import com.tpago.movil.util.Objects;
 
 /**
  * @author hecvasro
  */
-final class PasswordRegisterFormPresenter
-  extends RegisterFormPresenter<PasswordRegisterFormPresenter.View> {
+final class PasswordRegisterFormPresenter extends RegisterFormPresenter<PasswordRegisterFormPresenter.View> {
   private String textInputContent;
-  private boolean isTextInputContentValid = false;
   private String confirmationTextInputContent;
-  private boolean isConfirmationTextInputContentValid = false;
 
   private static String sanitize(String content) {
     return Objects.checkIfNull(content) ? "" : content.trim();
   }
 
-  PasswordRegisterFormPresenter(View view, StringResolver stringResolver, RegisterData registerData) {
+  PasswordRegisterFormPresenter(
+    View view,
+    StringResolver stringResolver,
+    RegisterData registerData) {
     super(view, stringResolver, registerData);
     this.textInputContent = this.registerData.getPassword();
-    this.isTextInputContentValid = Texts.isNotEmpty(this.textInputContent);
     this.confirmationTextInputContent = this.textInputContent;
-    this.isConfirmationTextInputContentValid = this.isTextInputContentValid;
   }
 
-  private boolean canMoveToNextScreen() {
-    return isTextInputContentValid
-      && isConfirmationTextInputContentValid
-      && textInputContent.equals(confirmationTextInputContent);
+  private boolean checkIfTextInputContentValid() {
+    return Password.checkIfValid(textInputContent);
+  }
+
+  private boolean checkIfConfirmationTextInputContentValid() {
+    return Password.checkIfValid(confirmationTextInputContent)
+      && confirmationTextInputContent.equals(textInputContent);
+  }
+
+  private boolean checkIfCanMoveToNextScreen() {
+    return checkIfTextInputContentValid() && checkIfConfirmationTextInputContentValid();
   }
 
   private void updateView() {
-    if (isTextInputContentValid) {
+    if (checkIfTextInputContentValid()) {
       view.showTextInputContentAsErratic(false);
     }
-    if (isConfirmationTextInputContentValid) {
+    if (checkIfConfirmationTextInputContentValid()) {
       view.showConfirmationTextInputContentAsErratic(false);
     }
-    view.showMoveToNextScreenButtonAsEnabled(canMoveToNextScreen());
+    view.showMoveToNextScreenButtonAsEnabled(checkIfCanMoveToNextScreen());
   }
 
   final void onTextInputContentChanged(String content) {
     final String sanitizedContent = sanitize(content);
     if (!sanitizedContent.equals(textInputContent)) {
       textInputContent = sanitizedContent;
-      isTextInputContentValid = Texts.isNotEmpty(textInputContent);
       updateView();
     }
   }
@@ -56,14 +60,13 @@ final class PasswordRegisterFormPresenter
     final String sanitizedContent = sanitize(content);
     if (!sanitizedContent.equals(confirmationTextInputContent)) {
       confirmationTextInputContent = sanitizedContent;
-      isConfirmationTextInputContentValid = Texts.isNotEmpty(confirmationTextInputContent);
       updateView();
     }
   }
 
   @Override
   void onMoveToNextScreenButtonClicked() {
-    if (canMoveToNextScreen()) {
+    if (checkIfCanMoveToNextScreen()) {
       registerData.setPassword(textInputContent);
       view.moveToNextScreen();
     } else {
@@ -71,8 +74,8 @@ final class PasswordRegisterFormPresenter
         stringResolver.resolve(R.string.register_form_password_error_title),
         stringResolver.resolve(R.string.register_form_password_error_message),
         stringResolver.resolve(R.string.register_form_password_error_positive_button_text));
-      view.showTextInputContentAsErratic(!isTextInputContentValid);
-      view.showConfirmationTextInputContentAsErratic(!isConfirmationTextInputContentValid);
+      view.showTextInputContentAsErratic(!checkIfTextInputContentValid());
+      view.showConfirmationTextInputContentAsErratic(!checkIfConfirmationTextInputContentValid());
     }
   }
 

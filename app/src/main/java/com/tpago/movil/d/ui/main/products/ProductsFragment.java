@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.squareup.picasso.Picasso;
 import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.ui.Dialogs;
@@ -267,7 +266,7 @@ public class ProductsFragment extends ChildFragment<MainContainer>
   @Override
   public void onDismiss(boolean succeeded) {
     if (!succeeded) {
-      final String m = Texts.isEmpty(requestMessage) ? getString(R.string.error_generic) : requestMessage;
+      final String m = Texts.checkIfEmpty(requestMessage) ? getString(R.string.error_generic) : requestMessage;
       Dialogs.builder(getContext())
         .setTitle(R.string.error_title)
         .setMessage(m)

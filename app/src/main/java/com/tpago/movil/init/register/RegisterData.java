@@ -2,9 +2,11 @@ package com.tpago.movil.init.register;
 
 import com.tpago.movil.Email;
 import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.domain.Password;
 import com.tpago.movil.init.InitData;
 import com.tpago.movil.text.Texts;
-import com.tpago.movil.util.Preconditions;
+
+import static com.tpago.movil.util.Preconditions.assertNotNull;
 
 /**
  * @author hecvasro
@@ -18,7 +20,7 @@ final class RegisterData {
   private String password;
 
   RegisterData(InitData initData) {
-    this.initData = Preconditions.assertNotNull(initData, "initData == null");
+    this.initData = assertNotNull(initData, "initData == null");
   }
 
   final PhoneNumber getPhoneNumber() {
@@ -38,14 +40,14 @@ final class RegisterData {
   }
 
   final void setName(String firstName, String lastName) {
-    Preconditions.assertNotNull(firstName, "firstName == null");
-    if (Texts.isEmpty(firstName)) {
-      throw new IllegalArgumentException("Texts.isEmpty(firstName) == true");
+    assertNotNull(firstName, "firstName == null");
+    if (Texts.checkIfEmpty(firstName)) {
+      throw new IllegalArgumentException("Texts.checkIfEmpty(firstName) == true");
     }
     this.firstName = firstName;
-    Preconditions.assertNotNull(lastName, "lastName == null");
-    if (Texts.isEmpty(lastName)) {
-      throw new IllegalArgumentException("Texts.isEmpty(lastName) == true");
+    assertNotNull(lastName, "lastName == null");
+    if (Texts.checkIfEmpty(lastName)) {
+      throw new IllegalArgumentException("Texts.checkIfEmpty(lastName) == true");
     }
     this.lastName = lastName;
   }
@@ -55,7 +57,7 @@ final class RegisterData {
   }
 
   final void setEmail(Email email) {
-    this.email = Preconditions.assertNotNull(email, "email == null");
+    this.email = assertNotNull(email, "email == null");
   }
 
   final String getPassword() {
@@ -63,9 +65,9 @@ final class RegisterData {
   }
 
   final void setPassword(String password) {
-    Preconditions.assertNotNull(password, "password == null");
-    if (Texts.isEmpty(password)) {
-      throw new IllegalArgumentException("Texts.isEmpty(password) == true");
+    assertNotNull(password, "password == null");
+    if (!Password.checkIfValid(password)) {
+      throw new IllegalArgumentException("Password.checkIfValid(password) == false");
     }
     this.password = password;
   }

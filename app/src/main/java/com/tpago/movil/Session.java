@@ -23,12 +23,12 @@ public abstract class Session implements Parcelable {
     private String token;
 
     public final boolean canBuild() {
-      return Texts.isNotEmpty(token);
+      return Texts.checkIfNotEmpty(token);
     }
 
     public final Builder setToken(String token) {
-      if (Texts.isEmpty(token)) {
-        throw new IllegalStateException("Texts.isEmpty(token) == true");
+      if (Texts.checkIfEmpty(token)) {
+        throw new IllegalStateException("Texts.checkIfEmpty(token) == true");
       }
       this.token = token;
       return this;

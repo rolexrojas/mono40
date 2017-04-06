@@ -39,19 +39,19 @@ public final class InformationalDialogFragment extends DialogFragment {
     String positiveButtonText,
     String negativeButtonText) {
     final Bundle bundle = new Bundle();
-    if (Texts.isEmpty(title)) {
-      throw new IllegalArgumentException("Texts.isEmpty(title) == true");
+    if (Texts.checkIfEmpty(title)) {
+      throw new IllegalArgumentException("Texts.checkIfEmpty(title) == true");
     }
     bundle.putString(KEY_TITLE, title);
-    if (Texts.isEmpty(message)) {
-      throw new IllegalArgumentException("Texts.isEmpty(message) == true");
+    if (Texts.checkIfEmpty(message)) {
+      throw new IllegalArgumentException("Texts.checkIfEmpty(message) == true");
     }
     bundle.putString(KEY_MESSAGE, message);
-    if (Texts.isEmpty(positiveButtonText)) {
-      throw new IllegalArgumentException("Texts.isEmpty(positiveButtonText) == true");
+    if (Texts.checkIfEmpty(positiveButtonText)) {
+      throw new IllegalArgumentException("Texts.checkIfEmpty(positiveButtonText) == true");
     }
     bundle.putString(KEY_TEXT_BUTTON_POSITIVE, positiveButtonText);
-    if (Texts.isNotEmpty(negativeButtonText)) {
+    if (Texts.checkIfNotEmpty(negativeButtonText)) {
       bundle.putString(KEY_TEXT_BUTTON_NEGATIVE, negativeButtonText);
     }
     final InformationalDialogFragment fragment = new InformationalDialogFragment();
@@ -113,7 +113,7 @@ public final class InformationalDialogFragment extends DialogFragment {
         }
       })
       .setView(R.layout.d_dialog_informational);
-    if (Texts.isNotEmpty(negativeButtonText)) {
+    if (Texts.checkIfNotEmpty(negativeButtonText)) {
       builder.setNegativeButton(negativeButtonText, new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {

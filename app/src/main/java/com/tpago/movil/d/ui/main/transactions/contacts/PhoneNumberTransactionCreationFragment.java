@@ -306,7 +306,7 @@ public class PhoneNumberTransactionCreationFragment
     if (succeeded) {
       getContainer().finish(true, resultMessage);
     } else {
-      final String message = Texts.isEmpty(resultMessage) ? getString(R.string.error_generic) : resultMessage;
+      final String message = Texts.checkIfEmpty(resultMessage) ? getString(R.string.error_generic) : resultMessage;
       Dialogs.builder(getContext())
         .setTitle(R.string.error_title)
         .setMessage(message)

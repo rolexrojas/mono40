@@ -4,20 +4,20 @@ import android.content.Context;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 
-import com.tpago.movil.util.Objects;
-
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
+
+import static com.tpago.movil.util.Objects.checkIfNull;
 
 /**
  * @author hecvasro
  */
 public final class Texts {
-  public static boolean isEmpty(CharSequence s) {
-    return Objects.checkIfNull(s) || s.length() == 0;
+  public static boolean checkIfEmpty(CharSequence s) {
+    return checkIfNull(s) || s.length() == 0;
   }
 
-  public static boolean isNotEmpty(CharSequence s) {
-    return !isEmpty(s);
+  public static boolean checkIfNotEmpty(CharSequence s) {
+    return !checkIfEmpty(s);
   }
 
   public static String join(String delimiter, Object... tokens) {
@@ -40,7 +40,7 @@ public final class Texts {
     String fontPath,
     int textColor,
     int textSize) {
-    if (Texts.isEmpty(content)) {
+    if (Texts.checkIfEmpty(content)) {
       return null;
     } else {
       return Truss.create()

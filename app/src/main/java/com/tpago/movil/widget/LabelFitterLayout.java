@@ -123,7 +123,7 @@ public final class LabelFitterLayout extends FrameLayout {
       return;
     }
     CharSequence currentText = childLabel.getText();
-    if (Texts.isEmpty(currentText)) {
+    if (Texts.checkIfEmpty(currentText)) {
       return;
     }
     final TransformationMethod transformationMethod = childLabel.getTransformationMethod();

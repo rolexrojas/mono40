@@ -93,7 +93,7 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
     final String sanitizedContent = sanitize(content);
     if (!sanitizedContent.equals(passwordTextInputContent)) {
       passwordTextInputContent = sanitizedContent;
-      isPasswordTextInputContentValid = Texts.isNotEmpty(passwordTextInputContent);
+      isPasswordTextInputContentValid = Texts.checkIfNotEmpty(passwordTextInputContent);
       updateView();
     }
   }

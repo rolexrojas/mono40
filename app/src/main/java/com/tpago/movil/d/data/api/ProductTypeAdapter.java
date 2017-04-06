@@ -85,7 +85,7 @@ class ProductTypeAdapter implements JsonDeserializer<Product>, JsonSerializer<Pr
     jsonObject.addProperty(PROPERTY_PAYMENT_OPTION, Product.isPaymentOption(src));
     jsonObject.addProperty(PROPERTY_IS_DEFAULT, Product.isDefaultPaymentOption(src));
     String imageUrl = src.getImageUriTemplate();
-    if (Texts.isNotEmpty(imageUrl)) {
+    if (Texts.checkIfNotEmpty(imageUrl)) {
       jsonObject.addProperty(PROPERTY_IMAGE_URL, imageUrl);
     }
     return jsonObject;

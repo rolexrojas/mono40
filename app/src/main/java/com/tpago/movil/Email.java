@@ -26,7 +26,7 @@ public abstract class Email {
   }
 
   public static boolean checkIfValue(String email) {
-    return Texts.isNotEmpty(email) && checkIfValue(email, true);
+    return Texts.checkIfNotEmpty(email) && checkIfValue(email, true);
   }
 
   public static Email create(String value) {

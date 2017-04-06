@@ -49,7 +49,7 @@ public final class ApiImageUriBuilder {
 
   public static Uri build(Context context, Product product) {
     final String template = product.getImageUriTemplate();
-    if (Texts.isEmpty(template)) {
+    if (Texts.checkIfEmpty(template)) {
       return Uri.EMPTY;
     } else {
       return Uri.parse(applyDisplayDensity(context, template));

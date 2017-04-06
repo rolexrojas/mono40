@@ -111,7 +111,7 @@ class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSerialize
       if (Objects.checkIfNotNull(r.getBank())) {
         jsonObject.add(PROPERTY_BANK, context.serialize(r.getBank()));
       }
-      if (Texts.isNotEmpty(r.getAccountNumber())) {
+      if (Texts.checkIfNotEmpty(r.getAccountNumber())) {
         jsonObject.addProperty(PROPERTY_ACCOUNT_NUMBER, r.getAccountNumber());
       }
       if (Objects.checkIfNotNull(r.getProduct())) {

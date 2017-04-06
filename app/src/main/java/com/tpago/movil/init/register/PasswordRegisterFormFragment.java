@@ -26,9 +26,7 @@ import butterknife.BindView;
 /**
  * @author hecvasro
  */
-public final class PasswordRegisterFormFragment
-  extends RegisterFormFragment<PasswordRegisterFormPresenter>
-  implements PasswordRegisterFormPresenter.View {
+public final class PasswordRegisterFormFragment extends RegisterFormFragment<PasswordRegisterFormPresenter> implements PasswordRegisterFormPresenter.View {
   static PasswordRegisterFormFragment create() {
     return new PasswordRegisterFormFragment();
   }

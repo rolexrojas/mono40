@@ -24,9 +24,9 @@ final class NameRegisterFormPresenter extends RegisterFormPresenter<NameRegister
     RegisterData registerData) {
     super(view, stringResolver, registerData);
     this.firstName = sanitize(this.registerData.getFirstName());
-    this.isFirstNameValid = Texts.isNotEmpty(this.firstName);
+    this.isFirstNameValid = Texts.checkIfNotEmpty(this.firstName);
     this.lastName = sanitize(this.registerData.getLastName());
-    this.isLastNameValid = Texts.isNotEmpty(this.lastName);
+    this.isLastNameValid = Texts.checkIfNotEmpty(this.lastName);
   }
 
   private void updateView() {
@@ -43,7 +43,7 @@ final class NameRegisterFormPresenter extends RegisterFormPresenter<NameRegister
     final String sanitizedContent = sanitize(content);
     if (!firstName.equals(sanitizedContent)) {
       firstName = sanitizedContent;
-      isFirstNameValid = Texts.isNotEmpty(firstName);
+      isFirstNameValid = Texts.checkIfNotEmpty(firstName);
       updateView();
     }
   }
@@ -52,7 +52,7 @@ final class NameRegisterFormPresenter extends RegisterFormPresenter<NameRegister
     final String sanitizedContent = sanitize(content);
     if (!lastName.equals(sanitizedContent)) {
       lastName = sanitizedContent;
-      isLastNameValid = Texts.isNotEmpty(lastName);
+      isLastNameValid = Texts.checkIfNotEmpty(lastName);
       updateView();
     }
   }

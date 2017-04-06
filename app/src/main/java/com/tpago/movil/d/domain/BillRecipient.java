@@ -63,7 +63,7 @@ public class BillRecipient extends Recipient {
   @Override
   public String getLabel() {
     String label = super.getLabel();
-    if (Texts.isEmpty(label)) {
+    if (Texts.checkIfEmpty(label)) {
       label = String.format("Factura de %1$s", partner.getName());
     }
     return label;
