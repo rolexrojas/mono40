@@ -105,7 +105,7 @@ public class BillTransactionCreationPresenter
                     transactionResult.getError().getDescription()));
               }
             } else {
-              result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
+              result = Result.create(FailureData.create(ErrorCode.INCORRECT_PIN));
             }
           } else {
             result = Result.create(

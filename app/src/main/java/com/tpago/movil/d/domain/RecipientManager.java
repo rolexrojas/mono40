@@ -58,17 +58,6 @@ public final class RecipientManager {
   }
 
   @Deprecated
-  private void queryBalance(final String authToken, final Recipient recipient) {
-    if (recipient instanceof BillRecipient) {
-      final ApiResult<BillBalance> result = apiBridge
-        .queryBalance(authToken, (BillRecipient) recipient);
-      if (result.isSuccessful()) {
-        ((BillRecipient) recipient).setBalance(result.getData());
-      }
-    }
-  }
-
-  @Deprecated
   final void syncRecipients(
     final String authToken,
     final List<Recipient> remoteRecipientList) {
@@ -91,7 +80,6 @@ public final class RecipientManager {
     final SharedPreferences.Editor editor = sharedPreferences.edit();
 
     for (Recipient recipient : recipientToAddList) {
-      queryBalance(authToken, recipient);
       recipientList.add(recipient);
       indexSet.add(recipient.getId());
       editor.putString(recipient.getId(), gson.toJson(recipient));
@@ -209,16 +197,14 @@ public final class RecipientManager {
   }
 
   public final void remove(Recipient recipient) {
-    if (recipientList.contains(recipient)) {
-      final String id = recipient.getId();
-      indexSet.remove(id);
-      sharedPreferences.edit()
-        .putStringSet(KEY_INDEX_SET, indexSet)
-        .remove(id)
-        .apply();
-      recipientList.remove(recipient);
-      Collections.sort(recipientList, Recipient.comparator());
-    }
+    final String id = recipient.getId();
+    indexSet.remove(id);
+    sharedPreferences.edit()
+      .putStringSet(KEY_INDEX_SET, indexSet)
+      .remove(id)
+      .apply();
+    recipientList.remove(recipient);
+    Collections.sort(recipientList, Recipient.comparator());
   }
 
   @Deprecated

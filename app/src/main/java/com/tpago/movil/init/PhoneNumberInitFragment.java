@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.tpago.movil.Digit;
 import com.tpago.movil.R;
 import com.tpago.movil.app.ActivityQualifier;
 import com.tpago.movil.app.FragmentReplacer;
 import com.tpago.movil.app.InformationalDialogFragment;
+import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.init.register.RegisterFragment;
 import com.tpago.movil.init.signin.SignInFragment;
 import com.tpago.movil.widget.EditableLabel;
@@ -186,5 +188,24 @@ public final class PhoneNumberInitFragment
   @Override
   public void onDeleteClicked() {
     presenter.removeDigit();
+  }
+
+  @Override
+  public void showGenericErrorDialog(String message) {
+    Dialogs.builder(getContext())
+      .setTitle(R.string.error_generic_title)
+      .setMessage(message)
+      .setPositiveButton(R.string.error_positive_button_text, null)
+      .show();
+  }
+
+  @Override
+  public void showGenericErrorDialog() {
+    showGenericErrorDialog(getString(R.string.error_generic));
+  }
+
+  @Override
+  public void showUnavailableNetworkError() {
+    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG).show();
   }
 }

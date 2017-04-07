@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import com.tpago.movil.R;
 import com.tpago.movil.UserStore;
 import com.tpago.movil.d.data.StringHelper;
+import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.PhoneNumber;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
@@ -26,10 +27,13 @@ import com.tpago.movil.domain.FailureData;
 import com.tpago.movil.domain.Result;
 import com.tpago.movil.net.NetworkService;
 import com.tpago.movil.reactivex.Disposables;
+import com.tpago.movil.text.Texts;
 import com.tpago.movil.util.Objects;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
@@ -66,12 +70,13 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   private final String authToken;
 
   private boolean deleting = false;
-  private List<Recipient> selectedRecipients = new ArrayList<>();
+  private List<Recipient> selectedRecipientList = new ArrayList<>();
 
   private Subscription subscription = Subscriptions.unsubscribed();
   private Subscription querySubscription = Subscriptions.unsubscribed();
   private Subscription searchSubscription = Subscriptions.unsubscribed();
   private Subscription signOutSubscription = Subscriptions.unsubscribed();
+  private Subscription queryBalanceSubscription = Subscriptions.unsubscribed();
 
   private Disposable deleteSubscription = Disposables.disposed();
 
@@ -176,6 +181,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
     RxUtils.unsubscribe(subscription);
     RxUtils.unsubscribe(searchSubscription);
     RxUtils.unsubscribe(querySubscription);
+    RxUtils.unsubscribe(queryBalanceSubscription);
     if (!deleteSubscription.isDisposed()) {
       deleteSubscription.dispose();
     }
@@ -319,74 +325,170 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
 
   final void stopDeleting() {
     if (deleting) {
-      selectedRecipients.clear();
+      selectedRecipientList.clear();
       deleting = false;
       screen.setDeleting(false);
     }
   }
 
-  final void resolve(Recipient r) {
+  final void resolve(final Recipient recipient) {
     if (deleting) {
-      if (!selectedRecipients.contains(r)) {
-        r.setSelected(true);
-        selectedRecipients.add(r);
+      if (!selectedRecipientList.contains(recipient)) {
+        recipient.setSelected(true);
+        selectedRecipientList.add(recipient);
       } else {
-        r.setSelected(false);
-        selectedRecipients.remove(r);
+        recipient.setSelected(false);
+        selectedRecipientList.remove(recipient);
       }
-      screen.update(r);
-      screen.setDeleteButtonEnabled(!selectedRecipients.isEmpty());
-    } else if (!(r instanceof BillRecipient) || Objects.checkIfNotNull(((BillRecipient) r).getBalance())) {
-      screen.startTransfer(r);
+      screen.update(recipient);
+      screen.setDeleteButtonEnabled(!selectedRecipientList.isEmpty());
+    } else if (recipient instanceof BillRecipient) {
+      final BillRecipient billRecipient = (BillRecipient) recipient;
+      if (Objects.checkIfNull(billRecipient.getBalance())) {
+        queryBalanceSubscription = rx.Single
+          .defer(new Callable<rx.Single<Result<BillBalance, ErrorCode>>>() {
+            @Override
+            public rx.Single<Result<BillBalance, ErrorCode>> call() throws Exception {
+              final Result<BillBalance, ErrorCode> result;
+              if (networkService.checkIfAvailable()) {
+                final ApiResult<BillBalance> queryBalanceResult = depApiBridge
+                  .queryBalance(authToken, billRecipient);
+                if (queryBalanceResult.isSuccessful()) {
+                  result = Result.create(queryBalanceResult.getData());
+                } else {
+                  result = Result.create(
+                    FailureData.create(
+                      ErrorCode.UNEXPECTED,
+                      queryBalanceResult.getError().getDescription()));
+                }
+              } else {
+                result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
+              }
+              return rx.Single.just(result);
+            }
+          })
+          .doOnSubscribe(new Action0() {
+            @Override
+            public void call() {
+              screen.showLoadIndicator(true);
+            }
+          })
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(new Action1<Result<BillBalance, ErrorCode>>() {
+            @Override
+            public void call(Result<BillBalance, ErrorCode> result) {
+              if (result.isSuccessful()) {
+                billRecipient.setBalance(result.getSuccessData());
+                recipientManager.update(recipient);
+                screen.update(billRecipient);
+              } else {
+                final FailureData<ErrorCode> failureData = result.getFailureData();
+                switch (failureData.getCode()) {
+                  case INCORRECT_PIN:
+                    screen.showGenericErrorDialog(stringHelper.resolve(R.string.error_incorrect_pin));
+                    break;
+                  case UNAVAILABLE_NETWORK:
+                    screen.showUnavailableNetworkError();
+                    break;
+                  default:
+                    screen.showGenericErrorDialog(failureData.getDescription());
+                    break;
+                }
+              }
+              screen.hideLoadIndicator();
+            }
+          }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+              Timber.e(throwable);
+              screen.hideLoadIndicator();
+              screen.showGenericErrorDialog();
+            }
+          });
+      } else {
+        screen.startTransfer(billRecipient);
+      }
+    } else {
+      screen.startTransfer(recipient);
     }
   }
 
   final void onPinRequestFinished(final String pin) {
     if (deleting) {
-      deleteSubscription = Single.defer(new Callable<SingleSource<Result<Boolean, ErrorCode>>>() {
-        @Override
-        public SingleSource<Result<Boolean, ErrorCode>> call() throws Exception {
-          final Result<Boolean, ErrorCode> result;
-          if (networkService.checkIfAvailable()) {
-            final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(authToken, pin);
-            if (pinValidationResult.isSuccessful()) {
-              if (pinValidationResult.getData()) {
-                final ApiResult<Void> recipientRemovalResult = recipientManager
-                  .remove(authToken, pin, selectedRecipients)
-                  .toBlocking()
-                  .value();
-                if (recipientRemovalResult.isSuccessful()) {
-                  result = Result.create(true);
+      deleteSubscription = Single
+        .defer(new Callable<SingleSource<Result<Map<Recipient, Boolean>, ErrorCode>>>() {
+          @Override
+          public SingleSource<Result<Map<Recipient, Boolean>, ErrorCode>> call() throws Exception {
+            final Result<Map<Recipient, Boolean>, ErrorCode> result;
+            if (networkService.checkIfAvailable()) {
+              final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(authToken, pin);
+              if (pinValidationResult.isSuccessful()) {
+                if (pinValidationResult.getData()) {
+                  final Map<Recipient, Boolean> resultMap = new HashMap<>();
+                  for (Recipient recipient : selectedRecipientList) {
+                    boolean resultFlag = true;
+                    if (Recipient.checkIfBill(recipient)) {
+                      final ApiResult<Void> recipientRemovalResult = depApiBridge
+                        .removeBill(authToken, (BillRecipient) recipient, pin);
+                      resultFlag = recipientRemovalResult.isSuccessful();
+                    }
+                    if (resultFlag) {
+                      recipientManager.remove(recipient);
+                    }
+                    resultMap.put(recipient, resultFlag);
+                  }
+                  result = Result.create(resultMap);
                 } else {
-                  result = Result.create(
-                    FailureData.create(
-                      ErrorCode.UNEXPECTED,
-                      recipientRemovalResult.getError().getDescription()));
+                  result = Result.create(FailureData.create(ErrorCode.INCORRECT_PIN));
                 }
               } else {
-                result = Result.create(FailureData.create(ErrorCode.INCORRECT_PIN));
+                result = Result.create(
+                  FailureData.create(
+                    ErrorCode.UNEXPECTED,
+                    pinValidationResult.getError().getDescription()));
               }
             } else {
-              result = Result.create(
-                FailureData.create(
-                  ErrorCode.UNEXPECTED,
-                  pinValidationResult.getError().getDescription()));
+              result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
             }
-          } else {
-            result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
+            return Single.just(result);
           }
-          return Single.just(result);
-        }
-      })
+        })
         .subscribeOn(io.reactivex.schedulers.Schedulers.io())
         .observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
-        .subscribe(new Consumer<Result<Boolean, ErrorCode>>() {
+        .subscribe(new Consumer<Result<Map<Recipient, Boolean>, ErrorCode>>() {
           @Override
-          public void accept(Result<Boolean, ErrorCode> result) throws Exception {
+          public void accept(
+            Result<Map<Recipient, Boolean>, ErrorCode> result) throws Exception {
             screen.setDeletingResult(result.isSuccessful());
             if (result.isSuccessful()) {
               stopDeleting();
-              screen.clearQuery();
+              final Map<Recipient, Boolean> resultMap = result.getSuccessData();
+              final StringBuilder resultMessageContentBuilder = new StringBuilder();
+              for (Recipient recipient : resultMap.keySet()) {
+                if (resultMap.get(recipient)) {
+                  screen.remove(recipient);
+                } else {
+                  String label = recipient.getLabel();
+                  if (Texts.checkIfEmpty(label)) {
+                    label = recipient.getIdentifier();
+                  }
+                  if (Texts.checkIfEmpty(resultMessageContentBuilder)) {
+                    resultMessageContentBuilder.append("\n");
+                  }
+                  resultMessageContentBuilder
+                    .append("\t- ")
+                    .append(label);
+                }
+              }
+              if (Texts.checkIfNotEmpty(resultMessageContentBuilder)) {
+                final String resultMessage = new StringBuilder(
+                  "Los destinatarios listados a continuación no pudieron ser eliminados:")
+                  .append("\n")
+                  .append(resultMessageContentBuilder.toString())
+                  .toString();
+                screen.showGenericErrorDialog(resultMessage);
+              }
             } else {
               final FailureData<ErrorCode> failureData = result.getFailureData();
               switch (failureData.getCode()) {

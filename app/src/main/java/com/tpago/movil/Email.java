@@ -21,18 +21,18 @@ public abstract class Email {
     return SANITIZER.matcher(value).replaceAll("");
   }
 
-  private static boolean checkIfValue(String email, boolean sanitize) {
+  private static boolean checkIfValid(String email, boolean sanitize) {
     return PATTERN.matcher(sanitize ? sanitize(email) : email).matches();
   }
 
-  public static boolean checkIfValue(String email) {
-    return Texts.checkIfNotEmpty(email) && checkIfValue(email, true);
+  public static boolean checkIfValid(String email) {
+    return Texts.checkIfNotEmpty(email) && checkIfValid(email, true);
   }
 
   public static Email create(String value) {
     Preconditions.assertNotNull(value, "value == null");
     final String sanitizedValue = sanitize(value);
-    if (!checkIfValue(sanitizedValue, false)) {
+    if (!checkIfValid(sanitizedValue, false)) {
       throw new IllegalArgumentException("checkIfValid(sanitizedValue, false) == false");
     }
     return new AutoValue_Email(sanitizedValue);

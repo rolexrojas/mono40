@@ -6,7 +6,6 @@ import com.tpago.movil.d.domain.api.DepApiBridge;
 
 import rx.Completable;
 import rx.functions.Action1;
-import timber.log.Timber;
 
 /**
  * @author hecvasro

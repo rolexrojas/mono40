@@ -5,6 +5,7 @@ import android.net.Uri;
 
 import com.tpago.movil.Partner;
 import com.tpago.movil.api.ApiImageUriBuilder;
+import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
@@ -47,7 +48,13 @@ class BillRecipientBuilder extends RecipientBuilder {
         @Override
         public Result call(ApiResult<Void> result) {
           if (result.isSuccessful()) {
-            return new Result(new BillRecipient(partner, number));
+            final BillRecipient recipient = new BillRecipient(partner, number);
+            final ApiResult<BillBalance> queryBalanceResult = apiBridge
+              .queryBalance(authToken, recipient);
+            if (queryBalanceResult.isSuccessful()) {
+              recipient.setBalance(queryBalanceResult.getData());
+            }
+            return new Result(recipient);
           } else {
             return new Result(result.getError().getDescription());
           }

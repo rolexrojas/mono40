@@ -6,18 +6,24 @@ import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.api.DApiBridge;
 import com.tpago.movil.api.DApiData;
-import com.tpago.movil.api.DApiError;
 import com.tpago.movil.app.Presenter;
+import com.tpago.movil.domain.ErrorCode;
+import com.tpago.movil.domain.FailureData;
+import com.tpago.movil.domain.Result;
 import com.tpago.movil.net.HttpResult;
+import com.tpago.movil.net.NetworkService;
 import com.tpago.movil.reactivex.Disposables;
 import com.tpago.movil.util.Objects;
 import com.tpago.movil.util.Preconditions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
+import io.reactivex.Single;
+import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -29,8 +35,11 @@ import timber.log.Timber;
  */
 public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPresenter.View> {
   @Inject
-  DApiBridge DApiBridge;
-  @Inject InitData initData;
+  DApiBridge apiBridge;
+  @Inject
+  InitData initData;
+  @Inject
+  NetworkService networkService;
 
   private boolean isPhoneNumberValid = false;
   private List<Digit> phoneNumberDigits = new ArrayList<>();
@@ -85,7 +94,30 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
   final void validate() {
     if (isPhoneNumberValid) {
       final PhoneNumber phoneNumber = PhoneNumber.create(Digits.stringify(phoneNumberDigits));
-      disposable = DApiBridge.validatePhoneNumber(phoneNumber)
+      disposable = Single
+        .defer(new Callable<SingleSource<Result<PhoneNumber.State, ErrorCode>>>() {
+          @Override
+          public SingleSource<Result<PhoneNumber.State, ErrorCode>> call() throws Exception {
+            final Result<PhoneNumber.State, ErrorCode> result;
+            if (networkService.checkIfAvailable()) {
+              final HttpResult<DApiData<PhoneNumber.State>> phoneNumberValidationResult = apiBridge
+                .validatePhoneNumber(phoneNumber)
+                .blockingGet();
+              final DApiData<PhoneNumber.State> resultData = phoneNumberValidationResult.getData();
+              if (phoneNumberValidationResult.isSuccessful()) {
+                result = Result.create(resultData.getValue());
+              } else {
+                result = Result.create(
+                  FailureData.create(
+                    ErrorCode.UNEXPECTED,
+                    resultData.getError().getDescription()));
+              }
+            } else {
+              result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
+            }
+            return Single.just(result);
+          }
+        })
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(new Consumer<Disposable>() {
@@ -94,13 +126,12 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
             startLoading();
           }
         })
-        .subscribe(new Consumer<HttpResult<DApiData<PhoneNumber.State>>>() {
+        .subscribe(new Consumer<Result<PhoneNumber.State, ErrorCode>>() {
           @Override
-          public void accept(HttpResult<DApiData<PhoneNumber.State>> result) throws Exception {
+          public void accept(Result<PhoneNumber.State, ErrorCode> result) throws Exception {
             stopLoading();
-            final DApiData<PhoneNumber.State> DApiData = result.getData();
             if (result.isSuccessful()) {
-              final PhoneNumber.State state = DApiData.getValue();
+              final PhoneNumber.State state = result.getSuccessData();
               if (state.equals(PhoneNumber.State.NONE)) {
                 view.showDialog(
                   R.string.init_phone_number_error_not_affiliated_title,
@@ -115,11 +146,15 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
                 }
               }
             } else {
-              final DApiError error = DApiData.getError();
-              view.showDialog(
-                R.string.error_generic_title,
-                error.getDescription(),
-                R.string.error_positive_button_text);
+              final FailureData<ErrorCode> failureData = result.getFailureData();
+              switch (failureData.getCode()) {
+                case UNAVAILABLE_NETWORK:
+                  view.showUnavailableNetworkError();
+                  break;
+                default:
+                  view.showGenericErrorDialog(failureData.getDescription());
+                  break;
+              }
             }
           }
         }, new Consumer<Throwable>() {
@@ -127,10 +162,7 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
           public void accept(Throwable throwable) throws Exception {
             Timber.e(throwable);
             stopLoading();
-            view.showDialog(
-              R.string.error_generic_title,
-              R.string.error_generic,
-              R.string.error_positive_button_text);
+            view.showGenericErrorDialog();
           }
         });
     } else {
@@ -161,6 +193,7 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
 
   interface View extends Presenter.View {
     void showDialog(int titleId, String message, int positiveButtonTextId);
+
     void showDialog(int titleId, int messageId, int positiveButtonTextId);
 
     void setTextInputContent(String text);
@@ -178,5 +211,9 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
     void moveToSignInScreen();
 
     void moveToSignUpScreen();
+
+    void showGenericErrorDialog(String message);
+    void showGenericErrorDialog();
+    void showUnavailableNetworkError();
   }
 }

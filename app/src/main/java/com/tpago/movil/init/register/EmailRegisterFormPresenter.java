@@ -35,10 +35,17 @@ final class EmailRegisterFormPresenter
     }
   }
 
-  private boolean canMoveToNextScreen() {
-    return isTextInputContentValid
-      && isConfirmationTextInputContentValid
-      && textInputContent.equals(confirmationTextInputContent);
+  private boolean checkIfTextInputContentIsValid() {
+    return Email.checkIfValid(textInputContent);
+  }
+
+  private boolean checkIfConfirmationTextInputContentIsValid() {
+    return Email.checkIfValid(confirmationTextInputContent)
+      && confirmationTextInputContent.equals(textInputContent);
+  }
+
+  private boolean checkIfCanMoveToNextScreen() {
+    return checkIfTextInputContentIsValid() && checkIfConfirmationTextInputContentIsValid();
   }
 
   private void updateView() {
@@ -48,14 +55,13 @@ final class EmailRegisterFormPresenter
     if (isConfirmationTextInputContentValid) {
       view.showConfirmationTextInputContentAsErratic(false);
     }
-    view.showMoveToNextScreenButtonAsEnabled(canMoveToNextScreen());
+    view.showMoveToNextScreenButtonAsEnabled(checkIfCanMoveToNextScreen());
   }
 
   final void onTextInputContentChanged(String content) {
     final String sanitizedContent = sanitize(content);
     if (!sanitizedContent.equals(textInputContent)) {
       textInputContent = sanitizedContent;
-      isTextInputContentValid = Email.checkIfValue(textInputContent);
       updateView();
     }
   }
@@ -64,14 +70,13 @@ final class EmailRegisterFormPresenter
     final String sanitizedContent = sanitize(content);
     if (!sanitizedContent.equals(confirmationTextInputContent)) {
       confirmationTextInputContent = sanitizedContent;
-      isConfirmationTextInputContentValid = Email.checkIfValue(confirmationTextInputContent);
       updateView();
     }
   }
 
   @Override
   void onMoveToNextScreenButtonClicked() {
-    if (canMoveToNextScreen()) {
+    if (checkIfCanMoveToNextScreen()) {
       registerData.setEmail(Email.create(textInputContent));
       view.moveToNextScreen();
     } else {
@@ -79,8 +84,8 @@ final class EmailRegisterFormPresenter
         stringResolver.resolve(R.string.register_form_email_error_title),
         stringResolver.resolve(R.string.register_form_email_error_message),
         stringResolver.resolve(R.string.register_form_email_error_positive_button_text));
-      view.showTextInputContentAsErratic(!isTextInputContentValid);
-      view.showConfirmationTextInputContentAsErratic(!isConfirmationTextInputContentValid);
+      view.showTextInputContentAsErratic(!checkIfTextInputContentIsValid());
+      view.showConfirmationTextInputContentAsErratic(!checkIfConfirmationTextInputContentIsValid());
     }
   }
 
