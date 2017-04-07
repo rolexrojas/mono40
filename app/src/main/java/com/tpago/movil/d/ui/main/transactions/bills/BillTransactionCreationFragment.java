@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tpago.movil.R;
 import com.tpago.movil.d.data.StringHelper;
@@ -19,7 +20,6 @@ import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.main.transactions.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transactions.TransactionCreationContainer;
 import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
-import com.tpago.movil.text.Texts;
 import com.tpago.movil.main.transactions.PaymentMethodChooser;
 
 import java.util.List;
@@ -197,14 +197,25 @@ public class BillTransactionCreationFragment extends ChildFragment<TransactionCr
     PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), succeeded);
     if (succeeded) {
       getContainer().finish(true, message);
-    } else {
-      message = Texts.checkIfEmpty(message) ? getString(R.string.error_generic) : message;
-      Dialogs.builder(getContext())
-        .setTitle(R.string.error_title)
-        .setMessage(message)
-        .setPositiveButton(R.string.error_positive_button_text, null)
-        .create()
-        .show();
     }
+  }
+
+  @Override
+  public void showGenericErrorDialog(String message) {
+    Dialogs.builder(getContext())
+      .setTitle(R.string.error_generic_title)
+      .setMessage(message)
+      .setPositiveButton(R.string.error_positive_button_text, null)
+      .show();
+  }
+
+  @Override
+  public void showGenericErrorDialog() {
+    showGenericErrorDialog(getString(R.string.error_generic));
+  }
+
+  @Override
+  public void showUnavailableNetworkError() {
+    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG).show();
   }
 }

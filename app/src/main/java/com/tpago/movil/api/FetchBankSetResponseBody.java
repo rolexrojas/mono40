@@ -10,12 +10,12 @@ import io.reactivex.functions.Function;
 /**
  * @author hecvasro
  */
-final class ApiBankSet {
-  static Function<ApiBankSet, Set<Bank>> mapperFunc() {
-    return new Function<ApiBankSet, Set<Bank>>() {
+final class FetchBankSetResponseBody {
+  static Function<FetchBankSetResponseBody, Set<Bank>> mapperFunc() {
+    return new Function<FetchBankSetResponseBody, Set<Bank>>() {
       @Override
-      public Set<Bank> apply(ApiBankSet apiBankSet) throws Exception {
-        return apiBankSet.embedded.set;
+      public Set<Bank> apply(FetchBankSetResponseBody fetchBankSetResponseBody) throws Exception {
+        return fetchBankSetResponseBody.embedded.set;
       }
     };
   }

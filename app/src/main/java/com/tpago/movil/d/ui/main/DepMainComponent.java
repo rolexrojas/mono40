@@ -19,6 +19,7 @@ import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.ui.ActivityComponent;
 import com.tpago.movil.d.ui.DepActivityModule;
 import com.tpago.movil.main.MainModule;
+import com.tpago.movil.net.NetworkService;
 
 import dagger.Component;
 
@@ -41,6 +42,7 @@ public interface DepMainComponent extends ActivityComponent {
   Context provideContext();
   DepApiBridge provideApiBridge();
   EventBus provideEventBus();
+  NetworkService provideNetworkService();
   PosBridge providePosBridge();
   ProductManager provideAccountManager();
   RecipientManager provideRecipientManager();

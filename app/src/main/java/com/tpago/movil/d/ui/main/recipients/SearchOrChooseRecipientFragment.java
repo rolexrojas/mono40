@@ -27,9 +27,7 @@ import rx.Observable;
 /**
  * @author hecvasro
  */
-public class SearchOrChooseRecipientFragment
-  extends ChildFragment<AddRecipientContainer>
-  implements SearchOrChooseRecipientContainer {
+public class SearchOrChooseRecipientFragment extends ChildFragment<AddRecipientContainer> implements SearchOrChooseRecipientContainer {
   private Unbinder unbinder;
 
   @BindView(R.id.search_view)

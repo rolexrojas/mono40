@@ -1,13 +1,16 @@
 package com.tpago.movil.d.ui.main.payments;
 
+import com.tpago.movil.Session;
 import com.tpago.movil.UserStore;
 import com.tpago.movil.app.FragmentScope;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.RecipientManager;
+import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.session.SessionManager;
+import com.tpago.movil.net.NetworkService;
 
 import dagger.Module;
 import dagger.Provides;
@@ -29,7 +32,10 @@ class PaymentsModule {
     SessionManager sessionManager,
     ProductManager productManager,
     PosBridge posBridge,
-    UserStore userStore) {
+    UserStore userStore,
+    NetworkService networkService,
+    DepApiBridge depApiBridge,
+    Session session) {
     return new PaymentsPresenter(
       stringHelper,
       schedulerProvider,
@@ -37,6 +43,9 @@ class PaymentsModule {
       sessionManager,
       productManager,
       posBridge,
-      userStore);
+      userStore,
+      networkService,
+      depApiBridge,
+      session.getToken());
   }
 }

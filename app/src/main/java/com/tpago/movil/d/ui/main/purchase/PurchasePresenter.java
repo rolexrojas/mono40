@@ -3,8 +3,10 @@ package com.tpago.movil.d.ui.main.purchase;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
-import com.tpago.movil.User;
+import com.tpago.movil.R;
 import com.tpago.movil.d.data.StringHelper;
+import com.tpago.movil.d.domain.api.ApiResult;
+import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.pos.PosResult;
 import com.tpago.movil.d.domain.util.Event;
@@ -16,8 +18,11 @@ import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.ui.AppDialog;
 import com.tpago.movil.d.ui.Presenter;
+import com.tpago.movil.domain.ErrorCode;
+import com.tpago.movil.domain.FailureData;
+import com.tpago.movil.domain.Result;
+import com.tpago.movil.net.NetworkService;
 import com.tpago.movil.util.Objects;
-import com.tpago.movil.util.Preconditions;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -41,7 +46,10 @@ final class PurchasePresenter extends Presenter<PurchaseScreen> {
   private final AppDialog.Creator screenDialogCreator;
   private final PosBridge posBridge;
 
-  private final User user;
+  private final NetworkService networkService;
+  private final DepApiBridge depApiBridge;
+  private final String phoneNumber;
+  private final String authToken;
 
   private Subscription productAdditionEventSubscription = Subscriptions.unsubscribed();
   private Subscription activationSubscription = Subscriptions.unsubscribed();
@@ -54,14 +62,20 @@ final class PurchasePresenter extends Presenter<PurchaseScreen> {
     EventBus eventBus,
     AppDialog.Creator screenDialogCreator,
     PosBridge posBridge,
-    User user) {
+    NetworkService networkService,
+    DepApiBridge depApiBridge,
+    String phoneNumber,
+    String authToken) {
     this.stringHelper = stringHelper;
     this.productManager = productManager;
     this.eventBus = eventBus;
     this.screenDialogCreator = screenDialogCreator;
     this.posBridge = posBridge;
 
-    this.user = Preconditions.assertNotNull(user, "user == null");
+    this.networkService = networkService;
+    this.depApiBridge = depApiBridge;
+    this.phoneNumber = phoneNumber;
+    this.authToken = authToken;
   }
 
   final void start() {
@@ -129,32 +143,66 @@ final class PurchasePresenter extends Presenter<PurchaseScreen> {
   final void activateCards(final String pin) {
     assertScreen();
     if (activationSubscription.isUnsubscribed()) {
-      activationSubscription = Single.defer(new Callable<Single<List<Pair<Product, PosResult>>>>() {
-        @Override
-        public Single<List<Pair<Product, PosResult>>> call() throws Exception {
-          final List<Pair<Product, PosResult>> resultList = productManager
-            .registerPaymentOptionList(user.getPhoneNumber().getValue(), pin);
-          return Single.just(resultList);
-        }
-      })
+      activationSubscription = Single
+        .defer(new Callable<Single<Result<Boolean, ErrorCode>>>() {
+          @Override
+          public Single<Result<Boolean, ErrorCode>> call() throws Exception {
+            final Result<Boolean, ErrorCode> result;
+            if (networkService.checkIfAvailable()) {
+              final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(authToken, pin);
+              if (pinValidationResult.isSuccessful()) {
+                if (pinValidationResult.getData()) {
+                  boolean flag = false;
+                  final StringBuilder builder = new StringBuilder();
+                  final List<Pair<Product, PosResult>> productRegistrationResultList = productManager
+                    .registerPaymentOptionList(phoneNumber, pin);
+                  for (Pair<Product, PosResult> pair : productRegistrationResultList) {
+                    flag |= pair.second.isSuccessful();
+                    builder.append(pair.second.getData());
+                    builder.append("\n");
+                  }
+                  if (flag) {
+                    result = Result.create(true);
+                  } else {
+                    result = Result.create(
+                      FailureData.create(ErrorCode.UNEXPECTED, builder.toString()));
+                  }
+                } else {
+                  result = Result.create(FailureData.create(ErrorCode.INCORRECT_PIN));
+                }
+              } else {
+                result = Result.create(
+                  FailureData.create(
+                    ErrorCode.UNEXPECTED,
+                    pinValidationResult.getError().getDescription()));
+              }
+            } else {
+              result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
+            }
+            return Single.just(result);
+          }
+        })
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Action1<List<Pair<Product, PosResult>>>() {
+        .subscribe(new Action1<Result<Boolean, ErrorCode>>() {
           @Override
-          public void call(List<Pair<Product, PosResult>> resultList) {
-            boolean flag = false;
-            final StringBuilder builder = new StringBuilder();
-            for (Pair<Product, PosResult> result : resultList) {
-              flag |= result.second.isSuccessful();
-              builder.append(result.second.getData());
-              builder.append("\n");
-            }
-            final String resultMessage = builder.toString();
-            screen.onActivationFinished(flag);
-            if (flag) {
+          public void call(Result<Boolean, ErrorCode> result) {
+            screen.onActivationFinished(result.isSuccessful());
+            if (result.isSuccessful()) {
               resume();
             } else {
-              screen.showGenericErrorDialog(resultMessage);
+              final FailureData<ErrorCode> failureData = result.getFailureData();
+              switch (failureData.getCode()) {
+                case INCORRECT_PIN:
+                  screen.showGenericErrorDialog(stringHelper.resolve(R.string.error_incorrect_pin));
+                  break;
+                case UNAVAILABLE_NETWORK:
+                  screen.showUnavailableNetworkError();
+                  break;
+                default:
+                  screen.showGenericErrorDialog(failureData.getDescription());
+                  break;
+              }
             }
           }
         }, new Action1<Throwable>() {

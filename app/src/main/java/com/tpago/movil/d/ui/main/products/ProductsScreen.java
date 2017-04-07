@@ -14,13 +14,14 @@ import com.tpago.movil.d.ui.Screen;
 interface ProductsScreen extends Screen, Refreshable {
   void clear();
 
-  void add(@NonNull Object item);
+  void add(Object item);
 
-  void onBalanceQueried(
-    boolean succeeded,
-    @NonNull Product product,
-    @Nullable Balance balance,
-    @Nullable String message);
+  void onBalanceQueried(Product product, @Nullable Balance balance);
 
   void setBalance(@NonNull Product product, @Nullable Balance balance);
+
+  void showGenericErrorDialog(String title, String message);
+  void showGenericErrorDialog(String message);
+  void showGenericErrorDialog();
+  void showUnavailableNetworkError();
 }

@@ -2,48 +2,63 @@ package com.tpago.movil.d.ui.main.transactions.contacts;
 
 import android.support.annotation.NonNull;
 
+import com.tpago.movil.R;
+import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.api.ApiResult;
-import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.Recipient;
-import com.tpago.movil.d.domain.TransactionManager;
-import com.tpago.movil.d.misc.rx.RxUtils;
+import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.ui.Presenter;
+import com.tpago.movil.domain.ErrorCode;
+import com.tpago.movil.domain.FailureData;
+import com.tpago.movil.domain.Result;
+import com.tpago.movil.net.NetworkService;
+import com.tpago.movil.reactivex.Disposables;
 
 import java.math.BigDecimal;
+import java.util.concurrent.Callable;
 
-import rx.Subscription;
-import rx.functions.Action1;
-import rx.subscriptions.Subscriptions;
+import io.reactivex.Single;
+import io.reactivex.SingleSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 class PhoneNumberTransactionCreationPresenter
   extends Presenter<PhoneNumberTransactionCreationScreen> {
-  private final SchedulerProvider schedulerProvider;
   private final ProductManager productManager;
-  private final TransactionManager transactionManager;
   private final Recipient recipient;
+
+  private final NetworkService networkService;
+  private final DepApiBridge depApiBridge;
+  private final String authToken;
+  private final StringHelper stringHelper;
 
   private Product paymentOption;
 
-  private Subscription paymentSubscription = Subscriptions.unsubscribed();
+  private Disposable paymentSubscription = Disposables.disposed();
 
   PhoneNumberTransactionCreationPresenter(
-    @NonNull SchedulerProvider schedulerProvider,
     @NonNull ProductManager productManager,
-    @NonNull TransactionManager transactionManager,
-    @NonNull Recipient recipient) {
-    this.schedulerProvider = schedulerProvider;
+    @NonNull Recipient recipient,
+    NetworkService networkService,
+    DepApiBridge depApiBridge,
+    String authToken,
+    StringHelper stringHelper) {
     this.productManager = productManager;
-    this.transactionManager = transactionManager;
     this.recipient = recipient;
+
+    this.networkService = networkService;
+    this.depApiBridge = depApiBridge;
+    this.authToken = authToken;
+    this.stringHelper = stringHelper;
   }
 
   void start() {
@@ -53,7 +68,7 @@ class PhoneNumberTransactionCreationPresenter
 
   void stop() {
     assertScreen();
-    RxUtils.unsubscribe(paymentSubscription);
+    Disposables.dispose(paymentSubscription);
   }
 
   void setPaymentOption(@NonNull Product paymentOption) {
@@ -71,31 +86,77 @@ class PhoneNumberTransactionCreationPresenter
     }
   }
 
-  void transferTo(@NonNull BigDecimal value, @NonNull String pin) {
+  final void transferTo(final BigDecimal value, final String pin) {
     assertScreen();
-    paymentSubscription = transactionManager.transferTo(paymentOption, recipient, value, pin)
-      .subscribeOn(schedulerProvider.io())
-      .observeOn(schedulerProvider.ui())
-      .subscribe(new Action1<ApiResult<String>>() {
-        @Override
-        public void call(ApiResult<String> result) {
-          final boolean flag;
-          final String message;
-          if (result.isSuccessful()) {
-            flag = true;
-            message = result.getData();
+    paymentSubscription = Single.defer(new Callable<SingleSource<Result<String, ErrorCode>>>() {
+      @Override
+      public SingleSource<Result<String, ErrorCode>> call() throws Exception {
+        final Result<String, ErrorCode> result;
+        if (networkService.checkIfAvailable()) {
+          final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(authToken, pin);
+          if (pinValidationResult.isSuccessful()) {
+            if (pinValidationResult.getData()) {
+              final ApiResult<String> transactionResult = depApiBridge.transferTo(
+                authToken,
+                paymentOption,
+                recipient,
+                value,
+                pin)
+                .toBlocking()
+                .single();
+              if (transactionResult.isSuccessful()) {
+                result = Result.create(transactionResult.getData());
+              } else {
+                result = Result.create(
+                  FailureData.create(
+                    ErrorCode.UNEXPECTED,
+                    transactionResult.getError().getDescription()));
+              }
+            } else {
+              result = Result.create(FailureData.create(ErrorCode.INCORRECT_PIN));
+            }
           } else {
-            flag = false;
-            message = result.getError().getDescription();
+            result = Result.create(
+              FailureData.create(
+                ErrorCode.UNEXPECTED,
+                pinValidationResult.getError().getDescription()));
           }
-          screen.setPaymentResult(flag, message);
+        } else {
+          result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
         }
-      }, new Action1<Throwable>() {
-        @Override
-        public void call(Throwable throwable) {
-          Timber.e(throwable, "Paying a recipient");
-          screen.setPaymentResult(false, null);
-        }
-      });
+        return Single.just(result);
+      }
+    })
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread())
+      .subscribe(new Consumer<Result<String,ErrorCode>>() {
+          @Override
+          public void accept(Result<String, ErrorCode> result) {
+            if (result.isSuccessful()) {
+              screen.setPaymentResult(true, result.getSuccessData());
+            } else {
+              screen.setPaymentResult(false, null);
+              final FailureData<ErrorCode> failureData = result.getFailureData();
+              switch (failureData.getCode()) {
+                case INCORRECT_PIN:
+                  screen.showGenericErrorDialog(stringHelper.resolve(R.string.error_incorrect_pin));
+                  break;
+                case UNAVAILABLE_NETWORK:
+                  screen.showUnavailableNetworkError();
+                  break;
+                default:
+                  screen.showGenericErrorDialog(failureData.getDescription());
+                  break;
+              }
+            }
+          }
+        }, new Consumer<Throwable>() {
+          @Override
+          public void accept(Throwable throwable) {
+            Timber.e(throwable);
+            screen.setPaymentResult(false, null);
+            screen.showGenericErrorDialog();
+          }
+        });
   }
 }

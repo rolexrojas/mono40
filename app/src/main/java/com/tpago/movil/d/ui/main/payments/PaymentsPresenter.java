@@ -3,6 +3,7 @@ package com.tpago.movil.d.ui.main.payments;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.tpago.movil.R;
 import com.tpago.movil.UserStore;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.BillRecipient;
@@ -10,6 +11,7 @@ import com.tpago.movil.d.domain.PhoneNumber;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.api.ApiResult;
+import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.pos.PosResult;
 import com.tpago.movil.d.domain.session.SessionManager;
@@ -19,12 +21,22 @@ import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.ui.Presenter;
 import com.tpago.movil.d.ui.main.list.NoResultsListItemItem;
+import com.tpago.movil.domain.ErrorCode;
+import com.tpago.movil.domain.FailureData;
+import com.tpago.movil.domain.Result;
+import com.tpago.movil.net.NetworkService;
+import com.tpago.movil.reactivex.Disposables;
 import com.tpago.movil.util.Objects;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Single;
+import io.reactivex.SingleSource;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -49,14 +61,19 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   private final PosBridge posBridge;
   private final UserStore userStore;
 
+  private final NetworkService networkService;
+  private final DepApiBridge depApiBridge;
+  private final String authToken;
+
   private boolean deleting = false;
   private List<Recipient> selectedRecipients = new ArrayList<>();
 
   private Subscription subscription = Subscriptions.unsubscribed();
   private Subscription querySubscription = Subscriptions.unsubscribed();
   private Subscription searchSubscription = Subscriptions.unsubscribed();
-  private Subscription deleteSubscription = Subscriptions.unsubscribed();
   private Subscription signOutSubscription = Subscriptions.unsubscribed();
+
+  private Disposable deleteSubscription = Disposables.disposed();
 
   PaymentsPresenter(
     @NonNull StringHelper stringHelper,
@@ -65,7 +82,10 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
     @NonNull SessionManager sessionManager,
     @NonNull ProductManager productManager,
     PosBridge posBridge,
-    UserStore userStore) {
+    UserStore userStore,
+    NetworkService networkService,
+    DepApiBridge depApiBridge,
+    String authToken) {
     this.stringHelper = stringHelper;
     this.schedulerProvider = schedulerProvider;
     this.recipientManager = recipientManager;
@@ -73,6 +93,10 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
     this.productManager = productManager;
     this.posBridge = posBridge;
     this.userStore = userStore;
+
+    this.networkService = networkService;
+    this.depApiBridge = depApiBridge;
+    this.authToken = authToken;
   }
 
   void start() {
@@ -152,7 +176,9 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
     RxUtils.unsubscribe(subscription);
     RxUtils.unsubscribe(searchSubscription);
     RxUtils.unsubscribe(querySubscription);
-    RxUtils.unsubscribe(deleteSubscription);
+    if (!deleteSubscription.isDisposed()) {
+      deleteSubscription.dispose();
+    }
     RxUtils.unsubscribe(signOutSubscription);
   }
 
@@ -315,28 +341,70 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
     }
   }
 
-  final void onPinRequestFinished(String pin) {
-    if (deleting && deleteSubscription.isUnsubscribed()) {
-      deleteSubscription = recipientManager.remove(
-        sessionManager.getSession().getAuthToken(),
-        pin,
-        selectedRecipients)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Action1<ApiResult<Void>>() {
+  final void onPinRequestFinished(final String pin) {
+    if (deleting) {
+      deleteSubscription = Single.defer(new Callable<SingleSource<Result<Boolean, ErrorCode>>>() {
+        @Override
+        public SingleSource<Result<Boolean, ErrorCode>> call() throws Exception {
+          final Result<Boolean, ErrorCode> result;
+          if (networkService.checkIfAvailable()) {
+            final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(authToken, pin);
+            if (pinValidationResult.isSuccessful()) {
+              if (pinValidationResult.getData()) {
+                final ApiResult<Void> recipientRemovalResult = recipientManager
+                  .remove(authToken, pin, selectedRecipients)
+                  .toBlocking()
+                  .value();
+                if (recipientRemovalResult.isSuccessful()) {
+                  result = Result.create(true);
+                } else {
+                  result = Result.create(
+                    FailureData.create(
+                      ErrorCode.UNEXPECTED,
+                      recipientRemovalResult.getError().getDescription()));
+                }
+              } else {
+                result = Result.create(FailureData.create(ErrorCode.INCORRECT_PIN));
+              }
+            } else {
+              result = Result.create(
+                FailureData.create(
+                  ErrorCode.UNEXPECTED,
+                  pinValidationResult.getError().getDescription()));
+            }
+          } else {
+            result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
+          }
+          return Single.just(result);
+        }
+      })
+        .subscribeOn(io.reactivex.schedulers.Schedulers.io())
+        .observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
+        .subscribe(new Consumer<Result<Boolean, ErrorCode>>() {
           @Override
-          public void call(ApiResult<Void> result) {
+          public void accept(Result<Boolean, ErrorCode> result) throws Exception {
+            screen.setDeletingResult(result.isSuccessful());
             if (result.isSuccessful()) {
               stopDeleting();
               screen.clearQuery();
-              screen.setDeletingResult(result.isSuccessful());
             } else {
-              screen.showMessage(result.getError().getDescription());
+              final FailureData<ErrorCode> failureData = result.getFailureData();
+              switch (failureData.getCode()) {
+                case INCORRECT_PIN:
+                  screen.showGenericErrorDialog(stringHelper.resolve(R.string.error_incorrect_pin));
+                  break;
+                case UNAVAILABLE_NETWORK:
+                  screen.showUnavailableNetworkError();
+                  break;
+                default:
+                  screen.showGenericErrorDialog(failureData.getDescription());
+                  break;
+              }
             }
           }
-        }, new Action1<Throwable>() {
+        }, new Consumer<Throwable>() {
           @Override
-          public void call(Throwable throwable) {
+          public void accept(Throwable throwable) throws Exception {
             Timber.e(throwable, "Removing one or more recipients");
             screen.setDeletingResult(false);
             screen.showMessage(stringHelper.cannotProcessYourRequestAtTheMoment());
@@ -346,7 +414,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
   }
 
   final void deleteSelectedRecipients() {
-    if (deleting && deleteSubscription.isUnsubscribed()) {
+    if (deleting) {
       screen.requestPin();
     }
   }

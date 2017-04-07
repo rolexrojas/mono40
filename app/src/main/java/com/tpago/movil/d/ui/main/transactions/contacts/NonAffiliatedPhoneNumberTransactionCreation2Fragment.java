@@ -99,7 +99,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends ChildF
             getContainer().finish(true, result.getData());
           } else {
             Dialogs.builder(getContext())
-              .setTitle(R.string.error_title)
+              .setTitle(R.string.error_generic_title)
               .setMessage(result.getError().getDescription())
               .setPositiveButton(R.string.error_positive_button_text, null)
               .create()
@@ -111,7 +111,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends ChildF
         public void call(Throwable throwable) {
           Timber.e(throwable, "Transfer to a non affiliated recipient");
           Dialogs.builder(getContext())
-            .setTitle(R.string.error_title)
+            .setTitle(R.string.error_generic_title)
             .setMessage(R.string.error_generic)
             .setPositiveButton(R.string.error_positive_button_text, null)
             .create()
@@ -173,7 +173,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends ChildF
                 y);
             } else {
               Dialogs.builder(getContext())
-                .setTitle(R.string.error_title)
+                .setTitle(R.string.error_generic_title)
                 .setMessage(result.getError().getDescription())
                 .setPositiveButton(R.string.error_positive_button_text, null)
                 .create()
@@ -186,7 +186,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends ChildF
             Timber.e(throwable, "");
             loadIndicator.stop();
             Dialogs.builder(getContext())
-              .setTitle(R.string.error_title)
+              .setTitle(R.string.error_generic_title)
               .setMessage(R.string.error_generic)
               .setPositiveButton(R.string.error_positive_button_text, null)
               .create()

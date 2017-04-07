@@ -426,12 +426,22 @@ public class PaymentsFragment
   }
 
   @Override
-  public void showGenericErrorDialog() {
+  public void showGenericErrorDialog(String message) {
     Dialogs.builder(getContext())
-      .setTitle(R.string.error_title)
-      .setMessage(R.string.error_generic)
+      .setTitle(R.string.error_generic_title)
+      .setMessage(message)
       .setPositiveButton(R.string.error_positive_button_text, null)
       .show();
+  }
+
+  @Override
+  public void showGenericErrorDialog() {
+    showGenericErrorDialog(getString(R.string.error_generic));
+  }
+
+  @Override
+  public void showUnavailableNetworkError() {
+    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG).show();
   }
 
   @Override

@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.util.BinderFactory;
@@ -30,7 +31,6 @@ import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Balance;
 import com.tpago.movil.d.ui.ChildFragment;
-import com.tpago.movil.text.Texts;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import javax.inject.Inject;
@@ -41,12 +41,13 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import timber.log.Timber;
 
+import static com.tpago.movil.util.Objects.checkIfNotNull;
+
 /**
  * @author hecvasro
  */
 @Deprecated
-public class ProductsFragment extends ChildFragment<MainContainer>
-  implements ProductsScreen,
+public class ProductsFragment extends ChildFragment<MainContainer> implements ProductsScreen,
   ProductListItemHolder.OnQueryActionButtonClickedListener,
   ShowRecentTransactionsListItemHolder.OnShowRecentTransactionsButtonClickedListener {
   private Unbinder unbinder;
@@ -209,21 +210,9 @@ public class ProductsFragment extends ChildFragment<MainContainer>
   }
 
   @Override
-  public void onBalanceQueried(
-    boolean succeeded,
-    @NonNull Product product,
-    @Nullable Balance balance,
-    @Nullable String message) {
-    PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), succeeded);
+  public void onBalanceQueried(Product product, @Nullable Balance balance) {
+    PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), checkIfNotNull(balance));
     setBalance(product, balance);
-    if (!succeeded) {
-      message = Texts.checkIfEmpty(message) ? getString(R.string.error_generic) : message;
-      Dialogs.builder(getContext())
-        .setTitle(R.string.error_title)
-        .setMessage(message)
-        .setPositiveButton(R.string.error_positive_button_text, null)
-        .show();
-    }
   }
 
   @Override
@@ -235,6 +224,30 @@ public class ProductsFragment extends ChildFragment<MainContainer>
       actualItem.setBalance(balance);
       adapter.set(index, actualItem);
     }
+  }
+
+  @Override
+  public void showGenericErrorDialog(String title, String message) {
+    Dialogs.builder(getContext())
+      .setTitle(title)
+      .setMessage(message)
+      .setPositiveButton(R.string.error_positive_button_text, null)
+      .show();
+  }
+
+  @Override
+  public void showGenericErrorDialog(String message) {
+    showGenericErrorDialog(getString(R.string.error_generic_title), message);
+  }
+
+  @Override
+  public void showGenericErrorDialog() {
+    showGenericErrorDialog(getString(R.string.error_generic));
+  }
+
+  @Override
+  public void showUnavailableNetworkError() {
+    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG).show();
   }
 
   @Nullable

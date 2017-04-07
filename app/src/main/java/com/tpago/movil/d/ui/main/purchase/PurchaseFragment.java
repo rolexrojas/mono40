@@ -14,6 +14,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.tpago.movil.R;
 import com.tpago.movil.d.data.StringHelper;
@@ -233,17 +234,27 @@ public class PurchaseFragment
   }
 
   @Override
-  public void showGenericErrorDialog(String message) {
+  public void showGenericErrorDialog(String title, String message) {
     Dialogs.builder(getContext())
-      .setTitle(R.string.error_title)
+      .setTitle(title)
       .setMessage(message)
       .setPositiveButton(R.string.error_positive_button_text, null)
       .show();
   }
 
   @Override
+  public void showGenericErrorDialog(String message) {
+    showGenericErrorDialog(getString(R.string.error_generic_title), message);
+  }
+
+  @Override
   public void showGenericErrorDialog() {
     showGenericErrorDialog(getString(R.string.error_generic));
+  }
+
+  @Override
+  public void showUnavailableNetworkError() {
+    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG).show();
   }
 
   @Override

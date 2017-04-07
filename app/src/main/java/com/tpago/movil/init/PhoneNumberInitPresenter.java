@@ -117,7 +117,7 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
             } else {
               final DApiError error = DApiData.getError();
               view.showDialog(
-                R.string.error_title,
+                R.string.error_generic_title,
                 error.getDescription(),
                 R.string.error_positive_button_text);
             }
@@ -128,7 +128,7 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
             Timber.e(throwable);
             stopLoading();
             view.showDialog(
-              R.string.error_title,
+              R.string.error_generic_title,
               R.string.error_generic,
               R.string.error_positive_button_text);
           }

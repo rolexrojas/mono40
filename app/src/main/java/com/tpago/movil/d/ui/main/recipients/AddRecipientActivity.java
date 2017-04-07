@@ -33,10 +33,7 @@ import butterknife.Unbinder;
 /**
  * @author hecvasro
  */
-public class AddRecipientActivity
-  extends SwitchableContainerActivity<AddRecipientComponent>
-  implements AddRecipientContainer,
-  AddRecipientScreen {
+public class AddRecipientActivity extends SwitchableContainerActivity<AddRecipientComponent> implements AddRecipientContainer, AddRecipientScreen {
   private static final String EXTRA_RECIPIENT = "recipient";
 
   private static final int REQUEST_CODE = 0;

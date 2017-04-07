@@ -57,7 +57,10 @@ interface PaymentsScreen extends Screen {
   void showTransactionSummary(Recipient recipient, boolean alreadyExists, String transactionId);
 
   void requestPin();
+
+  void showGenericErrorDialog(String message);
   void showGenericErrorDialog();
+  void showUnavailableNetworkError();
 
   void setDeletingResult(boolean result);
 }

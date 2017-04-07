@@ -45,14 +45,8 @@ interface PurchaseScreen extends Screen {
 
   void onActivationFinished(boolean succeeded);
 
-  /**
-   * TODO
-   *
-   * @param intent
-   *   TODO
-   */
-  void startActivity(@NonNull Intent intent);
-
+  void showGenericErrorDialog(String title, String message);
   void showGenericErrorDialog(String message);
   void showGenericErrorDialog();
+  void showUnavailableNetworkError();
 }

@@ -6,8 +6,9 @@
   <string name="edit">Editar</string>
   <string name="email">Correo electrónico</string>
   <string name="error_generic">En estos momentos no podemos procesar esta solicitud. Favor intentar nuevamente.</string>
+  <string name="error_incorrect_pin">PIN incorrecto.</string>
   <string name="error_positive_button_text">@string/ok</string>
-  <string name="error_title">¡Lo sentimos!</string>
+  <string name="error_generic_title">¡Lo sentimos!</string>
   <string name="error_unavailable_network">Sin conexión a Internet</string>
   <string name="first_name">Nombre</string>
   <string name="font_gotham_round_bold">fonts/GothamRounded/Bold.otf</string>
@@ -47,6 +48,7 @@
   <string name="action.save">Guardar</string>
   <string name="action.skip">Saltar</string>
   <string name="action.transfer">Transferir</string>
+  <string name="activate_payment_methods">Activar cuentas y tarjetas de crédito para compras</string>
   <string name="add_another_account">Agregar otra cuenta</string>
   <string name="add_recipient.search.hint">Seleccione o busque el destinatario</string>
   <string name="add_recipient.title">Agregar destinatario</string>
@@ -193,8 +195,6 @@
   <string name="register_form_password_button_move_to_next_screen">@string/next</string>
   <string name="register_form_password_error_message">La contraseña no cumple con los requisitos mínimos. Mínimo 8 caracteres, Alfanuméricos, no puede ser igual al correo electrónico.</string>
   <string name="register_form_password_error_positive_button_text">@string/ok</string>
-  <string name="remove_recipients">Eliminar destinatarios</string>
-  <string name="activate_payment_methods">Activar cuentas y tarjetas de crédito para compras</string>
   <string name="register_form_password_error_title">Contraseña incorrecta</string>
   <string name="register_form_password_input_hint">@string/password</string>
   <string name="register_form_password_input_hint_confirmation">Confirmar contraseña</string>
@@ -206,6 +206,7 @@
   <string name="register_summary_button_later">@string/later</string>
   <string name="register_summary_label_description">Empecemos con mostrarte lo más básico de la nueva App.</string>
   <string name="register_summary_label_title">¡tPago esta listo!</string>
+  <string name="remove_recipients">Eliminar destinatarios</string>
   <string name="screen_payments_commerce_title">Comprar</string>
   <string name="screen_products_text_widget_amount_value_font">@string/font_gotham_rounded_medium</string>
   <string name="see">Ver</string>

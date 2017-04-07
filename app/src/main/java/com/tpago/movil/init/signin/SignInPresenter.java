@@ -146,7 +146,7 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
             } else if (code.equals(Code.FAILURE_ALREADY_ASSOCIATED_DEVICE)) {
               view.checkIfUserWantsToForceSignIn();
             } else {
-              view.showDialog(R.string.error_title, data, R.string.error_positive_button_text);
+              view.showDialog(R.string.error_generic_title, data, R.string.error_positive_button_text);
             }
           }
         }, new Consumer<Throwable>() {
@@ -155,7 +155,7 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
             Timber.e(throwable, "Signing in");
             stopLoading();
             view.showDialog(
-              R.string.error_title,
+              R.string.error_generic_title,
               R.string.error_generic,
               R.string.error_positive_button_text);
           }

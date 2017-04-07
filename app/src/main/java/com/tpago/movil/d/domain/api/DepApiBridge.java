@@ -50,8 +50,7 @@ public interface DepApiBridge {
    * @return {@link Balance balance} of a {@link Product product} from the API.
    */
   @NonNull
-  Observable<ApiResult<Balance>> queryBalance(@NonNull String authToken, @NonNull Product product,
-    @NonNull String pin);
+  ApiResult<Balance> queryBalance(String authToken, Product product, String pin);
 
   /**
    * Creates an {@link Observable observable} that emits the latest {@link Transaction transactions}
@@ -141,4 +140,6 @@ public interface DepApiBridge {
     Product fundingAccount,
     BillRecipient.Option option,
     String pin);
+
+  ApiResult<Boolean> validatePin(String authToken, String pin);
 }

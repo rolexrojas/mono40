@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.tpago.movil.R;
 import com.tpago.movil.d.data.StringHelper;
@@ -21,7 +22,6 @@ import com.tpago.movil.d.ui.view.widget.pad.Digit;
 import com.tpago.movil.d.ui.view.widget.pad.Dot;
 import com.tpago.movil.d.ui.view.widget.pad.DepNumPad;
 import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
-import com.tpago.movil.text.Texts;
 import com.tpago.movil.main.transactions.PaymentMethodChooser;
 
 import java.math.BigDecimal;
@@ -75,8 +75,6 @@ public class PhoneNumberTransactionCreationFragment
 
   private boolean mustShowDot = false;
   private BigDecimal fractionOffset = ONE;
-
-  private String resultMessage = null;
 
   @NonNull
   public static PhoneNumberTransactionCreationFragment newInstance() {
@@ -202,18 +200,10 @@ public class PhoneNumberTransactionCreationFragment
   }
 
   @Override
-  public void setPaymentResult(boolean succeeded, String message) {
+  public void setPaymentResult(boolean succeeded, String transactionId) {
     PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), succeeded);
     if (succeeded) {
-      getContainer().finish(true, message);
-    } else {
-      message = Texts.checkIfEmpty(message) ? getString(R.string.error_generic) : message;
-      Dialogs.builder(getContext())
-        .setTitle(R.string.error_title)
-        .setMessage(message)
-        .setPositiveButton(R.string.error_positive_button_text, null)
-        .create()
-        .show();
+      getContainer().finish(true, transactionId);
     }
   }
 
@@ -307,5 +297,25 @@ public class PhoneNumberTransactionCreationFragment
   public void onPaymentMethodChosen(Product product) {
     fundingAccount.set(product);
     presenter.setPaymentOption(product);
+  }
+
+  public void showGenericErrorDialog(String title, String message) {
+    Dialogs.builder(getContext())
+      .setTitle(title)
+      .setMessage(message)
+      .setPositiveButton(R.string.error_positive_button_text, null)
+      .show();
+  }
+
+  public void showGenericErrorDialog(String message) {
+    showGenericErrorDialog(getString(R.string.error_generic_title), message);
+  }
+
+  public void showGenericErrorDialog() {
+    showGenericErrorDialog(getString(R.string.error_generic));
+  }
+
+  public void showUnavailableNetworkError() {
+    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG).show();
   }
 }

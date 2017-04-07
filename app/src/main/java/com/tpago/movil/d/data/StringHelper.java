@@ -35,6 +35,10 @@ public final class StringHelper {
     return String.format(getString(id), args);
   }
 
+  public final String resolve(@StringRes int id) {
+    return getString(id);
+  }
+
   @NonNull
   public final String appName() {
     return getString(R.string.app_name);

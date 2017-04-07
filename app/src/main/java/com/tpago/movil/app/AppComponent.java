@@ -32,6 +32,7 @@ import com.tpago.movil.init.InitModule;
 import com.tpago.movil.main.MainComponent;
 import com.tpago.movil.main.MainModule;
 import com.tpago.movil.net.NetModule;
+import com.tpago.movil.net.NetworkService;
 import com.tpago.movil.nfc.NfcModule;
 
 import javax.inject.Singleton;
@@ -73,6 +74,7 @@ public interface AppComponent {
   DepApiBridge provideApiBridge();
   EventBus provideEventBus();
   InitialDataLoader provideInitialDataLoader();
+  NetworkService provideNetworkService();
   NfcHandler provideNfcHandler();
   PosBridge providePosBridge();
   ProductManager provideProductManager();

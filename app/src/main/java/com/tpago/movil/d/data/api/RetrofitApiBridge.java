@@ -126,7 +126,7 @@ class RetrofitApiBridge implements DepApiBridge {
    */
   @NonNull
   @Override
-  public Observable<ApiResult<Balance>> queryBalance(@NonNull String authToken,
+  public ApiResult<Balance> queryBalance(@NonNull String authToken,
     @NonNull Product product, @NonNull String pin) {
     final Func1<Response<? extends Balance>, Observable<ApiResult<Balance>>> func1
       = new Func1<Response<? extends Balance>, Observable<ApiResult<Balance>>>() {
@@ -147,13 +147,17 @@ class RetrofitApiBridge implements DepApiBridge {
       }
     };
     final BalanceQueryRequestBody request = BalanceQueryRequestBody.create(product, pin);
+    final Observable<ApiResult<Balance>> observable;
     if (Product.checkIfCreditCard(product)) {
-      return apiService.creditCardBalance(authToken, request).flatMap(func1);
+      observable = apiService.creditCardBalance(authToken, request).flatMap(func1);
     } else if (Product.checkIfLoan(product)) {
-      return apiService.loanBalance(authToken, request).flatMap(func1);
+      observable = apiService.loanBalance(authToken, request).flatMap(func1);
     } else {
-      return apiService.accountBalance(authToken, request).flatMap(func1);
+      observable = apiService.accountBalance(authToken, request).flatMap(func1);
     }
+    return observable
+      .toBlocking()
+      .single();
   }
 
   /**
@@ -325,5 +329,13 @@ class RetrofitApiBridge implements DepApiBridge {
           return Long.toString(System.currentTimeMillis());
         }
       }));
+  }
+
+  @Override
+  public ApiResult<Boolean> validatePin(String authToken, String pin) {
+    return apiService.validatePin(authToken, ValidatePinRequestBody.create(pin))
+      .flatMap(mapToApiResult(RetrofitApiBridge.<Boolean>identityMapFunc()))
+      .toBlocking()
+      .single();
   }
 }

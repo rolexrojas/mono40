@@ -2,32 +2,25 @@ package com.tpago.movil.d.ui.main.purchase;
 
 import android.content.Context;
 
+import com.tpago.movil.Session;
 import com.tpago.movil.User;
 import com.tpago.movil.app.FragmentScope;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.ProductManager;
+import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.util.EventBus;
 import com.tpago.movil.d.ui.AppDialog;
+import com.tpago.movil.net.NetworkService;
 
 import dagger.Module;
 import dagger.Provides;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 @Module
 class PurchaseModule {
-  /**
-   * TODO
-   *
-   * @param context
-   *   TODO
-   *
-   * @return TODO
-   */
   @Provides
   @FragmentScope
   PurchasePaymentOptionBinder providePaymentOptionBinder(
@@ -45,13 +38,19 @@ class PurchaseModule {
     EventBus eventBus,
     AppDialog.Creator screenDialogCreator,
     PosBridge posBridge,
-    User user) {
+    NetworkService networkService,
+    DepApiBridge depApiBridge,
+    User user,
+    Session session) {
     return new PurchasePresenter(
       stringHelper,
       productManager,
       eventBus,
       screenDialogCreator,
       posBridge,
-      user);
+      networkService,
+      depApiBridge,
+      user.getPhoneNumber().getValue(),
+      session.getToken());
   }
 }

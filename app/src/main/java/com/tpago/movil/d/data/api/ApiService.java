@@ -20,8 +20,6 @@ import retrofit2.http.Query;
 import rx.Observable;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 @Deprecated
@@ -31,14 +29,17 @@ interface ApiService {
 
   @POST("query/accounts/balance")
   Observable<Response<AccountBalance>> accountBalance(
-    @Header(Api.Header.AUTHORIZATION) String authToken, @Body BalanceQueryRequestBody body);
+    @Header(Api.Header.AUTHORIZATION) String authToken,
+    @Body BalanceQueryRequestBody body);
 
   @POST("query/credit-cards/balance")
   Observable<Response<CreditCardBalance>> creditCardBalance(
-    @Header(Api.Header.AUTHORIZATION) String authToken, @Body BalanceQueryRequestBody body);
+    @Header(Api.Header.AUTHORIZATION) String authToken,
+    @Body BalanceQueryRequestBody body);
 
   @POST("query/loans/balance")
-  Observable<Response<LoanBalance>> loanBalance(@Header(Api.Header.AUTHORIZATION) String authToken,
+  Observable<Response<LoanBalance>> loanBalance(
+    @Header(Api.Header.AUTHORIZATION) String authToken,
     @Body BalanceQueryRequestBody body);
 
   @GET("query/last-transactions")
@@ -46,7 +47,8 @@ interface ApiService {
     @Header(Api.Header.AUTHORIZATION) String authToken);
 
   @GET("transfer/recipient-info")
-  Observable<Response<Void>> checkIfAssociated(@Header(Api.Header.AUTHORIZATION) String authToken,
+  Observable<Response<Void>> checkIfAssociated(
+    @Header(Api.Header.AUTHORIZATION) String authToken,
     @Query("recipient-msisdn") String phoneNumber);
 
   @POST("transfer/gcs-gcs")
@@ -100,4 +102,9 @@ interface ApiService {
   Observable<Response<Void>> removeBill(
     @Header(Api.Header.AUTHORIZATION) String authToken,
     @Body BillRequestBody body);
+
+  @POST("payments/validate-pin")
+  Observable<Response<Boolean>> validatePin(
+    @Header(Api.Header.AUTHORIZATION) String authToken,
+    @Body ValidatePinRequestBody body);
 }

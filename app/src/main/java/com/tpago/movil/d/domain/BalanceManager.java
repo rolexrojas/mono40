@@ -37,7 +37,6 @@ public final class BalanceManager {
 
   private final EventBus eventBus;
   private final DepApiBridge apiBridge;
-  private final com.tpago.movil.d.domain.session.SessionManager sessionManager;
 
   /**
    * Key-value structured used to store the last queried {@link Balance balance} of a {@link Product
@@ -47,12 +46,10 @@ public final class BalanceManager {
 
   private Subscription subscription = Subscriptions.unsubscribed();
 
-  public BalanceManager(@NonNull EventBus eventBus, @NonNull DepApiBridge apiBridge,
-    @NonNull com.tpago.movil.d.domain.session.SessionManager sessionManager) {
+  public BalanceManager(EventBus eventBus, DepApiBridge apiBridge) {
     this.eventBus = eventBus;
     this.apiBridge = apiBridge;
     this.balances = new HashMap<>();
-    this.sessionManager = sessionManager;
   }
 
   public final void start() {
@@ -123,17 +120,11 @@ public final class BalanceManager {
   }
 
   @NonNull
-  public final Observable<ApiResult<Balance>> queryBalance(
-    @NonNull final Product product,
-    @NonNull final String pin) {
-    return apiBridge.queryBalance(sessionManager.getSession().getAuthToken(), product, pin)
-      .doOnNext(new Action1<ApiResult<Balance>>() {
-        @Override
-        public void call(ApiResult<Balance> result) {
-          if (result.isSuccessful()) {
-            balances.put(product, Pair.create(System.currentTimeMillis(), result.getData()));
-          }
-        }
-      });
+  public final ApiResult<Balance> queryBalance(String authToken, Product product, String pin) {
+    final ApiResult<Balance> apiResult = apiBridge.queryBalance(authToken, product, pin);
+    if (apiResult.isSuccessful()) {
+      balances.put(product, Pair.create(System.currentTimeMillis(), apiResult.getData()));
+    }
+    return apiResult;
   }
 }

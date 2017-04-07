@@ -56,10 +56,10 @@ final class RetrofitApiService implements ApiService {
   @Override
   public Single<Result<Set<Bank>, ApiCode>> fetchBankSet() {
     return service.fetchBankSet()
-      .map(mapperFunc(ApiBankSet.mapperFunc()));
+      .map(mapperFunc(FetchBankSetResponseBody.mapperFunc()));
   }
 
   private interface Service {
-    @GET("banks") Single<Response<ApiBankSet>> fetchBankSet();
+    @GET("banks") Single<Response<FetchBankSetResponseBody>> fetchBankSet();
   }
 }

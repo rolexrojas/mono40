@@ -8,5 +8,5 @@ import io.reactivex.Observable;
  * @author hecvasro
  */
 interface Provider<T> {
-  Observable<Result<Set<T>, ProviderCode>> getAll();
+  Observable<Result<Set<T>, ErrorCode>> getAll();
 }

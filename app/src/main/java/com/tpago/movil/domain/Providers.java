@@ -10,15 +10,15 @@ import io.reactivex.functions.Function;
  * @author hecvasro
  */
 public final class Providers {
-  public static <T> Function<Result<Set<T>, ApiCode>, Result<Set<T>, ProviderCode>> resultMapper() {
-    return new Function<Result<Set<T>, ApiCode>, Result<Set<T>, ProviderCode>>() {
+  public static <T> Function<Result<Set<T>, ApiCode>, Result<Set<T>, ErrorCode>> resultMapper() {
+    return new Function<Result<Set<T>, ApiCode>, Result<Set<T>, ErrorCode>>() {
       @Override
-      public Result<Set<T>, ProviderCode> apply(Result<Set<T>, ApiCode> result) {
+      public Result<Set<T>, ErrorCode> apply(Result<Set<T>, ApiCode> result) {
         if (result.isSuccessful()) {
           return Result.create(result.getSuccessData());
         } else {
           final FailureData<ApiCode> failureData = result.getFailureData();
-          return Result.create(FailureData.create(ProviderCode.UNEXPECTED, failureData.getDescription()));
+          return Result.create(FailureData.create(ErrorCode.UNEXPECTED, failureData.getDescription()));
         }
       }
     };

@@ -38,25 +38,25 @@ public final class BankProvider implements Provider<Bank> {
   }
 
   @Override
-  public Observable<Result<Set<Bank>, ProviderCode>> getAll() {
-    final Observable<Result<Set<Bank>, ProviderCode>> localObservable = Observable.defer(
-      new Callable<ObservableSource<Result<Set<Bank>, ProviderCode>>>() {
+  public Observable<Result<Set<Bank>, ErrorCode>> getAll() {
+    final Observable<Result<Set<Bank>, ErrorCode>> localObservable = Observable.defer(
+      new Callable<ObservableSource<Result<Set<Bank>, ErrorCode>>>() {
         @Override
-        public ObservableSource<Result<Set<Bank>, ProviderCode>> call() throws Exception {
-          return Observable.just(Result.<Set<Bank>, ProviderCode>create(bankRepo.getAll()));
+        public ObservableSource<Result<Set<Bank>, ErrorCode>> call() throws Exception {
+          return Observable.just(Result.<Set<Bank>, ErrorCode>create(bankRepo.getAll()));
         }
       });
     if (fetchedSet) {
       return localObservable;
     } else {
-      final Observable<Result<Set<Bank>, ProviderCode>> remoteObservable;
+      final Observable<Result<Set<Bank>, ErrorCode>> remoteObservable;
       if (networkService.checkIfAvailable()) {
         remoteObservable = apiService.fetchBankSet()
-          .map(new Function<Result<Set<Bank>, ApiCode>, Result<Set<Bank>, ProviderCode>>() {
+          .map(new Function<Result<Set<Bank>, ApiCode>, Result<Set<Bank>, ErrorCode>>() {
             @Override
-            public Result<Set<Bank>, ProviderCode> apply(
+            public Result<Set<Bank>, ErrorCode> apply(
               final Result<Set<Bank>, ApiCode> apiResult) throws Exception {
-              final Result<Set<Bank>, ProviderCode> result;
+              final Result<Set<Bank>, ErrorCode> result;
               fetchedSet = apiResult.isSuccessful();
               if (fetchedSet) {
                 final Set<Bank> bankSet = Sets.createSortedSet(apiResult.getSuccessData());
@@ -71,7 +71,7 @@ public final class BankProvider implements Provider<Bank> {
               } else {
                 result = Result.create(
                   FailureData.create(
-                    ProviderCode.UNEXPECTED,
+                    ErrorCode.UNEXPECTED,
                     apiResult.getFailureData().getDescription()));
               }
               return result;
@@ -80,8 +80,8 @@ public final class BankProvider implements Provider<Bank> {
           .toObservable();
       } else {
         remoteObservable = Observable.just(
-          Result.<Set<Bank>, ProviderCode>create(
-            FailureData.create(ProviderCode.UNAVAILABLE_NETWORK)));
+          Result.<Set<Bank>, ErrorCode>create(
+            FailureData.create(ErrorCode.UNAVAILABLE_NETWORK)));
       }
       return localObservable.concatWith(remoteObservable);
     }

@@ -96,7 +96,7 @@ public final class InitFragment extends BaseInitFragment {
             Timber.e(throwable, "Loading initial data");
             final Activity activity = getActivity();
             new AlertDialog.Builder(activity)
-              .setTitle(R.string.error_title)
+              .setTitle(R.string.error_generic_title)
               .setMessage(R.string.error_generic)
               .setPositiveButton(
                 R.string.error_positive_button_text,

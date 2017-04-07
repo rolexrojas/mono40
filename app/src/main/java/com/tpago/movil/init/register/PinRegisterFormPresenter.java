@@ -78,7 +78,7 @@ public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPre
             } else {
               final DApiError error = DApiData.getError();
               view.showDialog(
-                R.string.error_title,
+                R.string.error_generic_title,
                 error.getDescription(),
                 R.string.error_positive_button_text);
             }
@@ -89,7 +89,7 @@ public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPre
             Timber.e(throwable, "Registering an user");
             view.stopLoading();
             view.showDialog(
-              R.string.error_title,
+              R.string.error_generic_title,
               R.string.error_generic,
               R.string.error_positive_button_text);
           }

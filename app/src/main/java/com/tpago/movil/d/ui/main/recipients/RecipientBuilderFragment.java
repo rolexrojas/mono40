@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,17 +13,27 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.Partner;
 import com.tpago.movil.R;
+import com.tpago.movil.d.domain.Recipient;
+import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
+import com.tpago.movil.domain.ErrorCode;
+import com.tpago.movil.domain.FailureData;
+import com.tpago.movil.domain.Result;
+import com.tpago.movil.net.NetworkService;
+import com.tpago.movil.reactivex.Disposables;
 import com.tpago.movil.text.Texts;
 import com.tpago.movil.util.Preconditions;
 import com.tpago.movil.widget.TextInput;
+
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
@@ -30,11 +41,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.Subscriptions;
+import io.reactivex.Single;
+import io.reactivex.SingleSource;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import timber.log.Timber;
 
 /**
@@ -50,12 +60,14 @@ public class RecipientBuilderFragment extends Fragment {
 
   private Unbinder unbinder;
 
-  private Subscription subscription = Subscriptions.unsubscribed();
+  private Disposable subscription = Disposables.disposed();
 
   @Inject
   SessionManager sessionManager;
   @Inject
   DepApiBridge apiBridge;
+  @Inject
+  NetworkService networkService;
 
   public static RecipientBuilderFragment create(String keyword, Partner partner) {
     final Bundle bundle = new Bundle();
@@ -75,34 +87,13 @@ public class RecipientBuilderFragment extends Fragment {
   @BindView(R.id.button)
   Button button;
 
-  private void resolve(RecipientBuilder.Result result) {
-    PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), result.isSuccessful());
-    if (result.isSuccessful()) {
-      final Activity activity = getActivity();
-      activity.setResult(
-        Activity.RESULT_OK,
-        AddRecipientActivity.serializeResult(result.getData()));
-      activity.finish();
-    } else {
-      Dialogs.builder(getContext())
-        .setTitle(R.string.error_title)
-        .setMessage(result.getError())
-        .setPositiveButton(R.string.error_positive_button_text, null)
-        .create()
-        .show();
-    }
-  }
-
   @OnClick(R.id.button)
   void onButtonClicked() {
     final String content = textInput.getText().toString().trim();
     if (Texts.checkIfEmpty(content)) {
-      Dialogs.builder(getContext())
-        .setTitle("Número de " + keyword + " incorrecto")
-        .setMessage("El número de " + keyword + " es requerido para adicionar el destinatario.")
-        .setPositiveButton(R.string.ok, null)
-        .create()
-        .show();
+      showGenericErrorDialog(
+        "Número de " + keyword + " incorrecto",
+        "El número de " + keyword + " es requerido para adicionar el destinatario.");
       textInput.setErraticStateEnabled(true);
     } else {
       final int x = Math.round((button.getRight() - button.getLeft()) / 2);
@@ -112,20 +103,79 @@ public class RecipientBuilderFragment extends Fragment {
         getString(R.string.recipient_addition_confirmation, content, builder.getTitle()),
         new PinConfirmationDialogFragment.Callback() {
           @Override
-          public void confirm(String pin) {
-            subscription = builder.build(content, pin)
-              .subscribeOn(Schedulers.io())
-              .observeOn(AndroidSchedulers.mainThread())
-              .subscribe(new Action1<RecipientBuilder.Result>() {
-                @Override
-                public void call(RecipientBuilder.Result result) {
-                  resolve(result);
+          public void confirm(final String pin) {
+            subscription = Single.defer(new Callable<SingleSource<Result<Recipient, ErrorCode>>>() {
+              @Override
+              public SingleSource<Result<Recipient, ErrorCode>> call() throws Exception {
+                final Result<Recipient, ErrorCode> result;
+                if (networkService.checkIfAvailable()) {
+                  final String authToken = sessionManager.getSession().getAuthToken();
+                  final ApiResult<Boolean> pinValidationResult = apiBridge.validatePin(
+                    authToken,
+                    pin);
+                  if (pinValidationResult.isSuccessful()) {
+                    if (pinValidationResult.getData()) {
+                      final RecipientBuilder.Result builderResult = builder.build(content, pin)
+                        .toBlocking()
+                        .single();
+                      if (builderResult.isSuccessful()) {
+                        result = Result.create(builderResult.getData());
+                      } else {
+                        result = Result.create(
+                          FailureData.create(
+                            ErrorCode.UNEXPECTED,
+                            builderResult.getError()));
+                      }
+                    } else {
+                      result = Result.create(FailureData.create(ErrorCode.INCORRECT_PIN));
+                    }
+                  } else {
+                    result = Result.create(
+                      FailureData.create(
+                        ErrorCode.UNEXPECTED,
+                        pinValidationResult.getError().getDescription()));
+                  }
+                } else {
+                  result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
                 }
-              }, new Action1<Throwable>() {
+                return Single.just(result);
+              }
+            })
+              .subscribeOn(io.reactivex.schedulers.Schedulers.io())
+              .observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
+              .subscribe(new Consumer<Result<Recipient, ErrorCode>>() {
                 @Override
-                public void call(Throwable throwable) {
-                  Timber.e(throwable, "Building a recipient");
-                  resolve(new RecipientBuilder.Result(getString(R.string.error_generic)));
+                public void accept(Result<Recipient, ErrorCode> result) throws Exception {
+                  final FragmentManager fragmentManager = getChildFragmentManager();
+                  if (result.isSuccessful()) {
+                    PinConfirmationDialogFragment.dismiss(fragmentManager, true);
+                    final Activity activity = getActivity();
+                    activity.setResult(
+                      Activity.RESULT_OK,
+                      AddRecipientActivity.serializeResult(result.getSuccessData()));
+                    activity.finish();
+                  } else {
+                    PinConfirmationDialogFragment.dismiss(fragmentManager, false);
+                    final FailureData<ErrorCode> failureData = result.getFailureData();
+                    switch (failureData.getCode()) {
+                      case INCORRECT_PIN:
+                        showGenericErrorDialog(getString(R.string.error_incorrect_pin));
+                        break;
+                      case UNAVAILABLE_NETWORK:
+                        showGenericErrorDialog(getString(R.string.error_unavailable_network));
+                        break;
+                      default:
+                        showGenericErrorDialog();
+                        break;
+                    }
+                  }
+                }
+              }, new Consumer<Throwable>() {
+                @Override
+                public void accept(Throwable throwable) throws Exception {
+                  Timber.e(throwable);
+                  PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), false);
+                  showGenericErrorDialog();
                 }
               });
           }
@@ -134,6 +184,26 @@ public class RecipientBuilderFragment extends Fragment {
         y
       );
     }
+  }
+
+  public void showGenericErrorDialog(String title, String message) {
+    Dialogs.builder(getContext())
+      .setTitle(title)
+      .setMessage(message)
+      .setPositiveButton(R.string.error_positive_button_text, null)
+      .show();
+  }
+
+  public void showGenericErrorDialog(String message) {
+    showGenericErrorDialog(getString(R.string.error_generic_title), message);
+  }
+
+  public void showGenericErrorDialog() {
+    showGenericErrorDialog(getString(R.string.error_generic));
+  }
+
+  public void showUnavailableNetworkError() {
+    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG).show();
   }
 
   @Override
@@ -193,9 +263,7 @@ public class RecipientBuilderFragment extends Fragment {
   @Override
   public void onPause() {
     super.onPause();
-    if (!subscription.isUnsubscribed()) {
-      subscription.unsubscribe();
-    }
+    Disposables.dispose(subscription);
   }
 
   @Override

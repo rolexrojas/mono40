@@ -105,7 +105,7 @@ public final class UnlockPresenter extends Presenter<UnlockPresenter.View> {
             } else {
               final DApiError error = data.getError();
               view.showDialog(
-                R.string.error_title,
+                R.string.error_generic_title,
                 error.getDescription(),
                 R.string.error_positive_button_text);
             }
@@ -116,7 +116,7 @@ public final class UnlockPresenter extends Presenter<UnlockPresenter.View> {
             Timber.e(throwable, "Unlocking");
             stopLoading();
             view.showDialog(
-              R.string.error_title,
+              R.string.error_generic_title,
               R.string.error_generic,
               R.string.error_positive_button_text);
           }

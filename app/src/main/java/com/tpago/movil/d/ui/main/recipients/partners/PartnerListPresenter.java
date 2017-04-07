@@ -10,6 +10,7 @@ import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.ui.main.recipients.RecipientCandidateListPresenter;
+import com.tpago.movil.util.Objects;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,17 +49,22 @@ class PartnerListPresenter extends RecipientCandidateListPresenter {
    */
   @NonNull
   @Override
-  protected Observable<Object> search(@Nullable String query) {
+  protected Observable<Object> search(@Nullable final String query) {
     return apiBridge.partners(sessionManager.getSession().getAuthToken())
       .map(new Func1<ApiResult<List<Partner>>, List<Partner>>() {
         @Override
         public List<Partner> call(ApiResult<List<Partner>> result) {
+          final List<Partner> filteredList = new ArrayList<>();
           if (result.isSuccessful()) {
-            Partner.sort(result.getData());
-            return result.getData();
-          } else {
-            return new ArrayList<>();
+            for (Partner partner : result.getData()) {
+              if (Objects.checkIfNull(query)
+                || partner.getName().toLowerCase().contains(query.toLowerCase())) {
+                filteredList.add(partner);
+              }
+            }
+            Partner.sort(filteredList);
           }
+          return filteredList;
         }
       })
       .compose(RxUtils.<Partner>fromCollection())

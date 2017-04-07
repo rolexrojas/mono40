@@ -28,7 +28,7 @@ import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.tpago.movil.domain.BankProvider;
 import com.tpago.movil.domain.FailureData;
 import com.tpago.movil.domain.LogoStyle;
-import com.tpago.movil.domain.ProviderCode;
+import com.tpago.movil.domain.ErrorCode;
 import com.tpago.movil.domain.Result;
 import com.tpago.movil.reactivex.Disposables;
 import com.tpago.movil.util.Objects;
@@ -125,9 +125,9 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment
           loadIndicator.show();
         }
       })
-      .subscribe(new Consumer<Result<Set<Bank>, ProviderCode>>() {
+      .subscribe(new Consumer<Result<Set<Bank>, ErrorCode>>() {
         @Override
-        public void accept(Result<Set<Bank>, ProviderCode> result) throws Exception {
+        public void accept(Result<Set<Bank>, ErrorCode> result) throws Exception {
           if (result.isSuccessful()) {
             if (checkIfNull(bankList)) {
               bankList = new ArrayList<>();
@@ -138,16 +138,16 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment
             bankList.addAll(result.getSuccessData());
             adapter.notifyItemRangeInserted(0, bankList.size());
           } else {
-            final FailureData<ProviderCode> failureData = result.getFailureData();
+            final FailureData<ErrorCode> failureData = result.getFailureData();
             final Context context = getContext();
             switch (failureData.getCode()) {
               case UNAVAILABLE_NETWORK:
-                Toast.makeText(context, R.string.error_unavailable_network, Toast.LENGTH_SHORT)
+                Toast.makeText(context, R.string.error_unavailable_network, Toast.LENGTH_LONG)
                   .show();
                 break;
               case UNEXPECTED:
                 Dialogs.builder(context)
-                  .setTitle(R.string.error_title)
+                  .setTitle(R.string.error_generic_title)
                   .setMessage(failureData.getDescription())
                   .setPositiveButton(R.string.ok, null)
                   .show();
@@ -160,7 +160,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment
         public void accept(Throwable throwable) throws Exception {
           Timber.e(throwable);
           Dialogs.builder(getContext())
-            .setTitle(R.string.error_title)
+            .setTitle(R.string.error_generic_title)
             .setMessage(R.string.error_generic)
             .setPositiveButton(R.string.error_positive_button_text, null)
             .show();

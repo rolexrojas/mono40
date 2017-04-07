@@ -50,11 +50,8 @@ public final class DepAppModule {
 
   @Provides
   @Singleton
-  BalanceManager provideBalanceManager(
-    EventBus eventBus,
-    DepApiBridge apiBridge,
-    SessionManager sessionManager) {
-    return new BalanceManager(eventBus, apiBridge, sessionManager);
+  BalanceManager provideBalanceManager(EventBus eventBus, DepApiBridge apiBridge) {
+    return new BalanceManager(eventBus, apiBridge);
   }
 
   @Provides

@@ -1,7 +1,9 @@
 package com.tpago.movil.d.ui.main.transactions.bills;
 
+import com.tpago.movil.R;
 import com.tpago.movil.app.Presenter;
 import com.tpago.movil.d.data.Formatter;
+import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.Product;
@@ -11,19 +13,24 @@ import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.main.transactions.TransactionCreationComponent;
+import com.tpago.movil.domain.ErrorCode;
+import com.tpago.movil.domain.FailureData;
+import com.tpago.movil.domain.Result;
+import com.tpago.movil.net.NetworkService;
+import com.tpago.movil.reactivex.Disposables;
 import com.tpago.movil.util.Objects;
 import com.tpago.movil.util.Preconditions;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.Subscriptions;
+import io.reactivex.Single;
+import io.reactivex.SingleSource;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import timber.log.Timber;
 
 /**
@@ -32,14 +39,22 @@ import timber.log.Timber;
 
 public class BillTransactionCreationPresenter
   extends Presenter<BillTransactionCreationPresenter.View> {
-  @Inject Recipient recipient;
-  @Inject ProductManager productManager;
-  @Inject DepApiBridge apiBridge;
-  @Inject SessionManager sessionManager;
+  @Inject
+  Recipient recipient;
+  @Inject
+  ProductManager productManager;
+  @Inject
+  DepApiBridge apiBridge;
+  @Inject
+  SessionManager sessionManager;
+  @Inject
+  NetworkService networkService;
+  @Inject
+  StringHelper stringHelper;
 
   private BillRecipient.Option option = BillRecipient.Option.TOTAL;
 
-  private Subscription paymentSubscription = Subscriptions.unsubscribed();
+  private Disposable paymentSubscription = Disposables.disposed();
 
   BillTransactionCreationPresenter(View view, TransactionCreationComponent component) {
     super(view);
@@ -63,29 +78,79 @@ public class BillTransactionCreationPresenter
         option.equals(BillRecipient.Option.TOTAL) ? b.getTotal() : b.getMinimum()));
   }
 
-  final void onPinRequestFinished(Product product, String pin) {
-    paymentSubscription = apiBridge.payBill(
-      sessionManager.getSession().getAuthToken(),
-      (BillRecipient) recipient,
-      product,
-      option,
-      pin)
-      .subscribeOn(Schedulers.io())
-      .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(new Action1<ApiResult<String>>() {
-        @Override
-        public void call(ApiResult<String> result) {
-          if (result.isSuccessful()) {
-            view.setPaymentResult(true, result.getData());
+  final void onPinRequestFinished(final Product product, final String pin) {
+    paymentSubscription = Single.defer(new Callable<SingleSource<Result<String, ErrorCode>>>() {
+      @Override
+      public SingleSource<Result<String, ErrorCode>> call() throws Exception {
+        final Result<String, ErrorCode> result;
+        if (networkService.checkIfAvailable()) {
+          final String authToken = sessionManager.getSession().getAuthToken();
+          final ApiResult<Boolean> pinValidationResult = apiBridge.validatePin(authToken, pin);
+          if (pinValidationResult.isSuccessful()) {
+            if (pinValidationResult.getData()) {
+              final ApiResult<String> transactionResult = apiBridge.payBill(
+                authToken,
+                (BillRecipient) recipient,
+                product,
+                option,
+                pin)
+                .toBlocking()
+                .single();
+              if (transactionResult.isSuccessful()) {
+                result = Result.create(transactionResult.getData());
+              } else {
+                result = Result.create(
+                  FailureData.create(
+                    ErrorCode.UNEXPECTED,
+                    transactionResult.getError().getDescription()));
+              }
+            } else {
+              result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
+            }
           } else {
-            view.setPaymentResult(false, result.getError().getDescription());
+            result = Result.create(
+              FailureData.create(
+                ErrorCode.UNEXPECTED,
+                pinValidationResult.getError().getDescription()));
           }
+        } else {
+          result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
         }
-      }, new Action1<Throwable>() {
+        return Single.just(result);
+      }
+    })
+      .subscribeOn(io.reactivex.schedulers.Schedulers.io())
+      .observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
+      .subscribe(new Consumer<Result<String, ErrorCode>>() {
         @Override
-        public void call(Throwable throwable) {
+        public void accept(Result<String, ErrorCode> result) throws Exception {
+          boolean succeeded = false;
+          String transactionId = null;
+          if (result.isSuccessful()) {
+            succeeded = true;
+            transactionId = result.getSuccessData();
+          } else {
+            final FailureData<ErrorCode> failureData = result.getFailureData();
+            switch (failureData.getCode()) {
+              case INCORRECT_PIN:
+                view.showGenericErrorDialog(stringHelper.resolve(R.string.error_incorrect_pin));
+                break;
+              case UNAVAILABLE_NETWORK:
+                view.showUnavailableNetworkError();
+                break;
+              default:
+                view.showGenericErrorDialog(failureData.getDescription());
+                break;
+            }
+          }
+          view.setPaymentResult(succeeded, transactionId);
+        }
+      }, new Consumer<Throwable>() {
+        @Override
+        public void accept(Throwable throwable) throws Exception {
           Timber.e(throwable);
           view.setPaymentResult(false, null);
+          view.showGenericErrorDialog();
         }
       });
   }
@@ -101,9 +166,6 @@ public class BillTransactionCreationPresenter
     final BillBalance b = r.getBalance();
     if (Objects.checkIfNotNull(b)) {
       dueDate = b.getDate();
-//      dueDate = new SimpleDateFormat("dd MMMM", new Locale("es", "DO"))
-//        .format(b.getDate())
-//        .toUpperCase();
       totalValue = b.getTotal();
       minimumValue = b.getMinimum();
     }
@@ -118,9 +180,7 @@ public class BillTransactionCreationPresenter
   @Override
   public void onViewStopped() {
     super.onViewStopped();
-    if (!paymentSubscription.isUnsubscribed()) {
-      paymentSubscription.unsubscribe();
-    }
+    Disposables.dispose(paymentSubscription);
   }
 
   public interface View extends Presenter.View {
@@ -140,6 +200,12 @@ public class BillTransactionCreationPresenter
 
     void requestPin(String partnerName, String value);
 
-    void setPaymentResult(boolean succeeded, String message);
+    void setPaymentResult(boolean succeeded, String transactionId);
+
+    void showGenericErrorDialog(String message);
+
+    void showGenericErrorDialog();
+
+    void showUnavailableNetworkError();
   }
 }

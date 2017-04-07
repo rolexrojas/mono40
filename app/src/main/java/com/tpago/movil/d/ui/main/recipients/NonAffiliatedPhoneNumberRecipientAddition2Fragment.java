@@ -108,7 +108,7 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
               activity.finish();
             } else {
               Dialogs.builder(getContext())
-                .setTitle(R.string.error_title)
+                .setTitle(R.string.error_generic_title)
                 .setMessage(result.getError().getDescription())
                 .setPositiveButton(R.string.error_positive_button_text, null)
                 .create()
@@ -121,7 +121,7 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
             Timber.e(throwable, "");
             loadIndicator.stop();
             Dialogs.builder(getContext())
-              .setTitle(R.string.error_title)
+              .setTitle(R.string.error_generic_title)
               .setMessage(R.string.error_generic)
               .setPositiveButton(R.string.error_positive_button_text, null)
               .create()
