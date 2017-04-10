@@ -3,7 +3,8 @@ package com.tpago.movil.widget;
 import android.view.View;
 
 import com.tpago.movil.R;
-import com.tpago.movil.util.Preconditions;
+
+import static com.tpago.movil.util.Preconditions.assertNotNull;
 
 /**
  * @author hecvasro
@@ -28,7 +29,7 @@ final class ErraticViewHelper implements ErraticView {
   private boolean erraticStateEnabled = false;
 
   ErraticViewHelper(View view) {
-    this.view = Preconditions.assertNotNull(view, "view == null");
+    this.view = assertNotNull(view, "view == null");
   }
 
   final int getExtraSpace(int extraSpace) {
@@ -43,7 +44,7 @@ final class ErraticViewHelper implements ErraticView {
   }
 
   @Override
-  public boolean checkIfErraticStateEnabled() {
+  public boolean isErraticStateEnabled() {
     return erraticStateEnabled;
   }
 

@@ -18,8 +18,9 @@ import android.widget.FrameLayout;
 
 import com.tpago.movil.R;
 import com.tpago.movil.text.BaseTextWatcher;
-import com.tpago.movil.text.Texts;
-import com.tpago.movil.util.Objects;
+
+import static com.tpago.movil.text.Texts.checkIfEmpty;
+import static com.tpago.movil.util.Objects.checkIfNotNull;
 
 /**
  * @author hecvasro
@@ -27,19 +28,19 @@ import com.tpago.movil.util.Objects;
 public final class LabelFitterLayout extends FrameLayout {
   private static final float SIZE_RATIO = 2F;
 
-  private static void checkChildCount(int childCount) {
+  private static void assertChildCount(int childCount) {
     if (childCount == 1) {
       throw new IllegalStateException("childCount == 1");
     }
   }
 
-  private static void checkChildViewType(View childView) {
+  private static void assertChildViewType(View childView) {
     if (!(childView instanceof Label)) {
       throw new ClassCastException("(childView instanceof Label) == false");
     }
   }
 
-  private static float getTextWidth(CharSequence text, TextPaint paint, float size) {
+  private static float calculateTextWidth(CharSequence text, TextPaint paint, float size) {
     final TextPaint copyPaint = new TextPaint(paint);
     copyPaint.setTextSize(size);
     return copyPaint.measureText(text, 0, text.length());
@@ -95,7 +96,7 @@ public final class LabelFitterLayout extends FrameLayout {
   }
 
   private void initializeChildLabel(View childView) {
-    if (Objects.checkIfNotNull(childLabel) && Objects.checkIfNotNull(childLabelTextWatcher)) {
+    if (checkIfNotNull(childLabel) && checkIfNotNull(childLabelTextWatcher)) {
       childLabel.removeTextChangedListener(childLabelTextWatcher);
       childLabelTextWatcher = null;
       childLabel = null;
@@ -123,21 +124,21 @@ public final class LabelFitterLayout extends FrameLayout {
       return;
     }
     CharSequence currentText = childLabel.getText();
-    if (Texts.checkIfEmpty(currentText)) {
+    if (checkIfEmpty(currentText)) {
       return;
     }
     final TransformationMethod transformationMethod = childLabel.getTransformationMethod();
-    if (Objects.checkIfNotNull(transformationMethod)) {
+    if (checkIfNotNull(transformationMethod)) {
       currentText = transformationMethod.getTransformation(currentText, this);
     }
     final TextPaint currentTextPaint = childLabel.getPaint();
     final float currentTextSize = currentTextPaint.getTextSize();
     float textSize = maxTextSize;
-    float textWidth = getTextWidth(currentText, currentTextPaint, textSize);
+    float textWidth = calculateTextWidth(currentText, currentTextPaint, textSize);
     if (textWidth > width && textSize > minTextSize) {
       while (textWidth > width && textSize > minTextSize) {
         textSize = Math.max(textSize - SIZE_RATIO, minTextSize);
-        textWidth = getTextWidth(currentText, currentTextPaint, textSize);
+        textWidth = calculateTextWidth(currentText, currentTextPaint, textSize);
       }
     }
     if (textSize != currentTextSize) {
@@ -164,40 +165,40 @@ public final class LabelFitterLayout extends FrameLayout {
 
   @Override
   public void addView(View childView) {
-    checkChildCount(getChildCount());
-    checkChildViewType(childView);
+    assertChildCount(getChildCount());
+    assertChildViewType(childView);
     super.addView(childView);
     initializeChildLabel(childView);
   }
 
   @Override
   public void addView(View childView, int index) {
-    checkChildCount(getChildCount());
-    checkChildViewType(childView);
+    assertChildCount(getChildCount());
+    assertChildViewType(childView);
     super.addView(childView, index);
     initializeChildLabel(childView);
   }
 
   @Override
   public void addView(View childView, int width, int height) {
-    checkChildCount(getChildCount());
-    checkChildViewType(childView);
+    assertChildCount(getChildCount());
+    assertChildViewType(childView);
     super.addView(childView, width, height);
     initializeChildLabel(childView);
   }
 
   @Override
   public void addView(View childView, ViewGroup.LayoutParams params) {
-    checkChildCount(getChildCount());
-    checkChildViewType(childView);
+    assertChildCount(getChildCount());
+    assertChildViewType(childView);
     super.addView(childView, params);
     initializeChildLabel(childView);
   }
 
   @Override
   public void addView(View childView, int index, ViewGroup.LayoutParams params) {
-    checkChildCount(getChildCount());
-    checkChildViewType(childView);
+    assertChildCount(getChildCount());
+    assertChildViewType(childView);
     super.addView(childView, index, params);
     initializeChildLabel(childView);
   }

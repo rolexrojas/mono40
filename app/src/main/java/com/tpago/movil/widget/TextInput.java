@@ -42,8 +42,8 @@ public class TextInput extends AppCompatEditText implements ErraticView {
   }
 
   @Override
-  public boolean checkIfErraticStateEnabled() {
-    return erraticViewHelper.checkIfErraticStateEnabled();
+  public boolean isErraticStateEnabled() {
+    return erraticViewHelper.isErraticStateEnabled();
   }
 
   @Override

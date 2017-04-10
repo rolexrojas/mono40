@@ -4,6 +4,6 @@ package com.tpago.movil.widget;
  * @author hecvasro
  */
 interface ErraticView {
-  boolean checkIfErraticStateEnabled();
+  boolean isErraticStateEnabled();
   void setErraticStateEnabled(boolean erraticStateEnabled);
 }

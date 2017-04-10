@@ -12,6 +12,7 @@ import com.tpago.movil.d.domain.api.DepApiBridge;
 
 import rx.Observable;
 import rx.functions.Func1;
+import timber.log.Timber;
 
 /**
  * @author hecvasro
@@ -49,10 +50,14 @@ class BillRecipientBuilder extends RecipientBuilder {
         public Result call(ApiResult<Void> result) {
           if (result.isSuccessful()) {
             final BillRecipient recipient = new BillRecipient(partner, number);
-            final ApiResult<BillBalance> queryBalanceResult = apiBridge
-              .queryBalance(authToken, recipient);
-            if (queryBalanceResult.isSuccessful()) {
-              recipient.setBalance(queryBalanceResult.getData());
+            try {
+              final ApiResult<BillBalance> queryBalanceResult = apiBridge
+                .queryBalance(authToken, recipient);
+              if (queryBalanceResult.isSuccessful()) {
+                recipient.setBalance(queryBalanceResult.getData());
+              }
+            } catch (Exception exception) {
+              Timber.i(exception);
             }
             return new Result(recipient);
           } else {
