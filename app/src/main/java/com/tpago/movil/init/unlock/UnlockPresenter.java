@@ -8,19 +8,25 @@ import com.tpago.movil.User;
 import com.tpago.movil.UserStore;
 import com.tpago.movil.api.DApiBridge;
 import com.tpago.movil.api.DApiData;
-import com.tpago.movil.api.DApiError;
 import com.tpago.movil.app.Presenter;
+import com.tpago.movil.domain.ErrorCode;
+import com.tpago.movil.domain.FailureData;
+import com.tpago.movil.domain.Result;
 import com.tpago.movil.init.InitComponent;
 import com.tpago.movil.net.HttpResult;
+import com.tpago.movil.net.NetworkService;
 import com.tpago.movil.reactivex.Disposables;
 import com.tpago.movil.text.Texts;
 import com.tpago.movil.util.Objects;
 import com.tpago.movil.util.Preconditions;
 
 import java.io.File;
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
+import io.reactivex.Single;
+import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -42,8 +48,8 @@ public final class UnlockPresenter extends Presenter<UnlockPresenter.View> {
 
   @Inject UserStore userStore;
   @Inject Session.Builder sessionBuilder;
-  @Inject
-  DApiBridge DApiBridge;
+  @Inject DApiBridge depApiBridge;
+  @Inject NetworkService networkService;
 
   UnlockPresenter(View view, InitComponent component) {
     super(view);
@@ -85,7 +91,29 @@ public final class UnlockPresenter extends Presenter<UnlockPresenter.View> {
       final User user = userStore.get();
       final PhoneNumber phoneNumber = user.getPhoneNumber();
       final Email email = user.getEmail();
-      disposable = DApiBridge.signIn(phoneNumber, email, passwordTextInputContent, false) // TODO: An endpoint for this scenario is required.
+      disposable = Single.defer(new Callable<SingleSource<Result<String, ErrorCode>>>() {
+        @Override
+        public SingleSource<Result<String, ErrorCode>> call() throws Exception {
+            final Result<String, ErrorCode> result;
+            if (networkService.checkIfAvailable()) {
+              final HttpResult<DApiData<String>> apiResult = depApiBridge
+                .signIn(phoneNumber, email, passwordTextInputContent, false)
+                .blockingGet();
+              final DApiData<String> apiResultData = apiResult.getData();
+              if (apiResult.isSuccessful()) {
+                result = Result.create(apiResultData.getValue());
+              } else {
+                result = Result.create(
+                  FailureData.create(
+                    ErrorCode.UNEXPECTED,
+                    apiResultData.getError().getDescription()));
+              }
+            } else {
+              result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
+            }
+            return Single.just(result);
+        }
+      })
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(new Consumer<Disposable>() {
@@ -94,31 +122,31 @@ public final class UnlockPresenter extends Presenter<UnlockPresenter.View> {
             startLoading();
           }
         })
-        .subscribe(new Consumer<HttpResult<DApiData<String>>>() {
+        .subscribe(new Consumer<Result<String, ErrorCode>>() {
           @Override
-          public void accept(HttpResult<DApiData<String>> result) throws Exception {
+          public void accept(Result<String, ErrorCode> result) throws Exception {
             stopLoading();
-            final DApiData<String> data = result.getData();
             if (result.isSuccessful()) {
-              sessionBuilder.setToken(data.getValue());
+              sessionBuilder.setToken(result.getSuccessData());
               view.moveToInitScreen();
             } else {
-              final DApiError error = data.getError();
-              view.showDialog(
-                R.string.error_generic_title,
-                error.getDescription(),
-                R.string.error_positive_button_text);
+              final FailureData<ErrorCode> failureData = result.getFailureData();
+              switch (failureData.getCode()) {
+                case UNAVAILABLE_NETWORK:
+                  view.showUnavailableNetworkError();
+                  break;
+                default:
+                  view.showGenericErrorDialog(failureData.getDescription());
+                  break;
+              }
             }
           }
         }, new Consumer<Throwable>() {
           @Override
           public void accept(Throwable throwable) throws Exception {
-            Timber.e(throwable, "Unlocking");
+            Timber.e(throwable);
             stopLoading();
-            view.showDialog(
-              R.string.error_generic_title,
-              R.string.error_generic,
-              R.string.error_positive_button_text);
+            view.showGenericErrorDialog();
           }
         });
     } else {
@@ -168,5 +196,9 @@ public final class UnlockPresenter extends Presenter<UnlockPresenter.View> {
     void stopLoading();
 
     void moveToInitScreen();
+
+    void showGenericErrorDialog(String message);
+    void showGenericErrorDialog();
+    void showUnavailableNetworkError();
   }
 }
