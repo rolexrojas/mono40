@@ -70,8 +70,9 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
     this.stringHelper = stringHelper;
   }
 
-  void start() {
+  final void start() {
     assertScreen();
+    balanceManager.reset();
     compositeSubscription = new CompositeSubscription();
     Subscription subscription = eventBus.onEventDispatched(
       EventType.PRODUCT_BALANCE_EXPIRATION)
@@ -100,7 +101,7 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
     screen.add(new ShowRecentTransactionsItem());
   }
 
-  void stop() {
+  final void stop() {
     assertScreen();
     if (Utils.isNotNull(compositeSubscription)) {
       RxUtils.unsubscribe(compositeSubscription);

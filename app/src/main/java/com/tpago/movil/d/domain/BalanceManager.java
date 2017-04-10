@@ -8,6 +8,7 @@ import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.util.EventBus;
 import com.tpago.movil.d.misc.rx.RxUtils;
+import com.tpago.movil.util.Resettable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +30,7 @@ import timber.log.Timber;
  * @author hecvasro
  */
 @Deprecated
-public final class BalanceManager {
+public final class BalanceManager implements Resettable {
   /**
    * Amount of time (milliseconds) that every balance will be kept alive.
    */
@@ -126,5 +127,10 @@ public final class BalanceManager {
       balances.put(product, Pair.create(System.currentTimeMillis(), apiResult.getData()));
     }
     return apiResult;
+  }
+
+  @Override
+  public void reset() {
+    balances.clear();
   }
 }
