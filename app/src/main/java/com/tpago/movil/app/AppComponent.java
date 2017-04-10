@@ -15,7 +15,6 @@ import com.tpago.movil.d.domain.BalanceManager;
 import com.tpago.movil.d.domain.InitialDataLoader;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.RecipientManager;
-import com.tpago.movil.d.domain.TransactionManager;
 import com.tpago.movil.d.domain.TransactionRepo;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.pos.PosBridge;
@@ -82,7 +81,6 @@ public interface AppComponent {
   SchedulerProvider provideSchedulerProvider();
   SessionManager provideSessionManager();
   StringHelper provideStringHelper();
-  TransactionManager provideTransactionManager();
   TransactionRepo provideTransactionRepo();
   UserStore provideUserStore();
 }

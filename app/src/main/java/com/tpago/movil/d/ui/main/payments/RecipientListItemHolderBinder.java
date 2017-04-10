@@ -17,6 +17,7 @@ import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
 import com.tpago.movil.domain.LogoStyle;
+import com.tpago.movil.text.Texts;
 import com.tpago.movil.util.Objects;
 
 /**
@@ -51,7 +52,7 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
         .load(imageUri)
         .into(holder.recipientPictureImageView);
     }
-    if (Utils.isNotNull(label)) {
+    if (Texts.checkIfNotEmpty(label)) {
       holder.recipientLabelTextView.setText(label);
       holder.recipientLabelTextView.setGravity(Gravity.START | Gravity.BOTTOM);
       holder.recipientExtraTextView.setText(identifier);

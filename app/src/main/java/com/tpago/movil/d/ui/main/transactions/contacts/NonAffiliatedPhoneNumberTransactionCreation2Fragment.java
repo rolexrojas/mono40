@@ -95,6 +95,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends ChildF
       .subscribe(new Action1<ApiResult<String>>() {
         @Override
         public void call(ApiResult<String> result) {
+          PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), result.isSuccessful());
           if (result.isSuccessful()) {
             getContainer().finish(true, result.getData());
           } else {
@@ -110,6 +111,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends ChildF
         @Override
         public void call(Throwable throwable) {
           Timber.e(throwable, "Transfer to a non affiliated recipient");
+          PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), false);
           Dialogs.builder(getContext())
             .setTitle(R.string.error_generic_title)
             .setMessage(R.string.error_generic)

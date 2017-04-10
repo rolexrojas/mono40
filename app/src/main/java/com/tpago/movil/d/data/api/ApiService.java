@@ -51,6 +51,12 @@ interface ApiService {
     @Header(Api.Header.AUTHORIZATION) String authToken,
     @Query("recipient-msisdn") String phoneNumber);
 
+  @GET("transfer/recipient-info")
+  Observable<Response<RecipientInfoResponseBody>> fetchRecipientInfo(
+    @Header(Api.Header.AUTHORIZATION) String authToken,
+    @Query("recipient-msisdn") String phoneNumber);
+
+
   @POST("transfer/gcs-gcs")
   Observable<Response<TransferResponseBody>> transferToAffiliated(
     @Header(Api.Header.AUTHORIZATION) String authToken,
@@ -71,7 +77,7 @@ interface ApiService {
     @Header(Api.Header.AUTHORIZATION) String authToken);
 
   @POST("transfer/recipient-account-info")
-  Observable<Response<ProductInfo>> checkAccountNumber(
+  Observable<Response<ProductInfo>> fetchProductInfo(
     @Header(Api.Header.AUTHORIZATION) String authToken,
     @Body RecipientAccountInfoRequestBody body);
 

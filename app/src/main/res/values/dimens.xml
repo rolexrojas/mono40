@@ -44,7 +44,7 @@
   <dimen name="commerce_payment_option_width">320dp</dimen>
   <dimen name="commerce_payment_option_margin">20dp</dimen>
   <dimen name="commerce_payment_option_padding">20dp</dimen>
-  <dimen name="commerce_payment_option_product_identifier_default_text_size">16sp</dimen>
+  <dimen name="commerce_payment_option_product_identifier_default_text_size">10sp</dimen>
   <dimen name="commerce_payment_option_product_number_default_text_size">18sp</dimen>
   <dimen name="commerce_payment_option_product_owner_name_default_text_size">14sp</dimen>
   <dimen name="commerce_payment_option_ready_text_size">10sp</dimen>

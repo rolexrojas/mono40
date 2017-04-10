@@ -14,8 +14,6 @@ import com.tpago.movil.d.domain.Product;
 import java.math.BigDecimal;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 @AutoValue
@@ -23,6 +21,7 @@ public abstract class TransferToAffiliatedRequestBody {
   static TransferToAffiliatedRequestBody create(
     Product product,
     PhoneNumberRecipient recipient,
+    String name,
     BigDecimal amount,
     String pin) {
     return new AutoValue_TransferToAffiliatedRequestBody(
@@ -34,7 +33,7 @@ public abstract class TransferToAffiliatedRequestBody {
       pin,
       amount,
       recipient.getPhoneNumber(),
-      recipient.getLabel());
+      name);
   }
 
   public static TypeAdapter<TransferToAffiliatedRequestBody> typeAdapter(Gson gson) {

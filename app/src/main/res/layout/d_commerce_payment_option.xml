@@ -30,7 +30,8 @@
       android:layout_alignTop="@+id/image_view_bank_logo"
       android:layout_marginStart="20dp"
       android:layout_toEndOf="@+id/image_view_bank_logo"
-      android:gravity="end"
+      android:gravity="center_vertical|end"
+      android:textAllCaps="true"
       android:textColor="@color/common_white"/>
     <ImageView
       android:id="@+id/image_view_issuer"

@@ -8,10 +8,8 @@ import com.tpago.movil.content.SharedPreferencesCreator;
 import com.tpago.movil.d.domain.InitialDataLoader;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.BalanceManager;
-import com.tpago.movil.d.domain.TransactionManager;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.pos.PosBridge;
-import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.domain.util.EventBus;
 import com.tpago.movil.d.domain.RecipientManager;
 
@@ -72,13 +70,5 @@ public final class DepAppModule {
     @DepQualifier Gson gson,
     DepApiBridge apiBridge) {
     return new RecipientManager(sharedPreferencesCreator, gson, apiBridge);
-  }
-
-  @Provides
-  @Singleton
-  TransactionManager provideTransactionManager(
-    DepApiBridge apiBridge,
-    SessionManager sessionManager) {
-    return new TransactionManager(apiBridge, sessionManager);
   }
 }

@@ -210,30 +210,60 @@ class RetrofitApiBridge implements DepApiBridge {
   @NonNull
   @Override
   public Observable<ApiResult<String>> transferTo(
-    @NonNull String authToken,
-    @NonNull Product product,
-    @NonNull Recipient recipient,
-    @NonNull BigDecimal amount,
-    @NonNull String pin) {
-    final Observable<Response<TransferResponseBody>> observable;
+    final String authToken,
+    final Product product,
+    final Recipient recipient,
+    final BigDecimal amount,
+    final String pin) {
     if (recipient instanceof NonAffiliatedPhoneNumberRecipient) {
-      observable = apiService.transferToNonAffiliated(
+      final NonAffiliatedPhoneNumberRecipient napnr = (NonAffiliatedPhoneNumberRecipient) recipient;
+      return apiService.fetchProductInfo(
         authToken,
-        TransferToNonAffiliatedRequestBody.create(
-          product,
-          ((NonAffiliatedPhoneNumberRecipient) recipient),
-          pin,
-          amount));
+        RecipientAccountInfoRequestBody.create(napnr.getBank(), napnr.getAccountNumber()))
+        .flatMap(mapToApiResult(RetrofitApiBridge.<ProductInfo>identityMapFunc()))
+        .flatMap(new Func1<ApiResult<ProductInfo>, Observable<ApiResult<String>>>() {
+          @Override
+          public Observable<ApiResult<String>> call(ApiResult<ProductInfo> apiResult) {
+            if (apiResult.isSuccessful()) {
+              return apiService.transferToNonAffiliated(
+                authToken,
+                TransferToNonAffiliatedRequestBody.create(
+                  ProductInfo.create(product),
+                  apiResult.getData(),
+                  pin,
+                  amount))
+                .flatMap(mapToApiResult(TransferResponseBody.mapFunc()));
+            } else {
+              return Observable.just(new ApiResult<String>(
+                apiResult.getCode(),
+                null,
+                apiResult.getError()));
+            }
+          }
+        });
     } else {
-      observable = apiService.transferToAffiliated(
-        authToken,
-        TransferToAffiliatedRequestBody.create(
-          product,
-          (PhoneNumberRecipient) recipient,
-          amount,
-          pin));
+      final PhoneNumberRecipient pnr = (PhoneNumberRecipient) recipient;
+      return apiService.fetchRecipientInfo(authToken, pnr.getPhoneNumber())
+        .flatMap(mapToApiResult(RecipientInfoResponseBody.mapFunc()))
+        .flatMap(new Func1<ApiResult<String>, Observable<ApiResult<String>>>() {
+          @Override
+          public Observable<ApiResult<String>> call(ApiResult<String> result) {
+            if (result.isSuccessful()) {
+              return apiService.transferToAffiliated(
+                authToken,
+                TransferToAffiliatedRequestBody.create(
+                  product,
+                  pnr,
+                  result.getData(),
+                  amount,
+                  pin))
+                .flatMap(mapToApiResult(TransferResponseBody.mapFunc()));
+            } else {
+              return Observable.just(result);
+            }
+          }
+        });
     }
-    return observable.flatMap(mapToApiResult(TransferResponseBody.mapFunc()));
   }
 
   @Override
@@ -251,7 +281,7 @@ class RetrofitApiBridge implements DepApiBridge {
     String authToken,
     Bank bank,
     String accountNumber) {
-    return apiService.checkAccountNumber(
+    return apiService.fetchProductInfo(
       authToken,
       RecipientAccountInfoRequestBody.create(bank, accountNumber))
       .flatMap(mapToApiResult(new Func1<ProductInfo, Pair<String, Product>>() {

@@ -4,8 +4,7 @@ import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
-import com.tpago.movil.d.domain.Product;
+import com.tpago.movil.d.domain.ProductInfo;
 
 import java.math.BigDecimal;
 
@@ -15,13 +14,13 @@ import java.math.BigDecimal;
 @AutoValue
 public abstract class TransferToNonAffiliatedRequestBody {
   public static TransferToNonAffiliatedRequestBody create(
-    Product fundingAccount,
-    NonAffiliatedPhoneNumberRecipient recipient,
+    ProductInfo fundingAccount,
+    ProductInfo recipientAccount,
     String pin,
     BigDecimal amount) {
     return new AutoValue_TransferToNonAffiliatedRequestBody(
       fundingAccount,
-      recipient.getProduct(),
+      recipientAccount,
       pin,
       amount);
   }
@@ -30,8 +29,8 @@ public abstract class TransferToNonAffiliatedRequestBody {
     return new AutoValue_TransferToNonAffiliatedRequestBody.GsonTypeAdapter(gson);
   }
 
-  @SerializedName("funding-account") public abstract Product getFundingAccount();
-  @SerializedName("recipient-account") public abstract Product getRecipientAccount();
+  @SerializedName("funding-account") public abstract ProductInfo getFundingAccount();
+  @SerializedName("recipient-account") public abstract ProductInfo getRecipientAccount();
   public abstract String getPin();
   public abstract BigDecimal getAmount();
 }

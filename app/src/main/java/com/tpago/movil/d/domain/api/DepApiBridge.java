@@ -104,13 +104,12 @@ public interface DepApiBridge {
    *
    * @return TODO
    */
-  @NonNull
   Observable<ApiResult<String>> transferTo(
-    @NonNull String authToken,
-    @NonNull Product product,
-    @NonNull Recipient recipient,
-    @NonNull BigDecimal amount,
-    @NonNull String pin);
+    String authToken,
+    Product product,
+    Recipient recipient,
+    BigDecimal amount,
+    String pin);
 
   ApiResult<Void> setDefaultPaymentOption(String authToken, Product paymentOption);
 
