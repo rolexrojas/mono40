@@ -44,7 +44,6 @@ public final class App extends Application {
   private void initializePicasso() {
     final Picasso picasso = new Picasso.Builder(this)
       .downloader(new OkHttp3Downloader(httpClient))
-      .indicatorsEnabled(BuildConfig.DEBUG)
       .build();
     Picasso.setSingletonInstance(picasso);
   }
