@@ -6,9 +6,9 @@
   <string name="edit">Editar</string>
   <string name="email">Correo electrónico</string>
   <string name="error_generic">En estos momentos no podemos procesar esta solicitud. Favor intentar nuevamente.</string>
+  <string name="error_generic_title">¡Lo sentimos!</string>
   <string name="error_incorrect_pin">PIN incorrecto.</string>
   <string name="error_positive_button_text">@string/ok</string>
-  <string name="error_generic_title">¡Lo sentimos!</string>
   <string name="error_unavailable_network">Sin conexión a Internet</string>
   <string name="first_name">Nombre</string>
   <string name="font_gotham_round_bold">fonts/GothamRounded/Bold.otf</string>
@@ -34,6 +34,7 @@
   <string name="unknown">Desconicido</string>
   <string name="unlock">Desbloquear</string>
   <string name="welcome">¡Bienvenido!</string>
+  <string name="widget_text_input_background_path_data">M0,44 H240</string>
 
   <string name="widget_text_input_content_font">@string/font_gotham_round_book</string>
   <string name="widget_editable_label_content_font">@string/font_gotham_round_light</string>

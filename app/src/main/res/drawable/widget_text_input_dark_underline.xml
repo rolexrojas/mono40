@@ -1,0 +1,11 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+  android:width="@dimen/widget_text_input_background_width"
+  android:height="@dimen/widget_text_input_background_height"
+  android:viewportHeight="@dimen/widget_text_input_background_viewport_height"
+  android:viewportWidth="@dimen/widget_text_input_background_viewport_width">
+  <path
+    android:fillColor="@color/common_transparent"
+    android:pathData="@string/widget_text_input_background_path_data"
+    android:strokeColor="@color/widget_text_input_dark_background"
+    android:strokeWidth="1"/>
+</vector>

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<shape
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:shape="rectangle">
-  <size android:width="@dimen/widget_text_input_cursor_width"/>
-  <solid android:color="@color/widget_text_input_dark_cursor_background"/>
-</shape>

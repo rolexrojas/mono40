@@ -37,15 +37,16 @@
   </style>
   <style name="Base.Widget.TextInput">
     <item name="android:maxLines">1</item>
-    <item name="android:padding">@dimen/widget_text_input_padding</item>
+    <item name="android:paddingEnd">@dimen/d_widget_text_input_padding_horizontal</item>
+    <item name="android:paddingStart">@dimen/d_widget_text_input_padding_horizontal</item>
     <item name="android:textSize">@dimen/widget_text_input_content_size</item>
     <item name="fontPath">@string/widget_text_input_content_font</item>
   </style>
   <style name="Base.Widget.TextInput.Dark">
-    <item name="android:background">@drawable/widget_text_input_dark</item>
-    <item name="android:textColor">@color/widget_text_input_dark_content_list</item>
+    <item name="android:background">@drawable/d_widget_text_input_dark</item>
+    <item name="android:textColor">@color/d_widget_text_input_dark</item>
     <item name="android:textColorHint">@color/widget_text_input_dark_content_alpha_50</item>
-    <item name="android:textCursorDrawable">@drawable/widget_text_input_dark_cursor</item>
+    <item name="android:textCursorDrawable">@drawable/d_widget_text_input_dark_cursor</item>
     <item name="android:theme">@style/App.ThemeOverlay.Dark</item>
   </style>
   <style name="Base.Screen"/>
@@ -139,6 +140,8 @@
   </style>
   <style name="D.Base.Widget.TextInput.Dark">
     <item name="android:background">@drawable/d_widget_text_input_dark</item>
+    <item name="android:paddingEnd">@dimen/d_widget_text_input_padding_horizontal</item>
+    <item name="android:paddingStart">@dimen/d_widget_text_input_padding_horizontal</item>
     <item name="android:textColor">@color/d_widget_text_input_dark</item>
     <item name="android:textColorHint">@color/widget_text_input_dark_content_alpha_50</item>
     <item name="android:textCursorDrawable">@drawable/d_widget_text_input_dark_cursor</item>
@@ -255,14 +258,17 @@
   <style name="D.App.Widget.AmountTextView" parent="D.Base.App.Widget.AmountTextView"/>
 
   <style name="D.Widget.Button.Dark.Gradient" parent="D.Base.Widget.Button.Dark.Gradient"/>
-  <style name="D.Widget.Button.Dark.Solid.Rounded" parent="D.Base.Widget.Button.Dark.Solid.Rounded"/>
-  <style name="D.Widget.Button.Dark.Transparent.Rounded" parent="D.Base.Widget.Button.Dark.Transparent.Rounded"/>
+  <style name="D.Widget.Button.Dark.Solid.Rounded"
+    parent="D.Base.Widget.Button.Dark.Solid.Rounded"/>
+  <style name="D.Widget.Button.Dark.Transparent.Rounded"
+    parent="D.Base.Widget.Button.Dark.Transparent.Rounded"/>
   <style name="D.Widget.Button.Light.Solid" parent="D.Base.Widget.Button.Light.Solid"/>
 
   <style name="D.Widget.TextInput.Dark" parent="D.Base.Widget.TextInput.Dark"/>
   <style name="Widget.TextInput.Light" parent="D.Base.Widget.TextInput.Light"/>
 
-  <style name="D.Widget.NotEditableTextInput.Dark" parent="D.Base.Widget.NotEditableTextInput.Dark"/>
+  <style name="D.Widget.NotEditableTextInput.Dark"
+    parent="D.Base.Widget.NotEditableTextInput.Dark"/>
 
   <style name="D.Widget.NumPadRow" parent="D.Base.Widget.NumPadRow"/>
   <style name="D.Widget.NumPadCell" parent="D.Base.Widget.NumPadCell"/>
@@ -270,7 +276,8 @@
   <style name="D.Widget.NumPad.Dark" parent="D.Base.Widget.NumPad.Dark"/>
   <style name="D.Widget.NumPad.Light" parent="D.Base.Widget.NumPad.Light"/>
 
-  <style name="D.Widget.FullSizeLoadIndicator.Light" parent="D.Base.Widget.FullSizeLoadIndicator.Light"/>
+  <style name="D.Widget.FullSizeLoadIndicator.Light"
+    parent="D.Base.Widget.FullSizeLoadIndicator.Light"/>
 
   <style name="D.Widget.TabLayout.Dark" parent="D.Base.Widget.TabLayout.Dark"/>
 
@@ -311,10 +318,13 @@
   </style>
 
 
-  <style name="D.Transactions.Label.PaymentMethodChooser.Primary" parent="D.Base.Transactions.Label.PaymentMethodChooser.Primary"/>
-  <style name="D.Transactions.Label.PaymentMethodChooser.Secondary" parent="D.Base.Transactions.Label.PaymentMethodChooser.Secondary"/>
+  <style name="D.Transactions.Label.PaymentMethodChooser.Primary"
+    parent="D.Base.Transactions.Label.PaymentMethodChooser.Primary"/>
+  <style name="D.Transactions.Label.PaymentMethodChooser.Secondary"
+    parent="D.Base.Transactions.Label.PaymentMethodChooser.Secondary"/>
 
-  <style name="D.Transactions.Widget.PaymentMethodChooser" parent="D.Base.Transactions.Widget.PaymentMethodChooser"/>
+  <style name="D.Transactions.Widget.PaymentMethodChooser"
+    parent="D.Base.Transactions.Widget.PaymentMethodChooser"/>
   <!-- [END] Transaction screen styles -->
 
   <!-- [START] Product screen styles -->
@@ -526,7 +536,9 @@
   <style name="Dep.Base.Widget.CommercePaymentOptionProductIdentifier">
     <item name="android:ellipsize">end</item>
     <item name="android:gravity">center_vertical</item>
-    <item name="android:textAppearance">@style/Dep.App.Text.CommercePaymentOption.ProductIdentifier</item>
+    <item name="android:textAppearance">
+      @style/Dep.App.Text.CommercePaymentOption.ProductIdentifier
+    </item>
   </style>
 
   <style name="Dep.Base.Widget.CommercePaymentOptionProductNumber">
@@ -542,7 +554,9 @@
     <item name="android:shadowDy">
       @dimen/commerce_payment_option_product_number_default_text_shadow_dy
     </item>
-    <item name="android:shadowColor">@color/d_commerce_payment_option_product_number_default_text_shadow</item>
+    <item name="android:shadowColor">
+      @color/d_commerce_payment_option_product_number_default_text_shadow
+    </item>
   </style>
 
   <style name="Dep.Base.Widget.CommercePaymentOptionProductOwnerName">
@@ -609,7 +623,9 @@
   <style name="Dep.App.Widget.CommercePaymentOption.Standalone">
     <item name="android:layout_alignParentBottom">true</item>
     <item name="android:layout_centerHorizontal">true</item>
-    <item name="android:layout_marginBottom">@dimen/commerce_payment_option_standalone_margin_bottom</item>
+    <item name="android:layout_marginBottom">
+      @dimen/commerce_payment_option_standalone_margin_bottom
+    </item>
   </style>
 
   <style
