@@ -55,8 +55,7 @@ import static com.tpago.movil.util.Objects.checkIfNull;
 /**
  * @author hecvasro
  */
-public class NonAffiliatedPhoneNumberTransactionCreation1Fragment
-  extends ChildFragment<TransactionCreationContainer> {
+public class NonAffiliatedPhoneNumberTransactionCreation1Fragment extends ChildFragment<TransactionCreationContainer> {
   private Unbinder unbinder;
 
   private Adapter adapter = new Adapter();

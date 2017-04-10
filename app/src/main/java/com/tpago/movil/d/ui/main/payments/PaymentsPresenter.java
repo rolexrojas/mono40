@@ -272,6 +272,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
     final Recipient recipient,
     final String transactionId) {
     assertScreen();
+    screen.clearQuery();
     screen.showTransactionSummary(
       recipient,
       recipientManager.checkIfExists(recipient),

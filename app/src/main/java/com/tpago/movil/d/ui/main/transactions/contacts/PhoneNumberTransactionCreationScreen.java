@@ -27,4 +27,6 @@ interface PhoneNumberTransactionCreationScreen extends Screen {
   void requestBankAndAccountNumber();
 
   void finish();
+
+  void showTransferButtonAsEnabled(boolean showAsEnabled);
 }

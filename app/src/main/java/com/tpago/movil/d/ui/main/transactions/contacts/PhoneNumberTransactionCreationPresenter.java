@@ -75,11 +75,13 @@ class PhoneNumberTransactionCreationPresenter
     this.assertScreen();
     this.paymentOption = paymentOption;
     this.screen.setPaymentOptionCurrency(this.paymentOption.getCurrency());
+    this.screen.showTransferButtonAsEnabled(!Product.checkIfCreditCard(this.paymentOption));
   }
 
   void onTransferButtonClicked() {
-    if (!(recipient instanceof NonAffiliatedPhoneNumberRecipient)
-      || ((NonAffiliatedPhoneNumberRecipient) recipient).canBeTransferTo()) {
+    if (Product.checkIfCreditCard(paymentOption)) {
+      screen.showGenericErrorDialog("Transferencias a terceros no pueden ser pagadas desde tarjetas de crédito. Favor seleccionar una cuenta corriente o de ahorros.");
+    } else if (!(recipient instanceof NonAffiliatedPhoneNumberRecipient) || ((NonAffiliatedPhoneNumberRecipient) recipient).canBeTransferTo()) {
       screen.requestPin();
     } else {
       screen.requestBankAndAccountNumber();
