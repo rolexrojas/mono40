@@ -8,6 +8,8 @@ import rx.Single;
  */
 @Deprecated
 public interface PosBridge {
+  boolean checkIfUsable();
+
   boolean isRegistered(String identifier);
   Observable<PosResult> selectCard(String identifier);
 

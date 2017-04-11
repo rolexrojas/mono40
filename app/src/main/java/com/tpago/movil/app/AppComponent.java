@@ -8,7 +8,6 @@ import com.tpago.movil.content.ContentModule;
 import com.tpago.movil.d.DepAppModule;
 import com.tpago.movil.api.ApiModule;
 import com.tpago.movil.d.data.DepDataModule;
-import com.tpago.movil.d.data.NfcHandler;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.BalanceManager;
@@ -32,7 +31,6 @@ import com.tpago.movil.main.MainComponent;
 import com.tpago.movil.main.MainModule;
 import com.tpago.movil.net.NetModule;
 import com.tpago.movil.net.NetworkService;
-import com.tpago.movil.nfc.NfcModule;
 
 import javax.inject.Singleton;
 
@@ -50,7 +48,6 @@ import dagger.Component;
   NetModule.class,
   GsonModule.class,
   ApiModule.class,
-  NfcModule.class,
   // Deprecated modules
   DepAppModule.class,
   DepDataModule.class
@@ -74,7 +71,6 @@ public interface AppComponent {
   EventBus provideEventBus();
   InitialDataLoader provideInitialDataLoader();
   NetworkService provideNetworkService();
-  NfcHandler provideNfcHandler();
   PosBridge providePosBridge();
   ProductManager provideProductManager();
   RecipientManager provideRecipientManager();

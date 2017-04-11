@@ -3,11 +3,12 @@
   style="@style/Dep.App.Widget.Container.Colored"
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:orientation="vertical">
-  <android.support.design.widget.AppBarLayout style="@style/Dep.App.Widget.AppBar">
+  <FrameLayout style="@style/Dep.App.Widget.AppBar">
     <android.support.v7.widget.Toolbar
       android:id="@+id/toolbar"
-      style="@style/Dep.App.Widget.Toolbar"/>
-  </android.support.design.widget.AppBarLayout>
+      style="@style/Dep.App.Widget.Toolbar"
+      android:layout_gravity="center_vertical"/>
+  </FrameLayout>
   <FrameLayout
     android:id="@+id/container"
     android:layout_width="match_parent"

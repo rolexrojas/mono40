@@ -2,6 +2,7 @@ package com.tpago.movil.d.data.pos;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.nfc.NfcAdapter;
 import android.text.TextUtils;
 
 import com.cube.sdk.Interfaces.CubeSdkCallback;
@@ -15,7 +16,6 @@ import com.cube.sdk.storage.operation.SelectCardParams;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.pos.PosCode;
 import com.tpago.movil.d.domain.pos.PosResult;
-import com.tpago.movil.util.Objects;
 
 import rx.Observable;
 import rx.Single;
@@ -25,23 +25,17 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import timber.log.Timber;
 
+import static com.tpago.movil.util.Objects.checkIfNull;
+import static com.tpago.movil.util.Objects.checkIfNotNull;
+import static com.tpago.movil.util.Preconditions.assertNotNull;
+
 /**
  * @author hecvasro
  */
 class CubePosBridge implements PosBridge {
   private static final String FILE_NAME = PosBridge.class.getCanonicalName();
-
   private static final String KEY_COUNT = "count";
-
   private static final String PLACEHOLDER = "placeholder";
-
-  private final CubeSdkImpl cubeSdk;
-  private final SharedPreferences sharedPreferences;
-
-  CubePosBridge(Context context) {
-    cubeSdk = new CubeSdkImpl(context);
-    sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
-  }
 
   private static AddCardParams createAddCardParams(String phoneNumber, String pin, String identifier) {
     final AddCardParams params = new AddCardParams();
@@ -92,6 +86,32 @@ class CubePosBridge implements PosBridge {
     return createResult(error);
   }
 
+  private final Context context;
+  private final SharedPreferences sharedPreferences;
+  private final NfcAdapter nfcAdapter;
+
+  private CubeSdkImpl cubeSdk;
+
+  CubePosBridge(Context context) {
+    this.context = assertNotNull(context, "context == null");
+    this.sharedPreferences = this.context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+    this.nfcAdapter = NfcAdapter.getDefaultAdapter(this.context);
+  }
+
+  private void assertUsable() {
+    if (!checkIfUsable()) {
+      throw new UnsupportedOperationException("checkIfUsable() == false");
+    }
+  }
+
+  private CubeSdkImpl getCubeSdk() {
+    assertUsable();
+    if (checkIfNull(cubeSdk)) {
+      cubeSdk = new CubeSdkImpl(context);
+    }
+    return cubeSdk;
+  }
+
   private Observable<String> getAltPan(final String identifier) {
     final String altPan = sharedPreferences.getString(identifier, PLACEHOLDER);
     if (altPan.equals(PLACEHOLDER)) {
@@ -99,7 +119,7 @@ class CubePosBridge implements PosBridge {
         @Override
         public void call(final Subscriber<? super String> subscriber) {
           try {
-            cubeSdk.ListCard(new CubeSdkCallback<ListCards, CubeError>() {
+            getCubeSdk().ListCard(new CubeSdkCallback<ListCards, CubeError>() {
               @Override
               public void success(ListCards data) {
                 String n = null;
@@ -108,7 +128,7 @@ class CubePosBridge implements PosBridge {
                     n = c.getAltpan();
                   }
                 }
-                if (Objects.checkIfNull(n)) {
+                if (checkIfNull(n)) {
                   subscriber.onError(new NullPointerException("altPan == null"));
                 } else {
                   subscriber.onNext(n);
@@ -140,8 +160,13 @@ class CubePosBridge implements PosBridge {
   }
 
   @Override
+  public boolean checkIfUsable() {
+    return checkIfNotNull(nfcAdapter);
+  }
+
+  @Override
   public boolean isRegistered(String identifier) {
-    return sharedPreferences.contains(identifier);
+    return checkIfUsable() && sharedPreferences.contains(identifier);
   }
 
   @Override
@@ -156,25 +181,29 @@ class CubePosBridge implements PosBridge {
       observable = Observable.create(new Observable.OnSubscribe<PosResult>() {
         @Override
         public void call(final Subscriber<? super PosResult> subscriber) {
-          cubeSdk.AddCard(
-            createAddCardParams(phoneNumber, pin, identifier),
-            new CubeSdkCallback<String, CubeError>() {
-              @Override
-              public void success(String message) {
-                sharedPreferences.edit()
-                  .putString(identifier, PLACEHOLDER)
-                  .putInt(KEY_COUNT, sharedPreferences.getInt(KEY_COUNT, 0) + 1)
-                  .apply();
-                subscriber.onNext(createResult(message));
-                subscriber.onCompleted();
-              }
+          try {
+            getCubeSdk().AddCard(
+              createAddCardParams(phoneNumber, pin, identifier),
+              new CubeSdkCallback<String, CubeError>() {
+                @Override
+                public void success(String message) {
+                  sharedPreferences.edit()
+                    .putString(identifier, PLACEHOLDER)
+                    .putInt(KEY_COUNT, sharedPreferences.getInt(KEY_COUNT, 0) + 1)
+                    .apply();
+                  subscriber.onNext(createResult(message));
+                  subscriber.onCompleted();
+                }
 
-              @Override
-              public void failure(CubeError error) {
-                subscriber.onNext(createResult(error));
-                subscriber.onCompleted();
-              }
-            });
+                @Override
+                public void failure(CubeError error) {
+                  subscriber.onNext(createResult(error));
+                  subscriber.onCompleted();
+                }
+              });
+          } catch (Exception exception) {
+            subscriber.onError(exception);
+          }
         }
       });
     }
@@ -195,29 +224,33 @@ class CubePosBridge implements PosBridge {
             return Observable.create(new Observable.OnSubscribe<PosResult>() {
               @Override
               public void call(final Subscriber<? super PosResult> subscriber) {
-                cubeSdk.SelectCard(
-                  createSelectCardParams(identifier, altPan),
-                  new CubeSdkCallback<PaymentInfo, CubeError>() {
-                    @Override
-                    public void success(PaymentInfo data) {
-                      subscriber.onNext(createResult(stringify(
-                        data.getValue(),
-                        data.getDate(),
-                        data.getReference(),
-                        data.getTime(),
-                        data.getCrypto(),
-                        data.getAtc()
-                      )));
-                      subscriber.onCompleted();
-                    }
+                try {
+                  getCubeSdk().SelectCard(
+                    createSelectCardParams(identifier, altPan),
+                    new CubeSdkCallback<PaymentInfo, CubeError>() {
+                      @Override
+                      public void success(PaymentInfo data) {
+                        subscriber.onNext(createResult(stringify(
+                          data.getValue(),
+                          data.getDate(),
+                          data.getReference(),
+                          data.getTime(),
+                          data.getCrypto(),
+                          data.getAtc()
+                        )));
+                        subscriber.onCompleted();
+                      }
 
-                    @Override
-                    public void failure(CubeError error) {
-                      subscriber.onNext(createResult(error));
-                      subscriber.onCompleted();
+                      @Override
+                      public void failure(CubeError error) {
+                        subscriber.onNext(createResult(error));
+                        subscriber.onCompleted();
+                      }
                     }
-                  }
-                );
+                  );
+                } catch (Exception exception) {
+                  subscriber.onError(exception);
+                }
               }
             });
           }
@@ -239,25 +272,29 @@ class CubePosBridge implements PosBridge {
             return Observable.create(new Observable.OnSubscribe<PosResult>() {
               @Override
               public void call(final Subscriber<? super PosResult> subscriber) {
-                cubeSdk.DeleteCard(
-                  createSelectCardParams(identifier, altPan),
-                  new CubeSdkCallback<String, CubeError>() {
-                    @Override
-                    public void success(String message) {
-                      sharedPreferences.edit()
-                        .remove(identifier)
-                        .putInt(KEY_COUNT, sharedPreferences.getInt(KEY_COUNT, 0) - 1)
-                        .apply();
-                      subscriber.onNext(createResult(message));
-                      subscriber.onCompleted();
-                    }
+                try {
+                  getCubeSdk().DeleteCard(
+                    createSelectCardParams(identifier, altPan),
+                    new CubeSdkCallback<String, CubeError>() {
+                      @Override
+                      public void success(String message) {
+                        sharedPreferences.edit()
+                          .remove(identifier)
+                          .putInt(KEY_COUNT, sharedPreferences.getInt(KEY_COUNT, 0) - 1)
+                          .apply();
+                        subscriber.onNext(createResult(message));
+                        subscriber.onCompleted();
+                      }
 
-                    @Override
-                    public void failure(CubeError error) {
-                      subscriber.onNext(createResult(error));
-                      subscriber.onCompleted();
-                    }
-                  });
+                      @Override
+                      public void failure(CubeError error) {
+                        subscriber.onNext(createResult(error));
+                        subscriber.onCompleted();
+                      }
+                    });
+                } catch (Exception exception) {
+                  subscriber.onError(exception);
+                }
               }
             });
           }
@@ -278,7 +315,7 @@ class CubePosBridge implements PosBridge {
         @Override
         public void call(final SingleSubscriber<? super PosResult> subscriber) {
           try {
-            cubeSdk.Unregister(phoneNumber, new CubeSdkCallback<String, CubeError>() {
+            getCubeSdk().Unregister(phoneNumber, new CubeSdkCallback<String, CubeError>() {
               @Override
               public void success(String message) {
                 sharedPreferences.edit()

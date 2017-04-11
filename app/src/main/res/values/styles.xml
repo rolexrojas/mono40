@@ -706,10 +706,9 @@
     <item name="subtitleTextAppearance">@style/Dep.App.Text.Widget.Toolbar.Subtitle</item>
     <item name="titleTextAppearance">@style/Dep.App.Text.Widget.Toolbar.Title</item>
   </style>
-  <style
-    name="Dep.Base.Widget.AppBar"
-    parent="Widget.Design.AppBarLayout">
-    <item name="android:layout_height">wrap_content</item>
+  <style name="Dep.Base.Widget.AppBar">
+    <item name="android:background">@color/common_primary</item>
+    <item name="android:layout_height">@dimen/toolbar_height</item>
     <item name="android:layout_width">match_parent</item>
     <item name="android:theme">@style/Dep.App.Theme.AppBar</item>
   </style>

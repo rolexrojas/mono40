@@ -2,8 +2,8 @@ package com.tpago.movil.d.ui.main;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.d.data.NfcHandler;
 import com.tpago.movil.d.data.StringHelper;
+import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.domain.BalanceManager;
 import com.tpago.movil.d.domain.util.Event;
@@ -18,6 +18,8 @@ import rx.functions.Action1;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
+import static com.tpago.movil.util.Preconditions.assertNotNull;
+
 /**
  * @author hecvasro
  */
@@ -27,20 +29,23 @@ final class MainPresenter extends Presenter<MainScreen> {
   private final EventBus eventBus;
   private final BalanceManager balanceManager;
   private final AppDialog.Creator screenDialogCreator;
-  private final NfcHandler nfcHandler;
+  private final PosBridge posBridge;
 
   private Subscription subscription = Subscriptions.unsubscribed();
 
   private boolean alreadyAskedForActivation = false;
 
-  MainPresenter(@NonNull StringHelper stringHelper, @NonNull EventBus eventBus,
-    @NonNull BalanceManager balanceManager, @NonNull AppDialog.Creator screenDialogCreator,
-    NfcHandler nfcHandler) {
-    this.stringHelper = stringHelper;
-    this.eventBus = eventBus;
-    this.balanceManager = balanceManager;
-    this.screenDialogCreator = screenDialogCreator;
-    this.nfcHandler = nfcHandler;
+  MainPresenter(
+    StringHelper stringHelper,
+    EventBus eventBus,
+    BalanceManager balanceManager,
+    AppDialog.Creator screenDialogCreator,
+    PosBridge posBridge) {
+    this.stringHelper = assertNotNull(stringHelper, "stringHelper == null");
+    this.eventBus = assertNotNull(eventBus, "eventBus == null");
+    this.balanceManager = assertNotNull(balanceManager, "balanceManager == null");
+    this.screenDialogCreator = assertNotNull(screenDialogCreator, "screenDialogCreator");
+    this.posBridge = assertNotNull(posBridge, "posBridge == null");
   }
 
   final void create() {
@@ -50,7 +55,7 @@ final class MainPresenter extends Presenter<MainScreen> {
 
   final void start() {
     assertScreen();
-    if (nfcHandler.isAvailable()) {
+    if (posBridge.checkIfUsable()) {
       if (!alreadyAskedForActivation) {
         subscription = eventBus.onEventDispatched(EventType.PRODUCT_ADDITION)
           .observeOn(AndroidSchedulers.mainThread())

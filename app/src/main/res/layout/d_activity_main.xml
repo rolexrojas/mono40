@@ -7,14 +7,11 @@
   android:layout_height="match_parent"
   tools:ignore="MissingPrefix">
   <include layout="@layout/d_include_menu"/>
-  <RelativeLayout
+  <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <FrameLayout
-      android:id="@+id/app_bar_layout"
-      style="@style/Dep.App.Widget.AppBar"
-      android:layout_height="@dimen/toolbar_height"
-      android:layout_alignParentTop="true">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <FrameLayout style="@style/Dep.App.Widget.AppBar">
       <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/Dep.App.Widget.Toolbar"
@@ -59,7 +56,6 @@
     <FrameLayout
       android:id="@+id/container"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_below="@+id/app_bar_layout"/>
-  </RelativeLayout>
+      android:layout_height="match_parent"/>
+  </LinearLayout>
 </com.tpago.movil.d.ui.view.widget.SlidingPaneLayout>

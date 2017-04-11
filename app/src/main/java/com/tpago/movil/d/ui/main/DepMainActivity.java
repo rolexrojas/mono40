@@ -18,8 +18,8 @@ import com.tpago.movil.Session;
 import com.tpago.movil.TimeOutManager;
 import com.tpago.movil.app.App;
 import com.tpago.movil.R;
-import com.tpago.movil.d.data.NfcHandler;
 import com.tpago.movil.d.domain.ResetEvent;
+import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.domain.util.EventBus;
 import com.tpago.movil.d.misc.Utils;
@@ -34,6 +34,7 @@ import com.tpago.movil.d.ui.main.payments.PaymentsFragment;
 import com.tpago.movil.d.ui.view.widget.SlidingPaneLayout;
 import com.tpago.movil.init.InitActivity;
 import com.tpago.movil.main.MainModule;
+import com.tpago.movil.main.purchase.NonNfcPurchaseFragment;
 import com.tpago.movil.util.Objects;
 
 import javax.inject.Inject;
@@ -69,7 +70,7 @@ public class DepMainActivity
   @Inject
   EventBus eventBus;
   @Inject
-  NfcHandler nfcHandler;
+  PosBridge posBridge;
 
   @BindView(R.id.sliding_pane_layout)
   SlidingPaneLayout slidingPaneLayout;
@@ -133,9 +134,6 @@ public class DepMainActivity
         }
       }
     });
-    final boolean enabled = nfcHandler.isAvailable();
-    commerceTextView.setEnabled(enabled);
-    commerceTextView.setAlpha(enabled ? 1F : 0.3F);
     // Sets the startup screen.
     setChildFragment(PaymentsFragment.newInstance(), false, false);
     // Attaches the screen to the presenter.
@@ -193,7 +191,11 @@ public class DepMainActivity
         childFragment = PaymentsFragment.newInstance();
         break;
       case R.id.text_view_commerce:
-        childFragment = PurchaseFragment.newInstance();
+        if (posBridge.checkIfUsable()) {
+          childFragment = PurchaseFragment.newInstance();
+        } else {
+          childFragment = NonNfcPurchaseFragment.create();
+        }
         break;
       case R.id.text_view_accounts:
         childFragment = ProductsFragment.newInstance();
@@ -235,7 +237,13 @@ public class DepMainActivity
 
   @Override
   public void openPurchaseScreen() {
-    setChildFragment(PurchaseFragment.newInstance(true), true, true);
+    final ChildFragment<MainContainer> childFragment;
+    if (posBridge.checkIfUsable()) {
+      childFragment = PurchaseFragment.newInstance(true);
+    } else {
+      childFragment = NonNfcPurchaseFragment.create();
+    }
+    setChildFragment(childFragment, true, true);
   }
 
   public void showDeleteLinearLayout() {

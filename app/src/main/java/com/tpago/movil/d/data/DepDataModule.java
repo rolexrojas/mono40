@@ -28,12 +28,6 @@ import dagger.Provides;
 public final class DepDataModule {
   @Provides
   @Singleton
-  NfcHandler provideNfcHandler(Context context) {
-    return new NfcHandler(context);
-  }
-
-  @Provides
-  @Singleton
   DepDeviceManager provideDeviceManager(Context context) {
     return new AndroidDeviceManager(context);
   }
