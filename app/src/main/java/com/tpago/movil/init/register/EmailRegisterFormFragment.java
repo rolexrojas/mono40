@@ -115,8 +115,6 @@ public final class EmailRegisterFormFragment
     // Detaches the text input to the presenter.
     textInput.removeTextChangedListener(textInputTextWatcher);
     textInputTextWatcher = null;
-    // Hides the keyboard.
-    Keyboard.hide(getActivity().getCurrentFocus());
   }
 
   @Override

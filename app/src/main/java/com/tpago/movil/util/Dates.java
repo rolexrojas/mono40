@@ -48,11 +48,7 @@ public final class Dates {
     final int suffixId;
     final boolean shouldSuffixIdBePluralized;
 
-    if (absDiff < MILLIS_MINUTE) {
-      divisor = MILLIS_SECOND;
-      suffixId = SUFFIX_ID_SECONDS;
-      shouldSuffixIdBePluralized = false;
-    } else if (absDiff < MILLIS_HOUR) {
+    if (absDiff < MILLIS_HOUR) {
       divisor = MILLIS_MINUTE;
       suffixId = SUFFIX_ID_MINUTES;
       shouldSuffixIdBePluralized = false;

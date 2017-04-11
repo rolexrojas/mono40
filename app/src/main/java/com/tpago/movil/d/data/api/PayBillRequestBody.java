@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.Product;
+import com.tpago.movil.d.domain.ProductInfo;
 
 /**
  * @author hecvasro
@@ -19,7 +20,7 @@ public abstract class PayBillRequestBody {
     String pin,
     BillRecipient.Option payOption) {
     return new AutoValue_PayBillRequestBody(
-      fundingAccount,
+      ProductInfo.create(fundingAccount),
       BillRequestBody.create(recipient.getPartner(), recipient.getContractNumber(), null),
       recipient.getBalance(),
       pin,
@@ -30,7 +31,7 @@ public abstract class PayBillRequestBody {
     return new AutoValue_PayBillRequestBody.GsonTypeAdapter(gson);
   }
 
-  @SerializedName("funding-account") public abstract Product getFundingAccount();
+  @SerializedName("funding-account") public abstract ProductInfo getFundingAccount();
   @SerializedName("invoice") public abstract BillRequestBody getInvoice();
   @SerializedName("invoice-detail") public abstract BillBalance getInvoiceDetail();
   @SerializedName("pin") public abstract String getPin();

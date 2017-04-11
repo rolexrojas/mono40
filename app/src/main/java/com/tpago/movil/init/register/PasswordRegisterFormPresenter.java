@@ -68,6 +68,7 @@ final class PasswordRegisterFormPresenter extends RegisterFormPresenter<Password
   void onMoveToNextScreenButtonClicked() {
     if (checkIfCanMoveToNextScreen()) {
       registerData.setPassword(textInputContent);
+      view.hideKeyboard();
       view.moveToNextScreen();
     } else {
       view.showDialog(
@@ -89,11 +90,10 @@ final class PasswordRegisterFormPresenter extends RegisterFormPresenter<Password
 
   interface View extends RegisterFormPresenter.View {
     void setTextInputContent(String content);
-
     void showTextInputContentAsErratic(boolean showAsErratic);
-
     void setConfirmationTextInputContent(String content);
-
     void showConfirmationTextInputContentAsErratic(boolean showAsErratic);
+
+    void hideKeyboard();
   }
 }

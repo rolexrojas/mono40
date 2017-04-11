@@ -115,8 +115,6 @@ public final class NameRegisterFormFragment
     // Detaches the first name text input from the presenter.
     firstNameTextInput.removeTextChangedListener(firstNameTextWatcher);
     lastNameTextWatcher = null;
-    // Hides the keyboard.
-    Keyboard.hide(getActivity().getCurrentFocus());
   }
 
   @Override

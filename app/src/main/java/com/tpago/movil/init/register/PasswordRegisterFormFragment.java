@@ -36,11 +36,15 @@ public final class PasswordRegisterFormFragment extends RegisterFormFragment<Pas
   private TextWatcher textInputTextWatcher;
   private TextWatcher confirmationTextInputTextWatcher;
 
-  @Inject StringResolver stringResolver;
-  @Inject RegisterData registerData;
+  @Inject
+  StringResolver stringResolver;
+  @Inject
+  RegisterData registerData;
 
-  @BindView(R.id.text_input) TextInput textInput;
-  @BindView(R.id.text_input_confirmation) TextInput confirmationTextInput;
+  @BindView(R.id.text_input)
+  TextInput textInput;
+  @BindView(R.id.text_input_confirmation)
+  TextInput confirmationTextInput;
 
   @Override
   protected PasswordRegisterFormPresenter getPresenter() {
@@ -113,8 +117,6 @@ public final class PasswordRegisterFormFragment extends RegisterFormFragment<Pas
     // Detaches the text input to the presenter.
     textInput.removeTextChangedListener(textInputTextWatcher);
     textInputTextWatcher = null;
-    // Hides the keyboard.
-    Keyboard.hide(getActivity().getCurrentFocus());
   }
 
   @Override
@@ -135,5 +137,10 @@ public final class PasswordRegisterFormFragment extends RegisterFormFragment<Pas
   @Override
   public void showConfirmationTextInputContentAsErratic(boolean showAsErratic) {
     confirmationTextInput.setErraticStateEnabled(showAsErratic);
+  }
+
+  @Override
+  public void hideKeyboard() {
+    Keyboard.hide(this);
   }
 }

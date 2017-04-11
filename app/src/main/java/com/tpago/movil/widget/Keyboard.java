@@ -1,11 +1,13 @@
 package com.tpago.movil.widget;
 
+import android.app.Activity;
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.tpago.movil.util.Objects;
-import com.tpago.movil.util.Preconditions;
+import static com.tpago.movil.util.Objects.checkIfNotNull;
+import static com.tpago.movil.util.Preconditions.assertNotNull;
 
 /**
  * @author hecvasro
@@ -16,20 +18,30 @@ public final class Keyboard {
   }
 
   public static void show(View view) {
-    Preconditions.assertNotNull(view, "view == null");
+    assertNotNull(view, "view == null");
     view.requestFocus();
     final InputMethodManager imm = getInputMethodManager(view);
-    if (Objects.checkIfNotNull(imm)) {
+    if (checkIfNotNull(imm)) {
       imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
     }
   }
 
   public static void hide(View view) {
-    Preconditions.assertNotNull(view, "view == null");
+    assertNotNull(view, "view == null");
     final InputMethodManager imm = getInputMethodManager(view);
-    if (Objects.checkIfNotNull(imm)) {
+    if (checkIfNotNull(imm)) {
       imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
+  }
+
+  public static void hide(Activity activity) {
+    assertNotNull(activity, "activit == null");
+    hide(activity.getCurrentFocus());
+  }
+
+  public static void hide(Fragment fragment) {
+    assertNotNull(fragment, "fragment == null");
+    hide(fragment.getActivity());
   }
 
   private Keyboard() {
