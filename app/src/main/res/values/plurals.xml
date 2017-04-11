@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <plurals name="relative_time_suffix_year">
+    <item quantity="one">año</item>
+    <item quantity="other">años</item>
+  </plurals>
+  <plurals name="relative_time_suffix_month">
+    <item quantity="one">mes</item>
+    <item quantity="other">meses</item>
+  </plurals>
+  <plurals name="relative_time_suffix_week">
+    <item quantity="one">semana</item>
+    <item quantity="other">semanas</item>
+  </plurals>
+  <plurals name="relative_time_suffix_day">
+    <item quantity="one">día</item>
+    <item quantity="other">días</item>
+  </plurals>
+</resources>

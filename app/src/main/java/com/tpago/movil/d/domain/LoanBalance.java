@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 public class LoanBalance extends Balance {
   private final BigDecimal fee;
 
-  public LoanBalance(@NonNull BigDecimal value, @NonNull BigDecimal fee) {
+  public LoanBalance(BigDecimal value, BigDecimal fee) {
     super(value);
     this.fee = fee;
   }

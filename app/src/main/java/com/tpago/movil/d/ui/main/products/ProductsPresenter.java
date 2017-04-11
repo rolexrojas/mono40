@@ -1,6 +1,7 @@
 package com.tpago.movil.d.ui.main.products;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 
 import com.tpago.movil.R;
 import com.tpago.movil.d.data.StringHelper;
@@ -72,7 +73,6 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
 
   final void start() {
     assertScreen();
-    balanceManager.reset();
     compositeSubscription = new CompositeSubscription();
     Subscription subscription = eventBus.onEventDispatched(
       EventType.PRODUCT_BALANCE_EXPIRATION)
@@ -93,7 +93,7 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
     compositeSubscription.add(subscription);
     screen.clear();
     for (Product product : productManager.getProductList()) {
-      screen.add(new ProductItem(product));
+      screen.add(ProductItem.create(product));
       if (balanceManager.hasValidBalance(product)) {
         screen.setBalance(product, balanceManager.getBalance(product));
       }
@@ -115,46 +115,44 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
       screen.setBalance(product, balanceManager.getBalance(product));
     } else if (Utils.isNotNull(compositeSubscription)) {
       final Subscription subscription = Single
-        .defer(new Callable<Single<Result<Balance, ErrorCode>>>() {
-        @Override
-        public Single<Result<Balance, ErrorCode>> call() throws Exception {
-          final Result<Balance, ErrorCode> result;
-          if (networkService.checkIfAvailable()) {
-            final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(authToken, pin);
-            if (pinValidationResult.isSuccessful()) {
-              if (pinValidationResult.getData()) {
-                final ApiResult<Balance> queryBalanceResult = balanceManager.queryBalance(
-                  authToken,
-                  product,
-                  pin);
-                if (queryBalanceResult.isSuccessful()) {
-                  result = Result.create(queryBalanceResult.getData());
+        .defer(new Callable<Single<Result<Pair<Long, Balance>, ErrorCode>>>() {
+          @Override
+          public Single<Result<Pair<Long, Balance>, ErrorCode>> call() throws Exception {
+            final Result<Pair<Long, Balance>, ErrorCode> result;
+            if (networkService.checkIfAvailable()) {
+              final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(authToken, pin);
+              if (pinValidationResult.isSuccessful()) {
+                if (pinValidationResult.getData()) {
+                  final ApiResult<Pair<Long, Balance>> queryBalanceResult = balanceManager
+                    .queryBalance(authToken, product, pin);
+                  if (queryBalanceResult.isSuccessful()) {
+                    result = Result.create(queryBalanceResult.getData());
+                  } else {
+                    result = Result.create(
+                      FailureData.create(
+                        ErrorCode.UNEXPECTED,
+                        queryBalanceResult.getError().getDescription()));
+                  }
                 } else {
-                  result = Result.create(
-                    FailureData.create(
-                      ErrorCode.UNEXPECTED,
-                      queryBalanceResult.getError().getDescription()));
+                  result = Result.create(FailureData.create(ErrorCode.INCORRECT_PIN));
                 }
               } else {
-                result = Result.create(FailureData.create(ErrorCode.INCORRECT_PIN));
+                result = Result.create(
+                  FailureData.create(
+                    ErrorCode.UNEXPECTED,
+                    pinValidationResult.getError().getDescription()));
               }
             } else {
-              result = Result.create(
-                FailureData.create(
-                  ErrorCode.UNEXPECTED,
-                  pinValidationResult.getError().getDescription()));
+              result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
             }
-          } else {
-            result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
+            return Single.just(result);
           }
-          return Single.just(result);
-        }
-      })
+        })
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Action1<Result<Balance, ErrorCode>>() {
+        .subscribe(new Action1<Result<Pair<Long, Balance>, ErrorCode>>() {
           @Override
-          public void call(Result<Balance, ErrorCode> result) {
+          public void call(Result<Pair<Long, Balance>, ErrorCode> result) {
             if (!result.isSuccessful()) {
               final FailureData<ErrorCode> failureData = result.getFailureData();
               switch (failureData.getCode()) {

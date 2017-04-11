@@ -5,30 +5,34 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.tpago.movil.R;
+import com.tpago.movil.d.ui.main.list.ListItemHolder;
 import com.tpago.movil.d.ui.main.list.ListItemHolderCreator;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 class ProductListItemHolderCreator implements ListItemHolderCreator<ProductListItemHolder> {
-  private final ProductListItemHolder.OnQueryActionButtonClickedListener listener;
+  private final ListItemHolder.OnClickListener onClickListener;
+  private final ProductListItemHolder.OnQueryBalanceButtonPressedListener onQueryButtonClickedListener;
 
-  /**
-   * TODO
-   *
-   * @param listener
-   *   TODO
-   */
-  ProductListItemHolderCreator(@NonNull ProductListItemHolder.OnQueryActionButtonClickedListener listener) {
-    this.listener = listener;
+  ProductListItemHolderCreator(
+    ListItemHolder.OnClickListener onClickListener,
+    ProductListItemHolder.OnQueryBalanceButtonPressedListener onQueryButtonClickedListener) {
+    this.onClickListener = onClickListener;
+    this.onQueryButtonClickedListener = onQueryButtonClickedListener;
   }
 
   @NonNull
   @Override
   public ProductListItemHolder create(@NonNull ViewGroup parent) {
-    return new ProductListItemHolder(LayoutInflater.from(parent.getContext())
-      .inflate(R.layout.d_list_item_product, parent, false), listener);
+    return new ProductListItemHolder(
+      LayoutInflater
+        .from(parent.getContext())
+        .inflate(
+          R.layout.d_list_item_product,
+          parent,
+          false),
+      onClickListener,
+      onQueryButtonClickedListener);
   }
 }

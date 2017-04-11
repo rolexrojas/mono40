@@ -13,8 +13,6 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 class BalanceTypeAdapter implements JsonDeserializer<Balance> {
@@ -24,7 +22,9 @@ class BalanceTypeAdapter implements JsonDeserializer<Balance> {
   private static final String PROPERTY_TOTAL = "total";
 
   @Override
-  public Balance deserialize(JsonElement json, Type typeOfT,
+  public Balance deserialize(
+    JsonElement json,
+    Type typeOfT,
     JsonDeserializationContext context) throws JsonParseException {
     final JsonObject jsonObject = json.getAsJsonObject();
     if (AccountBalance.class.isAssignableFrom((Class<?>) typeOfT)) {
@@ -33,7 +33,8 @@ class BalanceTypeAdapter implements JsonDeserializer<Balance> {
       } else if (!jsonObject.has(PROPERTY_TOTAL)) {
         throw new JsonParseException("Property '" + PROPERTY_TOTAL + "' is missing");
       } else {
-        return new AccountBalance(jsonObject.get(PROPERTY_TOTAL).getAsBigDecimal(),
+        return new AccountBalance(
+          jsonObject.get(PROPERTY_TOTAL).getAsBigDecimal(),
           jsonObject.get(PROPERTY_AVAILABLE).getAsBigDecimal());
       }
     } else if (CreditCardBalance.class.isAssignableFrom((Class<?>) typeOfT)) {
@@ -42,7 +43,8 @@ class BalanceTypeAdapter implements JsonDeserializer<Balance> {
       } else if (!jsonObject.has(PROPERTY_TOTAL)) {
         throw new JsonParseException("Property '" + PROPERTY_TOTAL + "' is missing");
       } else {
-        return new CreditCardBalance(jsonObject.get(PROPERTY_TOTAL).getAsBigDecimal(),
+        return new CreditCardBalance(
+          jsonObject.get(PROPERTY_TOTAL).getAsBigDecimal(),
           jsonObject.get(PROPERTY_AVAILABLE).getAsBigDecimal());
       }
     } else {
@@ -51,7 +53,8 @@ class BalanceTypeAdapter implements JsonDeserializer<Balance> {
       } else if (!jsonObject.has(PROPERTY_FEE)) {
         throw new JsonParseException("Property '" + PROPERTY_FEE + "' is missing");
       } else {
-        return new LoanBalance(jsonObject.get(PROPERTY_BALANCE).getAsBigDecimal(),
+        return new LoanBalance(
+          jsonObject.get(PROPERTY_BALANCE).getAsBigDecimal(),
           jsonObject.get(PROPERTY_FEE).getAsBigDecimal());
       }
     }

@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
+import com.tpago.movil.d.domain.api.ApiCode;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.util.EventBus;
@@ -112,21 +113,26 @@ public final class BalanceManager implements Resettable {
    * @return {@link Product}'s last queried {@link Balance balance} or {@code null}.
    */
   @Nullable
-  public final Balance getBalance(@NonNull Product product) {
+  public final Pair<Long, Balance> getBalance(@NonNull Product product) {
     if (hasValidBalance(product)) {
-      return balances.get(product).second;
+      return balances.get(product);
     } else {
       return null;
     }
   }
 
   @NonNull
-  public final ApiResult<Balance> queryBalance(String authToken, Product product, String pin) {
+  public final ApiResult<Pair<Long, Balance>> queryBalance(
+    String authToken,
+    Product product,
+    String pin) {
     final ApiResult<Balance> apiResult = apiBridge.queryBalance(authToken, product, pin);
     if (apiResult.isSuccessful()) {
       balances.put(product, Pair.create(System.currentTimeMillis(), apiResult.getData()));
+      return new ApiResult<>(ApiCode.OK, getBalance(product), null);
+    } else {
+      return new ApiResult<>(apiResult.getCode(), null, apiResult.getError());
     }
-    return apiResult;
   }
 
   @Override

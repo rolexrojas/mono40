@@ -1,81 +1,42 @@
 package com.tpago.movil.d.ui.main.products;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 
-import com.tpago.movil.d.misc.Utils;
+import com.google.auto.value.AutoValue;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Balance;
 
+import static com.tpago.movil.util.Objects.checkIfNotNull;
+
 /**
- * TODO
- *
  * @author hecvasro
  */
-class ProductItem {
-  /**
-   * TODO
-   */
-  private final Product product;
+@AutoValue
+abstract class ProductItem {
+  static ProductItem create(Product product) {
+    return new AutoValue_ProductItem(product);
+  }
 
-  /**
-   * TODO
-   */
+  private long queryTime;
   private Balance balance;
 
-  /**
-   * TODO
-   *
-   * @param product
-   *   TODO
-   */
-  ProductItem(@NonNull Product product) {
-    this.product = product;
+  protected ProductItem() {
   }
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
-  @NonNull
-  public final Product getProduct() {
-    return product;
+  abstract Product getProduct();
+
+  final long getQueryTime() {
+    return queryTime;
   }
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
-  @Nullable
-  public Balance getBalance() {
+  final Balance getBalance() {
     return balance;
   }
 
-  /**
-   * TODO
-   *
-   * @param balance
-   *   TODO
-   */
-  public void setBalance(@Nullable Balance balance) {
-    this.balance = balance;
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    return super.equals(object) || (Utils.isNotNull(object) && object instanceof ProductItem
-      && ((ProductItem) object).product.equals(product));
-  }
-
-  @Override
-  public int hashCode() {
-    return product.hashCode();
-  }
-
-  @Override
-  public String toString() {
-    return ProductItem.class.getSimpleName() + ":{product=" + product + ",balance=" + balance + "}";
+  final void setBalance(Pair<Long, Balance> pair) {
+    if (checkIfNotNull(pair)) {
+      queryTime = pair.first;
+      balance = pair.second;
+    }
   }
 }

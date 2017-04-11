@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +22,9 @@ import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.MainContainer;
 import com.tpago.movil.d.ui.main.list.ListItemAdapter;
+import com.tpago.movil.d.ui.main.list.ListItemHolder;
 import com.tpago.movil.d.ui.main.list.ListItemHolderCreatorFactory;
+import com.tpago.movil.d.ui.view.Views;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.tpago.movil.d.ui.main.AddAnotherProductFragment;
@@ -47,19 +50,27 @@ import static com.tpago.movil.util.Objects.checkIfNotNull;
  * @author hecvasro
  */
 @Deprecated
-public class ProductsFragment extends ChildFragment<MainContainer> implements ProductsScreen,
-  ProductListItemHolder.OnQueryActionButtonClickedListener,
+public class ProductsFragment
+  extends ChildFragment<MainContainer>
+  implements ProductsScreen,
+  ListItemHolder.OnClickListener,
+  ProductListItemHolder.OnQueryBalanceButtonPressedListener,
   ShowRecentTransactionsListItemHolder.OnShowRecentTransactionsButtonClickedListener {
   private Unbinder unbinder;
   private ListItemAdapter adapter;
   private LoadIndicator loadIndicator;
 
-  @Inject StringHelper stringHelper;
-  @Inject ProductsPresenter presenter;
+  @Inject
+  StringHelper stringHelper;
+  @Inject
+  ProductsPresenter presenter;
 
-  @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
-  @BindView(R.id.recycler_view) RecyclerView recyclerView;
-  @BindView(R.id.button_add_another_account) Button addAnotherAccountButton;
+  @BindView(R.id.swipe_refresh_layout)
+  SwipeRefreshLayout swipeRefreshLayout;
+  @BindView(R.id.recycler_view)
+  RecyclerView recyclerView;
+  @BindView(R.id.button_add_another_account)
+  Button addAnotherAccountButton;
 
   @NonNull
   public static ProductsFragment newInstance() {
@@ -109,10 +120,14 @@ public class ProductsFragment extends ChildFragment<MainContainer> implements Pr
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
     // Prepares the recycler view.
-    final ListItemHolderCreatorFactory holderCreatorFactory = new ListItemHolderCreatorFactory.Builder()
-      .addCreator(ShowRecentTransactionsItem.class,
+    final ListItemHolderCreatorFactory holderCreatorFactory = new ListItemHolderCreatorFactory
+      .Builder()
+      .addCreator(
+        ShowRecentTransactionsItem.class,
         new ShowRecentTransactionsListItemHolderCreator(this))
-      .addCreator(ProductItem.class, new ProductListItemHolderCreator(this))
+      .addCreator(
+        ProductItem.class,
+        new ProductListItemHolderCreator(this, this))
       .build();
     final BinderFactory holderBinderFactory = new BinderFactory.Builder()
       .addBinder(
@@ -210,14 +225,14 @@ public class ProductsFragment extends ChildFragment<MainContainer> implements Pr
   }
 
   @Override
-  public void onBalanceQueried(Product product, @Nullable Balance balance) {
+  public void onBalanceQueried(Product product, Pair<Long, Balance> balance) {
     PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), checkIfNotNull(balance));
     setBalance(product, balance);
   }
 
   @Override
-  public void setBalance(@NonNull Product product, @Nullable Balance balance) {
-    final ProductItem item = new ProductItem(product);
+  public void setBalance(@NonNull Product product, Pair<Long, Balance> balance) {
+    final ProductItem item = ProductItem.create(product);
     if (adapter.contains(item)) {
       final int index = adapter.indexOf(item);
       final ProductItem actualItem = (ProductItem) adapter.get(index);
@@ -259,7 +274,17 @@ public class ProductsFragment extends ChildFragment<MainContainer> implements Pr
   }
 
   @Override
-  public void onQueryBalanceButtonClicked(int position, int x, int y) {
+  public void onClick(int position) {
+    final int[] location = Views.getLocationOnScreen(
+      recyclerView.findViewHolderForAdapterPosition(position));
+    queryBalance(
+      ((ProductItem) adapter.get(position)).getProduct(),
+      location[0],
+      location[1]);
+  }
+
+  @Override
+  public void onQueryBalanceButtonPressed(int position, int x, int y) {
     queryBalance(((ProductItem) adapter.get(position)).getProduct(), x, y);
   }
 

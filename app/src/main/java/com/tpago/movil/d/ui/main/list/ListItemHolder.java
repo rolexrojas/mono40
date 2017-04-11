@@ -17,7 +17,8 @@ import butterknife.ButterKnife;
 public abstract class ListItemHolder extends RecyclerView.ViewHolder implements Holder {
   protected final View rootView;
 
-  protected ListItemHolder(@NonNull final View rootView,
+  protected ListItemHolder(
+    @NonNull final View rootView,
     @Nullable final OnClickListener onClickListener) {
     super(rootView);
     this.rootView = rootView;

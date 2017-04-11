@@ -3,6 +3,7 @@ package com.tpago.movil.d.ui.main.products;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.d.data.Formatter;
@@ -13,7 +14,9 @@ import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductType;
 import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
 import com.tpago.movil.domain.LogoStyle;
+import com.tpago.movil.util.Dates;
 
+import static com.tpago.movil.util.Objects.checkIfNull;
 import static com.tpago.movil.util.Preconditions.assertNotNull;
 
 /**
@@ -34,7 +37,7 @@ class ProductListItemHolderBinder implements ListItemHolderBinder<ProductItem, P
     Picasso.with(c)
       .load(b.getLogoUri(LogoStyle.GRAY_36))
       .into(holder.bankLogoImageView);
-    holder.bankNameTextView.setText(c.getString(ProductType.findStringId(p)));
+    holder.productTypeTextView.setText(c.getString(ProductType.findStringId(p)));
     final String productIdentifier;
     if (Product.checkIfCreditCard(p)) {
       productIdentifier = stringHelper.maskedProductNumber(p);
@@ -43,14 +46,31 @@ class ProductListItemHolderBinder implements ListItemHolderBinder<ProductItem, P
     }
     holder.productIdentifierTextView.setText(productIdentifier);
     final Balance balance = item.getBalance();
-    if (balance != null) {
+    final int productTypeAnchorId;
+    final RelativeLayout.LayoutParams productTypeLayoutParams
+       = (RelativeLayout.LayoutParams) holder.productTypeTextView.getLayoutParams();
+    final int productIdentifierAnchorId;
+    final RelativeLayout.LayoutParams productIdentifierLayoutParams
+      = (RelativeLayout.LayoutParams) holder.productIdentifierTextView.getLayoutParams();
+    if (checkIfNull(balance)) {
+      holder.productBalanceTextView.setVisibility(View.GONE);
+      holder.queryTimeTextView.setVisibility(View.GONE);
+      holder.queryBalanceButton.setVisibility(View.VISIBLE);
+      productTypeAnchorId = holder.queryBalanceButton.getId();
+      productIdentifierAnchorId = holder.queryBalanceButton.getId();
+    } else {
       holder.productBalanceTextView.setVisibility(View.VISIBLE);
       holder.productBalanceTextView.setPrefix(p.getCurrency());
       holder.productBalanceTextView.setContent(Formatter.amount(balance.getValue()));
+      productTypeAnchorId = holder.productBalanceTextView.getId();
+      holder.queryTimeTextView.setVisibility(View.VISIBLE);
+      holder.queryTimeTextView.setText(Dates.createRelativeTimeString(c, item.getQueryTime()));
+      productIdentifierAnchorId = holder.queryTimeTextView.getId();
       holder.queryBalanceButton.setVisibility(View.GONE);
-    } else {
-      holder.productBalanceTextView.setVisibility(View.GONE);
-      holder.queryBalanceButton.setVisibility(View.VISIBLE);
     }
+    productTypeLayoutParams.addRule(RelativeLayout.START_OF, productTypeAnchorId);
+    holder.productTypeTextView.setLayoutParams(productTypeLayoutParams);
+    productIdentifierLayoutParams.addRule(RelativeLayout.START_OF, productIdentifierAnchorId);
+    holder.productIdentifierTextView.setLayoutParams(productIdentifierLayoutParams);
   }
 }

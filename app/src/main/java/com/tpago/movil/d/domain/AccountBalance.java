@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 public class AccountBalance extends Balance {
   private final BigDecimal available;
 
-  public AccountBalance(@NonNull BigDecimal total, @NonNull BigDecimal available) {
+  public AccountBalance(BigDecimal total, BigDecimal available) {
     super(total);
     this.available = available;
   }

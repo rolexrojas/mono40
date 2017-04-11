@@ -1,7 +1,7 @@
 package com.tpago.movil.d.ui.main.products;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Balance;
@@ -16,12 +16,15 @@ interface ProductsScreen extends Screen, Refreshable {
 
   void add(Object item);
 
-  void onBalanceQueried(Product product, @Nullable Balance balance);
+  void onBalanceQueried(Product product, Pair<Long, Balance> balance);
 
-  void setBalance(@NonNull Product product, @Nullable Balance balance);
+  void setBalance(@NonNull Product product, Pair<Long, Balance> balance);
 
   void showGenericErrorDialog(String title, String message);
+
   void showGenericErrorDialog(String message);
+
   void showGenericErrorDialog();
+
   void showUnavailableNetworkError();
 }

@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.tpago.movil.R;
 import com.tpago.movil.d.ui.main.list.ListItemHolder;
+import com.tpago.movil.d.ui.view.Views;
 import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
 
 import butterknife.BindView;
@@ -15,31 +16,40 @@ import butterknife.OnClick;
 /**
  * @author hecvasro
  */
-class ProductListItemHolder extends ListItemHolder {
-  private OnQueryActionButtonClickedListener listener;
+final class ProductListItemHolder extends ListItemHolder {
+  private final OnQueryBalanceButtonPressedListener onQueryButtonClickedListener;
 
-  @BindView(R.id.button_query_balance) Button queryBalanceButton;
-  @BindView(R.id.image_view_bank_logo) ImageView bankLogoImageView;
-  @BindView(R.id.prefixable_text_view_product_balance) PrefixableTextView productBalanceTextView;
-  @BindView(R.id.text_view_product_type) TextView bankNameTextView;
-  @BindView(R.id.text_view_product_identifier) TextView productIdentifierTextView;
+  @BindView(R.id.button_query_balance)
+  Button queryBalanceButton;
+  @BindView(R.id.image_view_bank_logo)
+  ImageView bankLogoImageView;
+  @BindView(R.id.prefixable_text_view_product_balance)
+  PrefixableTextView productBalanceTextView;
+  @BindView(R.id.text_view_product_identifier)
+  TextView productIdentifierTextView;
+  @BindView(R.id.text_view_product_type)
+  TextView productTypeTextView;
+  @BindView(R.id.text_view_query_time)
+  TextView queryTimeTextView;
 
-  ProductListItemHolder(View rootView, OnQueryActionButtonClickedListener listener) {
-    super(rootView);
-    this.listener = listener;
+  ProductListItemHolder(
+    View rootView,
+    OnClickListener onClickListener,
+    OnQueryBalanceButtonPressedListener onQueryButtonClickedListener) {
+    super(rootView, onClickListener);
+    this.onQueryButtonClickedListener = onQueryButtonClickedListener;
   }
 
   @OnClick(R.id.button_query_balance)
   void onQueryBalanceButtonClicked(View view) {
-    final int[] location = new int[2];
-    view.getLocationOnScreen(location);
-    listener.onQueryBalanceButtonClicked(
+    final int[] location = Views.getLocationOnScreen(view);
+    onQueryButtonClickedListener.onQueryBalanceButtonPressed(
       getAdapterPosition(),
-      location[0] + (view.getWidth() / 2),
+      location[0],
       location[1]);
   }
 
-  interface OnQueryActionButtonClickedListener {
-    void onQueryBalanceButtonClicked(int position, int x, int y);
+  interface OnQueryBalanceButtonPressedListener {
+    void onQueryBalanceButtonPressed(int position, int x, int y);
   }
 }
