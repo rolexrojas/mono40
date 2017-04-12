@@ -29,7 +29,6 @@ import timber.log.Timber;
 public final class ProductManager {
   private static final String KEY_INDEX_SET = "indexSet";
   private static final String KEY_DEFAULT_PAYMENT_OPTION_ID = "defaultPaymentOption";
-  private static final String KEY_TEMPORARY_DEFAULT_PAYMENT_OPTION_ID = "temporaryDefaultPaymentOption";
 
   private final Lazy<PosBridge> posBridge;
   private final EventBus eventBus;
@@ -135,32 +134,12 @@ public final class ProductManager {
     //    set local.default local.temporary
     //    set remote.default local.temporary
     //    clear local.temporary
-    Product tdpo = null;
-    if (sharedPreferences.contains(KEY_TEMPORARY_DEFAULT_PAYMENT_OPTION_ID)) {
-      final String tdpoid = sharedPreferences
-        .getString(KEY_TEMPORARY_DEFAULT_PAYMENT_OPTION_ID, null);
-      for (Product p : remoteProductList) {
-        if (p.getId().equals(tdpoid)) {
-          tdpo = p;
-          break;
-        }
-      }
-    }
     if (Objects.checkIfNull(rdpo)) {
       defaultPaymentOption = null;
       editor.remove(KEY_DEFAULT_PAYMENT_OPTION_ID);
-      editor.remove(KEY_TEMPORARY_DEFAULT_PAYMENT_OPTION_ID);
-    } else if (Objects.checkIfNull(tdpo)) {
+    } else {
       defaultPaymentOption = rdpo;
       editor.putString(KEY_DEFAULT_PAYMENT_OPTION_ID, defaultPaymentOption.getId());
-    } else if (rdpo.equals(tdpo)) {
-      defaultPaymentOption = tdpo;
-      editor.putString(KEY_DEFAULT_PAYMENT_OPTION_ID, defaultPaymentOption.getId());
-      final ApiResult<Void> r = apiBridge.setDefaultPaymentOption(authToken, defaultPaymentOption);
-      Timber.d(r.toString());
-      if (r.isSuccessful()) {
-        editor.remove(KEY_TEMPORARY_DEFAULT_PAYMENT_OPTION_ID);
-      }
     }
 
     editor.apply();
@@ -220,38 +199,15 @@ public final class ProductManager {
     return resultList;
   }
 
-  public final boolean setTemporaryDefaultPaymentOption(
-    final String authToken,
-    final Product paymentOption) {
+  public final boolean setDefaultPaymentOption(final String authToken, final Product paymentOption) {
     if (paymentOption.equals(defaultPaymentOption)) {
       return true;
     } else {
       final ApiResult<Void> result = apiBridge.setDefaultPaymentOption(authToken, paymentOption);
       if (result.isSuccessful()) {
-        final SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (Objects.checkIfNull(defaultPaymentOption)) {
-          defaultPaymentOption = paymentOption;
-          editor.putString(KEY_DEFAULT_PAYMENT_OPTION_ID, defaultPaymentOption.getId());
-        } else {
-          editor.putString(KEY_TEMPORARY_DEFAULT_PAYMENT_OPTION_ID, paymentOption.getId());
-        }
-        editor.apply();
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-
-  public final boolean clearTemporaryDefaultPaymentOption(final String authToken) {
-    if (!sharedPreferences.contains(KEY_TEMPORARY_DEFAULT_PAYMENT_OPTION_ID)) {
-      return true;
-    } else {
-      final ApiResult<Void> result = apiBridge
-        .setDefaultPaymentOption(authToken, defaultPaymentOption);
-      if (result.isSuccessful()) {
+        defaultPaymentOption = paymentOption;
         sharedPreferences.edit()
-          .remove(KEY_TEMPORARY_DEFAULT_PAYMENT_OPTION_ID)
+          .putString(KEY_DEFAULT_PAYMENT_OPTION_ID, defaultPaymentOption.getId())
           .apply();
         return true;
       } else {

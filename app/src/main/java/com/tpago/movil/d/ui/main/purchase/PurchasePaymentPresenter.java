@@ -57,7 +57,7 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
       @Override
       public Observable<Boolean> call() {
         final boolean result = productManager
-          .setTemporaryDefaultPaymentOption(session.getToken(), paymentOption);
+          .setDefaultPaymentOption(session.getToken(), paymentOption);
         return Observable.just(result);
       }
     })
@@ -76,12 +76,6 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
           } else {
             return Observable.just(false);
           }
-        }
-      })
-      .doOnUnsubscribe(new Action0() {
-        @Override
-        public void call() {
-          productManager.clearTemporaryDefaultPaymentOption(session.getToken());
         }
       })
       .subscribeOn(Schedulers.io())
