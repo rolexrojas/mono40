@@ -28,6 +28,7 @@ import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.domain.LogoStyle;
 import com.tpago.movil.text.Texts;
 import com.tpago.movil.widget.FullSizeLoadIndicator;
+import com.tpago.movil.widget.Keyboard;
 import com.tpago.movil.widget.LoadIndicator;
 import com.tpago.movil.widget.TextInput;
 
@@ -171,7 +172,7 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
       .noFade()
       .into(imageView);
     textView.setText(String.format(getString(R.string.transaction), Banks.getName(bank)));
-    textInput.requestFocus();
+    Keyboard.show(textInput);
     textInput.setText(recipient.getAccountNumber());
     textInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
       @Override
