@@ -163,7 +163,7 @@ public final class UnlockPresenter extends Presenter<UnlockPresenter.View> {
     super.onViewStarted();
     final User user = userStore.get();
     view.setAvatarImageContent(user.getAvatar().getFile());
-    view.setTitleLabelContent(Texts.join(" ", user.getFirstName(), user.getLastName()));
+    view.setTitleLabelContent(user.getFirstName());
     view.setPasswordTextInputContent(passwordTextInputContent);
     updateView();
   }
