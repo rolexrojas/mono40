@@ -6,6 +6,8 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.tpago.movil.app.App;
+
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
@@ -24,5 +26,17 @@ public abstract class BaseActivity extends AppCompatActivity {
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(layoutResourceIdentifier());
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    App.get(this).setVisible(true);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    App.get(this).setVisible(false);
   }
 }

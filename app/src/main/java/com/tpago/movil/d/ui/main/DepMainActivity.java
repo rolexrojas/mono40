@@ -59,6 +59,8 @@ public class DepMainActivity
   private DepMainComponent component;
   private OnBackPressedListener onBackPressedListener;
 
+  private boolean shouldRequestAuthentication = false;
+
   @Inject TimeOutManager timeOutManager;
 
   @Inject
@@ -147,8 +149,12 @@ public class DepMainActivity
   @Override
   protected void onStart() {
     super.onStart();
-    // Starts the presenter.
-    presenter.start();
+    if (shouldRequestAuthentication) {
+      startActivity(InitActivity.getLaunchIntent(this));
+      finish();
+    } else {
+      presenter.start();
+    }
   }
 
   @Override
@@ -161,7 +167,6 @@ public class DepMainActivity
   @Override
   protected void onStop() {
     super.onStop();
-    // Stops the presenter.
     presenter.stop();
   }
 
@@ -283,8 +288,12 @@ public class DepMainActivity
 
   @Override
   public void handleTimeOut() {
-    startActivity(InitActivity.getLaunchIntent(this));
-    finish();
+    if (App.get(this).isVisible()) {
+      startActivity(InitActivity.getLaunchIntent(this));
+      finish();
+    } else {
+      shouldRequestAuthentication = true;
+    }
   }
 
   public interface OnBackPressedListener {

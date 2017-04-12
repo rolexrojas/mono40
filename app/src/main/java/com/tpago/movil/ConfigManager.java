@@ -25,8 +25,9 @@ public final class ConfigManager {
   }
 
   public final TimeOut getTimeOut() {
+    return TimeOut.ONE;
     // TODO: Change default time out value to ten (10) minutes.
-    return TimeOut.valueOf(sharedPreferences.getString(KEY_TIME_OUT, TimeOut.FIVE.name()));
+//    return TimeOut.valueOf(sharedPreferences.getString(KEY_TIME_OUT, TimeOut.FIVE.name()));
   }
 
   public final void addOnTimeOutChangedListener(OnTimeOutChangedListener listener) {

@@ -37,6 +37,18 @@ public abstract class BaseActivity extends AppCompatActivity {
   }
 
   @Override
+  protected void onResume() {
+    super.onResume();
+    App.get(this).setVisible(true);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    App.get(this).setVisible(false);
+  }
+
+  @Override
   protected void onDestroy() {
     super.onDestroy();
     // Unbinds all the annotated resources, views and methods.

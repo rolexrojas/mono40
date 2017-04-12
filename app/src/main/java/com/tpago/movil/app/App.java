@@ -25,6 +25,8 @@ public final class App extends Application {
 
   private AppComponent component;
 
+  private boolean visible = false;
+
   @Inject OkHttpClient httpClient;
 
   private void initTimber() {
@@ -53,6 +55,14 @@ public final class App extends Application {
 
   public final AppComponent getComponent() {
     return component;
+  }
+
+  public final boolean isVisible() {
+    return visible;
+  }
+
+  public final void setVisible(boolean visible) {
+    this.visible = visible;
   }
 
   @Override

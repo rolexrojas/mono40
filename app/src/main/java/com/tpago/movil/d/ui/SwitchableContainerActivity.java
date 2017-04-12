@@ -8,12 +8,9 @@ import com.tpago.movil.R;
 import com.tpago.movil.util.Objects;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
-public abstract class SwitchableContainerActivity<C> extends ContainerActivity<C>
-  implements SwitchableContainer<C> {
+public abstract class SwitchableContainerActivity<C> extends ContainerActivity<C> implements SwitchableContainer<C> {
   private static final String TAG_CHILD_FRAGMENT = "childFragment";
 
   @Override
