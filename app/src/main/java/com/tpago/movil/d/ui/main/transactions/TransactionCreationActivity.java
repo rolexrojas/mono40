@@ -12,9 +12,7 @@ import android.view.MenuItem;
 
 import com.tpago.movil.app.App;
 import com.tpago.movil.R;
-import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.misc.Utils;
-import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.RecipientType;
 import com.tpago.movil.d.ui.ChildFragment;
@@ -30,8 +28,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 public class TransactionCreationActivity
@@ -68,25 +64,11 @@ public class TransactionCreationActivity
     return intent;
   }
 
-  @NonNull
-  public static Intent getLaunchIntent(
-    @NonNull Context context,
-    @NonNull String phoneNumber,
-    boolean isAffiliated) {
-    final Recipient r;
-    if (isAffiliated) {
-      r = new PhoneNumberRecipient(phoneNumber);
-    } else {
-      r = new NonAffiliatedPhoneNumberRecipient(phoneNumber);
-    }
-    return getLaunchIntent(context, r);
-  }
-
   public static Pair<Recipient, String> deserializeResult(Intent intent) {
     if (Objects.checkIfNull(intent)) {
       return null;
     } else {
-      final Recipient recipient =  intent.getParcelableExtra(KEY_RECIPIENT);
+      final Recipient recipient = intent.getParcelableExtra(KEY_RECIPIENT);
       final String transactionId = intent.getStringExtra(KEY_TRANSACTION_ID);
       return Pair.create(recipient, transactionId);
     }

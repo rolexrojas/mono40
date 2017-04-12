@@ -32,6 +32,7 @@ import com.tpago.movil.domain.LogoStyle;
 import com.tpago.movil.text.Texts;
 import com.tpago.movil.util.Objects;
 import com.tpago.movil.widget.FullSizeLoadIndicator;
+import com.tpago.movil.widget.Keyboard;
 import com.tpago.movil.widget.LoadIndicator;
 import com.tpago.movil.widget.TextInput;
 
@@ -160,11 +161,11 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends ChildF
               final int y = Math.round((button.getBottom() - button.getTop()) / 2);
               PinConfirmationDialogFragment.show(
                 getChildFragmentManager(),
-                String.format(
-                  "Transferir %1$s a %2$s mas %3$s",
+                getString(
+                  R.string.format_transfer_to,
                   Formatter.amount(fundingAccount.get().getCurrency(), value.get()),
                   data.first,
-                  Formatter.amount(data.second.getCurrency(), data.second.getQueryFee())),
+                  Formatter.amount(fundingAccount.get().getCurrency(), BigDecimal.ZERO)), // TODO: Add the cost of a transfer.
                 new PinConfirmationDialogFragment.Callback() {
                   @Override
                   public void confirm(String pin) {
@@ -235,7 +236,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends ChildF
       .noFade()
       .into(imageView);
     textView.setText(String.format(getString(R.string.transaction), Banks.getName(bank)));
-    textInput.requestFocus();
+    Keyboard.show(textInput);
     textInput.setText(((NonAffiliatedPhoneNumberRecipient) recipient).getAccountNumber());
     textInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
       @Override

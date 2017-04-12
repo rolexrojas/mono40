@@ -111,7 +111,7 @@
   <string name="format_product_number_masked">•••• •••• %1$s</string>
   <string name="format_recipient_addition_message_contact">¿Le gustaría dar un apodo a %1$s para reconocerlo más fácil en tu lista de pagos?</string>
   <string name="format_transaction_confirmation_message_phone_number">¿Le gustaría guardar y apodar a %1$s para usarlo más fácil en el futuro?</string>
-  <string name="format_transfer_to">Transferir %1$s al %2$s</string>
+  <string name="format_transfer_to">Transferir %1$s a %2$s más %3$s</string>
   <string name="go_to_accounts">Ver cuentas</string>
   <string name="help">Ayuda</string>
   <string name="incorrect_format">Formato incorrecto</string>

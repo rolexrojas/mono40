@@ -6,6 +6,7 @@ import android.support.v4.util.Pair;
 import com.tpago.movil.Partner;
 import com.tpago.movil.api.DCurrencies;
 import com.tpago.movil.d.domain.Balance;
+import com.tpago.movil.d.domain.Customer;
 import com.tpago.movil.domain.Bank;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
@@ -243,23 +244,26 @@ class RetrofitApiBridge implements DepApiBridge {
         });
     } else {
       final PhoneNumberRecipient pnr = (PhoneNumberRecipient) recipient;
-      return apiService.fetchRecipientInfo(authToken, pnr.getPhoneNumber())
-        .flatMap(mapToApiResult(RecipientInfoResponseBody.mapFunc()))
-        .flatMap(new Func1<ApiResult<String>, Observable<ApiResult<String>>>() {
+      return apiService.fetchCustomer(authToken, pnr.getPhoneNumber())
+        .flatMap(mapToApiResult(RetrofitApiBridge.<Customer>identityMapFunc()))
+        .flatMap(new Func1<ApiResult<Customer>, Observable<ApiResult<String>>>() {
           @Override
-          public Observable<ApiResult<String>> call(ApiResult<String> result) {
+          public Observable<ApiResult<String>> call(ApiResult<Customer> result) {
             if (result.isSuccessful()) {
               return apiService.transferToAffiliated(
                 authToken,
                 TransferToAffiliatedRequestBody.create(
                   product,
                   pnr,
-                  result.getData(),
+                  result.getData().getName(),
                   amount,
                   pin))
                 .flatMap(mapToApiResult(TransferResponseBody.mapFunc()));
             } else {
-              return Observable.just(result);
+              return Observable.just(new ApiResult<String>(
+                result.getCode(),
+                null,
+                result.getError()));
             }
           }
         });
@@ -365,6 +369,22 @@ class RetrofitApiBridge implements DepApiBridge {
   public ApiResult<Boolean> validatePin(String authToken, String pin) {
     return apiService.validatePin(authToken, ValidatePinRequestBody.create(pin))
       .flatMap(mapToApiResult(RetrofitApiBridge.<Boolean>identityMapFunc()))
+      .toBlocking()
+      .single();
+  }
+
+  @Override
+  public ApiResult<Customer.State> fetchCustomerState(String authToken, String phoneNumber) {
+    return apiService.fetchCustomerStatus(authToken, phoneNumber)
+      .flatMap(mapToApiResult(FetchCustomerStateResponseBody.mapFunc()))
+      .toBlocking()
+      .single();
+  }
+
+  @Override
+  public ApiResult<Customer> fetchCustomer(String authToken, String phoneNumber) {
+    return apiService.fetchCustomer(authToken, phoneNumber)
+      .flatMap(mapToApiResult(RetrofitApiBridge.<Customer>identityMapFunc()))
       .toBlocking()
       .single();
   }

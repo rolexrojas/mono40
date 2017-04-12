@@ -42,12 +42,11 @@ interface PaymentsScreen extends Screen {
 
   void update(@NonNull Object item);
 
-  void startTransfer(@NonNull String phoneNumber, boolean isAffiliated);
+  void startTransfer(Recipient recipient);
 
   void openInitScreen();
   void finish();
   void setDeleting(boolean deleting);
-  void startTransfer(Recipient recipient);
   void showMessage(String message);
   void remove(Object item);
   void setDeleteButtonEnabled(boolean enabled);

@@ -308,13 +308,6 @@ public class PaymentsFragment
   }
 
   @Override
-  public void startTransfer(@NonNull String phoneNumber, boolean isAffiliated) {
-    startActivityForResult(
-      TransactionCreationActivity.getLaunchIntent(getContext(), phoneNumber, isAffiliated),
-      REQUEST_CODE_TRANSACTION_CREATION);
-  }
-
-  @Override
   public void openInitScreen() {
     startActivity(InitActivity.getLaunchIntent(getContext()));
   }

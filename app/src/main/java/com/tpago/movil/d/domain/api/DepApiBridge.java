@@ -5,6 +5,8 @@ import android.support.v4.util.Pair;
 
 import com.tpago.movil.Partner;
 import com.tpago.movil.d.domain.Balance;
+import com.tpago.movil.d.domain.Customer;
+import com.tpago.movil.d.domain.PhoneNumber;
 import com.tpago.movil.domain.Bank;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
@@ -141,4 +143,7 @@ public interface DepApiBridge {
     String pin);
 
   ApiResult<Boolean> validatePin(String authToken, String pin);
+
+  ApiResult<Customer.State> fetchCustomerState(String authToken, String phoneNumber);
+  ApiResult<Customer> fetchCustomer(String authToken, String phoneNumber);
 }

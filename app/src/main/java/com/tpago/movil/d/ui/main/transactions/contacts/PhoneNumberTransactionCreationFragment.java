@@ -23,6 +23,7 @@ import com.tpago.movil.d.ui.view.widget.pad.Dot;
 import com.tpago.movil.d.ui.view.widget.pad.DepNumPad;
 import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
 import com.tpago.movil.main.transactions.PaymentMethodChooser;
+import com.tpago.movil.text.Texts;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -214,10 +215,16 @@ public class PhoneNumberTransactionCreationFragment
       transferActionButton.getLocationOnScreen(location);
       final int x = location[0] + (transferActionButton.getWidth() / 2);
       final int y = location[1];
-      final String description = String.format(
-        getString(R.string.format_transfer_to),
-        Formatter.amount(amountTextView.getPrefix().toString(), value.get()),
-        recipient.getIdentifier());
+      final String currency = amountTextView.getPrefix().toString();
+      String label = recipient.getLabel();
+      if (Texts.checkIfEmpty(label)) {
+        label = recipient.getIdentifier();
+      }
+      final String description = getString(
+        R.string.format_transfer_to,
+        Formatter.amount(currency, value.get()),
+        label,
+        Formatter.amount(currency, BigDecimal.ZERO)); // TODO: Add the cost of a transfer.
       PinConfirmationDialogFragment.show(
         getChildFragmentManager(),
         description,

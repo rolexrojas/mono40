@@ -3,6 +3,7 @@ package com.tpago.movil.d.data.api;
 import com.tpago.movil.d.domain.AccountBalance;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.CreditCardBalance;
+import com.tpago.movil.d.domain.Customer;
 import com.tpago.movil.d.domain.InitialData;
 import com.tpago.movil.d.domain.LoanBalance;
 import com.tpago.movil.d.domain.ProductInfo;
@@ -11,11 +12,13 @@ import com.tpago.movil.d.domain.Transaction;
 import java.util.List;
 import java.util.Map;
 
+import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rx.Observable;
 
@@ -51,8 +54,13 @@ interface ApiService {
     @Header(Api.Header.AUTHORIZATION) String authToken,
     @Query("recipient-msisdn") String phoneNumber);
 
+  @GET("customer/{phoneNumber}/status")
+  Observable<Response<FetchCustomerStateResponseBody>> fetchCustomerStatus(
+    @Header(Api.Header.AUTHORIZATION) String authToken,
+    @Path("phoneNumber") String phoneNumber);
+
   @GET("transfer/recipient-info")
-  Observable<Response<RecipientInfoResponseBody>> fetchRecipientInfo(
+  Observable<Response<Customer>> fetchCustomer(
     @Header(Api.Header.AUTHORIZATION) String authToken,
     @Query("recipient-msisdn") String phoneNumber);
 
