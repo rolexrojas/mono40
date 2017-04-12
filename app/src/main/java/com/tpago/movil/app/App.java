@@ -31,6 +31,9 @@ public final class App extends Application {
     if (BuildConfig.DEBUG) {
       Timber.plant(new DebugLogTree());
     }
+    if (BuildConfig.CRASHLYTICS) {
+      Timber.plant(new CrashlyticsLogTree(this));
+    }
   }
 
   private void initDagger() {

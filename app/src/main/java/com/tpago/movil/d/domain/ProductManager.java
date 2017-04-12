@@ -1,9 +1,12 @@
 package com.tpago.movil.d.domain;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v4.util.Pair;
 
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
+import com.tpago.movil.api.ApiImageUriBuilder;
 import com.tpago.movil.content.SharedPreferencesCreator;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
@@ -30,6 +33,7 @@ public final class ProductManager {
   private static final String KEY_INDEX_SET = "indexSet";
   private static final String KEY_DEFAULT_PAYMENT_OPTION_ID = "defaultPaymentOption";
 
+  private final Context context;
   private final Lazy<PosBridge> posBridge;
   private final EventBus eventBus;
   private final DepApiBridge apiBridge;
@@ -47,6 +51,7 @@ public final class ProductManager {
   public ProductManager(
     SharedPreferencesCreator sharedPreferencesCreator,
     Gson gson,
+    Context context,
     EventBus eventBus,
     DepApiBridge apiBridge,
     Lazy<PosBridge> posBridge) {
@@ -59,15 +64,14 @@ public final class ProductManager {
 
     this.indexSet = this.sharedPreferences.getStringSet(KEY_INDEX_SET, new HashSet<String>());
 
+    this.context = context;
     this.eventBus = eventBus;
     this.apiBridge = apiBridge;
     this.posBridge = posBridge;
   }
 
   @Deprecated
-  final void syncProducts(
-    final String authToken,
-    final List<Product> remoteProductList) {
+  final void syncProducts(final List<Product> remoteProductList) {
     if (Objects.checkIfNull(productList)) {
       productList = new ArrayList<>();
     }
@@ -160,6 +164,9 @@ public final class ProductManager {
       paymentOptionList.add(defaultPaymentOption);
     }
     for (Product p : productList) {
+      if (Product.checkIfCreditCard(p)) {
+        Picasso.with(context).load(ApiImageUriBuilder.build(context, p)).fetch();
+      }
       if (Product.isPaymentOption(p) && !paymentOptionList.contains(p)) {
         paymentOptionList.add(p);
       }

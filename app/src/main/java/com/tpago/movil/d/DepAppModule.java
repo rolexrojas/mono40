@@ -1,5 +1,6 @@
 package com.tpago.movil.d;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
@@ -57,10 +58,17 @@ public final class DepAppModule {
   ProductManager provideProductManager(
     SharedPreferencesCreator sharedPreferencesCreator,
     @DepQualifier Gson gson,
+    Context context,
     EventBus eventBus,
     DepApiBridge apiBridge,
     Lazy<PosBridge> posBridge) {
-    return new ProductManager(sharedPreferencesCreator, gson, eventBus, apiBridge, posBridge);
+    return new ProductManager(
+      sharedPreferencesCreator,
+      gson,
+      context,
+      eventBus,
+      apiBridge,
+      posBridge);
   }
 
   @Provides

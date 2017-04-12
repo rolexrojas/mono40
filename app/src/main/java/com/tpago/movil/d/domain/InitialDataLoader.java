@@ -32,8 +32,8 @@ public final class InitialDataLoader {
         public void call(ApiResult<InitialData> result) {
           if (result.isSuccessful()) {
             final InitialData data = result.getData();
-            productManager.syncProducts(session.getToken(), data.getProducts());
-            recipientManager.syncRecipients(session.getToken(), data.getRecipients());
+            productManager.syncProducts(data.getProducts());
+            recipientManager.syncRecipients(data.getRecipients());
           }
         }
       })

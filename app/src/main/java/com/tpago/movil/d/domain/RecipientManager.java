@@ -1,5 +1,6 @@
 package com.tpago.movil.d.domain;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 
@@ -35,9 +36,9 @@ public final class RecipientManager {
   private final SharedPreferences sharedPreferences;
   private final Gson gson;
 
-  private final DepApiBridge apiBridge;
-
   private final Set<String> indexSet;
+
+  private final DepApiBridge apiBridge;
 
   private List<Recipient> recipientList;
 
@@ -51,16 +52,13 @@ public final class RecipientManager {
     this.gson = Preconditions
       .assertNotNull(gson, "gson == null");
 
-    this.apiBridge = Preconditions
-      .assertNotNull(apiBridge, "apiBridge == null");
-
     this.indexSet = this.sharedPreferences.getStringSet(KEY_INDEX_SET, new HashSet<String>());
+
+    this.apiBridge = Preconditions.assertNotNull(apiBridge, "apiBridge == null");
   }
 
   @Deprecated
-  final void syncRecipients(
-    final String authToken,
-    final List<Recipient> remoteRecipientList) {
+  final void syncRecipients(final List<Recipient> remoteRecipientList) {
     if (Objects.checkIfNull(recipientList)) {
       recipientList = new ArrayList<>();
     }
