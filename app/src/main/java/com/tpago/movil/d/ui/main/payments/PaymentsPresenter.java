@@ -209,7 +209,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
               final ApiResult<Customer.State> customerStateResult = depApiBridge
                 .fetchCustomerState(authToken, phoneNumber);
               if (customerStateResult.isSuccessful()) {
-                if (customerStateResult.getData().equals(Customer.State.AFFILIATED)) {
+                if (Customer.checkIfCanBeFetched(customerStateResult.getData())) {
                   final ApiResult<Customer> customerResult = depApiBridge
                     .fetchCustomer(authToken, phoneNumber);
                   if (customerResult.isSuccessful()) {
@@ -296,7 +296,7 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
               final ApiResult<Customer.State> customerStateResult = depApiBridge
                 .fetchCustomerState(authToken, phoneNumber);
               if (customerStateResult.isSuccessful()) {
-                if (customerStateResult.getData().equals(Customer.State.AFFILIATED)) {
+                if (Customer.checkIfCanBeFetched(customerStateResult.getData())) {
                   final ApiResult<Customer> customerResult = depApiBridge
                     .fetchCustomer(authToken, phoneNumber);
                   if (customerResult.isSuccessful()) {

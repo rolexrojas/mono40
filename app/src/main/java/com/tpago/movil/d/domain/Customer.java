@@ -10,6 +10,10 @@ import com.google.gson.annotations.SerializedName;
  */
 @AutoValue
 public abstract class Customer {
+  public static boolean checkIfCanBeFetched(State state) {
+    return state == State.AFFILIATED || state == State.REGISTERED;
+  }
+
   public static TypeAdapter<Customer> typeAdapter(Gson gson) {
     return new AutoValue_Customer.GsonTypeAdapter(gson);
   }
