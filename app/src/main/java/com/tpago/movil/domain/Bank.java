@@ -5,14 +5,23 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.auto.value.AutoValue;
+import com.tpago.movil.util.Preconditions;
+
+import java.math.BigDecimal;
 
 /**
  * @author hecvasro
  */
 @AutoValue
 public abstract class Bank implements LogoUriProvider, Parcelable, Comparable<Bank> {
+  private static final BigDecimal TRANSFER_COST_PERCENTAGE = BigDecimal.valueOf(0.015);
+
   public static Builder builder() {
     return new AutoValue_Bank.Builder();
+  }
+
+  public static BigDecimal calculateTransferCost(BigDecimal amount) {
+    return Preconditions.assertNotNull(amount, "amount == null").multiply(TRANSFER_COST_PERCENTAGE);
   }
 
   abstract LogoUriMap getLogoUriMap();

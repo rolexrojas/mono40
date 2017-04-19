@@ -22,6 +22,7 @@ import com.tpago.movil.d.ui.view.widget.pad.Digit;
 import com.tpago.movil.d.ui.view.widget.pad.Dot;
 import com.tpago.movil.d.ui.view.widget.pad.DepNumPad;
 import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
+import com.tpago.movil.domain.Bank;
 import com.tpago.movil.main.transactions.PaymentMethodChooser;
 import com.tpago.movil.text.Texts;
 
@@ -224,7 +225,9 @@ public class PhoneNumberTransactionCreationFragment
         R.string.format_transfer_to,
         Formatter.amount(currency, value.get()),
         label,
-        Formatter.amount(currency, BigDecimal.ZERO)); // TODO: Add the cost of a transfer.
+        Formatter.amount(
+          currency,
+          Bank.calculateTransferCost(value.get())));
       PinConfirmationDialogFragment.show(
         getChildFragmentManager(),
         description,

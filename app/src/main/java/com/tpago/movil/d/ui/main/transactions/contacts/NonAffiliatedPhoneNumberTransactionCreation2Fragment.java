@@ -165,7 +165,9 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends ChildF
                   R.string.format_transfer_to,
                   Formatter.amount(fundingAccount.get().getCurrency(), value.get()),
                   data.first,
-                  Formatter.amount(fundingAccount.get().getCurrency(), BigDecimal.ZERO)), // TODO: Add the cost of a transfer.
+                  Formatter.amount(
+                    fundingAccount.get().getCurrency(),
+                    Bank.calculateTransferCost(value.get()))),
                 new PinConfirmationDialogFragment.Callback() {
                   @Override
                   public void confirm(String pin) {
