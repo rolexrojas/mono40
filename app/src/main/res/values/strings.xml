@@ -34,7 +34,7 @@
   <string name="relative_time_suffix_seconds">s</string>
   <string name="savings">Ahorros</string>
   <string name="sign_in">Iniciar sesión</string>
-  <string name="skip">Saltar</string>
+  <string name="skip">@string/forward</string>
   <string name="start">Comenzar</string>
   <string name="unknown">Desconicido</string>
   <string name="unlock">Desbloquear</string>
@@ -42,6 +42,7 @@
   <string name="widget_editable_label_content_font">@string/font_gotham_round_light</string>
   <string name="widget_text_input_background_path_data">M0,44 H240</string>
   <string name="widget_text_input_content_font">@string/font_gotham_round_book</string>
+  <string name="forward">Avanzar</string>
 
   <!-- TODO: Remove every string from this point downwards -->
   <string name="about">Acerca de</string>

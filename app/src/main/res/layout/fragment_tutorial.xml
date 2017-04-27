@@ -39,7 +39,7 @@
         android:layout_height="36dp"
         android:layout_gravity="center_vertical|end"
         android:layout_marginEnd="30dp"
-        android:text="@string/ok"/>
+        android:text="@string/forward"/>
     </FrameLayout>
   </LinearLayout>
 </RelativeLayout>
