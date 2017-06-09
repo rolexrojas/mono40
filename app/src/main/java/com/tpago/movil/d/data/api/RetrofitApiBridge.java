@@ -6,7 +6,11 @@ import android.support.v4.util.Pair;
 import com.tpago.movil.Partner;
 import com.tpago.movil.api.DCurrencies;
 import com.tpago.movil.d.domain.Balance;
+import com.tpago.movil.d.domain.CreditCardBillBalance;
 import com.tpago.movil.d.domain.Customer;
+import com.tpago.movil.d.domain.LoanBillBalance;
+import com.tpago.movil.d.domain.ProductBillBalance;
+import com.tpago.movil.d.domain.ProductRecipient;
 import com.tpago.movil.domain.Bank;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
@@ -346,6 +350,32 @@ class RetrofitApiBridge implements DepApiBridge {
       .flatMap(mapToApiResult(RetrofitApiBridge.<BillBalance>identityMapFunc()))
       .toBlocking()
       .single();
+  }
+
+  @Override
+  public ApiResult<ProductBillBalance> queryBalance(String authToken, ProductRecipient recipient) {
+    final Product product = recipient.getProduct();
+    if (Product.checkIfCreditCard(product)) {
+      return apiService.queryCreditCardBillBalance(authToken, product)
+        .flatMap(mapToApiResult(new Func1<CreditCardBillBalance, ProductBillBalance>() {
+          @Override
+          public ProductBillBalance call(CreditCardBillBalance productBillBalance) {
+            return productBillBalance;
+          }
+        }))
+        .toBlocking()
+        .single();
+    } else {
+      return apiService.queryLoanBalance(authToken, product)
+        .flatMap(mapToApiResult(new Func1<LoanBillBalance, ProductBillBalance>() {
+          @Override
+          public ProductBillBalance call(LoanBillBalance productBillBalance) {
+            return productBillBalance;
+          }
+        }))
+        .toBlocking()
+        .single();
+    }
   }
 
   @Override

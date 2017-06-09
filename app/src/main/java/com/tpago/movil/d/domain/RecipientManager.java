@@ -72,7 +72,7 @@ public final class RecipientManager {
     for (Recipient recipient : recipientToAddList) {
       recipientList.add(recipient);
       indexSet.add(recipient.getId());
-      editor.putString(recipient.getId(), gson.toJson(recipient));
+      editor.putString(recipient.getId(), gson.toJson(recipient, Recipient.class));
     }
     for (Recipient recipient : recipientToRemoveList) {
       indexSet.remove(recipient.getId());

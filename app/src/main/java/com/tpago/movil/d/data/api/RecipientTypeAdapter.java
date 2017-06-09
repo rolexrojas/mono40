@@ -2,6 +2,10 @@ package com.tpago.movil.d.data.api;
 
 import android.text.TextUtils;
 
+import com.tpago.movil.d.domain.CreditCardBillBalance;
+import com.tpago.movil.d.domain.LoanBillBalance;
+import com.tpago.movil.d.domain.ProductBillBalance;
+import com.tpago.movil.d.domain.ProductRecipient;
 import com.tpago.movil.domain.Bank;
 import com.tpago.movil.Partner;
 import com.tpago.movil.d.domain.BillBalance;
@@ -90,6 +94,20 @@ class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSerialize
         b.setBalance((BillBalance) context.deserialize(jo.get(PROPERTY_BALANCE), BillBalance.class));
       }
       return b;
+    } else if (type.equals(RecipientType.PRODUCT)) {
+      if (!jo.has(PROPERTY_PRODUCT)) {
+        throw new JsonParseException("Property '" + PROPERTY_PRODUCT + "' is missing");
+      }
+      final Product product = context.deserialize(jo.get(PROPERTY_PRODUCT), Product.class);
+      final ProductRecipient p = new ProductRecipient(product, label);
+      if (jo.has(PROPERTY_BALANCE)) {
+        if (Product.checkIfCreditCard(product)) {
+          p.setBalance((CreditCardBillBalance) context.deserialize(jo.get(PROPERTY_BALANCE), CreditCardBillBalance.class));
+        } else {
+          p.setBalance((LoanBillBalance) context.deserialize(jo.get(PROPERTY_BALANCE), LoanBillBalance.class));
+        }
+      }
+      return p;
     } else {
       return null;
     }
@@ -125,6 +143,17 @@ class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSerialize
       final BillBalance b = r.getBalance();
       if (Objects.checkIfNotNull(b)) {
         jsonObject.add(PROPERTY_BALANCE, context.serialize(b, BillBalance.class));
+      }
+    } else if (type.equals(RecipientType.PRODUCT)) {
+      final ProductRecipient r = (ProductRecipient) src;
+      jsonObject.add(PROPERTY_PRODUCT, context.serialize(r.getProduct()));
+      final ProductBillBalance b = r.getBalance();
+      if (Objects.checkIfNotNull(b)) {
+        if (Product.checkIfCreditCard(r.getProduct())) {
+          jsonObject.add(PROPERTY_BALANCE, context.serialize(b, CreditCardBillBalance.class));
+        } else {
+          jsonObject.add(PROPERTY_BALANCE, context.serialize(b, LoanBillBalance.class));
+        }
       }
     }
     return jsonObject;

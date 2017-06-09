@@ -116,6 +116,8 @@ public class TransactionCreationActivity
         case BILL:
           fragment = BillTransactionCreationFragment.create();
           break;
+//        case PRODUCT:
+//          break;
         default:
           fragment = null;
           break;

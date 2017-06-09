@@ -3,9 +3,12 @@ package com.tpago.movil.d.data.api;
 import com.tpago.movil.d.domain.AccountBalance;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.CreditCardBalance;
+import com.tpago.movil.d.domain.CreditCardBillBalance;
 import com.tpago.movil.d.domain.Customer;
 import com.tpago.movil.d.domain.InitialData;
 import com.tpago.movil.d.domain.LoanBalance;
+import com.tpago.movil.d.domain.LoanBillBalance;
+import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductInfo;
 import com.tpago.movil.d.domain.Transaction;
 
@@ -102,6 +105,16 @@ interface ApiService {
   Observable<Response<BillBalance>> queryBalance(
     @Header(Api.Header.AUTHORIZATION) String authToken,
     @Body BillRequestBody body);
+
+  @POST("payment/credit-cards/balance")
+  Observable<Response<CreditCardBillBalance>> queryCreditCardBillBalance(
+    @Header(Api.Header.AUTHORIZATION) String authToken,
+    @Body Product body);
+
+  @POST("payment/loans/balance")
+  Observable<Response<LoanBillBalance>> queryLoanBalance(
+    @Header(Api.Header.AUTHORIZATION) String authToken,
+    @Body Product body);
 
   @GET("payments/invoices")
   Observable<Response<List<BillResponseBody>>> getBills(

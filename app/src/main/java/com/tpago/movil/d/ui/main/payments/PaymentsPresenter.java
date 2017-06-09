@@ -13,7 +13,9 @@ import com.tpago.movil.d.domain.Customer;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.PhoneNumber;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
+import com.tpago.movil.d.domain.ProductBillBalance;
 import com.tpago.movil.d.domain.ProductManager;
+import com.tpago.movil.d.domain.ProductRecipient;
 import com.tpago.movil.d.domain.api.ApiError;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
@@ -509,6 +511,73 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
           });
       } else {
         screen.startTransfer(billRecipient);
+      }
+    } else if (recipient instanceof ProductRecipient) {
+      final ProductRecipient productRecipient = (ProductRecipient) recipient;
+      if (Objects.checkIfNull(productRecipient.getBalance())) {
+        queryBalanceSubscription = rx.Single
+          .defer(new Callable<rx.Single<Result<ProductBillBalance, ErrorCode>>>() {
+            @Override
+            public rx.Single<Result<ProductBillBalance, ErrorCode>> call() throws Exception {
+              final Result<ProductBillBalance, ErrorCode> result;
+              if (networkService.checkIfAvailable()) {
+                final ApiResult<ProductBillBalance> queryBalanceResult = depApiBridge
+                  .queryBalance(authToken, productRecipient);
+                if (queryBalanceResult.isSuccessful()) {
+                  result = Result.create(queryBalanceResult.getData());
+                } else {
+                  result = Result.create(
+                    FailureData.create(
+                      ErrorCode.UNEXPECTED,
+                      queryBalanceResult.getError().getDescription()));
+                }
+              } else {
+                result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
+              }
+              return rx.Single.just(result);
+            }
+          })
+          .doOnSubscribe(new Action0() {
+            @Override
+            public void call() {
+              screen.showLoadIndicator(true);
+            }
+          })
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(new Action1<Result<ProductBillBalance, ErrorCode>>() {
+            @Override
+            public void call(Result<ProductBillBalance, ErrorCode> result) {
+              if (result.isSuccessful()) {
+                productRecipient.setBalance(result.getSuccessData());
+                recipientManager.update(recipient);
+                screen.update(productRecipient);
+              } else {
+                final FailureData<ErrorCode> failureData = result.getFailureData();
+                switch (failureData.getCode()) {
+                  case INCORRECT_PIN:
+                    screen.showGenericErrorDialog(stringHelper.resolve(R.string.error_incorrect_pin));
+                    break;
+                  case UNAVAILABLE_NETWORK:
+                    screen.showUnavailableNetworkError();
+                    break;
+                  default:
+                    screen.showGenericErrorDialog(failureData.getDescription());
+                    break;
+                }
+              }
+              screen.hideLoadIndicator();
+            }
+          }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+              Timber.e(throwable);
+              screen.hideLoadIndicator();
+              screen.showGenericErrorDialog();
+            }
+          });
+      } else {
+        screen.startTransfer(productRecipient);
       }
     } else {
       screen.startTransfer(recipient);

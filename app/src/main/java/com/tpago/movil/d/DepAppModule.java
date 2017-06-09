@@ -37,8 +37,9 @@ public final class DepAppModule {
   InitialDataLoader provideInitialDataLoader(
     DepApiBridge apiBridge,
     ProductManager productManager,
-    RecipientManager recipientManager) {
-    return new InitialDataLoader(apiBridge, productManager, recipientManager);
+    RecipientManager recipientManager,
+    Context context) {
+    return new InitialDataLoader(apiBridge, productManager, recipientManager, context);
   }
 
   @Provides

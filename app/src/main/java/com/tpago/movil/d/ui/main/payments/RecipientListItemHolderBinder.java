@@ -12,8 +12,9 @@ import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
+import com.tpago.movil.d.domain.ProductBillBalance;
+import com.tpago.movil.d.domain.ProductRecipient;
 import com.tpago.movil.d.domain.RecipientType;
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
 import com.tpago.movil.domain.LogoStyle;
@@ -38,12 +39,17 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
     Uri imageUri = Uri.EMPTY;
     final Context context = holder.getContext();
     if (type.equals(RecipientType.NON_AFFILIATED_PHONE_NUMBER)) {
-      imageUri = ((NonAffiliatedPhoneNumberRecipient) item).getBank().getLogoUri(LogoStyle.PRIMARY_24);
+      imageUri = ((NonAffiliatedPhoneNumberRecipient) item).getBank()
+        .getLogoUri(LogoStyle.PRIMARY_24);
     } else if (type.equals(RecipientType.BILL)) {
       imageUri = ApiImageUriBuilder.build(
         context,
         ((BillRecipient) item).getPartner(),
         ApiImageUriBuilder.Style.PRIMARY_24);
+    } else if (type.equals(RecipientType.PRODUCT)) {
+      imageUri = ((ProductRecipient) item).getProduct()
+        .getBank()
+        .getLogoUri(LogoStyle.PRIMARY_24);
     }
     if (imageUri.equals(Uri.EMPTY)) {
       holder.recipientPictureImageView.setImageDrawable(null);
@@ -74,16 +80,27 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
     } else {
       holder.deleteCheckbox.setVisibility(View.GONE);
       holder.deleteCheckbox.setChecked(false);
-      if (type.equals(RecipientType.BILL)) {
+      if (type.equals(RecipientType.BILL) || type.equals(RecipientType.PRODUCT)) {
         holder.totalOwedPrefixableTextView.setVisibility(View.VISIBLE);
         holder.dueDateTextView.setVisibility(View.VISIBLE);
         holder.proceedActionView.setVisibility(View.GONE);
-        final BillRecipient r = (BillRecipient) item;
-        final BillBalance b = r.getBalance();
-        if (Objects.checkIfNotNull(b)) {
-          dueDate = b.getDate();
-          totalOwedCurrency = r.getCurrency();
-          totalOwedValue = Formatter.amount(b.getTotal());
+        if (type.equals(RecipientType.BILL)) {
+          final BillRecipient r = (BillRecipient) item;
+          final BillBalance b = r.getBalance();
+          if (Objects.checkIfNotNull(b)) {
+            dueDate = b.getDate();
+            totalOwedCurrency = r.getCurrency();
+            totalOwedValue = Formatter.amount(b.getTotal());
+          }
+        } else {
+          final ProductRecipient r = (ProductRecipient) item;
+          final ProductBillBalance b = r.getBalance();
+          if (Objects.checkIfNotNull(b)) {
+            dueDate = b.dueDate();
+            totalOwedCurrency = r.getProduct()
+              .getCurrency();
+            totalOwedValue = Formatter.amount(b.currentAmount());
+          }
         }
       } else {
         holder.totalOwedPrefixableTextView.setVisibility(View.GONE);

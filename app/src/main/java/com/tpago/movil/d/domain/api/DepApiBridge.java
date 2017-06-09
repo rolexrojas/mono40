@@ -7,6 +7,8 @@ import com.tpago.movil.Partner;
 import com.tpago.movil.d.domain.Balance;
 import com.tpago.movil.d.domain.Customer;
 import com.tpago.movil.d.domain.PhoneNumber;
+import com.tpago.movil.d.domain.ProductBillBalance;
+import com.tpago.movil.d.domain.ProductRecipient;
 import com.tpago.movil.domain.Bank;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
@@ -134,6 +136,8 @@ public interface DepApiBridge {
     String pin);
 
   ApiResult<BillBalance> queryBalance(String authToken, BillRecipient recipient);
+
+  ApiResult<ProductBillBalance> queryBalance(String authToken, ProductRecipient recipient);
 
   Observable<ApiResult<String>> payBill(
     String authToken,
