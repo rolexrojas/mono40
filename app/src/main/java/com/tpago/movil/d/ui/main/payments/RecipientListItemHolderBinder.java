@@ -16,6 +16,7 @@ import com.tpago.movil.d.domain.ProductBillBalance;
 import com.tpago.movil.d.domain.ProductRecipient;
 import com.tpago.movil.d.domain.RecipientType;
 import com.tpago.movil.d.domain.Recipient;
+import com.tpago.movil.d.domain.UserRecipient;
 import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
 import com.tpago.movil.domain.LogoStyle;
 import com.tpago.movil.text.Texts;
@@ -50,6 +51,8 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
       imageUri = ((ProductRecipient) item).getProduct()
         .getBank()
         .getLogoUri(LogoStyle.PRIMARY_24);
+    } else if (type.equals(RecipientType.USER)) {
+      imageUri = ((UserRecipient) item).pictureUri();
     }
     if (imageUri.equals(Uri.EMPTY)) {
       holder.recipientPictureImageView.setImageDrawable(null);

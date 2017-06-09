@@ -1,6 +1,7 @@
 package com.tpago.movil;
 
 import com.google.auto.value.AutoValue;
+import com.google.auto.value.extension.memoized.Memoized;
 import com.google.gson.annotations.SerializedName;
 import com.tpago.movil.text.Texts;
 import com.tpago.movil.util.Preconditions;
@@ -54,6 +55,11 @@ public abstract class PhoneNumber {
   }
 
   public abstract String getValue();
+
+  @Memoized
+  public String formattedValued() {
+    return format(getValue());
+  }
 
   public enum State {
     @SerializedName("1") NONE,

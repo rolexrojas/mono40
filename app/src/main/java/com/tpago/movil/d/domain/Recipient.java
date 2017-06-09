@@ -21,7 +21,13 @@ public abstract class Recipient implements Parcelable, Matchable {
     return new Comparator<Recipient>() {
       @Override
       public int compare(Recipient ra, Recipient rb) {
-        return ra.getIdentifier().compareTo(rb.getIdentifier());
+        if (ra instanceof UserRecipient) {
+          return -1;
+        } else if (rb instanceof UserRecipient) {
+          return 1;
+        } else {
+          return ra.getIdentifier().compareTo(rb.getIdentifier());
+        }
       }
     };
   }

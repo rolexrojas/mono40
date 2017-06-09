@@ -9,5 +9,6 @@ public enum RecipientType {
   PHONE_NUMBER,
   NON_AFFILIATED_PHONE_NUMBER,
   BILL,
-  PRODUCT
+  PRODUCT,
+  USER
 }

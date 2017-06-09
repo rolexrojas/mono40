@@ -1,10 +1,12 @@
 package com.tpago.movil.d.ui.main.payments;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
 import com.tpago.movil.R;
+import com.tpago.movil.User;
 import com.tpago.movil.UserStore;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.BillBalance;
@@ -16,6 +18,7 @@ import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.ProductBillBalance;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.ProductRecipient;
+import com.tpago.movil.d.domain.UserRecipient;
 import com.tpago.movil.d.domain.api.ApiError;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
@@ -53,6 +56,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func0;
+import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
@@ -119,8 +124,33 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
         @Override
         public void call(final String query) {
           RxUtils.unsubscribe(searchSubscription);
+          final User user = userStore.get();
           final Observable<Object> recipientsObservable = Observable
-            .just(recipientManager.getAll(query))
+            .concat(
+              Observable.just(
+                new UserRecipient(
+                  user.getPhoneNumber().formattedValued(),
+                  user.getName(),
+                  user.getAvatar().exists() ? Uri.fromFile(user.getAvatar().getFile()) : Uri.EMPTY))
+                .filter(new Func1<UserRecipient, Boolean>() {
+                  @Override
+                  public Boolean call(UserRecipient userRecipient) {
+                    return userRecipient.matches(query);
+                  }
+                }),
+              Observable.from(recipientManager.getAll(query)))
+            .toSortedList(new Func2<Recipient, Recipient, Integer>() {
+              @Override
+              public Integer call(Recipient rA, Recipient rB) {
+                if (rA instanceof UserRecipient) {
+                  return -1;
+                } else if (rB instanceof UserRecipient) {
+                  return 1;
+                } else {
+                  return rA.getIdentifier().compareTo(rB.getIdentifier());
+                }
+              }
+            })
             .compose(RxUtils.<Recipient>fromCollection())
             .cast(Object.class);
           final Observable<Object> actionsObservable = Observable
