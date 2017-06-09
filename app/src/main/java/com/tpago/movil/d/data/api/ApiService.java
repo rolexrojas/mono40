@@ -45,7 +45,7 @@ interface ApiService {
     @Header(Api.Header.AUTHORIZATION) String authToken,
     @Body BalanceQueryRequestBody body);
 
-  @GET("query/last-transactions")
+  @GET("transaction-history")
   Observable<Response<List<Transaction>>> recentTransactions(
     @Header(Api.Header.AUTHORIZATION) String authToken);
 

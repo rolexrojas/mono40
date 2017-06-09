@@ -23,8 +23,6 @@ import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 class RecentTransactionsPresenter extends Presenter<RecentTransactionsScreen> {
@@ -39,26 +37,17 @@ class RecentTransactionsPresenter extends Presenter<RecentTransactionsScreen> {
     this.transactionProvider = transactionProvider;
   }
 
-  /**
-   * TODO
-   */
-  void start() {
+  final void start() {
     assertScreen();
     refresh();
   }
 
-  /**
-   * TODO
-   */
-  void stop() {
+  final void stop() {
     assertScreen();
     RxUtils.unsubscribe(subscription);
   }
 
-  /**
-   * TODO
-   */
-  void refresh() {
+  final void refresh() {
     assertScreen();
     if (subscription.isUnsubscribed()) {
       subscription = transactionProvider.getAll()
@@ -86,7 +75,7 @@ class RecentTransactionsPresenter extends Presenter<RecentTransactionsScreen> {
               final List<Date> keys = new ArrayList<>();
               final Map<Date, List<Transaction>> groups = new HashMap<>();
               for (Transaction transaction : transactions) {
-                key = Utils.getTime(transaction.getDate(), true);
+                key = transaction.date();
                 if (keys.contains(key)) {
                   items = groups.get(key);
                 } else {

@@ -72,7 +72,7 @@ class SharedPreferencesTransactionRepo implements TransactionRepo {
       .toSortedList(new Func2<Transaction, Transaction, Integer>() {
         @Override
         public Integer call(Transaction a, Transaction b) {
-          return a.getDate() > b.getDate() ? -1 : (a.getDate() == b.getDate() ? 0 : 1);
+          return a.time() > b.time() ? -1 : (a.time() == b.time() ? 0 : 1);
         }
       });
   }
@@ -101,7 +101,7 @@ class SharedPreferencesTransactionRepo implements TransactionRepo {
       .toSortedList(new Func2<Transaction, Transaction, Integer>() {
         @Override
         public Integer call(Transaction a, Transaction b) {
-          return a.getDate() > b.getDate() ? -1 : (a.getDate() == b.getDate() ? 0 : 1);
+          return a.time() > b.time() ? -1 : (a.time() == b.time() ? 0 : 1);
         }
       });
   }

@@ -25,7 +25,6 @@ import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.yqritc.recyclerviewflexibledivider.FlexibleDividerDecoration;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,8 +36,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 public class RecentTransactionsActivity
@@ -236,16 +233,14 @@ public class RecentTransactionsActivity
       } else {
         final Transaction transaction = (Transaction) item;
         final TransactionItemViewHolder transactionHolder = (TransactionItemViewHolder) holder;
-        transactionHolder.nameTextView.setText(transaction.getName());
-        transactionHolder.typeTextView.setText(transaction.getType());
-        final int colorId = transaction.getRequestType() == Transaction.RequestType.C ?
-          R.color.d_transaction_type_credit : R.color.d_transaction_type_debit;
-        final String currency = transaction.getCurrency();
-        transactionHolder.amountTextView.setPrefix(currency);
-        transactionHolder.amountTextView.setPrefixTextColorFromResource(colorId);
-        final BigDecimal value = transaction.getValue();
-        transactionHolder.amountTextView.setText(Formatter.amount(value));
-        transactionHolder.amountTextView.setTextColorFromResource(colorId);
+        transactionHolder.nameTextView.setText(transaction.detail());
+        transactionHolder.typeTextView.setText(transaction.type());
+//        final String currency = transaction.getCurrency();
+        transactionHolder.amountTextView.setPrefix("RD$");
+//        transactionHolder.amountTextView.setPrefixTextColorFromResource(colorId);
+//        final BigDecimal value = transaction.getValue();
+        transactionHolder.amountTextView.setText(Formatter.amount(transaction.amount()));
+//        transactionHolder.amountTextView.setTextColorFromResource(colorId);
       }
     }
 

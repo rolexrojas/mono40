@@ -24,6 +24,7 @@ import com.tpago.movil.d.ui.main.MainContainer;
 import com.tpago.movil.d.ui.main.list.ListItemAdapter;
 import com.tpago.movil.d.ui.main.list.ListItemHolder;
 import com.tpago.movil.d.ui.main.list.ListItemHolderCreatorFactory;
+import com.tpago.movil.d.ui.main.products.transactions.RecentTransactionsActivity;
 import com.tpago.movil.d.ui.view.Views;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
@@ -290,6 +291,6 @@ public class ProductsFragment
 
   @Override
   public void onShowRecentTransactionsButtonClicked() {
-    Dialogs.featureNotAvailable(getActivity()).show();
+    startActivity(RecentTransactionsActivity.getLaunchIntent(getContext()));
   }
 }

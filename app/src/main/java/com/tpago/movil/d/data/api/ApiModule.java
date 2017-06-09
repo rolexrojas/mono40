@@ -11,7 +11,6 @@ import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Recipient;
-import com.tpago.movil.d.domain.Transaction;
 import com.tpago.movil.d.domain.api.ApiError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -35,7 +34,6 @@ public class ApiModule {
       .setDateFormat("dd/MM/yyyy")
       .registerTypeAdapterFactory(new GsonTypeAdapterFactory(gson))
       .registerTypeAdapter(ApiError.class, new ApiErrorTypeAdapter())
-      .registerTypeAdapter(Transaction.class, new TransactionJsonDeserializer())
       .registerTypeAdapter(InitialData.class, new InitialDataDeserializer())
       .registerTypeAdapter(Product.class, new ProductTypeAdapter())
       .registerTypeAdapter(Balance.class, new BalanceTypeAdapter())
