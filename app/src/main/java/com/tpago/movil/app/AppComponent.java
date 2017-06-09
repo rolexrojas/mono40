@@ -21,6 +21,7 @@ import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.domain.util.EventBus;
 import com.tpago.movil.d.ui.main.recipients.NonAffiliatedPhoneNumberRecipientAddition1Fragment;
 import com.tpago.movil.d.ui.main.recipients.NonAffiliatedPhoneNumberRecipientAddition2Fragment;
+import com.tpago.movil.d.ui.main.transactions.own.OwnTransactionCreationActivity;
 import com.tpago.movil.data.DataModule;
 import com.tpago.movil.domain.BankProvider;
 import com.tpago.movil.domain.DomainModule;
@@ -57,6 +58,7 @@ public interface AppComponent {
   MainComponent plus(ActivityModule activityModule, MainModule mainModule);
 
   void inject(App app);
+  void inject(OwnTransactionCreationActivity activity);
 
   // Deprecated injects
   void inject(NonAffiliatedPhoneNumberRecipientAddition1Fragment fragment);

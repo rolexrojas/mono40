@@ -70,5 +70,9 @@
       android:screenOrientation="portrait"
       android:windowSoftInputMode="adjustResize"/>
     <!-- [END] Deprecated -->
+    <activity
+      android:name=".d.ui.main.transactions.own.OwnTransactionCreationActivity"
+      android:screenOrientation="portrait"
+      android:windowSoftInputMode="adjustResize"/>
   </application>
 </manifest>

@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.tpago.movil.R;
+import com.tpago.movil.d.domain.UserRecipient;
 import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.data.util.BinderFactory;
@@ -37,6 +38,7 @@ import com.tpago.movil.d.ui.main.list.NoResultsListItemHolderCreator;
 import com.tpago.movil.d.ui.main.recipients.AddRecipientActivity;
 import com.tpago.movil.d.ui.main.recipients.NonAffiliatedPhoneNumberRecipientAdditionActivity;
 import com.tpago.movil.d.ui.main.transactions.TransactionCreationActivity;
+import com.tpago.movil.d.ui.main.transactions.own.OwnTransactionCreationActivity;
 import com.tpago.movil.d.ui.view.widget.FullScreenLoadIndicator;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.ChildFragment;
@@ -447,7 +449,11 @@ public class PaymentsFragment
   public void onClick(int position) {
     final Object item = adapter.get(position);
     if (item instanceof Recipient) {
-      presenter.resolve((Recipient) item);
+      if (item instanceof UserRecipient) {
+        startActivity(OwnTransactionCreationActivity.createLaunchIntent(getContext()));
+      } else {
+        presenter.resolve((Recipient) item);
+      }
     } else if (item instanceof Action) {
       switch (((Action) item).getType()) {
         case ActionType.ADD_PHONE_NUMBER:
