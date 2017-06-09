@@ -17,6 +17,7 @@ public final class Banks {
   private static final int BANK_PROGRESO = 24;
   private static final int BANK_RESERVAS = 4;
   private static final int BANK_UNION = 45;
+  private static final int BANK_SCOTIA = ;
 
   /**
    * Temporary fix for: <a href="https://trello.com/c/09CG3iLy">https://trello.com/c/09CG3iLy</a>
@@ -55,6 +56,8 @@ public final class Banks {
         return Color.parseColor("#294661");
       case BANK_UNION:
         return Color.parseColor("#FD4F57");
+      case BANK_SCOTIA:
+        return Color.parseColor("#EE3124");
       default:
         return Color.parseColor("#D8D8D8");
     }
