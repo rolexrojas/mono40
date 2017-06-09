@@ -17,7 +17,7 @@ public final class Banks {
   private static final int BANK_PROGRESO = 24;
   private static final int BANK_RESERVAS = 4;
   private static final int BANK_UNION = 45;
-  private static final int BANK_SCOTIA = ;
+  private static final int BANK_SCOTIA = 49;
 
   /**
    * Temporary fix for: <a href="https://trello.com/c/09CG3iLy">https://trello.com/c/09CG3iLy</a>
