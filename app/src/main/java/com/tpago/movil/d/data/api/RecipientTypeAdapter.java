@@ -39,7 +39,7 @@ class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSerialize
   private static final String PROPERTY_ACCOUNT_NUMBER = "accountNumber";
   private static final String PROPERTY_PARTNER = "partner";
   private static final String PROPERTY_CONTRACT_NUMBER = "contractNumber";
-  private static final String PROPERTY_PRODUCT = "product";
+  private static final String PROPERTY_PRODUCT = "creditCard";
   private static final String PROPERTY_BALANCE = "balance";
 
   @Override

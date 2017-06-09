@@ -80,7 +80,7 @@ final class MainPresenter extends Presenter<MainScreen> {
           }, new Action1<Throwable>() {
             @Override
             public void call(Throwable throwable) {
-              Timber.e(throwable, "Listening to product addition events");
+              Timber.e(throwable, "Listening to creditCard addition events");
             }
           });
       }

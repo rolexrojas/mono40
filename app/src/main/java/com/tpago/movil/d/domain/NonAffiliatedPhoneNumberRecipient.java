@@ -100,7 +100,7 @@ public class NonAffiliatedPhoneNumberRecipient extends Recipient {
       + ",phoneNumber='" + phoneNumber + "'"
       + ",bank=" + bank.toString()
       + ",accountNumber='" + accountNumber + "'"
-      + ",product=" + product
+      + ",creditCard=" + product
       + "}";
   }
 

@@ -5,7 +5,7 @@ import com.tpago.movil.d.domain.util.Event;
 import com.tpago.movil.d.domain.util.EventType;
 
 /**
- * {@link Event} that represents the removal of a {@link Product product}.
+ * {@link Event} that represents the removal of a {@link Product creditCard}.
  *
  * @author hecvasro
  */

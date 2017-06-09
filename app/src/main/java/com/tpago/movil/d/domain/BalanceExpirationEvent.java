@@ -8,7 +8,7 @@ import com.tpago.movil.d.domain.util.EventType;
 
 /**
  * {@link Event} that represents the expiration of the {@link Balance balance} of a {@link Product
- * product}.
+ * creditCard}.
  *
  * @author hecvasro
  */

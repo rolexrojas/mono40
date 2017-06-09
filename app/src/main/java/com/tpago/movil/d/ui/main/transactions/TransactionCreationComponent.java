@@ -14,6 +14,10 @@ import com.tpago.movil.d.ui.main.transactions.bills.BillTransactionCreationFragm
 import com.tpago.movil.d.ui.main.transactions.bills.BillTransactionCreationPresenter;
 import com.tpago.movil.d.ui.main.transactions.contacts.NonAffiliatedPhoneNumberTransactionCreation1Fragment;
 import com.tpago.movil.d.ui.main.transactions.contacts.NonAffiliatedPhoneNumberTransactionCreation2Fragment;
+import com.tpago.movil.d.ui.main.transactions.products.CreditCardTransactionCreationFragment;
+import com.tpago.movil.d.ui.main.transactions.products.CreditCardTransactionCreationPresenter;
+import com.tpago.movil.d.ui.main.transactions.products.LoanTransactionCreationFragment;
+import com.tpago.movil.d.ui.main.transactions.products.LoanTransactionCreationPresenter;
 import com.tpago.movil.net.NetworkService;
 
 import java.math.BigDecimal;
@@ -37,6 +41,10 @@ public interface TransactionCreationComponent {
   void inject(NonAffiliatedPhoneNumberTransactionCreation2Fragment fragment);
   void inject(BillTransactionCreationFragment fragment);
   void inject(BillTransactionCreationPresenter presenter);
+  void inject(CreditCardTransactionCreationFragment fragment);
+  void inject(CreditCardTransactionCreationPresenter presenter);
+  void inject(LoanTransactionCreationFragment fragment);
+  void inject(LoanTransactionCreationPresenter presenter);
 
   AtomicReference<BigDecimal> provideAmount();
   AtomicReference<Product> provideFundingAccount();

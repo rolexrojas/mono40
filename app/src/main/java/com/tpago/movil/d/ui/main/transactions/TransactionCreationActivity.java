@@ -12,6 +12,8 @@ import android.view.MenuItem;
 
 import com.tpago.movil.app.App;
 import com.tpago.movil.R;
+import com.tpago.movil.d.domain.Product;
+import com.tpago.movil.d.domain.ProductRecipient;
 import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.RecipientType;
@@ -19,6 +21,8 @@ import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.SwitchableContainerActivity;
 import com.tpago.movil.d.ui.main.transactions.bills.BillTransactionCreationFragment;
 import com.tpago.movil.d.ui.main.transactions.contacts.PhoneNumberTransactionCreationFragment;
+import com.tpago.movil.d.ui.main.transactions.products.CreditCardTransactionCreationFragment;
+import com.tpago.movil.d.ui.main.transactions.products.LoanTransactionCreationFragment;
 import com.tpago.movil.util.Objects;
 
 import javax.inject.Inject;
@@ -116,8 +120,14 @@ public class TransactionCreationActivity
         case BILL:
           fragment = BillTransactionCreationFragment.create();
           break;
-//        case PRODUCT:
-//          break;
+        case PRODUCT:
+          final ProductRecipient productRecipient = (ProductRecipient) recipient;
+          if (Product.checkIfCreditCard(productRecipient.getProduct())) {
+            fragment = CreditCardTransactionCreationFragment.create();
+          } else {
+            fragment = LoanTransactionCreationFragment.create();
+          }
+          break;
         default:
           fragment = null;
           break;

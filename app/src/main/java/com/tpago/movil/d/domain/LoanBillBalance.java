@@ -18,4 +18,10 @@ public abstract class LoanBillBalance extends ProductBillBalance {
 
   @SerializedName("balance") public abstract BigDecimal currentAmount();
   @SerializedName("fee") public abstract BigDecimal periodAmount();
+
+  public enum Option {
+    @SerializedName("1") CURRENT,
+    @SerializedName("2") PERIOD,
+    @SerializedName("3") OTHER
+  }
 }

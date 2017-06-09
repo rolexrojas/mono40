@@ -8,6 +8,7 @@ import com.tpago.movil.d.domain.Customer;
 import com.tpago.movil.d.domain.InitialData;
 import com.tpago.movil.d.domain.LoanBalance;
 import com.tpago.movil.d.domain.LoanBillBalance;
+import com.tpago.movil.d.domain.PaymentResult;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductInfo;
 import com.tpago.movil.d.domain.Transaction;
@@ -124,6 +125,16 @@ interface ApiService {
   Observable<Response<Void>> payBill(
     @Header(Api.Header.AUTHORIZATION) String authToken,
     @Body PayBillRequestBody body);
+
+  @POST("payment/credit-cards/pay")
+  Observable<Response<PaymentResult>> payCreditCardBill(
+    @Header(Api.Header.AUTHORIZATION) String authToken,
+    @Body PayCreditCardBillRequestBody body);
+
+  @POST("payment/loans/pay")
+  Observable<Response<PaymentResult>> payLoanBill(
+    @Header(Api.Header.AUTHORIZATION) String authToken,
+    @Body PayLoanBillRequestBody body);
 
   @POST("payments/remove-invoice")
   Observable<Response<Void>> removeBill(

@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 import java.util.Comparator;
 
 /**
- * Abstract product representation.
+ * Abstract creditCard representation.
  *
  * @author hecvasro
  */
@@ -155,7 +155,7 @@ public class Product implements Parcelable {
   }
 
   /**
-   * Checks if the given {@link Product product} can be used as a payment option.
+   * Checks if the given {@link Product creditCard} can be used as a payment option.
    *
    * @param product
    *   {@link Product} that will be checked.
@@ -183,7 +183,7 @@ public class Product implements Parcelable {
   }
 
   /**
-   * Gets the {@link ProductType type} of the product.
+   * Gets the {@link ProductType type} of the creditCard.
    *
    * @return Product's {@link ProductType type}.
    */
@@ -193,7 +193,7 @@ public class Product implements Parcelable {
   }
 
   /**
-   * Gets the type of the product.
+   * Gets the type of the creditCard.
    *
    * @return Product's alias.
    */
@@ -203,7 +203,7 @@ public class Product implements Parcelable {
   }
 
   /**
-   * Gets the number of the product.
+   * Gets the number of the creditCard.
    *
    * @return Product's number.
    */
@@ -217,7 +217,7 @@ public class Product implements Parcelable {
   }
 
   /**
-   * Gets the {@link Bank holder} of the product.
+   * Gets the {@link Bank holder} of the creditCard.
    *
    * @return Product's {@link Bank holder}.
    */
@@ -227,7 +227,7 @@ public class Product implements Parcelable {
   }
 
   /**
-   * Gets the currency of the product.
+   * Gets the currency of the creditCard.
    *
    * @return Product's currency.
    */
@@ -247,7 +247,7 @@ public class Product implements Parcelable {
   }
 
   /**
-   * Gets the cost of querying the balance of the product.
+   * Gets the cost of querying the balance of the creditCard.
    *
    * @return Cost of querying the balance.
    */
@@ -257,7 +257,7 @@ public class Product implements Parcelable {
   }
 
   /**
-   * Sets the cost of querying the balance of the product.
+   * Sets the cost of querying the balance of the creditCard.
    *
    * @param queryFee
    *   Cost of querying the balance.

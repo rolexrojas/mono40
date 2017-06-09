@@ -9,6 +9,7 @@ import com.tpago.movil.d.domain.Balance;
 import com.tpago.movil.d.domain.CreditCardBillBalance;
 import com.tpago.movil.d.domain.Customer;
 import com.tpago.movil.d.domain.LoanBillBalance;
+import com.tpago.movil.d.domain.PaymentResult;
 import com.tpago.movil.d.domain.ProductBillBalance;
 import com.tpago.movil.d.domain.ProductRecipient;
 import com.tpago.movil.domain.Bank;
@@ -29,7 +30,6 @@ import com.tpago.movil.d.domain.api.ApiResult;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -394,6 +394,44 @@ class RetrofitApiBridge implements DepApiBridge {
           return Long.toString(System.currentTimeMillis());
         }
       }));
+  }
+
+  @Override
+  public Observable<ApiResult<PaymentResult>> payCreditCardBill(
+    String authToken,
+    BigDecimal amountToPay,
+    CreditCardBillBalance.Option option,
+    String pin,
+    Product fundingAccount,
+    Product creditCard) {
+    final PayCreditCardBillRequestBody body = PayCreditCardBillRequestBody.Builder.create()
+      .amountToPay(amountToPay)
+      .payOption(option)
+      .pin(pin)
+      .fundingAccount(ProductInfo.create(fundingAccount))
+      .creditCard(creditCard)
+      .build();
+    return apiService.payCreditCardBill(authToken, body)
+      .flatMap(mapToApiResult(RetrofitApiBridge.<PaymentResult>identityMapFunc()));
+  }
+
+  @Override
+  public Observable<ApiResult<PaymentResult>> payLoanBill(
+    String authToken,
+    BigDecimal amountToPay,
+    LoanBillBalance.Option option,
+    String pin,
+    Product fundingAccount,
+    Product loan) {
+    final PayLoanBillRequestBody body = PayLoanBillRequestBody.Builder.create()
+      .amountToPay(amountToPay)
+      .payOption(option)
+      .pin(pin)
+      .fundingAccount(ProductInfo.create(fundingAccount))
+      .loan(loan)
+      .build();
+    return apiService.payLoanBill(authToken, body)
+      .flatMap(mapToApiResult(RetrofitApiBridge.<PaymentResult>identityMapFunc()));
   }
 
   @Override

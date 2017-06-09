@@ -5,7 +5,10 @@ import android.support.v4.util.Pair;
 
 import com.tpago.movil.Partner;
 import com.tpago.movil.d.domain.Balance;
+import com.tpago.movil.d.domain.CreditCardBillBalance;
 import com.tpago.movil.d.domain.Customer;
+import com.tpago.movil.d.domain.LoanBillBalance;
+import com.tpago.movil.d.domain.PaymentResult;
 import com.tpago.movil.d.domain.PhoneNumber;
 import com.tpago.movil.d.domain.ProductBillBalance;
 import com.tpago.movil.d.domain.ProductRecipient;
@@ -41,7 +44,7 @@ public interface DepApiBridge {
   Observable<ApiResult<InitialData>> initialLoad(@NonNull String authToken);
 
   /**
-   * Query the {@link Balance balance} of a {@link Product product} from the API.
+   * Query the {@link Balance balance} of a {@link Product creditCard} from the API.
    * <p>
    * <em>Note:</em> By default {@link #queryBalance(String, Product, String)} does not operates on a
    * particular {@link rx.Scheduler}.
@@ -51,7 +54,7 @@ public interface DepApiBridge {
    * @param pin
    *   User's PIN code.
    *
-   * @return {@link Balance balance} of a {@link Product product} from the API.
+   * @return {@link Balance balance} of a {@link Product creditCard} from the API.
    */
   @NonNull
   ApiResult<Balance> queryBalance(String authToken, Product product, String pin);
@@ -145,6 +148,22 @@ public interface DepApiBridge {
     Product fundingAccount,
     BillRecipient.Option option,
     String pin);
+
+  Observable<ApiResult<PaymentResult>> payCreditCardBill(
+    String authToken,
+    BigDecimal amountToPay,
+    CreditCardBillBalance.Option option,
+    String pin,
+    Product fundingAccount,
+    Product creditCard);
+
+  Observable<ApiResult<PaymentResult>> payLoanBill(
+    String authToken,
+    BigDecimal amountToPay,
+    LoanBillBalance.Option option,
+    String pin,
+    Product fundingAccount,
+    Product loan);
 
   ApiResult<Boolean> validatePin(String authToken, String pin);
 

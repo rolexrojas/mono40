@@ -42,7 +42,7 @@ public final class BalanceManager implements Resettable {
 
   /**
    * Key-value structured used to store the last queried {@link Balance balance} of a {@link Product
-   * product}.
+   * creditCard}.
    */
   private final Map<Product, Pair<Long, Balance>> balances;
 
@@ -92,7 +92,7 @@ public final class BalanceManager implements Resettable {
   }
 
   /**
-   * Indicates whether the given {@link Product product} has a valid {@link Balance balance} or
+   * Indicates whether the given {@link Product creditCard} has a valid {@link Balance balance} or
    * not.
    *
    * @param product
@@ -105,7 +105,7 @@ public final class BalanceManager implements Resettable {
   }
 
   /**
-   * Gets the last queried {@link Balance balance} of the given {@link Product product}.
+   * Gets the last queried {@link Balance balance} of the given {@link Product creditCard}.
    *
    * @param product
    *   {@link Product} that will be queried.
