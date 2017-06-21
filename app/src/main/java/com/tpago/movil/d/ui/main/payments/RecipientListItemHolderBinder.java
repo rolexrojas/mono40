@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.squareup.picasso.Picasso;
+import com.tpago.movil.R;
 import com.tpago.movil.api.ApiImageUriBuilder;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.domain.BillBalance;
@@ -59,6 +60,7 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
     } else {
       Picasso.with(context)
         .load(imageUri)
+        .resizeDimen(R.dimen.icon_size_24, R.dimen.icon_size_24)
         .into(holder.recipientPictureImageView);
     }
     if (Texts.checkIfNotEmpty(label)) {
