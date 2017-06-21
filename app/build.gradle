@@ -20,8 +20,8 @@ android {
 
     applicationId 'com.tpago.movil'
 
-    versionCode 20_000_055
-    versionName '2.0.0-1.beta'
+    versionCode 20_000_056
+    versionName '2.0.0-1.beta1'
 
     minSdkVersion 19
     targetSdkVersion 24
