@@ -107,12 +107,12 @@ interface ApiService {
     @Header(Api.Header.AUTHORIZATION) String authToken,
     @Body BillRequestBody body);
 
-  @POST("payment/credit-cards/balance")
+  @POST("payments/credit-cards/balance")
   Observable<Response<CreditCardBillBalance>> queryCreditCardBillBalance(
     @Header(Api.Header.AUTHORIZATION) String authToken,
     @Body Product body);
 
-  @POST("payment/loans/balance")
+  @POST("payments/loans/balance")
   Observable<Response<LoanBillBalance>> queryLoanBalance(
     @Header(Api.Header.AUTHORIZATION) String authToken,
     @Body Product body);
