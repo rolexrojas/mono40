@@ -126,12 +126,12 @@ interface ApiService {
     @Header(Api.Header.AUTHORIZATION) String authToken,
     @Body PayBillRequestBody body);
 
-  @POST("payment/credit-cards/pay")
+  @POST("payments/credit-cards/pay")
   Observable<Response<PaymentResult>> payCreditCardBill(
     @Header(Api.Header.AUTHORIZATION) String authToken,
     @Body PayCreditCardBillRequestBody body);
 
-  @POST("payment/loans/pay")
+  @POST("payments/loans/pay")
   Observable<Response<PaymentResult>> payLoanBill(
     @Header(Api.Header.AUTHORIZATION) String authToken,
     @Body PayLoanBillRequestBody body);
