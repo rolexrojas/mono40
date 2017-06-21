@@ -18,7 +18,7 @@ public abstract class CreditCardBillBalance extends ProductBillBalance {
 
   @SerializedName("current-balance") public abstract BigDecimal currentAmount();
   @SerializedName("period-amount") public abstract BigDecimal periodAmount();
-  @SerializedName("minimum-amount") public abstract BigDecimal minimumAmount();
+  @SerializedName("min-amount") public abstract BigDecimal minimumAmount();
 
   public enum Option {
     @SerializedName("3") CURRENT,

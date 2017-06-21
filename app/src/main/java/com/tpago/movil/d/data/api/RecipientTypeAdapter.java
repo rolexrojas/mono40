@@ -146,7 +146,7 @@ class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSerialize
       }
     } else if (type.equals(RecipientType.PRODUCT)) {
       final ProductRecipient r = (ProductRecipient) src;
-      jsonObject.add(PROPERTY_PRODUCT, context.serialize(r.getProduct()));
+      jsonObject.add(PROPERTY_PRODUCT, context.serialize(r.getProduct(), Product.class));
       final ProductBillBalance b = r.getBalance();
       if (Objects.checkIfNotNull(b)) {
         if (Product.checkIfCreditCard(r.getProduct())) {

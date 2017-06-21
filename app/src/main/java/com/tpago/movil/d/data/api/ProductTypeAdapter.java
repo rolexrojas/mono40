@@ -1,10 +1,5 @@
 package com.tpago.movil.d.data.api;
 
-import com.tpago.movil.api.DCurrencies;
-import com.tpago.movil.d.domain.Product;
-import com.tpago.movil.d.domain.ProductCreator;
-import com.tpago.movil.d.domain.ProductType;
-import com.tpago.movil.domain.Bank;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -12,6 +7,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.tpago.movil.api.DCurrencies;
+import com.tpago.movil.d.domain.Product;
+import com.tpago.movil.d.domain.ProductCreator;
+import com.tpago.movil.d.domain.ProductType;
+import com.tpago.movil.domain.Bank;
 import com.tpago.movil.text.Texts;
 import com.tpago.movil.util.Objects;
 
