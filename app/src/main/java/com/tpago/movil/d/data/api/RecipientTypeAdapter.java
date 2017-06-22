@@ -31,7 +31,7 @@ import java.lang.reflect.Type;
  * @author hecvasro
  */
 @Deprecated
-class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSerializer<Recipient> {
+public class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSerializer<Recipient> {
   private static final String PROPERTY_TYPE = "type";
   private static final String PROPERTY_LABEL = "label";
   private static final String PROPERTY_PHONE_NUMBER = "phoneNumber";

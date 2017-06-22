@@ -2,10 +2,7 @@ package com.tpago.movil.app;
 
 import android.content.Context;
 
-import com.jakewharton.picasso.OkHttp3Downloader;
-import com.squareup.picasso.Picasso;
 import com.tpago.movil.Avatar;
-import com.tpago.movil.BuildConfig;
 import com.tpago.movil.ConfigManager;
 import com.tpago.movil.content.SharedPreferencesCreator;
 import com.tpago.movil.UserStore;
@@ -17,7 +14,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import okhttp3.OkHttpClient;
 
 /**
  * @author hecvasro

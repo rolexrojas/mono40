@@ -19,7 +19,7 @@ import java.util.List;
  *
  * @author hecvasro
  */
-class InitialDataDeserializer implements JsonDeserializer<InitialData> {
+public class InitialDataDeserializer implements JsonDeserializer<InitialData> {
   private static final String PROPERTY_QUERY = "query";
   private static final String PROPERTY_ACCOUNTS = "accounts";
   private static final String PROPERTY_CREDIT_CARDS = "credit-cards";

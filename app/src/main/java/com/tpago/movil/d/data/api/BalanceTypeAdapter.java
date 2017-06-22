@@ -15,7 +15,7 @@ import java.lang.reflect.Type;
 /**
  * @author hecvasro
  */
-class BalanceTypeAdapter implements JsonDeserializer<Balance> {
+public class BalanceTypeAdapter implements JsonDeserializer<Balance> {
   private static final String PROPERTY_AVAILABLE = "available";
   private static final String PROPERTY_BALANCE = "balance";
   private static final String PROPERTY_FEE = "fee";

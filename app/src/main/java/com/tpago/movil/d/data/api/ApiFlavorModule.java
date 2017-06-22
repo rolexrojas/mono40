@@ -1,7 +1,6 @@
 package com.tpago.movil.d.data.api;
 
 import com.google.gson.Gson;
-import com.tpago.movil.d.DepQualifier;
 import com.tpago.movil.d.domain.api.ApiError;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 
@@ -26,7 +25,7 @@ public class ApiFlavorModule {
   @Provides
   @Singleton
   DepApiBridge provideApiBridge(
-    @DepQualifier Gson gson,
+    Gson gson,
     HttpUrl baseUrl,
     OkHttpClient httpClient) {
     final Retrofit retrofit = new Retrofit.Builder()

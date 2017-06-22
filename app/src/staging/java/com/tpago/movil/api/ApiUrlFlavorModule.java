@@ -14,6 +14,6 @@ public final class ApiUrlFlavorModule {
   @Provides
   @Singleton
   HttpUrl provideBaseUrl() {
-    return HttpUrl.parse("https://demo.gcs-systems.com/api/neo/");
+    return HttpUrl.parse("https://tpagonet-dev.gcs-systems.com/api/neo/");
   }
 }
