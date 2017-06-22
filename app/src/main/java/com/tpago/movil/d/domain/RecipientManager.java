@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import rx.Observable;
+import timber.log.Timber;
 
 /**
  * @author hecvasro
@@ -126,7 +127,7 @@ public final class RecipientManager {
       indexSet.add(recipient.getId());
       sharedPreferences.edit()
         .putStringSet(KEY_INDEX_SET, indexSet)
-        .putString(recipient.getId(), gson.toJson(recipient))
+        .putString(recipient.getId(), gson.toJson(recipient, Recipient.class))
         .apply();
       Collections.sort(recipientList, Recipient.comparator());
     }
@@ -140,7 +141,7 @@ public final class RecipientManager {
     }
     sharedPreferences.edit()
       .putStringSet(KEY_INDEX_SET, indexSet)
-      .putString(recipient.getId(), gson.toJson(recipient))
+      .putString(recipient.getId(), gson.toJson(recipient, Recipient.class))
       .apply();
     Collections.sort(recipientList, Recipient.comparator());
   }
