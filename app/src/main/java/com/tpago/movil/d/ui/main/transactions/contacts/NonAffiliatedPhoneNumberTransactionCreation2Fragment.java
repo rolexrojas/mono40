@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.Banks;
+import com.tpago.movil.api.DCurrencies;
 import com.tpago.movil.domain.Bank;
 import com.tpago.movil.R;
 import com.tpago.movil.d.data.Formatter;
@@ -163,10 +164,10 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends ChildF
                 getChildFragmentManager(),
                 getString(
                   R.string.format_transfer_to,
-                  Formatter.amount(fundingAccount.get().getCurrency(), value.get()),
+                  Formatter.amount(DCurrencies.map(fundingAccount.get().getCurrency()), value.get()),
                   data.first,
                   Formatter.amount(
-                    fundingAccount.get().getCurrency(),
+                    DCurrencies.map(fundingAccount.get().getCurrency()),
                     Bank.calculateTransferCost(value.get()))),
                 new PinConfirmationDialogFragment.Callback() {
                   @Override

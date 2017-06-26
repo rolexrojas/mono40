@@ -7,7 +7,6 @@ import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.tpago.movil.domain.Bank;
-import com.tpago.movil.api.DCurrencies;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.Product;
 
@@ -29,7 +28,7 @@ public abstract class TransferToAffiliatedRequestBody {
       product.getNumber(),
       product.getType().name(),
       product.getBank(),
-      DCurrencies.map(product.getCurrency()),
+      product.getCurrency(),
       pin,
       amount,
       recipient.getPhoneNumber(),

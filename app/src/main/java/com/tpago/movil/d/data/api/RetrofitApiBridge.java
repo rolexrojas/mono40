@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
 import com.tpago.movil.Partner;
-import com.tpago.movil.api.DCurrencies;
 import com.tpago.movil.d.domain.Balance;
 import com.tpago.movil.d.domain.CreditCardBillBalance;
 import com.tpago.movil.d.domain.Customer;
@@ -303,7 +302,7 @@ class RetrofitApiBridge implements DepApiBridge {
               productInfo.getAlias(),
               productInfo.getNumber(),
               productInfo.getBank(),
-              DCurrencies.map(productInfo.getCurrency()),
+              productInfo.getCurrency(),
               productInfo.getQueryFee(),
               false,
               false,

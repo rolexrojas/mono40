@@ -1,6 +1,7 @@
 package com.tpago.movil.d.ui.main.transactions.products;
 
 import com.tpago.movil.R;
+import com.tpago.movil.api.DCurrencies;
 import com.tpago.movil.app.Presenter;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.data.StringHelper;
@@ -170,7 +171,7 @@ public class CreditCardTransactionCreationPresenter
   public void onViewStarted() {
     super.onViewStarted();
     final ProductRecipient r = (ProductRecipient) recipient;
-    view.setCurrencyValue(r.getProduct().getCurrency());
+    view.setCurrencyValue(DCurrencies.map(r.getProduct().getCurrency()));
     String dueDate = null;
     BigDecimal totalValue = BigDecimal.ZERO;
     BigDecimal periodValue = BigDecimal.ZERO;

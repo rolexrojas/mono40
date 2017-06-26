@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.squareup.picasso.Picasso;
+import com.tpago.movil.api.DCurrencies;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Balance;
@@ -60,7 +61,7 @@ class ProductListItemHolderBinder implements ListItemHolderBinder<ProductItem, P
       productIdentifierAnchorId = holder.queryBalanceButton.getId();
     } else {
       holder.productBalanceTextView.setVisibility(View.VISIBLE);
-      holder.productBalanceTextView.setPrefix(p.getCurrency());
+      holder.productBalanceTextView.setPrefix(DCurrencies.map(p.getCurrency()));
       holder.productBalanceTextView.setContent(Formatter.amount(balance.getValue()));
       productTypeAnchorId = holder.productBalanceTextView.getId();
       holder.queryTimeTextView.setVisibility(View.VISIBLE);

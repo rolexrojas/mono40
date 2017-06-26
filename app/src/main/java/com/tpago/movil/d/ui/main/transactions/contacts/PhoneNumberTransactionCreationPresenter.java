@@ -3,6 +3,7 @@ package com.tpago.movil.d.ui.main.transactions.contacts;
 import android.support.annotation.NonNull;
 
 import com.tpago.movil.R;
+import com.tpago.movil.api.DCurrencies;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.api.ApiResult;
@@ -74,7 +75,7 @@ class PhoneNumberTransactionCreationPresenter
   void setPaymentOption(@NonNull Product paymentOption) {
     this.assertScreen();
     this.paymentOption = paymentOption;
-    this.screen.setPaymentOptionCurrency(this.paymentOption.getCurrency());
+    this.screen.setPaymentOptionCurrency(DCurrencies.map(this.paymentOption.getCurrency()));
     this.screen.showTransferButtonAsEnabled(!Product.checkIfCreditCard(this.paymentOption));
   }
 

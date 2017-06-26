@@ -9,6 +9,7 @@ import android.view.View;
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.R;
 import com.tpago.movil.api.ApiImageUriBuilder;
+import com.tpago.movil.api.DCurrencies;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
@@ -102,8 +103,7 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
           final ProductBillBalance b = r.getBalance();
           if (Objects.checkIfNotNull(b)) {
             dueDate = b.dueDate();
-            totalOwedCurrency = r.getProduct()
-              .getCurrency();
+            totalOwedCurrency = DCurrencies.map(r.getProduct().getCurrency());
             totalOwedValue = Formatter.amount(b.currentAmount());
           }
         }

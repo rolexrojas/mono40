@@ -4,14 +4,14 @@ package com.tpago.movil.api;
  * @author hecvasro
  */
 public final class DCurrencies {
-  private static final String DOP_API = "DOP";
-  private static final String DOP_APP = "RD$";
+  private static final String API = "DOP";
+  private static final String APP = "RD$";
 
-  public static final String map(String currency) {
-    if (currency.equals(DOP_APP)) {
-      return DOP_API;
+  public static String map(String currency) {
+    if (currency.equals(API)) {
+      return APP;
     } else {
-      return DOP_APP;
+      return currency;
     }
   }
 

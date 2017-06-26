@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.tpago.movil.api.DCurrencies;
 import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.ui.Dialogs;
@@ -81,7 +82,7 @@ public class ProductsFragment
   private void queryBalance(@NonNull final Product product, final int x, final int y) {
     PinConfirmationDialogFragment.show(
       getChildFragmentManager(),
-      stringHelper.feeForTransaction(product.getCurrency(), product.getQueryFee()),
+      stringHelper.feeForTransaction(DCurrencies.map(product.getCurrency()), product.getQueryFee()),
       new PinConfirmationDialogFragment.Callback() {
         @Override
         public void confirm(String pin) {
