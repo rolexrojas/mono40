@@ -275,6 +275,26 @@ class RetrofitApiBridge implements DepApiBridge {
   }
 
   @Override
+  public Observable<ApiResult<String>> transferTo(
+    String authToken,
+    Product fundingProduct,
+    Product destinationProduct,
+    BigDecimal amount,
+    String pin
+  ) {
+    return apiService.transferTo(
+      authToken,
+      TransferToOwnRequestBody.builder()
+        .fundingProduct(fundingProduct)
+        .recipientProduct(destinationProduct)
+        .amount(amount)
+        .pin(pin)
+        .build()
+    )
+      .flatMap(mapToApiResult(TransferResponseBody.mapFunc()));
+  }
+
+  @Override
   public ApiResult<Void> setDefaultPaymentOption(String authToken, Product product) {
     final Map<String, String> body = new HashMap<>();
     body.put("alias", product.getAlias());

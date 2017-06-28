@@ -329,7 +329,7 @@ public class PinView extends LinearLayout {
     }
   }
 
-//  public void setPaymentResult(final boolean succeeded) {
+//  public void setTransferResult(final boolean succeeded) {
 //    if (!isResolving()) {
 //      if (Utils.checkIfNotNull(resolveAnimator)) {
 //        if (resolveAnimator.isRunning()) {

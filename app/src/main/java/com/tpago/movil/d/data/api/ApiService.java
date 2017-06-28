@@ -16,7 +16,6 @@ import com.tpago.movil.d.domain.Transaction;
 import java.util.List;
 import java.util.Map;
 
-import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -78,6 +77,12 @@ interface ApiService {
   Observable<Response<TransferResponseBody>> transferToNonAffiliated(
     @Header(Api.Header.AUTHORIZATION) String authToken,
     @Body TransferToNonAffiliatedRequestBody body);
+
+  @POST("transfer/gcs-own")
+  Observable<Response<TransferResponseBody>> transferTo(
+    @Header(Api.Header.AUTHORIZATION) String authToken,
+    @Body TransferToOwnRequestBody body
+  );
 
   @POST("payments/change-default-account")
   Observable<Response<Void>> setDefaultPaymentOption(

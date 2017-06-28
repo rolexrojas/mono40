@@ -74,5 +74,9 @@
       android:name=".d.ui.main.transactions.own.OwnTransactionCreationActivity"
       android:screenOrientation="portrait"
       android:windowSoftInputMode="adjustResize"/>
+    <activity
+      android:name=".d.ui.main.transactions.own.OwnTransferActivity"
+      android:screenOrientation="portrait"
+      android:windowSoftInputMode="adjustResize"/>
   </application>
 </manifest>

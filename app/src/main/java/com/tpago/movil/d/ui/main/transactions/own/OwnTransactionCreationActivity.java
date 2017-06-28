@@ -33,6 +33,20 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  * @author Hector Vasquez
  */
 public final class OwnTransactionCreationActivity extends AppCompatActivity implements OwnProductListItemHolder.OnButtonClickedListener {
+  private static final String KEY_TRANSACTION_ID = "transactionId";
+
+  private static final int REQUEST_CODE_TRANSFER = 0;
+
+  static Intent serializeResult(String transactionId) {
+    final Intent intent = new Intent();
+    intent.putExtra(KEY_TRANSACTION_ID, transactionId);
+    return intent;
+  }
+
+  public static String deserializeResult(Intent intent) {
+    return intent.getStringExtra(KEY_TRANSACTION_ID);
+  }
+
   public static Intent createLaunchIntent(Context context) {
     return new Intent(context, OwnTransactionCreationActivity.class);
   }
@@ -50,6 +64,16 @@ public final class OwnTransactionCreationActivity extends AppCompatActivity impl
   @Override
   protected void attachBaseContext(Context newBase) {
     super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+    if (requestCode == REQUEST_CODE_TRANSFER && resultCode == RESULT_OK) {
+      this.setResult(RESULT_OK, data);
+      this.finish();
+    }
   }
 
   @Override
@@ -122,6 +146,9 @@ public final class OwnTransactionCreationActivity extends AppCompatActivity impl
 
   @Override
   public void onButtonClicked(int position) {
-    // TODO
+    startActivityForResult(
+      OwnTransferActivity.createLaunchIntent(this, (Product) adapter.get(position)),
+      REQUEST_CODE_TRANSFER
+    );
   }
 }

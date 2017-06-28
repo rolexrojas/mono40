@@ -116,7 +116,16 @@ public interface DepApiBridge {
     Product product,
     Recipient recipient,
     BigDecimal amount,
-    String pin);
+    String pin
+  );
+
+  Observable<ApiResult<String>> transferTo(
+    String authToken,
+    Product fundingProduct,
+    Product destinationProduct,
+    BigDecimal amount,
+    String pin
+  );
 
   ApiResult<Void> setDefaultPaymentOption(String authToken, Product paymentOption);
 

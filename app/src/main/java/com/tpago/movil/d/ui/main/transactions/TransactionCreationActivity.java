@@ -68,6 +68,7 @@ public class TransactionCreationActivity
     return intent;
   }
 
+
   public static Pair<Recipient, String> deserializeResult(Intent intent) {
     if (Objects.checkIfNull(intent)) {
       return null;

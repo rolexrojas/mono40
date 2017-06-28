@@ -12,6 +12,6 @@
     app:showAsAction="never"/>
   <item
     android:id="@+id/menu_item_sign_out"
-    android:title="Cerrar sesión"
+    android:title="Desvincular"
     app:showAsAction="never"/>
 </menu>

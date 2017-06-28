@@ -42,7 +42,7 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
     boolean alreadyExists,
     String transactionId) {
     final Bundle args = new Bundle();
-    args.putParcelable(KEY_RECIPIENT, Preconditions.assertNotNull(recipient, "recipient == null"));
+    args.putParcelable(KEY_RECIPIENT, recipient);
     args.putSerializable(KEY_ALREADY_EXISTS, alreadyExists);
     args.putSerializable(KEY_TRANSACTION_ID, transactionId);
     final TransactionSummaryDialogFragment fragment = new TransactionSummaryDialogFragment();
@@ -75,7 +75,7 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
       .setCancelable(false)
       .setTitle(R.string.transaction_confirmation_title)
       .setView(R.layout.d_dialog_transaction_summary);
-    if (alreadyExists) {
+    if (recipient == null || alreadyExists) {
       builder.setPositiveButton(R.string.ok, null);
     } else {
       builder.setPositiveButton(R.string.action_save, new DialogInterface.OnClickListener() {
@@ -98,7 +98,7 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
     final Dialog dialog = getDialog();
     final TextView transactionTextView = ButterKnife.findById(dialog, R.id.text_view_transaction);
     transactionTextView.setText(String.format("#%1$s", transactionId));
-    if (alreadyExists) {
+    if (recipient == null || alreadyExists) {
       ButterKnife.findById(dialog, R.id.inclusion).setVisibility(View.GONE);
     } else {
       final String textValue;

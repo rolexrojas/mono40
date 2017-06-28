@@ -69,6 +69,7 @@ public class PaymentsFragment
   private static final int REQUEST_CODE_RECIPIENT_ADDITION = 0;
   private static final int REQUEST_CODE_TRANSACTION_CREATION = 1;
   private static final int REQUEST_CODE_NON_AFFILIATED_RECIPIENT_ADDITION = 2;
+  private static final int REQUEST_CODE_OWN_TRANSACTION_CREATION = 3;
 
   private Unbinder unbinder;
   private ListItemAdapter adapter;
@@ -184,6 +185,8 @@ public class PaymentsFragment
         presenter.showTransactionSummary(recipient, transactionId);
       } else if (code == REQUEST_CODE_NON_AFFILIATED_RECIPIENT_ADDITION) {
         presenter.addRecipient(recipient);
+      } else if (code == REQUEST_CODE_OWN_TRANSACTION_CREATION) {
+        presenter.showTransactionSummary(recipient, requestResult.second.second);
       }
       requestResult = null;
     }
@@ -254,6 +257,13 @@ public class PaymentsFragment
           .deserializeResult(data);
         if (Objects.checkIfNotNull(recipient)) {
           requestResult = Pair.create(requestCode, Pair.create(recipient, (String) null));
+        }
+      }
+    } else if (requestCode == REQUEST_CODE_OWN_TRANSACTION_CREATION) {
+      if (resultCode == Activity.RESULT_OK) {
+        final String transactionId = OwnTransactionCreationActivity.deserializeResult(data);
+        if (Objects.checkIfNotNull(transactionId)) {
+          requestResult = Pair.create(requestCode, Pair.create((Recipient) null, transactionId));
         }
       }
     }
@@ -450,7 +460,10 @@ public class PaymentsFragment
     final Object item = adapter.get(position);
     if (item instanceof Recipient) {
       if (item instanceof UserRecipient) {
-        startActivity(OwnTransactionCreationActivity.createLaunchIntent(getContext()));
+        startActivityForResult(
+          OwnTransactionCreationActivity.createLaunchIntent(getContext()),
+          REQUEST_CODE_TRANSACTION_CREATION
+        );
       } else {
         presenter.resolve((Recipient) item);
       }
