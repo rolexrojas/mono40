@@ -12,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.tpago.movil.R;
-import com.tpago.movil.User;
 import com.tpago.movil.UserStore;
 import com.tpago.movil.app.App;
 import com.tpago.movil.d.data.StringHelper;
@@ -65,12 +64,21 @@ public final class OwnTransactionCreationActivity extends AppCompatActivity impl
       .getComponent()
       .inject(this);
 
-    setSupportActionBar(toolbar);
+    setSupportActionBar(this.toolbar);
     final ActionBar actionBar = getSupportActionBar();
-    actionBar.setTitle("Transacción entre cuentas");
-    final User user = userStore.get();
-    actionBar.setSubtitle(user.getPhoneNumber().formattedValued());
     actionBar.setDisplayHomeAsUpEnabled(true);
+
+    this.toolbar.post(new Runnable() {
+      @Override
+      public void run() {
+        toolbar.setTitle("Transacción entre cuentas");
+        toolbar.setSubtitle(
+          userStore.get()
+            .getPhoneNumber()
+            .formattedValued()
+        );
+      }
+    });
 
     final ListItemHolderCreatorFactory holderCreatorFactory = new ListItemHolderCreatorFactory.Builder()
       .addCreator(Product.class, new OwnProductListItemHolderCreator(this))
