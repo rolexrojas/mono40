@@ -216,11 +216,13 @@ public class RecentTransactionsActivity
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
       final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
       if (viewType == TYPE_GROUP_TITLE) {
-        return new GroupItemViewHolder(inflater.inflate(R.layout.d_list_item_group_title, parent,
-          false));
+        return new GroupItemViewHolder(
+          inflater.inflate(R.layout.d_list_item_group_title, parent, false)
+        );
       } else {
-        return new TransactionItemViewHolder(inflater.inflate(R.layout.d_list_item_transaction,
-          parent, false));
+        return new TransactionItemViewHolder(
+          inflater.inflate(R.layout.d_list_item_transaction, parent, false)
+        );
       }
     }
 
@@ -236,10 +238,10 @@ public class RecentTransactionsActivity
         transactionHolder.nameTextView.setText(transaction.detail());
         transactionHolder.typeTextView.setText(transaction.type());
 //        final String currency = transaction.getCurrency();
-        transactionHolder.amountTextView.setPrefix("RD$");
+//        transactionHolder.amountTextView.setPrefix("RD$");
 //        transactionHolder.amountTextView.setPrefixTextColorFromResource(colorId);
 //        final BigDecimal value = transaction.getValue();
-        transactionHolder.amountTextView.setText(Formatter.amount(transaction.amount()));
+        transactionHolder.amountTextView.setContent(Formatter.amount(transaction.amount()));
 //        transactionHolder.amountTextView.setTextColorFromResource(colorId);
       }
     }

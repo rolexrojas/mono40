@@ -1073,6 +1073,7 @@
   </style>
   <!-- Recent transactions screen styles -->
   <style name="Dep.BaseListItemGroupTitle">
+    <item name="android:background">#EFEFEF</item>
     <item name="android:gravity">center_vertical</item>
     <item name="android:layout_height">35dp</item>
     <item name="android:paddingEnd">@dimen/space_horizontal_normal</item>

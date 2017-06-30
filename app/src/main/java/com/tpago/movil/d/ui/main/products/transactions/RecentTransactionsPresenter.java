@@ -17,8 +17,10 @@ import java.util.List;
 import java.util.Map;
 
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
@@ -51,8 +53,8 @@ class RecentTransactionsPresenter extends Presenter<RecentTransactionsScreen> {
     assertScreen();
     if (subscription.isUnsubscribed()) {
       subscription = transactionProvider.getAll()
-        .subscribeOn(schedulerProvider.io())
-        .observeOn(schedulerProvider.ui())
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(new Action0() {
           @Override
           public void call() {
