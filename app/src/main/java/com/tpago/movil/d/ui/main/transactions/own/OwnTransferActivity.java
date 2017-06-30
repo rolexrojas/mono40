@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.tpago.movil.R;
+import com.tpago.movil.api.DCurrencies;
 import com.tpago.movil.app.App;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.data.StringHelper;
@@ -234,7 +235,7 @@ public final class OwnTransferActivity
       final int x = location[0] + (this.transferActionButton.getWidth() / 2);
       final int y = location[1];
 
-      final String currency = this.fundingProduct.getCurrency();
+      final String currency = DCurrencies.map(this.fundingProduct.getCurrency());
       final String description = this.getString(
         R.string.format_transfer_to,
         Formatter.amount(currency, this.value),
@@ -318,7 +319,7 @@ public final class OwnTransferActivity
     }
     this.showTransferButtonAsEnabled();
 
-    this.amountTextView.setPrefix(this.fundingProduct.getCurrency());
+    this.amountTextView.setPrefix(DCurrencies.map(this.fundingProduct.getCurrency()));
     this.updateAmountText();
 
     this.numPad.setOnDigitClickedListener(this);
