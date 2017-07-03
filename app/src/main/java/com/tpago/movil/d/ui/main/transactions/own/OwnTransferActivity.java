@@ -239,7 +239,7 @@ public final class OwnTransferActivity
       final String description = this.getString(
         R.string.format_transfer_to,
         Formatter.amount(currency, this.value),
-        this.fundingProduct.getAlias(),
+        this.destinationProduct.getAlias(),
         Formatter.amount(currency, Bank.calculateTransferCost(this.value))
       );
       PinConfirmationDialogFragment.show(
