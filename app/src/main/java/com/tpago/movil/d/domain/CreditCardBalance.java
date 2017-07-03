@@ -19,4 +19,9 @@ public class CreditCardBalance extends Balance {
   public final BigDecimal getAvailable() {
     return available;
   }
+
+  @Override
+  public BigDecimal valueForWalletScreen() {
+    return this.getAvailable();
+  }
 }

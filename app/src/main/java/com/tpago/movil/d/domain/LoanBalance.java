@@ -19,4 +19,9 @@ public class LoanBalance extends Balance {
   public final BigDecimal getFee() {
     return fee;
   }
+
+  @Override
+  public BigDecimal valueForWalletScreen() {
+    return this.getValue();
+  }
 }

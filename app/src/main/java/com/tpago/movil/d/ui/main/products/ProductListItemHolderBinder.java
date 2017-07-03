@@ -62,7 +62,7 @@ class ProductListItemHolderBinder implements ListItemHolderBinder<ProductItem, P
     } else {
       holder.productBalanceTextView.setVisibility(View.VISIBLE);
       holder.productBalanceTextView.setPrefix(DCurrencies.map(p.getCurrency()));
-      holder.productBalanceTextView.setContent(Formatter.amount(balance.getValue()));
+      holder.productBalanceTextView.setContent(Formatter.amount(balance.valueForWalletScreen()));
       productTypeAnchorId = holder.productBalanceTextView.getId();
       holder.queryTimeTextView.setVisibility(View.VISIBLE);
       holder.queryTimeTextView.setText(Dates.createRelativeTimeString(c, item.getQueryTime()));

@@ -12,6 +12,8 @@ public abstract class Balance {
     this.value = value;
   }
 
+  public abstract BigDecimal valueForWalletScreen();
+
   public final BigDecimal getValue() {
     return value;
   }
