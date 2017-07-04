@@ -48,6 +48,11 @@ android {
       resValue 'string', 'app_name', 'tPago-stag'
       buildConfigField 'boolean', 'CRASHLYTICS', 'true'
     }
+    preproduction {
+      applicationIdSuffix '.prepro'
+      resValue 'string', 'app_name', 'tPago-prepro'
+      buildConfigField 'boolean', 'CRASHLYTICS', 'true'
+    }
     production {
       resValue 'string', 'app_name', 'tPago'
       buildConfigField 'boolean', 'CRASHLYTICS', 'true'
@@ -128,6 +133,7 @@ dependencies {
 
   def cub3SdkName = {env -> "Cub3AltPanSDK-v1.4-$env"}
   compile(name: cub3SdkName('dev'), ext: 'aar')
+  preproductionCompile(name: cub3SdkName('prod'), ext: 'aar')
   productionCompile(name: cub3SdkName('prod'), ext: 'aar')
 
   // Deprecated dependencies
