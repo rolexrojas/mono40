@@ -13,6 +13,7 @@ import com.tpago.movil.api.DCurrencies;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
+import com.tpago.movil.d.domain.LoanBillBalance;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.ProductBillBalance;
 import com.tpago.movil.d.domain.ProductRecipient;
@@ -23,6 +24,8 @@ import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
 import com.tpago.movil.domain.LogoStyle;
 import com.tpago.movil.text.Texts;
 import com.tpago.movil.util.Objects;
+
+import java.math.BigDecimal;
 
 /**
  * @author hecvasro
@@ -104,7 +107,13 @@ class RecipientListItemHolderBinder implements ListItemHolderBinder<Recipient, R
           if (Objects.checkIfNotNull(b)) {
             dueDate = b.dueDate();
             totalOwedCurrency = DCurrencies.map(r.getProduct().getCurrency());
-            totalOwedValue = Formatter.amount(b.currentAmount());
+            final BigDecimal v;
+            if (b instanceof LoanBillBalance) {
+              v = b.periodAmount();
+            } else {
+              v = b.currentAmount();
+            }
+            totalOwedValue = Formatter.amount(v);
           }
         }
       } else {
