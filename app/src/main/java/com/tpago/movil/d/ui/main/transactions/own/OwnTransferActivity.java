@@ -308,7 +308,7 @@ public final class OwnTransferActivity
     this.paymentMethodChooser.setOnPaymentMethodChosenListener(this);
     final List<Product> paymentMethodList = new ArrayList<>();
     for (Product paymentMethod : this.productManager.getPaymentOptionList()) {
-      if (!Product.checkIfCreditCard(paymentMethod) && !Product.checkIfLoan(paymentMethod)) {
+      if (Product.checkIfAccount(paymentMethod) && !paymentMethod.equals(this.fundingProduct)) {
         paymentMethodList.add(paymentMethod);
       }
     }

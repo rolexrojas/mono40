@@ -59,6 +59,10 @@ public class Product implements Parcelable {
     }
   };
 
+  public static boolean checkIfAccount(Product product) {
+    return !checkIfCreditCard(product) && !checkIfLoan(product);
+  }
+
   public static boolean checkIfCreditCard(Product product) {
     return product.getType().equals(ProductType.CC) || product.getType().equals(ProductType.AMEX);
   }
