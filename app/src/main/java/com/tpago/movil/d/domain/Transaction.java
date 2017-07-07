@@ -12,6 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.UUID;
 
 /**
  * @author Hector Vasquez
@@ -23,6 +24,9 @@ public abstract class Transaction {
   public static TypeAdapter<Transaction> typeAdapter(Gson gson) {
     return new AutoValue_Transaction.GsonTypeAdapter(gson);
   }
+
+  private final String id = UUID.randomUUID()
+    .toString();
 
   @SerializedName("date") public abstract String dateString();
   @SerializedName("transaction-type") public abstract String type();
@@ -40,6 +44,23 @@ public abstract class Transaction {
 
   @Memoized
   public long time() {
-    return date().getTime();
+    return this.date()
+      .getTime();
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (object == this) {
+      return true;
+    } else if (object instanceof Transaction) {
+      return ((Transaction) object).id.equals(id);
+    } else {
+      return false;
+    }
+  }
+
+  @Override
+  public int hashCode() {
+    return this.id.hashCode();
   }
 }
