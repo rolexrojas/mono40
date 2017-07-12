@@ -2,13 +2,9 @@ package com.tpago.movil.d.data.api;
 
 import android.text.TextUtils;
 
-import com.tpago.movil.d.domain.CreditCardBillBalance;
-import com.tpago.movil.d.domain.LoanBillBalance;
-import com.tpago.movil.d.domain.ProductBillBalance;
 import com.tpago.movil.d.domain.ProductRecipient;
 import com.tpago.movil.domain.Bank;
 import com.tpago.movil.Partner;
-import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
@@ -40,7 +36,7 @@ public class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSe
   private static final String PROPERTY_PARTNER = "partner";
   private static final String PROPERTY_CONTRACT_NUMBER = "contractNumber";
   private static final String PROPERTY_PRODUCT = "product";
-  private static final String PROPERTY_BALANCE = "balance";
+//  private static final String PROPERTY_BALANCE = "balance";
 
   @Override
   public Recipient deserialize(
@@ -90,9 +86,9 @@ public class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSe
       }
       final String contractNumber = jo.get(PROPERTY_CONTRACT_NUMBER).getAsString();
       final BillRecipient b = new BillRecipient(partner, contractNumber, label);
-      if (jo.has(PROPERTY_BALANCE)) {
-        b.setBalance((BillBalance) context.deserialize(jo.get(PROPERTY_BALANCE), BillBalance.class));
-      }
+//      if (jo.has(PROPERTY_BALANCE)) {
+//        b.setBalance((BillBalance) context.deserialize(jo.get(PROPERTY_BALANCE), BillBalance.class));
+//      }
       return b;
     } else if (type.equals(RecipientType.PRODUCT)) {
       if (!jo.has(PROPERTY_PRODUCT)) {
@@ -100,13 +96,13 @@ public class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSe
       }
       final Product product = context.deserialize(jo.get(PROPERTY_PRODUCT), Product.class);
       final ProductRecipient p = new ProductRecipient(product, label);
-      if (jo.has(PROPERTY_BALANCE)) {
-        if (Product.checkIfCreditCard(product)) {
-          p.setBalance((CreditCardBillBalance) context.deserialize(jo.get(PROPERTY_BALANCE), CreditCardBillBalance.class));
-        } else {
-          p.setBalance((LoanBillBalance) context.deserialize(jo.get(PROPERTY_BALANCE), LoanBillBalance.class));
-        }
-      }
+//      if (jo.has(PROPERTY_BALANCE)) {
+//        if (Product.checkIfCreditCard(product)) {
+//          p.setBalance((CreditCardBillBalance) context.deserialize(jo.get(PROPERTY_BALANCE), CreditCardBillBalance.class));
+//        } else {
+//          p.setBalance((LoanBillBalance) context.deserialize(jo.get(PROPERTY_BALANCE), LoanBillBalance.class));
+//        }
+//      }
       return p;
     } else {
       return null;
@@ -140,21 +136,21 @@ public class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSe
       final BillRecipient r = (BillRecipient) src;
       jsonObject.add(PROPERTY_PARTNER, context.serialize(r.getPartner(), Partner.class));
       jsonObject.addProperty(PROPERTY_CONTRACT_NUMBER, r.getContractNumber());
-      final BillBalance b = r.getBalance();
-      if (Objects.checkIfNotNull(b)) {
-        jsonObject.add(PROPERTY_BALANCE, context.serialize(b, BillBalance.class));
-      }
+//      final BillBalance b = r.getBalance();
+//      if (Objects.checkIfNotNull(b)) {
+//        jsonObject.add(PROPERTY_BALANCE, context.serialize(b, BillBalance.class));
+//      }
     } else if (type.equals(RecipientType.PRODUCT)) {
       final ProductRecipient r = (ProductRecipient) src;
       jsonObject.add(PROPERTY_PRODUCT, context.serialize(r.getProduct(), Product.class));
-      final ProductBillBalance b = r.getBalance();
-      if (Objects.checkIfNotNull(b)) {
-        if (Product.checkIfCreditCard(r.getProduct())) {
-          jsonObject.add(PROPERTY_BALANCE, context.serialize(b, CreditCardBillBalance.class));
-        } else {
-          jsonObject.add(PROPERTY_BALANCE, context.serialize(b, LoanBillBalance.class));
-        }
-      }
+//      final ProductBillBalance b = r.getBalance();
+//      if (Objects.checkIfNotNull(b)) {
+//        if (Product.checkIfCreditCard(r.getProduct())) {
+//          jsonObject.add(PROPERTY_BALANCE, context.serialize(b, CreditCardBillBalance.class));
+//        } else {
+//          jsonObject.add(PROPERTY_BALANCE, context.serialize(b, LoanBillBalance.class));
+//        }
+//      }
     }
     return jsonObject;
   }

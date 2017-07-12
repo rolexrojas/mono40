@@ -11,6 +11,7 @@ import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.ProductRecipient;
 import com.tpago.movil.d.domain.Recipient;
+import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.session.SessionManager;
@@ -62,6 +63,8 @@ public class LoanTransactionCreationPresenter
   NetworkService networkService;
   @Inject
   StringHelper stringHelper;
+  @Inject
+  RecipientManager recipientManager;
 
   private LoanBillBalance.Option option = LoanBillBalance.Option.CURRENT;
 
@@ -138,6 +141,11 @@ public class LoanTransactionCreationPresenter
           String transactionId = null;
           if (result.isSuccessful()) {
             succeeded = true;
+
+            final ProductRecipient pr = (ProductRecipient) recipient;
+            pr.setBalance(null);
+            recipientManager.update(pr);
+
             transactionId = result.getSuccessData()
               .id();
           } else {

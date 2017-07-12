@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Set;
 
 import rx.Observable;
-import timber.log.Timber;
 
 /**
  * @author hecvasro
@@ -135,15 +134,19 @@ public final class RecipientManager {
 
   @Deprecated
   public final void update(final Recipient recipient) {
-    if (!checkIfExists(recipient)) {
-      recipientList.add(recipient);
-      indexSet.add(recipient.getId());
+    if (checkIfExists(recipient)) {
+      this.recipientList.set(this.recipientList.indexOf(recipient), recipient);
+    } else {
+      this.recipientList.add(recipient);
+      this.indexSet.add(recipient.getId());
     }
-    sharedPreferences.edit()
-      .putStringSet(KEY_INDEX_SET, indexSet)
-      .putString(recipient.getId(), gson.toJson(recipient, Recipient.class))
+
+    this.sharedPreferences.edit()
+      .putStringSet(KEY_INDEX_SET, this.indexSet)
+      .putString(recipient.getId(), this.gson.toJson(recipient, Recipient.class))
       .apply();
-    Collections.sort(recipientList, Recipient.comparator());
+
+    Collections.sort(this.recipientList, Recipient.comparator());
   }
 
   public final void remove(Recipient recipient) {

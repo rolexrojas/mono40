@@ -9,6 +9,7 @@ import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.Recipient;
+import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.session.SessionManager;
@@ -51,6 +52,8 @@ public class BillTransactionCreationPresenter
   NetworkService networkService;
   @Inject
   StringHelper stringHelper;
+  @Inject
+  RecipientManager recipientManager;
 
   private BillRecipient.Option option = BillRecipient.Option.TOTAL;
 
@@ -128,6 +131,11 @@ public class BillTransactionCreationPresenter
           String transactionId = null;
           if (result.isSuccessful()) {
             succeeded = true;
+
+            final BillRecipient br = (BillRecipient) recipient;
+            br.setBalance(null);
+            recipientManager.update(br);
+
             transactionId = result.getSuccessData();
           } else {
             final FailureData<ErrorCode> failureData = result.getFailureData();
