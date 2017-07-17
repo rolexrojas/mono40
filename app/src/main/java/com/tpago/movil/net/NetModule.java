@@ -19,6 +19,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 /**
  * @author hecvasro
  */
@@ -49,7 +51,10 @@ public final class NetModule {
             .addHeader("User-Agent", System.getProperty("http.agent"));
           return chain.proceed(builder.build());
         }
-      });
+      })
+      .connectTimeout(30L, SECONDS)
+      .readTimeout(30L, SECONDS)
+      .writeTimeout(30L, SECONDS);
     if (BuildConfig.DEBUG) {
       final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
       interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
