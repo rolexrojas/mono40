@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout style="@style/NoResultsListItem">
+  <TextView
+    android:id="@+id/no_results.query"
+    style="@style/NoResultsListItemQuery"
+    xmlns:android="http://schemas.android.com/apk/res/android"/>
+</FrameLayout>

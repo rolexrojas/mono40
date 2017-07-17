@@ -1,0 +1,16 @@
+package com.tpago.movil.d.data.api;
+
+/**
+ * @author hecvasro
+ */
+final class ValidatePinRequestBody {
+  public static ValidatePinRequestBody create(String pin) {
+    return new ValidatePinRequestBody(pin);
+  }
+
+  String pin;
+
+  private ValidatePinRequestBody(String pin) {
+    this.pin = pin;
+  }
+}

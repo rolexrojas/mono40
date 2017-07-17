@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+  <item>
+    <shape android:shape="rectangle">
+      <padding
+        android:bottom="@dimen/d_widget_text_input_padding_horizontal"
+        android:left="@dimen/d_widget_text_input_padding_horizontal"
+        android:right="@dimen/d_widget_text_input_padding_horizontal"
+        android:top="@dimen/d_widget_text_input_padding_horizontal"/>
+    </shape>
+  </item>
+  <item
+    android:drawable="@drawable/widget_text_input_dark_underline_erratic"
+    android:gravity="bottom"/>
+</layer-list>

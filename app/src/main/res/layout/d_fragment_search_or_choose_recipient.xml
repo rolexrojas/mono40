@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@drawable/d_background_colored"
+  android:focusable="true"
+  android:focusableInTouchMode="true"
+  android:orientation="vertical">
+  <com.tpago.movil.d.ui.view.widget.SearchView
+    android:id="@+id/search_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/space_horizontal_normal"
+    android:layout_marginStart="@dimen/space_horizontal_normal"
+    app:hint="@string/add_recipient.search.hint"/>
+  <android.support.design.widget.TabLayout
+    android:id="@+id/tab_layout"
+    style="@style/Dep.AppTabLayout"
+    android:layout_marginEnd="@dimen/space_horizontal_normal"
+    android:layout_marginStart="@dimen/space_horizontal_normal"/>
+  <include layout="@layout/d_reusable_divider"/>
+  <android.support.v4.view.ViewPager
+    android:id="@+id/view_pager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
+</LinearLayout>

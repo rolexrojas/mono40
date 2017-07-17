@@ -1,0 +1,25 @@
+package com.tpago.movil.d.data.api;
+
+import com.google.auto.value.AutoValue;
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.SerializedName;
+import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
+
+/**
+ * @author hecvasro
+ */
+@AutoValue
+public abstract class RecipientAccount {
+  public static RecipientAccount create(NonAffiliatedPhoneNumberRecipient recipient) {
+    return new AutoValue_RecipientAccount(recipient.getBank(), recipient.getAccountNumber());
+  }
+
+  public static TypeAdapter<RecipientAccount> typeAdapter(Gson gson) {
+    return new AutoValue_RecipientAccount.GsonTypeAdapter(gson);
+  }
+
+  @SerializedName("bank") public abstract Bank getBank();
+  @SerializedName("account-number") public abstract String getAccountNumber();
+}

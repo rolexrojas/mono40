@@ -1,0 +1,14 @@
+package com.tpago.movil.d.domain;
+
+import android.support.annotation.NonNull;
+
+import rx.Observable;
+
+/**
+ * @author hecvasro
+ */
+public interface ProductRepo extends ProductProvider {
+  @NonNull Observable<Product> save(@NonNull Product product);
+  @NonNull Observable<Product> remove(@NonNull Product product);
+  void clear();
+}

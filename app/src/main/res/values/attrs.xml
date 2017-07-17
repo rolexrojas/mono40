@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <declare-styleable name="ErraticState">
+    <attr name="state_erratic" format="boolean"/>
+  </declare-styleable>
+
+  <declare-styleable name="LabelFitterLayout">
+    <attr name="minTextSize" format="dimension|reference"/>
+    <attr name="maxTextSize" format="dimension|reference"/>
+  </declare-styleable>
+
+  <declare-styleable name="AmountText">
+    <attr name="currencyContent" format="string|reference"/>
+    <attr name="currencyFontPath" format="string|reference"/>
+    <attr name="currencyTextColor" format="color|reference"/>
+    <attr name="currencyTextSize" format="dimension|reference"/>
+    <attr name="valueContent" format="string|reference"/>
+    <attr name="valueFontPath" format="string|reference"/>
+    <attr name="valueTextColor" format="color|reference"/>
+    <attr name="valueTextSize" format="dimension|reference"/>
+  </declare-styleable>
+
+  <declare-styleable name="App.Theme">
+    <attr name="labelFitterLayoutStyle" format="reference"/>
+
+    <attr name="autoResizableLabelStyle" format="reference"/>
+    <attr name="textInputStyle" format="reference"/>
+    <attr name="amountTextViewStyle" format="reference"/>
+    <attr name="amountTextInputStyle" format="reference"/>
+  </declare-styleable>
+
+  <!-- TODO: Remove every dimension from this point downwards -->
+  <declare-styleable name="NumPad">
+    <attr name="color"/>
+    <attr name="dotEnabled" format="boolean"/>
+    <attr name="deleteDrawable" format="reference"/>
+  </declare-styleable>
+
+  <declare-styleable name="DepPrefixableTextView">
+    <attr name="content" format="string|reference"/>
+    <attr
+      name="prefix"
+      format="string|reference"/>
+    <attr
+      name="prefixTextColor"
+      format="color|reference"/>
+    <attr
+      name="prefixFontPath"
+      format="string|reference"/>
+    <attr
+      name="prefixTextSizeProportion"
+      format="float|reference"/>
+    <attr
+      name="prefixPaddingEnd"
+      format="dimension|reference"/>
+  </declare-styleable>
+  <declare-styleable name="DepAutoResizeablePrefixableTextView">
+    <attr name="maxTextSize"/>
+    <attr name="minTextSize"/>
+    <attr
+      name="prefixMaxTextSize"
+      format="dimension|reference"/>
+    <attr
+      name="prefixMinTextSize"
+      format="dimension|reference"/>
+  </declare-styleable>
+  <declare-styleable name="DepNumPad">
+    <attr
+      name="tintColor"
+      format="color|reference"/>
+    <attr name="dotEnabled"/>
+    <attr
+      name="deleteEnabled"
+      format="boolean"/>
+    <attr name="deleteDrawable"/>
+  </declare-styleable>
+
+  <declare-styleable name="DepApp.Theme">
+    <attr
+      name="prefixableTextViewStyle"
+      format="reference"/>
+    <attr
+      name="autoResizeablePrefixableTextViewStyle"
+      format="reference"/>
+    <attr
+      name="numPadStyle"
+      format="reference"/>
+    <attr
+      name="searchViewStyle"
+      format="reference"/>
+  </declare-styleable>
+
+  <declare-styleable name="DepSearchView">
+    <attr
+      name="hint"
+      format="reference|string"/>
+  </declare-styleable>
+</resources>

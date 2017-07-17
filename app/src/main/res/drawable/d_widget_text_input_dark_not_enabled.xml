@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:drawable="@drawable/widget_text_input_dark_underline"/>
+  <item>
+    <inset
+      android:drawable="@drawable/widget_text_input_dark_underline"
+      android:insetLeft="@dimen/d_widget_text_input_padding_horizontal"
+      android:insetRight="@dimen/d_widget_text_input_padding_horizontal"/>
+  </item>
+</layer-list>

@@ -1,0 +1,150 @@
+apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+android {
+  packagingOptions {
+    exclude 'META-INF/rxjava.properties'
+  }
+
+  signingConfigs {
+    debug {
+      storeFile rootProject.file('keystores/debug.jks')
+    }
+  }
+
+  compileSdkVersion 25
+  buildToolsVersion '25.0.3'
+
+  defaultConfig {
+    vectorDrawables.useSupportLibrary = true
+
+    applicationId 'com.tpago.movil'
+
+    versionName '2.1.0-beta'
+    versionCode 20_100_000
+
+    minSdkVersion 19
+    targetSdkVersion 24
+  }
+
+  buildTypes {
+    debug {
+      signingConfig signingConfigs.debug
+    }
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+
+  productFlavors {
+    development {
+      applicationIdSuffix '.dev'
+      resValue 'string', 'app_name', 'tPago-dev'
+      buildConfigField 'boolean', 'CRASHLYTICS', 'false'
+    }
+    staging {
+      applicationIdSuffix '.stag'
+      resValue 'string', 'app_name', 'tPago-stag'
+      buildConfigField 'boolean', 'CRASHLYTICS', 'true'
+    }
+    preproduction {
+      applicationIdSuffix '.prepro'
+      resValue 'string', 'app_name', 'tPago-prepro'
+      buildConfigField 'boolean', 'CRASHLYTICS', 'true'
+    }
+    production {
+      resValue 'string', 'app_name', 'tPago'
+      buildConfigField 'boolean', 'CRASHLYTICS', 'true'
+    }
+  }
+}
+
+repositories {
+  jcenter()
+  maven {
+    url 'https://maven.fabric.io/public'
+  }
+  flatDir {
+    dirs 'libs'
+  }
+  maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+  compile 'javax.annotation:jsr250-api:1.0'
+
+  def autoValueVersion = '1.4'
+  provided "com.jakewharton.auto.value:auto-value-annotations:$autoValueVersion"
+  annotationProcessor "com.google.auto.value:auto-value:${autoValueVersion}"
+
+  annotationProcessor 'com.ryanharter.auto.value:auto-value-parcel:0.2.5'
+
+  compile 'io.reactivex.rxjava2:rxjava:2.0.5'
+
+  compile 'com.jakewharton.timber:timber:4.3.1'
+
+  def okHttpVersion = '3.6.0'
+  compile "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}"
+  compile "com.squareup.okhttp3:okhttp:${okHttpVersion}"
+
+  compile 'com.google.code.gson:gson:2.8.0'
+
+  def autoValueGsonVersion = '0.4.6'
+  provided "com.ryanharter.auto.value:auto-value-gson:${autoValueGsonVersion}"
+  annotationProcessor "com.ryanharter.auto.value:auto-value-gson:${autoValueGsonVersion}"
+
+  def retrofitVersion = '2.2.0'
+  compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"
+  compile "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
+  compile "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}"
+
+  testCompile 'junit:junit:4.12'
+
+  def supportLibraryVersion = '25.3.1'
+  compile "com.android.support:appcompat-v7:${supportLibraryVersion}"
+  compile "com.android.support:design:${supportLibraryVersion}"
+  compile "com.android.support:percent:${supportLibraryVersion}"
+  compile "com.android.support:recyclerview-v7:${supportLibraryVersion}"
+
+  compile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
+    transitive = true
+  }
+
+  def daggerVersion = '2.9'
+  compile "com.google.dagger:dagger:${daggerVersion}"
+  annotationProcessor "com.google.dagger:dagger-compiler:${daggerVersion}"
+
+  compile 'uk.co.chrisjenx:calligraphy:2.2.0'
+
+  def butterKnifeVersion = '8.5.1'
+  compile "com.jakewharton:butterknife:${butterKnifeVersion}"
+  annotationProcessor "com.jakewharton:butterknife-compiler:${butterKnifeVersion}"
+
+  compile 'com.theartofdev.edmodo:android-image-cropper:2.3.1'
+
+  compile 'com.squareup.picasso:picasso:2.5.2'
+  compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
+  compile 'jp.wasabeef:picasso-transformations:2.1.0'
+
+  compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+
+  compile fileTree(include: ['*.jar'], dir: 'libs')
+
+  def cub3SdkName = {env -> "Cub3AltPanSDK-v1.4-$env"}
+  developmentCompile(name: cub3SdkName('dev'), ext: 'aar')
+  stagingCompile(name: cub3SdkName('dev'), ext: 'aar')
+  preproductionCompile(name: cub3SdkName('prod'), ext: 'aar')
+  productionCompile(name: cub3SdkName('prod'), ext: 'aar')
+
+  // Deprecated dependencies
+  compile "com.github.ozodrukh:CircularReveal:2.0.1"
+  compile "com.googlecode.libphonenumber:libphonenumber:8.0.1"
+  compile "com.jakewharton.rxbinding:rxbinding:0.4.0"
+  compile "com.squareup.retrofit2:adapter-rxjava:${retrofitVersion}"
+  compile "com.tbruyelle.rxpermissions:rxpermissions:0.9.0"
+  compile "com.yqritc:recyclerview-flexibledivider:1.4.0"
+  compile "de.hdodenhof:circleimageview:2.1.0"
+  compile "io.reactivex:rxandroid:1.2.1"
+  compile "io.reactivex:rxjava:1.2.2"
+}

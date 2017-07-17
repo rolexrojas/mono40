@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+  <item
+    android:color="@color/d_widget_text_input_light_text_alpha_50"
+    android:state_enabled="false"/>
+  <item
+    android:color="@color/d_widget_text_input_light_erratic"
+    app:state_erratic="true"/>
+  <item
+    android:color="@color/d_widget_text_input_light_text"
+    app:state_erratic="false"/>
+</selector>
