@@ -9,10 +9,10 @@
     <android.support.v7.widget.Toolbar
       android:id="@+id/toolbar"
       style="@style/Dep.App.Widget.Toolbar"
-      android:layout_gravity="center_vertical"/>
+      android:layout_gravity="center_vertical" />
   </FrameLayout>
   <android.support.v7.widget.RecyclerView
     android:id="@+id/recycler_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+    android:layout_height="match_parent" />
 </LinearLayout>

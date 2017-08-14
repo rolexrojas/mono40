@@ -157,4 +157,10 @@ interface ApiService {
     @Header(Api.Header.AUTHORIZATION) String authToken,
     @Body RechargeRequestBody body
   );
+
+  @POST("cash-advance")
+  Observable<Response<TransferResponseBody>> advanceCash(
+    @Header(Api.Header.AUTHORIZATION) String authToken,
+    @Body CashAdvanceRequestBody body
+  );
 }

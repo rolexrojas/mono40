@@ -23,7 +23,6 @@ import com.tpago.movil.R;
 import com.tpago.movil.d.domain.ResetEvent;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.session.SessionManager;
-import com.tpago.movil.d.domain.session.SessionRepo;
 import com.tpago.movil.d.domain.util.EventBus;
 import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.StringHelper;
@@ -34,6 +33,7 @@ import com.tpago.movil.d.ui.SwitchableContainerActivity;
 import com.tpago.movil.d.ui.main.purchase.PurchaseFragment;
 import com.tpago.movil.d.ui.main.products.ProductsFragment;
 import com.tpago.movil.d.ui.main.recipient.index.category.RecipientCategoryFragment;
+import com.tpago.movil.d.ui.main.recipient.index.disburse.DisbursementFragment;
 import com.tpago.movil.d.ui.view.widget.SlidingPaneLayout;
 import com.tpago.movil.init.InitActivity;
 import com.tpago.movil.main.MainModule;
@@ -222,8 +222,7 @@ public class DepMainActivity
         this.setChildFragment(RecipientCategoryFragment.create(RECHARGE));
         break;
       case R.id.main_menuItem_disburse:
-        Dialogs.featureNotAvailable(this)
-          .show();
+        this.setChildFragment(DisbursementFragment.create());
         break;
       case R.id.main_menuItem_wallet:
         this.setChildFragment(ProductsFragment.newInstance());

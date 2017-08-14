@@ -115,8 +115,7 @@ public final class OwnTransactionCreationActivity extends AppCompatActivity impl
       .addCreator(Product.class, new OwnProductListItemHolderCreator(this))
       .build();
     final BinderFactory holderBinderFactory = new BinderFactory.Builder()
-      .addBinder(Product.class, OwnProductListItemHolder.class,
-        new OwnProductListItemHolderBinder(stringHelper))
+      .addBinder(Product.class, OwnProductListItemHolder.class, new OwnProductListItemHolderBinder(stringHelper))
       .build();
     adapter = new ListItemAdapter(holderCreatorFactory, holderBinderFactory);
     for (Product product : productManager.getProductList()) {

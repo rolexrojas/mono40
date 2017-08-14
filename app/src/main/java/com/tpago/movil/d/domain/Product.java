@@ -247,6 +247,9 @@ public class Product implements Parcelable {
    */
   @NonNull
   public BigDecimal getQueryFee() {
+    if (this.queryFee == null) {
+      this.queryFee = BigDecimal.ZERO;
+    }
     return queryFee;
   }
 

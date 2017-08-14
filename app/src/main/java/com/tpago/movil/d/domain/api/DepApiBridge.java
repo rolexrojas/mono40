@@ -187,4 +187,12 @@ public interface DepApiBridge {
     BigDecimal amount,
     String pin
   );
+
+  ApiResult<String> advanceCash(
+    String authToken,
+    Product fundingAccount,
+    Product recipientAccount,
+    BigDecimal amount,
+    String pin
+  );
 }

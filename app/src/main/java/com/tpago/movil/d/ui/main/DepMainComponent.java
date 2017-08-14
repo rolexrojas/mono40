@@ -18,6 +18,7 @@ import com.tpago.movil.d.domain.util.EventBus;
 import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.ui.ActivityComponent;
 import com.tpago.movil.d.ui.DepActivityModule;
+import com.tpago.movil.d.ui.main.recipient.index.disburse.DisbursementFragment;
 import com.tpago.movil.main.MainModule;
 import com.tpago.movil.net.NetworkService;
 
@@ -36,20 +37,36 @@ import dagger.Component;
     DepMainModule.class
   })
 public interface DepMainComponent extends ActivityComponent {
+
   void inject(DepMainActivity activity);
 
+  void inject(DisbursementFragment fragment);
+
   BalanceManager provideBalanceManager();
+
   Context provideContext();
+
   DepApiBridge provideApiBridge();
+
   EventBus provideEventBus();
+
   NetworkService provideNetworkService();
+
   PosBridge providePosBridge();
+
   ProductManager provideAccountManager();
+
   RecipientManager provideRecipientManager();
+
   SchedulerProvider provideSchedulerProvider();
+
   Session provideSession();
+
   SessionManager provideSessionManager();
+
   StringHelper provideMessageHelper();
+
   User provideUser();
+
   UserStore provideUserStore();
 }

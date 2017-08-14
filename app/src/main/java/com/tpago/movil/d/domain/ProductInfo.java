@@ -1,5 +1,7 @@
 package com.tpago.movil.d.domain;
 
+import static java.math.BigDecimal.ZERO;
+
 import android.support.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
@@ -31,7 +33,7 @@ public abstract class ProductInfo {
 
   public static TypeAdapter<ProductInfo> typeAdapter(Gson gson) {
     return new AutoValue_ProductInfo.GsonTypeAdapter(gson)
-      .setDefaultQueryFee(BigDecimal.ZERO);
+      .setDefaultQueryFee(ZERO);
   }
 
   @SerializedName("bank") public abstract Bank getBank();

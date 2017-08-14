@@ -499,4 +499,24 @@ class RetrofitApiBridge implements DepApiBridge {
     return apiService.recharge(authToken, body)
       .flatMap(mapToApiResult(TransferResponseBody.mapFunc()));
   }
+
+  @Override
+  public ApiResult<String> advanceCash(
+    String authToken,
+    Product fundingAccount,
+    Product recipientAccount,
+    BigDecimal amount,
+    String pin
+  ) {
+    final CashAdvanceRequestBody body = CashAdvanceRequestBody.createBuilder()
+      .fundingAccount(ProductInfo.create(fundingAccount))
+      .recipientAccount(ProductInfo.create(recipientAccount))
+      .amount(amount)
+      .pin(pin)
+      .build();
+    return apiService.advanceCash(authToken, body)
+      .flatMap(mapToApiResult(TransferResponseBody.mapFunc()))
+      .toBlocking()
+      .single();
+  }
 }

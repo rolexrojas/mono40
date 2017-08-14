@@ -21,6 +21,7 @@ import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.domain.util.EventBus;
 import com.tpago.movil.d.ui.main.recipient.addition.NonAffiliatedPhoneNumberRecipientAddition1Fragment;
 import com.tpago.movil.d.ui.main.recipient.addition.NonAffiliatedPhoneNumberRecipientAddition2Fragment;
+import com.tpago.movil.d.ui.main.recipient.index.disburse.DisbursementActivity;
 import com.tpago.movil.d.ui.main.transaction.own.OwnTransactionCreationActivity;
 import com.tpago.movil.d.ui.main.transaction.own.OwnTransferActivity;
 import com.tpago.movil.data.DataModule;
@@ -55,32 +56,54 @@ import dagger.Component;
   DepDataModule.class
 })
 public interface AppComponent {
+
   InitComponent plus(ActivityModule activityModule, InitModule initModule);
+
   MainComponent plus(ActivityModule activityModule, MainModule mainModule);
 
   void inject(App app);
+
   void inject(OwnTransactionCreationActivity activity);
+
   void inject(OwnTransferActivity activity);
+
+  void inject(DisbursementActivity activity);
 
   // Deprecated injects
   void inject(NonAffiliatedPhoneNumberRecipientAddition1Fragment fragment);
+
   void inject(NonAffiliatedPhoneNumberRecipientAddition2Fragment fragment);
 
   // Deprecated provides
   BalanceManager provideBalanceManager();
+
   BankProvider provideBankProvider();
+
   ConfigManager provideConfigManager();
+
   Context provideContext();
+
   DepApiBridge provideApiBridge();
+
   EventBus provideEventBus();
+
   InitialDataLoader provideInitialDataLoader();
+
   NetworkService provideNetworkService();
+
   PosBridge providePosBridge();
+
   ProductManager provideProductManager();
+
   RecipientManager provideRecipientManager();
+
   SchedulerProvider provideSchedulerProvider();
+
   SessionManager provideSessionManager();
+
   StringHelper provideStringHelper();
+
   TransactionRepo provideTransactionRepo();
+
   UserStore provideUserStore();
 }
