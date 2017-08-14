@@ -9,6 +9,7 @@ import com.tpago.movil.util.Preconditions;
  * @author hecvasro
  */
 public final class DeviceManager {
+
   private final TelephonyManager telephonyManager;
 
   public DeviceManager(Context context) {
@@ -17,7 +18,6 @@ public final class DeviceManager {
   }
 
   public final String getId() {
-//    return telephonyManager.getDeviceId();
-    return "352637070606069";
+    return telephonyManager.getDeviceId();
   }
 }
