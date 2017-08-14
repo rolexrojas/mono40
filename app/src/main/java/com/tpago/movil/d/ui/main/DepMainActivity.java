@@ -23,6 +23,7 @@ import com.tpago.movil.R;
 import com.tpago.movil.d.domain.ResetEvent;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.session.SessionManager;
+import com.tpago.movil.d.domain.session.SessionRepo;
 import com.tpago.movil.d.domain.util.EventBus;
 import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.StringHelper;
@@ -55,6 +56,7 @@ public class DepMainActivity
   implements MainContainer,
   MainScreen,
   TimeOutManager.TimeOutHandler {
+
   private static final String KEY_SESSION = "session";
 
   private Unbinder unbinder;
@@ -63,7 +65,8 @@ public class DepMainActivity
 
   private boolean shouldRequestAuthentication = false;
 
-  @Inject TimeOutManager timeOutManager;
+  @Inject
+  TimeOutManager timeOutManager;
 
   @Inject
   StringHelper stringHelper;
@@ -230,6 +233,10 @@ public class DepMainActivity
           .show();
         break;
       case R.id.main_menuItem_exit:
+        this.sessionManager.deactivate();
+
+        this.startActivity(InitActivity.getLaunchIntent(this));
+        this.finish();
         break;
     }
   }
@@ -238,7 +245,8 @@ public class DepMainActivity
   public void onBackPressed() {
     if (slidingPaneLayout.isOpen()) {
       slidingPaneLayout.closePane();
-    } else if (Objects.checkIfNull(onBackPressedListener) || !onBackPressedListener.onBackPressed()) {
+    } else if (Objects.checkIfNull(onBackPressedListener) || !onBackPressedListener
+      .onBackPressed()) {
       super.onBackPressed();
     }
   }
@@ -314,6 +322,7 @@ public class DepMainActivity
   }
 
   public interface OnBackPressedListener {
+
     boolean onBackPressed();
   }
 }
