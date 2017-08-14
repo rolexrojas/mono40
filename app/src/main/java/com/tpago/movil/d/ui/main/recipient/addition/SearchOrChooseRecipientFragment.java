@@ -1,5 +1,7 @@
 package com.tpago.movil.d.ui.main.recipient.addition;
 
+import static com.tpago.movil.d.ui.main.recipient.index.category.Category.PAY;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,18 +19,25 @@ import com.tpago.movil.R;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.main.recipient.addition.contacts.ContactListFragment;
 import com.tpago.movil.d.ui.main.recipient.addition.partners.PartnerListFragment;
+import com.tpago.movil.d.ui.main.recipient.index.category.Category;
 import com.tpago.movil.d.ui.view.widget.SearchView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import javax.inject.Inject;
 import rx.Observable;
 
 /**
  * @author hecvasro
  */
-public class SearchOrChooseRecipientFragment extends ChildFragment<AddRecipientContainer> implements SearchOrChooseRecipientContainer {
+public class SearchOrChooseRecipientFragment extends ChildFragment<AddRecipientContainer> implements
+  SearchOrChooseRecipientContainer {
+
   private Unbinder unbinder;
+
+  @Inject
+  Category category;
 
   @BindView(R.id.search_view)
   SearchView searchView;
@@ -42,10 +51,22 @@ public class SearchOrChooseRecipientFragment extends ChildFragment<AddRecipientC
     return new SearchOrChooseRecipientFragment();
   }
 
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    // Injects all annotated dependencies.
+    this.getComponent()
+      .inject(this);
+  }
+
   @Nullable
   @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+  public View onCreateView(
+    LayoutInflater inflater,
+    @Nullable ViewGroup container,
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(R.layout.d_fragment_search_or_choose_recipient, container, false);
   }
 
@@ -53,50 +74,59 @@ public class SearchOrChooseRecipientFragment extends ChildFragment<AddRecipientC
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     // Binds all the annotated views and methods.
-    unbinder = ButterKnife.bind(this, view);
+    this.unbinder = ButterKnife.bind(this, view);
     // Prepares the view pager.
-    viewPager.setAdapter(new RecipientListAdapter(getChildFragmentManager()));
+    this.viewPager.setAdapter(new RecipientListAdapter(getChildFragmentManager()));
     // Prepares the tab layout.
-    tabLayout.setupWithViewPager(viewPager);
+    this.tabLayout.setupWithViewPager(this.viewPager);
   }
 
   @Override
   public void onDestroyView() {
     super.onDestroyView();
     // Unbinds all the annotated views and methods.
-    unbinder.unbind();
+    this.unbinder.unbind();
   }
 
   @Nullable
   @Override
   public AddRecipientComponent getComponent() {
-    return getContainer().getComponent();
+    return this.getContainer()
+      .getComponent();
   }
 
   @Override
   public void onContactClicked(Contact contact) {
-    getContainer().onContactClicked(contact);
+    this.getContainer()
+      .onContactClicked(contact);
   }
 
   @Override
   public void onPartnerClicked(Partner partner) {
-    getContainer().onPartnerClicked(partner);
+    this.getContainer()
+      .onPartnerClicked(partner);
   }
 
   @NonNull
   @Override
   public Observable<String> onQueryChanged() {
-    return searchView.onQueryChanged();
+    return this.searchView.onQueryChanged();
   }
 
   private class RecipientListAdapter extends FragmentPagerAdapter {
+
     RecipientListAdapter(FragmentManager fragmentManager) {
       super(fragmentManager);
     }
 
     @Override
+    public int getCount() {
+      return 1;
+    }
+
+    @Override
     public Fragment getItem(int position) {
-      if (position == 0) {
+      if (category == PAY) {
         return new PartnerListFragment();
       } else {
         return new ContactListFragment();
@@ -104,13 +134,8 @@ public class SearchOrChooseRecipientFragment extends ChildFragment<AddRecipientC
     }
 
     @Override
-    public int getCount() {
-      return 2;
-    }
-
-    @Override
     public CharSequence getPageTitle(int position) {
-      if (position == 0) {
+      if (category == PAY) {
         return getString(R.string.partners);
       } else {
         return getString(R.string.contacts);

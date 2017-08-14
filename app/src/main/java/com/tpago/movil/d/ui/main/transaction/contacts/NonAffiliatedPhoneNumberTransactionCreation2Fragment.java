@@ -57,7 +57,9 @@ import timber.log.Timber;
 /**
  * @author hecvasro
  */
-public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends ChildFragment<TransactionCreationContainer> {
+public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
+  ChildFragment<TransactionCreationContainer> {
+
   private Unbinder unbinder;
 
   private LoadIndicator loadIndicator;
@@ -164,7 +166,8 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends ChildF
                 getChildFragmentManager(),
                 getString(
                   R.string.format_transfer_to,
-                  Formatter.amount(DCurrencies.map(fundingAccount.get().getCurrency()), value.get()),
+                  Formatter
+                    .amount(DCurrencies.map(fundingAccount.get().getCurrency()), value.get()),
                   data.first,
                   Formatter.amount(
                     DCurrencies.map(fundingAccount.get().getCurrency()),

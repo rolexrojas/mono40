@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
 import com.tpago.movil.Partner;
+import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.d.domain.Balance;
 import com.tpago.movil.d.domain.CreditCardBillBalance;
 import com.tpago.movil.d.domain.Customer;
@@ -44,6 +45,7 @@ import rx.functions.Func1;
  */
 @Deprecated
 class RetrofitApiBridge implements DepApiBridge {
+
   private static final Func1<Void, Void> MAP_FUNC_VOID = new Func1<Void, Void>() {
     @Override
     public Void call(Void aVoid) {
@@ -85,7 +87,8 @@ class RetrofitApiBridge implements DepApiBridge {
                 } else {
                   error = errorConverter.convert(response.errorBody());
                 }
-                return Observable.just(new ApiResult<>(ApiCode.fromValue(response.code()), data, error));
+                return Observable
+                  .just(new ApiResult<>(ApiCode.fromValue(response.code()), data, error));
               } catch (IOException exception) {
                 return Observable.error(exception);
               }
@@ -248,7 +251,7 @@ class RetrofitApiBridge implements DepApiBridge {
         });
     } else {
       final PhoneNumberRecipient pnr = (PhoneNumberRecipient) recipient;
-      return apiService.fetchCustomer(authToken, pnr.getPhoneNumber())
+      return apiService.fetchCustomer(authToken, pnr.getPhoneNumber().getValue())
         .flatMap(mapToApiResult(RetrofitApiBridge.<Customer>identityMapFunc()))
         .flatMap(new Func1<ApiResult<Customer>, Observable<ApiResult<String>>>() {
           @Override
@@ -475,5 +478,25 @@ class RetrofitApiBridge implements DepApiBridge {
       .flatMap(mapToApiResult(RetrofitApiBridge.<Customer>identityMapFunc()))
       .toBlocking()
       .single();
+  }
+
+  @Override
+  public Observable<ApiResult<String>> recharge(
+    String authToken,
+    Partner carrier,
+    PhoneNumber phoneNumber,
+    Product fundingAccount,
+    BigDecimal amount,
+    String pin
+  ) {
+    final RechargeRequestBody body = RechargeRequestBody.createBuilder()
+      .carrier(carrier)
+      .phoneNumber(phoneNumber.getValue())
+      .fundingAccount(ProductInfo.create(fundingAccount))
+      .amount(amount)
+      .pin(pin)
+      .build();
+    return apiService.recharge(authToken, body)
+      .flatMap(mapToApiResult(TransferResponseBody.mapFunc()));
   }
 }

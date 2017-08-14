@@ -1,13 +1,14 @@
 package com.tpago.movil.d.domain;
 
+import static com.tpago.movil.util.Objects.checkIfNull;
+import static com.tpago.movil.util.Preconditions.assertNotNull;
+
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.tpago.movil.content.SharedPreferencesCreator;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.api.ApiUtils;
-import com.tpago.movil.util.Objects;
-import com.tpago.movil.util.Preconditions;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +23,7 @@ import rx.Observable;
  */
 @Deprecated
 public final class RecipientManager {
+
   private static final String KEY_INDEX_SET = "indexSet";
 
   private final SharedPreferences sharedPreferences;
@@ -36,31 +38,36 @@ public final class RecipientManager {
   public RecipientManager(
     SharedPreferencesCreator sharedPreferencesCreator,
     Gson gson,
-    DepApiBridge apiBridge) {
-    this.sharedPreferences = Preconditions
-      .assertNotNull(sharedPreferencesCreator, "sharedPreferencesCreator == null")
-      .create(RecipientManager.class.getCanonicalName());
-    this.gson = Preconditions
-      .assertNotNull(gson, "gson == null");
+    DepApiBridge apiBridge
+  ) {
+    this.sharedPreferences =
+      assertNotNull(sharedPreferencesCreator, "sharedPreferencesCreator == null")
+        .create(RecipientManager.class.getCanonicalName());
+    this.gson =
+      assertNotNull(gson, "gson == null");
 
     this.indexSet = this.sharedPreferences.getStringSet(KEY_INDEX_SET, new HashSet<String>());
 
-    this.apiBridge = Preconditions.assertNotNull(apiBridge, "apiBridge == null");
+    this.apiBridge = assertNotNull(apiBridge, "apiBridge == null");
   }
 
   @Deprecated
   final void syncRecipients(final List<Recipient> remoteRecipientList) {
-    if (Objects.checkIfNull(recipientList)) {
-      recipientList = new ArrayList<>();
+    if (checkIfNull(this.recipientList)) {
+      this.recipientList = new ArrayList<>();
+    } else {
+      this.recipientList.clear();
     }
-    recipientList.clear();
-    for (String id : indexSet) {
-      recipientList.add(gson.fromJson(sharedPreferences.getString(id, null), Recipient.class));
+
+    for (String id : this.indexSet) {
+      this.recipientList.add(
+        this.gson.fromJson(this.sharedPreferences.getString(id, null), Recipient.class)
+      );
     }
 
     final List<Recipient> recipientToAddList = new ArrayList<>(remoteRecipientList);
     final List<Recipient> recipientToRemoveList = new ArrayList<>();
-    for (Recipient recipient : recipientList) {
+    for (Recipient recipient : this.recipientList) {
       if (recipient instanceof BillRecipient && !remoteRecipientList.contains(recipient)) {
         recipientToRemoveList.add(recipient);
       }

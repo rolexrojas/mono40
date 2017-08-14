@@ -1,5 +1,6 @@
 package com.tpago.movil;
 
+import android.os.Parcelable;
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.google.gson.annotations.SerializedName;
@@ -12,7 +13,8 @@ import java.util.regex.Pattern;
  * @author hecvasro
  */
 @AutoValue
-public abstract class PhoneNumber {
+public abstract class PhoneNumber implements Parcelable {
+
   private static final Pattern SANITIZER = Pattern.compile("[\\D]");
 
   private static final Pattern PATTERN = Pattern.compile("\\A8[024]9[0-9]{7}\\z");
@@ -62,8 +64,8 @@ public abstract class PhoneNumber {
   }
 
   public enum State {
-    @SerializedName("1") NONE,
-    @SerializedName("2") AFFILIATED,
-    @SerializedName("3") REGISTERED
+    @SerializedName("1")NONE,
+    @SerializedName("2")AFFILIATED,
+    @SerializedName("3")REGISTERED
   }
 }

@@ -31,7 +31,8 @@ public abstract class TransferToAffiliatedRequestBody {
       product.getCurrency(),
       pin,
       amount,
-      recipient.getPhoneNumber(),
+      recipient.getPhoneNumber()
+        .getValue(),
       name);
   }
 

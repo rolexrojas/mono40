@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.d.domain.UserRecipient;
 import com.tpago.movil.d.misc.Utils;
@@ -39,6 +40,7 @@ import com.tpago.movil.d.ui.main.list.NoResultsListItemHolderBinder;
 import com.tpago.movil.d.ui.main.list.NoResultsListItemHolderCreator;
 import com.tpago.movil.d.ui.main.recipient.addition.AddRecipientActivity;
 import com.tpago.movil.d.ui.main.recipient.addition.NonAffiliatedPhoneNumberRecipientAdditionActivity;
+import com.tpago.movil.d.ui.main.transaction.TransactionCategory;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivity;
 import com.tpago.movil.d.ui.main.transaction.own.OwnTransactionCreationActivity;
 import com.tpago.movil.d.ui.view.widget.FullScreenLoadIndicator;
@@ -146,7 +148,7 @@ public class RecipientCategoryFragment
       .addCreator(NoResultsListItemItem.class, new NoResultsListItemHolderCreator())
       .build();
     final Context context = getContext();
-    recipientBinder = new RecipientListItemHolderBinder();
+    recipientBinder = new RecipientListItemHolderBinder(this.category);
     final BinderFactory binderFactory = new BinderFactory.Builder()
       .addBinder(
         Recipient.class,
@@ -155,7 +157,7 @@ public class RecipientCategoryFragment
       .addBinder(
         Action.class,
         ActionListItemHolder.class,
-        new ActionListItemHolderBinder(stringHelper))
+        new ActionListItemHolderBinder(stringHelper, category))
       .addBinder(
         NoResultsListItemItem.class,
         NoResultsListItemHolder.class,
@@ -212,12 +214,14 @@ public class RecipientCategoryFragment
 
     inflater.inflate(R.menu.recipient_index_category, menu);
 
-    final String categoryDeletionString = this.getString(this.category.deletionStringId)
+    final String categoryDeletionString = this.getString(this.category.subjectStringId)
       .toLowerCase();
     final MenuItem addMenuItem = menu.findItem(R.id.recipientIndexCategory_menuItem_add);
-    addMenuItem.setTitle(String.format(this.getString(R.string.format_add), categoryDeletionString));
+    addMenuItem
+      .setTitle(String.format(this.getString(R.string.format_add), categoryDeletionString));
     final MenuItem removeMenuItem = menu.findItem(R.id.recipientIndexCategory_menuItem_remove);
-    removeMenuItem.setTitle(String.format(this.getString(R.string.format_remove), categoryDeletionString));
+    removeMenuItem
+      .setTitle(String.format(this.getString(R.string.format_remove), categoryDeletionString));
   }
 
   @Override
@@ -225,7 +229,7 @@ public class RecipientCategoryFragment
     switch (item.getItemId()) {
       case R.id.recipientIndexCategory_menuItem_add:
         startActivityForResult(
-          AddRecipientActivity.getLaunchIntent(getContext()),
+          AddRecipientActivity.getLaunchIntent(this.getContext(), this.category),
           REQUEST_CODE_RECIPIENT_ADDITION
         );
         return true;
@@ -388,8 +392,13 @@ public class RecipientCategoryFragment
   @Override
   public void startTransfer(Recipient recipient) {
     startActivityForResult(
-      TransactionCreationActivity.getLaunchIntent(getActivity(), recipient),
-      REQUEST_CODE_TRANSACTION_CREATION);
+      TransactionCreationActivity.getLaunchIntent(
+        this.getActivity(),
+        TransactionCategory.transform(this.category),
+        recipient
+      ),
+      REQUEST_CODE_TRANSACTION_CREATION
+    );
   }
 
   @Override
@@ -414,12 +423,14 @@ public class RecipientCategoryFragment
   }
 
   @Override
-  public void startNonAffiliatedPhoneNumberRecipientAddition(String phoneNumber) {
-    startActivityForResult(
+  public void startNonAffiliatedPhoneNumberRecipientAddition(PhoneNumber phoneNumber) {
+    this.startActivityForResult(
       NonAffiliatedPhoneNumberRecipientAdditionActivity.getLaunchIntent(
-        getContext(),
-        phoneNumber),
-      REQUEST_CODE_NON_AFFILIATED_RECIPIENT_ADDITION);
+        this.getContext(),
+        phoneNumber
+      ),
+      REQUEST_CODE_NON_AFFILIATED_RECIPIENT_ADDITION
+    );
   }
 
   @Override
@@ -478,26 +489,32 @@ public class RecipientCategoryFragment
     final Object item = adapter.get(position);
     if (item instanceof Recipient) {
       if (item instanceof UserRecipient) {
+        final Context context = this.getContext();
         if (category == TRANSFER) {
-          startActivityForResult(
-            OwnTransactionCreationActivity.createLaunchIntent(getContext()),
+          this.startActivityForResult(
+            OwnTransactionCreationActivity.createLaunchIntent(context),
             REQUEST_CODE_TRANSACTION_CREATION
           );
         } else {
-          // TODO: Add support for recharging user's phone.
-          Dialogs.featureNotAvailable(this.getContext())
-            .show();
+          this.startActivityForResult(
+            TransactionCreationActivity.getLaunchIntent(
+              context,
+              TransactionCategory.transform(this.category),
+              (UserRecipient) item
+            ),
+            REQUEST_CODE_TRANSACTION_CREATION
+          );
         }
       } else {
         presenter.resolve((Recipient) item);
       }
     } else if (item instanceof Action) {
-      switch (((Action) item).getType()) {
-        case ActionType.ADD_PHONE_NUMBER:
-          presenter.addRecipient(((PhoneNumberAction) item).getPhoneNumber());
+      switch (((Action) item).type()) {
+        case ADD_PHONE_NUMBER:
+          presenter.addRecipient(((PhoneNumberAction) item).phoneNumber());
           break;
-        case ActionType.TRANSACTION_WITH_PHONE_NUMBER:
-          presenter.startTransfer(((PhoneNumberAction) item).getPhoneNumber());
+        case TRANSACTION_WITH_PHONE_NUMBER:
+          presenter.startTransfer(((PhoneNumberAction) item).phoneNumber());
           break;
       }
     }

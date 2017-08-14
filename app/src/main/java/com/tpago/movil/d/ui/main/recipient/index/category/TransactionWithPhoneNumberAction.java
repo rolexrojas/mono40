@@ -1,18 +1,20 @@
 package com.tpago.movil.d.ui.main.recipient.index.category;
 
-import android.support.annotation.NonNull;
+import static com.tpago.movil.d.ui.main.recipient.index.category.Action.Type.TRANSACTION_WITH_PHONE_NUMBER;
+
+import com.google.auto.value.AutoValue;
+import com.tpago.movil.PhoneNumber;
 
 /**
  * @author hecvasro
  */
-class TransactionWithPhoneNumberAction extends PhoneNumberAction {
-  TransactionWithPhoneNumberAction(@NonNull String phoneNumber) {
-    super(ActionType.TRANSACTION_WITH_PHONE_NUMBER, phoneNumber);
-  }
+@AutoValue
+abstract class TransactionWithPhoneNumberAction extends PhoneNumberAction {
 
-  @Override
-  public String toString() {
-    return TransactionWithPhoneNumberAction.class.getSimpleName() + ":{super="
-      + super.toString() + "}";
+  static TransactionWithPhoneNumberAction create(PhoneNumber phoneNumber) {
+    return new AutoValue_TransactionWithPhoneNumberAction(
+      TRANSACTION_WITH_PHONE_NUMBER,
+      phoneNumber
+    );
   }
 }

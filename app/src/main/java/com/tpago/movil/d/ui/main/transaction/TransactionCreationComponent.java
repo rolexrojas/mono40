@@ -12,6 +12,7 @@ import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.main.transaction.bills.BillTransactionCreationFragment;
 import com.tpago.movil.d.ui.main.transaction.bills.BillTransactionCreationPresenter;
+import com.tpago.movil.d.ui.main.transaction.contacts.CarrierSelectionFragment;
 import com.tpago.movil.d.ui.main.transaction.contacts.NonAffiliatedPhoneNumberTransactionCreation1Fragment;
 import com.tpago.movil.d.ui.main.transaction.contacts.NonAffiliatedPhoneNumberTransactionCreation2Fragment;
 import com.tpago.movil.d.ui.main.transaction.products.CreditCardTransactionCreationFragment;
@@ -36,23 +37,44 @@ import dagger.Component;
     TransactionCreationModule.class
   })
 public interface TransactionCreationComponent {
+
   void inject(TransactionCreationActivity activity);
+
   void inject(NonAffiliatedPhoneNumberTransactionCreation1Fragment fragment);
+
   void inject(NonAffiliatedPhoneNumberTransactionCreation2Fragment fragment);
+
   void inject(BillTransactionCreationFragment fragment);
+
   void inject(BillTransactionCreationPresenter presenter);
+
   void inject(CreditCardTransactionCreationFragment fragment);
+
   void inject(CreditCardTransactionCreationPresenter presenter);
+
   void inject(LoanTransactionCreationFragment fragment);
+
   void inject(LoanTransactionCreationPresenter presenter);
 
+  void inject(CarrierSelectionFragment fragment);
+
   AtomicReference<BigDecimal> provideAmount();
+
   AtomicReference<Product> provideFundingAccount();
+
   DepApiBridge provideDepApiBridge();
+
   NetworkService provideNetworkService();
+
   ProductManager provideProductManager();
+
   Recipient provideRecipient();
+
   SchedulerProvider provideSchedulerProvider();
+
   StringHelper provideStringHelper();
+
   SessionManager provideSessionManager();
+
+  TransactionCategory transactionCategory();
 }

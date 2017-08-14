@@ -9,6 +9,7 @@ import com.tpago.movil.R;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Recipient;
 
+import com.tpago.movil.d.ui.main.recipient.index.category.Category;
 import java.math.BigDecimal;
 import java.util.Locale;
 
@@ -188,9 +189,12 @@ public final class StringHelper {
   }
 
   @NonNull
-  public final String transactionWith(@NonNull String phoneNumber) {
-    return String.format(Locale.getDefault(),
-      getString(R.string.payments_action_phone_number_transaction), phoneNumber);
+  public final String transactionWith(Category category, String phoneNumber) {
+    return String.format(
+      getString(R.string.payments_action_phone_number_transaction),
+      getString(category.stringId),
+      phoneNumber
+    );
   }
 
   @NonNull

@@ -55,7 +55,9 @@ import static com.tpago.movil.util.Objects.checkIfNull;
 /**
  * @author hecvasro
  */
-public class NonAffiliatedPhoneNumberTransactionCreation1Fragment extends ChildFragment<TransactionCreationContainer> {
+public class NonAffiliatedPhoneNumberTransactionCreation1Fragment extends
+  ChildFragment<TransactionCreationContainer> {
+
   private Unbinder unbinder;
 
   private Adapter adapter = new Adapter();
@@ -64,11 +66,15 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment extends ChildF
   private LoadIndicator loadIndicator;
   private Disposable disposable = Disposables.disposed();
 
-  @Inject BankProvider bankProvider;
-  @Inject Recipient recipient;
+  @Inject
+  BankProvider bankProvider;
+  @Inject
+  Recipient recipient;
 
-  @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
-  @BindView(R.id.recycler_view) RecyclerView recyclerView;
+  @BindView(R.id.swipe_refresh_layout)
+  SwipeRefreshLayout swipeRefreshLayout;
+  @BindView(R.id.recycler_view)
+  RecyclerView recyclerView;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -187,6 +193,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment extends ChildF
   }
 
   class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
     private ImageView imageView;
     private TextView textView;
 
@@ -205,6 +212,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment extends ChildF
   }
 
   class Adapter extends RecyclerView.Adapter<ViewHolder> {
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
       return new ViewHolder(

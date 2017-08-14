@@ -23,14 +23,21 @@ import dagger.Component;
     ActivityModule.class,
     DepActivityModule.class,
     AddRecipientModule.class
-  })
+  }
+)
 public interface AddRecipientComponent extends ActivityComponent {
+
   void inject(AddRecipientActivity activity);
+
+  void inject(SearchOrChooseRecipientFragment fragment);
 
   void inject(RecipientBuilderFragment fragment);
 
   Context provideContext();
+
   DepApiBridge provideApiBridge();
+
   SchedulerProvider provideSchedulerProvider();
+
   SessionManager provideSessionManager();
 }

@@ -16,9 +16,9 @@ import java.util.List;
  */
 @AutoValue
 public abstract class Partner implements Parcelable {
-  public static Partner create(int code, String id, String name, String logoUri) {
-    return new AutoValue_Partner(code, id, name, logoUri);
-  }
+
+  public static final String TYPE_CARRIER = "T";
+  public static final String TYPE_PROVIDER = "L";
 
   public static TypeAdapter<Partner> typeAdapter(Gson gson) {
     return new AutoValue_Partner.GsonTypeAdapter(gson);
@@ -29,13 +29,24 @@ public abstract class Partner implements Parcelable {
     Collections.sort(partnerList, new Comparator<Partner>() {
       @Override
       public int compare(Partner pa, Partner pb) {
-        return pa.getName().compareTo(pb.getName());
+        return pa.getName()
+          .compareTo(pb.getName());
       }
     });
   }
 
-  @SerializedName("partner-code") public abstract int getCode();
-  @SerializedName("partner-id") public abstract String getId();
-  @SerializedName("partner-name") public abstract String getName();
-  @SerializedName("image-url") public abstract String getImageUriTemplate();
+  @SerializedName("partner-code")
+  public abstract int getCode();
+
+  @SerializedName("partner-type")
+  public abstract String getType();
+
+  @SerializedName("partner-id")
+  public abstract String getId();
+
+  @SerializedName("partner-name")
+  public abstract String getName();
+
+  @SerializedName("image-url")
+  public abstract String getImageUriTemplate();
 }

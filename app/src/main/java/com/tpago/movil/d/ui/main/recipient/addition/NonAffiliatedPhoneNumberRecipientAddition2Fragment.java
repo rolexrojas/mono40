@@ -50,6 +50,7 @@ import timber.log.Timber;
  * @author hecvasro
  */
 public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment {
+
   private Unbinder unbinder;
   private NonAffiliatedPhoneNumberRecipient recipient;
 

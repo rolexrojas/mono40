@@ -7,6 +7,7 @@ import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.util.EventBus;
 import com.tpago.movil.d.ui.AppDialog;
 
+import com.tpago.movil.d.ui.main.recipient.index.category.RecipientDrawableStore;
 import dagger.Module;
 import dagger.Provides;
 
@@ -16,6 +17,7 @@ import dagger.Provides;
 @Module
 @Deprecated
 class DepMainModule {
+
   @Provides
   @ActivityScope
   MainPresenter provideMainPresenter(
@@ -23,12 +25,20 @@ class DepMainModule {
     EventBus eventBus,
     BalanceManager balanceManager,
     AppDialog.Creator screenDialogCreator,
-    PosBridge posBridge) {
+    PosBridge posBridge
+  ) {
     return new MainPresenter(
       stringHelper,
       eventBus,
       balanceManager,
       screenDialogCreator,
-      posBridge);
+      posBridge
+    );
+  }
+
+  @Provides
+  @ActivityScope
+  RecipientDrawableStore recipientDrawableStore() {
+    return RecipientDrawableStore.create();
   }
 }

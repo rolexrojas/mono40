@@ -1,9 +1,13 @@
 package com.tpago.movil.d.domain;
 
+import static com.tpago.movil.d.domain.RecipientType.PHONE_NUMBER;
+
 import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.tpago.movil.Partner;
+import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.d.domain.util.StringUtils;
 import com.tpago.movil.text.Texts;
 
@@ -13,6 +17,7 @@ import com.tpago.movil.text.Texts;
  * @author hecvasro
  */
 public class PhoneNumberRecipient extends Recipient {
+
   public static final Creator<PhoneNumberRecipient> CREATOR = new Creator<PhoneNumberRecipient>() {
     @Override
     public PhoneNumberRecipient createFromParcel(Parcel source) {
@@ -25,49 +30,63 @@ public class PhoneNumberRecipient extends Recipient {
     }
   };
 
-  private final String phoneNumber;
+  private final PhoneNumber phoneNumber;
+  private Partner carrier;
 
   protected PhoneNumberRecipient(Parcel source) {
     super(source);
-    phoneNumber = source.readString();
+    this.phoneNumber = source.readParcelable(PhoneNumber.class.getClassLoader());
+    this.carrier = source.readParcelable(Partner.class.getClassLoader());
   }
 
-  /**
-   * Constructs a new phone number recipient.
-   */
-  public PhoneNumberRecipient(@NonNull String phoneNumber, @Nullable String label) {
-    super(RecipientType.PHONE_NUMBER, label);
+  public PhoneNumberRecipient(
+    @NonNull PhoneNumber phoneNumber,
+    @Nullable Partner carrier,
+    @Nullable String label
+  ) {
+    super(PHONE_NUMBER, label);
+
     this.phoneNumber = phoneNumber;
+    this.carrier = carrier;
   }
 
-  /**
-   * Constructs a new phone number recipient.
-   */
-  public PhoneNumberRecipient(@NonNull String phoneNumber) {
-    super(RecipientType.PHONE_NUMBER);
-    this.phoneNumber = phoneNumber;
+  public PhoneNumberRecipient(@NonNull PhoneNumber phoneNumber,
+    @Nullable String label) {
+    this(phoneNumber, null, label);
+  }
+
+  public PhoneNumberRecipient(@NonNull PhoneNumber phoneNumber) {
+    this(phoneNumber, null, null);
   }
 
   @NonNull
-  public final String getPhoneNumber() {
-    return phoneNumber;
+  public final PhoneNumber getPhoneNumber() {
+    return this.phoneNumber;
+  }
+
+  public final void setCarrier(Partner carrier) {
+    this.carrier = carrier;
+  }
+
+  public final Partner getCarrier() {
+    return this.carrier;
   }
 
   @Override
   public String getId() {
-    return Texts.join("-", getType(), phoneNumber);
+    return Texts.join("-", this.getType(), this.phoneNumber.getValue());
   }
 
   @NonNull
   @Override
   public String getIdentifier() {
-    return com.tpago.movil.PhoneNumber.format(phoneNumber);
+    return this.phoneNumber.formattedValued();
   }
 
   @Override
   public String toString() {
     return PhoneNumberRecipient.class.getSimpleName() + ":{super=" + super.toString()
-      + ",phoneNumber='" + phoneNumber + "'}";
+      + ",phoneNumber='" + phoneNumber + ",carrier=" + carrier.toString() + "'}";
   }
 
   /**
@@ -75,12 +94,14 @@ public class PhoneNumberRecipient extends Recipient {
    */
   @Override
   public boolean matches(@Nullable String query) {
-    return super.matches(query) || StringUtils.matches(phoneNumber, query);
+    return super.matches(query) || StringUtils.matches(this.phoneNumber.getValue(), query);
   }
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
     super.writeToParcel(dest, flags);
-    dest.writeString(phoneNumber);
+
+    dest.writeParcelable(this.phoneNumber, flags);
+    dest.writeParcelable(this.carrier, flags);
   }
 }

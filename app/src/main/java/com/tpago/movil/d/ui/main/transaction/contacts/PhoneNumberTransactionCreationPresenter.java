@@ -1,17 +1,27 @@
 package com.tpago.movil.d.ui.main.transaction.contacts;
 
+import static com.tpago.movil.d.domain.Product.checkIfCreditCard;
+import static com.tpago.movil.d.ui.main.transaction.TransactionCategory.RECHARGE;
+import static com.tpago.movil.d.ui.main.transaction.TransactionCategory.TRANSFER;
+import static com.tpago.movil.util.Objects.checkIfNull;
+
 import android.support.annotation.NonNull;
 
+import com.tpago.movil.Partner;
+import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.api.DCurrencies;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
+import com.tpago.movil.d.domain.PhoneNumberRecipient;
+import com.tpago.movil.d.domain.UserRecipient;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.ui.Presenter;
+import com.tpago.movil.d.ui.main.transaction.TransactionCategory;
 import com.tpago.movil.domain.ErrorCode;
 import com.tpago.movil.domain.FailureData;
 import com.tpago.movil.domain.Result;
@@ -19,6 +29,8 @@ import com.tpago.movil.net.NetworkService;
 import com.tpago.movil.reactivex.Disposables;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Single;
@@ -27,6 +39,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import rx.Subscription;
+import rx.functions.Action1;
+import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 /**
@@ -34,6 +49,7 @@ import timber.log.Timber;
  */
 class PhoneNumberTransactionCreationPresenter
   extends Presenter<PhoneNumberTransactionCreationScreen> {
+
   private final ProductManager productManager;
   private final Recipient recipient;
 
@@ -42,9 +58,12 @@ class PhoneNumberTransactionCreationPresenter
   private final String authToken;
   private final StringHelper stringHelper;
 
+  private final TransactionCategory transactionCategory;
+
   private Product paymentOption;
 
   private Disposable paymentSubscription = Disposables.disposed();
+  private Subscription rechargeSubscription = Subscriptions.unsubscribed();
 
   PhoneNumberTransactionCreationPresenter(
     @NonNull ProductManager productManager,
@@ -52,7 +71,9 @@ class PhoneNumberTransactionCreationPresenter
     NetworkService networkService,
     DepApiBridge depApiBridge,
     String authToken,
-    StringHelper stringHelper) {
+    StringHelper stringHelper,
+    TransactionCategory transactionCategory
+  ) {
     this.productManager = productManager;
     this.recipient = recipient;
 
@@ -60,37 +81,71 @@ class PhoneNumberTransactionCreationPresenter
     this.depApiBridge = depApiBridge;
     this.authToken = authToken;
     this.stringHelper = stringHelper;
+
+    this.transactionCategory = transactionCategory;
   }
 
-  void start() {
+  final void start() {
     assertScreen();
-    screen.setPaymentOptions(productManager.getPaymentOptionList());
+
+    final List<Product> paymentOptionList = new ArrayList<>();
+    for (Product product : this.productManager.getPaymentOptionList()) {
+      if (this.transactionCategory == RECHARGE || !checkIfCreditCard(product)) {
+        paymentOptionList.add(product);
+      }
+    }
+
+    this.screen.setPaymentOptions(paymentOptionList);
   }
 
-  void stop() {
+  final void stop() {
     assertScreen();
     Disposables.dispose(paymentSubscription);
+    if (!this.rechargeSubscription.isUnsubscribed()) {
+      this.rechargeSubscription.unsubscribe();
+    }
   }
 
   void setPaymentOption(@NonNull Product paymentOption) {
     this.assertScreen();
     this.paymentOption = paymentOption;
     this.screen.setPaymentOptionCurrency(DCurrencies.map(this.paymentOption.getCurrency()));
-    this.screen.showTransferButtonAsEnabled(!Product.checkIfCreditCard(this.paymentOption));
   }
 
-  void onTransferButtonClicked() {
-    if (Product.checkIfCreditCard(paymentOption)) {
-      screen.showGenericErrorDialog("Transferencias a terceros no pueden ser pagadas desde tarjetas de crédito. Favor seleccionar una cuenta corriente o de ahorros.");
-    } else if (!(recipient instanceof NonAffiliatedPhoneNumberRecipient) || ((NonAffiliatedPhoneNumberRecipient) recipient).canBeTransferTo()) {
-      screen.requestPin();
+  final void onTransferButtonClicked() {
+    if (this.recipient instanceof NonAffiliatedPhoneNumberRecipient) {
+      final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) this.recipient;
+      if (r.canAcceptTransfers()) {
+        this.screen.requestPin();
+      } else {
+        this.screen.requestBankAndAccountNumber();
+      }
     } else {
-      screen.requestBankAndAccountNumber();
+      this.screen.requestPin();
     }
   }
 
-  final void transferTo(final BigDecimal value, final String pin) {
-    assertScreen();
+  final void onRechargeButtonClicked() {
+    Partner carrier;
+    if (this.recipient instanceof UserRecipient) {
+      final UserRecipient r = (UserRecipient) this.recipient;
+      carrier = r.getCarrier();
+    } else if (this.recipient instanceof NonAffiliatedPhoneNumberRecipient) {
+      final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) this.recipient;
+      carrier = r.getCarrier();
+    } else {
+      final PhoneNumberRecipient r = (PhoneNumberRecipient) this.recipient;
+      carrier = r.getCarrier();
+    }
+
+    if (checkIfNull(carrier)) {
+      this.screen.requestCarrier();
+    } else {
+      this.screen.requestPin();
+    }
+  }
+
+  final void transfer(final BigDecimal value, final String pin) {
     paymentSubscription = Single.defer(new Callable<SingleSource<Result<String, ErrorCode>>>() {
       @Override
       public SingleSource<Result<String, ErrorCode>> call() throws Exception {
@@ -132,34 +187,91 @@ class PhoneNumberTransactionCreationPresenter
     })
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(new Consumer<Result<String,ErrorCode>>() {
-          @Override
-          public void accept(Result<String, ErrorCode> result) {
-            if (result.isSuccessful()) {
-              screen.setPaymentResult(true, result.getSuccessData());
-            } else {
-              screen.setPaymentResult(false, null);
-              final FailureData<ErrorCode> failureData = result.getFailureData();
-              switch (failureData.getCode()) {
-                case INCORRECT_PIN:
-                  screen.showGenericErrorDialog(stringHelper.resolve(R.string.error_incorrect_pin));
-                  break;
-                case UNAVAILABLE_NETWORK:
-                  screen.showUnavailableNetworkError();
-                  break;
-                default:
-                  screen.showGenericErrorDialog(failureData.getDescription());
-                  break;
-              }
+      .subscribe(new Consumer<Result<String, ErrorCode>>() {
+        @Override
+        public void accept(Result<String, ErrorCode> result) {
+          if (result.isSuccessful()) {
+            screen.setPaymentResult(true, result.getSuccessData());
+          } else {
+            screen.setPaymentResult(false, null);
+            final FailureData<ErrorCode> failureData = result.getFailureData();
+            switch (failureData.getCode()) {
+              case INCORRECT_PIN:
+                screen.showGenericErrorDialog(stringHelper.resolve(R.string.error_incorrect_pin));
+                break;
+              case UNAVAILABLE_NETWORK:
+                screen.showUnavailableNetworkError();
+                break;
+              default:
+                screen.showGenericErrorDialog(failureData.getDescription());
+                break;
             }
           }
-        }, new Consumer<Throwable>() {
-          @Override
-          public void accept(Throwable throwable) {
-            Timber.e(throwable);
-            screen.setPaymentResult(false, null);
-            screen.showGenericErrorDialog();
+        }
+      }, new Consumer<Throwable>() {
+        @Override
+        public void accept(Throwable throwable) {
+          Timber.e(throwable);
+          screen.setPaymentResult(false, null);
+          screen.showGenericErrorDialog();
+        }
+      });
+  }
+
+  final void recharge(final BigDecimal value, final String pin) {
+    final Partner carrier;
+    final PhoneNumber phoneNumber;
+    if (this.recipient instanceof UserRecipient) {
+      final UserRecipient r = (UserRecipient) this.recipient;
+
+      carrier = r.getCarrier();
+      phoneNumber = r.phoneNumber();
+    } else if (this.recipient instanceof NonAffiliatedPhoneNumberRecipient) {
+      final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) this.recipient;
+
+      carrier = r.getCarrier();
+      phoneNumber = r.getPhoneNumber();
+    } else {
+      final PhoneNumberRecipient r = (PhoneNumberRecipient) this.recipient;
+
+      carrier = r.getCarrier();
+      phoneNumber = r.getPhoneNumber();
+    }
+
+    rechargeSubscription = depApiBridge.recharge(
+      authToken,
+      carrier,
+      phoneNumber,
+      paymentOption,
+      value,
+      pin
+    )
+      .subscribeOn(rx.schedulers.Schedulers.io())
+      .observeOn(rx.android.schedulers.AndroidSchedulers.mainThread())
+      .subscribe(new Action1<ApiResult<String>>() {
+        @Override
+        public void call(ApiResult<String> result) {
+          if (result.isSuccessful()) {
+            screen.setPaymentResult(true, result.getData());
+          } else {
+            screen.showGenericErrorDialog(result.getError().getDescription());
           }
-        });
+        }
+      }, new Action1<Throwable>() {
+        @Override
+        public void call(Throwable throwable) {
+          Timber.e(throwable);
+          screen.setPaymentResult(false, null);
+          screen.showGenericErrorDialog();
+        }
+      });
+  }
+
+  final void transferTo(final BigDecimal value, final String pin) {
+    if (this.transactionCategory == TRANSFER) {
+      this.transfer(value, pin);
+    } else {
+      this.recharge(value, pin);
+    }
   }
 }

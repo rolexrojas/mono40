@@ -13,6 +13,7 @@ import com.tpago.movil.text.Texts;
  * @author hecvasro
  */
 public class BillRecipient extends Recipient {
+
   public static final Creator<BillRecipient> CREATOR = new Creator<BillRecipient>() {
     @Override
     public BillRecipient createFromParcel(Parcel source) {
@@ -70,7 +71,13 @@ public class BillRecipient extends Recipient {
 
   @Override
   public String getId() {
-    return Texts.join("-", getType(), getPartner().getId(), getContractNumber());
+    return Texts.join(
+      "-",
+      this.getType(),
+      this.getPartner()
+        .getId(),
+      this.getContractNumber()
+    );
   }
 
   @NonNull
@@ -119,7 +126,7 @@ public class BillRecipient extends Recipient {
   }
 
   public enum Option {
-    @SerializedName("PayTotal") TOTAL,
-    @SerializedName("PayMinimum") MINIMUM
+    @SerializedName("PayTotal")TOTAL,
+    @SerializedName("PayMinimum")MINIMUM
   }
 }

@@ -6,29 +6,11 @@ package com.tpago.movil.d.ui.main.recipient.index.category;
  * @author hecvasro
  */
 abstract class Action {
-  /**
-   * Action's {@link ActionType type}.
-   */
-  @ActionType
-  private final int type;
 
-  /**
-   * Constructs a new action.
-   *
-   * @param type
-   *   Action's {@link ActionType type}.
-   */
-  Action(@ActionType int type) {
-    this.type = type;
-  }
+  abstract Type type();
 
-  /**
-   * Gets the {@link ActionType type} of the action.
-   *
-   * @return Action's {@link ActionType type}.
-   */
-  @ActionType
-  final int getType() {
-    return type;
+  enum Type {
+    TRANSACTION_WITH_PHONE_NUMBER,
+    ADD_PHONE_NUMBER
   }
 }

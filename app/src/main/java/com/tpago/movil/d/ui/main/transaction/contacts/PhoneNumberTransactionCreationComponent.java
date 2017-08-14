@@ -11,7 +11,9 @@ import dagger.Component;
 @FragmentScope
 @Component(
   dependencies = TransactionCreationComponent.class,
-  modules = PhoneNumberTransactionCreationModule.class)
+  modules = PhoneNumberTransactionCreationModule.class
+)
 interface PhoneNumberTransactionCreationComponent {
+
   void inject(PhoneNumberTransactionCreationFragment fragment);
 }

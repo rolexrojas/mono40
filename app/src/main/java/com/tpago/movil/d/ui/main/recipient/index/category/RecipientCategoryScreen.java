@@ -2,6 +2,7 @@ package com.tpago.movil.d.ui.main.recipient.index.category;
 
 import android.support.annotation.NonNull;
 
+import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.ui.Screen;
 
@@ -52,7 +53,7 @@ interface RecipientCategoryScreen extends Screen {
   void setDeleteButtonEnabled(boolean enabled);
 
   void showRecipientAdditionDialog(Recipient recipient);
-  void startNonAffiliatedPhoneNumberRecipientAddition(String phoneNumber);
+  void startNonAffiliatedPhoneNumberRecipientAddition(PhoneNumber phoneNumber);
   void showTransactionSummary(Recipient recipient, boolean alreadyExists, String transactionId);
 
   void requestPin();

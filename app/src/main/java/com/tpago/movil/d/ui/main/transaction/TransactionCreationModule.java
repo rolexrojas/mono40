@@ -17,10 +17,19 @@ import dagger.Provides;
  */
 @Module
 class TransactionCreationModule {
+
+  private final TransactionCategory transactionCategory;
   private final Recipient recipient;
 
-  TransactionCreationModule(@NonNull Recipient recipient) {
+  TransactionCreationModule(TransactionCategory transactionCategory, @NonNull Recipient recipient) {
+    this.transactionCategory = transactionCategory;
     this.recipient = recipient;
+  }
+
+  @Provides
+  @ActivityScope
+  TransactionCategory transactionCategory() {
+    return this.transactionCategory;
   }
 
   @Provides

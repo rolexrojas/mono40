@@ -11,5 +11,6 @@ import dagger.Component;
 @FragmentScope
 @Component(dependencies = AddRecipientComponent.class, modules = PartnerListModule.class)
 interface PartnerListComponent {
+
   void inject(PartnerListFragment fragment);
 }

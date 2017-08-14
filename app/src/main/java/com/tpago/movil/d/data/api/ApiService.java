@@ -30,6 +30,7 @@ import rx.Observable;
  */
 @Deprecated
 interface ApiService {
+
   @GET("initial-load")
   Observable<Response<InitialData>> initialLoad(@Header(Api.Header.AUTHORIZATION) String authToken);
 
@@ -150,4 +151,10 @@ interface ApiService {
   Observable<Response<Boolean>> validatePin(
     @Header(Api.Header.AUTHORIZATION) String authToken,
     @Body ValidatePinRequestBody body);
+
+  @POST("recharge/direct")
+  Observable<Response<TransferResponseBody>> recharge(
+    @Header(Api.Header.AUTHORIZATION) String authToken,
+    @Body RechargeRequestBody body
+  );
 }

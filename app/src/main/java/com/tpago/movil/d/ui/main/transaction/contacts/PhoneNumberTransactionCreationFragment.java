@@ -1,5 +1,7 @@
 package com.tpago.movil.d.ui.main.transaction.contacts;
 
+import static com.tpago.movil.d.ui.main.transaction.TransactionCategory.TRANSFER;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +19,7 @@ import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
+import com.tpago.movil.d.ui.main.transaction.TransactionCategory;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
 import com.tpago.movil.d.ui.view.widget.pad.Digit;
 import com.tpago.movil.d.ui.view.widget.pad.Dot;
@@ -48,6 +51,7 @@ public class PhoneNumberTransactionCreationFragment
   DepNumPad.OnDigitClickedListener,
   DepNumPad.OnDotClickedListener,
   DepNumPad.OnDeleteClickedListener {
+
   private static final BigDecimal ZERO = BigDecimal.ZERO;
   private static final BigDecimal ONE = BigDecimal.ONE;
   private static final BigDecimal TEN = BigDecimal.TEN;
@@ -55,6 +59,8 @@ public class PhoneNumberTransactionCreationFragment
 
   @Inject
   StringHelper stringHelper;
+  @Inject
+  TransactionCategory transactionCategory;
   @Inject
   PhoneNumberTransactionCreationPresenter presenter;
   @Inject
@@ -70,10 +76,13 @@ public class PhoneNumberTransactionCreationFragment
   PrefixableTextView amountTextView;
   @BindView(R.id.transaction_creation_num_pad)
   DepNumPad numPad;
+  @BindView(R.id.action_recharge)
+  Button rechargeActionButton;
   @BindView(R.id.action_transfer)
   Button transferActionButton;
 
-  @BindView(R.id.payment_method_chooser) PaymentMethodChooser paymentMethodChooser;
+  @BindView(R.id.payment_method_chooser)
+  PaymentMethodChooser paymentMethodChooser;
 
   private boolean mustShowDot = false;
   private BigDecimal fractionOffset = ONE;
@@ -112,15 +121,22 @@ public class PhoneNumberTransactionCreationFragment
     amountTextView.setContent(getFormattedValue(value.get(), fractionOffset, mustShowDot));
   }
 
-  @OnClick(R.id.action_recharge)
-  void onRechargeButtonClicked() {
-    Dialogs.featureNotAvailable(getActivity())
-      .show();
+  @OnClick(R.id.action_transfer)
+  final void onTransferButtonClicked() {
+    if (this.value.get().compareTo(BigDecimal.ZERO) <= 0) {
+      // TODO: Let the user know that he must insert an amount greater than zero.
+    } else {
+      this.presenter.onTransferButtonClicked();
+    }
   }
 
-  @OnClick(R.id.action_transfer)
-  void onTransferButtonClicked() {
-    presenter.onTransferButtonClicked();
+  @OnClick(R.id.action_recharge)
+  final void onRechargeButtonClicked() {
+    if (this.value.get().compareTo(BigDecimal.ZERO) <= 0) {
+      // TODO: Let the user know that he must insert an amount greater than zero.
+    } else {
+      this.presenter.onRechargeButtonClicked();
+    }
   }
 
   @Override
@@ -138,7 +154,8 @@ public class PhoneNumberTransactionCreationFragment
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
     @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.d_fragment_transaction_creation_phone_number, container, false);
+    return inflater
+      .inflate(R.layout.d_fragment_transaction_creation_phone_number, container, false);
   }
 
   @Override
@@ -152,6 +169,15 @@ public class PhoneNumberTransactionCreationFragment
     numPad.setOnDigitClickedListener(this);
     numPad.setOnDotClickedListener(this);
     numPad.setOnDeleteClickedListener(this);
+
+    if (this.transactionCategory == TRANSFER) {
+      this.transferActionButton.setVisibility(View.VISIBLE);
+      this.rechargeActionButton.setVisibility(View.GONE);
+    } else {
+      this.transferActionButton.setVisibility(View.GONE);
+      this.rechargeActionButton.setVisibility(View.VISIBLE);
+    }
+
     // Attaches the screen to the presenter.
     presenter.attachScreen(this);
   }
@@ -246,12 +272,20 @@ public class PhoneNumberTransactionCreationFragment
 
   @Override
   public void requestBankAndAccountNumber() {
-    getContainer().setChildFragment(new NonAffiliatedPhoneNumberTransactionCreation1Fragment());
+    this.getContainer()
+      .setChildFragment(new NonAffiliatedPhoneNumberTransactionCreation1Fragment());
+  }
+
+  @Override
+  public void requestCarrier() {
+    this.getContainer()
+      .setChildFragment(CarrierSelectionFragment.create());
   }
 
   @Override
   public void finish() {
-    getContainer().finish(false, null);
+    this.getContainer()
+      .finish(false, null);
   }
 
   @Override
@@ -310,8 +344,8 @@ public class PhoneNumberTransactionCreationFragment
 
   @Override
   public void onPaymentMethodChosen(Product product) {
-    fundingAccount.set(product);
-    presenter.setPaymentOption(product);
+    this.fundingAccount.set(product);
+    this.presenter.setPaymentOption(product);
   }
 
   public void showGenericErrorDialog(String title, String message) {

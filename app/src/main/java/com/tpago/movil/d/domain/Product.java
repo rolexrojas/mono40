@@ -19,6 +19,7 @@ import java.util.Comparator;
  */
 @Deprecated
 public class Product implements Parcelable {
+
   protected Product(Parcel in) {
     type = ProductType.valueOf(in.readString());
     alias = in.readString();
@@ -124,20 +125,13 @@ public class Product implements Parcelable {
   /**
    * Constructs a new account.
    *
-   * @param type
-   *   Product's {@link ProductType type}.
-   * @param alias
-   *   Product's type.
-   * @param number
-   *   Product's number.
-   * @param currency
-   *   Product's amount.
-   * @param bank
-   *   Product's {@link Bank holder}.
-   * @param queryFee
-   *   Cost of querying the balance.
-   * @param paymentOption
-   *   Indicates whether can be used as a payment option or not.
+   * @param type Product's {@link ProductType type}.
+   * @param alias Product's type.
+   * @param number Product's number.
+   * @param currency Product's amount.
+   * @param bank Product's {@link Bank holder}.
+   * @param queryFee Cost of querying the balance.
+   * @param paymentOption Indicates whether can be used as a payment option or not.
    */
   Product(
     @NonNull ProductType type,
@@ -161,9 +155,7 @@ public class Product implements Parcelable {
   /**
    * Checks if the given {@link Product creditCard} can be used as a payment option.
    *
-   * @param product
-   *   {@link Product} that will be checked.
-   *
+   * @param product {@link Product} that will be checked.
    * @return True if it can be used as a payment option, false otherwise.
    */
   public static boolean isPaymentOption(@NonNull Product product) {
@@ -173,9 +165,7 @@ public class Product implements Parcelable {
   /**
    * TODO
    *
-   * @param product
-   *   TODO
-   *
+   * @param product TODO
    * @return TODO
    */
   public static boolean isDefaultPaymentOption(@NonNull Product product) {
@@ -263,8 +253,7 @@ public class Product implements Parcelable {
   /**
    * Sets the cost of querying the balance of the creditCard.
    *
-   * @param queryFee
-   *   Cost of querying the balance.
+   * @param queryFee Cost of querying the balance.
    */
   public void setQueryFee(@NonNull BigDecimal queryFee) {
     if (queryFee.compareTo(BigDecimal.ZERO) < 0) {

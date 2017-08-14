@@ -38,6 +38,7 @@
 
   <string name="format_add">Agregar %1$s</string>
   <string name="format_remove">Eliminar %1$s</string>
+  <string name="format_transaction_title">%1$s a %2$s</string>
 
   <!-- TODO: Remove every string from this point downwards -->
   <string name="accounts">Cuentas</string>
@@ -173,7 +174,7 @@
   <string name="pay_screen_search_hint">Nombre, número o facturador</string>
   <string name="pay_total">Pagar total</string>
   <string name="payments.action.phone_number.add">Agregar \'%1$s\'</string>
-  <string name="payments.action.phone_number.transaction">Transacción con \'%1$s\'</string>
+  <string name="payments.action.phone_number.transaction">%1$s a \'%2$s\'</string>
   <string name="payments.menu.option.add_recipient">Agregar destinatario</string>
   <string name="payments.menu.option.remove_recipient">Remover destinatario</string>
   <string name="payments.title">Pagar</string>

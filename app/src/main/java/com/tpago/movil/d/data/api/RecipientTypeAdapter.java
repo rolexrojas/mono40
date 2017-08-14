@@ -1,7 +1,14 @@
 package com.tpago.movil.d.data.api;
 
+import static com.tpago.movil.d.domain.RecipientType.BILL;
+import static com.tpago.movil.d.domain.RecipientType.NON_AFFILIATED_PHONE_NUMBER;
+import static com.tpago.movil.d.domain.RecipientType.PHONE_NUMBER;
+import static com.tpago.movil.d.domain.RecipientType.PRODUCT;
+import static com.tpago.movil.util.Objects.checkIfNotNull;
+
 import android.text.TextUtils;
 
+import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.d.domain.ProductRecipient;
 import com.tpago.movil.domain.Bank;
 import com.tpago.movil.Partner;
@@ -19,7 +26,6 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.tpago.movil.text.Texts;
-import com.tpago.movil.util.Objects;
 
 import java.lang.reflect.Type;
 
@@ -37,6 +43,7 @@ public class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSe
   private static final String PROPERTY_CONTRACT_NUMBER = "contractNumber";
   private static final String PROPERTY_PRODUCT = "product";
 //  private static final String PROPERTY_BALANCE = "balance";
+  private static final String PROPERTY_CARRIER = "carrier";
 
   @Override
   public Recipient deserialize(
@@ -52,13 +59,17 @@ public class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSe
     if (jo.has(PROPERTY_LABEL)) {
       label = jo.get(PROPERTY_LABEL).getAsString();
     }
-    if (type.equals(RecipientType.PHONE_NUMBER)) {
+    if (type == PHONE_NUMBER) {
       if (!jo.has(PROPERTY_PHONE_NUMBER)) {
         throw new JsonParseException("Property '" + PROPERTY_PHONE_NUMBER + "' is missing");
       }
       final String phoneNumber = jo.get(PROPERTY_PHONE_NUMBER).getAsString();
-      return new PhoneNumberRecipient(phoneNumber, label);
-    } else if (type.equals(RecipientType.NON_AFFILIATED_PHONE_NUMBER)) {
+      Partner carrier = null;
+      if (jo.has(PROPERTY_CARRIER)) {
+        carrier = context.deserialize(jo.get(PROPERTY_CARRIER), Partner.class);
+      }
+      return new PhoneNumberRecipient(PhoneNumber.create(phoneNumber), carrier, label);
+    } else if (type == NON_AFFILIATED_PHONE_NUMBER) {
       if (!jo.has(PROPERTY_PHONE_NUMBER)) {
         throw new JsonParseException("Property '" + PROPERTY_PHONE_NUMBER + "' is missing");
       }
@@ -75,8 +86,12 @@ public class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSe
       if (jo.has(PROPERTY_PRODUCT)) {
         product = context.deserialize(jo.get(PROPERTY_PRODUCT), Product.class);
       }
-      return new NonAffiliatedPhoneNumberRecipient(phoneNumber, label, bank, accountNumber, product);
-    } else if (type.equals(RecipientType.BILL)) {
+      Partner carrier = null;
+      if (jo.has(PROPERTY_CARRIER)) {
+        carrier = context.deserialize(jo.get(PROPERTY_CARRIER), Partner.class);
+      }
+      return new NonAffiliatedPhoneNumberRecipient(PhoneNumber.create(phoneNumber), label, bank, accountNumber, product, carrier);
+    } else if (type == BILL) {
       if (!jo.has(PROPERTY_PARTNER)) {
         throw new JsonParseException("Property '" + PROPERTY_PARTNER + "' is missing");
       }
@@ -90,7 +105,7 @@ public class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSe
 //        b.setBalance((BillBalance) context.deserialize(jo.get(PROPERTY_BALANCE), BillBalance.class));
 //      }
       return b;
-    } else if (type.equals(RecipientType.PRODUCT)) {
+    } else if (type == PRODUCT) {
       if (!jo.has(PROPERTY_PRODUCT)) {
         throw new JsonParseException("Property '" + PROPERTY_PRODUCT + "' is missing");
       }
@@ -117,22 +132,30 @@ public class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSe
     if (!TextUtils.isEmpty(src.getLabel())) {
       jsonObject.addProperty(PROPERTY_LABEL, src.getLabel());
     }
-    if (type.equals(RecipientType.PHONE_NUMBER)) {
+    if (type == PHONE_NUMBER) {
       final PhoneNumberRecipient r = (PhoneNumberRecipient) src;
-      jsonObject.addProperty(PROPERTY_PHONE_NUMBER, r.getPhoneNumber());
-    } else if (type.equals(RecipientType.NON_AFFILIATED_PHONE_NUMBER)) {
+      jsonObject.addProperty(PROPERTY_PHONE_NUMBER, r.getPhoneNumber().getValue());
+      final Partner carrier = r.getCarrier();
+      if (checkIfNotNull(carrier)) {
+        jsonObject.add(PROPERTY_CARRIER, context.serialize(r.getCarrier(), Partner.class));
+      }
+    } else if (type == NON_AFFILIATED_PHONE_NUMBER) {
       final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) src;
-      jsonObject.addProperty(PROPERTY_PHONE_NUMBER, r.getPhoneNumber());
-      if (Objects.checkIfNotNull(r.getBank())) {
+      jsonObject.addProperty(PROPERTY_PHONE_NUMBER, r.getPhoneNumber().getValue());
+      if (checkIfNotNull(r.getBank())) {
         jsonObject.add(PROPERTY_BANK, context.serialize(r.getBank(), Bank.class));
       }
       if (Texts.checkIfNotEmpty(r.getAccountNumber())) {
         jsonObject.addProperty(PROPERTY_ACCOUNT_NUMBER, r.getAccountNumber());
       }
-      if (Objects.checkIfNotNull(r.getProduct())) {
+      if (checkIfNotNull(r.getProduct())) {
         jsonObject.add(PROPERTY_PRODUCT, context.serialize(r.getProduct(), Product.class));
       }
-    } else if (type.equals(RecipientType.BILL)) {
+      final Partner carrier = r.getCarrier();
+      if (checkIfNotNull(carrier)) {
+        jsonObject.add(PROPERTY_CARRIER, context.serialize(r.getCarrier(), Partner.class));
+      }
+    } else if (type == BILL) {
       final BillRecipient r = (BillRecipient) src;
       jsonObject.add(PROPERTY_PARTNER, context.serialize(r.getPartner(), Partner.class));
       jsonObject.addProperty(PROPERTY_CONTRACT_NUMBER, r.getContractNumber());
@@ -140,7 +163,7 @@ public class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSe
 //      if (Objects.checkIfNotNull(b)) {
 //        jsonObject.add(PROPERTY_BALANCE, context.serialize(b, BillBalance.class));
 //      }
-    } else if (type.equals(RecipientType.PRODUCT)) {
+    } else if (type == PRODUCT) {
       final ProductRecipient r = (ProductRecipient) src;
       jsonObject.add(PROPERTY_PRODUCT, context.serialize(r.getProduct(), Product.class));
 //      final ProductBillBalance b = r.getBalance();

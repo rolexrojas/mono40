@@ -11,6 +11,8 @@ import com.tpago.movil.d.ui.Screen;
  * @author hecvasro
  */
 interface AddRecipientScreen extends Screen, Refreshable {
+
   void startNonAffiliatedProcess(NonAffiliatedPhoneNumberRecipient recipient);
+
   void finish(Recipient recipient);
 }

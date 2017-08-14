@@ -187,10 +187,10 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
             final Observable<Object> actionSource;
 
             if ((category == TRANSFER || category == RECHARGE) && PhoneNumber.checkIfValid(query)) {
-              final String phoneNumberValue = PhoneNumber.format(query);
-              actionSource = Observable.just(new TransactionWithPhoneNumberAction(phoneNumberValue))
+              final PhoneNumber phoneNumber = PhoneNumber.create(query);
+              actionSource = Observable.just(TransactionWithPhoneNumberAction.create(phoneNumber))
                 .cast(Object.class)
-                .concatWith(Observable.just(new AddPhoneNumberAction(phoneNumberValue)))
+                .concatWith(Observable.just(AddPhoneNumberAction.create(phoneNumber)))
                 .cast(Object.class);
             } else {
               actionSource = Observable.empty();
@@ -252,12 +252,14 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
 
   void addRecipient(@NonNull Recipient recipient) {
     assertScreen();
-    recipientManager.add(recipient);
-    screen.clearQuery();
-    screen.showRecipientAdditionDialog(recipient);
+    if (!(recipient instanceof UserRecipient)) {
+      recipientManager.add(recipient);
+      screen.clearQuery();
+      screen.showRecipientAdditionDialog(recipient);
+    }
   }
 
-  void addRecipient(@NonNull final String phoneNumber) {
+  void addRecipient(@NonNull final PhoneNumber phoneNumber) {
     assertScreen();
     if (recipientAdditionSubscription.isDisposed()) {
       recipientAdditionSubscription = Single
@@ -267,11 +269,11 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
             final Result<Customer, ErrorCode> result;
             if (networkService.checkIfAvailable()) {
               final ApiResult<Customer.State> customerStateResult = depApiBridge
-                .fetchCustomerState(authToken, phoneNumber);
+                .fetchCustomerState(authToken, phoneNumber.getValue());
               if (customerStateResult.isSuccessful()) {
                 if (Customer.checkIfCanBeFetched(customerStateResult.getData())) {
                   final ApiResult<Customer> customerResult = depApiBridge
-                    .fetchCustomer(authToken, phoneNumber);
+                    .fetchCustomer(authToken, phoneNumber.getValue());
                   if (customerResult.isSuccessful()) {
                     result = Result.create(customerResult.getData());
                   } else {
@@ -315,7 +317,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
               final FailureData<ErrorCode> failureData = result.getFailureData();
               switch (failureData.getCode()) {
                 case NOT_AFFILIATED_CUSTOMER:
-                  screen.startNonAffiliatedPhoneNumberRecipientAddition(phoneNumber);
+                  addRecipient(new NonAffiliatedPhoneNumberRecipient(phoneNumber));
                   break;
                 case UNAVAILABLE_NETWORK:
                   screen.showUnavailableNetworkError();
@@ -339,12 +341,14 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
 
   void updateRecipient(@NonNull Recipient recipient, @Nullable String label) {
     assertScreen();
-    recipient.setLabel(label);
-    recipientManager.update(recipient);
-    screen.update(recipient);
+    if (!(recipient instanceof UserRecipient)) {
+      recipient.setLabel(label);
+      recipientManager.update(recipient);
+      screen.update(recipient);
+    }
   }
 
-  void startTransfer(@NonNull final String phoneNumber) {
+  void startTransfer(@NonNull final PhoneNumber phoneNumber) {
     assertScreen();
     if (recipientAdditionSubscription.isDisposed()) {
       recipientAdditionSubscription = Single
@@ -354,11 +358,11 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
             final Result<Pair<Boolean, String>, ErrorCode> result;
             if (networkService.checkIfAvailable()) {
               final ApiResult<Customer.State> customerStateResult = depApiBridge
-                .fetchCustomerState(authToken, phoneNumber);
+                .fetchCustomerState(authToken, phoneNumber.getValue());
               if (customerStateResult.isSuccessful()) {
                 if (Customer.checkIfCanBeFetched(customerStateResult.getData())) {
                   final ApiResult<Customer> customerResult = depApiBridge
-                    .fetchCustomer(authToken, phoneNumber);
+                    .fetchCustomer(authToken, phoneNumber.getValue());
                   if (customerResult.isSuccessful()) {
                     result = Result.create(Pair.create(true, customerResult.getData().getName()));
                   } else {
@@ -716,8 +720,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
                 }
               }
               if (Texts.checkIfNotEmpty(resultMessageContentBuilder)) {
-                final String resultMessage = new StringBuilder(
-                  "Los destinatarios listados a continuación no pudieron ser eliminados:")
+                final String resultMessage = new StringBuilder("Error al eliminar:")
                   .append("\n")
                   .append(resultMessageContentBuilder.toString())
                   .toString();

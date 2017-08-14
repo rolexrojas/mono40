@@ -5,13 +5,17 @@ import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.tpago.movil.Partner;
+import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.User;
 import com.tpago.movil.d.domain.util.StringUtils;
+import com.tpago.movil.text.Texts;
 
 /**
  * @author Hector Vasquez
  */
 public final class UserRecipient extends Recipient {
+
   public static final Creator<UserRecipient> CREATOR = new Creator<UserRecipient>() {
     @Override
     public UserRecipient createFromParcel(Parcel source) {
@@ -24,54 +28,77 @@ public final class UserRecipient extends Recipient {
     }
   };
 
-  private final String phoneNumber;
+  private final String id;
+  private final PhoneNumber phoneNumber;
   private final String name;
   private final Uri pictureUri;
+
+  private Partner carrier;
 
   private UserRecipient(Parcel source) {
     super(source);
 
-    this.phoneNumber = source.readString();
+    this.id = source.readString();
+    this.phoneNumber = source.readParcelable(PhoneNumber.class.getClassLoader());
     this.name = source.readString();
     this.pictureUri = source.readParcelable(Uri.class.getClassLoader());
+
+    this.carrier = source.readParcelable(Partner.class.getClassLoader());
   }
 
   public UserRecipient(User user) {
     super(RecipientType.USER);
 
-    this.phoneNumber = user.phoneNumber()
-      .formattedValued();
+    this.id = user.phoneNumber()
+      .getValue();
+    this.phoneNumber = user.phoneNumber();
     this.name = user.name();
     this.pictureUri = user.avatar().exists() ? Uri.fromFile(user.avatar().getFile()) : Uri.EMPTY;
+  }
+
+  public final PhoneNumber phoneNumber() {
+    return this.phoneNumber;
   }
 
   public final Uri pictureUri() {
     return this.pictureUri;
   }
 
+  public final void setCarrier(Partner carrier) {
+    this.carrier = carrier;
+  }
+
+  public final Partner getCarrier() {
+    return this.carrier;
+  }
+
   @Override
   public String getId() {
-    return this.phoneNumber;
+    return Texts.join("-", this.getType(), this.id);
   }
 
   @NonNull
   @Override
   public String getIdentifier() {
-    return this.phoneNumber;
+    return this.phoneNumber.formattedValued();
   }
 
   @Override
   public boolean matches(@Nullable String query) {
     return super.matches(query)
-      || StringUtils.matches(phoneNumber, query)
-      || StringUtils.matches(name, query);
+      || StringUtils.matches(this.phoneNumber.getValue(), query)
+      || StringUtils.matches(this.name, query);
   }
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
     super.writeToParcel(dest, flags);
-    dest.writeString(phoneNumber);
-    dest.writeString(name);
-    dest.writeParcelable(pictureUri, flags);
+
+    dest.writeString(this.id);
+    dest.writeParcelable(this.phoneNumber, flags);
+    dest.writeString(this.name);
+    dest.writeParcelable(this.pictureUri, flags);
+
+    dest.writeParcelable(this.carrier, flags);
   }
 }

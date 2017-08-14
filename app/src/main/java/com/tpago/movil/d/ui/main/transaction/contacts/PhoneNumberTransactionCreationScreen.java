@@ -13,18 +13,24 @@ import java.util.List;
  * @author hecvasro
  */
 interface PhoneNumberTransactionCreationScreen extends Screen {
+
   void setPaymentOptions(@NonNull List<Product> paymentOptions);
 
   void setPaymentOptionCurrency(@NonNull String currency);
 
   void setPaymentResult(boolean succeeded, String transactionId);
+
   void showGenericErrorDialog(String message);
+
   void showGenericErrorDialog();
+
   void showUnavailableNetworkError();
 
   void requestPin();
 
   void requestBankAndAccountNumber();
+
+  void requestCarrier();
 
   void finish();
 

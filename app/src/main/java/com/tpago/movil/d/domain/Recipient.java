@@ -35,7 +35,8 @@ public abstract class Recipient implements Parcelable, Matchable {
         } else if (rb instanceof UserRecipient) {
           return 1;
         } else {
-          return ra.getIdentifier().compareTo(rb.getIdentifier());
+          return ra.getIdentifier()
+            .compareTo(rb.getIdentifier());
         }
       }
     };
@@ -47,22 +48,26 @@ public abstract class Recipient implements Parcelable, Matchable {
   }
 
   public static boolean acceptsPayments(Recipient recipient) {
-    return checkIfNotNull(recipient) && recipient.type == PRODUCT;
+    return checkIfNotNull(recipient) && (recipient.type == BILL || recipient.type == PRODUCT);
   }
 
   public static boolean acceptsTransfers(Recipient recipient) {
     return checkIfNotNull(recipient)
-      && recipient.type == PRODUCT
-      && Product.checkIfAccount(((ProductRecipient) recipient).getProduct());
+      && (
+      (recipient.type == PRODUCT && Product
+        .checkIfAccount(((ProductRecipient) recipient).getProduct()))
+        || recipient.type == PHONE_NUMBER
+        || recipient.type == NON_AFFILIATED_PHONE_NUMBER
+    );
   }
 
   public static boolean acceptsRecharges(Recipient recipient) {
     return checkIfNotNull(recipient)
       && (
-        recipient.type == USER
-          || recipient.type == PHONE_NUMBER
-          || recipient.type == NON_AFFILIATED_PHONE_NUMBER
-      );
+      recipient.type == USER
+        || recipient.type == PHONE_NUMBER
+        || recipient.type == NON_AFFILIATED_PHONE_NUMBER
+    );
   }
 
   public static boolean acceptsDisburses(Recipient recipient) {

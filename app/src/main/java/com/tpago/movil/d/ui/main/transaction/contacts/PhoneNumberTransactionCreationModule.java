@@ -6,6 +6,7 @@ import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.session.SessionManager;
+import com.tpago.movil.d.ui.main.transaction.TransactionCategory;
 import com.tpago.movil.net.NetworkService;
 
 import dagger.Module;
@@ -24,13 +25,17 @@ class PhoneNumberTransactionCreationModule {
     NetworkService networkService,
     DepApiBridge depApiBridge,
     SessionManager sessionManager,
-    StringHelper stringHelper) {
+    StringHelper stringHelper,
+    TransactionCategory transactionCategory
+  ) {
     return new PhoneNumberTransactionCreationPresenter(
       productManager,
       recipient,
       networkService,
       depApiBridge,
       sessionManager.getSession().getAuthToken(),
-      stringHelper);
+      stringHelper,
+      transactionCategory
+    );
   }
 }

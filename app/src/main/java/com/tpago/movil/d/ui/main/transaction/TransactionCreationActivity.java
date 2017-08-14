@@ -1,5 +1,8 @@
 package com.tpago.movil.d.ui.main.transaction;
 
+import static com.tpago.movil.d.misc.Utils.isNotNull;
+import static com.tpago.movil.util.Objects.checkIfNull;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,7 +26,6 @@ import com.tpago.movil.d.ui.main.transaction.bills.BillTransactionCreationFragme
 import com.tpago.movil.d.ui.main.transaction.contacts.PhoneNumberTransactionCreationFragment;
 import com.tpago.movil.d.ui.main.transaction.products.CreditCardTransactionCreationFragment;
 import com.tpago.movil.d.ui.main.transaction.products.LoanTransactionCreationFragment;
-import com.tpago.movil.util.Objects;
 
 import javax.inject.Inject;
 
@@ -37,12 +39,16 @@ import butterknife.Unbinder;
 public class TransactionCreationActivity
   extends SwitchableContainerActivity<TransactionCreationComponent>
   implements TransactionCreationContainer {
+
   private static final String KEY_RECIPIENT = "recipient";
   private static final String KEY_TRANSACTION_ID = "transactionId";
+  private static final String KEY_TRANSACTION_CATEGORY = "transactionCategory";
 
   private Unbinder unbinder;
   private TransactionCreationComponent component;
 
+  @Inject
+  TransactionCategory transactionCategory;
   @Inject
   Recipient recipient;
 
@@ -57,20 +63,20 @@ public class TransactionCreationActivity
   }
 
   @NonNull
-  private static Intent getLaunchIntent(@NonNull Context context) {
-    return new Intent(context, TransactionCreationActivity.class);
-  }
-
-  @NonNull
-  public static Intent getLaunchIntent(@NonNull Context context, @NonNull Recipient recipient) {
-    final Intent intent = getLaunchIntent(context);
+  public static Intent getLaunchIntent(
+    @NonNull Context context,
+    @NonNull TransactionCategory transactionCategory,
+    @NonNull Recipient recipient
+  ) {
+    final Intent intent = new Intent(context, TransactionCreationActivity.class);
+    intent.putExtra(KEY_TRANSACTION_CATEGORY, transactionCategory.name());
     intent.putExtra(KEY_RECIPIENT, recipient);
     return intent;
   }
 
 
   public static Pair<Recipient, String> deserializeResult(Intent intent) {
-    if (Objects.checkIfNull(intent)) {
+    if (checkIfNull(intent)) {
       return null;
     } else {
       final Recipient recipient = intent.getParcelableExtra(KEY_RECIPIENT);
@@ -89,22 +95,29 @@ public class TransactionCreationActivity
     super.onCreate(savedInstanceState);
     unbinder = ButterKnife.bind(this);
     // Asserts all the required arguments.
-    final Bundle bundle = Utils.isNotNull(savedInstanceState) ? savedInstanceState : getIntent()
+    final Bundle bundle = isNotNull(savedInstanceState) ? savedInstanceState : getIntent()
       .getExtras();
-    if (Utils.isNull(bundle) || !bundle.containsKey(KEY_RECIPIENT)) {
+    if (Utils.isNull(bundle)) {
+      throw new NullPointerException("bundle == null");
+    } else if (!bundle.containsKey(KEY_TRANSACTION_CATEGORY)) {
+      throw new NullPointerException(
+        "Argument '" + KEY_TRANSACTION_CATEGORY + "' must be provided");
+    } else if (!bundle.containsKey(KEY_RECIPIENT)) {
       throw new NullPointerException("Argument '" + KEY_RECIPIENT + "' must be provided");
     } else {
+      final TransactionCategory transactionCategory = TransactionCategory
+        .valueOf(bundle.getString(KEY_TRANSACTION_CATEGORY));
       final Recipient recipient = bundle.getParcelable(KEY_RECIPIENT);
       // Injects all the annotated dependencies.
       component = DaggerTransactionCreationComponent.builder()
         .appComponent(((App) getApplication()).getComponent())
-        .transactionCreationModule(new TransactionCreationModule(recipient))
+        .transactionCreationModule(new TransactionCreationModule(transactionCategory, recipient))
         .build();
       component.inject(this);
       // Prepares the app bar.
       setSupportActionBar(toolbar);
       final ActionBar actionBar = getSupportActionBar();
-      if (Utils.isNotNull(actionBar)) {
+      if (isNotNull(actionBar)) {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
       }
@@ -129,11 +142,14 @@ public class TransactionCreationActivity
             fragment = LoanTransactionCreationFragment.create();
           }
           break;
+        case USER:
+          fragment = PhoneNumberTransactionCreationFragment.newInstance();
+          break;
         default:
           fragment = null;
           break;
       }
-      if (Objects.checkIfNull(fragment)) {
+      if (checkIfNull(fragment)) {
         finish();
       } else {
         setChildFragment(fragment, false, false);
@@ -148,7 +164,7 @@ public class TransactionCreationActivity
     final String title;
     final String subtitle;
     final String label = recipient.getLabel();
-    if (Utils.isNotNull(label)) {
+    if (isNotNull(label)) {
       title = label;
       subtitle = recipient.getIdentifier();
     } else {
@@ -158,13 +174,13 @@ public class TransactionCreationActivity
     toolbar.post(new Runnable() {
       @Override
       public void run() {
-        final int stringId;
-        if (recipient.getType().equals(RecipientType.BILL)) {
-          stringId = R.string.transaction_creation_title_bill;
-        } else {
-          stringId = R.string.transaction_creation_title;
-        }
-        toolbar.setTitle(getString(stringId, title));
+        toolbar.setTitle(
+          getString(
+            R.string.format_transaction_title,
+            getString(transactionCategory.stringId),
+            title
+          )
+        );
         toolbar.setSubtitle(subtitle);
       }
     });

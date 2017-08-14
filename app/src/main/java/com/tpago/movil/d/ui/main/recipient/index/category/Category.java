@@ -11,10 +11,10 @@ public enum Category {
   RECHARGE(R.string.recharge, R.string.number);
 
   public final int stringId;
-  public final int deletionStringId;
+  public final int subjectStringId;
 
-  Category(int stringId, int deletionStringId) {
+  Category(int stringId, int subjectStringId) {
     this.stringId = stringId;
-    this.deletionStringId = deletionStringId;
+    this.subjectStringId = subjectStringId;
   }
 }

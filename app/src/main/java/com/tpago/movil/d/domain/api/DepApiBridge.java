@@ -178,4 +178,13 @@ public interface DepApiBridge {
 
   ApiResult<Customer.State> fetchCustomerState(String authToken, String phoneNumber);
   ApiResult<Customer> fetchCustomer(String authToken, String phoneNumber);
+
+  Observable<ApiResult<String>> recharge(
+    String authToken,
+    Partner carrier,
+    com.tpago.movil.PhoneNumber phoneNumber,
+    Product fundingAccount,
+    BigDecimal amount,
+    String pin
+  );
 }

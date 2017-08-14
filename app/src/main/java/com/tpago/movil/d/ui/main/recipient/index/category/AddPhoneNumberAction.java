@@ -1,17 +1,17 @@
 package com.tpago.movil.d.ui.main.recipient.index.category;
 
-import android.support.annotation.NonNull;
+import static com.tpago.movil.d.ui.main.recipient.index.category.Action.Type.ADD_PHONE_NUMBER;
+
+import com.google.auto.value.AutoValue;
+import com.tpago.movil.PhoneNumber;
 
 /**
  * @author hecvasro
  */
-class AddPhoneNumberAction extends PhoneNumberAction {
-  AddPhoneNumberAction(@NonNull String phoneNumber) {
-    super(ActionType.ADD_PHONE_NUMBER, phoneNumber);
-  }
+@AutoValue
+abstract class AddPhoneNumberAction extends PhoneNumberAction {
 
-  @Override
-  public String toString() {
-    return AddPhoneNumberAction.class.getSimpleName() + ":{super=" + super.toString() + "}";
+  static AddPhoneNumberAction create(PhoneNumber phoneNumber) {
+    return new AutoValue_AddPhoneNumberAction(ADD_PHONE_NUMBER, phoneNumber);
   }
 }

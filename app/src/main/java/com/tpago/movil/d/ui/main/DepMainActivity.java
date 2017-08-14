@@ -186,10 +186,6 @@ public class DepMainActivity
     this.setChildFragment(childFragment, true, true);
   }
 
-  private void setChildFragment(ChildFragment<MainContainer> childFragment, String tag) {
-    this.setChildFragment(childFragment, tag, true, true);
-  }
-
   @OnClick({
     R.id.main_menuItem_pay,
     R.id.main_menuItem_purchase,
@@ -207,7 +203,7 @@ public class DepMainActivity
 
     switch (view.getId()) {
       case R.id.main_menuItem_pay:
-        this.setChildFragment(RecipientCategoryFragment.create(PAY), PAY.name());
+        this.setChildFragment(RecipientCategoryFragment.create(PAY));
         break;
       case R.id.main_menuItem_purchase:
         if (this.posBridge.checkIfUsable()) {
@@ -217,10 +213,10 @@ public class DepMainActivity
         }
         break;
       case R.id.main_menuItem_transfer:
-        this.setChildFragment(RecipientCategoryFragment.create(TRANSFER), TRANSFER.name());
+        this.setChildFragment(RecipientCategoryFragment.create(TRANSFER));
         break;
       case R.id.main_menuItem_recharge:
-        this.setChildFragment(RecipientCategoryFragment.create(RECHARGE), RECHARGE.name());
+        this.setChildFragment(RecipientCategoryFragment.create(RECHARGE));
         break;
       case R.id.main_menuItem_disburse:
         Dialogs.featureNotAvailable(this)

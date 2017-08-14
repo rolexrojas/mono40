@@ -14,13 +14,13 @@ import com.tpago.movil.d.ui.main.list.ListItemHolderCreator;
  * @author hecvasro
  */
 class PartnerListItemHolderCreator implements ListItemHolderCreator<PartnerListItemHolder> {
+
   private final ListItemHolder.OnClickListener onClickListener;
 
   /**
    * TODO
    *
-   * @param onClickListener
-   *   TODO
+   * @param onClickListener TODO
    */
   PartnerListItemHolderCreator(@NonNull ListItemHolder.OnClickListener onClickListener) {
     this.onClickListener = onClickListener;

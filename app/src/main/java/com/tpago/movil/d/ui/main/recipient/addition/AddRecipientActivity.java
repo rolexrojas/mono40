@@ -20,6 +20,7 @@ import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.ui.DepActivityModule;
 import com.tpago.movil.d.ui.SwitchableContainerActivity;
+import com.tpago.movil.d.ui.main.recipient.index.category.Category;
 import com.tpago.movil.d.ui.view.widget.FullScreenLoadIndicator;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.util.Objects;
@@ -33,7 +34,12 @@ import butterknife.Unbinder;
 /**
  * @author hecvasro
  */
-public class AddRecipientActivity extends SwitchableContainerActivity<AddRecipientComponent> implements AddRecipientContainer, AddRecipientScreen {
+public class AddRecipientActivity extends
+  SwitchableContainerActivity<AddRecipientComponent> implements AddRecipientContainer,
+  AddRecipientScreen {
+
+  private static final String KEY_CATEGORY = "category";
+
   private static final String EXTRA_RECIPIENT = "recipient";
 
   private static final int REQUEST_CODE = 0;
@@ -42,12 +48,19 @@ public class AddRecipientActivity extends SwitchableContainerActivity<AddRecipie
   private AddRecipientComponent component;
   private LoadIndicator loadIndicator;
 
-  @Inject SessionManager sessionManager;
-  @Inject DepApiBridge apiBridge;
-  @Inject AddRecipientPresenter presenter;
+  @Inject
+  SessionManager sessionManager;
+  @Inject
+  DepApiBridge apiBridge;
+  @Inject
+  AddRecipientPresenter presenter;
+  @Inject
+  Category category;
 
-  @BindView(R.id.toolbar) Toolbar toolbar;
-  @BindView(R.id.container) FrameLayout containerFrameLayout;
+  @BindView(R.id.toolbar)
+  Toolbar toolbar;
+  @BindView(R.id.container)
+  FrameLayout containerFrameLayout;
 
   private Recipient requestResult = null;
 
@@ -61,8 +74,10 @@ public class AddRecipientActivity extends SwitchableContainerActivity<AddRecipie
   }
 
   @NonNull
-  public static Intent getLaunchIntent(@NonNull Context context) {
-    return new Intent(context, AddRecipientActivity.class);
+  public static Intent getLaunchIntent(@NonNull Context context, Category category) {
+    final Intent intent = new Intent(context, AddRecipientActivity.class);
+    intent.putExtra(KEY_CATEGORY, category.name());
+    return intent;
   }
 
   @Nullable
@@ -92,9 +107,14 @@ public class AddRecipientActivity extends SwitchableContainerActivity<AddRecipie
     super.onCreate(savedInstanceState);
     unbinder = ButterKnife.bind(this);
     // Injects all the annotated dependencies.
+    final String categoryName = this.getIntent()
+      .getExtras()
+      .getString(KEY_CATEGORY);
+    final Category category = Category.valueOf(categoryName);
     component = DaggerAddRecipientComponent.builder()
       .appComponent(((App) getApplication()).getComponent())
       .depActivityModule(new DepActivityModule(this))
+      .addRecipientModule(new AddRecipientModule(category))
       .build();
     component.inject(this);
     // Prepares the action bar.
@@ -103,7 +123,12 @@ public class AddRecipientActivity extends SwitchableContainerActivity<AddRecipie
     if (Utils.isNotNull(actionBar)) {
       actionBar.setDisplayHomeAsUpEnabled(true);
       actionBar.setDisplayShowTitleEnabled(true);
-      actionBar.setTitle(R.string.add_recipient_title);
+      actionBar.setTitle(
+        String.format(
+          this.getString(R.string.format_add),
+          this.getString(this.category.subjectStringId)
+        )
+      );
     }
     // Sets the initial screen.
     setChildFragment(SearchOrChooseRecipientFragment.newInstance(), false, false);

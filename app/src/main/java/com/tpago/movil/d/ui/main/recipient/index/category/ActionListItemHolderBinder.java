@@ -6,32 +6,30 @@ import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 class ActionListItemHolderBinder implements ListItemHolderBinder<Action, ActionListItemHolder> {
-  private final StringHelper stringHelper;
 
-  /**
-   * TODO
-   *
-   * @param stringHelper
-   *   TODO
-   */
-  ActionListItemHolderBinder(@NonNull StringHelper stringHelper) {
+  private final StringHelper stringHelper;
+  private final Category category;
+
+  ActionListItemHolderBinder(@NonNull StringHelper stringHelper, Category category) {
     this.stringHelper = stringHelper;
+    this.category = category;
   }
 
   @Override
   public void bind(@NonNull Action item, @NonNull ActionListItemHolder holder) {
     String actionText = "";
-    switch (item.getType()) {
-      case ActionType.ADD_PHONE_NUMBER:
-        actionText = stringHelper.add(((PhoneNumberAction) item).getPhoneNumber());
+    switch (item.type()) {
+      case ADD_PHONE_NUMBER:
+        actionText = stringHelper.add(((PhoneNumberAction) item).phoneNumber().formattedValued());
         break;
-      case ActionType.TRANSACTION_WITH_PHONE_NUMBER:
-        actionText = stringHelper.transactionWith(((PhoneNumberAction) item).getPhoneNumber());
+      case TRANSACTION_WITH_PHONE_NUMBER:
+        actionText = stringHelper.transactionWith(
+          category,
+          ((PhoneNumberAction) item).phoneNumber().formattedValued()
+        );
         break;
     }
     holder.actionTextView.setText(actionText);

@@ -32,7 +32,9 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 /**
  * @author Hector Vasquez
  */
-public final class OwnTransactionCreationActivity extends AppCompatActivity implements OwnProductListItemHolder.OnButtonClickedListener {
+public final class OwnTransactionCreationActivity extends AppCompatActivity implements
+  OwnProductListItemHolder.OnButtonClickedListener {
+
   private static final String KEY_TRANSACTION_ID = "transactionId";
 
   private static final int REQUEST_CODE_TRANSFER = 0;
@@ -54,12 +56,17 @@ public final class OwnTransactionCreationActivity extends AppCompatActivity impl
   private Unbinder unbinder;
   private ListItemAdapter adapter;
 
-  @BindView(R.id.toolbar) Toolbar toolbar;
-  @BindView(R.id.recycler_view) RecyclerView recyclerView;
+  @BindView(R.id.toolbar)
+  Toolbar toolbar;
+  @BindView(R.id.recycler_view)
+  RecyclerView recyclerView;
 
-  @Inject UserStore userStore;
-  @Inject StringHelper stringHelper;
-  @Inject ProductManager productManager;
+  @Inject
+  UserStore userStore;
+  @Inject
+  StringHelper stringHelper;
+  @Inject
+  ProductManager productManager;
 
   @Override
   protected void attachBaseContext(Context newBase) {
@@ -108,7 +115,8 @@ public final class OwnTransactionCreationActivity extends AppCompatActivity impl
       .addCreator(Product.class, new OwnProductListItemHolderCreator(this))
       .build();
     final BinderFactory holderBinderFactory = new BinderFactory.Builder()
-      .addBinder(Product.class, OwnProductListItemHolder.class, new OwnProductListItemHolderBinder(stringHelper))
+      .addBinder(Product.class, OwnProductListItemHolder.class,
+        new OwnProductListItemHolderBinder(stringHelper))
       .build();
     adapter = new ListItemAdapter(holderCreatorFactory, holderBinderFactory);
     for (Product product : productManager.getProductList()) {
@@ -119,7 +127,8 @@ public final class OwnTransactionCreationActivity extends AppCompatActivity impl
     recyclerView.setAdapter(adapter);
     recyclerView.setHasFixedSize(true);
     recyclerView.setItemAnimator(null);
-    recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+    recyclerView
+      .setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(this)
       .drawable(R.drawable.d_divider)
       .marginResId(R.dimen.space_horizontal_normal)

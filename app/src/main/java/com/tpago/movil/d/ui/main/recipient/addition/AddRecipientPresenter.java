@@ -8,6 +8,7 @@ import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.ui.Presenter;
+import com.tpago.movil.d.ui.main.recipient.index.category.Category;
 import com.tpago.movil.d.ui.misc.UiUtils;
 import com.tpago.movil.util.Preconditions;
 
@@ -23,14 +24,20 @@ import timber.log.Timber;
  * @author hecvasro
  */
 class AddRecipientPresenter extends Presenter<AddRecipientScreen> {
+
   private final String authToken;
   private final RecipientManager recipientManager;
 
+  private final Category category;
+
   private Subscription checkIfAffiliatedSubscription = Subscriptions.unsubscribed();
 
-  AddRecipientPresenter(String authToken, RecipientManager recipientManager) {
+  AddRecipientPresenter(String authToken, RecipientManager recipientManager, Category category) {
     this.authToken = Preconditions.assertNotNull(authToken, "authToken == null");
-    this.recipientManager = Preconditions.assertNotNull(recipientManager, "recipientManager == null");
+    this.recipientManager = Preconditions
+      .assertNotNull(recipientManager, "recipientManager == null");
+
+    this.category = category;
   }
 
   void stop() {
@@ -56,16 +63,23 @@ class AddRecipientPresenter extends Presenter<AddRecipientScreen> {
           @Override
           public void call(Boolean isAffiliated) {
             UiUtils.hideRefreshIndicator(screen);
-            final String contactPhoneNumber = contact.getPhoneNumber().toString();
+            final String contactPhoneNumber = contact.getPhoneNumber()
+              .toString();
             final String contactName = contact.getName();
             if (isAffiliated) {
-              final Recipient recipient = new PhoneNumberRecipient(contactPhoneNumber, contactName);
+              final Recipient recipient = new PhoneNumberRecipient(
+                com.tpago.movil.PhoneNumber.create(contactPhoneNumber),
+                contactName
+              );
               recipientManager.add(recipient);
               screen.finish(recipient);
             } else {
-              screen.startNonAffiliatedProcess(new NonAffiliatedPhoneNumberRecipient(
-                contactPhoneNumber,
-                contactName));
+              screen.startNonAffiliatedProcess(
+                new NonAffiliatedPhoneNumberRecipient(
+                  com.tpago.movil.PhoneNumber.create(contactPhoneNumber),
+                  contactName
+                )
+              );
             }
           }
         }, new Action1<Throwable>() {
