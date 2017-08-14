@@ -5,13 +5,9 @@
   <item
     android:id="@+id/payments.menu.option.add_recipient"
     android:title="@string/payments.menu.option.add_recipient"
-    app:showAsAction="never"/>
+    app:showAsAction="never" />
   <item
     android:id="@+id/payments.menu.option.remove_recipient"
     android:title="@string/payments.menu.option.remove_recipient"
-    app:showAsAction="never"/>
-  <item
-    android:id="@+id/menu_item_sign_out"
-    android:title="Desvincular"
-    app:showAsAction="never"/>
+    app:showAsAction="never" />
 </menu>

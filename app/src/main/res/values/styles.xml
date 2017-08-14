@@ -1,6 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <style name="Base"/>
+  <style name="Base.ThemeOverlay" />
+  <style name="Base.ThemeOverlay.App.Dark" parent="ThemeOverlay.AppCompat.Dark" />
+  <style name="ThemeOverlay.App.Dark" parent="Base.ThemeOverlay.App.Dark" />
+  <style name="Base.ThemeOverlay.App.Light" parent="ThemeOverlay.AppCompat.Light" />
+  <style name="ThemeOverlay.App.Light" parent="Base.ThemeOverlay.App.Light" />
+  <style name="Base.Widget"/>
+  <style name="Base.Widget.App"/>
+  <style name="Base.Widget.App.Container">
+    <item name="android:layout_height">match_parent</item>
+    <item name="android:layout_width">match_parent</item>
+  </style>
+  <style name="Widget.App.Container" parent="@style/Base.Widget.App.Container" />
+  <style name="Base.Widget.App.Container.Dark">
+    <item name="android:background">@drawable/widget_app_container_dark_gradient_background</item>
+  </style>
+  <style name="Widget.App.Container.Dark" parent="Base.Widget.App.Container.Dark" />
+  <style name="Base.Widget.Main" />
+  <style name="Base.Widget.Main.Container" parent="Widget.App.Container" />
+  <style name="Base.Widget.Main.Container.Gradient">
+    <item name="android:background">@drawable/widget_main_container_gradient_background</item>
+  </style>
+  <style name="Base.Widget.Main.Container.Solid" />
+  <style name="Base.Widget.Main.Container.Solid.Gray">
+    <item name="android:background">#EFEFEF</item>
+  </style>
+  <style name="Base.Widget.Main.Container.Solid.White">
+    <item name="android:background">@color/white</item>
+  </style>
+  <style name="Base.Widget.Main.MenuItem">
+    <item name="android:background">?attr/selectableItemBackground</item>
+    <item name="android:clickable">true</item>
+    <item name="android:gravity">center_vertical</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:paddingStart">20dp</item>
+    <item name="android:textColor">@color/white</item>
+  </style>
+  <style name="Base.Widget.Main.MenuItem.Large">
+    <item name="android:drawablePadding">10dp</item>
+    <item name="android:paddingBottom">16dp</item>
+    <item name="android:paddingTop">16dp</item>
+    <item name="android:textAllCaps">true</item>
+    <item name="android:textSize">15sp</item>
+    <item name="fontPath">@string/font_gothamRounded_medium</item>
+  </style>
+  <style name="Base.Widget.Main.MenuItem.Normal">
+    <item name="android:paddingBottom">8dp</item>
+    <item name="android:paddingTop">8dp</item>
+    <item name="android:textSize">15sp</item>
+    <item name="fontPath">@string/font_gothamRounded_book</item>
+  </style>
+  <style name="Base.Widget.Main.MenuItem.Small">
+    <item name="android:paddingBottom">6dp</item>
+    <item name="android:paddingTop">6dp</item>
+    <item name="android:textSize">12sp</item>
+    <item name="fontPath">@string/font_gothamRounded_book</item>
+  </style>
+
+  <style name="Widget.Main.Container.Gradient" parent="Base.Widget.Main.Container.Gradient" />
+  <style name="Widget.Main.Container.Solid.Gray" parent="Base.Widget.Main.Container.Solid.Gray" />
+  <style name="Widget.Main.Container.Solid.White" parent="Base.Widget.Main.Container.Solid.White" />
+  <style name="Widget.Main.MenuItem.Large" parent="Base.Widget.Main.MenuItem.Large" />
+  <style name="Widget.Main.MenuItem.Normal" parent="Base.Widget.Main.MenuItem.Normal" />
+  <style name="Widget.Main.MenuItem.Small" parent="Base.Widget.Main.MenuItem.Small" />
+
+  <!-- TODO: Remove every style from this point downwards -->
   <style name="Base.App"/>
   <style name="Base.App.Theme" parent="D.App.Theme">
     <item name="colorAccent">@color/common_accent</item>
@@ -15,7 +81,6 @@
   <style name="Base.App.ThemeOverlay.Dark" parent="ThemeOverlay.AppCompat.Dark">
     <item name="colorAccent">@color/common_white</item>
   </style>
-  <style name="Base.Widget"/>
   <style name="Base.Widget.Label"/>
   <style name="Base.Widget.EditableLabel">
     <item name="android:focusable">true</item>
@@ -60,7 +125,6 @@
   <style name="Widget.TextInput.Dark" parent="Base.Widget.TextInput.Dark"/>
   <style name="Screen" parent="Base.Screen"/>
 
-  <!-- TODO: Remove every dimension from this point downwards -->
   <!-- [START] App styles -->
   <style name="D"/>
   <style name="D.Base"/>

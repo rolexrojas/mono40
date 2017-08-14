@@ -11,9 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.tpago.movil.BuildConfig;
 import com.tpago.movil.Session;
 import com.tpago.movil.TimeOutManager;
 import com.tpago.movil.app.App;
@@ -78,8 +76,6 @@ public class DepMainActivity
   SlidingPaneLayout slidingPaneLayout;
   @BindView(R.id.toolbar)
   Toolbar toolbar;
-  @BindView(R.id.text_view_commerce)
-  TextView commerceTextView;
   @BindView(R.id.linear_layout_delete)
   LinearLayout deleteLinearLayout;
   @BindView(R.id.image_button_cancel)
@@ -90,7 +86,8 @@ public class DepMainActivity
   @NonNull
   public static Intent getLaunchIntent(
     Context context,
-    Session session) {
+    Session session
+  ) {
     final Intent i = new Intent(context, DepMainActivity.class);
     i.putExtra(KEY_SESSION, session);
     return i;
@@ -160,8 +157,6 @@ public class DepMainActivity
   @Override
   protected void onResume() {
     super.onResume();
-    ButterKnife.<TextView>findById(slidingPaneLayout, R.id.text_view_add_another_account)
-      .setText(String.format("%1$s (%2$s)", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
   }
 
   @Override
@@ -183,37 +178,57 @@ public class DepMainActivity
     unbinder.unbind();
   }
 
-  @OnClick({ R.id.text_view_payments, R.id.text_view_commerce, R.id.text_view_accounts,
-    R.id.text_view_profile, R.id.text_view_preferences, R.id.text_view_about, R.id.text_view_help,
-    R.id.text_view_add_another_account })
-  void onMenuItemButtonClicked(@NonNull View view) {
-    if (slidingPaneLayout.isOpen()) {
-      slidingPaneLayout.closePane();
+  private void setChildFragment(ChildFragment<MainContainer> childFragment) {
+    this.setChildFragment(childFragment, true, true);
+  }
+
+  @OnClick({
+    R.id.main_menuItem_pay,
+    R.id.main_menuItem_purchase,
+    R.id.main_menuItem_transfer,
+    R.id.main_menuItem_recharge,
+    R.id.main_menuItem_disburse,
+    R.id.main_menuItem_wallet,
+    R.id.main_menuItem_settings,
+    R.id.main_menuItem_exit
+  })
+  final void onMenuItemButtonClicked(@NonNull View view) {
+    if (this.slidingPaneLayout.isOpen()) {
+      this.slidingPaneLayout.closePane();
     }
-    final ChildFragment<MainContainer> childFragment;
+
     switch (view.getId()) {
-      case R.id.text_view_payments:
-        childFragment = PaymentsFragment.newInstance();
+      case R.id.main_menuItem_pay:
+        this.setChildFragment(PaymentsFragment.newInstance());
         break;
-      case R.id.text_view_commerce:
-        if (posBridge.checkIfUsable()) {
-          childFragment = PurchaseFragment.newInstance();
+      case R.id.main_menuItem_purchase:
+        if (this.posBridge.checkIfUsable()) {
+          this.setChildFragment(PurchaseFragment.newInstance());
         } else {
-          childFragment = NonNfcPurchaseFragment.create();
+          this.setChildFragment(NonNfcPurchaseFragment.create());
         }
         break;
-      case R.id.text_view_accounts:
-        childFragment = ProductsFragment.newInstance();
+      case R.id.main_menuItem_transfer:
+        Dialogs.featureNotAvailable(this)
+          .show();
         break;
-      default:
-        childFragment = null;
+      case R.id.main_menuItem_recharge:
+        Dialogs.featureNotAvailable(this)
+          .show();
         break;
-    }
-    if (Utils.isNotNull(childFragment)) {
-      setChildFragment(childFragment, true, true);
-    } else {
-      Dialogs.featureNotAvailable(this)
-        .show();
+      case R.id.main_menuItem_disburse:
+        Dialogs.featureNotAvailable(this)
+          .show();
+        break;
+      case R.id.main_menuItem_wallet:
+        this.setChildFragment(ProductsFragment.newInstance());
+        break;
+      case R.id.main_menuItem_settings:
+        Dialogs.featureNotAvailable(this)
+          .show();
+        break;
+      case R.id.main_menuItem_exit:
+        break;
     }
   }
 

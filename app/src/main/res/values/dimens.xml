@@ -3,6 +3,7 @@
   <dimen name="common_margin_horizontal_large">60dp</dimen>
   <dimen name="icon_size_24">24dp</dimen>
 
+  <dimen name="widget_app_toolbar_height">64dp</dimen>
   <dimen name="widget_editable_label_padding">16dp</dimen>
   <dimen name="widget_label_fitter_layout_height">80dp</dimen>
   <dimen name="widget_label_fitter_layout_text_size_max">34sp</dimen>

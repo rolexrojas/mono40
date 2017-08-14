@@ -210,9 +210,6 @@ public class PaymentsFragment
       case R.id.payments_menu_option_remove_recipient:
         presenter.startDeleting();
         return true;
-      case R.id.menu_item_sign_out:
-        presenter.signOut();
-        return true;
       default:
         return super.onOptionsItemSelected(item);
     }
