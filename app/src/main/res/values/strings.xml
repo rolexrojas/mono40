@@ -36,6 +36,9 @@
   <string name="font_roboto_medium">fonts/Roboto/Medium.ttf</string>
   <string name="font_roboto_regular">fonts/Roboto/Regular.ttf</string>
 
+  <string name="format_add">Agregar %1$s</string>
+  <string name="format_remove">Eliminar %1$s</string>
+
   <!-- TODO: Remove every string from this point downwards -->
   <string name="accounts">Cuentas</string>
   <string name="action.add">Agregar</string>

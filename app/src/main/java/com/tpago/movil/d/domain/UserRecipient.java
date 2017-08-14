@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.tpago.movil.User;
 import com.tpago.movil.d.domain.util.StringUtils;
 
 /**
@@ -35,11 +36,13 @@ public final class UserRecipient extends Recipient {
     this.pictureUri = source.readParcelable(Uri.class.getClassLoader());
   }
 
-  public UserRecipient(String phoneNumber, String name, Uri pictureUri) {
-    super(RecipientType.USER, name);
-    this.phoneNumber = phoneNumber;
-    this.name = name;
-    this.pictureUri = pictureUri;
+  public UserRecipient(User user) {
+    super(RecipientType.USER);
+
+    this.phoneNumber = user.phoneNumber()
+      .formattedValued();
+    this.name = user.name();
+    this.pictureUri = user.avatar().exists() ? Uri.fromFile(user.avatar().getFile()) : Uri.EMPTY;
   }
 
   public final Uri pictureUri() {

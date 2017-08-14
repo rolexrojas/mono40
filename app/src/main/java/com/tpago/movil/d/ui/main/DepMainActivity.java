@@ -1,5 +1,9 @@
 package com.tpago.movil.d.ui.main;
 
+import static com.tpago.movil.d.ui.main.recipient.index.category.Category.PAY;
+import static com.tpago.movil.d.ui.main.recipient.index.category.Category.RECHARGE;
+import static com.tpago.movil.d.ui.main.recipient.index.category.Category.TRANSFER;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,7 +32,7 @@ import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.SwitchableContainerActivity;
 import com.tpago.movil.d.ui.main.purchase.PurchaseFragment;
 import com.tpago.movil.d.ui.main.products.ProductsFragment;
-import com.tpago.movil.d.ui.main.payments.PaymentsFragment;
+import com.tpago.movil.d.ui.main.recipient.index.category.RecipientCategoryFragment;
 import com.tpago.movil.d.ui.view.widget.SlidingPaneLayout;
 import com.tpago.movil.init.InitActivity;
 import com.tpago.movil.main.MainModule;
@@ -134,7 +138,7 @@ public class DepMainActivity
       }
     });
     // Sets the startup screen.
-    setChildFragment(PaymentsFragment.newInstance(), false, false);
+    setChildFragment(RecipientCategoryFragment.create(PAY), false, false);
     // Attaches the screen to the presenter.
     presenter.attachScreen(this);
     // Creates the presenter.
@@ -182,6 +186,10 @@ public class DepMainActivity
     this.setChildFragment(childFragment, true, true);
   }
 
+  private void setChildFragment(ChildFragment<MainContainer> childFragment, String tag) {
+    this.setChildFragment(childFragment, tag, true, true);
+  }
+
   @OnClick({
     R.id.main_menuItem_pay,
     R.id.main_menuItem_purchase,
@@ -199,7 +207,7 @@ public class DepMainActivity
 
     switch (view.getId()) {
       case R.id.main_menuItem_pay:
-        this.setChildFragment(PaymentsFragment.newInstance());
+        this.setChildFragment(RecipientCategoryFragment.create(PAY), PAY.name());
         break;
       case R.id.main_menuItem_purchase:
         if (this.posBridge.checkIfUsable()) {
@@ -209,12 +217,10 @@ public class DepMainActivity
         }
         break;
       case R.id.main_menuItem_transfer:
-        Dialogs.featureNotAvailable(this)
-          .show();
+        this.setChildFragment(RecipientCategoryFragment.create(TRANSFER), TRANSFER.name());
         break;
       case R.id.main_menuItem_recharge:
-        Dialogs.featureNotAvailable(this)
-          .show();
+        this.setChildFragment(RecipientCategoryFragment.create(RECHARGE), RECHARGE.name());
         break;
       case R.id.main_menuItem_disburse:
         Dialogs.featureNotAvailable(this)

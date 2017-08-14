@@ -1,7 +1,6 @@
 package com.tpago.movil.d.domain;
 
 import android.content.SharedPreferences;
-import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.tpago.movil.content.SharedPreferencesCreator;
@@ -96,14 +95,8 @@ public final class RecipientManager {
   }
 
   @Deprecated
-  public final List<Recipient> getAll(@Nullable final String query) {
-    final List<Recipient> resultList = new ArrayList<>();
-    for (Recipient recipient : recipientList) {
-      if (recipient.matches(query)) {
-        resultList.add(recipient);
-      }
-    }
-    return resultList;
+  public final List<Recipient> getAll() {
+    return this.recipientList;
   }
 
   @Deprecated

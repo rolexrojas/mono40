@@ -1,5 +1,12 @@
 package com.tpago.movil.d.domain;
 
+import static com.tpago.movil.d.domain.RecipientType.BILL;
+import static com.tpago.movil.d.domain.RecipientType.NON_AFFILIATED_PHONE_NUMBER;
+import static com.tpago.movil.d.domain.RecipientType.PHONE_NUMBER;
+import static com.tpago.movil.d.domain.RecipientType.PRODUCT;
+import static com.tpago.movil.d.domain.RecipientType.USER;
+import static com.tpago.movil.util.Objects.checkIfNotNull;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -17,7 +24,9 @@ import java.util.Comparator;
  */
 @Deprecated
 public abstract class Recipient implements Parcelable, Matchable {
-  @Deprecated public static Comparator<Recipient> comparator() {
+
+  @Deprecated
+  public static Comparator<Recipient> comparator() {
     return new Comparator<Recipient>() {
       @Override
       public int compare(Recipient ra, Recipient rb) {
@@ -32,8 +41,34 @@ public abstract class Recipient implements Parcelable, Matchable {
     };
   }
 
-  @Deprecated public static boolean checkIfBill(Recipient recipient) {
-    return recipient.getType().equals(RecipientType.BILL);
+  @Deprecated
+  public static boolean checkIfBill(Recipient recipient) {
+    return recipient.type == BILL;
+  }
+
+  public static boolean acceptsPayments(Recipient recipient) {
+    return checkIfNotNull(recipient) && recipient.type == PRODUCT;
+  }
+
+  public static boolean acceptsTransfers(Recipient recipient) {
+    return checkIfNotNull(recipient)
+      && recipient.type == PRODUCT
+      && Product.checkIfAccount(((ProductRecipient) recipient).getProduct());
+  }
+
+  public static boolean acceptsRecharges(Recipient recipient) {
+    return checkIfNotNull(recipient)
+      && (
+        recipient.type == USER
+          || recipient.type == PHONE_NUMBER
+          || recipient.type == NON_AFFILIATED_PHONE_NUMBER
+      );
+  }
+
+  public static boolean acceptsDisburses(Recipient recipient) {
+    return checkIfNotNull(recipient)
+      && recipient.type == PRODUCT
+      && Product.checkIfCreditCard(((ProductRecipient) recipient).getProduct());
   }
 
   /**
@@ -56,10 +91,8 @@ public abstract class Recipient implements Parcelable, Matchable {
   /**
    * Constructs a new recipient.
    *
-   * @param type
-   *   Recipient's {@link RecipientType type}.
-   * @param label
-   *   Recipient's label.
+   * @param type Recipient's {@link RecipientType type}.
+   * @param label Recipient's label.
    */
   protected Recipient(@NonNull RecipientType type, @Nullable String label) {
     this.type = type;
@@ -69,8 +102,7 @@ public abstract class Recipient implements Parcelable, Matchable {
   /**
    * Constructs a new recipient.
    *
-   * @param type
-   *   Recipient's {@link RecipientType type}.
+   * @param type Recipient's {@link RecipientType type}.
    */
   protected Recipient(@NonNull RecipientType type) {
     this(type, null);
@@ -109,8 +141,7 @@ public abstract class Recipient implements Parcelable, Matchable {
   /**
    * Sets the label of the recipient.
    *
-   * @param label
-   *   Recipient's label.
+   * @param label Recipient's label.
    */
   public void setLabel(@Nullable String label) {
     this.label = label;

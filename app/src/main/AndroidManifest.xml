@@ -54,11 +54,11 @@
       android:screenOrientation="portrait"
       android:windowSoftInputMode="adjustResize"/>
     <activity
-      android:name="com.tpago.movil.d.ui.main.recipients.AddRecipientActivity"
+      android:name="com.tpago.movil.d.ui.main.recipient.addition.AddRecipientActivity"
       android:screenOrientation="portrait"
       android:windowSoftInputMode="adjustResize"/>
     <activity
-      android:name="com.tpago.movil.d.ui.main.transactions.TransactionCreationActivity"
+      android:name="com.tpago.movil.d.ui.main.transaction.TransactionCreationActivity"
       android:screenOrientation="portrait"
       android:windowSoftInputMode="adjustResize"/>
     <activity
@@ -66,16 +66,16 @@
       android:screenOrientation="portrait"
       android:windowSoftInputMode="adjustResize"/>
     <activity
-      android:name=".d.ui.main.recipients.NonAffiliatedPhoneNumberRecipientAdditionActivity"
+      android:name=".d.ui.main.recipient.addition.NonAffiliatedPhoneNumberRecipientAdditionActivity"
       android:screenOrientation="portrait"
       android:windowSoftInputMode="adjustResize"/>
     <!-- [END] Deprecated -->
     <activity
-      android:name=".d.ui.main.transactions.own.OwnTransactionCreationActivity"
+      android:name=".d.ui.main.transaction.own.OwnTransactionCreationActivity"
       android:screenOrientation="portrait"
       android:windowSoftInputMode="adjustResize"/>
     <activity
-      android:name=".d.ui.main.transactions.own.OwnTransferActivity"
+      android:name=".d.ui.main.transaction.own.OwnTransferActivity"
       android:screenOrientation="portrait"
       android:windowSoftInputMode="adjustResize"/>
   </application>
