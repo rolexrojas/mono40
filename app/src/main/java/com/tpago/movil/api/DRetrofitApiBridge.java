@@ -1,12 +1,14 @@
 package com.tpago.movil.api;
 
+import static com.tpago.movil.util.Preconditions.assertNotNull;
+
+import android.support.v4.util.Pair;
 import com.tpago.movil.Email;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.Pin;
 import com.tpago.movil.app.DeviceManager;
 import com.tpago.movil.net.HttpCode;
 import com.tpago.movil.net.HttpResult;
-import com.tpago.movil.util.Preconditions;
 
 import java.lang.annotation.Annotation;
 
@@ -21,13 +23,13 @@ import retrofit2.Retrofit;
  * @author hecvasro
  */
 final class DRetrofitApiBridge implements DApiBridge {
+
   private final DeviceManager deviceManager;
 
-  private final DApiService DApiService;
-  private final Converter<ResponseBody, ApiErrorResponseBody> errorConverter;
+  private final DApiService apiService;
+  private final Converter<ResponseBody, ApiErrorResponseBody> apiErrorConverter;
 
-  private <A, B> Function<Response<A>, HttpResult<DApiData<B>>> mapToHttpResult(
-    final Function<A, B> mapperFunc) {
+  private <A, B> Function<Response<A>, HttpResult<DApiData<B>>> mapToHttpResult(final Function<A, B> mapperFunc) {
     return new Function<Response<A>, HttpResult<DApiData<B>>>() {
       @Override
       public HttpResult<DApiData<B>> apply(Response<A> response) throws Exception {
@@ -35,57 +37,88 @@ final class DRetrofitApiBridge implements DApiBridge {
         if (response.isSuccessful()) {
           data = DApiData.create(mapperFunc.apply(response.body()));
         } else {
-          data = DApiData.create(errorConverter.convert(response.errorBody()).getError());
+          data = DApiData.create(apiErrorConverter.convert(response.errorBody()).getError());
         }
         return HttpResult.create(HttpCode.find(response.code()), data);
       }
     };
   }
 
+  private Function<Response<UserData>, HttpResult<DApiData<Pair<UserData, String>>>> mapToHttpResult() {
+    return new Function<Response<UserData>, HttpResult<DApiData<Pair<UserData, String>>>>() {
+      @Override
+      public HttpResult<DApiData<Pair<UserData, String>>> apply(Response<UserData> response) throws Exception {
+        final DApiData<Pair<UserData, String>> data;
+        if (response.isSuccessful()) {
+          data = DApiData.create(
+            Pair.create(
+              response.body(),
+              response.headers()
+                .get("token")
+            )
+          );
+        } else {
+          data = DApiData.create(apiErrorConverter.convert(response.errorBody()).getError());
+        }
+
+        return HttpResult.create(HttpCode.find(response.code()), data);
+      }
+    };
+  }
+
   DRetrofitApiBridge(DeviceManager deviceManager, Retrofit retrofit) {
-    this.deviceManager = Preconditions.assertNotNull(deviceManager, "deviceManager == null");
-    Preconditions.assertNotNull(retrofit, "retrofit == null");
-    this.errorConverter = retrofit.responseBodyConverter(ApiErrorResponseBody.class, new Annotation[0]);
-    this.DApiService = retrofit.create(DApiService.class);
+    this.deviceManager = assertNotNull(deviceManager, "deviceManager == null");
+
+    assertNotNull(retrofit, "retrofit == null");
+    this.apiService = retrofit.create(DApiService.class);
+    this.apiErrorConverter = retrofit.responseBodyConverter(ApiErrorResponseBody.class, new Annotation[0]);
   }
 
   @Override
   public Single<HttpResult<DApiData<PhoneNumber.State>>> validatePhoneNumber(
-    PhoneNumber phoneNumber) {
-    return DApiService.validatePhoneNumber(phoneNumber.getValue())
+    PhoneNumber phoneNumber
+  ) {
+    return this.apiService.validatePhoneNumber(phoneNumber.getValue())
       .map(mapToHttpResult(ValidatePhoneNumberResponseData.mapperFunc()));
   }
 
   @Override
-  public Single<HttpResult<DApiData<String>>> signUp(
+  public Single<HttpResult<DApiData<Pair<UserData, String>>>> signUp(
     PhoneNumber phoneNumber,
     Email email,
     String password,
-    Pin pin) {
-    return DApiService.signUp(SignUpRequestBody.create(
-      email.getValue(),
-      deviceManager.getId(),
-      phoneNumber.getValue(),
-      password,
-      pin.getValue()))
-      .map(mapToHttpResult(AuthResponseBody.mapperFunc()));
+    Pin pin
+  ) {
+    final Single<Response<UserData>> single = this.apiService.signUp(
+      SignUpRequestBody.create(
+        email.getValue(),
+        this.deviceManager.getId(),
+        phoneNumber.getValue(),
+        password,
+        pin.getValue())
+    );
+
+    return single.map(mapToHttpResult());
   }
 
   @Override
-  public Single<HttpResult<DApiData<String>>> signIn(
+  public Single<HttpResult<DApiData<Pair<UserData, String>>>> signIn(
     PhoneNumber phoneNumber,
     Email email,
     String password,
-    boolean shouldForce) {
-    final Single<Response<AuthResponseBody>> single;
+    boolean shouldForce
+  ) {
     final String e = email.getValue();
-    final String dId = deviceManager.getId();
     final String pn = phoneNumber.getValue();
+    final String dId = this.deviceManager.getId();
+
+    final Single<Response<UserData>> single;
     if (shouldForce) {
-      single = DApiService.associate(AssociateRequestBody.create(e, pn, dId, password));
+      single = this.apiService.associate(AssociateRequestBody.create(e, pn, dId, password));
     } else {
-      single = DApiService.signIn(SignInRequestBody.create(e, dId, pn, password));
+      single = this.apiService.signIn(SignInRequestBody.create(e, dId, pn, password));
     }
-    return single.map(mapToHttpResult(AuthResponseBody.mapperFunc()));
+
+    return single.map(mapToHttpResult());
   }
 }

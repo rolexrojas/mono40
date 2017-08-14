@@ -108,6 +108,6 @@ final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePayme
     productNumberTextView.setText(productNumber);
 
     final TextView ownerTextView = holder.getOwnerNameTextView();
-    ownerTextView.setText(user.getName());
+    ownerTextView.setText(user.name());
   }
 }

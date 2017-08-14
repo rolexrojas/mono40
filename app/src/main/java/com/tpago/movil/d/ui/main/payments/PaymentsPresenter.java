@@ -129,9 +129,9 @@ class PaymentsPresenter extends Presenter<PaymentsScreen> {
             .concat(
               Observable.just(
                 new UserRecipient(
-                  user.getPhoneNumber().formattedValued(),
-                  user.getName(),
-                  user.getAvatar().exists() ? Uri.fromFile(user.getAvatar().getFile()) : Uri.EMPTY))
+                  user.phoneNumber().formattedValued(),
+                  user.name(),
+                  user.avatar().exists() ? Uri.fromFile(user.avatar().getFile()) : Uri.EMPTY))
                 .filter(new Func1<UserRecipient, Boolean>() {
                   @Override
                   public Boolean call(UserRecipient userRecipient) {

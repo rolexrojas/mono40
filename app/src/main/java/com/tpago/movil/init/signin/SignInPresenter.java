@@ -1,5 +1,6 @@
 package com.tpago.movil.init.signin;
 
+import android.support.v4.util.Pair;
 import com.tpago.movil.Email;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
@@ -8,6 +9,7 @@ import com.tpago.movil.UserStore;
 import com.tpago.movil.api.DApiBridge;
 import com.tpago.movil.api.DApiData;
 import com.tpago.movil.api.DApiError;
+import com.tpago.movil.api.UserData;
 import com.tpago.movil.app.Presenter;
 import com.tpago.movil.domain.ErrorCode;
 import com.tpago.movil.domain.FailureData;
@@ -107,15 +109,15 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
     if (isEmailTextInputContentValid && isPasswordTextInputContentValid) {
       final PhoneNumber phoneNumber = initData.getPhoneNumber();
       final Email email = Email.create(emailTextInputContent);
-      disposable = Single.defer(new Callable<SingleSource<Result<String, ErrorCode>>>() {
+      disposable = Single.defer(new Callable<SingleSource<Result<Pair<UserData, String>, ErrorCode>>>() {
         @Override
-        public SingleSource<Result<String, ErrorCode>> call() throws Exception {
-          final Result<String, ErrorCode> result;
+        public SingleSource<Result<Pair<UserData, String>, ErrorCode>> call() throws Exception {
+          final Result<Pair<UserData, String>, ErrorCode> result;
           if (networkService.checkIfAvailable()) {
-            final HttpResult<DApiData<String>> apiResult = depApiBridge
+            final HttpResult<DApiData<Pair<UserData, String>>> apiResult = depApiBridge
               .signIn(phoneNumber, email, passwordTextInputContent, shouldForce)
               .blockingGet();
-            final DApiData<String> apiResultData = apiResult.getData();
+            final DApiData<Pair<UserData, String>> apiResultData = apiResult.getData();
             if (apiResult.isSuccessful()) {
               result = Result.create(apiResultData.getValue());
             } else {
@@ -141,13 +143,14 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
             startLoading();
           }
         })
-        .subscribe(new Consumer<Result<String, ErrorCode>>() {
+        .subscribe(new Consumer<Result<Pair<UserData, String>, ErrorCode>>() {
           @Override
-          public void accept(Result<String, ErrorCode> result) throws Exception {
+          public void accept(Result<Pair<UserData, String>, ErrorCode> result) throws Exception {
             stopLoading();
             if (result.isSuccessful()) {
-              sessionBuilder.setToken(result.getSuccessData());
-              userStore.set(phoneNumber, email, "Usuario", "tPago");
+              final Pair<UserData, String> successData = result.getSuccessData();
+              userStore.set(successData.first);
+              sessionBuilder.setToken(successData.second);
               view.moveToInitScreen();
             } else {
               final FailureData<ErrorCode> failureData = result.getFailureData();

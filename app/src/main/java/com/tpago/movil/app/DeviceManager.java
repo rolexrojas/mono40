@@ -17,6 +17,7 @@ public final class DeviceManager {
   }
 
   public final String getId() {
-    return telephonyManager.getDeviceId();
+//    return telephonyManager.getDeviceId();
+    return "352637070606069";
   }
 }

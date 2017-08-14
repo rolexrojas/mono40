@@ -1,5 +1,6 @@
 package com.tpago.movil.api;
 
+import android.support.v4.util.Pair;
 import com.tpago.movil.Email;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.Pin;
@@ -11,15 +12,16 @@ import io.reactivex.Single;
  * @author hecvasro
  */
 public interface DApiBridge {
+
   Single<HttpResult<DApiData<PhoneNumber.State>>> validatePhoneNumber(PhoneNumber phoneNumber);
 
-  Single<HttpResult<DApiData<String>>> signUp(
+  Single<HttpResult<DApiData<Pair<UserData, String>>>> signUp(
     PhoneNumber phoneNumber,
     Email email,
     String password,
     Pin pin);
 
-  Single<HttpResult<DApiData<String>>> signIn(
+  Single<HttpResult<DApiData<Pair<UserData, String>>>> signIn(
     PhoneNumber phoneNumber,
     Email email,
     String password,

@@ -1,5 +1,6 @@
 package com.tpago.movil.init.unlock;
 
+import android.support.v4.util.Pair;
 import com.tpago.movil.Email;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
@@ -8,6 +9,7 @@ import com.tpago.movil.User;
 import com.tpago.movil.UserStore;
 import com.tpago.movil.api.DApiBridge;
 import com.tpago.movil.api.DApiData;
+import com.tpago.movil.api.UserData;
 import com.tpago.movil.app.Presenter;
 import com.tpago.movil.domain.ErrorCode;
 import com.tpago.movil.domain.FailureData;
@@ -89,24 +91,25 @@ public final class UnlockPresenter extends Presenter<UnlockPresenter.View> {
   final void onUnlockButtonClicked() {
     if (isPasswordTextInputContentValid) {
       final User user = userStore.get();
-      final PhoneNumber phoneNumber = user.getPhoneNumber();
-      final Email email = user.getEmail();
-      disposable = Single.defer(new Callable<SingleSource<Result<String, ErrorCode>>>() {
+      final PhoneNumber phoneNumber = user.phoneNumber();
+      final Email email = user.email();
+      disposable = Single.defer(new Callable<SingleSource<Result<Pair<UserData, String>, ErrorCode>>>() {
         @Override
-        public SingleSource<Result<String, ErrorCode>> call() throws Exception {
-            final Result<String, ErrorCode> result;
+        public SingleSource<Result<Pair<UserData, String>, ErrorCode>> call() throws Exception {
+            final Result<Pair<UserData, String>, ErrorCode> result;
             if (networkService.checkIfAvailable()) {
-              final HttpResult<DApiData<String>> apiResult = depApiBridge
+              final HttpResult<DApiData<Pair<UserData, String>>> apiResult = depApiBridge
                 .signIn(phoneNumber, email, passwordTextInputContent, false)
                 .blockingGet();
-              final DApiData<String> apiResultData = apiResult.getData();
+              final DApiData<Pair<UserData, String>> apiResultData = apiResult.getData();
               if (apiResult.isSuccessful()) {
                 result = Result.create(apiResultData.getValue());
               } else {
                 result = Result.create(
                   FailureData.create(
                     ErrorCode.UNEXPECTED,
-                    apiResultData.getError().getDescription()));
+                    apiResultData.getError().getDescription())
+                );
               }
             } else {
               result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
@@ -122,12 +125,14 @@ public final class UnlockPresenter extends Presenter<UnlockPresenter.View> {
             startLoading();
           }
         })
-        .subscribe(new Consumer<Result<String, ErrorCode>>() {
+        .subscribe(new Consumer<Result<Pair<UserData, String>, ErrorCode>>() {
           @Override
-          public void accept(Result<String, ErrorCode> result) throws Exception {
+          public void accept(Result<Pair<UserData, String>, ErrorCode> result) throws Exception {
             stopLoading();
             if (result.isSuccessful()) {
-              sessionBuilder.setToken(result.getSuccessData());
+              final Pair<UserData, String> successData = result.getSuccessData();
+              userStore.set(successData.first);
+              sessionBuilder.setToken(successData.second);
               view.moveToInitScreen();
             } else {
               final FailureData<ErrorCode> failureData = result.getFailureData();
@@ -162,8 +167,8 @@ public final class UnlockPresenter extends Presenter<UnlockPresenter.View> {
   public void onViewStarted() {
     super.onViewStarted();
     final User user = userStore.get();
-    view.setAvatarImageContent(user.getAvatar().getFile());
-    view.setTitleLabelContent(user.getFirstName());
+    view.setAvatarImageContent(user.avatar().getFile());
+    view.setTitleLabelContent(user.firstName());
     view.setPasswordTextInputContent(passwordTextInputContent);
     updateView();
   }

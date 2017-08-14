@@ -1,5 +1,6 @@
 package com.tpago.movil.init.register;
 
+import android.support.v4.util.Pair;
 import com.tpago.movil.Digit;
 import com.tpago.movil.Pin;
 import com.tpago.movil.R;
@@ -8,6 +9,7 @@ import com.tpago.movil.UserStore;
 import com.tpago.movil.api.DApiBridge;
 import com.tpago.movil.api.DApiData;
 import com.tpago.movil.api.DApiError;
+import com.tpago.movil.api.UserData;
 import com.tpago.movil.app.Presenter;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.domain.ErrorCode;
@@ -65,18 +67,18 @@ public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPre
     view.setTextInputContent(builder.getMaskedValue());
     if (builder.canBuild()) {
       final Pin pin = builder.build();
-      disposable = Single.defer(new Callable<SingleSource<Result<String, ErrorCode>>>() {
+      disposable = Single.defer(new Callable<SingleSource<Result<Pair<UserData, String>, ErrorCode>>>() {
         @Override
-        public SingleSource<Result<String, ErrorCode>> call() throws Exception {
-          final Result<String, ErrorCode> result;
+        public SingleSource<Result<Pair<UserData, String>, ErrorCode>> call() throws Exception {
+          final Result<Pair<UserData, String>, ErrorCode> result;
           if (networkService.checkIfAvailable()) {
-            final HttpResult<DApiData<String>> registerResult = apiBridge.signUp(
+            final HttpResult<DApiData<Pair<UserData, String>>> registerResult = apiBridge.signUp(
               registerData.getPhoneNumber(),
               registerData.getEmail(),
               registerData.getPassword(),
               pin)
               .blockingGet();
-            final DApiData<String> resultData = registerResult.getData();
+            final DApiData<Pair<UserData, String>> resultData = registerResult.getData();
             if (registerResult.isSuccessful()) {
               result = Result.create(resultData.getValue());
             } else {
@@ -105,17 +107,14 @@ public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPre
             view.startLoading();
           }
         })
-        .subscribe(new Consumer<Result<String, ErrorCode>>() {
+        .subscribe(new Consumer<Result<Pair<UserData, String>, ErrorCode>>() {
           @Override
-          public void accept(Result<String, ErrorCode> result) throws Exception {
+          public void accept(Result<Pair<UserData, String>, ErrorCode> result) throws Exception {
             view.stopLoading();
             if (result.isSuccessful()) {
-              sessionBuilder.setToken(result.getSuccessData());
-              userStore.set(
-                registerData.getPhoneNumber(),
-                registerData.getEmail(),
-                registerData.getFirstName(),
-                registerData.getLastName());
+              final Pair<UserData, String> successData = result.getSuccessData();
+              userStore.set(successData.first);
+              sessionBuilder.setToken(successData.second);
               view.moveToNextScreen();
             } else {
               final FailureData<ErrorCode> failureData = result.getFailureData();

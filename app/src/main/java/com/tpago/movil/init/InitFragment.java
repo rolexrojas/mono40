@@ -69,8 +69,8 @@ public final class InitFragment extends BaseInitFragment {
       final Session session = sessionBuilder.build();
       final com.tpago.movil.d.domain.session.Session s
         = new com.tpago.movil.d.domain.session.Session(
-        user.getPhoneNumber().getValue(),
-        user.getEmail().getValue(),
+        user.phoneNumber().getValue(),
+        user.email().getValue(),
         session.getToken());
       sessionRepo.setSession(s);
       subscription = initialDataLoader.load(session)

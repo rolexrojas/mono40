@@ -1,70 +1,106 @@
 package com.tpago.movil;
 
+import static com.tpago.movil.text.Texts.checkIfEmpty;
+import static com.tpago.movil.util.Objects.checkIfNotNull;
+import static com.tpago.movil.util.Preconditions.assertNotNull;
+
 import com.google.auto.value.AutoValue;
-import com.tpago.movil.util.Objects;
-import com.tpago.movil.text.Texts;
-import com.tpago.movil.util.Preconditions;
 
 /**
  * @author hecvasro
  */
 @AutoValue
 public abstract class User {
-  static User create(
-    PhoneNumber phoneNumber,
-    Email email,
-    String firstName,
-    String lastName,
-    Avatar avatar) {
-    final User user = new AutoValue_User(phoneNumber, email, avatar);
-    user.setName(firstName, lastName);
-    return user;
+
+  static Builder createBuilder() {
+    return new AutoValue_User.Builder();
   }
+
+  private int id;
+  private OnIdChangedListener onIdChangedListener;
 
   private String firstName;
   private String lastName;
-
+  private String name;
   private OnNameChangedListener onNameChangedListener;
 
-  void setOnNameChangedListener(OnNameChangedListener listener) {
-    onNameChangedListener = listener;
+  public abstract PhoneNumber phoneNumber();
+
+  public abstract Email email();
+
+  final void onIdChangedListener(OnIdChangedListener listener) {
+    this.onIdChangedListener = listener;
   }
 
-  public abstract PhoneNumber getPhoneNumber();
+  final void id(int id) {
+    this.id = id;
 
-  public abstract Email getEmail();
-
-  public abstract Avatar getAvatar();
-
-  public final String getFirstName() {
-    return firstName;
+    if (checkIfNotNull(this.onIdChangedListener)) {
+      this.onIdChangedListener.onIdChanged(this.id);
+    }
   }
 
-  public final String getLastName() {
-    return lastName;
+  final int id() {
+    return this.id;
   }
 
-  public final String getName() {
-    return Texts.join(" ", firstName, lastName);
+  final void onNameChangedListener(OnNameChangedListener listener) {
+    this.onNameChangedListener = listener;
   }
 
-  public final void setName(String firstName, String lastName) {
-    Preconditions.assertNotNull(firstName, "firstName == null");
-    if (Texts.checkIfEmpty(firstName)) {
+  public final void name(String firstName, String lastName) {
+    assertNotNull(firstName, "firstName == null");
+    if (checkIfEmpty(firstName)) {
       throw new IllegalArgumentException("Texts.checkIfEmpty(firstName) == true");
     }
     this.firstName = firstName;
-    Preconditions.assertNotNull(lastName, "lastName == null");
-    if (Texts.checkIfEmpty(lastName)) {
+
+    assertNotNull(lastName, "lastName == null");
+    if (checkIfEmpty(lastName)) {
       throw new IllegalArgumentException("Texts.checkIfEmpty(lastName) == true");
     }
     this.lastName = lastName;
-    if (Objects.checkIfNotNull(this.onNameChangedListener)) {
+
+    this.name = this.firstName + " " + this.lastName;
+
+    if (checkIfNotNull(this.onNameChangedListener)) {
       this.onNameChangedListener.onNameChanged(this.firstName, this.lastName);
     }
   }
 
+  public final String firstName() {
+    return this.firstName;
+  }
+
+  public final String lastName() {
+    return this.lastName;
+  }
+
+  public final String name() {
+    return this.name;
+  }
+
+  public abstract Avatar avatar();
+
+  interface OnIdChangedListener {
+
+    void onIdChanged(int id);
+  }
+
   interface OnNameChangedListener {
+
     void onNameChanged(String firstName, String lastName);
+  }
+
+  @AutoValue.Builder
+  public static abstract class Builder {
+
+    public abstract Builder phoneNumber(PhoneNumber phoneNumber);
+
+    public abstract Builder email(Email email);
+
+    public abstract Builder avatar(Avatar avatar);
+
+    public abstract User build();
   }
 }

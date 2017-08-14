@@ -25,6 +25,16 @@ android {
 
     minSdkVersion 19
     targetSdkVersion 24
+
+    javaCompileOptions {
+      annotationProcessorOptions {
+        arguments = [
+//          'eventBusIndex': 'com.tpago.movil.bus.BusIndex',
+          'autovaluegson.defaultCollectionsToEmpty': 'true',
+          'autovaluegson.mutableAdaptersWithDefaultSetters': 'true'
+        ]
+      }
+    }
   }
 
   buildTypes {
@@ -136,6 +146,9 @@ dependencies {
   stagingCompile(name: cub3SdkName('dev'), ext: 'aar')
   preproductionCompile(name: cub3SdkName('prod'), ext: 'aar')
   productionCompile(name: cub3SdkName('prod'), ext: 'aar')
+
+  compile 'org.greenrobot:eventbus:3.0.0'
+  annotationProcessor 'org.greenrobot:eventbus-annotation-processor:3.0.1'
 
   // Deprecated dependencies
   compile "com.github.ozodrukh:CircularReveal:2.0.1"

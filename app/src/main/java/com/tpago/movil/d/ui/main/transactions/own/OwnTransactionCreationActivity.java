@@ -98,7 +98,7 @@ public final class OwnTransactionCreationActivity extends AppCompatActivity impl
         toolbar.setTitle("Transacción entre cuentas");
         toolbar.setSubtitle(
           userStore.get()
-            .getPhoneNumber()
+            .phoneNumber()
             .formattedValued()
         );
       }

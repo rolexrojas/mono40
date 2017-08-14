@@ -11,6 +11,7 @@ import io.reactivex.functions.Function;
  */
 @AutoValue
 public abstract class AuthResponseBody {
+
   static AuthResponseBody create(String token) {
     return new AutoValue_AuthResponseBody(token);
   }

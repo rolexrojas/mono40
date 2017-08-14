@@ -9,6 +9,7 @@ import java.io.File;
  */
 @AutoValue
 public abstract class Avatar {
+
   public static Avatar create(File file) {
     return new AutoValue_Avatar(file);
   }

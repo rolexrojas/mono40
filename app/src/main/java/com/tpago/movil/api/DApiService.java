@@ -12,16 +12,18 @@ import retrofit2.http.Path;
  */
 @Deprecated
 interface DApiService {
+
   @GET("customer/{phoneNumber}/status")
   Single<Response<ValidatePhoneNumberResponseData>> validatePhoneNumber(
-    @Path("phoneNumber") String phoneNumber);
+    @Path("phoneNumber") String phoneNumber
+  );
 
   @POST("signup")
-  Single<Response<AuthResponseBody>> signUp(@Body SignUpRequestBody body);
+  Single<Response<UserData>> signUp(@Body SignUpRequestBody body);
 
   @POST("signin")
-  Single<Response<AuthResponseBody>> signIn(@Body SignInRequestBody body);
+  Single<Response<UserData>> signIn(@Body SignInRequestBody body);
 
   @POST("associate")
-  Single<Response<AuthResponseBody>> associate(@Body AssociateRequestBody body);
+  Single<Response<UserData>> associate(@Body AssociateRequestBody body);
 }

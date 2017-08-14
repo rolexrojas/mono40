@@ -1,17 +1,23 @@
 package com.tpago.movil;
 
+import static com.tpago.movil.util.Objects.checkIfNotNull;
+import static com.tpago.movil.util.Objects.checkIfNull;
+import static com.tpago.movil.util.Preconditions.assertNotNull;
+
 import android.content.SharedPreferences;
 
+import com.tpago.movil.User.OnIdChangedListener;
+import com.tpago.movil.User.OnNameChangedListener;
+import com.tpago.movil.api.UserData;
 import com.tpago.movil.content.SharedPreferencesCreator;
-import com.tpago.movil.util.Objects;
-import com.tpago.movil.util.Preconditions;
-
-import timber.log.Timber;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author hecvasro
  */
-public final class UserStore {
+public final class UserStore implements OnIdChangedListener, OnNameChangedListener {
+
+  private static final String KEY_ID = "id";
   private static final String KEY_PHONE_NUMBER = "phoneNumber";
   private static final String KEY_EMAIL = "email";
   private static final String KEY_FIRST_NAME = "firstName";
@@ -20,74 +26,89 @@ public final class UserStore {
   private final SharedPreferences sharedPreferences;
   private final Avatar avatar;
 
-  private User user;
+  private AtomicReference<User> user = new AtomicReference<>();
 
   public UserStore(SharedPreferencesCreator sharedPreferencesCreator, Avatar avatar) {
-    this.sharedPreferences = Preconditions
-      .assertNotNull(sharedPreferencesCreator, "sharedPreferencesCreator == null")
+    this.sharedPreferences = assertNotNull(sharedPreferencesCreator, "sharedPreferencesCreator == null")
       .create(UserStore.class.getCanonicalName());
-    this.avatar = Preconditions.assertNotNull(avatar, "avatar == null");
-  }
-
-  private void createUser(
-    PhoneNumber phoneNumber,
-    Email email,
-    String firstName,
-    String lastName,
-    Avatar avatar) {
-    user = User.create(phoneNumber, email, firstName, lastName, avatar);
-    user.setOnNameChangedListener(new User.OnNameChangedListener() {
-      @Override
-      public void onNameChanged(String firstName, String lastName) {
-        Timber.d("onNameChanged('%1$s','%2$s')", firstName, lastName);
-        sharedPreferences.edit()
-          .putString(KEY_FIRST_NAME, firstName)
-          .putString(KEY_LAST_NAME, lastName)
-          .apply();
-      }
-    });
+    this.avatar = assertNotNull(avatar, "avatar == null");
   }
 
   public final boolean isSet() {
-    return sharedPreferences.contains(KEY_PHONE_NUMBER)
-      && sharedPreferences.contains(KEY_EMAIL)
-      && sharedPreferences.contains(KEY_FIRST_NAME)
-      && sharedPreferences.contains(KEY_LAST_NAME);
+    return this.sharedPreferences.contains(KEY_ID)
+      && this.sharedPreferences.contains(KEY_PHONE_NUMBER)
+      && this.sharedPreferences.contains(KEY_EMAIL)
+      && this.sharedPreferences.contains(KEY_FIRST_NAME)
+      && this.sharedPreferences.contains(KEY_LAST_NAME);
   }
 
-  public final void set(PhoneNumber phoneNumber, Email email, String firstName, String lastName) {
-    if (!isSet()) {
-      createUser(phoneNumber, email, firstName, lastName, avatar);
-      sharedPreferences.edit()
-        .putString(KEY_PHONE_NUMBER, user.getPhoneNumber().getValue())
-        .putString(KEY_EMAIL, user.getEmail().getValue())
-        .putString(KEY_FIRST_NAME, user.getFirstName())
-        .putString(KEY_LAST_NAME, user.getLastName())
+  public final void set(UserData userData) {
+    final User reference = this.get();
+    if (checkIfNotNull(reference)) {
+      reference.id(userData.id());
+      reference.name(userData.firstName(), userData.lastName());
+    } else {
+      this.sharedPreferences.edit()
+        .putInt(KEY_ID, userData.id())
+        .putString(KEY_PHONE_NUMBER, userData.phoneNumber())
+        .putString(KEY_EMAIL, userData.email())
+        .putString(KEY_FIRST_NAME, userData.firstName())
+        .putString(KEY_LAST_NAME, userData.lastName())
         .apply();
     }
   }
 
   public final User get() {
-    if (isSet() && Objects.checkIfNull(user)) {
-      createUser(
-        PhoneNumber.create(sharedPreferences.getString(KEY_PHONE_NUMBER, null)),
-        Email.create(sharedPreferences.getString(KEY_EMAIL, null)),
-        sharedPreferences.getString(KEY_FIRST_NAME, null),
-        sharedPreferences.getString(KEY_LAST_NAME, null),
-        avatar);
+    if (checkIfNull(this.user.get()) && this.isSet()) {
+      final User reference = User.createBuilder()
+        .phoneNumber(PhoneNumber.create(this.sharedPreferences.getString(KEY_PHONE_NUMBER, null)))
+        .email(Email.create(this.sharedPreferences.getString(KEY_EMAIL, null)))
+        .avatar(this.avatar)
+        .build();
+
+      reference.id(this.sharedPreferences.getInt(KEY_ID, 0));
+      reference.onIdChangedListener(this);
+
+      reference.name(
+        this.sharedPreferences.getString(KEY_FIRST_NAME, null),
+        this.sharedPreferences.getString(KEY_LAST_NAME, null)
+      );
+      reference.onNameChangedListener(this);
+
+      this.user.set(reference);
     }
-    return user;
+    return this.user.get();
   }
 
   public final void clear() {
-    if (isSet()) {
-      if (Objects.checkIfNotNull(user)) {
-        user.setOnNameChangedListener(null);
-        user = null;
+    if (this.isSet()) {
+      final User reference = this.user.get();
+      if (checkIfNotNull(reference)) {
+        reference.onNameChangedListener(null);
       }
-      avatar.clear();
-      sharedPreferences.edit()
+
+      this.user.set(null);
+      this.sharedPreferences.edit()
         .clear()
+        .apply();
+    }
+  }
+
+  @Override
+  public void onIdChanged(int id) {
+    if (this.isSet()) {
+      this.sharedPreferences.edit()
+        .putInt(KEY_ID, id)
+        .apply();
+    }
+  }
+
+  @Override
+  public void onNameChanged(String firstName, String lastName) {
+    if (this.isSet()) {
+      this.sharedPreferences.edit()
+        .putString(KEY_FIRST_NAME, firstName)
+        .putString(KEY_LAST_NAME, lastName)
         .apply();
     }
   }
