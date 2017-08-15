@@ -19,6 +19,7 @@ import static com.tpago.movil.util.Preconditions.assertNotNull;
  * @author hecvasro
  */
 public final class App extends Application {
+
   public static App get(Context context) {
     return (App) assertNotNull(context, "context == null").getApplicationContext();
   }
@@ -27,13 +28,14 @@ public final class App extends Application {
 
   private boolean visible = false;
 
-  @Inject OkHttpClient httpClient;
+  @Inject
+  OkHttpClient httpClient;
 
   private void initTimber() {
     if (BuildConfig.DEBUG) {
       Timber.plant(new DebugLogTree());
     }
-    if (BuildConfig.CRASHLYTICS) {
+    if (BuildConfig.MODE_CRASH_REPORTING) {
       Timber.plant(new CrashlyticsLogTree(this));
     }
   }

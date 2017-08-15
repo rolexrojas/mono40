@@ -12,14 +12,19 @@ import com.google.gson.annotations.SerializedName;
 @AutoValue
 public abstract class UserData {
 
+  private static final String DEFAULT_FIRST_NAME = "Usuario";
+  private static final String DEFAULT_LAST_NAME = "tPago";
+
   public static TypeAdapter<UserData> typeAdapter(Gson gson) {
-    return new AutoValue_UserData.GsonTypeAdapter(gson);
+    return new AutoValue_UserData.GsonTypeAdapter(gson)
+      .setDefaultFirstName(DEFAULT_FIRST_NAME)
+      .setDefaultLastName(DEFAULT_LAST_NAME);
   }
 
   public static Builder createBuilder() {
     return new AutoValue_UserData.Builder()
-      .firstName("Usuario")
-      .lastName("tPago");
+      .firstName(DEFAULT_FIRST_NAME)
+      .lastName(DEFAULT_LAST_NAME);
   }
 
   @SerializedName("id")
