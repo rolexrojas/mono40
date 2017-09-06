@@ -142,7 +142,7 @@ dependencies {
   productionCompile(name: cubeSdkName('prod'), ext: 'aar')
 
   // Remove dependencies
-  compile 'com.google.guava:guava:22.0-android'
+  compile 'com.google.guava:guava:23.0-android'
 
   def autoValueVersion = '1.4'
   provided "com.jakewharton.auto.value:auto-value-annotations:$autoValueVersion"
