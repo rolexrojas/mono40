@@ -35,7 +35,7 @@ final class AppModule {
   @Provides
   @Singleton
   DisplayDensity provideDisplayDensity(Context context) {
-    return DisplayDensity.find(context);
+    return DisplayDensity.get(context);
   }
 
   // Deprecated providers.

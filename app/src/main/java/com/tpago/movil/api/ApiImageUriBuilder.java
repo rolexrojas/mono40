@@ -13,7 +13,7 @@ import com.tpago.movil.text.Texts;
  */
 public final class ApiImageUriBuilder {
   private static String applyDisplayDensity(Context context, String template) {
-    return template.replace("{size}", DisplayDensity.find(context).name().toLowerCase());
+    return template.replace("{size}", DisplayDensity.get(context).name().toLowerCase());
   }
 
   private static String applyStyle(String template, String code, Style style) {

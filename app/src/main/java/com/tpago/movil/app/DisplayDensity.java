@@ -2,9 +2,11 @@ package com.tpago.movil.app;
 
 import android.content.Context;
 
-import com.tpago.movil.util.Preconditions;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
+ * Device display density
+ *
  * @author hecvasro
  */
 public enum DisplayDensity {
@@ -15,18 +17,31 @@ public enum DisplayDensity {
   XXHDPI(3.00F),
   XXXHDPI(4.00F);
 
-  public static DisplayDensity find(Context context) {
-    Preconditions.assertNotNull(context, "context == null");
-    final float value = context.getResources().getDisplayMetrics().density;
-    if (value <= LDPI.getValue()) {
+  /**
+   * Returns the display density of the device.
+   *
+   * @param context
+   *   {@link App} {@link Context context}.
+   *
+   * @return Display density of the device.
+   */
+  public static DisplayDensity get(Context context) {
+    checkNotNull(context, "context == null");
+
+    final float value = context
+      .getResources()
+      .getDisplayMetrics()
+      .density;
+
+    if (value <= LDPI.value) {
       return LDPI;
-    } else if (value <= MDPI.getValue()) {
+    } else if (value <= MDPI.value) {
       return MDPI;
-    } else if (value <= HDPI.getValue()) {
+    } else if (value <= HDPI.value) {
       return HDPI;
-    } else if (value <= XHDPI.getValue()) {
+    } else if (value <= XHDPI.value) {
       return XHDPI;
-    } else if (value <= XXHDPI.getValue()) {
+    } else if (value <= XXHDPI.value) {
       return XXHDPI;
     } else {
       return XXXHDPI;
@@ -39,7 +54,10 @@ public enum DisplayDensity {
     this.value = value;
   }
 
-  public final float getValue() {
-    return value;
+
+  @Override
+  public String toString() {
+    return this.name()
+      .toLowerCase();
   }
 }
