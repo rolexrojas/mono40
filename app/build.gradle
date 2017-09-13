@@ -202,6 +202,10 @@ dependencies {
 
   compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
 
+  testCompile 'junit:junit:4.12'
+
+  testCompile 'org.mockito:mockito-core:2.9.0'
+
   // Deprecated dependencies
   compile "${retrofitGroupId}:adapter-rxjava2:${retrofitVersion}"
   compile "${retrofitGroupId}:adapter-rxjava:${retrofitVersion}"
