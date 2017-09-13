@@ -50,7 +50,7 @@ class PurchaseModule {
       posBridge,
       networkService,
       depApiBridge,
-      user.phoneNumber().getValue(),
+      user.phoneNumber().value(),
       session.getToken());
   }
 }

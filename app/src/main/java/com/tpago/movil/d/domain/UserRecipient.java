@@ -50,7 +50,7 @@ public final class UserRecipient extends Recipient {
     super(RecipientType.USER);
 
     this.id = user.phoneNumber()
-      .getValue();
+      .value();
     this.phoneNumber = user.phoneNumber();
     this.name = user.name();
     this.pictureUri = user.avatar().exists() ? Uri.fromFile(user.avatar().getFile()) : Uri.EMPTY;
@@ -86,7 +86,7 @@ public final class UserRecipient extends Recipient {
   @Override
   public boolean matches(@Nullable String query) {
     return super.matches(query)
-      || StringUtils.matches(this.phoneNumber.getValue(), query)
+      || StringUtils.matches(this.phoneNumber.value(), query)
       || StringUtils.matches(this.name, query);
   }
 

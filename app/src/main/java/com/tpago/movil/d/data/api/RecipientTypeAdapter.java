@@ -134,14 +134,14 @@ public class RecipientTypeAdapter implements JsonDeserializer<Recipient>, JsonSe
     }
     if (type == PHONE_NUMBER) {
       final PhoneNumberRecipient r = (PhoneNumberRecipient) src;
-      jsonObject.addProperty(PROPERTY_PHONE_NUMBER, r.getPhoneNumber().getValue());
+      jsonObject.addProperty(PROPERTY_PHONE_NUMBER, r.getPhoneNumber().value());
       final Partner carrier = r.getCarrier();
       if (checkIfNotNull(carrier)) {
         jsonObject.add(PROPERTY_CARRIER, context.serialize(r.getCarrier(), Partner.class));
       }
     } else if (type == NON_AFFILIATED_PHONE_NUMBER) {
       final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) src;
-      jsonObject.addProperty(PROPERTY_PHONE_NUMBER, r.getPhoneNumber().getValue());
+      jsonObject.addProperty(PROPERTY_PHONE_NUMBER, r.getPhoneNumber().value());
       if (checkIfNotNull(r.getBank())) {
         jsonObject.add(PROPERTY_BANK, context.serialize(r.getBank(), Bank.class));
       }

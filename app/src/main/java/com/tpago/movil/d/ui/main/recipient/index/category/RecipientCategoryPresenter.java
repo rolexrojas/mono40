@@ -186,7 +186,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
             // TODO: Add support for actions related to invoices.
             final Observable<Object> actionSource;
 
-            if ((category == TRANSFER || category == RECHARGE) && PhoneNumber.checkIfValid(query)) {
+            if ((category == TRANSFER || category == RECHARGE) && PhoneNumber.isValid(query)) {
               final PhoneNumber phoneNumber = PhoneNumber.create(query);
               actionSource = Observable.just(TransactionWithPhoneNumberAction.create(phoneNumber))
                 .cast(Object.class)
@@ -269,11 +269,11 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
             final Result<Customer, ErrorCode> result;
             if (networkService.checkIfAvailable()) {
               final ApiResult<Customer.State> customerStateResult = depApiBridge
-                .fetchCustomerState(authToken, phoneNumber.getValue());
+                .fetchCustomerState(authToken, phoneNumber.value());
               if (customerStateResult.isSuccessful()) {
                 if (Customer.checkIfCanBeFetched(customerStateResult.getData())) {
                   final ApiResult<Customer> customerResult = depApiBridge
-                    .fetchCustomer(authToken, phoneNumber.getValue());
+                    .fetchCustomer(authToken, phoneNumber.value());
                   if (customerResult.isSuccessful()) {
                     result = Result.create(customerResult.getData());
                   } else {
@@ -358,11 +358,11 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
             final Result<Pair<Boolean, String>, ErrorCode> result;
             if (networkService.checkIfAvailable()) {
               final ApiResult<Customer.State> customerStateResult = depApiBridge
-                .fetchCustomerState(authToken, phoneNumber.getValue());
+                .fetchCustomerState(authToken, phoneNumber.value());
               if (customerStateResult.isSuccessful()) {
                 if (Customer.checkIfCanBeFetched(customerStateResult.getData())) {
                   final ApiResult<Customer> customerResult = depApiBridge
-                    .fetchCustomer(authToken, phoneNumber.getValue());
+                    .fetchCustomer(authToken, phoneNumber.value());
                   if (customerResult.isSuccessful()) {
                     result = Result.create(Pair.create(true, customerResult.getData().getName()));
                   } else {

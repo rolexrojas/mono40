@@ -132,7 +132,7 @@ public class NonAffiliatedPhoneNumberRecipient extends Recipient {
 
   @Override
   public String getId() {
-    return Texts.join("-", this.getType(), this.phoneNumber.getValue());
+    return Texts.join("-", this.getType(), this.phoneNumber.value());
   }
 
   @NonNull

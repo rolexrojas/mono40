@@ -27,7 +27,8 @@ final class RegisterData {
     return initData.getPhoneNumber();
   }
 
-  final PhoneNumber.State getPhoneNumberState() {
+  @PhoneNumber.State
+  final int getPhoneNumberState() {
     return initData.getPhoneNumberState();
   }
 

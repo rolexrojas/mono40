@@ -12,22 +12,19 @@ import io.reactivex.functions.Function;
  */
 @AutoValue
 public abstract class ValidatePhoneNumberResponseData {
-  static ValidatePhoneNumberResponseData create(PhoneNumber.State state) {
+
+  static ValidatePhoneNumberResponseData create(@PhoneNumber.State int state) {
     return new AutoValue_ValidatePhoneNumberResponseData(state);
   }
 
-  static Function<ValidatePhoneNumberResponseData, PhoneNumber.State> mapperFunc() {
-    return new Function<ValidatePhoneNumberResponseData, PhoneNumber.State>() {
-      @Override
-      public PhoneNumber.State apply(ValidatePhoneNumberResponseData data) throws Exception {
-        return data.status();
-      }
-    };
+  static Function<ValidatePhoneNumberResponseData, Integer> mapperFunc() {
+    return (data) -> data.status();
   }
 
   public static TypeAdapter<ValidatePhoneNumberResponseData> typeAdapter(Gson gson) {
     return new AutoValue_ValidatePhoneNumberResponseData.GsonTypeAdapter(gson);
   }
 
-  abstract PhoneNumber.State status();
+  @PhoneNumber.State
+  abstract int status();
 }

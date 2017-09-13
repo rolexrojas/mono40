@@ -8,21 +8,22 @@ import com.tpago.movil.util.Preconditions;
  */
 public final class InitData {
   private PhoneNumber phoneNumber;
-  private PhoneNumber.State phoneNumberState = PhoneNumber.State.NONE;
+  @PhoneNumber.State private int phoneNumberState = PhoneNumber.State.NONE;
 
   InitData() {
   }
 
-  final void setPhoneNumber(PhoneNumber phoneNumber, PhoneNumber.State phoneNumberState) {
+  final void setPhoneNumber(PhoneNumber phoneNumber, @PhoneNumber.State int phoneNumberState) {
     this.phoneNumber = Preconditions.assertNotNull(phoneNumber, "phoneNumber == null");
-    this.phoneNumberState = Preconditions.assertNotNull(phoneNumberState, "phoneNumberState == null");
+    this.phoneNumberState = phoneNumberState;
   }
 
   public final PhoneNumber getPhoneNumber() {
     return phoneNumber;
   }
 
-  public final PhoneNumber.State getPhoneNumberState() {
+  @PhoneNumber.State
+  public final int getPhoneNumberState() {
     return phoneNumberState;
   }
 }

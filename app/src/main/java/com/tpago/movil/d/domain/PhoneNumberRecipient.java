@@ -74,7 +74,7 @@ public class PhoneNumberRecipient extends Recipient {
 
   @Override
   public String getId() {
-    return Texts.join("-", this.getType(), this.phoneNumber.getValue());
+    return Texts.join("-", this.getType(), this.phoneNumber.value());
   }
 
   @NonNull
@@ -94,7 +94,7 @@ public class PhoneNumberRecipient extends Recipient {
    */
   @Override
   public boolean matches(@Nullable String query) {
-    return super.matches(query) || StringUtils.matches(this.phoneNumber.getValue(), query);
+    return super.matches(query) || StringUtils.matches(this.phoneNumber.value(), query);
   }
 
   @Override

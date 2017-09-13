@@ -75,10 +75,10 @@ final class DRetrofitApiBridge implements DApiBridge {
   }
 
   @Override
-  public Single<HttpResult<DApiData<PhoneNumber.State>>> validatePhoneNumber(
+  public Single<HttpResult<DApiData<Integer>>> validatePhoneNumber(
     PhoneNumber phoneNumber
   ) {
-    return this.apiService.validatePhoneNumber(phoneNumber.getValue())
+    return this.apiService.validatePhoneNumber(phoneNumber.value())
       .map(mapToHttpResult(ValidatePhoneNumberResponseData.mapperFunc()));
   }
 
@@ -93,7 +93,7 @@ final class DRetrofitApiBridge implements DApiBridge {
       SignUpRequestBody.create(
         email.getValue(),
         this.deviceManager.getId(),
-        phoneNumber.getValue(),
+        phoneNumber.value(),
         password,
         pin.getValue())
     );
@@ -109,7 +109,7 @@ final class DRetrofitApiBridge implements DApiBridge {
     boolean shouldForce
   ) {
     final String e = email.getValue();
-    final String pn = phoneNumber.getValue();
+    final String pn = phoneNumber.value();
     final String dId = this.deviceManager.getId();
 
     final Single<Response<UserData>> single;

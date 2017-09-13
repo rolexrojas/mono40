@@ -32,7 +32,7 @@ public abstract class TransferToAffiliatedRequestBody {
       pin,
       amount,
       recipient.getPhoneNumber()
-        .getValue(),
+        .value(),
       name);
   }
 

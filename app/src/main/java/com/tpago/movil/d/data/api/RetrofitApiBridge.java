@@ -251,7 +251,7 @@ class RetrofitApiBridge implements DepApiBridge {
         });
     } else {
       final PhoneNumberRecipient pnr = (PhoneNumberRecipient) recipient;
-      return apiService.fetchCustomer(authToken, pnr.getPhoneNumber().getValue())
+      return apiService.fetchCustomer(authToken, pnr.getPhoneNumber().value())
         .flatMap(mapToApiResult(RetrofitApiBridge.<Customer>identityMapFunc()))
         .flatMap(new Func1<ApiResult<Customer>, Observable<ApiResult<String>>>() {
           @Override
@@ -491,7 +491,7 @@ class RetrofitApiBridge implements DepApiBridge {
   ) {
     final RechargeRequestBody body = RechargeRequestBody.createBuilder()
       .carrier(carrier)
-      .phoneNumber(phoneNumber.getValue())
+      .phoneNumber(phoneNumber.value())
       .fundingAccount(ProductInfo.create(fundingAccount))
       .amount(amount)
       .pin(pin)

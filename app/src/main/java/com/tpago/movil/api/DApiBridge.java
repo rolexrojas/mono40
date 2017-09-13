@@ -13,7 +13,7 @@ import io.reactivex.Single;
  */
 public interface DApiBridge {
 
-  Single<HttpResult<DApiData<PhoneNumber.State>>> validatePhoneNumber(PhoneNumber phoneNumber);
+  Single<HttpResult<DApiData<Integer>>> validatePhoneNumber(PhoneNumber phoneNumber);
 
   Single<HttpResult<DApiData<Pair<UserData, String>>>> signUp(
     PhoneNumber phoneNumber,

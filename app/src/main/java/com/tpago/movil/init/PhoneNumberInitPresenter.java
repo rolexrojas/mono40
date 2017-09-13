@@ -57,7 +57,7 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
 
   private void updateView() {
     final String phoneNumber = DigitHelper.toDigitString(phoneNumberDigits);
-    isPhoneNumberValid = PhoneNumber.checkIfValid(phoneNumber);
+    isPhoneNumberValid = PhoneNumber.isValid(phoneNumber);
     if (Objects.checkIfNotNull(view)) {
       view.setTextInputContent(PhoneNumber.format(phoneNumber));
       view.showNextButtonAsEnabled(isPhoneNumberValid);
@@ -97,15 +97,15 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
     if (isPhoneNumberValid) {
       final PhoneNumber phoneNumber = PhoneNumber.create(DigitHelper.toDigitString(phoneNumberDigits));
       disposable = Single
-        .defer(new Callable<SingleSource<Result<PhoneNumber.State, ErrorCode>>>() {
+        .defer(new Callable<SingleSource<Result<Integer, ErrorCode>>>() {
           @Override
-          public SingleSource<Result<PhoneNumber.State, ErrorCode>> call() throws Exception {
-            final Result<PhoneNumber.State, ErrorCode> result;
+          public SingleSource<Result<Integer, ErrorCode>> call() throws Exception {
+            final Result<Integer, ErrorCode> result;
             if (networkService.checkIfAvailable()) {
-              final HttpResult<DApiData<PhoneNumber.State>> phoneNumberValidationResult = apiBridge
+              final HttpResult<DApiData<Integer>> phoneNumberValidationResult = apiBridge
                 .validatePhoneNumber(phoneNumber)
                 .blockingGet();
-              final DApiData<PhoneNumber.State> resultData = phoneNumberValidationResult.getData();
+              final DApiData<Integer> resultData = phoneNumberValidationResult.getData();
               if (phoneNumberValidationResult.isSuccessful()) {
                 result = Result.create(resultData.getValue());
               } else {
@@ -128,20 +128,20 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
             startLoading();
           }
         })
-        .subscribe(new Consumer<Result<PhoneNumber.State, ErrorCode>>() {
+        .subscribe(new Consumer<Result<Integer, ErrorCode>>() {
           @Override
-          public void accept(Result<PhoneNumber.State, ErrorCode> result) throws Exception {
+          public void accept(Result<Integer, ErrorCode> result) throws Exception {
             stopLoading();
             if (result.isSuccessful()) {
-              final PhoneNumber.State state = result.getSuccessData();
-              if (state.equals(PhoneNumber.State.NONE)) {
+              @PhoneNumber.State final int state = result.getSuccessData();
+              if (state == PhoneNumber.State.NONE) {
                 view.showDialog(
                   R.string.init_phone_number_error_not_affiliated_title,
                   R.string.init_phone_number_error_not_affiliated_message,
                   R.string.init_phone_number_error_not_affiliated_positive_button_text);
               } else {
                 initData.setPhoneNumber(phoneNumber, state);
-                if (state.equals(PhoneNumber.State.REGISTERED)) {
+                if (state == PhoneNumber.State.REGISTERED) {
                   view.moveToSignInScreen();
                 } else {
                   view.moveToSignUpScreen();
@@ -182,7 +182,7 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
     final PhoneNumber phoneNumber = initData.getPhoneNumber();
     if (Objects.checkIfNotNull(phoneNumber)) {
       phoneNumberDigits.clear();
-      phoneNumberDigits.addAll(toDigitList(phoneNumber.getValue()));
+      phoneNumberDigits.addAll(toDigitList(phoneNumber.value()));
     }
     updateView();
   }
