@@ -1,40 +1,39 @@
 package com.tpago.movil;
 
+import android.support.annotation.IntDef;
+
+import java.lang.annotation.Retention;
+
+import static java.lang.annotation.RetentionPolicy.SOURCE;
+
 /**
+ * Digit enumeration
+ *
  * @author hecvasro
  */
-public enum Digit {
-  ZERO(0),
-  ONE(1),
-  TWO(2),
-  THREE(3),
-  FOUR(4),
-  FIVE(5),
-  SIX(6),
-  SEVEN(7),
-  EIGHT(8),
-  NINE(9);
+@IntDef({
+  Digit.ZERO,
+  Digit.ONE,
+  Digit.TWO,
+  Digit.THREE,
+  Digit.FOUR,
+  Digit.FIVE,
+  Digit.SIX,
+  Digit.SEVEN,
+  Digit.EIGHT,
+  Digit.NINE,
+})
+@Retention(SOURCE)
+public @interface Digit {
 
-  private final int value;
-
-  public static Digit find(int value) {
-    if (value < 0 || value > 9) {
-      throw new IllegalArgumentException("value < 0 || value > 9");
-    }
-    Digit digit = null;
-    for (Digit current : values()) {
-      if (current.getValue() == value) {
-        digit = current;
-      }
-    }
-    return digit;
-  }
-
-  Digit(int value) {
-    this.value = value;
-  }
-
-  public final int getValue() {
-    return value;
-  }
+  int ZERO = 0;
+  int ONE = 1;
+  int TWO = 2;
+  int THREE = 3;
+  int FOUR = 4;
+  int FIVE = 5;
+  int SIX = 6;
+  int SEVEN = 7;
+  int EIGHT = 8;
+  int NINE = 9;
 }

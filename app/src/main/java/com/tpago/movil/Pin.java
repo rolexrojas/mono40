@@ -6,6 +6,8 @@ import com.tpago.movil.util.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.tpago.movil.DigitHelper.toDigitString;
+
 /**
  * @author hecvasro
  */
@@ -15,14 +17,14 @@ public abstract class Pin {
 
   private static final int LENGTH = 4;
 
-  private static Pin create(List<Digit> digits) {
-    return new AutoValue_Pin(Digits.stringify(digits));
+  private static Pin create(List<Integer> digits) {
+    return new AutoValue_Pin(toDigitString(digits));
   }
 
   public abstract String getValue();
 
   public static final class Builder {
-    private final List<Digit> digits;
+    private final List<Integer> digits;
 
     public Builder() {
       digits = new ArrayList<>();
@@ -30,7 +32,7 @@ public abstract class Pin {
 
     public final String getMaskedValue() {
       final StringBuilder builder = new StringBuilder();
-      for (Digit d : digits) {
+      for (Integer d : digits) {
         builder.append(MASK);
       }
       return builder.toString();
@@ -40,7 +42,7 @@ public abstract class Pin {
       return digits.size() == LENGTH;
     }
 
-    public final Builder addDigit(Digit digit) {
+    public final Builder addDigit(@Digit int digit) {
       Preconditions.assertNotNull(digit, "digit == null");
       if (!canBuild()) {
         digits.add(digit);

@@ -23,6 +23,8 @@ import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.tpago.movil.DigitHelper.toDigit;
+
 /**
  * @author hecvasro
  */
@@ -95,7 +97,10 @@ public final class NumPad extends LinearLayout {
     R.id.num_pad_cell_nine
   })
   void onDigitClicked(Button button) {
-    final Digit digit = Digit.find(Integer.parseInt(button.getText().toString()));
+    final char buttonChar = button.getText()
+      .toString()
+      .charAt(0);
+    final @Digit int digit = toDigit(buttonChar);
     if (Objects.checkIfNotNull(digitListener)) {
       digitListener.onDigitClicked(digit);
     }
@@ -154,7 +159,7 @@ public final class NumPad extends LinearLayout {
   }
 
   public interface OnDigitClickedListener {
-    void onDigitClicked(Digit digit);
+    void onDigitClicked(@Digit int digit);
   }
 
   public interface OnDeleteClickedListener {

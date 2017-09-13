@@ -142,7 +142,7 @@ public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPre
     }
   }
 
-  final void onDigitButtonClicked(Digit digit) {
+  final void onDigitButtonClicked(@Digit int digit) {
     builder.addDigit(digit);
     updateView();
   }

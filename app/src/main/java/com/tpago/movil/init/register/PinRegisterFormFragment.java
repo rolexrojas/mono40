@@ -116,7 +116,7 @@ public final class PinRegisterFormFragment
   }
 
   @Override
-  public void onDigitClicked(Digit digit) {
+  public void onDigitClicked(@Digit int digit) {
     presenter.onDigitButtonClicked(digit);
   }
 

@@ -181,7 +181,7 @@ public final class PhoneNumberInitFragment
   }
 
   @Override
-  public void onDigitClicked(Digit digit) {
+  public void onDigitClicked(@Digit int digit) {
     presenter.addDigit(digit);
   }
 

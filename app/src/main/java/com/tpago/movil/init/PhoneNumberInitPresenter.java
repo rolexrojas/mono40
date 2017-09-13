@@ -1,7 +1,7 @@
 package com.tpago.movil.init;
 
 import com.tpago.movil.Digit;
-import com.tpago.movil.Digits;
+import com.tpago.movil.DigitHelper;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.api.DApiBridge;
@@ -30,6 +30,8 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
+import static com.tpago.movil.DigitHelper.toDigitList;
+
 /**
  * @author hecvasro
  */
@@ -42,7 +44,7 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
   NetworkService networkService;
 
   private boolean isPhoneNumberValid = false;
-  private List<Digit> phoneNumberDigits = new ArrayList<>();
+  private List<Integer> phoneNumberDigits = new ArrayList<>();
 
   private Disposable disposable = Disposables.disposed();
 
@@ -54,7 +56,7 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
   }
 
   private void updateView() {
-    final String phoneNumber = Digits.stringify(phoneNumberDigits);
+    final String phoneNumber = DigitHelper.toDigitString(phoneNumberDigits);
     isPhoneNumberValid = PhoneNumber.checkIfValid(phoneNumber);
     if (Objects.checkIfNotNull(view)) {
       view.setTextInputContent(PhoneNumber.format(phoneNumber));
@@ -77,7 +79,7 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
     view.showNextButtonAsEnabled(true);
   }
 
-  final void addDigit(Digit digit) {
+  final void addDigit(@Digit int digit) {
     if (phoneNumberDigits.size() < 10) {
       phoneNumberDigits.add(digit);
       updateView();
@@ -93,7 +95,7 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
 
   final void validate() {
     if (isPhoneNumberValid) {
-      final PhoneNumber phoneNumber = PhoneNumber.create(Digits.stringify(phoneNumberDigits));
+      final PhoneNumber phoneNumber = PhoneNumber.create(DigitHelper.toDigitString(phoneNumberDigits));
       disposable = Single
         .defer(new Callable<SingleSource<Result<PhoneNumber.State, ErrorCode>>>() {
           @Override
@@ -180,7 +182,7 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
     final PhoneNumber phoneNumber = initData.getPhoneNumber();
     if (Objects.checkIfNotNull(phoneNumber)) {
       phoneNumberDigits.clear();
-      phoneNumberDigits.addAll(Digits.getDigits(phoneNumber));
+      phoneNumberDigits.addAll(toDigitList(phoneNumber.getValue()));
     }
     updateView();
   }
