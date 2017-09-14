@@ -11,7 +11,7 @@ import static junit.framework.Assert.assertTrue;
  *
  * @author hecvasro
  */
-public class PhoneNumberTest {
+public final class PhoneNumberTest {
 
   @Test
   public final void isValid_nullString_shouldReturnFalse() {
