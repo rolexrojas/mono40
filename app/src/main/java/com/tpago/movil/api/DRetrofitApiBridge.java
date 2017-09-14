@@ -91,7 +91,7 @@ final class DRetrofitApiBridge implements DApiBridge {
   ) {
     final Single<Response<UserData>> single = this.apiService.signUp(
       SignUpRequestBody.create(
-        email.getValue(),
+        email.value(),
         this.deviceManager.getId(),
         phoneNumber.value(),
         password,
@@ -108,7 +108,7 @@ final class DRetrofitApiBridge implements DApiBridge {
     String password,
     boolean shouldForce
   ) {
-    final String e = email.getValue();
+    final String e = email.value();
     final String pn = phoneNumber.value();
     final String dId = this.deviceManager.getId();
 

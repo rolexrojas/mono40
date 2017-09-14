@@ -28,7 +28,7 @@ final class EmailRegisterFormPresenter
       this.confirmationTextInputContent = null;
       this.isConfirmationTextInputContentValid = false;
     } else {
-      this.textInputContent = email.getValue();
+      this.textInputContent = email.value();
       this.isTextInputContentValid = true;
       this.confirmationTextInputContent = this.textInputContent;
       this.isConfirmationTextInputContentValid = true;
@@ -36,11 +36,11 @@ final class EmailRegisterFormPresenter
   }
 
   private boolean checkIfTextInputContentIsValid() {
-    return Email.checkIfValid(textInputContent);
+    return Email.isValid(textInputContent);
   }
 
-  private boolean checkIfConfirmationTextInputContentIsValid() {
-    return Email.checkIfValid(confirmationTextInputContent)
+  private boolean checkIfConfirmationTextInputContentIsValid(){
+    return Email.isValid(confirmationTextInputContent)
       && confirmationTextInputContent.equals(textInputContent);
   }
 

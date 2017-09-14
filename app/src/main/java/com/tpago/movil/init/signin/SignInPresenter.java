@@ -91,7 +91,7 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
     final String sanitizedContent = sanitize(content);
     if (!sanitizedContent.equals(emailTextInputContent)) {
       emailTextInputContent = sanitizedContent;
-      isEmailTextInputContentValid = Email.checkIfValid(emailTextInputContent);
+      isEmailTextInputContentValid = Email.isValid(emailTextInputContent);
       updateView();
     }
   }
