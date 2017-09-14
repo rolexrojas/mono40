@@ -78,7 +78,7 @@ public abstract class PhoneNumber implements Comparable<PhoneNumber>, Parcelable
     final String sanitizedString = removeNonDigits(s);
     final StringBuilder formattedStringBuilder = new StringBuilder(sanitizedString);
     insertSeparatorIfGreaterThan(sanitizedString, 3, formattedStringBuilder);
-    insertSeparatorIfGreaterThan(sanitizedString, 6, formattedStringBuilder);
+    insertSeparatorIfGreaterThan(sanitizedString, 7, formattedStringBuilder);
     return formattedStringBuilder.toString();
   }
 
