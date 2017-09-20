@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.d.domain.UserRecipient;
 import com.tpago.movil.d.misc.Utils;
@@ -73,7 +72,6 @@ public class RecipientCategoryFragment
 
   private static final int REQUEST_CODE_RECIPIENT_ADDITION = 0;
   private static final int REQUEST_CODE_TRANSACTION_CREATION = 1;
-  private static final int REQUEST_CODE_NON_AFFILIATED_RECIPIENT_ADDITION = 2;
   private static final int REQUEST_CODE_OWN_TRANSACTION_CREATION = 3;
 
   private static final String KEY_CATEGORY = "category";
@@ -130,8 +128,10 @@ public class RecipientCategoryFragment
 
   @Nullable
   @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+  public View onCreateView(
+    LayoutInflater inflater, @Nullable ViewGroup container,
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(R.layout.d_fragment_payments, container, false);
   }
 
@@ -153,15 +153,18 @@ public class RecipientCategoryFragment
       .addBinder(
         Recipient.class,
         RecipientListItemHolder.class,
-        recipientBinder)
+        recipientBinder
+      )
       .addBinder(
         Action.class,
         ActionListItemHolder.class,
-        new ActionListItemHolderBinder(stringHelper, category))
+        new ActionListItemHolderBinder(stringHelper, category)
+      )
       .addBinder(
         NoResultsListItemItem.class,
         NoResultsListItemHolder.class,
-        new NoResultsListItemHolderBinder(context))
+        new NoResultsListItemHolderBinder(context)
+      )
       .build();
     adapter = new ListItemAdapter(holderCreatorFactory, binderFactory);
     recyclerView.setAdapter(adapter);
@@ -192,17 +195,12 @@ public class RecipientCategoryFragment
   public void onResume() {
     super.onResume();
     if (Utils.isNotNull(requestResult)) {
-      final int code = requestResult.first;
       final Recipient recipient = requestResult.second.first;
-      if (code == REQUEST_CODE_RECIPIENT_ADDITION) {
-        presenter.addRecipient(recipient);
-      } else if (code == REQUEST_CODE_TRANSACTION_CREATION) {
-        final String transactionId = requestResult.second.second;
-        presenter.showTransactionSummary(recipient, transactionId);
-      } else if (code == REQUEST_CODE_NON_AFFILIATED_RECIPIENT_ADDITION) {
-        presenter.addRecipient(recipient);
-      } else if (code == REQUEST_CODE_OWN_TRANSACTION_CREATION) {
+      final int code = requestResult.first;
+      if (recipient instanceof UserRecipient || code == REQUEST_CODE_TRANSACTION_CREATION || code == REQUEST_CODE_OWN_TRANSACTION_CREATION) {
         presenter.showTransactionSummary(recipient, requestResult.second.second);
+      } else if (code == REQUEST_CODE_RECIPIENT_ADDITION) {
+        presenter.addRecipient(recipient);
       }
       requestResult = null;
     }
@@ -403,7 +401,8 @@ public class RecipientCategoryFragment
 
   @Override
   public void showMessage(String message) {
-    Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+    Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT)
+      .show();
   }
 
   @Override
@@ -423,21 +422,11 @@ public class RecipientCategoryFragment
   }
 
   @Override
-  public void startNonAffiliatedPhoneNumberRecipientAddition(PhoneNumber phoneNumber) {
-    this.startActivityForResult(
-      NonAffiliatedPhoneNumberRecipientAdditionActivity.getLaunchIntent(
-        this.getContext(),
-        phoneNumber
-      ),
-      REQUEST_CODE_NON_AFFILIATED_RECIPIENT_ADDITION
-    );
-  }
-
-  @Override
   public void showTransactionSummary(
     Recipient recipient,
     boolean alreadyExists,
-    String transactionId) {
+    String transactionId
+  ) {
     TransactionSummaryDialogFragment.create(recipient, alreadyExists, transactionId)
       .show(getChildFragmentManager(), null);
   }
@@ -457,7 +446,8 @@ public class RecipientCategoryFragment
         }
       },
       x,
-      y);
+      y
+    );
   }
 
   @Override
@@ -476,7 +466,8 @@ public class RecipientCategoryFragment
 
   @Override
   public void showUnavailableNetworkError() {
-    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG).show();
+    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG)
+      .show();
   }
 
   @Override
