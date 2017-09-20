@@ -12,8 +12,14 @@ import com.tpago.movil.text.Texts;
  * @author hecvasro
  */
 public final class ApiImageUriBuilder {
+
   private static String applyDisplayDensity(Context context, String template) {
-    return template.replace("{size}", DisplayDensity.get(context).name().toLowerCase());
+    return template.replace(
+      "{size}",
+      DisplayDensity.get(context)
+        .name()
+        .toLowerCase()
+    );
   }
 
   private static String applyStyle(String template, String code, Style style) {
@@ -44,7 +50,9 @@ public final class ApiImageUriBuilder {
         applyStyle(
           partner.getImageUriTemplate(),
           partner.getId(),
-          style)));
+          style
+        )
+      ));
   }
 
   public static Uri build(Context context, Product product) {

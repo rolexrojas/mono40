@@ -18,6 +18,7 @@ import timber.log.Timber;
  * @author hecvasro
  */
 class BillRecipientBuilder extends RecipientBuilder {
+
   private final String authToken;
   private final DepApiBridge apiBridge;
 
@@ -26,7 +27,8 @@ class BillRecipientBuilder extends RecipientBuilder {
   BillRecipientBuilder(
     String authToken,
     DepApiBridge apiBridge,
-    Partner partner) {
+    Partner partner
+  ) {
     this.authToken = authToken;
     this.apiBridge = apiBridge;
     this.partner = partner;
@@ -61,7 +63,8 @@ class BillRecipientBuilder extends RecipientBuilder {
             }
             return new Result(recipient);
           } else {
-            return new Result(result.getError().getDescription());
+            return new Result(result.getError()
+              .getDescription());
           }
         }
       });

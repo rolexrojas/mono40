@@ -1,6 +1,7 @@
 package com.tpago.movil.d.ui.main.recipient.addition;
 
 import static com.tpago.movil.d.ui.main.recipient.index.category.Category.PAY;
+import static com.tpago.movil.d.ui.main.recipient.index.category.Category.TRANSFER;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,15 +18,19 @@ import android.view.ViewGroup;
 import com.tpago.movil.Partner;
 import com.tpago.movil.R;
 import com.tpago.movil.d.ui.ChildFragment;
+import com.tpago.movil.d.ui.main.recipient.addition.banks.BankListFragment;
 import com.tpago.movil.d.ui.main.recipient.addition.contacts.ContactListFragment;
 import com.tpago.movil.d.ui.main.recipient.addition.partners.PartnerListFragment;
 import com.tpago.movil.d.ui.main.recipient.index.category.Category;
 import com.tpago.movil.d.ui.view.widget.SearchView;
+import com.tpago.movil.domain.Bank;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
 import javax.inject.Inject;
+
 import rx.Observable;
 
 /**
@@ -107,6 +112,12 @@ public class SearchOrChooseRecipientFragment extends ChildFragment<AddRecipientC
       .onPartnerClicked(partner);
   }
 
+  @Override
+  public void onBankClicked(Bank bank) {
+    this.getContainer()
+      .onBankClicked(bank);
+  }
+
   @NonNull
   @Override
   public Observable<String> onQueryChanged() {
@@ -121,12 +132,18 @@ public class SearchOrChooseRecipientFragment extends ChildFragment<AddRecipientC
 
     @Override
     public int getCount() {
-      return 1;
+      return category == TRANSFER ? 2 : 1;
     }
 
     @Override
     public Fragment getItem(int position) {
-      if (category == PAY) {
+      if (category == TRANSFER) {
+        if (position == 0) {
+          return new BankListFragment();
+        } else {
+          return new ContactListFragment();
+        }
+      } else if (category == PAY) {
         return new PartnerListFragment();
       } else {
         return new ContactListFragment();
@@ -135,7 +152,13 @@ public class SearchOrChooseRecipientFragment extends ChildFragment<AddRecipientC
 
     @Override
     public CharSequence getPageTitle(int position) {
-      if (category == PAY) {
+      if (category == TRANSFER) {
+        if (position == 0) {
+          return getString(R.string.banks);
+        } else {
+          return getString(R.string.contacts);
+        }
+      } else if (category == PAY) {
         return getString(R.string.partners);
       } else {
         return getString(R.string.contacts);

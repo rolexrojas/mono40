@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.tpago.movil.Partner;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.ui.Container;
+import com.tpago.movil.domain.Bank;
 
 import rx.Observable;
 
@@ -14,8 +15,12 @@ import rx.Observable;
  * @author hecvasro
  */
 public interface SearchOrChooseRecipientContainer extends Container<AddRecipientComponent> {
+
   void onContactClicked(Contact contact);
+
   void onPartnerClicked(Partner partner);
+
+  void onBankClicked(Bank bank);
 
   /**
    * Creates an {@link Observable observable} that emits all query change events.

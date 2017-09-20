@@ -7,6 +7,7 @@
   <string name="cancel">Cancelar</string>
   <string name="contact">Contacto</string>
   <string name="contacts">Contactos</string>
+  <string name="banks">Bancos</string>
   <string name="credit">Crédito</string>
   <string name="current">Corriente</string>
   <string name="debit">Débito</string>
@@ -69,6 +70,7 @@
   <string name="commerce_payment_option_ready_text_value">Listo para tocar y pagar</string>
   <string name="contact.picture">Imagen del contacto</string>
   <string name="contract">Contrato</string>
+  <string name="account">Cuenta</string>
   <string name="credit_card">Tarjeta de crédito</string>
   <string name="crop_image_menu_crop">@string/ok</string>
   <string name="debit_card">Tarjeta de débito</string>

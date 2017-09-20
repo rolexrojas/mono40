@@ -134,6 +134,7 @@ public interface DepApiBridge {
     Bank bank,
     String accountNumber);
 
+  Observable<ApiResult<List<Bank>>> banks();
   Observable<ApiResult<List<Partner>>> partners(String authToken);
 
   Observable<ApiResult<Void>> addBill(

@@ -23,6 +23,7 @@ import com.tpago.movil.d.ui.SwitchableContainerActivity;
 import com.tpago.movil.d.ui.main.recipient.index.category.Category;
 import com.tpago.movil.d.ui.view.widget.FullScreenLoadIndicator;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
+import com.tpago.movil.domain.Bank;
 import com.tpago.movil.util.Objects;
 
 import javax.inject.Inject;
@@ -188,8 +189,27 @@ public class AddRecipientActivity extends
       .replace(
         R.id.container,
         RecipientBuilderFragment.create(
-          getString(R.string.contract).toLowerCase(),
-          partner))
+          getString(R.string.contract)
+            .toLowerCase(),
+          partner
+        )
+      )
+      .addToBackStack(null)
+      .commit();
+  }
+
+  @Override
+  public void onBankClicked(Bank bank) {
+    getSupportFragmentManager().beginTransaction()
+      .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+      .replace(
+        R.id.container,
+        RecipientBuilderFragment.create(
+          getString(R.string.account)
+            .toLowerCase(),
+          bank
+        )
+      )
       .addToBackStack(null)
       .commit();
   }
@@ -206,7 +226,8 @@ public class AddRecipientActivity extends
   public void startNonAffiliatedProcess(NonAffiliatedPhoneNumberRecipient recipient) {
     startActivityForResult(
       NonAffiliatedPhoneNumberRecipientAdditionActivity.getLaunchIntent(this, recipient),
-      REQUEST_CODE);
+      REQUEST_CODE
+    );
   }
 
   @Override

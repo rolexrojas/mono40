@@ -7,11 +7,13 @@
   android:background="@drawable/d_background_colored"
   android:paddingTop="20dp"
   tools:ignore="MissingPrefix">
+
   <ImageView
     android:id="@+id/image_view_background"
     android:layout_width="24dp"
     android:layout_height="24dp"
     android:layout_marginStart="24dp"/>
+
   <TextView
     android:id="@+id/text_view"
     fontPath="@string/font_gotham_round_book"
@@ -23,6 +25,7 @@
     android:lineSpacingExtra="8sp"
     android:textColor="#333"
     android:textSize="16sp"/>
+
   <com.tpago.movil.widget.TextInput
     android:id="@+id/text_input"
     style="@style/Widget.TextInput.Light"
@@ -36,6 +39,7 @@
     android:inputType="number"
     android:maxLines="1"
     android:textSize="20sp"/>
+
   <Button
     android:id="@+id/button"
     style="@style/D.Widget.Button.Light.Solid"
