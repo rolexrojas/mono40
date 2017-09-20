@@ -85,7 +85,16 @@ public class CreditCardTransactionCreationPresenter
   final void onPayButtonClicked() {
     final ProductRecipient r = (ProductRecipient) recipient;
     final CreditCardBillBalance b = (CreditCardBillBalance) r.getBalance();
-    view.requestPin(recipient.getLabel(), Formatter.amount(amountToPay(b, option)));
+    view.requestPin(
+      recipient.getLabel(),
+      Formatter.amount(
+        DCurrencies.map(
+          ((ProductRecipient) recipient).getProduct()
+            .getCurrency()
+        ),
+        amountToPay(b, option)
+      )
+    );
   }
 
   final void onPinRequestFinished(final Product product, final String pin) {
