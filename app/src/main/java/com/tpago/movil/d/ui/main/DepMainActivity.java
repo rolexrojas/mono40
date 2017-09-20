@@ -1,5 +1,6 @@
 package com.tpago.movil.d.ui.main;
 
+import static com.tpago.movil.d.domain.Product.checkIfCreditCard;
 import static com.tpago.movil.d.ui.main.recipient.index.category.Category.PAY;
 import static com.tpago.movil.d.ui.main.recipient.index.category.Category.RECHARGE;
 import static com.tpago.movil.d.ui.main.recipient.index.category.Category.TRANSFER;
@@ -20,6 +21,8 @@ import com.tpago.movil.Session;
 import com.tpago.movil.TimeOutManager;
 import com.tpago.movil.app.App;
 import com.tpago.movil.R;
+import com.tpago.movil.d.domain.Product;
+import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.ResetEvent;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.session.SessionManager;
@@ -39,6 +42,8 @@ import com.tpago.movil.init.InitActivity;
 import com.tpago.movil.main.MainModule;
 import com.tpago.movil.main.purchase.NonNfcPurchaseFragment;
 import com.tpago.movil.util.Objects;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -78,6 +83,8 @@ public class DepMainActivity
   EventBus eventBus;
   @Inject
   PosBridge posBridge;
+  @Inject
+  ProductManager productManager;
 
   @BindView(R.id.sliding_pane_layout)
   SlidingPaneLayout slidingPaneLayout;
@@ -222,7 +229,24 @@ public class DepMainActivity
         this.setChildFragment(RecipientCategoryFragment.create(RECHARGE));
         break;
       case R.id.main_menuItem_disburse:
-        this.setChildFragment(DisbursementFragment.create());
+        boolean hasCreditCards = false;
+        for (Product product : this.productManager.getProductList()) {
+          if (checkIfCreditCard(product)) {
+            hasCreditCards = true;
+            break;
+          }
+        }
+        if (hasCreditCards) {
+          this.setChildFragment(DisbursementFragment.create());
+        } else {
+          Dialogs.builder(this)
+            .setTitle(R.string.we_are_sorry)
+            .setMessage(
+              "No tiene tarjetas de crédito afiliadas para realizar esta transacción. Favor enrole sus tarjetas e intente de nuevo."
+            )
+            .setPositiveButton(R.string.ok, null)
+            .show();
+        }
         break;
       case R.id.main_menuItem_wallet:
         this.setChildFragment(ProductsFragment.newInstance());
@@ -312,7 +336,8 @@ public class DepMainActivity
 
   @Override
   public void handleTimeOut() {
-    if (App.get(this).isVisible()) {
+    if (App.get(this)
+      .isVisible()) {
       startActivity(InitActivity.getLaunchIntent(this));
       finish();
     } else {
