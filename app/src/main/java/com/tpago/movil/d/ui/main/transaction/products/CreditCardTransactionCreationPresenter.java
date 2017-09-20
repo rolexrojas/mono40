@@ -37,38 +37,37 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import timber.log.Timber;
 
+import static java.math.BigDecimal.ZERO;
+
 /**
  * @author hecvasro
  */
 
 public class CreditCardTransactionCreationPresenter
   extends Presenter<CreditCardTransactionCreationPresenter.View> {
+
   private static BigDecimal amountToPay(CreditCardBillBalance b, CreditCardBillBalance.Option o) {
     switch (o) {
-      case PERIOD: return b.periodAmount();
-      case MINIMUM: return b.minimumAmount();
-      case CURRENT: return b.currentAmount();
-      default: return BigDecimal.ZERO;
+      case PERIOD:
+        return b.periodAmount();
+      case MINIMUM:
+        return b.minimumAmount();
+      case CURRENT:
+        return b.currentAmount();
+      default:
+        return ZERO;
     }
   }
 
-  @Inject
-  Recipient recipient;
-  @Inject
-  ProductManager productManager;
-  @Inject
-  DepApiBridge apiBridge;
-  @Inject
-  SessionManager sessionManager;
-  @Inject
-  NetworkService networkService;
-  @Inject
-  StringHelper stringHelper;
-  @Inject
-  RecipientManager recipientManager;
+  @Inject DepApiBridge apiBridge;
+  @Inject NetworkService networkService;
+  @Inject ProductManager productManager;
+  @Inject Recipient recipient;
+  @Inject RecipientManager recipientManager;
+  @Inject SessionManager sessionManager;
+  @Inject StringHelper stringHelper;
 
-  private CreditCardBillBalance.Option option = CreditCardBillBalance.Option.CURRENT;
-
+  private CreditCardBillBalance.Option option;
   private Disposable paymentSubscription = Disposables.disposed();
 
   CreditCardTransactionCreationPresenter(View view, TransactionCreationComponent component) {
@@ -90,12 +89,14 @@ public class CreditCardTransactionCreationPresenter
   }
 
   final void onPinRequestFinished(final Product product, final String pin) {
-    paymentSubscription = Single.defer(new Callable<SingleSource<Result<PaymentResult, ErrorCode>>>() {
+    paymentSubscription
+      = Single.defer(new Callable<SingleSource<Result<PaymentResult, ErrorCode>>>() {
       @Override
       public SingleSource<Result<PaymentResult, ErrorCode>> call() throws Exception {
         final Result<PaymentResult, ErrorCode> result;
         if (networkService.checkIfAvailable()) {
-          final String authToken = sessionManager.getSession().getAuthToken();
+          final String authToken = sessionManager.getSession()
+            .getAuthToken();
           final ApiResult<Boolean> pinValidationResult = apiBridge.validatePin(authToken, pin);
           if (pinValidationResult.isSuccessful()) {
             if (pinValidationResult.getData()) {
@@ -107,7 +108,8 @@ public class CreditCardTransactionCreationPresenter
                 option,
                 pin,
                 product,
-                r.getProduct())
+                r.getProduct()
+              )
                 .toBlocking()
                 .single();
               if (transactionResult.isSuccessful()) {
@@ -116,7 +118,9 @@ public class CreditCardTransactionCreationPresenter
                 result = Result.create(
                   FailureData.create(
                     ErrorCode.UNEXPECTED,
-                    transactionResult.getError().getDescription()));
+                    transactionResult.getError()
+                      .getDescription()
+                  ));
               }
             } else {
               result = Result.create(FailureData.create(ErrorCode.INCORRECT_PIN));
@@ -125,7 +129,9 @@ public class CreditCardTransactionCreationPresenter
             result = Result.create(
               FailureData.create(
                 ErrorCode.UNEXPECTED,
-                pinValidationResult.getError().getDescription()));
+                pinValidationResult.getError()
+                  .getDescription()
+              ));
           }
         } else {
           result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
@@ -179,11 +185,12 @@ public class CreditCardTransactionCreationPresenter
   public void onViewStarted() {
     super.onViewStarted();
     final ProductRecipient r = (ProductRecipient) recipient;
-    view.setCurrencyValue(DCurrencies.map(r.getProduct().getCurrency()));
+    view.setCurrencyValue(DCurrencies.map(r.getProduct()
+      .getCurrency()));
     String dueDate = null;
-    BigDecimal totalValue = BigDecimal.ZERO;
-    BigDecimal periodValue = BigDecimal.ZERO;
-    BigDecimal minimumValue = BigDecimal.ZERO;
+    BigDecimal totalValue = ZERO;
+    BigDecimal periodValue = ZERO;
+    BigDecimal minimumValue = ZERO;
     final CreditCardBillBalance b = (CreditCardBillBalance) r.getBalance();
     if (Objects.checkIfNotNull(b)) {
       dueDate = b.dueDate();
@@ -191,12 +198,31 @@ public class CreditCardTransactionCreationPresenter
       periodValue = b.periodAmount();
       minimumValue = b.minimumAmount();
     }
-    view.setOptionChecked(option);
-    view.setDueDateValue(dueDate);
-    view.setTotalValue(Formatter.amount(totalValue));
-    view.setPeriodValue(Formatter.amount(periodValue));
-    view.setMinimumValue(Formatter.amount(minimumValue));
-    view.setPayButtonEnabled(totalValue.compareTo(BigDecimal.ZERO) > 0);
+    this.view.setDueDateValue(dueDate);
+
+    this.view.setTotalValue(Formatter.amount(totalValue));
+    final boolean isTotalValueEnabled = totalValue.compareTo(ZERO) > 0;
+    this.view.setTotalValueEnabled(isTotalValueEnabled);
+
+    this.view.setPeriodValue(Formatter.amount(periodValue));
+    final boolean isPeriodValueEnabled = periodValue.compareTo(ZERO) > 0;
+    this.view.setPeriodValueEnabled(isPeriodValueEnabled);
+
+    this.view.setMinimumValue(Formatter.amount(minimumValue));
+    final boolean isMinimumValueEnabled = minimumValue.compareTo(ZERO) > 0;
+    this.view.setMinimumValueEnabled(isMinimumValueEnabled);
+
+    if (isTotalValueEnabled) {
+      this.option = CreditCardBillBalance.Option.CURRENT;
+    } else if (isPeriodValueEnabled) {
+      this.option = CreditCardBillBalance.Option.PERIOD;
+    } else if (isMinimumValueEnabled) {
+      this.option = CreditCardBillBalance.Option.MINIMUM;
+    } else {
+      this.option = CreditCardBillBalance.Option.OTHER;
+    }
+    this.view.setOptionChecked(this.option);
+    this.view.setPayButtonEnabled(isTotalValueEnabled || isPeriodValueEnabled || isMinimumValueEnabled);
 
     final List<Product> paymentOptions = new ArrayList<>();
     for (Product paymentOption : productManager.getPaymentOptionList()) {
@@ -214,15 +240,22 @@ public class CreditCardTransactionCreationPresenter
   }
 
   public interface View extends Presenter.View {
+
     void setCurrencyValue(String value);
 
     void setDueDateValue(String value);
 
     void setTotalValue(String value);
 
+    void setTotalValueEnabled(boolean enabled);
+
     void setPeriodValue(String value);
 
+    void setPeriodValueEnabled(boolean enabled);
+
     void setMinimumValue(String value);
+
+    void setMinimumValueEnabled(boolean enabled);
 
     void setPaymentOptions(List<Product> paymentOptions);
 

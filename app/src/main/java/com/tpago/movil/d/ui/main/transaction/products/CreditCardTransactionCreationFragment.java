@@ -35,35 +35,29 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 
-public class CreditCardTransactionCreationFragment extends ChildFragment<TransactionCreationContainer> implements CreditCardTransactionCreationPresenter.View {
+public class CreditCardTransactionCreationFragment
+  extends ChildFragment<TransactionCreationContainer>
+  implements CreditCardTransactionCreationPresenter.View {
+
   private CreditCardTransactionCreationPresenter presenter;
 
   private Unbinder unbinder;
 
-  @Inject
-  StringHelper stringHelper;
+  @Inject StringHelper stringHelper;
 
-  @BindView(R.id.button)
-  Button button;
-  @BindView(R.id.prefixable_text_view_total_owed)
-  PrefixableTextView totalOwedPrefixableTextView;
-  @BindView(R.id.text_view_due_date)
-  TextView dueDateTextView;
-  @BindView(R.id.prefixable_text_view_period)
-  PrefixableTextView periodPrefixableTextView;
-  @BindView(R.id.prefixable_text_view_minimum)
-  PrefixableTextView minimumPrefixableTextView;
-  @BindView(R.id.prefixable_text_view_total)
-  PrefixableTextView totalPrefixableTextView;
-  @BindView(R.id.radio_button_pay_period)
-  RadioButton periodRadioButton;
-  @BindView(R.id.radio_button_pay_minimum)
-  RadioButton minimumRadioButton;
-  @BindView(R.id.radio_button_pay_total)
-  RadioButton totalRadioButton;
-
-  @BindView(R.id.payment_method_chooser)
-  PaymentMethodChooser paymentMethodChooser;
+  @BindView(R.id.button) Button button;
+  @BindView(R.id.payment_method_chooser) PaymentMethodChooser paymentMethodChooser;
+  @BindView(R.id.prefixable_text_view_minimum) PrefixableTextView minimumPrefixableTextView;
+  @BindView(R.id.prefixable_text_view_period) PrefixableTextView periodPrefixableTextView;
+  @BindView(R.id.prefixable_text_view_total) PrefixableTextView totalPrefixableTextView;
+  @BindView(R.id.prefixable_text_view_total_owed) PrefixableTextView totalOwedPrefixableTextView;
+  @BindView(R.id.radio_button_pay_minimum) RadioButton minimumRadioButton;
+  @BindView(R.id.radio_button_pay_period) RadioButton periodRadioButton;
+  @BindView(R.id.radio_button_pay_total) RadioButton totalRadioButton;
+  @BindView(R.id.text_view_due_date) TextView dueDateTextView;
+  @BindView(R.id.view_minimum) View minimumView;
+  @BindView(R.id.view_period) View periodView;
+  @BindView(R.id.view_total) View totalView;
 
   public static CreditCardTransactionCreationFragment create() {
     return new CreditCardTransactionCreationFragment();
@@ -103,7 +97,8 @@ public class CreditCardTransactionCreationFragment extends ChildFragment<Transac
   public View onCreateView(
     LayoutInflater inflater,
     @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(R.layout.d_fragment_transaction_creation_credit_card, container, false);
   }
 
@@ -157,13 +152,31 @@ public class CreditCardTransactionCreationFragment extends ChildFragment<Transac
   }
 
   @Override
+  public void setTotalValueEnabled(boolean enabled) {
+    this.totalRadioButton.setEnabled(enabled);
+    this.totalView.setEnabled(enabled);
+  }
+
+  @Override
   public void setPeriodValue(String value) {
     periodPrefixableTextView.setContent(value);
   }
 
   @Override
+  public void setPeriodValueEnabled(boolean enabled) {
+    this.periodRadioButton.setEnabled(enabled);
+    this.periodView.setEnabled(enabled);
+  }
+
+  @Override
   public void setMinimumValue(String value) {
     minimumPrefixableTextView.setContent(value);
+  }
+
+  @Override
+  public void setMinimumValueEnabled(boolean enabled) {
+    this.minimumRadioButton.setEnabled(enabled);
+    this.minimumView.setEnabled(enabled);
   }
 
   @Override
@@ -211,7 +224,8 @@ public class CreditCardTransactionCreationFragment extends ChildFragment<Transac
         }
       },
       x,
-      y);
+      y
+    );
   }
 
   @Override
@@ -238,6 +252,7 @@ public class CreditCardTransactionCreationFragment extends ChildFragment<Transac
 
   @Override
   public void showUnavailableNetworkError() {
-    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG).show();
+    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG)
+      .show();
   }
 }

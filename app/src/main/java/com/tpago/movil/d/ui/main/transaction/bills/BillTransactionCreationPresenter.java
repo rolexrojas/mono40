@@ -34,28 +34,24 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import timber.log.Timber;
 
+import static java.math.BigDecimal.ZERO;
+
 /**
  * @author hecvasro
  */
 
 public class BillTransactionCreationPresenter
   extends Presenter<BillTransactionCreationPresenter.View> {
-  @Inject
-  Recipient recipient;
-  @Inject
-  ProductManager productManager;
-  @Inject
-  DepApiBridge apiBridge;
-  @Inject
-  SessionManager sessionManager;
-  @Inject
-  NetworkService networkService;
-  @Inject
-  StringHelper stringHelper;
-  @Inject
-  RecipientManager recipientManager;
 
-  private BillRecipient.Option option = BillRecipient.Option.TOTAL;
+  @Inject DepApiBridge apiBridge;
+  @Inject NetworkService networkService;
+  @Inject ProductManager productManager;
+  @Inject Recipient recipient;
+  @Inject RecipientManager recipientManager;
+  @Inject SessionManager sessionManager;
+  @Inject StringHelper stringHelper;
+
+  private BillRecipient.Option option;
 
   private Disposable paymentSubscription = Disposables.disposed();
 
@@ -78,7 +74,9 @@ public class BillTransactionCreationPresenter
       recipient.getIdentifier(),
       Formatter.amount(
         r.getCurrency(),
-        option.equals(BillRecipient.Option.TOTAL) ? b.getTotal() : b.getMinimum()));
+        option.equals(BillRecipient.Option.TOTAL) ? b.getTotal() : b.getMinimum()
+      )
+    );
   }
 
   final void onPinRequestFinished(final Product product, final String pin) {
@@ -87,7 +85,8 @@ public class BillTransactionCreationPresenter
       public SingleSource<Result<String, ErrorCode>> call() throws Exception {
         final Result<String, ErrorCode> result;
         if (networkService.checkIfAvailable()) {
-          final String authToken = sessionManager.getSession().getAuthToken();
+          final String authToken = sessionManager.getSession()
+            .getAuthToken();
           final ApiResult<Boolean> pinValidationResult = apiBridge.validatePin(authToken, pin);
           if (pinValidationResult.isSuccessful()) {
             if (pinValidationResult.getData()) {
@@ -96,7 +95,8 @@ public class BillTransactionCreationPresenter
                 (BillRecipient) recipient,
                 product,
                 option,
-                pin)
+                pin
+              )
                 .toBlocking()
                 .single();
               if (transactionResult.isSuccessful()) {
@@ -105,7 +105,9 @@ public class BillTransactionCreationPresenter
                 result = Result.create(
                   FailureData.create(
                     ErrorCode.UNEXPECTED,
-                    transactionResult.getError().getDescription()));
+                    transactionResult.getError()
+                      .getDescription()
+                  ));
               }
             } else {
               result = Result.create(FailureData.create(ErrorCode.INCORRECT_PIN));
@@ -114,7 +116,9 @@ public class BillTransactionCreationPresenter
             result = Result.create(
               FailureData.create(
                 ErrorCode.UNEXPECTED,
-                pinValidationResult.getError().getDescription()));
+                pinValidationResult.getError()
+                  .getDescription()
+              ));
           }
         } else {
           result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
@@ -169,20 +173,33 @@ public class BillTransactionCreationPresenter
     final BillRecipient r = (BillRecipient) recipient;
     view.setCurrencyValue(r.getCurrency());
     String dueDate = null;
-    BigDecimal totalValue = BigDecimal.ZERO;
-    BigDecimal minimumValue = BigDecimal.ZERO;
+    BigDecimal totalValue = ZERO;
+    BigDecimal minimumValue = ZERO;
     final BillBalance b = r.getBalance();
     if (Objects.checkIfNotNull(b)) {
       dueDate = b.getDate();
       totalValue = b.getTotal();
       minimumValue = b.getMinimum();
     }
-    view.setOptionChecked(option);
-    view.setDueDateValue(dueDate);
-    view.setTotalValue(Formatter.amount(totalValue));
-    view.setMinimumValue(Formatter.amount(minimumValue));
-    view.setPayButtonEnabled(totalValue.compareTo(BigDecimal.ZERO) > 0);
-    view.setPaymentOptions(productManager.getPaymentOptionList());
+    this.view.setDueDateValue(dueDate);
+
+    this.view.setTotalValue(Formatter.amount(totalValue));
+    final boolean isTotalValueEnabled = totalValue.compareTo(ZERO) > 0;
+    this.view.setTotalValueEnabled(isTotalValueEnabled);
+
+    this.view.setMinimumValue(Formatter.amount(minimumValue));
+    final boolean isMinimumValueEnabled = minimumValue.compareTo(ZERO) > 0;
+    this.view.setMinimumValueEnabled(isMinimumValueEnabled);
+
+    if (isTotalValueEnabled) {
+      this.option = BillRecipient.Option.TOTAL;
+    } else {
+      this.option = BillRecipient.Option.MINIMUM;
+    }
+    this.view.setOptionChecked(this.option);
+    this.view.setPayButtonEnabled(isTotalValueEnabled || isMinimumValueEnabled);
+
+    this.view.setPaymentOptions(productManager.getPaymentOptionList());
   }
 
   @Override
@@ -192,13 +209,18 @@ public class BillTransactionCreationPresenter
   }
 
   public interface View extends Presenter.View {
+
     void setCurrencyValue(String value);
 
     void setDueDateValue(String value);
 
     void setTotalValue(String value);
 
+    void setTotalValueEnabled(boolean enabled);
+
     void setMinimumValue(String value);
+
+    void setMinimumValueEnabled(boolean enabled);
 
     void setPaymentOptions(List<Product> paymentOptions);
 
