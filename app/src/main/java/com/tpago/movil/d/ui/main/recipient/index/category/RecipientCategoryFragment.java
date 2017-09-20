@@ -38,7 +38,6 @@ import com.tpago.movil.d.ui.main.list.NoResultsListItemHolder;
 import com.tpago.movil.d.ui.main.list.NoResultsListItemHolderBinder;
 import com.tpago.movil.d.ui.main.list.NoResultsListItemHolderCreator;
 import com.tpago.movil.d.ui.main.recipient.addition.AddRecipientActivity;
-import com.tpago.movil.d.ui.main.recipient.addition.NonAffiliatedPhoneNumberRecipientAdditionActivity;
 import com.tpago.movil.d.ui.main.transaction.TransactionCategory;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivity;
 import com.tpago.movil.d.ui.main.transaction.own.OwnTransactionCreationActivity;
@@ -270,14 +269,6 @@ public class RecipientCategoryFragment
         final Pair<Recipient, String> result = TransactionCreationActivity.deserializeResult(data);
         if (Utils.isNotNull(result)) {
           requestResult = Pair.create(requestCode, result);
-        }
-      }
-    } else if (requestCode == REQUEST_CODE_NON_AFFILIATED_RECIPIENT_ADDITION) {
-      if (resultCode == Activity.RESULT_OK) {
-        final Recipient recipient = NonAffiliatedPhoneNumberRecipientAdditionActivity
-          .deserializeResult(data);
-        if (Objects.checkIfNotNull(recipient)) {
-          requestResult = Pair.create(requestCode, Pair.create(recipient, (String) null));
         }
       }
     } else if (requestCode == REQUEST_CODE_OWN_TRANSACTION_CREATION) {
