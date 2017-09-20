@@ -9,31 +9,36 @@
   android:focusableInTouchMode="true"
   android:orientation="vertical"
   tools:ignore="MissingPrefix">
+
   <FrameLayout
     android:layout_width="match_parent"
     android:layout_height="130dp"
-    android:layout_marginStart="20dp"
     android:layout_marginEnd="20dp"
+    android:layout_marginStart="20dp"
     android:paddingTop="16dp">
+
     <TextView
       fontPath="@string/font_gotham_round_book"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_gravity="top"
       android:lineSpacingExtra="8dp"
-      android:text="Este número no esta afiliado a tPago. Para continuar, selecciona el banco de tu beneficiario."
+      android:text="Para continuar, selecciona la telefónica a la que pertenece el número telefónico."
       android:textColor="#333"
-      android:textSize="16sp" />
+      android:textSize="16sp"/>
   </FrameLayout>
-  <include layout="@layout/d_reusable_divider" />
+
+  <include layout="@layout/d_reusable_divider"/>
+
   <android.support.v4.widget.SwipeRefreshLayout
     android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <android.support.v7.widget.RecyclerView
       android:id="@+id/recycler_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="@color/common_white" />
+      android:background="@color/common_white"/>
   </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

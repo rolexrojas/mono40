@@ -12,9 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.Partner;
 import com.tpago.movil.PhoneNumber;
@@ -40,11 +42,14 @@ import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.tpago.movil.util.Objects;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+
 import javax.inject.Inject;
+
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
@@ -98,7 +103,8 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
       carrier = r.getCarrier();
       phoneNumber = r.phoneNumber();
     } else if (this.recipient instanceof NonAffiliatedPhoneNumberRecipient) {
-      final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) this.recipient;
+      final NonAffiliatedPhoneNumberRecipient r
+        = (NonAffiliatedPhoneNumberRecipient) this.recipient;
 
       carrier = r.getCarrier();
       phoneNumber = r.getPhoneNumber();
@@ -130,7 +136,8 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
           } else {
             Dialogs.builder(getContext())
               .setTitle(R.string.error_generic_title)
-              .setMessage(result.getError().getDescription())
+              .setMessage(result.getError()
+                .getDescription())
               .setPositiveButton(R.string.error_positive_button_text, null)
               .create()
               .show();
@@ -167,11 +174,13 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
   public View onCreateView(
     LayoutInflater inflater,
     @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(
       R.layout.carrier_selection_fragment,
       container,
-      false);
+      false
+    );
   }
 
 
@@ -187,7 +196,8 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
     recyclerView.setLayoutManager(new LinearLayoutManager(
       context,
       LinearLayoutManager.VERTICAL,
-      false));
+      false
+    ));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
       .drawable(R.drawable.d_divider)
       .marginResId(R.dimen.space_horizontal_normal)
@@ -199,7 +209,8 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
   @Override
   public void onResume() {
     super.onResume();
-    subscription = apiBridge.partners(sessionManager.getSession().getAuthToken())
+    subscription = apiBridge.partners(sessionManager.getSession()
+      .getAuthToken())
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
       .doOnSubscribe(new Action0() {
@@ -220,7 +231,8 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
             }
 
             for (Partner partner : result.getData()) {
-              if (partner.getType().equals(Partner.TYPE_CARRIER)) {
+              if (partner.getType()
+                .equals(Partner.TYPE_CARRIER)) {
                 carrierList.add(partner);
               }
             }
@@ -228,7 +240,8 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
           } else {
             Dialogs.builder(getContext())
               .setTitle(R.string.error_generic_title)
-              .setMessage(result.getError().getDescription())
+              .setMessage(result.getError()
+                .getDescription())
               .setPositiveButton(R.string.ok, null)
               .show();
           }
