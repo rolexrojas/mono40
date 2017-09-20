@@ -27,6 +27,7 @@ import butterknife.ButterKnife;
  * @author hecvasro
  */
 public final class TransactionSummaryDialogFragment extends DialogFragment {
+
   private static final String KEY_RECIPIENT = "recipient";
   private static final String KEY_ALREADY_EXISTS = "alreadyExists";
   private static final String KEY_TRANSACTION_ID = "transactionId";
@@ -40,7 +41,8 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
   public static TransactionSummaryDialogFragment create(
     Recipient recipient,
     boolean alreadyExists,
-    String transactionId) {
+    String transactionId
+  ) {
     final Bundle args = new Bundle();
     args.putParcelable(KEY_RECIPIENT, recipient);
     args.putSerializable(KEY_ALREADY_EXISTS, alreadyExists);
@@ -83,7 +85,11 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
         public void onClick(DialogInterface dialog, int which) {
           if (Objects.checkIfNotNull(listener)) {
             final EditText editText = ButterKnife.findById(getDialog(), R.id.edit_text);
-            listener.onSaveButtonClicked(recipient, editText.getText().toString().trim());
+            listener.onSaveButtonClicked(recipient,
+              editText.getText()
+                .toString()
+                .trim()
+            );
           }
         }
       })
@@ -99,11 +105,13 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
     final TextView transactionTextView = ButterKnife.findById(dialog, R.id.text_view_transaction);
     transactionTextView.setText(String.format("#%1$s", transactionId));
     if (recipient == null || alreadyExists) {
-      ButterKnife.findById(dialog, R.id.inclusion).setVisibility(View.GONE);
+      ButterKnife.findById(dialog, R.id.inclusion)
+        .setVisibility(View.GONE);
     } else {
       final String textValue;
       final String hintValue;
-      if (recipient.getType().equals(RecipientType.BILL)) {
+      if (recipient.getType()
+        .equals(RecipientType.BILL)) {
         textValue = getString(R.string.recipient_addition_message_bill);
         hintValue = getString(R.string.recipient_addition_hint_bill);
       } else {

@@ -6,6 +6,7 @@
   android:layout_height="wrap_content"
   android:orientation="vertical"
   tools:ignore="MissingPrefix">
+
   <TextView
     android:id="@+id/text_view_transaction"
     fontPath="@string/font_roboto_regular"
@@ -17,6 +18,7 @@
     android:lineSpacingExtra="8sp"
     android:textColor="@color/common_black_alpha_27"
     android:textSize="16sp"/>
+
   <include
     android:id="@+id/inclusion"
     layout="@layout/d_dialog_recipient_addition"/>

@@ -66,6 +66,7 @@ import timber.log.Timber;
  * @author hecvasro
  */
 class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
+
   private static final long DEFAULT_IME_SPAN_QUERY = 300L; // 0.3 seconds.
 
   private final StringHelper stringHelper;
@@ -90,7 +91,8 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
   private final RecipientComparator recipientComparator;
 
   private boolean deleting = false;
-  private RecipientDeletionFilter recipientDeletableFilter = RecipientDeletionFilter.create(this.deleting);
+  private RecipientDeletionFilter recipientDeletableFilter
+    = RecipientDeletionFilter.create(this.deleting);
   private List<Recipient> selectedRecipientList = new ArrayList<>();
 
   private Subscription querySubscription = Subscriptions.unsubscribed();
@@ -281,7 +283,8 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
                     result = Result.create(
                       FailureData.create(
                         ErrorCode.UNEXPECTED,
-                        apiError.getDescription()));
+                        apiError.getDescription()
+                      ));
                   }
                 } else {
                   result = Result.create(FailureData.create(ErrorCode.NOT_AFFILIATED_CUSTOMER));
@@ -291,7 +294,8 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
                 result = Result.create(
                   FailureData.create(
                     ErrorCode.UNEXPECTED,
-                    apiError.getDescription()));
+                    apiError.getDescription()
+                  ));
               }
             } else {
               result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
@@ -312,7 +316,11 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
           public void accept(Result<Customer, ErrorCode> result) throws Exception {
             screen.hideLoadIndicator();
             if (result.isSuccessful()) {
-              addRecipient(new PhoneNumberRecipient(phoneNumber, result.getSuccessData().getName()));
+              addRecipient(new PhoneNumberRecipient(
+                phoneNumber,
+                result.getSuccessData()
+                  .getName()
+              ));
             } else {
               final FailureData<ErrorCode> failureData = result.getFailureData();
               switch (failureData.getCode()) {
@@ -364,13 +372,18 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
                   final ApiResult<Customer> customerResult = depApiBridge
                     .fetchCustomer(authToken, phoneNumber.value());
                   if (customerResult.isSuccessful()) {
-                    result = Result.create(Pair.create(true, customerResult.getData().getName()));
+                    result = Result.create(Pair.create(
+                      true,
+                      customerResult.getData()
+                        .getName()
+                    ));
                   } else {
                     final ApiError apiError = customerStateResult.getError();
                     result = Result.create(
                       FailureData.create(
                         ErrorCode.UNEXPECTED,
-                        apiError.getDescription()));
+                        apiError.getDescription()
+                      ));
                   }
                 } else {
                   result = Result.create(Pair.<Boolean, String>create(false, null));
@@ -380,7 +393,8 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
                 result = Result.create(
                   FailureData.create(
                     ErrorCode.UNEXPECTED,
-                    apiError.getDescription()));
+                    apiError.getDescription()
+                  ));
               }
             } else {
               result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
@@ -434,18 +448,21 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
 
   void showTransactionSummary(
     final Recipient recipient,
-    final String transactionId) {
+    final String transactionId
+  ) {
     assertScreen();
     screen.clearQuery();
     screen.showTransactionSummary(
       recipient,
       recipientManager.checkIfExists(recipient),
-      transactionId);
+      transactionId
+    );
   }
 
   final void signOut() {
     if (signOutSubscription.isUnsubscribed()) {
-      posBridge.unregister(sessionManager.getSession().getPhoneNumber())
+      posBridge.unregister(sessionManager.getSession()
+        .getPhoneNumber())
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(new Action0() {
@@ -530,7 +547,9 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
                   result = Result.create(
                     FailureData.create(
                       ErrorCode.UNEXPECTED,
-                      queryBalanceResult.getError().getDescription()));
+                      queryBalanceResult.getError()
+                        .getDescription()
+                    ));
                 }
               } else {
                 result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
@@ -597,7 +616,9 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
                   result = Result.create(
                     FailureData.create(
                       ErrorCode.UNEXPECTED,
-                      queryBalanceResult.getError().getDescription()));
+                      queryBalanceResult.getError()
+                        .getDescription()
+                    ));
                 }
               } else {
                 result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
@@ -660,7 +681,10 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
           public SingleSource<Result<Map<Recipient, Boolean>, ErrorCode>> call() throws Exception {
             final Result<Map<Recipient, Boolean>, ErrorCode> result;
             if (networkService.checkIfAvailable()) {
-              final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(authToken, pin);
+              final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(
+                authToken,
+                pin
+              );
               if (pinValidationResult.isSuccessful()) {
                 if (pinValidationResult.getData()) {
                   final Map<Recipient, Boolean> resultMap = new HashMap<>();
@@ -684,7 +708,9 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
                 result = Result.create(
                   FailureData.create(
                     ErrorCode.UNEXPECTED,
-                    pinValidationResult.getError().getDescription()));
+                    pinValidationResult.getError()
+                      .getDescription()
+                  ));
               }
             } else {
               result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
@@ -697,7 +723,8 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
         .subscribe(new Consumer<Result<Map<Recipient, Boolean>, ErrorCode>>() {
           @Override
           public void accept(
-            Result<Map<Recipient, Boolean>, ErrorCode> result) throws Exception {
+            Result<Map<Recipient, Boolean>, ErrorCode> result
+          ) throws Exception {
             screen.setDeletingResult(result.isSuccessful());
             if (result.isSuccessful()) {
               stopDeleting();
