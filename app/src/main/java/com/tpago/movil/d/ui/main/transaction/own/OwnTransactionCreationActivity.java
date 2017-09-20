@@ -18,6 +18,7 @@ import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
+import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.list.ListItemAdapter;
 import com.tpago.movil.d.ui.main.list.ListItemHolderCreatorFactory;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -28,6 +29,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+import static com.tpago.movil.d.domain.Product.checkIfAccount;
 
 /**
  * @author Hector Vasquez
@@ -111,11 +114,16 @@ public final class OwnTransactionCreationActivity extends AppCompatActivity impl
       }
     });
 
-    final ListItemHolderCreatorFactory holderCreatorFactory = new ListItemHolderCreatorFactory.Builder()
+    final ListItemHolderCreatorFactory holderCreatorFactory
+      = new ListItemHolderCreatorFactory.Builder()
       .addCreator(Product.class, new OwnProductListItemHolderCreator(this))
       .build();
     final BinderFactory holderBinderFactory = new BinderFactory.Builder()
-      .addBinder(Product.class, OwnProductListItemHolder.class, new OwnProductListItemHolderBinder(stringHelper))
+      .addBinder(
+        Product.class,
+        OwnProductListItemHolder.class,
+        new OwnProductListItemHolderBinder(stringHelper)
+      )
       .build();
     adapter = new ListItemAdapter(holderCreatorFactory, holderBinderFactory);
     for (Product product : productManager.getProductList()) {
@@ -138,7 +146,7 @@ public final class OwnTransactionCreationActivity extends AppCompatActivity impl
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == android.R.id.home) {
-      onBackPressed();
+      this.onBackPressed();
       return true;
     } else {
       return super.onOptionsItemSelected(item);
@@ -154,9 +162,29 @@ public final class OwnTransactionCreationActivity extends AppCompatActivity impl
 
   @Override
   public void onButtonClicked(int position) {
-    startActivityForResult(
-      OwnTransferActivity.createLaunchIntent(this, (Product) adapter.get(position)),
-      REQUEST_CODE_TRANSFER
-    );
+    boolean hasAccounts = false;
+    for (Product product : this.productManager.getProductList()) {
+      if (checkIfAccount(product)) {
+        hasAccounts = true;
+        break;
+      }
+    }
+    if (hasAccounts) {
+      this.startActivityForResult(
+        OwnTransferActivity.createLaunchIntent(
+          this,
+          (Product) this.adapter.get(position)
+        ),
+        REQUEST_CODE_TRANSFER
+      );
+    } else {
+      Dialogs.builder(this)
+        .setTitle(R.string.we_are_sorry)
+        .setMessage(
+          "No tiene cuentas bancarias afiliadas para acreditar su avance de efectivo desde su tarjeta. Favor enrole sus cuentas e intente de nuevo."
+        )
+        .setPositiveButton(R.string.ok, null)
+        .show();
+    }
   }
 }
