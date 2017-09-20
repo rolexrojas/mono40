@@ -6,7 +6,6 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.util.Pair;
 
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
@@ -56,7 +55,6 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
-import rx.functions.Func0;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
@@ -360,10 +358,10 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
     assertScreen();
     if (recipientAdditionSubscription.isDisposed()) {
       recipientAdditionSubscription = Single
-        .defer(new Callable<SingleSource<Result<Pair<Boolean, String>, ErrorCode>>>() {
+        .defer(new Callable<SingleSource<Result<String, ErrorCode>>>() {
           @Override
-          public SingleSource<Result<Pair<Boolean, String>, ErrorCode>> call() throws Exception {
-            final Result<Pair<Boolean, String>, ErrorCode> result;
+          public SingleSource<Result<String, ErrorCode>> call() throws Exception {
+            final Result<String, ErrorCode> result;
             if (networkService.checkIfAvailable()) {
               final ApiResult<Customer.State> customerStateResult = depApiBridge
                 .fetchCustomerState(authToken, phoneNumber.value());
@@ -372,11 +370,10 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
                   final ApiResult<Customer> customerResult = depApiBridge
                     .fetchCustomer(authToken, phoneNumber.value());
                   if (customerResult.isSuccessful()) {
-                    result = Result.create(Pair.create(
-                      true,
+                    result = Result.create(
                       customerResult.getData()
                         .getName()
-                    ));
+                    );
                   } else {
                     final ApiError apiError = customerStateResult.getError();
                     result = Result.create(
@@ -386,7 +383,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
                       ));
                   }
                 } else {
-                  result = Result.create(Pair.<Boolean, String>create(false, null));
+                  result = Result.create(null);
                 }
               } else {
                 final ApiError apiError = customerStateResult.getError();
@@ -410,17 +407,17 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
             screen.showLoadIndicator(true);
           }
         })
-        .subscribe(new Consumer<Result<Pair<Boolean, String>, ErrorCode>>() {
+        .subscribe(new Consumer<Result<String, ErrorCode>>() {
           @Override
-          public void accept(Result<Pair<Boolean, String>, ErrorCode> result) throws Exception {
+          public void accept(Result<String, ErrorCode> result) throws Exception {
             screen.hideLoadIndicator();
             if (result.isSuccessful()) {
-              final Pair<Boolean, String> successData = result.getSuccessData();
               final Recipient recipient;
-              if (successData.first) {
-                recipient = new PhoneNumberRecipient(phoneNumber, successData.second);
-              } else {
+              final String successData = result.getSuccessData();
+              if (successData == null) {
                 recipient = new NonAffiliatedPhoneNumberRecipient(phoneNumber);
+              } else {
+                recipient = new PhoneNumberRecipient(phoneNumber, successData);
               }
               screen.startTransfer(recipient);
             } else {
