@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.tpago.movil.R;
+import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.domain.UserRecipient;
 import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.StringHelper;
@@ -497,6 +498,16 @@ public class RecipientCategoryFragment
           break;
         case TRANSACTION_WITH_PHONE_NUMBER:
           presenter.startTransfer(((PhoneNumberAction) item).phoneNumber());
+          break;
+        case ADD_ACCOUNT:
+          presenter.addRecipient(
+            AccountRecipient.builder()
+              .number(((AccountAction) item).number())
+              .build()
+          );
+          break;
+        case TRANSACTION_WITH_ACCOUNT:
+          this.presenter.startTransfer(((AccountAction) item).number());
           break;
       }
     }

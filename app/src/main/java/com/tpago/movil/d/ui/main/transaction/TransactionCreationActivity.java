@@ -142,6 +142,9 @@ public class TransactionCreationActivity
             fragment = LoanTransactionCreationFragment.create();
           }
           break;
+        case ACCOUNT:
+          fragment = PhoneNumberTransactionCreationFragment.newInstance();
+          break;
         case USER:
           fragment = PhoneNumberTransactionCreationFragment.newInstance();
           break;

@@ -5,6 +5,7 @@ import android.support.v4.util.Pair;
 
 import com.tpago.movil.Partner;
 import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.domain.Balance;
 import com.tpago.movil.d.domain.CreditCardBillBalance;
 import com.tpago.movil.d.domain.Customer;
@@ -234,13 +235,25 @@ class RetrofitApiBridge implements DepApiBridge {
     final BigDecimal amount,
     final String pin
   ) {
-    if (recipient instanceof NonAffiliatedPhoneNumberRecipient) {
+    if (recipient instanceof AccountRecipient) {
+      final AccountRecipient r = (AccountRecipient) recipient;
+      return apiService.transferToNonAffiliated(
+        authToken,
+        TransferToNonAffiliatedRequestBody.create(
+          ProductInfo.create(product),
+          ProductInfo.create(r.product()),
+          pin,
+          amount
+        )
+      )
+        .flatMap(mapToApiResult(TransferResponseBody.mapFunc()));
+    } else if (recipient instanceof NonAffiliatedPhoneNumberRecipient) {
       final NonAffiliatedPhoneNumberRecipient napnr = (NonAffiliatedPhoneNumberRecipient) recipient;
       return apiService.fetchProductInfo(
         authToken,
         RecipientAccountInfoRequestBody.create(napnr.getBank(), napnr.getAccountNumber())
       )
-        .flatMap(mapToApiResult(RetrofitApiBridge.<ProductInfo>identityMapFunc()))
+        .flatMap(mapToApiResult(RetrofitApiBridge.identityMapFunc()))
         .flatMap(new Func1<ApiResult<ProductInfo>, Observable<ApiResult<String>>>() {
           @Override
           public Observable<ApiResult<String>> call(ApiResult<ProductInfo> apiResult) {
@@ -266,7 +279,8 @@ class RetrofitApiBridge implements DepApiBridge {
         });
     } else {
       final PhoneNumberRecipient pnr = (PhoneNumberRecipient) recipient;
-      return apiService.fetchCustomer(authToken,
+      return apiService.fetchCustomer(
+        authToken,
         pnr.getPhoneNumber()
           .value()
       )

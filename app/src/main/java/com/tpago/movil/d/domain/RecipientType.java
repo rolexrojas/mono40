@@ -10,5 +10,6 @@ public enum RecipientType {
   NON_AFFILIATED_PHONE_NUMBER,
   BILL,
   PRODUCT,
-  USER
+  USER,
+  ACCOUNT
 }

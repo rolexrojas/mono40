@@ -12,6 +12,7 @@ import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.api.DCurrencies;
 import com.tpago.movil.d.data.StringHelper;
+import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.UserRecipient;
@@ -114,7 +115,15 @@ class PhoneNumberTransactionCreationPresenter
 
   final void onTransferButtonClicked() {
     if (this.recipient instanceof NonAffiliatedPhoneNumberRecipient) {
-      final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) this.recipient;
+      final NonAffiliatedPhoneNumberRecipient r
+        = (NonAffiliatedPhoneNumberRecipient) this.recipient;
+      if (r.canAcceptTransfers()) {
+        this.screen.requestPin();
+      } else {
+        this.screen.requestBankAndAccountNumber();
+      }
+    } else if (this.recipient instanceof AccountRecipient) {
+      final AccountRecipient r = (AccountRecipient) this.recipient;
       if (r.canAcceptTransfers()) {
         this.screen.requestPin();
       } else {
@@ -131,7 +140,8 @@ class PhoneNumberTransactionCreationPresenter
       final UserRecipient r = (UserRecipient) this.recipient;
       carrier = r.getCarrier();
     } else if (this.recipient instanceof NonAffiliatedPhoneNumberRecipient) {
-      final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) this.recipient;
+      final NonAffiliatedPhoneNumberRecipient r
+        = (NonAffiliatedPhoneNumberRecipient) this.recipient;
       carrier = r.getCarrier();
     } else {
       final PhoneNumberRecipient r = (PhoneNumberRecipient) this.recipient;
@@ -159,7 +169,8 @@ class PhoneNumberTransactionCreationPresenter
                 paymentOption,
                 recipient,
                 value,
-                pin)
+                pin
+              )
                 .toBlocking()
                 .single();
               if (transactionResult.isSuccessful()) {
@@ -168,7 +179,9 @@ class PhoneNumberTransactionCreationPresenter
                 result = Result.create(
                   FailureData.create(
                     ErrorCode.UNEXPECTED,
-                    transactionResult.getError().getDescription()));
+                    transactionResult.getError()
+                      .getDescription()
+                  ));
               }
             } else {
               result = Result.create(FailureData.create(ErrorCode.INCORRECT_PIN));
@@ -177,7 +190,9 @@ class PhoneNumberTransactionCreationPresenter
             result = Result.create(
               FailureData.create(
                 ErrorCode.UNEXPECTED,
-                pinValidationResult.getError().getDescription()));
+                pinValidationResult.getError()
+                  .getDescription()
+              ));
           }
         } else {
           result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
@@ -227,7 +242,8 @@ class PhoneNumberTransactionCreationPresenter
       carrier = r.getCarrier();
       phoneNumber = r.phoneNumber();
     } else if (this.recipient instanceof NonAffiliatedPhoneNumberRecipient) {
-      final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) this.recipient;
+      final NonAffiliatedPhoneNumberRecipient r
+        = (NonAffiliatedPhoneNumberRecipient) this.recipient;
 
       carrier = r.getCarrier();
       phoneNumber = r.getPhoneNumber();
@@ -254,7 +270,8 @@ class PhoneNumberTransactionCreationPresenter
           if (result.isSuccessful()) {
             screen.setPaymentResult(true, result.getData());
           } else {
-            screen.showGenericErrorDialog(result.getError().getDescription());
+            screen.showGenericErrorDialog(result.getError()
+              .getDescription());
           }
         }
       }, new Action1<Throwable>() {

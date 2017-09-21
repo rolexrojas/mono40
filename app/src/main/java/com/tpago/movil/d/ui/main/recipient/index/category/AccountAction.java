@@ -7,14 +7,14 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.tpago.movil.DigitHelper.removeNonDigits;
-import static com.tpago.movil.d.ui.main.recipient.index.category.Action.Type.ADD_PRODUCT;
-import static com.tpago.movil.d.ui.main.recipient.index.category.Action.Type.TRANSACTION_WITH_PRODUCT;
+import static com.tpago.movil.d.ui.main.recipient.index.category.Action.Type.ADD_ACCOUNT;
+import static com.tpago.movil.d.ui.main.recipient.index.category.Action.Type.TRANSACTION_WITH_ACCOUNT;
 
 /**
  * @author hecvasro
  */
 @AutoValue
-abstract class ProductAction extends Action {
+abstract class AccountAction extends Action {
 
   private static final Pattern PATTERN = Pattern.compile("\\A[0-9]{3,}\\z");
 
@@ -49,17 +49,17 @@ abstract class ProductAction extends Action {
    * @return Instance created from the given {@link String string}.
    *
    * @throws IllegalArgumentException
-   *   If {@code type} is not {@link Type#TRANSACTION_WITH_PRODUCT} or {@link Type#ADD_PRODUCT}.
+   *   If {@code type} is not {@link Type#TRANSACTION_WITH_ACCOUNT} or {@link Type#ADD_ACCOUNT}.
    * @throws IllegalArgumentException
    *   If {@code s} is not a {@link #isProductNumber(String) valid} {@link Product product} number.
    */
-  static ProductAction create(Type type, String s) {
+  static AccountAction create(Type type, String s) {
     checkArgument(
-      type == TRANSACTION_WITH_PRODUCT || type == ADD_PRODUCT,
+      type == TRANSACTION_WITH_ACCOUNT || type == ADD_ACCOUNT,
       "%1$s != %2$s && %1$s != %3$s",
       type,
-      TRANSACTION_WITH_PRODUCT,
-      ADD_PRODUCT
+      TRANSACTION_WITH_ACCOUNT,
+      ADD_ACCOUNT
     );
     final String sanitizedString = removeNonDigits(s);
     checkArgument(
@@ -67,10 +67,10 @@ abstract class ProductAction extends Action {
       "!isValid(%1$s, false)",
       sanitizedString
     );
-    return new AutoValue_ProductAction(type, sanitizedString);
+    return new AutoValue_AccountAction(type, sanitizedString);
   }
 
-  ProductAction() {
+  AccountAction() {
   }
 
   abstract String number();

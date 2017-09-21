@@ -1,5 +1,6 @@
 package com.tpago.movil.d.domain;
 
+import static com.tpago.movil.d.domain.RecipientType.ACCOUNT;
 import static com.tpago.movil.d.domain.RecipientType.BILL;
 import static com.tpago.movil.d.domain.RecipientType.NON_AFFILIATED_PHONE_NUMBER;
 import static com.tpago.movil.d.domain.RecipientType.PHONE_NUMBER;
@@ -58,6 +59,7 @@ public abstract class Recipient implements Parcelable, Matchable {
         .checkIfAccount(((ProductRecipient) recipient).getProduct()))
         || recipient.type == PHONE_NUMBER
         || recipient.type == NON_AFFILIATED_PHONE_NUMBER
+        || recipient.type == ACCOUNT
     );
   }
 
@@ -96,8 +98,10 @@ public abstract class Recipient implements Parcelable, Matchable {
   /**
    * Constructs a new recipient.
    *
-   * @param type Recipient's {@link RecipientType type}.
-   * @param label Recipient's label.
+   * @param type
+   *   Recipient's {@link RecipientType type}.
+   * @param label
+   *   Recipient's label.
    */
   protected Recipient(@NonNull RecipientType type, @Nullable String label) {
     this.type = type;
@@ -107,7 +111,8 @@ public abstract class Recipient implements Parcelable, Matchable {
   /**
    * Constructs a new recipient.
    *
-   * @param type Recipient's {@link RecipientType type}.
+   * @param type
+   *   Recipient's {@link RecipientType type}.
    */
   protected Recipient(@NonNull RecipientType type) {
     this(type, null);
@@ -146,7 +151,8 @@ public abstract class Recipient implements Parcelable, Matchable {
   /**
    * Sets the label of the recipient.
    *
-   * @param label Recipient's label.
+   * @param label
+   *   Recipient's label.
    */
   public void setLabel(@Nullable String label) {
     this.label = label;
@@ -162,7 +168,8 @@ public abstract class Recipient implements Parcelable, Matchable {
 
   @Override
   public boolean equals(Object o) {
-    return o != null && o instanceof Recipient && ((Recipient) o).getId().equals(getId());
+    return o != null && o instanceof Recipient && ((Recipient) o).getId()
+      .equals(getId());
   }
 
   @Override

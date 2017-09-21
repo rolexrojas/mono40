@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.Banks;
+import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.domain.Bank;
 import com.tpago.movil.R;
@@ -90,11 +91,13 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment extends
   public View onCreateView(
     LayoutInflater inflater,
     @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(
       R.layout.d_fragment_non_affiliated_phone_number_recipient_addition_1,
       container,
-      false);
+      false
+    );
   }
 
   @Override
@@ -109,7 +112,8 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment extends
     recyclerView.setLayoutManager(new LinearLayoutManager(
       context,
       LinearLayoutManager.VERTICAL,
-      false));
+      false
+    ));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
       .drawable(R.drawable.d_divider)
       .marginResId(R.dimen.space_horizontal_normal)
@@ -206,7 +210,12 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment extends
 
     @Override
     public void onClick(View v) {
-      ((NonAffiliatedPhoneNumberRecipient) recipient).setBank(bankList.get(getAdapterPosition()));
+      final Bank bank = bankList.get(getAdapterPosition());
+      if (recipient instanceof AccountRecipient) {
+        ((AccountRecipient) recipient).bank(bank);
+      } else {
+        ((NonAffiliatedPhoneNumberRecipient) recipient).setBank(bank);
+      }
       getContainer().setChildFragment(new NonAffiliatedPhoneNumberTransactionCreation2Fragment());
     }
   }

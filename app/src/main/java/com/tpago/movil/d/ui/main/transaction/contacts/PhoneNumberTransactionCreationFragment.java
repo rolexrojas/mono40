@@ -302,11 +302,6 @@ public class PhoneNumberTransactionCreationFragment
   }
 
   @Override
-  public void showTransferButtonAsEnabled(boolean showAsEnabled) {
-    transferActionButton.setAlpha(showAsEnabled ? 1.0F : 0.5F);
-  }
-
-  @Override
   public void onDigitClicked(@NonNull Digit digit) {
     BigDecimal addition = BigDecimal.valueOf(digit.getValue());
     if (mustShowDot && fractionOffset.compareTo(HUNDRED) < 0) {

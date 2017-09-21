@@ -1,5 +1,7 @@
 package com.tpago.movil.d.ui.main.recipient.index.category;
 
+import static com.tpago.movil.d.ui.main.recipient.index.category.Action.Type.ADD_ACCOUNT;
+import static com.tpago.movil.d.ui.main.recipient.index.category.Action.Type.TRANSACTION_WITH_ACCOUNT;
 import static com.tpago.movil.d.ui.main.recipient.index.category.Category.RECHARGE;
 import static com.tpago.movil.d.ui.main.recipient.index.category.Category.TRANSFER;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -11,6 +13,7 @@ import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.UserStore;
 import com.tpago.movil.d.data.StringHelper;
+import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.Customer;
@@ -136,6 +139,14 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
     this.recipientComparator = RecipientComparator.create();
   }
 
+  private Observable<Object> phoneNumberActions(String s) {
+    final PhoneNumber phoneNumber = PhoneNumber.create(s);
+    return Observable.just(TransactionWithPhoneNumberAction.create(phoneNumber))
+      .cast(Object.class)
+      .concatWith(Observable.just(AddPhoneNumberAction.create(phoneNumber)))
+      .cast(Object.class);
+  }
+
   void start() {
     assertScreen();
     querySubscription = screen.onQueryChanged()
@@ -179,24 +190,26 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
             .filter(matchableFilter)
             .filter(recipientDeletableFilter)
             .toSortedList(recipientComparator)
-            .compose(RxUtils.<Recipient>fromCollection())
+            .compose(RxUtils.fromCollection())
             .cast(Object.class);
 
           if (!deleting && (query != null && !query.isEmpty())) {
-            // TODO: Add support for actions related to invoices.
-            final Observable<Object> actionSource;
+            Observable<Object> actions = Observable.empty();
 
-            if ((category == TRANSFER || category == RECHARGE) && PhoneNumber.isValid(query)) {
-              final PhoneNumber phoneNumber = PhoneNumber.create(query);
-              actionSource = Observable.just(TransactionWithPhoneNumberAction.create(phoneNumber))
-                .cast(Object.class)
-                .concatWith(Observable.just(AddPhoneNumberAction.create(phoneNumber)))
-                .cast(Object.class);
-            } else {
-              actionSource = Observable.empty();
+            if (category == TRANSFER) {
+              if (PhoneNumber.isValid(query)) {
+                actions = phoneNumberActions(query);
+              } else if (AccountAction.isProductNumber(query)) {
+                actions = Observable.just(AccountAction.create(TRANSACTION_WITH_ACCOUNT, query))
+                  .cast(Object.class)
+                  .concatWith(Observable.just(AccountAction.create(ADD_ACCOUNT, query)))
+                  .cast(Object.class);
+              }
+            } else if (category == RECHARGE && PhoneNumber.isValid(query)) {
+              actions = phoneNumberActions(query);
             }
 
-            source = source.switchIfEmpty(actionSource);
+            source = source.switchIfEmpty(actions);
           }
 
           searchSubscription = source
@@ -441,6 +454,14 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
           }
         });
     }
+  }
+
+  final void startTransfer(String accountNumber) {
+    this.screen.startTransfer(
+      AccountRecipient.builder()
+        .number(accountNumber)
+        .build()
+    );
   }
 
   void showTransactionSummary(
