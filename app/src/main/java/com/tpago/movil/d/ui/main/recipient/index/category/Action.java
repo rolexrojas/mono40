@@ -11,6 +11,8 @@ abstract class Action {
 
   enum Type {
     TRANSACTION_WITH_PHONE_NUMBER,
-    ADD_PHONE_NUMBER
+    ADD_PHONE_NUMBER,
+    TRANSACTION_WITH_PRODUCT,
+    ADD_PRODUCT
   }
 }
