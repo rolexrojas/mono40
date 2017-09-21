@@ -91,8 +91,9 @@ public abstract class PhoneNumber implements Comparable<PhoneNumber>, Parcelable
    *   If {@code s} is not a {@link #isValid(String) valid} phone number.
    */
   public static PhoneNumber create(String s) {
-    checkArgument(isValid(s), "!isValid(%1$s)", s);
-    return new AutoValue_PhoneNumber(s);
+    final String sanitizedString = removeNonDigits(s);
+    checkArgument(isValid(sanitizedString, false), "!isValid(%1$s, false)", sanitizedString);
+    return new AutoValue_PhoneNumber(sanitizedString);
   }
 
   public abstract String value();
