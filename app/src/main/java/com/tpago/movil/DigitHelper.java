@@ -97,7 +97,7 @@ public final class DigitHelper {
    * @return A copy of the given {@link String string} with only {@link Digit digit} {@link
    * Character characters}.
    */
-  static String removeNonDigits(String s) {
+  public static String removeNonDigits(String s) {
     return CharMatcher.inRange(CHAR_ZERO, CHAR_NINE)
       .retainFrom(nullToEmpty(s));
   }
