@@ -30,8 +30,8 @@ android {
   defaultConfig {
     applicationId 'com.tpago.movil'
 
-    def (major, minor, patch, build) = [2, 2, 0, 1]
-    versionName version.name(major, minor, patch, build, 'beta')
+    def (major, minor, patch, build) = [2, 2, 1, 0]
+    versionName version.name(major, minor, patch, build, 'alpha')
     versionCode version.code(major, minor, patch, build)
 
     minSdkVersion 19
