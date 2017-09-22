@@ -2,6 +2,7 @@ package com.tpago.movil.app;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDexApplication;
 
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
@@ -18,7 +19,7 @@ import static com.tpago.movil.util.Preconditions.assertNotNull;
 /**
  * @author hecvasro
  */
-public final class App extends Application {
+public final class App extends MultiDexApplication {
 
   public static App get(Context context) {
     return (App) assertNotNull(context, "context == null").getApplicationContext();

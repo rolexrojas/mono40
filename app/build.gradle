@@ -37,6 +37,8 @@ android {
     minSdkVersion 19
     targetSdkVersion 25
 
+    multiDexEnabled true
+
     vectorDrawables.useSupportLibrary = true
 
     javaCompileOptions {
@@ -199,6 +201,7 @@ dependencies {
   compile "${supportLibraryGroupId}:design:${supportLibraryVersion}"
   compile "${supportLibraryGroupId}:percent:${supportLibraryVersion}"
   compile "${supportLibraryGroupId}:recyclerview-v7:${supportLibraryVersion}"
+  compile "${supportLibraryGroupId}:multidex:1.0.1"
 
   compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
 
