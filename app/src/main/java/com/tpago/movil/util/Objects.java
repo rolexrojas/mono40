@@ -3,6 +3,7 @@ package com.tpago.movil.util;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class Objects {
   private static final Object NOTIFICATION = new Object();
 
