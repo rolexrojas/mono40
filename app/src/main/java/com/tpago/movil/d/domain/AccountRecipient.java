@@ -19,7 +19,7 @@ import static com.tpago.movil.util.ObjectHelper.isNotNull;
  */
 public final class AccountRecipient extends Recipient {
 
-  private static final Creator<AccountRecipient> CREATOR = new Creator<AccountRecipient>() {
+  public static final Creator<AccountRecipient> CREATOR = new Creator<AccountRecipient>() {
     @Override
     public AccountRecipient createFromParcel(Parcel source) {
       return new AccountRecipient(source);
