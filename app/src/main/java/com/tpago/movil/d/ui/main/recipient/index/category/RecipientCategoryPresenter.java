@@ -399,7 +399,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
                       ));
                   }
                 } else {
-                  result = Result.create(null);
+                  result = Result.create("");
                 }
               } else {
                 final ApiError apiError = customerStateResult.getError();
@@ -430,7 +430,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
             if (result.isSuccessful()) {
               final Recipient recipient;
               final String successData = result.getSuccessData();
-              if (successData == null) {
+              if (com.tpago.movil.util.StringHelper.isNullOrEmpty(successData)) {
                 recipient = new NonAffiliatedPhoneNumberRecipient(phoneNumber);
               } else {
                 recipient = new PhoneNumberRecipient(phoneNumber, successData);

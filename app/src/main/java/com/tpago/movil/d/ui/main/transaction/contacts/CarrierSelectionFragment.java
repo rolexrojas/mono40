@@ -308,7 +308,7 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
         final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) recipient;
         r.setCarrier(carrierList.get(this.getAdapterPosition()));
 
-        recipientManager.update(recipient);
+//        recipientManager.update(recipient);
 
         phoneNumber = r.getPhoneNumber()
           .formattedValued();
@@ -316,7 +316,7 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
         final PhoneNumberRecipient r = (PhoneNumberRecipient) recipient;
         r.setCarrier(carrierList.get(this.getAdapterPosition()));
 
-        recipientManager.update(recipient);
+//        recipientManager.update(recipient);
 
         phoneNumber = r.getPhoneNumber()
           .formattedValued();
