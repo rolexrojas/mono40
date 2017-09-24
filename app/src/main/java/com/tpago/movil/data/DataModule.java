@@ -11,10 +11,13 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
+ * {@link Module} that contains providers for objects that belong to the data layer.
+ *
  * @author hecvasro
  */
-@Module
+@Module(includes = DataFlavorModule.class)
 public final class DataModule {
+
   @Provides
   @Singleton
   AssetUriBuilder provideAssetUriBuilder(DisplayDensity displayDensity) {

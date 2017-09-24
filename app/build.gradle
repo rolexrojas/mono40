@@ -37,8 +37,12 @@ android {
     }
   }
 
+  flavorDimensions 'deviceType', 'environment'
+
   productFlavors {
     development {
+      dimension 'environment'
+
       def flavorName = 'dev'
 
       applicationIdSuffix ".${flavorName}"
@@ -49,6 +53,8 @@ android {
     }
 
     staging {
+      dimension 'environment'
+
       def flavorName = 'stag'
 
       applicationIdSuffix ".${flavorName}"
@@ -59,9 +65,19 @@ android {
     }
 
     production {
+      dimension 'environment'
+
       resValue 'string', 'app_name', appName
 
       buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'true'
+    }
+
+    emulatedDevice {
+      dimension 'deviceType'
+    }
+
+    notEmulatedDevice {
+      dimension 'deviceType'
     }
   }
 

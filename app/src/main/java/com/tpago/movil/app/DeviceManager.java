@@ -1,23 +1,25 @@
 package com.tpago.movil.app;
 
-import android.content.Context;
-import android.telephony.TelephonyManager;
-
-import com.tpago.movil.util.Preconditions;
+import com.tpago.movil.data.DeviceIdSupplier;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class DeviceManager {
 
-  private final TelephonyManager telephonyManager;
+  public static DeviceManager create(DeviceIdSupplier deviceIdSupplier) {
+    return new DeviceManager(deviceIdSupplier);
+  }
 
-  public DeviceManager(Context context) {
-    telephonyManager = (TelephonyManager) Preconditions.assertNotNull(context, "context == null")
-      .getSystemService(Context.TELEPHONY_SERVICE);
+  private final DeviceIdSupplier deviceIdSupplier;
+
+  private DeviceManager(DeviceIdSupplier deviceIdSupplier) {
+    this.deviceIdSupplier = ObjectHelper.checkNotNull(deviceIdSupplier, "deviceIdSupplier");
   }
 
   public final String getId() {
-    return telephonyManager.getDeviceId();
+    return this.deviceIdSupplier.get();
   }
 }
