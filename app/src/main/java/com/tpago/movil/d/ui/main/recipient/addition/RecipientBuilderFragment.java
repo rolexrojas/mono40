@@ -114,7 +114,12 @@ public class RecipientBuilderFragment extends Fragment {
       final int y = Math.round((button.getBottom() - button.getTop()) / 2);
       PinConfirmationDialogFragment.show(
         getChildFragmentManager(),
-        getString(R.string.recipient_addition_confirmation, content, builder.getTitle()),
+        getString(
+          R.string.recipient_addition_confirmation,
+          builder.getCategoryName(),
+          content,
+          builder.getTitle()
+        ),
         new PinConfirmationDialogFragment.Callback() {
           @Override
           public void confirm(final String pin) {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.v4.util.Pair;
 
+import com.tpago.Banks;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductRecipient;
 import com.tpago.movil.d.domain.api.ApiResult;
@@ -40,7 +41,12 @@ class ProductRecipientBuilder extends RecipientBuilder {
 
   @Override
   public String getTitle() {
-    return this.bank.getName();
+    return Banks.getName(this.bank);
+  }
+
+  @Override
+  public String getCategoryName() {
+    return "cuenta";
   }
 
   @Override

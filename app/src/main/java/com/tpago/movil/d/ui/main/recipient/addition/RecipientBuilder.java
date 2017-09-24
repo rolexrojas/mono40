@@ -12,12 +12,17 @@ import rx.Observable;
  * @author hecvasro
  */
 abstract class RecipientBuilder {
+
   public abstract Uri getImageUri(Context context);
+
   public abstract String getTitle();
+
+  public abstract String getCategoryName();
 
   public abstract Observable<Result> build(String number, String pin);
 
   static final class Result {
+
     private final Recipient recipient;
     private final String error;
 

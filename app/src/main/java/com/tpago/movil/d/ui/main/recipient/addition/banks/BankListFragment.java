@@ -5,10 +5,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import com.tpago.movil.Partner;
 import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.ui.main.list.ListItemHolderCreatorFactory;
 import com.tpago.movil.d.ui.main.recipient.addition.RecipientCandidateListFragment;
+import com.tpago.movil.domain.Bank;
 
 /**
  * @author hecvasro
@@ -31,14 +31,14 @@ public class BankListFragment
   @Override
   protected ListItemHolderCreatorFactory.Builder createHolderCreatorFactoryBuilder() {
     return new ListItemHolderCreatorFactory.Builder()
-      .addCreator(Partner.class, new BankListItemHolderCreator(this));
+      .addCreator(Bank.class, new BankListItemHolderCreator(this));
   }
 
   @NonNull
   @Override
   protected BinderFactory.Builder createHolderBinderFactoryBuilder() {
     return new BinderFactory.Builder()
-      .addBinder(Partner.class, BankListItemHolder.class, new BankListItemHolderBinder());
+      .addBinder(Bank.class, BankListItemHolder.class, new BankListItemHolderBinder());
   }
 
   @Override

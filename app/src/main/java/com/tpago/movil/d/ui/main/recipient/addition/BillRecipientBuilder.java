@@ -45,6 +45,11 @@ class BillRecipientBuilder extends RecipientBuilder {
   }
 
   @Override
+  public String getCategoryName() {
+    return "factura";
+  }
+
+  @Override
   public Observable<Result> build(final String number, final String pin) {
     return apiBridge.addBill(authToken, partner, number, pin)
       .map(new Func1<ApiResult<Void>, Result>() {

@@ -192,7 +192,7 @@
   <string name="recent_transactions">Últimas transacciones</string>
   <string name="recipient">Recipiente</string>
   <string name="recipient.picture">Imagen del destinatario</string>
-  <string name="recipient_addition_confirmation">Agregar factura #%1$s de %2$s</string>
+  <string name="recipient_addition_confirmation">Agregar %1$s #%2$s de %3$s</string>
   <string name="recipient_addition_hint_bill">Nombre de factura</string>
   <string name="recipient_addition_hint_phone_number">Nombre de contacto</string>
   <string name="recipient_addition_message_bill">¿Te gustaría guardar esta factura para reconocerla con más facilidad?</string>
