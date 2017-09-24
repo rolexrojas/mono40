@@ -9,8 +9,10 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.tpago.movil.Partner;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
+import com.tpago.movil.User;
 import com.tpago.movil.UserStore;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.AccountRecipient;
@@ -41,6 +43,7 @@ import com.tpago.movil.domain.Result;
 import com.tpago.movil.net.NetworkService;
 import com.tpago.movil.reactivex.Disposables;
 import com.tpago.movil.text.Texts;
+import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.Objects;
 
 import java.util.ArrayList;
@@ -464,15 +467,25 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
     );
   }
 
-  void showTransactionSummary(
-    final Recipient recipient,
-    final String transactionId
-  ) {
+  void showTransactionSummary(final Recipient recipient, final String transactionId) {
     assertScreen();
+
+    final boolean isUser = recipient instanceof UserRecipient;
+    if (isUser) {
+      final User user = this.userStore.get();
+      final UserRecipient userRecipient = (UserRecipient) recipient;
+
+      final Partner carrierA = user.carrier();
+      final Partner carrierB = userRecipient.getCarrier();
+      if (ObjectHelper.isNotNull(carrierB) && !carrierB.equals(carrierA)) {
+        user.carrier(carrierB);
+      }
+    }
+
     screen.clearQuery();
     screen.showTransactionSummary(
       recipient,
-      recipientManager.checkIfExists(recipient),
+      isUser || recipientManager.checkIfExists(recipient),
       transactionId
     );
   }

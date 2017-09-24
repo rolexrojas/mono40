@@ -6,30 +6,41 @@ import static com.tpago.movil.util.Preconditions.assertNotNull;
 
 import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
 import com.tpago.movil.User.OnIdChangedListener;
 import com.tpago.movil.User.OnNameChangedListener;
+import com.tpago.movil.User.OnCarrierChangedListener;
 import com.tpago.movil.api.UserData;
 import com.tpago.movil.content.SharedPreferencesCreator;
+import com.tpago.movil.util.ObjectHelper;
+
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author hecvasro
  */
-public final class UserStore implements OnIdChangedListener, OnNameChangedListener {
+public final class UserStore
+  implements OnIdChangedListener, OnNameChangedListener, OnCarrierChangedListener {
 
   private static final String KEY_ID = "id";
   private static final String KEY_PHONE_NUMBER = "phoneNumber";
   private static final String KEY_EMAIL = "email";
   private static final String KEY_FIRST_NAME = "firstName";
   private static final String KEY_LAST_NAME = "lastName";
+  private static final String KEY_CARRIER = "carrier";
 
+  private final Gson gson;
   private final SharedPreferences sharedPreferences;
   private final Avatar avatar;
 
   private AtomicReference<User> user = new AtomicReference<>();
 
-  public UserStore(SharedPreferencesCreator sharedPreferencesCreator, Avatar avatar) {
-    this.sharedPreferences = assertNotNull(sharedPreferencesCreator, "sharedPreferencesCreator == null")
+  public UserStore(Gson gson, SharedPreferencesCreator sharedPreferencesCreator, Avatar avatar) {
+    this.gson = ObjectHelper.checkNotNull(gson, "gson");
+    this.sharedPreferences = assertNotNull(
+      sharedPreferencesCreator,
+      "sharedPreferencesCreator == null"
+    )
       .create(UserStore.class.getCanonicalName());
     this.avatar = assertNotNull(avatar, "avatar == null");
   }
@@ -75,6 +86,16 @@ public final class UserStore implements OnIdChangedListener, OnNameChangedListen
       );
       reference.onNameChangedListener(this);
 
+      if (this.sharedPreferences.contains(KEY_CARRIER)) {
+        reference.carrier(
+          this.gson.fromJson(
+            this.sharedPreferences.getString(KEY_CARRIER, null),
+            Partner.class
+          )
+        );
+      }
+      reference.onCarrierChangedListener(this);
+
       this.user.set(reference);
     }
     return this.user.get();
@@ -84,7 +105,9 @@ public final class UserStore implements OnIdChangedListener, OnNameChangedListen
     if (this.isSet()) {
       final User reference = this.user.get();
       if (checkIfNotNull(reference)) {
+        reference.onIdChangedListener(null);
         reference.onNameChangedListener(null);
+        reference.onCarrierChangedListener(null);
       }
 
       this.user.set(null);
@@ -109,6 +132,15 @@ public final class UserStore implements OnIdChangedListener, OnNameChangedListen
       this.sharedPreferences.edit()
         .putString(KEY_FIRST_NAME, firstName)
         .putString(KEY_LAST_NAME, lastName)
+        .apply();
+    }
+  }
+
+  @Override
+  public void onCarrierChanged(Partner carrier) {
+    if (this.isSet()) {
+      this.sharedPreferences.edit()
+        .putString(KEY_CARRIER, this.gson.toJson(carrier, Partner.class))
         .apply();
     }
   }

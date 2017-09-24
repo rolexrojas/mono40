@@ -197,7 +197,7 @@ public class RecipientCategoryFragment
     if (Utils.isNotNull(requestResult)) {
       final Recipient recipient = requestResult.second.first;
       final int code = requestResult.first;
-      if (recipient instanceof UserRecipient || code == REQUEST_CODE_TRANSACTION_CREATION || code == REQUEST_CODE_OWN_TRANSACTION_CREATION) {
+      if (code == REQUEST_CODE_TRANSACTION_CREATION || code == REQUEST_CODE_OWN_TRANSACTION_CREATION) {
         presenter.showTransactionSummary(recipient, requestResult.second.second);
       } else if (code == REQUEST_CODE_RECIPIENT_ADDITION) {
         presenter.addRecipient(recipient);

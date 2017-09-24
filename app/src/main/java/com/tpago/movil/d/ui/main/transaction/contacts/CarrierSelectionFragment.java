@@ -22,6 +22,7 @@ import com.tpago.movil.Partner;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.api.ApiImageUriBuilder;
+import com.tpago.movil.api.DCurrencies;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
@@ -132,7 +133,8 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
           PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), result.isSuccessful());
 
           if (result.isSuccessful()) {
-            getContainer().finish(true, result.getData());
+            getContainer()
+              .finish(true, result.getData());
           } else {
             Dialogs.builder(getContext())
               .setTitle(R.string.error_generic_title)
@@ -323,8 +325,10 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
       final String description = String.format(
         "Recargar %1$s a %2$s",
         Formatter.amount(
-          fundingAccount.get()
-            .getCurrency(),
+          DCurrencies.map(
+            fundingAccount.get()
+              .getCurrency()
+          ),
           value.get()
         ),
         phoneNumber

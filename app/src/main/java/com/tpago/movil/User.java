@@ -5,6 +5,7 @@ import static com.tpago.movil.util.Objects.checkIfNotNull;
 import static com.tpago.movil.util.Preconditions.assertNotNull;
 
 import com.google.auto.value.AutoValue;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * @author hecvasro
@@ -24,7 +25,29 @@ public abstract class User {
   private String name;
   private OnNameChangedListener onNameChangedListener;
 
+  private Partner carrier;
+  private OnCarrierChangedListener onCarrierChangedListener;
+
+  User() {
+  }
+
   public abstract PhoneNumber phoneNumber();
+
+  public final Partner carrier() {
+    return this.carrier;
+  }
+
+  public final void carrier(Partner carrier) {
+    this.carrier = carrier;
+
+    if (ObjectHelper.isNotNull(this.onCarrierChangedListener)) {
+      this.onCarrierChangedListener.onCarrierChanged(this.carrier);
+    }
+  }
+
+  final void onCarrierChangedListener(OnCarrierChangedListener listener) {
+    this.onCarrierChangedListener = listener;
+  }
 
   public abstract Email email();
 
@@ -90,6 +113,11 @@ public abstract class User {
   interface OnNameChangedListener {
 
     void onNameChanged(String firstName, String lastName);
+  }
+
+  interface OnCarrierChangedListener {
+
+    void onCarrierChanged(Partner carrier);
   }
 
   @AutoValue.Builder

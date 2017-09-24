@@ -2,6 +2,7 @@ package com.tpago.movil.app;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
 import com.tpago.movil.Avatar;
 import com.tpago.movil.ConfigManager;
 import com.tpago.movil.content.SharedPreferencesCreator;
@@ -61,8 +62,12 @@ final class AppModule {
 
   @Provides
   @Singleton
-  UserStore provideUserStore(SharedPreferencesCreator sharedPreferencesCreator, Avatar avatar) {
-    return new UserStore(sharedPreferencesCreator, avatar);
+  UserStore provideUserStore(
+    Gson gson,
+    SharedPreferencesCreator sharedPreferencesCreator,
+    Avatar avatar
+  ) {
+    return new UserStore(gson, sharedPreferencesCreator, avatar);
   }
 
   @Provides
