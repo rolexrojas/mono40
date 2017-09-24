@@ -13,9 +13,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
 import com.tpago.movil.R;
 import com.tpago.movil.UserStore;
 import com.tpago.movil.d.data.StringHelper;
@@ -23,11 +25,13 @@ import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.ui.ChildFragment;
+import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.MainContainer;
 import com.tpago.movil.d.ui.main.list.ListItemAdapter;
 import com.tpago.movil.d.ui.main.list.ListItemHolderCreatorFactory;
 import com.tpago.movil.d.ui.main.recipient.index.category.TransactionSummaryDialogFragment;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
+
 import javax.inject.Inject;
 
 /**
@@ -109,7 +113,11 @@ public final class DisbursementFragment extends ChildFragment<MainContainer> imp
       .addCreator(Product.class, new OwnProductListItemHolderCreator(this))
       .build();
     final BinderFactory binderFactory = new BinderFactory.Builder()
-      .addBinder(Product.class, OwnProductListItemHolder.class, new OwnProductListItemHolderBinder(stringHelper))
+      .addBinder(
+        Product.class,
+        OwnProductListItemHolder.class,
+        new OwnProductListItemHolderBinder(stringHelper)
+      )
       .build();
     adapter = new ListItemAdapter(holderCreatorFactory, binderFactory);
     for (Product product : this.productManager.getProductList()) {
@@ -159,14 +167,31 @@ public final class DisbursementFragment extends ChildFragment<MainContainer> imp
 
   @Override
   public void onButtonClicked(int position) {
-    final Product product = (Product) this.adapter.get(position);
+    boolean hasAccounts = false;
+    for (Product product : this.productManager.getProductList()) {
+      if (Product.checkIfAccount(product)) {
+        hasAccounts = true;
+        break;
+      }
+    }
+    if (hasAccounts) {
+      final Product product = (Product) this.adapter.get(position);
 
-    startActivityForResult(
-      DisbursementActivity.createLaunchIntent(
-        this.getContext(),
-        product
-      ),
-      REQUEST_CODE_TRANSFER
-    );
+      this.startActivityForResult(
+        DisbursementActivity.createLaunchIntent(
+          this.getContext(),
+          product
+        ),
+        REQUEST_CODE_TRANSFER
+      );
+    } else {
+      Dialogs.builder(this.getActivity())
+        .setTitle(R.string.we_are_sorry)
+        .setMessage(
+          "No tiene cuentas bancarias afiliadas para acreditar su avance de efectivo desde su tarjeta. Favor enrole sus cuentas e intente de nuevo."
+        )
+        .setPositiveButton(R.string.ok, null)
+        .show();
+    }
   }
 }
