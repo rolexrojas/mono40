@@ -3,10 +3,6 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'io.fabric'
 
 def appName = 'tPago'
-def version = [
-  name: { major, minor, patch -> "${major}.${minor}.${patch}" },
-  code: { major, minor, patch -> (major * 10_000_000) + (minor * 100_000) + (patch * 1_000) }
-]
 
 android {
   packagingOptions {
@@ -20,8 +16,8 @@ android {
     applicationId 'com.tpago.movil'
 
     def (major, minor, patch) = [2, 2, 2]
-    versionName version.name(major, minor, patch)
-    versionCode version.code(major, minor, patch)
+    versionName "${major}.${minor}.${patch}"
+    versionCode ((major * 10_000_000) + (minor * 100_000) + (patch * 1_000))
 
     minSdkVersion 19
     targetSdkVersion 25
