@@ -173,7 +173,9 @@
   <string name="partners">Facturadores</string>
   <string name="password">Contraseña</string>
   <string name="pay_minimum">Pagar mínimo</string>
-  <string name="pay_screen_search_hint">Nombre, número o facturador</string>
+  <string name="pay_screen_search_hint_pay">Nombre, número, o facturador</string>
+  <string name="pay_screen_search_hint_recharge">Nombre, número, o telefónica</string>
+  <string name="pay_screen_search_hint_transfer">Nombre, número, o banco</string>
   <string name="pay_total">Pagar total</string>
   <string name="payments.action.phone_number.add">Agregar \'%1$s\'</string>
   <string name="payments.action.phone_number.transaction">%1$s a \'%2$s\'</string>

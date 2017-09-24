@@ -1,5 +1,6 @@
 package com.tpago.movil.d.ui.main.recipient.index.category;
 
+import static com.tpago.movil.d.ui.main.recipient.index.category.Category.PAY;
 import static com.tpago.movil.d.ui.main.recipient.index.category.Category.TRANSFER;
 
 import android.app.Activity;
@@ -187,6 +188,16 @@ public class RecipientCategoryFragment
     // Sets the title.
     this.getContainer()
       .setTitle(this.getString(this.category.stringId));
+    // Sets the hint of the search box.
+    final int hintId;
+    if (this.category == PAY) {
+      hintId = R.string.pay_screen_search_hint_pay;
+    } else if (this.category == TRANSFER) {
+      hintId = R.string.pay_screen_search_hint_transfer;
+    } else {
+      hintId = R.string.pay_screen_search_hint_recharge;
+    }
+    this.searchView.setHint(this.getString(hintId));
     // Starts the presenter.
     presenter.start();
   }

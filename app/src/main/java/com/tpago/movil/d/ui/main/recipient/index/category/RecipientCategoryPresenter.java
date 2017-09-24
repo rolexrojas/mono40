@@ -95,8 +95,8 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
   private final RecipientComparator recipientComparator;
 
   private boolean deleting = false;
-  private RecipientDeletionFilter recipientDeletableFilter
-    = RecipientDeletionFilter.create(this.deleting);
+  private RecipientDeletionFilter recipientDeletableFilter = RecipientDeletionFilter
+    .create(this.deleting);
   private List<Recipient> selectedRecipientList = new ArrayList<>();
 
   private Subscription querySubscription = Subscriptions.unsubscribed();

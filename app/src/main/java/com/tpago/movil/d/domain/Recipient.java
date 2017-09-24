@@ -55,9 +55,7 @@ public abstract class Recipient implements Parcelable, Matchable {
   public static boolean acceptsTransfers(Recipient recipient) {
     return checkIfNotNull(recipient)
       && (
-      (recipient.type == PRODUCT && Product
-        .checkIfAccount(((ProductRecipient) recipient).getProduct()))
-        || recipient.type == PHONE_NUMBER
+      recipient.type == PHONE_NUMBER
         || recipient.type == NON_AFFILIATED_PHONE_NUMBER
         || recipient.type == ACCOUNT
     );
