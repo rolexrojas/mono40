@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.v4.util.Pair;
 
 import com.tpago.Banks;
+import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductRecipient;
 import com.tpago.movil.d.domain.api.ApiResult;
@@ -57,7 +58,13 @@ class ProductRecipientBuilder extends RecipientBuilder {
         public Result call(ApiResult<Pair<String, Product>> result) {
           if (result.isSuccessful()) {
             final Pair<String, Product> data = result.getData();
-            return new Result(new ProductRecipient(data.second, data.first));
+            final AccountRecipient recipient = AccountRecipient.builder()
+              .bank(bank)
+              .number(number)
+              .product(data.second)
+              .label(data.first)
+              .build();
+            return new Result(recipient);
           } else {
             return new Result(
               result.getError()
