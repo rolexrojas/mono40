@@ -18,7 +18,7 @@
       android:layout_marginTop="10dp"/>
     <TextView
       android:id="@+id/label_title"
-      fontPath="@string/font_gotham_round_book"
+      fontPath="@string/font_gothamRounded_book"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="10dp"

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <!-- TODO -->
+  <!-- TODO: Remove every style from this point downwards -->
   <style
     name="Dep.FullScreenDialogTheme"
     parent="Dep.App.Theme">
     <item name="android:windowBackground">@color/common_transparent</item>
   </style>
+
   <style
     name="Dep.ToolbarTheme"
     parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-    <item name="fontPath">@string/font_gotham_rounded_book</item>
+    <item name="fontPath">@string/font_gothamRounded_book</item>
     <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
   </style>
 </resources>

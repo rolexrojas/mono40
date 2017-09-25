@@ -33,7 +33,7 @@
           android:background="?attr/selectableItemBackgroundBorderless"
           android:src="@drawable/ic_clear_white_24dp"/>
         <TextView
-          fontPath="@string/font_gotham_rounded_book"
+          fontPath="@string/font_gothamRounded_book"
           android:layout_width="0dp"
           android:layout_height="match_parent"
           android:layout_marginStart="20dp"

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+  <style name="SettingsSectionTitle" parent="Base.SettingsSectionTitle">
+  </style>
+
+  <!-- TODO: Remove every style from this point downwards -->
   <!-- [START] App styles -->
   <style name="D.Widget.Button.Dark.Gradient" parent="D.Base.Widget.Button.Dark.Gradient">
     <item name="android:background">@drawable/d_widget_button_dark_gradient</item>
@@ -64,7 +69,6 @@
       <item name="android:background">@drawable/d_app_widget_button_blurred</item>
     </style>
 
-    <!-- TODO -->
     <style name="Dep.AppTabText"
       parent="Dep.BaseDep.AppTabText">
       <item name="android:letterSpacing">@dimen/text.letter_spacing.small</item>

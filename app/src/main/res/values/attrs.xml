@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+  <!-- TODO: Remove every dimension from this point downwards -->
   <declare-styleable name="ErraticState">
     <attr name="state_erratic" format="boolean"/>
   </declare-styleable>
@@ -29,7 +31,6 @@
     <attr name="amountTextInputStyle" format="reference"/>
   </declare-styleable>
 
-  <!-- TODO: Remove every dimension from this point downwards -->
   <declare-styleable name="NumPad">
     <attr name="color"/>
     <attr name="dotEnabled" format="boolean"/>
