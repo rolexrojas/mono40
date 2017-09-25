@@ -35,7 +35,7 @@
 
   <style name="SettingsSectionTitleView" parent="Base.SettingsSectionTitleView"/>
   
-  <style name="Base.SettingsContainerLayout">
+  <style name="Base.SettingsContainerView">
     <item name="android:background">@color/white</item>
     <item name="android:paddingBottom">@dimen/spaceVerticalNormal</item>
     <item name="android:paddingEnd">@dimen/spaceHorizontalNormal</item>
@@ -43,7 +43,7 @@
     <item name="android:paddingTop">@dimen/spaceVerticalNormal</item>
   </style>
 
-  <style name="SettingsContainerLayout" parent="Base.SettingsContainerLayout"/>
+  <style name="SettingsContainerView" parent="Base.SettingsContainerView"/>
 
   <style name="Base.AppTheme" parent="App.Theme">
     <item name="colorAccent">@color/accent</item>
