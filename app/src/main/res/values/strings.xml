@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+  <!-- Words -->
+  <string name="accounts">Cuentas</string>
+  <string name="profile">Perfil</string>
+  <string name="security">Seguridad</string>
+  <string name="settings">Ajustes</string>
+
+  <!-- Phrases -->
+
+  <!-- Fonts -->
   <string name="font_gothamRounded_bold">fonts/GothamRounded/Bold.otf</string>
   <string name="font_gothamRounded_book">fonts/GothamRounded/Book.otf</string>
   <string name="font_gothamRounded_light">fonts/GothamRounded/Light.otf</string>
@@ -10,7 +20,6 @@
   <!-- TODO: Remove every string from this point downwards -->
   <string name="about">Acerca de</string>
   <string name="account">Cuenta</string>
-  <string name="accounts">Cuentas</string>
   <string name="action.add">Agregar</string>
   <string name="action.pay">Pagar</string>
   <string name="action.recharge">Recargar</string>
@@ -226,7 +235,6 @@
   <string name="screen_products_text_widget_amount_value_font">@string/font_gothamRounded_medium</string>
   <string name="see">Ver</string>
   <string name="see_bank_branches">Ver sucursales bancarias</string>
-  <string name="settings">Ajustes</string>
   <string name="sign_in">Iniciar sesión</string>
   <string name="sign_in_button">@string/sign_in</string>
   <string name="sign_in_error_description">Tanto el correo electrónico como la contraseña son requeridos.</string>

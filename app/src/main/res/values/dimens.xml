@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <dimen name="spaceHorizontalNormal">20dp</dimen>
+  <dimen name="spaceVerticalNormal">30dp</dimen>
+
   <!-- TODO: Remove every dimension from this point downwards -->
   <dimen name="amount_text_currency">10sp</dimen>
   <dimen name="amount_text_value">16sp</dimen>

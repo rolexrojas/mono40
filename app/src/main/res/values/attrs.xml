@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+  <declare-styleable name="AppTheme">
+    <attr name="settingsSectionTitleViewStyle" format="reference"/>
+  </declare-styleable>
+
   <!-- TODO: Remove every dimension from this point downwards -->
   <declare-styleable name="ErraticState">
     <attr name="state_erratic" format="boolean"/>

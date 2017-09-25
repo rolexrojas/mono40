@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <style name="SettingsSectionTitle" parent="Base.SettingsSectionTitle">
+  <style name="SettingsText.Title" parent="Base.SettingsText.Title">
+    <!-- TODO: Add letterSpacing of 0.8sp -->
+  </style>
+
+  <style name="SettingsText.Secondary" parent="Base.SettingsText.Secondary">
+    <!-- TODO: Add letterSpacing of 0.8sp -->
   </style>
 
   <!-- TODO: Remove every style from this point downwards -->
