@@ -12,9 +12,8 @@
     <!-- Picture -->
     <ImageView
       android:id="@+id/pictureImageView"
-      android:layout_width="@dimen/largeImageSize"
-      android:layout_height="@dimen/largeImageSize"
-      android:layout_gravity="center_horizontal"/>
+      android:layout_gravity="center_horizontal"
+      style="@style/ProfilePicturePlaceholder.Light.Large"/>
 
     <Space style="@style/Divider.Space.Normal"/>
 

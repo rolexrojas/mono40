@@ -93,6 +93,31 @@
 
   <style name="SettingsContainer" parent="Base.SettingsContainer"/>
 
+  <!-- Profile picture placeholder -->
+  <style name="Base.ProfilePicturePlaceholder"/>
+
+  <style name="Base.ProfilePicturePlaceholder.Dark">
+    <item name="srcCompat">@drawable/profile_picture_placeholder_dark</item>
+  </style>
+
+  <style name="Base.ProfilePicturePlaceholder.Dark.Normal">
+    <item name="android:layout_height">@dimen/normalProfilePictureSize</item>
+    <item name="android:layout_width">@dimen/normalProfilePictureSize</item>
+  </style>
+
+  <style name="ProfilePicturePlaceholder.Dark.Normal" parent="Base.ProfilePicturePlaceholder.Dark.Normal"/>
+
+  <style name="Base.ProfilePicturePlaceholder.Light">
+    <item name="srcCompat">@drawable/profile_picture_placeholder_light</item>
+  </style>
+
+  <style name="Base.ProfilePicturePlaceholder.Light.Large">
+    <item name="android:layout_height">@dimen/largeProfilePictureSize</item>
+    <item name="android:layout_width">@dimen/largeProfilePictureSize</item>
+  </style>
+
+  <style name="ProfilePicturePlaceholder.Light.Large" parent="Base.ProfilePicturePlaceholder.Light.Large"/>
+
   <style name="Base.ProfileLabel">
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_width">match_parent</item>

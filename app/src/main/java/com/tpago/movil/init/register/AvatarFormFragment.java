@@ -30,10 +30,13 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 public final class AvatarFormFragment extends BaseRegisterFragment {
+
   private Unbinder unbinder;
 
   @Inject Avatar avatar;
-  @Inject @FragmentQualifier FragmentReplacer fragmentReplacer;
+  @Inject
+  @FragmentQualifier
+  FragmentReplacer fragmentReplacer;
 
   @BindView(R.id.image_view_avatar) ImageView avatarImageView;
   @BindView(R.id.button_move_to_next_screen) Button moveToNextScreenButton;
@@ -68,7 +71,8 @@ public final class AvatarFormFragment extends BaseRegisterFragment {
   public View onCreateView(
     LayoutInflater inflater,
     @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(R.layout.fragment_register_form_avatar, container, false);
   }
 
@@ -86,17 +90,18 @@ public final class AvatarFormFragment extends BaseRegisterFragment {
       final File file = avatar.getFile();
       final Context context = getActivity();
       moveToNextScreenButton.setText(R.string.next);
-      Picasso.with(context).invalidate(file);
+      Picasso.with(context)
+        .invalidate(file);
       Picasso.with(context)
         .load(file)
-        .resizeDimen(R.dimen.widget_image_avatar_large, R.dimen.widget_image_avatar_large)
+        .resizeDimen(R.dimen.normalProfilePictureSize, R.dimen.normalProfilePictureSize)
         .transform(new CircleTransformation())
-        .placeholder(R.drawable.d_widget_image_dark_avatar_placeholder_large)
-        .error(R.drawable.d_widget_image_dark_avatar_placeholder_large)
+        .placeholder(R.drawable.profile_picture_placeholder_dark)
+        .error(R.drawable.profile_picture_placeholder_dark)
         .noFade()
         .into(avatarImageView);
     } else {
-      avatarImageView.setImageResource(R.drawable.d_widget_image_dark_avatar_placeholder_large);
+      avatarImageView.setImageResource(R.drawable.profile_picture_placeholder_dark);
       moveToNextScreenButton.setText(R.string.later);
     }
   }

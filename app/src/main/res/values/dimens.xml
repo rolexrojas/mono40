@@ -13,8 +13,8 @@
   <dimen name="largeIconSize">36dp</dimen>
   
   <!-- Images -->
-  <dimen name="normalImageSize">80dp</dimen>
-  <dimen name="largeImageSize">120dp</dimen>
+  <dimen name="normalProfilePictureSize">80dp</dimen>
+  <dimen name="largeProfilePictureSize">120dp</dimen>
 
   <!-- TODO: Remove every dimension from this point downwards -->
   <dimen name="amount_text_currency">10sp</dimen>
@@ -110,7 +110,6 @@
   <dimen name="widget_button_radius">2dp</dimen>
   <dimen name="widget_button_width">125dp</dimen>
   <dimen name="widget_editable_label_padding">16dp</dimen>
-  <dimen name="widget_image_avatar_large">80dp</dimen>
   <dimen name="widget_label_fitter_layout_height">80dp</dimen>
   <dimen name="widget_label_fitter_layout_text_size_max">34sp</dimen>
   <dimen name="widget_label_fitter_layout_text_size_min">18sp</dimen>
