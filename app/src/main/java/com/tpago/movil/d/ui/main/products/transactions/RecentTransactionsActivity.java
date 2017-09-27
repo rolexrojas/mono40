@@ -19,7 +19,7 @@ import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Transaction;
-import com.tpago.movil.d.ui.BaseActivity;
+import com.tpago.movil.d.ui.DepBaseActivity;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.yqritc.recyclerviewflexibledivider.FlexibleDividerDecoration;
@@ -39,7 +39,7 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 public class RecentTransactionsActivity
-  extends BaseActivity
+  extends DepBaseActivity
   implements RecentTransactionsScreen,
   SwipeRefreshLayout.OnRefreshListener {
   private Unbinder unbinder;
@@ -166,7 +166,7 @@ public class RecentTransactionsActivity
   }
 
   @Override
-  protected int layoutResourceIdentifier() {
+  protected int layoutResId() {
     return R.layout.d_activity_recent_transactions;
   }
 

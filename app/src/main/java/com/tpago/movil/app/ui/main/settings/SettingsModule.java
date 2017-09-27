@@ -1,4 +1,4 @@
-package com.tpago.movil.app.ui.main.settings.index;
+package com.tpago.movil.app.ui.main.settings;
 
 import com.tpago.movil.ConfigManager;
 import com.tpago.movil.UserStore;
@@ -14,27 +14,27 @@ import dagger.Provides;
  * @author hecvasro
  */
 @Module
-public final class SettingsIndexModule {
+public final class SettingsModule {
 
-  static SettingsIndexModule create(SettingsIndexPresentation presentation) {
-    return new SettingsIndexModule(presentation);
+  static SettingsModule create(SettingsPresentation presentation) {
+    return new SettingsModule(presentation);
   }
 
-  private final SettingsIndexPresentation presentation;
+  private final SettingsPresentation presentation;
 
-  private SettingsIndexModule(SettingsIndexPresentation presentation) {
+  private SettingsModule(SettingsPresentation presentation) {
     this.presentation = ObjectHelper.checkNotNull(presentation, "presentation");
   }
 
   @Provides
   @FragmentScope
-  SettingsIndexPresenter presenter(
+  SettingsPresenter presenter(
     UserStore userStore,
     ProductManager productManager,
     ConfigManager configManager,
     StringMapper stringMapper
   ) {
-    return SettingsIndexPresenter.builder()
+    return SettingsPresenter.builder()
       .userStore(userStore)
       .productManager(productManager)
       .configManager(configManager)

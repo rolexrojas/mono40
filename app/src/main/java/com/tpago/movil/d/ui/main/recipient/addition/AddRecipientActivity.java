@@ -99,7 +99,7 @@ public class AddRecipientActivity extends
   }
 
   @Override
-  protected int layoutResourceIdentifier() {
+  protected int layoutResId() {
     return R.layout.d_activity_add_recipient;
   }
 

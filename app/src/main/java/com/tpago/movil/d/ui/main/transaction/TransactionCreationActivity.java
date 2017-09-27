@@ -86,7 +86,7 @@ public class TransactionCreationActivity
   }
 
   @Override
-  protected int layoutResourceIdentifier() {
+  protected int layoutResId() {
     return R.layout.d_activity_transaction_creation;
   }
 

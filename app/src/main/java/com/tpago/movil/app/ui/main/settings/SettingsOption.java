@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
@@ -23,6 +24,7 @@ import butterknife.ButterKnife;
 abstract class SettingsOption extends RelativeLayout {
 
   private String primaryText;
+  private int primaryTextColor;
 
   @BindView(R.id.primaryTextView) TextView primaryTextView;
 
@@ -38,10 +40,14 @@ abstract class SettingsOption extends RelativeLayout {
       attributeSet,
       R.styleable.SettingsOption,
       defaultStyleAttribute,
-      0
+      R.style.SettingsOption
     );
 
     this.primaryText = array.getString(R.styleable.SettingsOption_primaryText);
+    this.primaryTextColor = array.getColor(
+      R.styleable.SettingsOption_primaryTextColor,
+      ContextCompat.getColor(context, R.color.normalSettingsText)
+    );
 
     array.recycle();
 
@@ -52,9 +58,10 @@ abstract class SettingsOption extends RelativeLayout {
 
   private void updatePrimaryTextView() {
     this.primaryTextView.setText(this.primaryText);
+    this.primaryTextView.setTextColor(this.primaryTextColor);
   }
 
-  public final void primaryText(@Nullable String text) {
+  public final void setPrimaryText(@Nullable String text) {
     this.primaryText = StringHelper.nullIfEmpty(text);
     this.updatePrimaryTextView();
   }

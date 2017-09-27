@@ -25,7 +25,7 @@ import com.tpago.movil.app.App;
 import com.tpago.movil.R;
 import com.tpago.movil.app.FragmentReplacer;
 import com.tpago.movil.app.ui.FragmentActivityModule;
-import com.tpago.movil.app.ui.main.settings.index.SettingsIndexFragment;
+import com.tpago.movil.app.ui.main.settings.SettingsFragment;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.ResetEvent;
@@ -133,7 +133,7 @@ public class DepMainActivity
   }
 
   @Override
-  protected int layoutResourceIdentifier() {
+  protected int layoutResId() {
     return R.layout.d_activity_main;
   }
 
@@ -277,9 +277,9 @@ public class DepMainActivity
         this.setChildFragment(ProductsFragment.newInstance());
         break;
       case R.id.main_menuItem_settings:
-        this.fragmentReplacer.begin(SettingsIndexFragment.create())
-          .addToBackStack()
+        this.fragmentReplacer.begin(SettingsFragment.create())
           .transition(FragmentReplacer.Transition.FIFO)
+          .addToBackStack()
           .commit();
         break;
       case R.id.main_menuItem_exit:

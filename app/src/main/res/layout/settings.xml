@@ -18,7 +18,7 @@
       style="@style/SettingsOption"
       app:primaryText="@string/profileSettingsOption"/>
 
-    <com.tpago.movil.app.ui.main.settings.SettingsSectionDivider style="@style/SettingsSectionDivider"/>
+    <android.support.v4.widget.Space style="@style/Divider.Space.Normal"/>
 
     <TextView
       style="@style/SettingsSectionTitle"
@@ -31,8 +31,8 @@
       android:visibility="gone"
       app:primaryText="@string/primaryPaymentMethodSettingsOption"/>
 
-    <com.tpago.movil.app.ui.main.settings.SettingsSectionDivider
-      style="@style/SettingsSectionDivider"
+    <android.support.v4.widget.Space
+      style="@style/Divider.Space.Normal"
       android:visibility="gone"/>
 
     <TextView
@@ -44,8 +44,8 @@
       style="@style/SettingsOption"
       app:primaryText="@string/unlockMethodSettingsOption"/>
 
-    <com.tpago.movil.app.ui.Divider
-      style="@style/Divider"
+    <View
+      style="@style/Divider.Line"
       android:visibility="gone"/>
 
     <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
@@ -54,8 +54,8 @@
       android:visibility="gone"
       app:primaryText="@string/timeoutSettingsOption"/>
 
-    <com.tpago.movil.app.ui.Divider
-      style="@style/Divider"
+    <View
+      style="@style/Divider.Line"
       android:visibility="gone"/>
 
     <com.tpago.movil.app.ui.main.settings.ToggleableSettingsOption
@@ -64,8 +64,8 @@
       android:visibility="gone"
       app:primaryText="@string/lockOnExitSettingsOption"/>
 
-    <com.tpago.movil.app.ui.Divider
-      style="@style/Divider"
+    <View
+      style="@style/Divider.Line"
       android:visibility="gone"/>
 
     <com.tpago.movil.app.ui.main.settings.SingleLineSettingsOption

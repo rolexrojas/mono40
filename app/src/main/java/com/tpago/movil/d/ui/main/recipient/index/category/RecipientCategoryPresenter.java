@@ -29,7 +29,6 @@ import com.tpago.movil.d.domain.api.ApiError;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.pos.PosBridge;
-import com.tpago.movil.d.domain.pos.PosResult;
 import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.data.SchedulerProvider;
@@ -74,11 +73,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
   private static final long DEFAULT_IME_SPAN_QUERY = 300L; // 0.3 seconds.
 
   private final StringHelper stringHelper;
-  private final SchedulerProvider schedulerProvider;
   private final RecipientManager recipientManager;
-  private final SessionManager sessionManager;
-  private final ProductManager productManager;
-  private final PosBridge posBridge;
   private final UserStore userStore;
 
   private final NetworkService networkService;
@@ -109,11 +104,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
 
   RecipientCategoryPresenter(
     @NonNull StringHelper stringHelper,
-    @NonNull SchedulerProvider schedulerProvider,
     @NonNull RecipientManager recipientManager,
-    @NonNull SessionManager sessionManager,
-    @NonNull ProductManager productManager,
-    PosBridge posBridge,
     UserStore userStore,
     NetworkService networkService,
     DepApiBridge depApiBridge,
@@ -121,11 +112,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
     Category category
   ) {
     this.stringHelper = stringHelper;
-    this.schedulerProvider = schedulerProvider;
     this.recipientManager = recipientManager;
-    this.sessionManager = sessionManager;
-    this.productManager = productManager;
-    this.posBridge = posBridge;
     this.userStore = userStore;
 
     this.networkService = networkService;
@@ -488,44 +475,6 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
       isUser || recipientManager.checkIfExists(recipient),
       transactionId
     );
-  }
-
-  final void signOut() {
-    if (signOutSubscription.isUnsubscribed()) {
-      posBridge.unregister(sessionManager.getSession()
-        .getPhoneNumber())
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe(new Action0() {
-          @Override
-          public void call() {
-            screen.showLoadIndicator(true);
-          }
-        })
-        .subscribe(new Action1<PosResult>() {
-          @Override
-          public void call(PosResult result) {
-            screen.showLoadIndicator(false);
-            if (result.isSuccessful()) {
-              recipientManager.clear();
-              productManager.clear();
-              sessionManager.deactivate();
-              userStore.clear();
-              screen.openInitScreen();
-              screen.finish();
-            } else {
-              screen.showGenericErrorDialog();
-            }
-          }
-        }, new Action1<Throwable>() {
-          @Override
-          public void call(Throwable throwable) {
-            Timber.e(throwable);
-            screen.showLoadIndicator(false);
-            screen.showGenericErrorDialog();
-          }
-        });
-    }
   }
 
   final void startDeleting() {

@@ -1,4 +1,4 @@
-package com.tpago.movil.app.ui.main.settings.index;
+package com.tpago.movil.app.ui.main.settings;
 
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -6,9 +6,10 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import com.tpago.movil.R;
+import com.tpago.movil.app.ActivityQualifier;
+import com.tpago.movil.app.FragmentReplacer;
 import com.tpago.movil.app.ui.main.BaseMainFragment;
-import com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption;
-import com.tpago.movil.app.ui.main.settings.ToggleableSettingsOption;
+import com.tpago.movil.app.ui.main.profile.ProfileFragment;
 import com.tpago.movil.d.ui.main.DepMainActivity;
 
 import javax.inject.Inject;
@@ -19,14 +20,14 @@ import butterknife.OnClick;
 /**
  * @author hecvasro
  */
-public final class SettingsIndexFragment extends BaseMainFragment
-  implements SettingsIndexPresentation {
+public final class SettingsFragment extends BaseMainFragment implements SettingsPresentation {
 
-  public static SettingsIndexFragment create() {
-    return new SettingsIndexFragment();
+  public static SettingsFragment create() {
+    return new SettingsFragment();
   }
 
-  @Inject SettingsIndexPresenter presenter;
+  @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
+  @Inject SettingsPresenter presenter;
 
   @BindView(R.id.profileSettingsOption) MultiLineSettingsOption profileSettingsOption;
   @BindView(R.id.primaryPaymentMethodSettingsOption) MultiLineSettingsOption primaryPaymentMethodSettingsOption;
@@ -37,7 +38,7 @@ public final class SettingsIndexFragment extends BaseMainFragment
   @Override
   @LayoutRes
   protected int layoutResId() {
-    return R.layout.settings_index;
+    return R.layout.settings;
   }
 
   @Override
@@ -48,7 +49,10 @@ public final class SettingsIndexFragment extends BaseMainFragment
 
   @OnClick(R.id.profileSettingsOption)
   final void onProfileSettingsOptionClicked() {
-    // TODO
+    this.fragmentReplacer.begin(ProfileFragment.create())
+      .transition(FragmentReplacer.Transition.FIFO)
+      .addToBackStack()
+      .commit();
   }
 
   @OnClick(R.id.primaryPaymentMethodSettingsOption)
@@ -83,7 +87,7 @@ public final class SettingsIndexFragment extends BaseMainFragment
     // Injects all annotated dependencies.
     DepMainActivity.get(this.getActivity())
       .getComponent()
-      .create(SettingsIndexModule.create(this))
+      .create(SettingsModule.create(this))
       .inject(this);
   }
 

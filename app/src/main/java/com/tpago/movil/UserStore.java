@@ -19,6 +19,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class UserStore
   implements OnIdChangedListener, OnNameChangedListener, OnCarrierChangedListener {
 

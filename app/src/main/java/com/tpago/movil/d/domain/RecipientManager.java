@@ -92,7 +92,6 @@ public final class RecipientManager {
     Collections.sort(recipientList, Recipient.comparator());
   }
 
-  @Deprecated
   public final void clear() {
     recipientList.clear();
     indexSet.clear();
@@ -114,7 +113,8 @@ public final class RecipientManager {
   @Deprecated
   public final Observable<Boolean> checkIfAffiliated(
     final String authToken,
-    final String phoneNumber) {
+    final String phoneNumber
+  ) {
     return apiBridge.checkIfAffiliated(authToken, phoneNumber)
       .compose(ApiUtils.<Boolean>handleApiResult(true));
   }

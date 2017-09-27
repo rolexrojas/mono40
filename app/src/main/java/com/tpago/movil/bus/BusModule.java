@@ -19,7 +19,7 @@ public final class BusModule {
   @Singleton
   EventBus provideBus() {
     return EventBus.builder()
-//      .addIndex(new BusIndex())
+      .addIndex(new BusIndex())
       .logSubscriberExceptions(false)
       .logNoSubscriberMessages(BuildConfig.DEBUG)
       .sendNoSubscriberEvent(false)

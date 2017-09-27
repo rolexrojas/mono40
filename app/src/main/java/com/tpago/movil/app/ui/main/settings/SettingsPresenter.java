@@ -1,4 +1,4 @@
-package com.tpago.movil.app.ui.main.settings.index;
+package com.tpago.movil.app.ui.main.settings;
 
 import com.tpago.Banks;
 import com.tpago.movil.ConfigManager;
@@ -18,7 +18,7 @@ import java.util.Arrays;
 /**
  * @author hecvasro
  */
-public final class SettingsIndexPresenter extends Presenter<SettingsIndexPresentation> {
+final class SettingsPresenter extends Presenter<SettingsPresentation> {
 
   static Builder builder() {
     return new Builder();
@@ -29,7 +29,7 @@ public final class SettingsIndexPresenter extends Presenter<SettingsIndexPresent
   private final ConfigManager configManager;
   private final StringMapper stringMapper;
 
-  private SettingsIndexPresenter(Builder builder) {
+  private SettingsPresenter(Builder builder) {
     super(builder.presentation);
 
     this.userStore = builder.userStore;
@@ -72,7 +72,7 @@ public final class SettingsIndexPresenter extends Presenter<SettingsIndexPresent
     private ProductManager productManager;
     private ConfigManager configManager;
     private StringMapper stringMapper;
-    private SettingsIndexPresentation presentation;
+    private SettingsPresentation presentation;
 
     private Builder() {
     }
@@ -97,12 +97,12 @@ public final class SettingsIndexPresenter extends Presenter<SettingsIndexPresent
       return this;
     }
 
-    final Builder presentation(SettingsIndexPresentation presentation) {
+    final Builder presentation(SettingsPresentation presentation) {
       this.presentation = ObjectHelper.checkNotNull(presentation, "presentation");
       return this;
     }
 
-    final SettingsIndexPresenter build() {
+    final SettingsPresenter build() {
       BuilderChecker.create()
         .addPropertyNameIfMissing("userStore", ObjectHelper.isNull(this.userStore))
         .addPropertyNameIfMissing("productManager", ObjectHelper.isNull(this.productManager))
@@ -111,7 +111,7 @@ public final class SettingsIndexPresenter extends Presenter<SettingsIndexPresent
         .addPropertyNameIfMissing("presentation", ObjectHelper.isNull(this.presentation))
         .checkNoMissingProperties();
 
-      return new SettingsIndexPresenter(this);
+      return new SettingsPresenter(this);
     }
   }
 }

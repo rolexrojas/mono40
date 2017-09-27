@@ -13,7 +13,7 @@ import dagger.Component;
 @Component(dependencies = AppComponent.class, modules = DepActivityModule.class)
 @Deprecated
 public interface ActivityComponent {
-  void inject(BaseActivity activity);
+  void inject(DepBaseActivity activity);
 
   AppDialog.Creator provideScreenDialogCreator();
   RxPermissions providePermissionManager();

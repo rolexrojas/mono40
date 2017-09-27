@@ -44,8 +44,6 @@ interface RecipientCategoryScreen extends Screen {
 
   void startTransfer(Recipient recipient);
 
-  void openInitScreen();
-  void finish();
   void setDeleting(boolean deleting);
   void showMessage(String message);
   void remove(Object item);

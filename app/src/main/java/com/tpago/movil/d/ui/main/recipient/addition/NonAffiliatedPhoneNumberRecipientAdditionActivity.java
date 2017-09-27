@@ -12,7 +12,7 @@ import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.Recipient;
-import com.tpago.movil.d.ui.BaseActivity;
+import com.tpago.movil.d.ui.DepBaseActivity;
 import com.tpago.movil.util.Objects;
 
 import butterknife.BindView;
@@ -22,7 +22,7 @@ import butterknife.Unbinder;
 /**
  * @author hecvasro
  */
-public class NonAffiliatedPhoneNumberRecipientAdditionActivity extends BaseActivity {
+public class NonAffiliatedPhoneNumberRecipientAdditionActivity extends DepBaseActivity {
   private static final String KEY_RECIPIENT = "recipient";
 
   private Unbinder unbinder;
@@ -61,7 +61,7 @@ public class NonAffiliatedPhoneNumberRecipientAdditionActivity extends BaseActiv
   }
 
   @Override
-  protected int layoutResourceIdentifier() {
+  protected int layoutResId() {
     return R.layout.d_activity_non_affiliated_phone_number_recipient_addition;
   }
 

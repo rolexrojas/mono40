@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.tpago.movil.ConfigManager;
 import com.tpago.movil.UserStore;
+import com.tpago.movil.bus.BusModule;
 import com.tpago.movil.content.ContentModule;
 import com.tpago.movil.d.DepAppModule;
 import com.tpago.movil.api.ApiModule;
@@ -44,19 +45,24 @@ import dagger.Component;
  * @author hecvasro
  */
 @Singleton
-@Component(modules = {
-  AppModule.class,
-  ContentModule.class,
-  DataModule.class,
-  DomainModule.class,
-  NetModule.class,
-  GsonModule.class,
-  ApiModule.class,
-  // Deprecated modules
-  DepAppModule.class,
-  DepDataModule.class
-})
+@Component(
+  modules = {
+    AppModule.class,
+    BusModule.class,
+    ContentModule.class,
+    DataModule.class,
+    DomainModule.class,
+    NetModule.class,
+    GsonModule.class,
+    ApiModule.class,
+    // Deprecated modules
+    DepAppModule.class,
+    DepDataModule.class
+  }
+)
 public interface AppComponent {
+
+  org.greenrobot.eventbus.EventBus eventBus();
 
   StringMapper stringMapper();
 

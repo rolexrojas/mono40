@@ -30,6 +30,7 @@ import timber.log.Timber;
  */
 @Deprecated
 public final class ProductManager {
+
   private static final String KEY_INDEX_SET = "indexSet";
   private static final String KEY_DEFAULT_PAYMENT_OPTION_ID = "defaultPaymentOption";
 
@@ -54,7 +55,8 @@ public final class ProductManager {
     Context context,
     EventBus eventBus,
     DepApiBridge apiBridge,
-    Lazy<PosBridge> posBridge) {
+    Lazy<PosBridge> posBridge
+  ) {
 
     this.sharedPreferences = Preconditions
       .assertNotNull(sharedPreferencesCreator, "sharedPreferencesCreator == null")
@@ -165,7 +167,9 @@ public final class ProductManager {
     }
     for (Product p : productList) {
       if (Product.checkIfCreditCard(p)) {
-        Picasso.with(context).load(ApiImageUriBuilder.build(context, p)).fetch();
+        Picasso.with(context)
+          .load(ApiImageUriBuilder.build(context, p))
+          .fetch();
       }
       if (Product.isPaymentOption(p) && !paymentOptionList.contains(p)) {
         paymentOptionList.add(p);
@@ -173,7 +177,7 @@ public final class ProductManager {
     }
   }
 
-  @Deprecated public final void clear() {
+  public final void clear() {
     productList.clear();
     defaultPaymentOption = null;
     paymentOptionList.clear();
@@ -197,7 +201,8 @@ public final class ProductManager {
 
   public final List<Pair<Product, PosResult>> registerPaymentOptionList(
     final String phoneNumber,
-    final String pin) {
+    final String pin
+  ) {
     final PosBridge b = posBridge.get();
     final List<Pair<Product, PosResult>> resultList = new ArrayList<>();
     for (Product po : paymentOptionList) {
@@ -206,7 +211,10 @@ public final class ProductManager {
     return resultList;
   }
 
-  public final boolean setDefaultPaymentOption(final String authToken, final Product paymentOption) {
+  public final boolean setDefaultPaymentOption(
+    final String authToken,
+    final Product paymentOption
+  ) {
     if (paymentOption.equals(defaultPaymentOption)) {
       return true;
     } else {

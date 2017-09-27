@@ -18,9 +18,13 @@
   <color name="primary_50">#7F9C188F</color>
   <color name="transparent">@android:color/transparent</color>
   <color name="white">#FFF</color>
+  <color name="whiteAlpha50">#7FFFFFFF</color>
   <color name="white_20">#33FFFFFF</color>
-  <color name="white_50">#7FFFFFFF</color>
   <color name="white_90">#E5FFFFFF</color>
+
+  <!-- Settings -->
+  <color name="normalSettingsText">#333</color>
+  <color name="dangerousSettingsText">#D0021B</color>
 
   <!-- TODO: Remove every color from this point downwards -->
   <color name="common_accent">#9C188F</color>

@@ -47,11 +47,7 @@ class RecipientCategoryModule {
     Session session) {
     return new RecipientCategoryPresenter(
       stringHelper,
-      schedulerProvider,
       recipientManager,
-      sessionManager,
-      productManager,
-      posBridge,
       userStore,
       networkService,
       depApiBridge,

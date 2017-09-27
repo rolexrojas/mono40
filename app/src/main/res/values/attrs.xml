@@ -3,6 +3,7 @@
 
   <declare-styleable name="SettingsOption">
     <attr name="primaryText" format="string|reference"/>
+    <attr name="primaryTextColor" format="color|reference"/>
   </declare-styleable>
 
   <declare-styleable name="MultiLineSettingsOption">

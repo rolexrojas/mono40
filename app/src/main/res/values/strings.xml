@@ -3,17 +3,30 @@
 
   <!-- Words -->
   <string name="accounts">Cuentas</string>
+  <string name="email">Correo electrónico</string>
+  <string name="firstName">Nombre</string>
+  <string name="lastName">Apellido</string>
+  <string name="ok">Ok</string>
+  <string name="phoneNumber">Número de teléfono</string>
   <string name="profile">Perfil</string>
   <string name="security">Seguridad</string>
   <string name="settings">Ajustes</string>
 
   <!-- Phrases -->
+  <string name="changeMyPassword">Cambiar mi contraseña</string>
+  <string name="error_unexpected_dialog_message">En estos momentos no podemos procesar esta solicitud. Favor intentar nuevamente.</string>
+  <string name="error_unexpected_dialog_positiveButton">@string/ok</string>
+  <string name="error_unexpected_dialog_title">@string/weAreSorry</string>
   <string name="lockOnExitSettingsOption">Bloquear al salir</string>
+  <string name="myProfile">Mi perfil</string>
   <string name="pinSettingsOption">Cambiar PIN tPago</string>
   <string name="primaryPaymentMethodSettingsOption">Cuenta de fondos primaria</string>
   <string name="profileSettingsOption">Editar mi perfil</string>
+  <string name="signOut">Desvincular dispositivo</string>
   <string name="timeoutSettingsOption">Bloquear automáticamente</string>
   <string name="unlockMethodSettingsOption">Desbloquear rápido</string>
+  <string name="weAreSorry">¡Lo sentimos!</string>
+
 
   <!-- Fonts -->
   <string name="font_gothamRounded_bold">fonts/GothamRounded/Bold.otf</string>
@@ -94,7 +107,6 @@
   <string name="due_date">Fecha de vencimiento</string>
   <string name="edit">Editar</string>
   <string name="edit_text_content_font">@string/font_gothamRounded_book</string>
-  <string name="email">Correo electrónico</string>
   <string name="error_generic">En estos momentos no podemos procesar esta solicitud. Favor intentar nuevamente.</string>
   <string name="error_generic_title">¡Lo sentimos!</string>
   <string name="error_incorrect_pin">PIN incorrecto.</string>
@@ -102,7 +114,6 @@
   <string name="error_unavailable_network">Sin conexión a Internet</string>
   <string name="exit">Salir</string>
   <string name="fee_for_transaction">Cargo por transacción %1$s</string>
-  <string name="first_name">Nombre</string>
   <string name="format_add">Agregar %1$s</string>
   <string name="format_credit_card_number_masked">•••• •••• •••• %1$s</string>
   <string name="format_product_number_masked">•••• •••• %1$s</string>
@@ -147,7 +158,6 @@
   <string name="intro_tab_title_03">Pagos al instante</string>
   <string name="invoice">Factura</string>
   <string name="is_required">Es requerido</string>
-  <string name="last_name">Apellido</string>
   <string name="later">Mas Tarde</string>
   <string name="learn_more">Aprende mas</string>
   <string name="list.no_results">No hay resultados para \'%1$s\'</string>
@@ -161,7 +171,6 @@
   <string name="nick_name">Apodo</string>
   <string name="no_internet_connection">Sin conexión a Internet</string>
   <string name="number">Número</string>
-  <string name="ok">Ok</string>
   <string name="onboarding_button_skip">@string/skip</string>
   <string name="partners">Facturadores</string>
   <string name="password">Contraseña</string>
@@ -211,8 +220,8 @@
   <string name="register_form_name_error_message">Tu nombre y apellido son requeridos.</string>
   <string name="register_form_name_error_positive_button_text">@string/ok</string>
   <string name="register_form_name_error_title">¿Tienes nombre?</string>
-  <string name="register_form_name_hint_first_name">@string/first_name</string>
-  <string name="register_form_name_hint_last_name">@string/last_name</string>
+  <string name="register_form_name_hint_first_name">@string/firstName</string>
+  <string name="register_form_name_hint_last_name">@string/lastName</string>
   <string name="register_form_name_label_description">Continuamos con crear tu perfil para tPago</string>
   <string name="register_form_name_label_title">¿Cómo te llamas?</string>
   <string name="register_form_password_button_move_to_next_screen">@string/next</string>
@@ -251,7 +260,6 @@
   <string name="sign_in_label_description">Iniciar sesión con usuario y contraseña de tPago</string>
   <string name="sign_in_label_title">@string/welcome</string>
   <string name="skip">@string/forward</string>
-  <string name="sorry">¡Lo sentimos!</string>
   <string name="start">Comenzar</string>
   <string name="total">Total</string>
   <string name="total_owed">Total adeudado</string>

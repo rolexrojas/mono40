@@ -1,11 +1,11 @@
-package com.tpago.movil.app.ui.main.settings.index;
+package com.tpago.movil.app.ui.main.settings;
 
 import com.tpago.movil.app.ui.Presentation;
 
 /**
  * @author hecvasro
  */
-interface SettingsIndexPresentation extends Presentation {
+interface SettingsPresentation extends Presentation {
 
   void setProfileSettingsOptionSecondaryText(String text);
 

@@ -48,7 +48,6 @@ import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.view.widget.SearchView;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
-import com.tpago.movil.init.InitActivity;
 import com.tpago.movil.util.Objects;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
@@ -341,16 +340,6 @@ public class RecipientCategoryFragment
   @Override
   public void update(@NonNull Object item) {
     adapter.updateOrAdd(item);
-  }
-
-  @Override
-  public void openInitScreen() {
-    startActivity(InitActivity.getLaunchIntent(getContext()));
-  }
-
-  @Override
-  public void finish() {
-    getActivity().finish();
   }
 
   @Override

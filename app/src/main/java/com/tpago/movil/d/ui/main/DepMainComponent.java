@@ -7,10 +7,11 @@ import com.tpago.movil.User;
 import com.tpago.movil.UserStore;
 import com.tpago.movil.app.ActivityScope;
 import com.tpago.movil.app.AppComponent;
-import com.tpago.movil.app.FragmentReplacer;
 import com.tpago.movil.app.ui.FragmentActivityModule;
-import com.tpago.movil.app.ui.main.settings.index.SettingsIndexComponent;
-import com.tpago.movil.app.ui.main.settings.index.SettingsIndexModule;
+import com.tpago.movil.app.ui.main.settings.SettingsComponent;
+import com.tpago.movil.app.ui.main.settings.SettingsModule;
+import com.tpago.movil.app.ui.main.profile.ProfileComponent;
+import com.tpago.movil.app.ui.main.profile.ProfileModule;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.domain.ProductManager;
@@ -50,7 +51,9 @@ public interface DepMainComponent extends ActivityComponent {
 
   StringMapper stringMapper();
 
-  SettingsIndexComponent create(SettingsIndexModule module);
+  SettingsComponent create(SettingsModule module);
+
+  ProfileComponent create(ProfileModule module);
 
   BalanceManager provideBalanceManager();
 

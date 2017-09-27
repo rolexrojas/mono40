@@ -3,17 +3,34 @@
   <style name="Base"/>
 
   <style name="Base.Divider">
+    <item name="android:layout_width">match_parent</item>
+  </style>
+
+  <style name="Base.Divider.Line">
     <item name="android:background">@color/blackAlpha20</item>
     <item name="android:layout_height">1dp</item>
     <item name="android:layout_marginEnd">@dimen/normalHorizontalSpace</item>
     <item name="android:layout_marginStart">@dimen/normalHorizontalSpace</item>
-    <item name="android:layout_width">match_parent</item>
   </style>
 
-  <style name="Divider" parent="Base.Divider"/>
+  <style name="Divider.Line" parent="Base.Divider.Line"/>
+
+  <style name="Base.Divider.Space"/>
+
+  <style name="Base.Divider.Space.Small">
+    <item name="android:layout_height">@dimen/smallVerticalSpace</item>
+  </style>
+
+  <style name="Divider.Space.Small" parent="Base.Divider.Space.Small"/>
+
+  <style name="Base.Divider.Space.Normal">
+    <item name="android:layout_height">@dimen/normalVerticalSpace</item>
+  </style>
+
+  <style name="Divider.Space.Normal" parent="Base.Divider.Space.Normal"/>
 
   <style name="Base.SettingsText">
-    <item name="android:textColor">#333</item>
+    <item name="android:textColor">@color/normalSettingsText</item>
   </style>
 
   <style name="Base.SettingsText.Title">
@@ -76,17 +93,48 @@
 
   <style name="SettingsContainer" parent="Base.SettingsContainer"/>
 
+  <style name="Base.ProfileLabel">
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:paddingEnd">@dimen/normalHorizontalSpace</item>
+    <item name="android:paddingStart">@dimen/normalHorizontalSpace</item>
+    <item name="android:textAppearance">@style/SettingsText.Secondary</item>
+  </style>
+
+  <style name="ProfileLabel" parent="Base.ProfileLabel"/>
+
+  <style name="Base.ProfileInput">
+    <item name="android:background">@null</item>
+    <item name="android:gravity">center_vertical</item>
+    <item name="android:layout_height">32dp</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:paddingEnd">@dimen/normalHorizontalSpace</item>
+    <item name="android:paddingStart">@dimen/normalHorizontalSpace</item>
+    <item name="android:textAppearance">@style/SettingsText.Primary</item>
+    <item name="android:textColor">@color/normalSettingsText</item>
+  </style>
+
+  <style name="ProfileInput" parent="Base.ProfileInput"/>
+
   <style name="Base.AppTheme" parent="App.Theme">
     <item name="colorAccent">@color/accent</item>
     <item name="colorPrimary">@color/primary</item>
     <item name="colorPrimaryDark">@color/primaryDark</item>
 
-    <item name="dividerStyle">@style/Divider</item>
     <item name="settingsSectionDividerStyle">@style/SettingsSectionDivider</item>
     <item name="settingsOptionStyle">@style/SettingsOption</item>
   </style>
 
   <style name="AppTheme" parent="Base.AppTheme"/>
+
+  <style name="Base.TakeoverLoaderTheme">
+    <item name="android:windowBackground">@color/whiteAlpha50</item>
+    <item name="colorAccent">@color/accent</item>
+    <item name="colorPrimary">@color/primary</item>
+    <item name="colorPrimaryDark">#B076A7</item>
+  </style>
+
+  <style name="TakeoverLoaderTheme" parent="Base.TakeoverLoaderTheme"/>
 
   <!-- TODO: Remove every style from this point downwards -->
   <style name="Base.ThemeOverlay" />
