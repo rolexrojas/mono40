@@ -2,9 +2,6 @@ package com.tpago.movil.util;
 
 import java.util.List;
 
-import static com.tpago.movil.util.ObjectHelper.checkNotNull;
-import static com.tpago.movil.util.ObjectHelper.isNull;
-
 /**
  * Collection of helpers for {@link String strings}.
  *
@@ -13,20 +10,56 @@ import static com.tpago.movil.util.ObjectHelper.isNull;
 public final class StringHelper {
 
   /**
-   * Checks if the given {@link String string} is null or empty.
+   * Checks whether a given {@link CharSequence sequence} is empty o not.
+   *
+   * @param s
+   *   {@link CharSequence Sequence} that will be checked.
+   *
+   * @return True if the given {@link CharSequence sequence} is empty, or otherwise false.
+   *
+   * @throws NullPointerException
+   *   If {@code s} is null.
+   */
+  private static boolean isEmpty(CharSequence s) {
+    return ObjectHelper.checkNotNull(s, "s")
+      .length() == 0;
+  }
+
+  /**
+   * Checks whether the a {@link String string} is {@code null} or empty.
    *
    * @param s
    *   {@link String} that will be checked.
    *
-   * @return True if the given {@link String string} is null or empty, false otherwise.
+   * @return True if the given {@link String string} is null or empty, or otherwise false.
    */
   public static boolean isNullOrEmpty(CharSequence s) {
-    return isNull(s) || s.length() == 0;
+    return ObjectHelper.isNull(s) || isEmpty(s);
   }
 
   /**
-   * Creates a {@link String string} that contains each given {@link
-   * Object object} joined by the given delimiter.
+   * Returns {@code null} if a given {@link String string} is empty, or otherwise the given one.
+   *
+   * @return {@code null} if a given {@link String string} is empty, or otherwise the given one.
+   */
+  public static String nullIfEmpty(String s) {
+    return isNullOrEmpty(s) ? null : s;
+  }
+
+  /**
+   * Returns an empty {@link String string} if a given {@link String string} is {@code null}, or
+   * otherwise the given one.
+   *
+   * @return An empty {@link String string} if a given {@link String string} is {@code null}, or
+   * otherwise the given one.
+   */
+  public static String emptyIfNull(String s) {
+    return ObjectHelper.firstNonNull(s, "");
+  }
+
+  /**
+   * Creates a {@link String string} that contains each given {@link Object object} joined by the
+   * given delimiter.
    *
    * @param tokenList
    *   {@link List} of {@link Object tokens} that will be joined. Each one will be joined using its
@@ -41,8 +74,8 @@ public final class StringHelper {
    *   If the parameter {@code strings} is null.
    */
   public static <T> String join(CharSequence delimiter, List<T> tokenList) {
-    checkNotNull(delimiter, "delimiter");
-    checkNotNull(tokenList, "tokenList");
+    ObjectHelper.checkNotNull(delimiter, "delimiter");
+    ObjectHelper.checkNotNull(tokenList, "tokenList");
 
     final int size = tokenList.size();
     if (size == 0) {
