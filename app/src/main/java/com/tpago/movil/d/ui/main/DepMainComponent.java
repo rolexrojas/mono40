@@ -9,6 +9,8 @@ import com.tpago.movil.app.ActivityScope;
 import com.tpago.movil.app.AppComponent;
 import com.tpago.movil.app.FragmentReplacer;
 import com.tpago.movil.app.ui.FragmentActivityModule;
+import com.tpago.movil.app.ui.main.settings.index.SettingsIndexComponent;
+import com.tpago.movil.app.ui.main.settings.index.SettingsIndexModule;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.domain.ProductManager;
@@ -21,6 +23,7 @@ import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.ui.ActivityComponent;
 import com.tpago.movil.d.ui.DepActivityModule;
 import com.tpago.movil.d.ui.main.recipient.index.disburse.DisbursementFragment;
+import com.tpago.movil.data.StringMapper;
 import com.tpago.movil.main.MainModule;
 import com.tpago.movil.net.NetworkService;
 
@@ -44,6 +47,10 @@ public interface DepMainComponent extends ActivityComponent {
   void inject(DepMainActivity activity);
 
   void inject(DisbursementFragment fragment);
+
+  StringMapper stringMapper();
+
+  SettingsIndexComponent create(SettingsIndexModule module);
 
   BalanceManager provideBalanceManager();
 

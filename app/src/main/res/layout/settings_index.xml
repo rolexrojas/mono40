@@ -22,14 +22,18 @@
 
     <TextView
       style="@style/SettingsSectionTitle"
-      android:text="@string/accounts"/>
+      android:text="@string/accounts"
+      android:visibility="gone"/>
 
     <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
       android:id="@+id/primaryPaymentMethodSettingsOption"
       style="@style/SettingsOption"
+      android:visibility="gone"
       app:primaryText="@string/primaryPaymentMethodSettingsOption"/>
 
-    <com.tpago.movil.app.ui.main.settings.SettingsSectionDivider style="@style/SettingsSectionDivider"/>
+    <com.tpago.movil.app.ui.main.settings.SettingsSectionDivider
+      style="@style/SettingsSectionDivider"
+      android:visibility="gone"/>
 
     <TextView
       style="@style/SettingsSectionTitle"
@@ -40,25 +44,34 @@
       style="@style/SettingsOption"
       app:primaryText="@string/unlockMethodSettingsOption"/>
 
-    <com.tpago.movil.app.ui.Divider style="@style/Divider"/>
+    <com.tpago.movil.app.ui.Divider
+      style="@style/Divider"
+      android:visibility="gone"/>
 
     <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
       android:id="@+id/timeoutSettingsOption"
       style="@style/SettingsOption"
+      android:visibility="gone"
       app:primaryText="@string/timeoutSettingsOption"/>
 
-    <com.tpago.movil.app.ui.Divider style="@style/Divider"/>
+    <com.tpago.movil.app.ui.Divider
+      style="@style/Divider"
+      android:visibility="gone"/>
 
     <com.tpago.movil.app.ui.main.settings.ToggleableSettingsOption
       android:id="@+id/lockOnExitSettingsOption"
       style="@style/SettingsOption"
+      android:visibility="gone"
       app:primaryText="@string/lockOnExitSettingsOption"/>
 
-    <com.tpago.movil.app.ui.Divider style="@style/Divider"/>
+    <com.tpago.movil.app.ui.Divider
+      style="@style/Divider"
+      android:visibility="gone"/>
 
     <com.tpago.movil.app.ui.main.settings.SingleLineSettingsOption
       android:id="@+id/pinSettingsOption"
       style="@style/SettingsOption"
+      android:visibility="gone"
       app:primaryText="@string/pinSettingsOption"/>
   </LinearLayout>
 </ScrollView>

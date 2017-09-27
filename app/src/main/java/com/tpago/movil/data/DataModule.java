@@ -1,5 +1,7 @@
 package com.tpago.movil.data;
 
+import android.content.Context;
+
 import com.google.gson.Gson;
 import com.tpago.movil.app.DisplayDensity;
 import com.tpago.movil.content.SharedPreferencesCreator;
@@ -17,6 +19,12 @@ import dagger.Provides;
  */
 @Module(includes = DataFlavorModule.class)
 public final class DataModule {
+
+  @Provides
+  @Singleton
+  StringMapper stringMapper(Context context) {
+    return context::getString;
+  }
 
   @Provides
   @Singleton

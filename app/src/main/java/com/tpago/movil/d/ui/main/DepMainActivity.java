@@ -25,7 +25,7 @@ import com.tpago.movil.app.App;
 import com.tpago.movil.R;
 import com.tpago.movil.app.FragmentReplacer;
 import com.tpago.movil.app.ui.FragmentActivityModule;
-import com.tpago.movil.app.ui.main.settings.SettingsIndexFragment;
+import com.tpago.movil.app.ui.main.settings.index.SettingsIndexFragment;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.ResetEvent;

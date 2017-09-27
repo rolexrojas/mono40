@@ -25,6 +25,7 @@ import com.tpago.movil.d.ui.main.recipient.index.disburse.DisbursementActivity;
 import com.tpago.movil.d.ui.main.transaction.own.OwnTransactionCreationActivity;
 import com.tpago.movil.d.ui.main.transaction.own.OwnTransferActivity;
 import com.tpago.movil.data.DataModule;
+import com.tpago.movil.data.StringMapper;
 import com.tpago.movil.domain.BankProvider;
 import com.tpago.movil.domain.DomainModule;
 import com.tpago.movil.gson.GsonModule;
@@ -56,6 +57,8 @@ import dagger.Component;
   DepDataModule.class
 })
 public interface AppComponent {
+
+  StringMapper stringMapper();
 
   InitComponent plus(ActivityModule activityModule, InitModule initModule);
 
