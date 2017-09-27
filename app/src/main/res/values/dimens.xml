@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <dimen name="spaceHorizontalNormal">20dp</dimen>
-  <dimen name="spaceVerticalNormal">30dp</dimen>
+  <!-- Spaces -->
+  <dimen name="smallHorizontalSpace">15dp</dimen>
+  <dimen name="normalHorizontalSpace">20dp</dimen>
+  <dimen name="normalVerticalSpace">30dp</dimen>
+
+  <!-- Icons -->
+  <dimen name="tinyIconSize">18dp</dimen>
+  <dimen name="smallIconSize">20dp</dimen>
+  <dimen name="normalIconSize">24dp</dimen>
+  <dimen name="largeIconSize">36dp</dimen>
 
   <!-- TODO: Remove every dimension from this point downwards -->
   <dimen name="amount_text_currency">10sp</dimen>

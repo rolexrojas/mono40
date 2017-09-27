@@ -2,6 +2,16 @@
 <resources>
   <style name="Base"/>
 
+  <style name="Base.Divider">
+    <item name="android:background">@color/blackAlpha20</item>
+    <item name="android:layout_height">1dp</item>
+    <item name="android:layout_marginEnd">@dimen/normalHorizontalSpace</item>
+    <item name="android:layout_marginStart">@dimen/normalHorizontalSpace</item>
+    <item name="android:layout_width">match_parent</item>
+  </style>
+
+  <style name="Divider" parent="Base.Divider"/>
+
   <style name="Base.SettingsText">
     <item name="android:textColor">#333</item>
   </style>
@@ -29,28 +39,51 @@
 
   <style name="SettingsText.Secondary" parent="Base.SettingsText.Secondary"/>
 
-  <style name="Base.SettingsSectionTitleView">
+  <style name="Base.SettingsSectionTitle">
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:paddingEnd">@dimen/normalHorizontalSpace</item>
+    <item name="android:paddingStart">@dimen/normalHorizontalSpace</item>
     <item name="android:textAppearance">@style/SettingsText.Title</item>
   </style>
 
-  <style name="SettingsSectionTitleView" parent="Base.SettingsSectionTitleView"/>
-  
-  <style name="Base.SettingsContainerView">
-    <item name="android:background">@color/white</item>
-    <item name="android:paddingBottom">@dimen/spaceVerticalNormal</item>
-    <item name="android:paddingEnd">@dimen/spaceHorizontalNormal</item>
-    <item name="android:paddingStart">@dimen/spaceHorizontalNormal</item>
-    <item name="android:paddingTop">@dimen/spaceVerticalNormal</item>
+  <style name="SettingsSectionTitle" parent="Base.SettingsSectionTitle"/>
+
+  <style name="Base.SettingsSectionDivider">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">32dp</item>
   </style>
 
-  <style name="SettingsContainerView" parent="Base.SettingsContainerView"/>
+  <style name="SettingsSectionDivider" parent="Base.SettingsSectionDivider"/>
+
+  <style name="Base.SettingsOption">
+    <item name="android:background">?attr/selectableItemBackground</item>
+    <item name="android:layout_height">56dp</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:paddingEnd">@dimen/normalHorizontalSpace</item>
+    <item name="android:paddingStart">@dimen/normalHorizontalSpace</item>
+  </style>
+
+  <style name="SettingsOption" parent="Base.SettingsOption"/>
+
+  <style name="Base.SettingsContainer">
+    <item name="android:background">@color/white</item>
+    <item name="android:layout_height">match_parent</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:paddingBottom">@dimen/normalVerticalSpace</item>
+    <item name="android:paddingTop">@dimen/normalVerticalSpace</item>
+  </style>
+
+  <style name="SettingsContainer" parent="Base.SettingsContainer"/>
 
   <style name="Base.AppTheme" parent="App.Theme">
     <item name="colorAccent">@color/accent</item>
     <item name="colorPrimary">@color/primary</item>
     <item name="colorPrimaryDark">@color/primaryDark</item>
 
-    <item name="settingsSectionTitleViewStyle">@style/SettingsSectionTitleView</item>
+    <item name="dividerStyle">@style/Divider</item>
+    <item name="settingsSectionDividerStyle">@style/SettingsSectionDivider</item>
+    <item name="settingsOptionStyle">@style/SettingsOption</item>
   </style>
 
   <style name="AppTheme" parent="Base.AppTheme"/>

@@ -8,6 +8,12 @@
   <string name="settings">Ajustes</string>
 
   <!-- Phrases -->
+  <string name="lockOnExitSettingsOption">Bloquear al salir</string>
+  <string name="pinSettingsOption">Cambiar PIN tPago</string>
+  <string name="primaryPaymentMethodSettingsOption">Cuenta de fondos primaria</string>
+  <string name="profileSettingsOption">Editar mi perfil</string>
+  <string name="timeoutSettingsOption">Bloquear automáticamente</string>
+  <string name="unlockMethodSettingsOption">Desbloquear rápido</string>
 
   <!-- Fonts -->
   <string name="font_gothamRounded_bold">fonts/GothamRounded/Bold.otf</string>

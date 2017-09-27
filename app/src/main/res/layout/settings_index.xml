@@ -1,32 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
   xmlns:android="http://schemas.android.com/apk/res/android"
-  style="@style/SettingsContainerView"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent">
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  style="@style/SettingsContainer">
 
   <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.tpago.movil.app.ui.main.settings.SettingsSectionTitleView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="16dp"
+    <TextView
+      style="@style/SettingsSectionTitle"
       android:text="@string/profile"/>
 
-    <com.tpago.movil.app.ui.main.settings.SettingsSectionTitleView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="16dp"
+    <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+      android:id="@+id/profileSettingsOption"
+      style="@style/SettingsOption"
+      app:primaryText="@string/profileSettingsOption"/>
+
+    <com.tpago.movil.app.ui.main.settings.SettingsSectionDivider style="@style/SettingsSectionDivider"/>
+
+    <TextView
+      style="@style/SettingsSectionTitle"
       android:text="@string/accounts"/>
 
-    <com.tpago.movil.app.ui.main.settings.SettingsSectionTitleView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="16dp"
+    <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+      android:id="@+id/primaryPaymentMethodSettingsOption"
+      style="@style/SettingsOption"
+      app:primaryText="@string/primaryPaymentMethodSettingsOption"/>
+
+    <com.tpago.movil.app.ui.main.settings.SettingsSectionDivider style="@style/SettingsSectionDivider"/>
+
+    <TextView
+      style="@style/SettingsSectionTitle"
       android:text="@string/security"/>
+
+    <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+      android:id="@+id/unlockMethodSettingsOption"
+      style="@style/SettingsOption"
+      app:primaryText="@string/unlockMethodSettingsOption"/>
+
+    <com.tpago.movil.app.ui.Divider style="@style/Divider"/>
+
+    <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+      android:id="@+id/timeoutSettingsOption"
+      style="@style/SettingsOption"
+      app:primaryText="@string/timeoutSettingsOption"/>
+
+    <com.tpago.movil.app.ui.Divider style="@style/Divider"/>
+
+    <com.tpago.movil.app.ui.main.settings.ToggleableSettingsOption
+      android:id="@+id/lockOnExitSettingsOption"
+      style="@style/SettingsOption"
+      app:primaryText="@string/lockOnExitSettingsOption"/>
+
+    <com.tpago.movil.app.ui.Divider style="@style/Divider"/>
+
+    <com.tpago.movil.app.ui.main.settings.SingleLineSettingsOption
+      android:id="@+id/pinSettingsOption"
+      style="@style/SettingsOption"
+      app:primaryText="@string/pinSettingsOption"/>
   </LinearLayout>
 </ScrollView>

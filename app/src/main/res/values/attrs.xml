@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+  <declare-styleable name="SettingsOption">
+    <attr name="primaryText" format="string|reference"/>
+  </declare-styleable>
+
+  <declare-styleable name="MultiLineSettingsOption">
+    <attr name="secondaryText" format="string|reference"/>
+  </declare-styleable>
+
   <declare-styleable name="AppTheme">
-    <attr name="settingsSectionTitleViewStyle" format="reference"/>
+    <attr name="dividerStyle" format="reference"/>
+    <attr name="settingsSectionDividerStyle" format="reference"/>
+    <attr name="settingsOptionStyle" format="reference"/>
   </declare-styleable>
 
   <!-- TODO: Remove every dimension from this point downwards -->

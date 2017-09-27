@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+  xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <View
+    android:id="@+id/anchor"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_centerVertical="true"
+    android:layout_marginBottom="2dp"
+    android:layout_marginTop="2dp"/>
+
+  <TextView
+    android:id="@+id/primaryTextView"
+    style="@style/SettingsText.Primary"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/anchor"
+    android:layout_centerVertical="true"
+    android:ellipsize="end"/>
+
+  <TextView
+    android:id="@+id/secondaryTextView"
+    style="@style/SettingsText.Secondary"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/anchor"
+    android:layout_centerVertical="true"
+    android:ellipsize="end"/>
+</merge>

@@ -2,8 +2,8 @@
 <resources>
   <color name="accent">#9C188F</color>
   <color name="black">#000</color>
+  <color name="blackAlpha20">#33000000</color>
   <color name="black_10">#20000000</color>
-  <color name="black_20">#33000000</color>
   <color name="black_27">#45000000</color>
   <color name="black_40">#66000000</color>
   <color name="black_54">#89000000</color>
