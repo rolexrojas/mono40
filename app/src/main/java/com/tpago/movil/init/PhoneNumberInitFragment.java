@@ -168,7 +168,7 @@ public final class PhoneNumberInitFragment
   public void moveToSignInScreen() {
     fragmentReplacer.begin(SignInFragment.create())
       .addToBackStack()
-      .setTransition(FragmentReplacer.Transition.SRFO)
+      .transition(FragmentReplacer.Transition.SRFO)
       .commit();
   }
 
@@ -176,7 +176,7 @@ public final class PhoneNumberInitFragment
   public void moveToSignUpScreen() {
     fragmentReplacer.begin(RegisterFragment.create())
       .addToBackStack()
-      .setTransition(FragmentReplacer.Transition.SRFO)
+      .transition(FragmentReplacer.Transition.SRFO)
       .commit();
   }
 

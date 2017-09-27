@@ -7,6 +7,8 @@ import com.tpago.movil.User;
 import com.tpago.movil.UserStore;
 import com.tpago.movil.app.ActivityScope;
 import com.tpago.movil.app.AppComponent;
+import com.tpago.movil.app.FragmentReplacer;
+import com.tpago.movil.app.ui.FragmentActivityModule;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.domain.ProductManager;
@@ -32,6 +34,7 @@ import dagger.Component;
 @Component(
   dependencies = AppComponent.class,
   modules = {
+    FragmentActivityModule.class,
     DepActivityModule.class,
     MainModule.class,
     DepMainModule.class

@@ -31,7 +31,7 @@ public final class InitModule {
   @ActivityScope
   @ActivityQualifier
   FragmentReplacer provideFragmentReplacer(BaseActivity activity) {
-    return new FragmentReplacer(activity.getSupportFragmentManager(), R.id.view_container);
+    return FragmentReplacer.create(activity.getSupportFragmentManager(), R.id.view_container);
   }
 
   @Provides

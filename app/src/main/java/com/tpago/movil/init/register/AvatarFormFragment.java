@@ -46,7 +46,7 @@ public final class AvatarFormFragment extends BaseRegisterFragment {
   void onMoveToNextScreenButtonClicked() {
     fragmentReplacer.begin(EmailRegisterFormFragment.create())
       .addToBackStack()
-      .setTransition(FragmentReplacer.Transition.SRFO)
+      .transition(FragmentReplacer.Transition.SRFO)
       .commit();
   }
 

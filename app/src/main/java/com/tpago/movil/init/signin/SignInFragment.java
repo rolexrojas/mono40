@@ -234,7 +234,7 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
   @Override
   public void moveToInitScreen() {
     fragmentReplacer.begin(InitFragment.create())
-      .setTransition(FragmentReplacer.Transition.FIFO)
+      .transition(FragmentReplacer.Transition.FIFO)
       .commit();
   }
 

@@ -216,7 +216,7 @@ public final class UnlockFragment extends BaseInitFragment implements UnlockPres
   @Override
   public void moveToInitScreen() {
     fragmentReplacer.begin(InitFragment.create())
-      .setTransition(FragmentReplacer.Transition.FIFO)
+      .transition(FragmentReplacer.Transition.FIFO)
       .commit();
   }
 

@@ -44,7 +44,7 @@ public final class IntroFragment extends BaseInitFragment {
   void onStartButtonClicked() {
     fragmentReplacer.begin(PhoneNumberInitFragment.create())
       .addToBackStack()
-      .setTransition(FragmentReplacer.Transition.SRFO)
+      .transition(FragmentReplacer.Transition.SRFO)
       .commit();
   }
 

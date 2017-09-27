@@ -5,6 +5,7 @@ import static com.tpago.movil.d.ui.main.recipient.index.category.Category.PAY;
 import static com.tpago.movil.d.ui.main.recipient.index.category.Category.RECHARGE;
 import static com.tpago.movil.d.ui.main.recipient.index.category.Category.TRANSFER;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,8 +20,12 @@ import android.widget.LinearLayout;
 
 import com.tpago.movil.Session;
 import com.tpago.movil.TimeOutManager;
+import com.tpago.movil.app.ActivityQualifier;
 import com.tpago.movil.app.App;
 import com.tpago.movil.R;
+import com.tpago.movil.app.FragmentReplacer;
+import com.tpago.movil.app.ui.FragmentActivityModule;
+import com.tpago.movil.app.ui.main.settings.SettingsIndexFragment;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.ResetEvent;
@@ -41,9 +46,8 @@ import com.tpago.movil.d.ui.view.widget.SlidingPaneLayout;
 import com.tpago.movil.init.InitActivity;
 import com.tpago.movil.main.MainModule;
 import com.tpago.movil.main.purchase.NonNfcPurchaseFragment;
+import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.Objects;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -62,6 +66,18 @@ public class DepMainActivity
   MainScreen,
   TimeOutManager.TimeOutHandler {
 
+  public static DepMainActivity get(Activity activity) {
+    ObjectHelper.checkNotNull(activity, "activity");
+    if (!(activity instanceof DepMainActivity)) {
+      throw new ClassCastException("!(activity instanceof DepMainActivity)");
+    }
+    return (DepMainActivity) activity;
+  }
+
+  public final Toolbar toolbar() {
+    return this.toolbar;
+  }
+
   private static final String KEY_SESSION = "session";
 
   private Unbinder unbinder;
@@ -71,7 +87,10 @@ public class DepMainActivity
   private boolean shouldRequestAuthentication = false;
 
   @Inject
-  TimeOutManager timeOutManager;
+  @ActivityQualifier
+  FragmentReplacer fragmentReplacer;
+
+  @Inject TimeOutManager timeOutManager;
 
   @Inject
   StringHelper stringHelper;
@@ -127,6 +146,12 @@ public class DepMainActivity
       .appComponent(((App) getApplication()).getComponent())
       .mainModule(new MainModule(((Session) getIntent().getParcelableExtra(KEY_SESSION)), this))
       .depActivityModule(new DepActivityModule(this))
+      .fragmentActivityModule(
+        FragmentActivityModule.create(
+          this.getSupportFragmentManager(),
+          R.id.container
+        )
+      )
       .build();
     component.inject(this);
     // Prepares the action bar.
@@ -252,8 +277,10 @@ public class DepMainActivity
         this.setChildFragment(ProductsFragment.newInstance());
         break;
       case R.id.main_menuItem_settings:
-        Dialogs.featureNotAvailable(this)
-          .show();
+        this.fragmentReplacer.begin(SettingsIndexFragment.create())
+          .addToBackStack()
+          .transition(FragmentReplacer.Transition.FIFO)
+          .commit();
         break;
       case R.id.main_menuItem_exit:
         this.sessionManager.deactivate();

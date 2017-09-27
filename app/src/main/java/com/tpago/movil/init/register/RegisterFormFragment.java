@@ -103,7 +103,7 @@ public abstract class RegisterFormFragment<P extends RegisterFormPresenter>
   public void moveToNextScreen() {
     fragmentReplacer.begin(getNextScreen())
       .addToBackStack()
-      .setTransition(FragmentReplacer.Transition.SRFO)
+      .transition(FragmentReplacer.Transition.SRFO)
       .commit();
   }
 }

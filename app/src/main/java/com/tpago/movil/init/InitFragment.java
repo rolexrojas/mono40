@@ -58,11 +58,11 @@ public final class InitFragment extends BaseInitFragment {
   private void resolve() {
     if (!userStore.isSet()) {
       fragmentReplacer.begin(IntroFragment.create())
-        .setTransition(FragmentReplacer.Transition.SRFO)
+        .transition(FragmentReplacer.Transition.SRFO)
         .commit();
     } else if (!sessionBuilder.canBuild()) {
       fragmentReplacer.begin(UnlockFragment.create())
-        .setTransition(FragmentReplacer.Transition.FIFO)
+        .transition(FragmentReplacer.Transition.FIFO)
         .commit();
     } else {
       final User user = userStore.get();

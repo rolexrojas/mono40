@@ -158,7 +158,7 @@ public final class PinRegisterFormFragment
   public void moveToNextScreen() {
     fragmentReplacer.begin(SummaryRegisterFragment.create())
       .addToBackStack()
-      .setTransition(FragmentReplacer.Transition.SRFO)
+      .transition(FragmentReplacer.Transition.SRFO)
       .commit();
   }
 

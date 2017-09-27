@@ -8,14 +8,15 @@ import com.tpago.movil.d.domain.util.EventBus;
 import com.tpago.movil.d.ui.AppDialog;
 
 import com.tpago.movil.d.ui.main.recipient.index.category.RecipientDrawableStore;
+
 import dagger.Module;
 import dagger.Provides;
 
 /**
  * @author hecvasro
  */
-@Module
 @Deprecated
+@Module
 class DepMainModule {
 
   @Provides

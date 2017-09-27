@@ -31,6 +31,6 @@ public class RegisterModule {
   @FragmentScope
   @FragmentQualifier
   FragmentReplacer provideFragmentReplacer() {
-    return new FragmentReplacer(fragment.getChildFragmentManager(), R.id.view_container);
+    return FragmentReplacer.create(fragment.getChildFragmentManager(), R.id.view_container);
   }
 }

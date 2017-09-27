@@ -38,14 +38,14 @@ public final class SummaryRegisterFragment extends BaseRegisterFragment {
   @OnClick(R.id.button_continue)
   void onContinueButtonClicked() {
     fragmentReplacer.begin(TutorialFragment.create())
-      .setTransition(FragmentReplacer.Transition.SRFO)
+      .transition(FragmentReplacer.Transition.SRFO)
       .commit();
   }
 
   @OnClick(R.id.button_later)
   void onLaterButtonClicked() {
     fragmentReplacer.begin(InitFragment.create())
-      .setTransition(FragmentReplacer.Transition.FIFO)
+      .transition(FragmentReplacer.Transition.FIFO)
       .commit();
   }
 
