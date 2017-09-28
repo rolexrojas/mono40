@@ -1,6 +1,6 @@
 package com.tpago.movil.d.ui.main.recipient.index.category;
 
-import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.domain.PhoneNumber;
 
 /**
  * @author hecvasro

@@ -8,7 +8,7 @@ import static com.tpago.movil.util.Objects.checkIfNull;
 import android.support.annotation.NonNull;
 
 import com.tpago.movil.Partner;
-import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.domain.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.api.DCurrencies;
 import com.tpago.movil.d.data.StringHelper;

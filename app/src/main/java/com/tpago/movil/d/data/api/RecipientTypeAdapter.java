@@ -10,7 +10,7 @@ import static com.tpago.movil.util.Objects.checkIfNotNull;
 
 import android.text.TextUtils;
 
-import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.domain.PhoneNumber;
 import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.domain.ProductRecipient;
 import com.tpago.movil.d.domain.Bank;

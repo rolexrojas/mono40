@@ -10,6 +10,7 @@ import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.ui.Presenter;
 import com.tpago.movil.d.ui.main.recipient.index.category.Category;
 import com.tpago.movil.d.ui.misc.UiUtils;
+import com.tpago.movil.domain.PhoneNumber;
 import com.tpago.movil.util.Preconditions;
 
 import rx.Subscription;
@@ -68,7 +69,7 @@ class AddRecipientPresenter extends Presenter<AddRecipientScreen> {
             final String contactName = contact.getName();
             if (isAffiliated) {
               final Recipient recipient = new PhoneNumberRecipient(
-                com.tpago.movil.PhoneNumber.create(contactPhoneNumber),
+                PhoneNumber.create(contactPhoneNumber),
                 contactName
               );
               recipientManager.add(recipient);
@@ -76,7 +77,7 @@ class AddRecipientPresenter extends Presenter<AddRecipientScreen> {
             } else {
               screen.startNonAffiliatedProcess(
                 new NonAffiliatedPhoneNumberRecipient(
-                  com.tpago.movil.PhoneNumber.create(contactPhoneNumber),
+                  PhoneNumber.create(contactPhoneNumber),
                   contactName
                 )
               );

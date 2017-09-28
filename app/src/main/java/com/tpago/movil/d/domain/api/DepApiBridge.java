@@ -18,6 +18,7 @@ import com.tpago.movil.d.domain.InitialData;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.Transaction;
+import com.tpago.movil.domain.PhoneNumber;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -182,7 +183,7 @@ public interface DepApiBridge {
   Observable<ApiResult<String>> recharge(
     String authToken,
     Partner carrier,
-    com.tpago.movil.PhoneNumber phoneNumber,
+    PhoneNumber phoneNumber,
     Product fundingAccount,
     BigDecimal amount,
     String pin

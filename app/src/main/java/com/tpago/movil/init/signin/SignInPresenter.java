@@ -2,7 +2,7 @@ package com.tpago.movil.init.signin;
 
 import android.support.v4.util.Pair;
 import com.tpago.movil.Email;
-import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.domain.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.Session;
 import com.tpago.movil.UserStore;

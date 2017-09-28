@@ -1,7 +1,7 @@
 package com.tpago.movil.init.register;
 
 import com.tpago.movil.Email;
-import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.domain.PhoneNumber;
 import com.tpago.movil.d.domain.Password;
 import com.tpago.movil.init.InitData;
 import com.tpago.movil.text.Texts;

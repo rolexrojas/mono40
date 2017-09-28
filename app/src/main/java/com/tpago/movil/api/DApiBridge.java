@@ -2,7 +2,7 @@ package com.tpago.movil.api;
 
 import android.support.v4.util.Pair;
 import com.tpago.movil.Email;
-import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.domain.PhoneNumber;
 import com.tpago.movil.Pin;
 import com.tpago.movil.net.HttpResult;
 

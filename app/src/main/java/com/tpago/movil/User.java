@@ -5,6 +5,7 @@ import static com.tpago.movil.util.Objects.checkIfNotNull;
 import static com.tpago.movil.util.Preconditions.assertNotNull;
 
 import com.google.auto.value.AutoValue;
+import com.tpago.movil.domain.PhoneNumber;
 import com.tpago.movil.util.ObjectHelper;
 
 /**

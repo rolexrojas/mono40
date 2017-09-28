@@ -1,6 +1,6 @@
 package com.tpago.movil.init;
 
-import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.domain.PhoneNumber;
 import com.tpago.movil.util.Preconditions;
 
 /**

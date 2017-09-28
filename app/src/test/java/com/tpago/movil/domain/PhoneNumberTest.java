@@ -1,4 +1,4 @@
-package com.tpago.movil;
+package com.tpago.movil.domain;
 
 import org.junit.Test;
 

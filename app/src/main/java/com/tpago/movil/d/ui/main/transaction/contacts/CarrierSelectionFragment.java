@@ -19,7 +19,7 @@ import butterknife.Unbinder;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.Partner;
-import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.domain.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.api.ApiImageUriBuilder;
 import com.tpago.movil.api.DCurrencies;

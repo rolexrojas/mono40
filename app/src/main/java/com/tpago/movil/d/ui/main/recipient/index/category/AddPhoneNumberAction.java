@@ -3,7 +3,7 @@ package com.tpago.movil.d.ui.main.recipient.index.category;
 import static com.tpago.movil.d.ui.main.recipient.index.category.Action.Type.ADD_PHONE_NUMBER;
 
 import com.google.auto.value.AutoValue;
-import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.domain.PhoneNumber;
 
 /**
  * @author hecvasro

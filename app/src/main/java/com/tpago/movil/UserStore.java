@@ -12,6 +12,7 @@ import com.tpago.movil.User.OnNameChangedListener;
 import com.tpago.movil.User.OnCarrierChangedListener;
 import com.tpago.movil.api.UserData;
 import com.tpago.movil.content.SharedPreferencesCreator;
+import com.tpago.movil.domain.PhoneNumber;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.util.concurrent.atomic.AtomicReference;

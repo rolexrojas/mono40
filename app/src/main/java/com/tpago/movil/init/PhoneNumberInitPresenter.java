@@ -2,7 +2,7 @@ package com.tpago.movil.init;
 
 import com.tpago.movil.Digit;
 import com.tpago.movil.DigitHelper;
-import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.domain.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.api.DApiBridge;
 import com.tpago.movil.api.DApiData;

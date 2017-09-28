@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
 import com.tpago.movil.Partner;
-import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.domain.PhoneNumber;
 import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.domain.Balance;
 import com.tpago.movil.d.domain.CreditCardBillBalance;

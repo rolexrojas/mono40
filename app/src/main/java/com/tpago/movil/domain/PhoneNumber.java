@@ -1,4 +1,4 @@
-package com.tpago.movil;
+package com.tpago.movil.domain;
 
 import android.os.Parcelable;
 import android.support.annotation.IntDef;
@@ -6,14 +6,12 @@ import android.support.annotation.NonNull;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
+import com.tpago.movil.DigitHelper;
+import com.tpago.movil.util.StringHelper;
 
 import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.regex.Pattern;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static com.tpago.movil.DigitHelper.removeNonDigits;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 /**
  * Phone number representation
@@ -37,11 +35,11 @@ public abstract class PhoneNumber implements Comparable<PhoneNumber>, Parcelable
   private static boolean isValid(String s, boolean shouldSanitize) {
     final String sanitizedString;
     if (shouldSanitize) {
-      sanitizedString = removeNonDigits(s);
+      sanitizedString = DigitHelper.removeNonDigits(s);
     } else {
       sanitizedString = s;
     }
-    if (isNullOrEmpty(sanitizedString)) {
+    if (StringHelper.isNullOrEmpty(sanitizedString)) {
       return false;
     } else {
       return PATTERN.matcher(sanitizedString)
@@ -75,7 +73,7 @@ public abstract class PhoneNumber implements Comparable<PhoneNumber>, Parcelable
    * @return A {@link String string} formatted as a phone number.
    */
   public static String format(String s) {
-    final String sanitizedString = removeNonDigits(s);
+    final String sanitizedString = DigitHelper.removeNonDigits(s);
     final StringBuilder formattedStringBuilder = new StringBuilder(sanitizedString);
     insertSeparatorIfGreaterThan(sanitizedString, 3, formattedStringBuilder);
     insertSeparatorIfGreaterThan(sanitizedString, 7, formattedStringBuilder);
@@ -91,8 +89,10 @@ public abstract class PhoneNumber implements Comparable<PhoneNumber>, Parcelable
    *   If {@code s} is not a {@link #isValid(String) valid} phone number.
    */
   public static PhoneNumber create(String s) {
-    final String sanitizedString = removeNonDigits(s);
-    checkArgument(isValid(sanitizedString, false), "!isValid(%1$s, false)", sanitizedString);
+    final String sanitizedString = DigitHelper.removeNonDigits(s);
+    if (!isValid(sanitizedString, false)) {
+      throw new IllegalArgumentException(String.format("!isValid(%1$s, false)", sanitizedString));
+    }
     return new AutoValue_PhoneNumber(sanitizedString);
   }
 
@@ -122,7 +122,7 @@ public abstract class PhoneNumber implements Comparable<PhoneNumber>, Parcelable
     State.AFFILIATED,
     State.REGISTERED
   })
-  @Retention(SOURCE)
+  @Retention(RetentionPolicy.SOURCE)
   public @interface State {
 
     int NONE = 1;
