@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
-import com.tpago.Banks;
+import com.tpago.movil.d.domain.Banks;
 import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.R;
 import com.tpago.movil.app.App;

@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.tpago.Banks;
+import com.tpago.movil.d.domain.Banks;
 import com.tpago.movil.R;
 import com.tpago.movil.User;
 import com.tpago.movil.api.ApiImageUriBuilder;

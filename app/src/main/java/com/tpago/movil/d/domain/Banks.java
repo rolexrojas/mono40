@@ -1,4 +1,4 @@
-package com.tpago;
+package com.tpago.movil.d.domain;
 
 import android.graphics.Color;
 

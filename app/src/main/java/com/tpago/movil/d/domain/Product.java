@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import com.tpago.Banks;
 import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.text.Texts;
 

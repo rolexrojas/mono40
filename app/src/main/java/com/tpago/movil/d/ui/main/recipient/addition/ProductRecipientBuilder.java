@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.v4.util.Pair;
 
-import com.tpago.Banks;
+import com.tpago.movil.d.domain.Banks;
 import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.api.ApiResult;

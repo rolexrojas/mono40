@@ -3,7 +3,7 @@ package com.tpago.movil.d.ui.main.recipient.addition.banks;
 import android.support.annotation.NonNull;
 
 import com.squareup.picasso.Picasso;
-import com.tpago.Banks;
+import com.tpago.movil.d.domain.Banks;
 import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
 import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.d.domain.LogoStyle;
