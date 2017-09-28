@@ -18,12 +18,12 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-import com.tpago.movil.Session;
-import com.tpago.movil.TimeOutManager;
-import com.tpago.movil.app.ActivityQualifier;
-import com.tpago.movil.app.App;
+import com.tpago.movil.dep.Session;
+import com.tpago.movil.dep.TimeOutManager;
+import com.tpago.movil.app.ui.ActivityQualifier;
+import com.tpago.movil.dep.App;
 import com.tpago.movil.R;
-import com.tpago.movil.app.FragmentReplacer;
+import com.tpago.movil.app.ui.FragmentReplacer;
 import com.tpago.movil.app.ui.FragmentActivityModule;
 import com.tpago.movil.app.ui.main.settings.SettingsFragment;
 import com.tpago.movil.d.domain.Product;
@@ -43,11 +43,11 @@ import com.tpago.movil.d.ui.main.products.ProductsFragment;
 import com.tpago.movil.d.ui.main.recipient.index.category.RecipientCategoryFragment;
 import com.tpago.movil.d.ui.main.recipient.index.disburse.DisbursementFragment;
 import com.tpago.movil.d.ui.view.widget.SlidingPaneLayout;
-import com.tpago.movil.init.InitActivity;
-import com.tpago.movil.main.MainModule;
-import com.tpago.movil.main.purchase.NonNfcPurchaseFragment;
+import com.tpago.movil.dep.init.InitActivity;
+import com.tpago.movil.dep.main.MainModule;
+import com.tpago.movil.dep.main.purchase.NonNfcPurchaseFragment;
 import com.tpago.movil.util.ObjectHelper;
-import com.tpago.movil.util.Objects;
+import com.tpago.movil.dep.Objects;
 
 import javax.inject.Inject;
 

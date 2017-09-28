@@ -6,15 +6,15 @@ import android.support.v4.util.Pair;
 
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
-import com.tpago.movil.api.ApiImageUriBuilder;
-import com.tpago.movil.content.SharedPreferencesCreator;
+import com.tpago.movil.dep.api.ApiImageUriBuilder;
+import com.tpago.movil.dep.content.SharedPreferencesCreator;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.pos.PosResult;
 import com.tpago.movil.d.domain.util.EventBus;
-import com.tpago.movil.util.Objects;
-import com.tpago.movil.util.Preconditions;
+import com.tpago.movil.dep.Objects;
+import com.tpago.movil.dep.Preconditions;
 
 import java.util.ArrayList;
 import java.util.Collections;

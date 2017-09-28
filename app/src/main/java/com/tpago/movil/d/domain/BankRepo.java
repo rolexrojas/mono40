@@ -1,6 +1,6 @@
 package com.tpago.movil.d.domain;
 
-import com.tpago.movil.util.Resettable;
+import com.tpago.movil.dep.Resettable;
 
 import java.util.Set;
 

@@ -1,9 +1,9 @@
 package com.tpago.movil.app.ui.main.settings;
 
 import com.tpago.movil.d.domain.Banks;
-import com.tpago.movil.ConfigManager;
-import com.tpago.movil.User;
-import com.tpago.movil.UserStore;
+import com.tpago.movil.dep.ConfigManager;
+import com.tpago.movil.dep.User;
+import com.tpago.movil.dep.UserStore;
 import com.tpago.movil.app.ui.Presenter;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;

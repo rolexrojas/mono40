@@ -1,7 +1,7 @@
 package com.tpago.movil.app.ui.main.profile;
 
-import com.tpago.movil.User;
-import com.tpago.movil.UserStore;
+import com.tpago.movil.dep.User;
+import com.tpago.movil.dep.UserStore;
 import com.tpago.movil.app.ui.Presenter;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.ObjectHelper;

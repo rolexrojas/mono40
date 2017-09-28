@@ -3,7 +3,7 @@ package com.tpago.movil.d.domain.api;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
-import com.tpago.movil.Partner;
+import com.tpago.movil.dep.Partner;
 import com.tpago.movil.d.domain.Balance;
 import com.tpago.movil.d.domain.CreditCardBillBalance;
 import com.tpago.movil.d.domain.Customer;

@@ -3,8 +3,8 @@ package com.tpago.movil.d.domain;
 import android.content.Context;
 
 import com.squareup.picasso.Picasso;
-import com.tpago.movil.api.ApiService;
-import com.tpago.movil.net.NetworkService;
+import com.tpago.movil.dep.api.ApiService;
+import com.tpago.movil.dep.net.NetworkService;
 
 import javax.inject.Singleton;
 

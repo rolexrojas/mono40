@@ -6,7 +6,7 @@ import com.google.auto.value.AutoValue;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Balance;
 
-import static com.tpago.movil.util.Objects.checkIfNotNull;
+import static com.tpago.movil.dep.Objects.checkIfNotNull;
 
 /**
  * @author hecvasro

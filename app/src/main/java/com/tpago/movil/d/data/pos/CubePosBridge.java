@@ -25,9 +25,9 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import timber.log.Timber;
 
-import static com.tpago.movil.util.Objects.checkIfNull;
-import static com.tpago.movil.util.Objects.checkIfNotNull;
-import static com.tpago.movil.util.Preconditions.assertNotNull;
+import static com.tpago.movil.dep.Objects.checkIfNull;
+import static com.tpago.movil.dep.Objects.checkIfNotNull;
+import static com.tpago.movil.dep.Preconditions.assertNotNull;
 
 /**
  * @author hecvasro

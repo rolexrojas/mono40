@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
-import com.tpago.movil.DigitHelper;
+import com.tpago.movil.util.DigitHelper;
 import com.tpago.movil.util.StringHelper;
 
 import java.lang.annotation.Retention;

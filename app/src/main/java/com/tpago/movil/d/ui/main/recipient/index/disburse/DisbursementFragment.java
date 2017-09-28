@@ -2,7 +2,7 @@ package com.tpago.movil.d.ui.main.recipient.index.disburse;
 
 import static android.app.Activity.RESULT_OK;
 import static com.tpago.movil.d.domain.Product.checkIfCreditCard;
-import static com.tpago.movil.util.Objects.checkIfNotNull;
+import static com.tpago.movil.dep.Objects.checkIfNotNull;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 import com.tpago.movil.R;
-import com.tpago.movil.UserStore;
+import com.tpago.movil.dep.UserStore;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.domain.Product;

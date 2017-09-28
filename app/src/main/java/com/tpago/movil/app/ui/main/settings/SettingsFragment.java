@@ -6,8 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import com.tpago.movil.R;
-import com.tpago.movil.app.ActivityQualifier;
-import com.tpago.movil.app.FragmentReplacer;
+import com.tpago.movil.app.ui.ActivityQualifier;
+import com.tpago.movil.app.ui.FragmentReplacer;
 import com.tpago.movil.app.ui.main.BaseMainFragment;
 import com.tpago.movil.app.ui.main.profile.ProfileFragment;
 import com.tpago.movil.d.ui.main.DepMainActivity;

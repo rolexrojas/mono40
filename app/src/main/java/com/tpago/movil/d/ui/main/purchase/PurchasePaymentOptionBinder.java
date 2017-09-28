@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.tpago.movil.d.domain.Banks;
 import com.tpago.movil.R;
-import com.tpago.movil.User;
-import com.tpago.movil.api.ApiImageUriBuilder;
+import com.tpago.movil.dep.User;
+import com.tpago.movil.dep.api.ApiImageUriBuilder;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.data.util.Binder;
 import com.tpago.movil.d.domain.Bank;
@@ -21,8 +21,8 @@ import com.tpago.movil.d.domain.Product;
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.d.domain.ProductType;
 import com.tpago.movil.d.domain.LogoStyle;
-import com.tpago.movil.util.Objects;
-import com.tpago.movil.util.Preconditions;
+import com.tpago.movil.dep.Objects;
+import com.tpago.movil.dep.Preconditions;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 

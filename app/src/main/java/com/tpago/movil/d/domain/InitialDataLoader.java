@@ -2,7 +2,7 @@ package com.tpago.movil.d.domain;
 
 import android.content.Context;
 
-import com.tpago.movil.Session;
+import com.tpago.movil.dep.Session;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 

@@ -1,7 +1,7 @@
 package com.tpago.movil.app.ui.main.profile;
 
-import com.tpago.movil.UserStore;
-import com.tpago.movil.app.FragmentScope;
+import com.tpago.movil.dep.UserStore;
+import com.tpago.movil.app.ui.FragmentScope;
 import com.tpago.movil.util.ObjectHelper;
 
 import dagger.Module;

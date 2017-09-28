@@ -3,7 +3,7 @@ package com.tpago.movil.d.ui.main.recipient.index.category;
 import static com.tpago.movil.d.domain.Recipient.acceptsPayments;
 import static com.tpago.movil.d.domain.Recipient.acceptsRecharges;
 import static com.tpago.movil.d.domain.Recipient.acceptsTransfers;
-import static com.tpago.movil.util.Preconditions.assertNotNull;
+import static com.tpago.movil.dep.Preconditions.assertNotNull;
 
 import com.tpago.movil.d.domain.Recipient;
 import rx.functions.Func1;

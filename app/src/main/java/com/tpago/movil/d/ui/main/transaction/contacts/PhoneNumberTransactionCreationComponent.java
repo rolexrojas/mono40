@@ -1,6 +1,6 @@
 package com.tpago.movil.d.ui.main.transaction.contacts;
 
-import com.tpago.movil.app.FragmentScope;
+import com.tpago.movil.app.ui.FragmentScope;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 
 import dagger.Component;

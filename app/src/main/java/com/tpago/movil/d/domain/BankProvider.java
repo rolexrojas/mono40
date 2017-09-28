@@ -1,10 +1,10 @@
 package com.tpago.movil.d.domain;
 
 import com.squareup.picasso.Picasso;
-import com.tpago.movil.api.ApiCode;
-import com.tpago.movil.api.ApiService;
-import com.tpago.movil.net.NetworkService;
-import com.tpago.movil.util.Sets;
+import com.tpago.movil.dep.api.ApiCode;
+import com.tpago.movil.dep.api.ApiService;
+import com.tpago.movil.dep.net.NetworkService;
+import com.tpago.movil.dep.Sets;
 
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -13,7 +13,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.functions.Function;
 
-import static com.tpago.movil.util.Preconditions.assertNotNull;
+import static com.tpago.movil.dep.Preconditions.assertNotNull;
 
 /**
  * @author hecvasro

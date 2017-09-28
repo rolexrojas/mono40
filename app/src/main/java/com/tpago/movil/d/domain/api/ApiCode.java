@@ -2,7 +2,7 @@ package com.tpago.movil.d.domain.api;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.net.HttpCode;
+import com.tpago.movil.dep.net.HttpCode;
 
 /**
  * {@link DepApiBridge API}'s code enumeration.

@@ -20,7 +20,7 @@
     android:layout_marginStart="60dp"
     android:layout_marginTop="10dp"
     android:text="@string/register_form_name_label_description"/>
-  <com.tpago.movil.widget.TextInput
+  <com.tpago.movil.dep.widget.TextInput
     android:id="@+id/text_input_first_name"
     style="@style/D.Widget.TextInput.Dark"
     android:layout_width="match_parent"
@@ -33,7 +33,7 @@
     android:inputType="text|textCapWords|textPersonName"
     android:maxLines="1"
     android:nextFocusDown="@+id/text_input_last_name"/>
-  <com.tpago.movil.widget.TextInput
+  <com.tpago.movil.dep.widget.TextInput
     android:id="@+id/text_input_last_name"
     style="@style/D.Widget.TextInput.Dark"
     android:layout_width="match_parent"

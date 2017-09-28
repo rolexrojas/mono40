@@ -2,7 +2,7 @@ package com.tpago.movil.d.domain;
 
 import java.util.regex.Pattern;
 
-import static com.tpago.movil.text.Texts.checkIfNotEmpty;
+import static com.tpago.movil.dep.text.Texts.checkIfNotEmpty;
 
 /**
  * @author hecvasro

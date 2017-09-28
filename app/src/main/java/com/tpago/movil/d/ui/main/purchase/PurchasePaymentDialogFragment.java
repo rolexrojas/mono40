@@ -18,7 +18,7 @@ import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.ui.FullScreenChildDialogFragment;
 import com.tpago.movil.d.ui.view.BaseAnimatorListener;
-import com.tpago.movil.util.Objects;
+import com.tpago.movil.dep.Objects;
 
 import javax.inject.Inject;
 

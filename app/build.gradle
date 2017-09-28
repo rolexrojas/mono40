@@ -29,7 +29,7 @@ android {
     javaCompileOptions {
       annotationProcessorOptions {
         arguments = [
-          'eventBusIndex': 'com.tpago.movil.bus.BusIndex',
+          'eventBusIndex': 'com.tpago.movil.data.bus.BusIndex',
           'autovaluegson.defaultCollectionsToEmpty': 'true',
           'autovaluegson.mutableAdaptersWithDefaultSetters': 'true'
         ]

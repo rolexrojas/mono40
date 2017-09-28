@@ -10,8 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
-import com.tpago.movil.Partner;
-import com.tpago.movil.app.App;
+import com.tpago.movil.dep.Partner;
+import com.tpago.movil.dep.App;
 import com.tpago.movil.R;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.api.DepApiBridge;
@@ -24,7 +24,7 @@ import com.tpago.movil.d.ui.main.recipient.index.category.Category;
 import com.tpago.movil.d.ui.view.widget.FullScreenLoadIndicator;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.domain.Bank;
-import com.tpago.movil.util.Objects;
+import com.tpago.movil.dep.Objects;
 
 import javax.inject.Inject;
 

@@ -1,16 +1,16 @@
 package com.tpago.movil.d.domain;
 
 import static com.tpago.movil.d.domain.RecipientType.NON_AFFILIATED_PHONE_NUMBER;
-import static com.tpago.movil.text.Texts.checkIfNotEmpty;
-import static com.tpago.movil.util.Objects.checkIfNotNull;
+import static com.tpago.movil.dep.text.Texts.checkIfNotEmpty;
+import static com.tpago.movil.dep.Objects.checkIfNotNull;
 
 import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.tpago.movil.domain.PhoneNumber;
-import com.tpago.movil.Partner;
-import com.tpago.movil.text.Texts;
+import com.tpago.movil.dep.Partner;
+import com.tpago.movil.dep.text.Texts;
 
 /**
  * @author hecvasro

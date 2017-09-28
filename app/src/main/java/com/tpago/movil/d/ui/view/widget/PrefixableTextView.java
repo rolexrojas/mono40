@@ -19,7 +19,7 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 import com.tpago.movil.R;
-import com.tpago.movil.text.Truss;
+import com.tpago.movil.dep.text.Truss;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
 import uk.co.chrisjenx.calligraphy.TypefaceUtils;

@@ -1,7 +1,7 @@
 package com.tpago.movil.d.ui.main.transaction.bills;
 
 import com.tpago.movil.R;
-import com.tpago.movil.app.Presenter;
+import com.tpago.movil.dep.Presenter;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.BillBalance;
@@ -17,10 +17,10 @@ import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.tpago.movil.d.domain.ErrorCode;
 import com.tpago.movil.d.domain.FailureData;
 import com.tpago.movil.d.domain.Result;
-import com.tpago.movil.net.NetworkService;
-import com.tpago.movil.reactivex.Disposables;
-import com.tpago.movil.util.Objects;
-import com.tpago.movil.util.Preconditions;
+import com.tpago.movil.dep.net.NetworkService;
+import com.tpago.movil.dep.reactivex.Disposables;
+import com.tpago.movil.dep.Objects;
+import com.tpago.movil.dep.Preconditions;
 
 import java.math.BigDecimal;
 import java.util.List;

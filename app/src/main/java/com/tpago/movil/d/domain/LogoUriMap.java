@@ -4,7 +4,7 @@ import android.net.Uri;
 import android.os.Parcelable;
 
 import com.google.auto.value.AutoValue;
-import com.tpago.movil.util.Preconditions;
+import com.tpago.movil.dep.Preconditions;
 
 /**
  * @author hecvasro

@@ -11,7 +11,7 @@ import com.tpago.movil.d.ui.Presenter;
 import com.tpago.movil.d.ui.main.recipient.index.category.Category;
 import com.tpago.movil.d.ui.misc.UiUtils;
 import com.tpago.movil.domain.PhoneNumber;
-import com.tpago.movil.util.Preconditions;
+import com.tpago.movil.dep.Preconditions;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;

@@ -1,6 +1,6 @@
 package com.tpago.movil.d.ui.main.recipient.index.disburse;
 
-import static com.tpago.movil.util.Preconditions.assertNotNull;
+import static com.tpago.movil.dep.Preconditions.assertNotNull;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

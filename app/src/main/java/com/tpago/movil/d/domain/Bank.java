@@ -5,7 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.auto.value.AutoValue;
-import com.tpago.movil.util.Preconditions;
+import com.tpago.movil.dep.Preconditions;
 
 import java.math.BigDecimal;
 

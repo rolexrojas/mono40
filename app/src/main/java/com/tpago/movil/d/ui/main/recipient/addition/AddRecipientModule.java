@@ -1,6 +1,6 @@
 package com.tpago.movil.d.ui.main.recipient.addition;
 
-import com.tpago.movil.app.ActivityScope;
+import com.tpago.movil.app.ui.ActivityScope;
 import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.domain.session.SessionManager;
 

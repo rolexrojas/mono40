@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.tpago.movil.api.DCurrencies;
+import com.tpago.movil.dep.api.DCurrencies;
 import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.ui.Dialogs;
@@ -46,7 +46,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import timber.log.Timber;
 
-import static com.tpago.movil.util.Objects.checkIfNotNull;
+import static com.tpago.movil.dep.Objects.checkIfNotNull;
 
 /**
  * @author hecvasro

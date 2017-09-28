@@ -21,8 +21,8 @@ import com.tpago.movil.d.ui.Presenter;
 import com.tpago.movil.d.domain.ErrorCode;
 import com.tpago.movil.d.domain.FailureData;
 import com.tpago.movil.d.domain.Result;
-import com.tpago.movil.net.NetworkService;
-import com.tpago.movil.util.Objects;
+import com.tpago.movil.dep.net.NetworkService;
+import com.tpago.movil.dep.Objects;
 
 import java.util.List;
 import java.util.concurrent.Callable;

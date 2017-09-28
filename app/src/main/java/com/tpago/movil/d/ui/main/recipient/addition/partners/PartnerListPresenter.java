@@ -1,11 +1,11 @@
 package com.tpago.movil.d.ui.main.recipient.addition.partners;
 
-import static com.tpago.movil.Partner.TYPE_PROVIDER;
+import static com.tpago.movil.dep.Partner.TYPE_PROVIDER;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.tpago.movil.Partner;
+import com.tpago.movil.dep.Partner;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;

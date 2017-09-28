@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 
 import com.tpago.movil.R;
 import com.tpago.movil.d.misc.Utils;
-import com.tpago.movil.util.Objects;
+import com.tpago.movil.dep.Objects;
 
 import java.util.ArrayList;
 import java.util.List;

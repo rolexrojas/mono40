@@ -12,8 +12,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.tpago.movil.R;
-import com.tpago.movil.api.DCurrencies;
-import com.tpago.movil.app.App;
+import com.tpago.movil.dep.api.DCurrencies;
+import com.tpago.movil.dep.App;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Product;
@@ -31,8 +31,8 @@ import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.d.domain.ErrorCode;
 import com.tpago.movil.d.domain.FailureData;
 import com.tpago.movil.d.domain.Result;
-import com.tpago.movil.main.transactions.PaymentMethodChooser;
-import com.tpago.movil.net.NetworkService;
+import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
+import com.tpago.movil.dep.net.NetworkService;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

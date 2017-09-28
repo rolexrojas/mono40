@@ -11,7 +11,7 @@ import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
 import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.d.domain.LogoStyle;
 
-import static com.tpago.movil.util.Preconditions.assertNotNull;
+import static com.tpago.movil.dep.Preconditions.assertNotNull;
 
 /**
  * @author hecvasro

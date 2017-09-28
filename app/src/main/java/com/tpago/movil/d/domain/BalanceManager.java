@@ -9,7 +9,7 @@ import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.util.EventBus;
 import com.tpago.movil.d.misc.rx.RxUtils;
-import com.tpago.movil.util.Resettable;
+import com.tpago.movil.dep.Resettable;
 
 import java.util.HashMap;
 import java.util.Map;

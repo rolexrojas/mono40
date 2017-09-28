@@ -19,7 +19,7 @@ import com.squareup.picasso.Picasso;
 import com.tpago.movil.d.domain.Banks;
 import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.R;
-import com.tpago.movil.app.App;
+import com.tpago.movil.dep.App;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
@@ -29,7 +29,7 @@ import com.tpago.movil.d.domain.FailureData;
 import com.tpago.movil.d.domain.LogoStyle;
 import com.tpago.movil.d.domain.ErrorCode;
 import com.tpago.movil.d.domain.Result;
-import com.tpago.movil.reactivex.Disposables;
+import com.tpago.movil.dep.reactivex.Disposables;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-import static com.tpago.movil.util.Objects.checkIfNull;
+import static com.tpago.movil.dep.Objects.checkIfNull;
 
 /**
  * @author hecvasro

@@ -18,11 +18,11 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 import com.squareup.picasso.Picasso;
-import com.tpago.movil.Partner;
+import com.tpago.movil.dep.Partner;
 import com.tpago.movil.domain.PhoneNumber;
 import com.tpago.movil.R;
-import com.tpago.movil.api.ApiImageUriBuilder;
-import com.tpago.movil.api.DCurrencies;
+import com.tpago.movil.dep.api.ApiImageUriBuilder;
+import com.tpago.movil.dep.api.DCurrencies;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
@@ -41,7 +41,7 @@ import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
-import com.tpago.movil.util.Objects;
+import com.tpago.movil.dep.Objects;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.math.BigDecimal;

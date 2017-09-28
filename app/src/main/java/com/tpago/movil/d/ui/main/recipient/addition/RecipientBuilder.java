@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.tpago.movil.d.domain.Recipient;
-import com.tpago.movil.util.Objects;
+import com.tpago.movil.dep.Objects;
 
 import rx.Observable;
 

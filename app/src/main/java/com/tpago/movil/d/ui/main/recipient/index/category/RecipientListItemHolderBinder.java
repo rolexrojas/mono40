@@ -1,7 +1,7 @@
 package com.tpago.movil.d.ui.main.recipient.index.category;
 
 import static android.support.v4.content.ContextCompat.getDrawable;
-import static com.tpago.movil.util.Objects.checkIfNotNull;
+import static com.tpago.movil.dep.Objects.checkIfNotNull;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -12,8 +12,8 @@ import android.view.View;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.R;
-import com.tpago.movil.api.ApiImageUriBuilder;
-import com.tpago.movil.api.DCurrencies;
+import com.tpago.movil.dep.api.ApiImageUriBuilder;
+import com.tpago.movil.dep.api.DCurrencies;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
@@ -28,7 +28,7 @@ import com.tpago.movil.d.domain.UserRecipient;
 import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
 import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.d.domain.LogoStyle;
-import com.tpago.movil.text.Texts;
+import com.tpago.movil.dep.text.Texts;
 
 import java.math.BigDecimal;
 

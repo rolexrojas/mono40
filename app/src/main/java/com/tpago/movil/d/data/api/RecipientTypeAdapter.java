@@ -6,7 +6,7 @@ import static com.tpago.movil.d.domain.RecipientType.NON_AFFILIATED_PHONE_NUMBER
 import static com.tpago.movil.d.domain.RecipientType.PHONE_NUMBER;
 import static com.tpago.movil.d.domain.RecipientType.PRODUCT;
 import static com.tpago.movil.util.ObjectHelper.isNotNull;
-import static com.tpago.movil.util.Objects.checkIfNotNull;
+import static com.tpago.movil.dep.Objects.checkIfNotNull;
 
 import android.text.TextUtils;
 
@@ -14,7 +14,7 @@ import com.tpago.movil.domain.PhoneNumber;
 import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.domain.ProductRecipient;
 import com.tpago.movil.d.domain.Bank;
-import com.tpago.movil.Partner;
+import com.tpago.movil.dep.Partner;
 import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
@@ -28,7 +28,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import com.tpago.movil.text.Texts;
+import com.tpago.movil.dep.text.Texts;
 
 import java.lang.reflect.Type;
 

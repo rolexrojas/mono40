@@ -2,7 +2,7 @@ package com.tpago.movil.d.ui.main.recipient.addition;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.Partner;
+import com.tpago.movil.dep.Partner;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.ui.Container;
 import com.tpago.movil.d.domain.Bank;

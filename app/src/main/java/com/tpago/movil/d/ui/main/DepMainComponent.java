@@ -2,11 +2,11 @@ package com.tpago.movil.d.ui.main;
 
 import android.content.Context;
 
-import com.tpago.movil.Session;
-import com.tpago.movil.User;
-import com.tpago.movil.UserStore;
-import com.tpago.movil.app.ActivityScope;
-import com.tpago.movil.app.AppComponent;
+import com.tpago.movil.dep.Session;
+import com.tpago.movil.dep.User;
+import com.tpago.movil.dep.UserStore;
+import com.tpago.movil.app.ui.ActivityScope;
+import com.tpago.movil.dep.AppComponent;
 import com.tpago.movil.app.ui.FragmentActivityModule;
 import com.tpago.movil.app.ui.main.settings.SettingsComponent;
 import com.tpago.movil.app.ui.main.settings.SettingsModule;
@@ -25,8 +25,8 @@ import com.tpago.movil.d.ui.ActivityComponent;
 import com.tpago.movil.d.ui.DepActivityModule;
 import com.tpago.movil.d.ui.main.recipient.index.disburse.DisbursementFragment;
 import com.tpago.movil.data.StringMapper;
-import com.tpago.movil.main.MainModule;
-import com.tpago.movil.net.NetworkService;
+import com.tpago.movil.dep.main.MainModule;
+import com.tpago.movil.dep.net.NetworkService;
 
 import dagger.Component;
 

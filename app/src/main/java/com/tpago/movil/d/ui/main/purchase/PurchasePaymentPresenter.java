@@ -2,7 +2,7 @@ package com.tpago.movil.d.ui.main.purchase;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.Session;
+import com.tpago.movil.dep.Session;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
@@ -10,7 +10,7 @@ import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.pos.PosResult;
 import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.ui.Presenter;
-import com.tpago.movil.util.Preconditions;
+import com.tpago.movil.dep.Preconditions;
 
 import dagger.Lazy;
 import rx.Observable;

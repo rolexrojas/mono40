@@ -1,14 +1,14 @@
 package com.tpago.movil.d.ui.main.products;
 
-import com.tpago.movil.Session;
-import com.tpago.movil.app.FragmentScope;
+import com.tpago.movil.dep.Session;
+import com.tpago.movil.app.ui.FragmentScope;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.BalanceManager;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.util.EventBus;
-import com.tpago.movil.net.NetworkService;
+import com.tpago.movil.dep.net.NetworkService;
 
 import dagger.Module;
 import dagger.Provides;

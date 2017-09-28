@@ -18,8 +18,8 @@ import com.tpago.movil.R;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.RecipientType;
 import com.tpago.movil.d.ui.Dialogs;
-import com.tpago.movil.util.Objects;
-import com.tpago.movil.util.Preconditions;
+import com.tpago.movil.dep.Objects;
+import com.tpago.movil.dep.Preconditions;
 
 import butterknife.ButterKnife;
 

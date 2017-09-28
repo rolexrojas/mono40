@@ -9,7 +9,7 @@ import com.google.common.base.MoreObjects;
 import com.tpago.movil.d.domain.util.StringUtils;
 
 import static com.google.common.base.Strings.emptyToNull;
-import static com.tpago.movil.DigitHelper.removeNonDigits;
+import static com.tpago.movil.util.DigitHelper.removeNonDigits;
 import static com.tpago.movil.d.domain.RecipientType.ACCOUNT;
 import static com.tpago.movil.util.ObjectHelper.isNotNull;
 

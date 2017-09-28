@@ -4,8 +4,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
-import com.tpago.movil.app.App;
-import com.tpago.movil.content.SharedPreferencesCreator;
+import com.tpago.movil.dep.App;
+import com.tpago.movil.dep.content.SharedPreferencesCreator;
 import com.tpago.movil.d.domain.InitialDataLoader;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.BalanceManager;

@@ -6,7 +6,7 @@ import static com.tpago.movil.d.domain.RecipientType.NON_AFFILIATED_PHONE_NUMBER
 import static com.tpago.movil.d.domain.RecipientType.PHONE_NUMBER;
 import static com.tpago.movil.d.domain.RecipientType.PRODUCT;
 import static com.tpago.movil.d.domain.RecipientType.USER;
-import static com.tpago.movil.util.Objects.checkIfNotNull;
+import static com.tpago.movil.dep.Objects.checkIfNotNull;
 
 import android.os.Parcel;
 import android.os.Parcelable;

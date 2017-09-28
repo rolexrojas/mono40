@@ -5,7 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.tpago.movil.d.misc.Utils;
-import com.tpago.movil.text.Texts;
+import com.tpago.movil.dep.text.Texts;
 
 import java.math.BigDecimal;
 import java.util.Comparator;

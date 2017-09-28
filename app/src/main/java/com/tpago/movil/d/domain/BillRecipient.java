@@ -5,9 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
-import com.tpago.movil.Partner;
+import com.tpago.movil.dep.Partner;
 import com.tpago.movil.d.domain.util.StringUtils;
-import com.tpago.movil.text.Texts;
+import com.tpago.movil.dep.text.Texts;
 
 /**
  * @author hecvasro

@@ -12,8 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.tpago.movil.R;
-import com.tpago.movil.UserStore;
-import com.tpago.movil.app.App;
+import com.tpago.movil.dep.UserStore;
+import com.tpago.movil.dep.App;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.domain.Product;

@@ -18,7 +18,7 @@ import com.squareup.picasso.Picasso;
 import com.tpago.movil.d.domain.Banks;
 import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.R;
-import com.tpago.movil.app.App;
+import com.tpago.movil.dep.App;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.api.ApiResult;
@@ -26,11 +26,11 @@ import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.domain.LogoStyle;
-import com.tpago.movil.text.Texts;
-import com.tpago.movil.widget.FullSizeLoadIndicator;
-import com.tpago.movil.widget.Keyboard;
-import com.tpago.movil.widget.LoadIndicator;
-import com.tpago.movil.widget.TextInput;
+import com.tpago.movil.dep.text.Texts;
+import com.tpago.movil.dep.widget.FullSizeLoadIndicator;
+import com.tpago.movil.dep.widget.Keyboard;
+import com.tpago.movil.dep.widget.LoadIndicator;
+import com.tpago.movil.dep.widget.TextInput;
 
 import javax.inject.Inject;
 

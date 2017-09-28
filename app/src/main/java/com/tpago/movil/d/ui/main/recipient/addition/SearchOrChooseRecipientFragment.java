@@ -15,7 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tpago.movil.Partner;
+import com.tpago.movil.dep.Partner;
 import com.tpago.movil.R;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.main.recipient.addition.banks.BankListFragment;

@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.squareup.picasso.Picasso;
-import com.tpago.movil.api.DCurrencies;
+import com.tpago.movil.dep.api.DCurrencies;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Balance;
@@ -15,10 +15,10 @@ import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductType;
 import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
 import com.tpago.movil.d.domain.LogoStyle;
-import com.tpago.movil.util.Dates;
+import com.tpago.movil.dep.Dates;
 
-import static com.tpago.movil.util.Objects.checkIfNull;
-import static com.tpago.movil.util.Preconditions.assertNotNull;
+import static com.tpago.movil.dep.Objects.checkIfNull;
+import static com.tpago.movil.dep.Preconditions.assertNotNull;
 
 /**
  * @author hecvasro

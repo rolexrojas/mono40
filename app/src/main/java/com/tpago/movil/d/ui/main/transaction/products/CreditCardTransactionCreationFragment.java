@@ -20,7 +20,7 @@ import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
 import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
-import com.tpago.movil.main.transactions.PaymentMethodChooser;
+import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
 
 import java.util.List;
 

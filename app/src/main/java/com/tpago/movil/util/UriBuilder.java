@@ -1,6 +1,6 @@
 package com.tpago.movil.util;
 
-import com.tpago.movil.app.DisplayDensity;
+import com.tpago.movil.dep.DisplayDensity;
 
 /**
  * Builds {@link android.net.Uri uris} from a given {@link String template} by finding and replacing

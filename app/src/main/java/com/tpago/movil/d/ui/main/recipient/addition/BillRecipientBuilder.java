@@ -3,8 +3,8 @@ package com.tpago.movil.d.ui.main.recipient.addition;
 import android.content.Context;
 import android.net.Uri;
 
-import com.tpago.movil.Partner;
-import com.tpago.movil.api.ApiImageUriBuilder;
+import com.tpago.movil.dep.Partner;
+import com.tpago.movil.dep.api.ApiImageUriBuilder;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.api.ApiResult;

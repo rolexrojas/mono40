@@ -6,7 +6,7 @@ import com.google.auto.value.extension.memoized.Memoized;
 import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.tpago.movil.DigitHelper.removeNonDigits;
+import static com.tpago.movil.util.DigitHelper.removeNonDigits;
 import static com.tpago.movil.d.ui.main.recipient.index.category.Action.Type.ADD_ACCOUNT;
 import static com.tpago.movil.d.ui.main.recipient.index.category.Action.Type.TRANSACTION_WITH_ACCOUNT;
 

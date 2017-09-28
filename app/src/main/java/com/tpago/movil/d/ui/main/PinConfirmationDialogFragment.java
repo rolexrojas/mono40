@@ -25,10 +25,10 @@ import com.tpago.movil.d.ui.view.BaseAnimatorListener;
 import com.tpago.movil.d.ui.view.widget.pad.Digit;
 import com.tpago.movil.d.ui.view.widget.pad.DepNumPad;
 import com.tpago.movil.d.ui.view.widget.PinView;
-import com.tpago.movil.util.Objects;
-import com.tpago.movil.util.Preconditions;
-import com.tpago.movil.widget.FullSizeLoadIndicator;
-import com.tpago.movil.widget.LoadIndicator;
+import com.tpago.movil.dep.Objects;
+import com.tpago.movil.dep.Preconditions;
+import com.tpago.movil.dep.widget.FullSizeLoadIndicator;
+import com.tpago.movil.dep.widget.LoadIndicator;
 
 import java.io.Serializable;
 

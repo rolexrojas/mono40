@@ -12,7 +12,7 @@
       style="@style/Dep.App.Widget.Toolbar"
       android:layout_gravity="center_vertical" />
   </FrameLayout>
-  <com.tpago.movil.main.transactions.PaymentMethodChooser
+  <com.tpago.movil.dep.main.transactions.PaymentMethodChooser
     android:id="@+id/payment_method_chooser"
     style="@style/D.Transactions.Widget.PaymentMethodChooser"
     android:layout_marginStart="32dp"

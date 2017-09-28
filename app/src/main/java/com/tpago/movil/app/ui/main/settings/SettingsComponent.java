@@ -1,6 +1,6 @@
 package com.tpago.movil.app.ui.main.settings;
 
-import com.tpago.movil.app.FragmentScope;
+import com.tpago.movil.app.ui.FragmentScope;
 
 import dagger.Subcomponent;
 

@@ -5,7 +5,7 @@ import com.google.auto.value.extension.memoized.Memoized;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.tpago.movil.DigitHelper;
+import com.tpago.movil.util.DigitHelper;
 
 /**
  * @author Hector Vasquez

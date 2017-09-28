@@ -2,9 +2,9 @@ package com.tpago.movil.d.ui.main.recipient.addition;
 
 import android.content.Context;
 
-import com.tpago.movil.app.ActivityModule;
-import com.tpago.movil.app.ActivityScope;
-import com.tpago.movil.app.AppComponent;
+import com.tpago.movil.dep.ActivityModule;
+import com.tpago.movil.app.ui.ActivityScope;
+import com.tpago.movil.dep.AppComponent;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.session.SessionManager;

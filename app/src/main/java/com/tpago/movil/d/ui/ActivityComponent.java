@@ -1,7 +1,7 @@
 package com.tpago.movil.d.ui;
 
-import com.tpago.movil.app.ActivityScope;
-import com.tpago.movil.app.AppComponent;
+import com.tpago.movil.app.ui.ActivityScope;
+import com.tpago.movil.dep.AppComponent;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import dagger.Component;

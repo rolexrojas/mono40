@@ -1,12 +1,12 @@
 package com.tpago.movil.d.domain;
 
-import static com.tpago.movil.util.Objects.checkIfNull;
-import static com.tpago.movil.util.Preconditions.assertNotNull;
+import static com.tpago.movil.dep.Objects.checkIfNull;
+import static com.tpago.movil.dep.Preconditions.assertNotNull;
 
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
-import com.tpago.movil.content.SharedPreferencesCreator;
+import com.tpago.movil.dep.content.SharedPreferencesCreator;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.api.ApiUtils;
 

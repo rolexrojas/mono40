@@ -29,7 +29,7 @@
       android:textColor="@color/common_white"
       android:textSize="15sp"/>
 
-    <com.tpago.movil.widget.TextInput
+    <com.tpago.movil.dep.widget.TextInput
       android:id="@+id/text_input_password"
       style="@style/D.Widget.TextInput.Dark"
       android:layout_width="match_parent"

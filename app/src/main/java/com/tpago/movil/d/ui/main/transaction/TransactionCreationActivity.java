@@ -1,7 +1,7 @@
 package com.tpago.movil.d.ui.main.transaction;
 
 import static com.tpago.movil.d.misc.Utils.isNotNull;
-import static com.tpago.movil.util.Objects.checkIfNull;
+import static com.tpago.movil.dep.Objects.checkIfNull;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +13,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.tpago.movil.app.App;
+import com.tpago.movil.dep.App;
 import com.tpago.movil.R;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductRecipient;

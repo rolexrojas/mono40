@@ -26,8 +26,8 @@ import com.tpago.movil.d.ui.view.widget.pad.Dot;
 import com.tpago.movil.d.ui.view.widget.pad.DepNumPad;
 import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
 import com.tpago.movil.d.domain.Bank;
-import com.tpago.movil.main.transactions.PaymentMethodChooser;
-import com.tpago.movil.text.Texts;
+import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
+import com.tpago.movil.dep.text.Texts;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

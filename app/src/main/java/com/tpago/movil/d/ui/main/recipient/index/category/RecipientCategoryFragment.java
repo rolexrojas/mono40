@@ -48,7 +48,7 @@ import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.view.widget.SearchView;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
-import com.tpago.movil.util.Objects;
+import com.tpago.movil.dep.Objects;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import javax.inject.Inject;

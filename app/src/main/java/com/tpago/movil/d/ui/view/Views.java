@@ -3,7 +3,7 @@ package com.tpago.movil.d.ui.view;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import static com.tpago.movil.util.Preconditions.assertNotNull;
+import static com.tpago.movil.dep.Preconditions.assertNotNull;
 
 /**
  * @author hecvasro

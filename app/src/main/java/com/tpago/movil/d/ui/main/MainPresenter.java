@@ -18,7 +18,7 @@ import rx.functions.Action1;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-import static com.tpago.movil.util.Preconditions.assertNotNull;
+import static com.tpago.movil.dep.Preconditions.assertNotNull;
 
 /**
  * @author hecvasro

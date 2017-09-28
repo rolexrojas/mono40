@@ -22,7 +22,7 @@ import com.tpago.movil.d.ui.Presenter;
 import com.tpago.movil.d.domain.ErrorCode;
 import com.tpago.movil.d.domain.FailureData;
 import com.tpago.movil.d.domain.Result;
-import com.tpago.movil.net.NetworkService;
+import com.tpago.movil.dep.net.NetworkService;
 
 import java.util.concurrent.Callable;
 

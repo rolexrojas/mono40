@@ -1,8 +1,8 @@
 package com.tpago.movil.app.ui.main.settings;
 
-import com.tpago.movil.ConfigManager;
-import com.tpago.movil.UserStore;
-import com.tpago.movil.app.FragmentScope;
+import com.tpago.movil.dep.ConfigManager;
+import com.tpago.movil.dep.UserStore;
+import com.tpago.movil.app.ui.FragmentScope;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.data.StringMapper;
 import com.tpago.movil.util.ObjectHelper;

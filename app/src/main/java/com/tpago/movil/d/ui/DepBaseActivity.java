@@ -1,6 +1,6 @@
 package com.tpago.movil.d.ui;
 
-import com.tpago.movil.app.App;
+import com.tpago.movil.dep.App;
 import com.tpago.movil.app.ui.BaseActivity;
 
 /**

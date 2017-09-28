@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.d.domain.Banks;
-import com.tpago.movil.api.DCurrencies;
+import com.tpago.movil.dep.api.DCurrencies;
 import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.R;
@@ -31,12 +31,12 @@ import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
 import com.tpago.movil.d.domain.LogoStyle;
-import com.tpago.movil.text.Texts;
-import com.tpago.movil.util.Objects;
-import com.tpago.movil.widget.FullSizeLoadIndicator;
-import com.tpago.movil.widget.Keyboard;
-import com.tpago.movil.widget.LoadIndicator;
-import com.tpago.movil.widget.TextInput;
+import com.tpago.movil.dep.text.Texts;
+import com.tpago.movil.dep.Objects;
+import com.tpago.movil.dep.widget.FullSizeLoadIndicator;
+import com.tpago.movil.dep.widget.Keyboard;
+import com.tpago.movil.dep.widget.LoadIndicator;
+import com.tpago.movil.dep.widget.TextInput;
 
 import java.math.BigDecimal;
 import java.util.concurrent.atomic.AtomicReference;

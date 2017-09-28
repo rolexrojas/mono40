@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import com.tpago.movil.R;
-import com.tpago.movil.UserStore;
+import com.tpago.movil.dep.UserStore;
 import com.tpago.movil.app.ui.AlertShowEventHelper;
 import com.tpago.movil.app.ui.TakeoverLoaderHelper;
 import com.tpago.movil.app.ui.main.BaseMainFragment;
@@ -18,8 +18,8 @@ import com.tpago.movil.d.domain.pos.PosResult;
 import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.main.DepMainActivity;
 import com.tpago.movil.data.StringMapper;
-import com.tpago.movil.init.InitActivity;
-import com.tpago.movil.widget.TextInput;
+import com.tpago.movil.dep.init.InitActivity;
+import com.tpago.movil.dep.widget.TextInput;
 
 import org.greenrobot.eventbus.EventBus;
 

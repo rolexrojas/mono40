@@ -2,7 +2,7 @@ package com.tpago.movil.d.ui.main.purchase;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.Session;
+import com.tpago.movil.dep.Session;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;

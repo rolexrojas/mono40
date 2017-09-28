@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tpago.movil.Partner;
+import com.tpago.movil.dep.Partner;
 import com.tpago.movil.R;
 import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.util.BinderFactory;

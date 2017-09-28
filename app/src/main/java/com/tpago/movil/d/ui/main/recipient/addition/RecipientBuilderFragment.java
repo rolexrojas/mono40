@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
-import com.tpago.movil.Partner;
+import com.tpago.movil.dep.Partner;
 import com.tpago.movil.R;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.api.ApiResult;
@@ -29,11 +29,11 @@ import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.d.domain.ErrorCode;
 import com.tpago.movil.d.domain.FailureData;
 import com.tpago.movil.d.domain.Result;
-import com.tpago.movil.net.NetworkService;
-import com.tpago.movil.reactivex.Disposables;
-import com.tpago.movil.text.Texts;
-import com.tpago.movil.util.Preconditions;
-import com.tpago.movil.widget.TextInput;
+import com.tpago.movil.dep.net.NetworkService;
+import com.tpago.movil.dep.reactivex.Disposables;
+import com.tpago.movil.dep.text.Texts;
+import com.tpago.movil.dep.Preconditions;
+import com.tpago.movil.dep.widget.TextInput;
 
 import java.util.concurrent.Callable;
 
