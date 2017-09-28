@@ -1,7 +1,6 @@
 package com.tpago.movil.net;
 
 import com.google.auto.value.AutoValue;
-import com.tpago.movil.util.Result;
 
 /**
  * @author hecvasro

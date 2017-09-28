@@ -1,4 +1,4 @@
-package com.tpago.movil.util;
+package com.tpago.movil.net;
 
 /**
  * @author hecvasro
