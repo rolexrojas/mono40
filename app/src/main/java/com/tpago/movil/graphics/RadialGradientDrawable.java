@@ -5,6 +5,7 @@ import android.graphics.drawable.GradientDrawable;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class RadialGradientDrawable extends GradientDrawable {
   private static final float DEFAULT_CENTER_X = 0.50F;
   private static final float DEFAULT_CENTER_Y = 0.97F;

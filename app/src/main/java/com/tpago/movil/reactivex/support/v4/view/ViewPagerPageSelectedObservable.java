@@ -11,6 +11,7 @@ import io.reactivex.android.MainThreadDisposable;
 /**
  * @author hecvasro
  */
+@Deprecated
 final class ViewPagerPageSelectedObservable extends Observable<Integer> {
   private final ViewPager viewPager;
 

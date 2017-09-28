@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class TransferToAffiliatedRequestBody {
   static TransferToAffiliatedRequestBody create(

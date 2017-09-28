@@ -12,6 +12,7 @@ import rx.functions.Func1;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class PartnerListRequestResponse {
   public static TypeAdapter<PartnerListRequestResponse> typeAdapter(Gson gson) {

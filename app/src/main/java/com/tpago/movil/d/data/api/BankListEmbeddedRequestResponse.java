@@ -10,6 +10,7 @@ import java.util.List;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class BankListEmbeddedRequestResponse {
   public static TypeAdapter<BankListEmbeddedRequestResponse> typeAdapter(Gson gson) {

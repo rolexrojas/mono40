@@ -11,6 +11,7 @@ import io.reactivex.Single;
 /**
  * @author hecvasro
  */
+@Deprecated
 public interface DApiBridge {
 
   Single<HttpResult<DApiData<Integer>>> validatePhoneNumber(PhoneNumber phoneNumber);

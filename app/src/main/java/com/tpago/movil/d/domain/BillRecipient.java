@@ -12,6 +12,7 @@ import com.tpago.movil.text.Texts;
 /**
  * @author hecvasro
  */
+@Deprecated
 public class BillRecipient extends Recipient {
 
   public static final Creator<BillRecipient> CREATOR = new Creator<BillRecipient>() {

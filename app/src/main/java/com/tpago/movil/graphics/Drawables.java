@@ -10,6 +10,7 @@ import com.tpago.movil.util.Preconditions;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class Drawables {
   private static void setAnimationDrawableState(ImageView imageView, boolean flag) {
     final Drawable drawable = Preconditions

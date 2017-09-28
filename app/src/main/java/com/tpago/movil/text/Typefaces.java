@@ -10,6 +10,7 @@ import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class Typefaces {
   public static Typeface load(Context context, String path) {
     return TypefaceUtils.load(

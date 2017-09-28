@@ -30,6 +30,7 @@ import dagger.Provides;
 /**
  * @author hecvasro
  */
+@Deprecated
 @Module
 public final class GsonModule {
   @Provides

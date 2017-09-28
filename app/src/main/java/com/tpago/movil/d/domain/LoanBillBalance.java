@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 /**
  * @author Hector Vasquez
  */
+@Deprecated
 @AutoValue
 public abstract class LoanBillBalance extends ProductBillBalance {
   public static TypeAdapter<LoanBillBalance> typeAdapter(Gson gson) {

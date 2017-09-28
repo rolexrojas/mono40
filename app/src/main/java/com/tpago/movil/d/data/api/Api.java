@@ -19,6 +19,7 @@ import rx.functions.Func1;
  *
  * @author hecvasro
  */
+@Deprecated
 public final class Api {
   static final class Header {
     static final String AUTHORIZATION = "Authorization";

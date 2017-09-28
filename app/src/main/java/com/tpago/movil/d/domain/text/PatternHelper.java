@@ -8,6 +8,7 @@ import android.util.Patterns;
  *
  * @author hecvasro
  */
+@Deprecated
 public final class PatternHelper {
   private PatternHelper() {
   }

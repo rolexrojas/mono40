@@ -11,6 +11,7 @@ import java.util.List;
  * @author hecvasro
  */
 
+@Deprecated
 @AutoValue
 public abstract class PartnerListEmbeddedRequestResponse {
     public static TypeAdapter<PartnerListEmbeddedRequestResponse> typeAdapter(Gson gson) {

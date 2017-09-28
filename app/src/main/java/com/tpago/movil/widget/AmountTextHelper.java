@@ -15,6 +15,7 @@ import com.tpago.movil.util.Preconditions;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class AmountTextHelper implements AmountText {
   private final Context context;
 

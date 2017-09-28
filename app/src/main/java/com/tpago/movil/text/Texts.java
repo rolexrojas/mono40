@@ -11,6 +11,7 @@ import static com.tpago.movil.util.Objects.checkIfNull;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class Texts {
   public static boolean checkIfEmpty(CharSequence s) {
     return checkIfNull(s) || s.length() == 0;

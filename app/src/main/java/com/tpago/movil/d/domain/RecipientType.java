@@ -5,6 +5,7 @@ package com.tpago.movil.d.domain;
  *
  * @author hecvasro
  */
+@Deprecated
 public enum RecipientType {
   PHONE_NUMBER,
   NON_AFFILIATED_PHONE_NUMBER,

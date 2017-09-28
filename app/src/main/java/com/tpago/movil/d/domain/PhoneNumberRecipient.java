@@ -16,6 +16,7 @@ import com.tpago.movil.text.Texts;
  *
  * @author hecvasro
  */
+@Deprecated
 public class PhoneNumberRecipient extends Recipient {
 
   public static final Creator<PhoneNumberRecipient> CREATOR = new Creator<PhoneNumberRecipient>() {

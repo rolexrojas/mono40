@@ -9,6 +9,7 @@ import io.reactivex.functions.Function;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class AuthResponseBody {
 

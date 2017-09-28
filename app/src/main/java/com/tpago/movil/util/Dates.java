@@ -11,6 +11,7 @@ import static com.tpago.movil.util.Preconditions.assertNotNull;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class Dates {
   private static final Character SEPARATOR = ' ';
 

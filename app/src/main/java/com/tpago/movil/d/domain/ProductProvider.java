@@ -9,6 +9,7 @@ import rx.Observable;
 /**
  * @author hecvasro
  */
+@Deprecated
 public interface ProductProvider {
   /**
    * Gets all the {@link Product products} registered in the provider.

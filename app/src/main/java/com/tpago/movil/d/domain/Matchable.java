@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
  *
  * @author hecvasro
  */
+@Deprecated
 public interface Matchable {
   /**
    * Checks if any of the matchable properties matches the given {@code query}.

@@ -15,6 +15,7 @@ import rx.Observable;
  *
  * @author hecvasro
  */
+@Deprecated
 public class DecoratedTransactionProvider implements TransactionProvider {
   private final TransactionRepo transactionRepo;
   private final DepApiBridge apiBridge;

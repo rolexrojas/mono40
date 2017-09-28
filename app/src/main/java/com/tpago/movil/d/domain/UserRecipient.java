@@ -14,6 +14,7 @@ import com.tpago.movil.text.Texts;
 /**
  * @author Hector Vasquez
  */
+@Deprecated
 public final class UserRecipient extends Recipient {
 
   public static final Creator<UserRecipient> CREATOR = new Creator<UserRecipient>() {

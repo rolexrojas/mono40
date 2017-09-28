@@ -7,6 +7,7 @@ import com.google.auto.value.AutoValue;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class FailureData<C> {
   public static <C> FailureData<C> create(C code, @Nullable String description) {

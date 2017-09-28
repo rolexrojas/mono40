@@ -10,6 +10,7 @@ import io.reactivex.Single;
 /**
  * @author hecvasro
  */
+@Deprecated
 public interface ApiService {
   Single<Result<Set<Bank>, ApiCode>> fetchBankSet();
 }

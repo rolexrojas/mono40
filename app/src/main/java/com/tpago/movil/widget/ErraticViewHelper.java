@@ -9,6 +9,7 @@ import static com.tpago.movil.util.Preconditions.assertNotNull;
 /**
  * @author hecvasro
  */
+@Deprecated
 final class ErraticViewHelper implements ErraticView {
   private static final int[] ARRAY_DRAWABLE_STATE_ERRATIC = new int[] { R.attr.state_erratic };
 

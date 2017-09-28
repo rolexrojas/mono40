@@ -13,6 +13,7 @@ import static com.tpago.movil.util.Preconditions.assertNotNull;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class AssetUriBuilder {
   private static final String PLACEHOLDER_SIZE = "{size}";
   private static final String PLACEHOLDER_STYLE = "{style}";

@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 /**
  * @author hecvasro
  */
+@Deprecated
 public class Label extends AppCompatTextView {
   public Label(Context context) {
     super(context);

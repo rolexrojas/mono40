@@ -9,6 +9,7 @@ import com.tpago.movil.d.domain.util.StringUtils;
 /**
  * @author Hector Vasquez
  */
+@Deprecated
 public final class ProductRecipient extends Recipient {
   public static final Creator<ProductRecipient> CREATOR = new Creator<ProductRecipient>() {
     @Override

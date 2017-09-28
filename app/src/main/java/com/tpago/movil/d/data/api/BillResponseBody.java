@@ -16,6 +16,7 @@ import rx.functions.Func1;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class BillResponseBody {
   public static TypeAdapter<BillResponseBody> typeAdapter(Gson gson) {

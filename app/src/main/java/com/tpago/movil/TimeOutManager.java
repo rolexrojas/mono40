@@ -14,6 +14,7 @@ import io.reactivex.functions.Action;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class TimeOutManager {
   private final ConfigManager configManager;
   private final TimeOutHandler timeOutHandler;

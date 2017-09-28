@@ -24,6 +24,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 /**
  * @author hecvasro
  */
+@Deprecated
 @Module
 public final class NetModule {
   @Provides

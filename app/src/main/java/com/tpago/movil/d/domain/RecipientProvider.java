@@ -12,6 +12,7 @@ import rx.Observable;
  *
  * @author hecvasro
  */
+@Deprecated
 public interface RecipientProvider {
   /**
    * Gets all the {@link Recipient recipients} registered in the provider.

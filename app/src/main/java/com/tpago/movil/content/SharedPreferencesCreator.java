@@ -9,6 +9,7 @@ import com.tpago.movil.util.Preconditions;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class SharedPreferencesCreator {
   private final Context context;
 

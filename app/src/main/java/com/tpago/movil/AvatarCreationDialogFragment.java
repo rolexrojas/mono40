@@ -30,6 +30,7 @@ import timber.log.Timber;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class AvatarCreationDialogFragment extends DialogFragment {
   private static final String KEY_OUTPUT_FILE = "outputFile";
 

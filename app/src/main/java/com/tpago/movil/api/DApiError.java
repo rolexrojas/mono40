@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class DApiError {
   public static DApiError create(Code code, String description) {

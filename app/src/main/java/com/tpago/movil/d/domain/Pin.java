@@ -7,6 +7,7 @@ import com.tpago.movil.d.domain.text.TextHelper;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class Pin {
   /**
    * TODO

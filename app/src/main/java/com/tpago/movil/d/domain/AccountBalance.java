@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 /**
  * @author hecvasro
  */
+@Deprecated
 public class AccountBalance extends Balance {
   private final BigDecimal available;
 

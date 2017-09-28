@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * @author hecvasro
  */
+@Deprecated
 final class ApiError {
   @SerializedName("error") EmbeddedError embedded;
 

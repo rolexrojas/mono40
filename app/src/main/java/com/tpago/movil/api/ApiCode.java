@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * @author hecvasro
  */
+@Deprecated
 public enum ApiCode {
   @SerializedName("0004") INCORRECT_USERNAME_AND_PASSWORD,
   @SerializedName("0005") INVALID_EMAIL,

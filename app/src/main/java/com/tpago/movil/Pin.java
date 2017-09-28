@@ -11,6 +11,7 @@ import static com.tpago.movil.DigitHelper.toDigitString;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class Pin {
   private static final String MASK = "•";

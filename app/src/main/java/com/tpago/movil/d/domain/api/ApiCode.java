@@ -9,6 +9,7 @@ import com.tpago.movil.net.HttpCode;
  *
  * @author hecvasro
  */
+@Deprecated
 public enum ApiCode {
   OK(HttpCode.OK.getValue()),
   MULTIPLE_CHOICES(HttpCode.MULTIPLE_CHOICES.getValue()),

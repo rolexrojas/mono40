@@ -10,6 +10,7 @@ import java.util.Date;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class Utils {
   private Utils() {
   }

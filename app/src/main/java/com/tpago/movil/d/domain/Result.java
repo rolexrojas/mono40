@@ -5,6 +5,7 @@ import static com.tpago.movil.util.Preconditions.assertNotNull;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class Result<T, C> {
   public static <T, C> Result<T, C> create(T successData) {
     return new Result<>(true, successData, null);

@@ -16,6 +16,7 @@ import com.tpago.movil.util.Preconditions;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class FullSizeLoadIndicator implements LoadIndicator {
   private static final String TAG = FullSizeLoadIndicator.class.getSimpleName();
 

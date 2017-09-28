@@ -9,6 +9,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * @author Hector Vasquez
  */
+@Deprecated
 @AutoValue
 public abstract class UserData {
 

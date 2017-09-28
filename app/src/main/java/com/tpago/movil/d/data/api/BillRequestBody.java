@@ -11,6 +11,7 @@ import com.tpago.movil.Partner;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class BillRequestBody {
   public static BillRequestBody create(Partner partner, String contractNumber, String pin) {

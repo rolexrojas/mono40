@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author hecvasro
  */
+@Deprecated
 public enum TimeOut {
   ONE(1L),
   TWO(2L),

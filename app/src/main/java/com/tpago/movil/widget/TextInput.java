@@ -9,6 +9,7 @@ import com.tpago.movil.util.Objects;
 /**
  * @author hecvasro
  */
+@Deprecated
 public class TextInput extends AppCompatEditText implements ErraticView {
   private ErraticViewHelper erraticViewHelper;
 

@@ -15,6 +15,7 @@ import javax.inject.Singleton;
  *
  * @author hecvasro
  */
+@Deprecated
 @Singleton
 final class ConnectivityManagerNetworkHelper implements NetworkHelper {
   private final ConnectivityManager connectivityManager;

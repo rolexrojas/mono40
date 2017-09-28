@@ -22,6 +22,7 @@ import rx.functions.Func2;
  *
  * @author hecvasro
  */
+@Deprecated
 class SharedPreferencesTransactionRepo implements TransactionRepo {
   private static final String KEY_INDEX = "index";
 

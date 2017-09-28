@@ -9,6 +9,7 @@ import com.tpago.movil.d.domain.util.EventType;
  *
  * @author hecvasro
  */
+@Deprecated
 public class ProductRemovalEvent extends Event {
   public ProductRemovalEvent() {
     super(EventType.PRODUCT_REMOVAL, true);

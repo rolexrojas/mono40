@@ -6,6 +6,7 @@ import com.tpago.movil.util.Preconditions;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class DApiData<T> {
   private final T value;
   private final DApiError error;

@@ -3,6 +3,7 @@ package com.tpago.movil.api;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class DCurrencies {
   private static final String API = "DOP";
   private static final String APP = "RD$";

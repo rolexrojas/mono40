@@ -7,6 +7,7 @@ import com.google.gson.TypeAdapter;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class ApiErrorResponseBody {
   static ApiErrorResponseBody create(DApiError DApiError) {

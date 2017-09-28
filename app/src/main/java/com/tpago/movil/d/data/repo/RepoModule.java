@@ -13,6 +13,7 @@ import dagger.Provides;
 /**
  * @author hecvasro
  */
+@Deprecated
 @Module
 public class RepoModule {
   @Provides

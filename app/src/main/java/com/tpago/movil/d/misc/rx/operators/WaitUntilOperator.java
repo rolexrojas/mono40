@@ -13,6 +13,7 @@ import rx.observers.SerializedSubscriber;
  *
  * @author hecvasro
  */
+@Deprecated
 public class WaitUntilOperator<T, O> implements Observable.Operator<T, T> {
   /**
    * TODO

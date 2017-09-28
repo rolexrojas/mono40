@@ -22,6 +22,7 @@ import retrofit2.Retrofit;
 /**
  * @author hecvasro
  */
+@Deprecated
 final class DRetrofitApiBridge implements DApiBridge {
 
   private final DeviceManager deviceManager;

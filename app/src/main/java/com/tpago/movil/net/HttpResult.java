@@ -5,6 +5,7 @@ import com.google.auto.value.AutoValue;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class HttpResult<T> extends Result<T> {
   public static <T> HttpResult<T> create(HttpCode code, T data) {

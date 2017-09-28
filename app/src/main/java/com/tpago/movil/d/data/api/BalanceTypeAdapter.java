@@ -15,6 +15,7 @@ import java.lang.reflect.Type;
 /**
  * @author hecvasro
  */
+@Deprecated
 public class BalanceTypeAdapter implements JsonDeserializer<Balance> {
   private static final String PROPERTY_AVAILABLE = "available";
   private static final String PROPERTY_BALANCE = "balance";

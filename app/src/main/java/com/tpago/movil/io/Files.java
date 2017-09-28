@@ -16,6 +16,7 @@ import static com.tpago.movil.util.Preconditions.assertNotNull;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class Files {
   private static final String FORMAT_FILE_NAME_PICTURE = "%1$s.png";
 

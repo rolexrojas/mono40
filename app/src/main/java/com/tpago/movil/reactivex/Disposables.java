@@ -7,6 +7,7 @@ import io.reactivex.disposables.Disposable;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class Disposables {
   public static Disposable disposed() {
     return io.reactivex.disposables.Disposables.disposed();

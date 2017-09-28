@@ -7,6 +7,7 @@ import com.tpago.movil.d.domain.Bank;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class Banks {
   private static final int BANK_ADEMI = 38;
   private static final int BANK_ADOPEM = 44;

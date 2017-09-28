@@ -5,6 +5,7 @@ package com.tpago.movil.d.misc;
  *
  * @author hecvasro
  */
+@Deprecated
 public abstract class Result<C, D> {
   private final boolean successful;
   private final C code;

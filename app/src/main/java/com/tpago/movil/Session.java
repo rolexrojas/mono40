@@ -8,6 +8,7 @@ import com.tpago.movil.text.Texts;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class Session implements Parcelable {
   private static Session create(String token) {

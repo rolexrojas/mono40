@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class AssociateRequestBody {
   static AssociateRequestBody create(String email, String msisdn, String newImei, String password) {

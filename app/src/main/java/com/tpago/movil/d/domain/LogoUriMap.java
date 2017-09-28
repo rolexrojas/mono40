@@ -9,6 +9,7 @@ import com.tpago.movil.util.Preconditions;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class LogoUriMap implements LogoUriProvider, Parcelable {
   public static Builder builder(){

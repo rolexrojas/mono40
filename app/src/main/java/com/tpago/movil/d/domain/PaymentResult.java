@@ -10,6 +10,7 @@ import com.tpago.movil.DigitHelper;
 /**
  * @author Hector Vasquez
  */
+@Deprecated
 @AutoValue
 public abstract class PaymentResult {
 

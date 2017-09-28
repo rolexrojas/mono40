@@ -16,6 +16,7 @@ import java.io.Serializable;
  *
  * @author hecvasro
  */
+@Deprecated
 public class PhoneNumber implements Serializable, Matchable {
   /**
    * TODO

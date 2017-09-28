@@ -10,6 +10,7 @@ import io.reactivex.functions.Function;
 /**
  * @author hecvasro
  */
+@Deprecated
 final class FetchBankSetResponseBody {
   static Function<FetchBankSetResponseBody, Set<Bank>> mapperFunc() {
     return new Function<FetchBankSetResponseBody, Set<Bank>>() {

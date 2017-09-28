@@ -9,6 +9,7 @@ import io.reactivex.functions.Function;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class Providers {
   public static <T> Function<Result<Set<T>, ApiCode>, Result<Set<T>, ErrorCode>> resultMapper() {
     return new Function<Result<Set<T>, ApiCode>, Result<Set<T>, ErrorCode>>() {

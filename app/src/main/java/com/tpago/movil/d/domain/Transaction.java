@@ -17,6 +17,7 @@ import java.util.UUID;
 /**
  * @author Hector Vasquez
  */
+@Deprecated
 @AutoValue
 public abstract class Transaction {
   private static final DateFormat FORMAT = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());

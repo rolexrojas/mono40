@@ -11,6 +11,7 @@ import java.util.List;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class ConfigManager {
   private static final String KEY_TIME_OUT = "timeOut";
 

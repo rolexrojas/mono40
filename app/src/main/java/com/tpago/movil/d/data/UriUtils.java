@@ -10,6 +10,7 @@ import com.tpago.movil.d.misc.Utils;
  *
  * @author hecvasro
  */
+@Deprecated
 public final class UriUtils {
   private UriUtils() {
   }

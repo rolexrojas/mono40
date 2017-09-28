@@ -9,6 +9,7 @@ import android.text.style.ForegroundColorSpan;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class AlphaForegroundColorSpan extends ForegroundColorSpan {
   public static final Creator CREATOR = new Creator();
 

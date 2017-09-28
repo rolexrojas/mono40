@@ -14,6 +14,7 @@ import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
  * @author Jake Wharton
  * @see <a href="https://gist.github.com/JakeWharton/11274467">Gist</a>
  */
+@Deprecated
 public final class Truss {
   private final SpannableStringBuilder builder;
   private final Deque<Span> stack;

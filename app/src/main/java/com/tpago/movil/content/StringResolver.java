@@ -7,6 +7,7 @@ import com.tpago.movil.util.Preconditions;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class StringResolver {
   private final Context context;
 

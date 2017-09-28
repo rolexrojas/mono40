@@ -8,6 +8,7 @@ import javax.inject.Qualifier;
 /**
  * @author hecvasro
  */
+@Deprecated
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DepQualifier {

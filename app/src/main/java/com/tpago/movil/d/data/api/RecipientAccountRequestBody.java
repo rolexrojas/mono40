@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class RecipientAccountRequestBody {
   public static RecipientAccountRequestBody create(Product product, String name) {

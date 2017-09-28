@@ -9,6 +9,7 @@ import com.tpago.movil.d.domain.util.EventType;
  *
  * @author hecvasro
  */
+@Deprecated
 public class ProductAdditionEvent extends Event {
   public ProductAdditionEvent() {
     super(EventType.PRODUCT_ADDITION, true);

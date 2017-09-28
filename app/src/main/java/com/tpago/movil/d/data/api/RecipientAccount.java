@@ -10,6 +10,7 @@ import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class RecipientAccount {
   public static RecipientAccount create(NonAffiliatedPhoneNumberRecipient recipient) {

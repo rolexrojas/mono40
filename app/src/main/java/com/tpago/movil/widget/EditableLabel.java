@@ -8,6 +8,7 @@ import static com.tpago.movil.util.Objects.checkIfNull;
 /**
  * @author hecvasro
  */
+@Deprecated
 public class EditableLabel extends Label implements ErraticView {
   private ErraticViewHelper erraticViewHelper;
 

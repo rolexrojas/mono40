@@ -5,6 +5,7 @@ import com.tpago.movil.d.misc.Result;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class ApiResult<D> extends Result<ApiCode, D> {
   private final ApiError error;
 

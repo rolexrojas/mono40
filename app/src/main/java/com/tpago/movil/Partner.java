@@ -14,6 +14,7 @@ import java.util.List;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class Partner implements Parcelable {
 

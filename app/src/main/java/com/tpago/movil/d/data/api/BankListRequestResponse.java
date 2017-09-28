@@ -12,6 +12,7 @@ import rx.functions.Func1;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class BankListRequestResponse {
   public static TypeAdapter<BankListRequestResponse> typeAdapter(Gson gson) {

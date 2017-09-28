@@ -20,6 +20,7 @@ import static com.tpago.movil.util.Preconditions.assertNotNull;
 /**
  * @author hecvasro
  */
+@Deprecated
 final class RetrofitApiService implements ApiService {
   private final Service service;
   private final Function<ResponseBody, FailureData<ApiCode>> errorMapperFunc;

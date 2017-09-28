@@ -9,6 +9,7 @@ import rx.Observable;
 /**
  * @author hecvasro
  */
+@Deprecated
 public interface RecipientRepo extends RecipientProvider {
   @NonNull Observable<Recipient> save(@NonNull Recipient recipient);
   @NonNull Observable<List<Recipient>> saveAll(@NonNull List<Recipient> recipients);

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
  *
  * @author hecvasro
  */
+@Deprecated
 public enum PosCode {
   OK(1),
   EXPIRED_AUTH_CODE(1000),

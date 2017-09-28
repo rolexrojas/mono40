@@ -8,6 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * @author hecvasro
  */
+@Deprecated
 @Retention(RetentionPolicy.SOURCE)
 @StringDef({
   LogoStyle.GRAY_20,

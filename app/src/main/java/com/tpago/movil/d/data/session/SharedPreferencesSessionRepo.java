@@ -15,6 +15,7 @@ import com.tpago.movil.d.misc.Utils;
  *
  * @author hecvasro
  */
+@Deprecated
 class SharedPreferencesSessionRepo implements SessionRepo {
   /**
    * TODO

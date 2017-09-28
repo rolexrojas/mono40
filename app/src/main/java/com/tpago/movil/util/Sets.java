@@ -8,6 +8,7 @@ import java.util.TreeSet;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class Sets {
   public static <T> Set<T> createSet() {
     return new HashSet<>();

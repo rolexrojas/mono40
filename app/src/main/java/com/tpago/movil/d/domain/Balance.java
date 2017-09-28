@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 /**
  * @author hecvasro
  */
+@Deprecated
 public abstract class Balance {
   private final BigDecimal value;
 

@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class Bank implements LogoUriProvider, Parcelable, Comparable<Bank> {
   private static final BigDecimal TRANSFER_COST_PERCENTAGE = BigDecimal.valueOf(0.015);

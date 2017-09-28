@@ -3,6 +3,7 @@ package com.tpago.movil.net;
 /**
  * @author hecvasro
  */
+@Deprecated
 public enum HttpCode {
   OK(200),
   MULTIPLE_CHOICES(300),

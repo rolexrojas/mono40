@@ -13,6 +13,7 @@ import java.util.Locale;
  *
  * @author hecvasro
  */
+@Deprecated
 public final class Formatter {
   /**
    * TODO

@@ -11,6 +11,7 @@ import com.tpago.movil.text.Texts;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class ApiImageUriBuilder {
 
   private static String applyDisplayDensity(Context context, String template) {

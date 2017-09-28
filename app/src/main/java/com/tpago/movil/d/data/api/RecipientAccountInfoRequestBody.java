@@ -9,6 +9,7 @@ import com.tpago.movil.d.domain.Bank;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class RecipientAccountInfoRequestBody {
   public static RecipientAccountInfoRequestBody create(Bank bank, String accountNumber) {

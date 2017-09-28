@@ -11,6 +11,7 @@ import rx.Observable;
  *
  * @author hecvasro
  */
+@Deprecated
 public interface TransactionProvider {
   /**
    * TODO

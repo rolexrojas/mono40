@@ -13,6 +13,7 @@ import rx.functions.Func1;
  *
  * @author hecvasro
  */
+@Deprecated
 public final class ApiUtils {
   private ApiUtils() {
   }

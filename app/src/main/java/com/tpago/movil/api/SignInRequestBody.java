@@ -7,6 +7,7 @@ import com.google.gson.TypeAdapter;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class SignInRequestBody {
   static SignInRequestBody create(String email, String imei, String msisdn, String password) {

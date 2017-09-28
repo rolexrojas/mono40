@@ -9,6 +9,7 @@ import static com.tpago.movil.util.Preconditions.assertNotNull;
 /**
  * @author hecvasro
  */
+@Deprecated
 final class ConnectivityManagerNetworkService implements NetworkService {
   private final ConnectivityManager connectivityManager;
 

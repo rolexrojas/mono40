@@ -32,6 +32,7 @@ import static com.tpago.movil.util.Preconditions.assertNotNull;
 /**
  * @author hecvasro
  */
+@Deprecated
 class CubePosBridge implements PosBridge {
   private static final String FILE_NAME = PosBridge.class.getCanonicalName();
   private static final String KEY_COUNT = "count";

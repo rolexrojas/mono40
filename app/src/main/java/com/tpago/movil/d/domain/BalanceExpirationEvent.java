@@ -12,6 +12,7 @@ import com.tpago.movil.d.domain.util.EventType;
  *
  * @author hecvasro
  */
+@Deprecated
 public class BalanceExpirationEvent extends Event {
   /**
    * TODO

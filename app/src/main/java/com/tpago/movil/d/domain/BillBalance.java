@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class BillBalance implements Parcelable {
   public static TypeAdapter<BillBalance> typeAdapter(Gson gson) {

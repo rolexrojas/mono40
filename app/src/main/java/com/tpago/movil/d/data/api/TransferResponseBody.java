@@ -11,6 +11,7 @@ import rx.functions.Func1;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class TransferResponseBody {
 

@@ -13,6 +13,7 @@ import java.util.Map;
  *
  * @author hecvasro
  */
+@Deprecated
 public final class BinderFactory {
   /**
    * TODO

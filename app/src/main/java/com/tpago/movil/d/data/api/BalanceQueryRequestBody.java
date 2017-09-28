@@ -12,6 +12,7 @@ import com.tpago.movil.d.domain.Bank;
  *
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class BalanceQueryRequestBody {
   static BalanceQueryRequestBody create(Product product, String pin) {

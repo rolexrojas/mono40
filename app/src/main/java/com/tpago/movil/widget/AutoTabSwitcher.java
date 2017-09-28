@@ -8,6 +8,7 @@ import com.tpago.movil.util.Preconditions;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class AutoTabSwitcher extends ViewPager.SimpleOnPageChangeListener {
   private final ViewPager viewPager;
 

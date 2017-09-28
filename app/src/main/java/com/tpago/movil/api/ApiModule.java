@@ -16,6 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * @author hecvasro
  */
+@Deprecated
 @Module(includes = ApiUrlFlavorModule.class)
 public class ApiModule {
   @Provides

@@ -16,6 +16,7 @@ import static com.tpago.movil.util.ObjectHelper.isNotNull;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class AccountRecipient extends Recipient {
 
   public static final Creator<AccountRecipient> CREATOR = new Creator<AccountRecipient>() {

@@ -17,6 +17,7 @@ import static com.tpago.movil.util.Preconditions.assertNotNull;
 /**
  * @author hecvasro
  */
+@Deprecated
 final class BankTypeAdapter extends TypeAdapter<Bank> {
   private static final String PROPERTY_CODE = "bank-code";
   private static final String PROPERTY_ID = "bank-id";

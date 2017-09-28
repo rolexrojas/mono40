@@ -14,6 +14,7 @@ import butterknife.ButterKnife;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class AmountTextView extends LinearLayout implements AmountText {
   private AmountTextHelper amountTextHelper;
 

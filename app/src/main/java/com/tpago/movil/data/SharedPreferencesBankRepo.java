@@ -15,6 +15,7 @@ import static com.tpago.movil.util.Preconditions.assertNotNull;
 /**
  * @author hecvasro
  */
+@Deprecated
 final class SharedPreferencesBankRepo implements BankRepo {
   private static final String KEY_ID_SET = "idSet";
 

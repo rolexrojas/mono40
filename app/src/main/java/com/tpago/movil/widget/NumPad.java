@@ -28,6 +28,7 @@ import static com.tpago.movil.DigitHelper.toDigit;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class NumPad extends LinearLayout {
   private int color;
   private boolean dotEnabled;

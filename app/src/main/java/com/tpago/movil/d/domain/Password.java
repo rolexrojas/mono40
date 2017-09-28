@@ -7,6 +7,7 @@ import static com.tpago.movil.text.Texts.checkIfNotEmpty;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class Password {
   private static final Pattern PATTERN = Pattern.compile("\\A[A-Za-z0-9]{8,}\\z");
 

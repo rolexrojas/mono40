@@ -25,6 +25,7 @@ import static com.tpago.movil.util.Objects.checkIfNotNull;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class LabelFitterLayout extends FrameLayout {
   private static final float SIZE_RATIO = 2F;
 

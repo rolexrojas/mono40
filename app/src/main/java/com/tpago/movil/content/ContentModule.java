@@ -10,6 +10,7 @@ import dagger.Provides;
 /**
  * @author hecvasro
  */
+@Deprecated
 @Module
 public final class ContentModule {
   @Provides

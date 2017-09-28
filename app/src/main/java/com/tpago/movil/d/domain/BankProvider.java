@@ -18,6 +18,7 @@ import static com.tpago.movil.util.Preconditions.assertNotNull;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class BankProvider implements Provider<Bank> {
   private final BankRepo bankRepo;
   private final NetworkService networkService;

@@ -12,6 +12,7 @@ import static com.tpago.movil.util.Preconditions.assertNotNull;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class Keyboard {
   private static InputMethodManager getInputMethodManager(View view) {
     return (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
