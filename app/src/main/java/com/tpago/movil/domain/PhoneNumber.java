@@ -30,7 +30,7 @@ public abstract class PhoneNumber implements Comparable<PhoneNumber>, Parcelable
    *   {@link Boolean Flag} that indicates whether the given {@link String string} should be
    *   sanitized or not.
    *
-   * @return True if the given {@link String string} is a valid phone number, false otherwise.
+   * @return True if the given {@link String string} is a valid phone number, or otherwise false.
    */
   private static boolean isValid(String s, boolean shouldSanitize) {
     final String sanitizedString;
@@ -50,7 +50,7 @@ public abstract class PhoneNumber implements Comparable<PhoneNumber>, Parcelable
   /**
    * Checks whether the given {@link String string} is a valid phone number or not.
    *
-   * @return True if the given {@link String string} is a valid phone number, false otherwise.
+   * @return True if the given {@link String string} is a valid phone number, or otherwise false.
    */
   public static boolean isValid(String s) {
     return isValid(s, true);
