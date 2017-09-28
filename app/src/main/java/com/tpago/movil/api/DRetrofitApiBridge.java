@@ -3,7 +3,7 @@ package com.tpago.movil.api;
 import static com.tpago.movil.util.Preconditions.assertNotNull;
 
 import android.support.v4.util.Pair;
-import com.tpago.movil.Email;
+import com.tpago.movil.domain.Email;
 import com.tpago.movil.domain.PhoneNumber;
 import com.tpago.movil.Pin;
 import com.tpago.movil.app.DeviceManager;

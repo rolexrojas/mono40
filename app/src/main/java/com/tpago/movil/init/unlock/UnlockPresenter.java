@@ -1,7 +1,7 @@
 package com.tpago.movil.init.unlock;
 
 import android.support.v4.util.Pair;
-import com.tpago.movil.Email;
+import com.tpago.movil.domain.Email;
 import com.tpago.movil.domain.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.Session;

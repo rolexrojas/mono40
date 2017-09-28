@@ -5,7 +5,7 @@ import android.net.Uri;
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.google.common.base.Optional;
-import com.tpago.movil.Email;
+import com.tpago.movil.domain.Email;
 import com.tpago.movil.domain.PhoneNumber;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.Consumer;

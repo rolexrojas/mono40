@@ -1,14 +1,13 @@
-package com.tpago.movil;
+package com.tpago.movil.domain;
 
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
+import com.tpago.movil.util.StringHelper;
 
 import static android.util.Patterns.EMAIL_ADDRESS;
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
  * Email representation
@@ -21,10 +20,10 @@ public abstract class Email implements Comparable<Email>, Parcelable {
   /**
    * Checks whether the given {@link String string} is a valid email address or not.
    *
-   * @return True if the given {@link String string} is a valid email address, false otherwise.
+   * @return True if the given {@link String string} is a valid email address, or otherwise false.
    */
   public static boolean isValid(String s) {
-    if (isNullOrEmpty(s)) {
+    if (StringHelper.isNullOrEmpty(s)) {
       return false;
     } else {
       return EMAIL_ADDRESS.matcher(s)
@@ -41,7 +40,9 @@ public abstract class Email implements Comparable<Email>, Parcelable {
    *   If {@code s} is not a {@link #isValid(String) valid} email address.
    */
   public static Email create(String s) {
-    checkArgument(isValid(s), "!isValid(%1$s)", s);
+    if (!isValid(s)) {
+      throw new IllegalArgumentException(String.format("!isValid(%1$s)", s));
+    }
     return new AutoValue_Email(s);
   }
 
@@ -49,11 +50,11 @@ public abstract class Email implements Comparable<Email>, Parcelable {
 
   @Memoized
   @Override
-  public abstract int hashCode();
+  public abstract String toString();
 
   @Memoized
   @Override
-  public abstract String toString();
+  public abstract int hashCode();
 
   @Override
   public int compareTo(@NonNull Email that) {

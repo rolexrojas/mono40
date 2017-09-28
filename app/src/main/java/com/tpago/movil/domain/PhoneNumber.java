@@ -105,11 +105,11 @@ public abstract class PhoneNumber implements Comparable<PhoneNumber>, Parcelable
 
   @Memoized
   @Override
-  public abstract int hashCode();
+  public abstract String toString();
 
   @Memoized
   @Override
-  public abstract String toString();
+  public abstract int hashCode();
 
   @Override
   public int compareTo(@NonNull PhoneNumber that) {
