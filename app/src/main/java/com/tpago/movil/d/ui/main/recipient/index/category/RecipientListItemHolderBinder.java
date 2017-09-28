@@ -26,8 +26,8 @@ import com.tpago.movil.d.domain.RecipientType;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.UserRecipient;
 import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
-import com.tpago.movil.domain.Bank;
-import com.tpago.movil.domain.LogoStyle;
+import com.tpago.movil.d.domain.Bank;
+import com.tpago.movil.d.domain.LogoStyle;
 import com.tpago.movil.text.Texts;
 
 import java.math.BigDecimal;

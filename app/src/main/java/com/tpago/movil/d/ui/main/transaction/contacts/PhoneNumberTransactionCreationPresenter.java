@@ -23,9 +23,9 @@ import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.ui.Presenter;
 import com.tpago.movil.d.ui.main.transaction.TransactionCategory;
-import com.tpago.movil.domain.ErrorCode;
-import com.tpago.movil.domain.FailureData;
-import com.tpago.movil.domain.Result;
+import com.tpago.movil.d.domain.ErrorCode;
+import com.tpago.movil.d.domain.FailureData;
+import com.tpago.movil.d.domain.Result;
 import com.tpago.movil.net.NetworkService;
 import com.tpago.movil.reactivex.Disposables;
 

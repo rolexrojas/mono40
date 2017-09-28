@@ -1,7 +1,7 @@
 package com.tpago.movil.api;
 
 import com.google.gson.annotations.SerializedName;
-import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.Bank;
 
 import java.util.Set;
 

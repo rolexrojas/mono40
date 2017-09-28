@@ -3,7 +3,7 @@ package com.tpago.movil.data;
 import android.net.Uri;
 
 import com.tpago.movil.app.DisplayDensity;
-import com.tpago.movil.domain.LogoStyle;
+import com.tpago.movil.d.domain.LogoStyle;
 
 import java.util.HashMap;
 import java.util.Map;

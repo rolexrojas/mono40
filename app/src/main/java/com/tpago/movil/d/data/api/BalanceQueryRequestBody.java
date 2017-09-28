@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.tpago.movil.d.domain.Product;
-import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.Bank;
 
 /**
  * TODO

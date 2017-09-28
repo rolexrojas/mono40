@@ -13,7 +13,7 @@ import android.text.TextUtils;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.domain.ProductRecipient;
-import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.Partner;
 import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;

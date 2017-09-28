@@ -1,7 +1,7 @@
 package com.tpago.movil.api;
 
-import com.tpago.movil.domain.Bank;
-import com.tpago.movil.domain.Result;
+import com.tpago.movil.d.domain.Bank;
+import com.tpago.movil.d.domain.Result;
 
 import java.util.Set;
 

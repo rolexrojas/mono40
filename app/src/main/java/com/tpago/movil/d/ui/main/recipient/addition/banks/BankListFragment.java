@@ -8,7 +8,7 @@ import android.view.View;
 import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.ui.main.list.ListItemHolderCreatorFactory;
 import com.tpago.movil.d.ui.main.recipient.addition.RecipientCandidateListFragment;
-import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.Bank;
 
 /**
  * @author hecvasro

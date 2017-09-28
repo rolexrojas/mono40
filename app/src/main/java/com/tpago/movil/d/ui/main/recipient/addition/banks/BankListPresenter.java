@@ -8,7 +8,7 @@ import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.ui.main.recipient.addition.RecipientCandidateListPresenter;
-import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.Bank;
 
 import java.util.ArrayList;
 import java.util.List;

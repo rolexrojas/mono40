@@ -8,8 +8,8 @@ import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductType;
 import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
-import com.tpago.movil.domain.Bank;
-import com.tpago.movil.domain.LogoStyle;
+import com.tpago.movil.d.domain.Bank;
+import com.tpago.movil.d.domain.LogoStyle;
 
 import static com.tpago.movil.util.Preconditions.assertNotNull;
 

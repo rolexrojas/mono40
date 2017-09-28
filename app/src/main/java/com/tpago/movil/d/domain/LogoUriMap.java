@@ -1,4 +1,4 @@
-package com.tpago.movil.domain;
+package com.tpago.movil.d.domain;
 
 import android.net.Uri;
 import android.os.Parcelable;
@@ -12,7 +12,7 @@ import com.tpago.movil.util.Preconditions;
 @AutoValue
 public abstract class LogoUriMap implements LogoUriProvider, Parcelable {
   public static Builder builder(){
-    return new AutoValue_LogoUriMap.Builder();
+    return new $AutoValue_LogoUriMap.Builder();
   }
 
   abstract Uri getUriForGray20();

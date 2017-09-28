@@ -1,4 +1,4 @@
-package com.tpago.movil.domain;
+package com.tpago.movil.d.domain;
 
 import com.tpago.movil.util.Resettable;
 

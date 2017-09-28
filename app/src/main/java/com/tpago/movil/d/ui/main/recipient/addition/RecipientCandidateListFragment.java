@@ -25,7 +25,7 @@ import com.tpago.movil.d.ui.main.list.NoResultsListItemHolderCreator;
 import com.tpago.movil.d.ui.main.list.NoResultsListItemItem;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
-import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.Bank;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import javax.inject.Inject;

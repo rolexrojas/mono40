@@ -1,8 +1,8 @@
 package com.tpago.movil.api;
 
-import com.tpago.movil.domain.Bank;
-import com.tpago.movil.domain.FailureData;
-import com.tpago.movil.domain.Result;
+import com.tpago.movil.d.domain.Bank;
+import com.tpago.movil.d.domain.FailureData;
+import com.tpago.movil.d.domain.Result;
 
 import java.lang.annotation.Annotation;
 import java.util.Set;

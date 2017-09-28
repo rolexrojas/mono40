@@ -7,11 +7,10 @@ import android.support.v4.util.Pair;
 import com.tpago.Banks;
 import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.domain.Product;
-import com.tpago.movil.d.domain.ProductRecipient;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
-import com.tpago.movil.domain.Bank;
-import com.tpago.movil.domain.LogoStyle;
+import com.tpago.movil.d.domain.Bank;
+import com.tpago.movil.d.domain.LogoStyle;
 
 import rx.Observable;
 import rx.functions.Func1;

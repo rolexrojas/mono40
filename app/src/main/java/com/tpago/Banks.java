@@ -2,7 +2,7 @@ package com.tpago;
 
 import android.graphics.Color;
 
-import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.Bank;
 
 /**
  * @author hecvasro

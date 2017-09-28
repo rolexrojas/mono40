@@ -1,4 +1,4 @@
-package com.tpago.movil.domain;
+package com.tpago.movil.d.domain;
 
 import android.net.Uri;
 import android.os.Parcelable;
@@ -17,7 +17,7 @@ public abstract class Bank implements LogoUriProvider, Parcelable, Comparable<Ba
   private static final BigDecimal TRANSFER_COST_PERCENTAGE = BigDecimal.valueOf(0.015);
 
   public static Builder builder() {
-    return new AutoValue_Bank.Builder();
+    return new $AutoValue_Bank.Builder();
   }
 
   public static BigDecimal calculateTransferCost(BigDecimal amount) {

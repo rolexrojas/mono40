@@ -25,7 +25,7 @@ import com.tpago.movil.d.ui.view.widget.pad.Digit;
 import com.tpago.movil.d.ui.view.widget.pad.Dot;
 import com.tpago.movil.d.ui.view.widget.pad.DepNumPad;
 import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
-import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.main.transactions.PaymentMethodChooser;
 import com.tpago.movil.text.Texts;
 

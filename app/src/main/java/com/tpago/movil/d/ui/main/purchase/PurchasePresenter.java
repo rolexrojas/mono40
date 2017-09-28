@@ -18,9 +18,9 @@ import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.ui.AppDialog;
 import com.tpago.movil.d.ui.Presenter;
-import com.tpago.movil.domain.ErrorCode;
-import com.tpago.movil.domain.FailureData;
-import com.tpago.movil.domain.Result;
+import com.tpago.movil.d.domain.ErrorCode;
+import com.tpago.movil.d.domain.FailureData;
+import com.tpago.movil.d.domain.Result;
 import com.tpago.movil.net.NetworkService;
 import com.tpago.movil.util.Objects;
 

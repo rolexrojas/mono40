@@ -13,7 +13,7 @@ import com.tpago.movil.d.domain.LoanBillBalance;
 import com.tpago.movil.d.domain.PaymentResult;
 import com.tpago.movil.d.domain.ProductBillBalance;
 import com.tpago.movil.d.domain.ProductRecipient;
-import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.InitialData;

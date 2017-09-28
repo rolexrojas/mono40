@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import com.tpago.movil.Partner;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.ui.Container;
-import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.Bank;
 
 import rx.Observable;
 

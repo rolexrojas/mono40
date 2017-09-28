@@ -4,8 +4,8 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.tpago.movil.content.SharedPreferencesCreator;
-import com.tpago.movil.domain.Bank;
-import com.tpago.movil.domain.BankRepo;
+import com.tpago.movil.d.domain.Bank;
+import com.tpago.movil.d.domain.BankRepo;
 import com.tpago.movil.util.Sets;
 
 import java.util.Set;

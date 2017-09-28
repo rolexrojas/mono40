@@ -6,7 +6,7 @@ import com.squareup.picasso.Picasso;
 import com.tpago.movil.d.data.util.Binder;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductType;
-import com.tpago.movil.domain.LogoStyle;
+import com.tpago.movil.d.domain.LogoStyle;
 import com.tpago.movil.util.Preconditions;
 
 /**

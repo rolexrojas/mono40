@@ -5,7 +5,7 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.tpago.movil.app.DisplayDensity;
 import com.tpago.movil.content.SharedPreferencesCreator;
-import com.tpago.movil.domain.BankRepo;
+import com.tpago.movil.d.domain.BankRepo;
 
 import javax.inject.Singleton;
 

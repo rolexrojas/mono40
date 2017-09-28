@@ -20,7 +20,7 @@ import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.api.ApiError;
 import com.tpago.movil.data.AssetUriBuilder;
-import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.Bank;
 
 import javax.inject.Singleton;
 

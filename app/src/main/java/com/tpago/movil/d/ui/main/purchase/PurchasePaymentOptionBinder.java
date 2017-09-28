@@ -16,11 +16,11 @@ import com.tpago.movil.User;
 import com.tpago.movil.api.ApiImageUriBuilder;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.data.util.Binder;
-import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.d.domain.Product;
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.d.domain.ProductType;
-import com.tpago.movil.domain.LogoStyle;
+import com.tpago.movil.d.domain.LogoStyle;
 import com.tpago.movil.util.Objects;
 import com.tpago.movil.util.Preconditions;
 

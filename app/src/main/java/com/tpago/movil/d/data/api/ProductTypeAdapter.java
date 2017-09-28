@@ -10,7 +10,7 @@ import com.google.gson.JsonSerializer;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductCreator;
 import com.tpago.movil.d.domain.ProductType;
-import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.text.Texts;
 import com.tpago.movil.util.Objects;
 

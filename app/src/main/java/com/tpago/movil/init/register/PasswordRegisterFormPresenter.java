@@ -2,7 +2,7 @@ package com.tpago.movil.init.register;
 
 import com.tpago.movil.R;
 import com.tpago.movil.content.StringResolver;
-import com.tpago.movil.domain.Password;
+import com.tpago.movil.d.domain.Password;
 import com.tpago.movil.util.Objects;
 
 /**

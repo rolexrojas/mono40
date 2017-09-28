@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import com.google.common.base.Joiner;
 import com.google.common.base.MoreObjects;
 import com.tpago.movil.d.domain.util.StringUtils;
-import com.tpago.movil.domain.Bank;
 
 import static com.google.common.base.Strings.emptyToNull;
 import static com.tpago.movil.DigitHelper.removeNonDigits;

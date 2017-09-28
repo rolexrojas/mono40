@@ -10,11 +10,11 @@ import com.tpago.movil.api.DCurrencies;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Balance;
-import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductType;
 import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
-import com.tpago.movil.domain.LogoStyle;
+import com.tpago.movil.d.domain.LogoStyle;
 import com.tpago.movil.util.Dates;
 
 import static com.tpago.movil.util.Objects.checkIfNull;

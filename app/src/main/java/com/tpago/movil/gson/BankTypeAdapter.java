@@ -5,9 +5,9 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.tpago.movil.data.AssetUriBuilder;
-import com.tpago.movil.domain.Bank;
-import com.tpago.movil.domain.LogoStyle;
-import com.tpago.movil.domain.LogoUriMap;
+import com.tpago.movil.d.domain.Bank;
+import com.tpago.movil.d.domain.LogoStyle;
+import com.tpago.movil.d.domain.LogoUriMap;
 
 import java.io.IOException;
 

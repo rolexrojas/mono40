@@ -23,7 +23,7 @@ import com.tpago.movil.d.ui.SwitchableContainerActivity;
 import com.tpago.movil.d.ui.main.recipient.index.category.Category;
 import com.tpago.movil.d.ui.view.widget.FullScreenLoadIndicator;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
-import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.util.Objects;
 
 import javax.inject.Inject;
