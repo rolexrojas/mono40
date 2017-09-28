@@ -1,7 +1,11 @@
 package com.tpago.movil.dep.api;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.Gson;
+import com.tpago.movil.BuildConfig;
 import com.tpago.movil.dep.DeviceManager;
+import com.tpago.movil.util.StringHelper;
 
 import javax.inject.Singleton;
 
@@ -19,10 +23,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Deprecated
 @Module(includes = ApiUrlFlavorModule.class)
 public class ApiModule {
+
   @Provides
   @Singleton
   ApiService provideApiService(Retrofit retrofit) {
-    return new RetrofitApiService(retrofit);
+    if (StringHelper.isNullOrEmpty(BuildConfig.API_URL)) {
+      return MockApiService.create();
+    } else {
+      return new RetrofitApiService(retrofit);
+    }
   }
 
   @Provides
@@ -40,6 +49,10 @@ public class ApiModule {
   @Provides
   @Singleton
   DApiBridge provideApiBridge(DeviceManager deviceManager, Retrofit retrofit) {
-    return new DRetrofitApiBridge(deviceManager, retrofit);
+    if (StringHelper.isNullOrEmpty(BuildConfig.API_URL)) {
+      return MockDApiBridge.create();
+    } else {
+      return new DRetrofitApiBridge(deviceManager, retrofit);
+    }
   }
 }

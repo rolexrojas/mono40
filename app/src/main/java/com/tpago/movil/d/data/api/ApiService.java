@@ -37,47 +37,56 @@ interface ApiService {
   @POST("query/accounts/balance")
   Observable<Response<AccountBalance>> accountBalance(
     @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body BalanceQueryRequestBody body);
+    @Body BalanceQueryRequestBody body
+  );
 
   @POST("query/credit-cards/balance")
   Observable<Response<CreditCardBalance>> creditCardBalance(
     @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body BalanceQueryRequestBody body);
+    @Body BalanceQueryRequestBody body
+  );
 
   @POST("query/loans/balance")
   Observable<Response<LoanBalance>> loanBalance(
     @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body BalanceQueryRequestBody body);
+    @Body BalanceQueryRequestBody body
+  );
 
   @GET("transaction-history")
   Observable<Response<List<Transaction>>> recentTransactions(
-    @Header(Api.Header.AUTHORIZATION) String authToken);
+    @Header(Api.Header.AUTHORIZATION) String authToken
+  );
 
   @GET("transfer/recipient-info")
   Observable<Response<Void>> checkIfAssociated(
     @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Query("recipient-msisdn") String phoneNumber);
+    @Query("recipient-msisdn") String phoneNumber
+  );
 
   @GET("customer/{phoneNumber}/status")
   Observable<Response<FetchCustomerStateResponseBody>> fetchCustomerStatus(
     @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Path("phoneNumber") String phoneNumber);
+    @Path("phoneNumber") String phoneNumber
+  );
 
   @GET("transfer/recipient-info")
   Observable<Response<Customer>> fetchCustomer(
     @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Query("recipient-msisdn") String phoneNumber);
+    @Query("recipient-msisdn") String phoneNumber
+  );
 
 
   @POST("transfer/gcs-gcs")
   Observable<Response<TransferResponseBody>> transferToAffiliated(
     @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body TransferToAffiliatedRequestBody body);
+    @Body TransferToAffiliatedRequestBody body
+  );
 
   @POST("transfer/gcs-non")
   Observable<Response<TransferResponseBody>> transferToNonAffiliated(
     @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body TransferToNonAffiliatedRequestBody body);
+    @Body TransferToNonAffiliatedRequestBody body
+  );
 
   @POST("transfer/gcs-own")
   Observable<Response<TransferResponseBody>> transferTo(
@@ -88,69 +97,83 @@ interface ApiService {
   @POST("payments/change-default-account")
   Observable<Response<Void>> setDefaultPaymentOption(
     @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body Map<String, String> body);
+    @Body Map<String, String> body
+  );
 
   @GET("banks")
   Observable<Response<BankListRequestResponse>> banks(
-    @Header(Api.Header.AUTHORIZATION) String authToken);
+    @Header(Api.Header.AUTHORIZATION) String authToken
+  );
 
   @POST("transfer/recipient-account-info")
   Observable<Response<ProductInfo>> fetchProductInfo(
     @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body RecipientAccountInfoRequestBody body);
+    @Body RecipientAccountInfoRequestBody body
+  );
 
   @GET("payments/partners")
   Observable<Response<PartnerListRequestResponse>> partners(
-    @Header(Api.Header.AUTHORIZATION) String authToken);
+    @Header(Api.Header.AUTHORIZATION) String authToken
+  );
 
   @POST("payments/invoices")
   Observable<Response<Void>> addBill(
     @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body BillRequestBody body);
+    @Body BillRequestBody body
+  );
 
   @POST("payments/invoices/balance")
   Observable<Response<BillBalance>> queryBalance(
     @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body BillRequestBody body);
+    @Body BillRequestBody body
+  );
 
   @POST("payments/credit-cards/balance")
   Observable<Response<CreditCardBillBalance>> queryCreditCardBillBalance(
     @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body Product body);
+    @Body Product body
+  );
 
   @POST("payments/loans/balance")
   Observable<Response<LoanBillBalance>> queryLoanBalance(
     @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body Product body);
+    @Body Product body
+  );
 
   @GET("payments/invoices")
   Observable<Response<List<BillResponseBody>>> getBills(
-    @Header(Api.Header.AUTHORIZATION) String authToken);
+    @Header(Api.Header.AUTHORIZATION) String authToken
+  );
 
   @POST("payments/invoices/pay")
   Observable<Response<Void>> payBill(
     @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body PayBillRequestBody body);
+    @Body PayBillRequestBody body
+  );
 
   @POST("payments/credit-cards/pay")
   Observable<Response<PaymentResult>> payCreditCardBill(
     @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body PayCreditCardBillRequestBody body);
+    @Body PayCreditCardBillRequestBody body
+  );
 
   @POST("payments/loans/pay")
   Observable<Response<PaymentResult>> payLoanBill(
     @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body PayLoanBillRequestBody body);
+    @Body PayLoanBillRequestBody body
+  );
 
   @POST("payments/remove-invoice")
   Observable<Response<Void>> removeBill(
     @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body BillRequestBody body);
+    @Body BillRequestBody body
+  );
 
   @POST("payments/validate-pin")
   Observable<Response<Boolean>> validatePin(
     @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body ValidatePinRequestBody body);
+    @Body ValidatePinRequestBody body
+  );
 
   @POST("recharge/direct")
   Observable<Response<TransferResponseBody>> recharge(

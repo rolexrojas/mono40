@@ -20,7 +20,7 @@ public final class AssetUriBuilder {
 
   private final String displayDensityName;
 
-  AssetUriBuilder(DisplayDensity displayDensity) {
+  public AssetUriBuilder(DisplayDensity displayDensity) {
     displayDensityName = assertNotNull(displayDensity, "displayDensity == null").name().toLowerCase();
   }
 

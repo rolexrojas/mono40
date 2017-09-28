@@ -36,6 +36,13 @@ public abstract class Partner implements Parcelable {
     });
   }
 
+  public static Builder builder() {
+    return new AutoValue_Partner.Builder();
+  }
+
+  Partner() {
+  }
+
   @SerializedName("partner-code")
   public abstract int getCode();
 
@@ -50,4 +57,23 @@ public abstract class Partner implements Parcelable {
 
   @SerializedName("image-url")
   public abstract String getImageUriTemplate();
+
+  @AutoValue.Builder
+  public static abstract class Builder {
+
+    Builder() {
+    }
+
+    public abstract Builder setCode(int code);
+
+    public abstract Builder setType(String type);
+
+    public abstract Builder setId(String id);
+
+    public abstract Builder setName(String name);
+
+    public abstract Builder setImageUriTemplate(String imageUriTemplate);
+
+    public abstract Partner build();
+  }
 }

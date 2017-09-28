@@ -18,6 +18,10 @@ public abstract class PaymentResult {
     return new AutoValue_PaymentResult.GsonTypeAdapter(gson);
   }
 
+  public static PaymentResult create(String id, String message) {
+    return new AutoValue_PaymentResult(id, message);
+  }
+
   @SerializedName("transaction-id")
   abstract String internalId();
 

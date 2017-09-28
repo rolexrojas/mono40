@@ -156,6 +156,7 @@ dependencies {
   compile fileTree(include: ['*.jar'], dir: 'libs')
 
   def cubeSdkName = { env -> "Cub3AltPanSDK-v1.4-$env" }
+  mockCompile(name: cubeSdkName('dev'), ext: 'aar')
   developmentCompile(name: cubeSdkName('dev'), ext: 'aar')
   stagingCompile(name: cubeSdkName('stag'), ext: 'aar')
   productionCompile(name: cubeSdkName('prod'), ext: 'aar')

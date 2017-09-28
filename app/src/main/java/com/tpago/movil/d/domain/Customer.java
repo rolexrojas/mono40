@@ -19,6 +19,10 @@ public abstract class Customer {
     return new AutoValue_Customer.GsonTypeAdapter(gson);
   }
 
+  public static Customer create(String name) {
+    return new AutoValue_Customer(name);
+  }
+
   @SerializedName("Beneficiario") public abstract String getName();
 
   public enum State {

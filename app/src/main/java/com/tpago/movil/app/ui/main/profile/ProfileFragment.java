@@ -1,12 +1,16 @@
 package com.tpago.movil.app.ui.main.profile;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
 import com.tpago.movil.R;
+import com.tpago.movil.data.picasso.CircleTransformation;
 import com.tpago.movil.dep.UserStore;
 import com.tpago.movil.app.ui.AlertShowEventHelper;
 import com.tpago.movil.app.ui.TakeoverLoaderHelper;
@@ -54,6 +58,7 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
   @Inject ProductManager productManager;
   @Inject RecipientManager recipientManager;
 
+  @BindView(R.id.pictureImageView) ImageView pictureImageView;
   @BindView(R.id.firstNameTextInput) TextInput firstNameTextInput;
   @BindView(R.id.lastNameTextInput) TextInput lastNameTextInput;
   @BindView(R.id.phoneNumberTextInput) TextInput phoneNumberTextInput;
@@ -87,6 +92,12 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
     super.onResume();
 
     this.presenter.onPresentationResumed();
+
+    Picasso.with(this.getContext())
+      .load(Uri.parse("https://www.biography.com/.image/t_share/MTIwNjA4NjMzOTAyODkyNTU2/nelson-mandela-9397017-1-402.jpg"))
+      .resizeDimen(R.dimen.largeProfilePictureSize, R.dimen.largeProfilePictureSize)
+      .transform(new CircleTransformation())
+      .into(this.pictureImageView);
   }
 
   @Override
