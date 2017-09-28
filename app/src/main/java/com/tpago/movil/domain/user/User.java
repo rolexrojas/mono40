@@ -1,19 +1,13 @@
 package com.tpago.movil.domain.user;
 
-import android.net.Uri;
-
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
-import com.google.common.base.Optional;
 import com.tpago.movil.domain.Email;
 import com.tpago.movil.domain.PhoneNumber;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.dep.Consumer;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.tpago.movil.util.ObjectHelper.isNull;
+import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.util.StringHelper;
 
 /**
  * User representation
@@ -29,10 +23,8 @@ public abstract class User {
 
   private String firstName;
   private String lastName;
-  private final List<NameConsumer> nameConsumers = new ArrayList<>();
 
-  private Optional<Uri> picture;
-  private final List<Consumer<Optional<Uri>>> pictureConsumers = new ArrayList<>();
+  private String pictureUri;
 
   User() {
   }
@@ -64,99 +56,18 @@ public abstract class User {
    *   If {@code lastName} is null or empty.
    */
   public final void name(String firstName, String lastName) {
-//    checkArgument(!isNullOrEmpty(firstName), "isNullOrEmpty(firstName)");
-//    checkArgument(!isNullOrEmpty(lastName), "isNullOrEmpty(lastName)");
-
+    if (!StringHelper.isNullOrEmpty(firstName)) {
+      throw new IllegalArgumentException("!isNullOrEmpty(firstName)");
+    }
     this.firstName = firstName;
+    if (!StringHelper.isNullOrEmpty(lastName)) {
+      throw new IllegalArgumentException("!isNullOrEmpty(lastName)");
+    }
     this.lastName = lastName;
-
-    for (NameConsumer consumer : this.nameConsumers) {
-      consumer.accept(this.firstName, this.lastName);
-    }
   }
 
-  /**
-   * Adds the given {@link NameConsumer consumer} to the {@link #nameConsumers list}.
-   *
-   * @param consumer
-   *   {@link NameConsumer Consumer} that will be added.
-   *
-   * @throws NullPointerException
-   *   If {@code consumer} is null.
-   */
-  public final void addNameConsumer(NameConsumer consumer) {
-//    checkNotNull(consumer, "isNull(consumer)");
-    if (!this.nameConsumers.contains(consumer)) {
-      this.nameConsumers.add(consumer);
-    }
-  }
-
-  /**
-   * Removes the given {@link NameConsumer consumer} from the {@link #nameConsumers list}.
-   *
-   * @param consumer
-   *   {@link NameConsumer Consumer} that will be removed.
-   *
-   * @throws NullPointerException
-   *   If {@code consumer} is null.
-   */
-  public final void removeNameConsumer(NameConsumer consumer) {
-//    checkNotNull(consumer, "isNull(consumer)");
-    if (this.nameConsumers.contains(consumer)) {
-      this.nameConsumers.add(consumer);
-    }
-  }
-
-  public final Optional<Uri> picture() {
-    return this.picture;
-  }
-
-  /**
-   * Sets its picture and notifies each subscribed {@link Consumer consumer} that it was set.
-   *
-   * @throws NullPointerException
-   *   If {@code picture} is null.
-   */
-  public final void picture(Optional<Uri> picture) {
-//    checkNotNull(picture, "isNull(picture)");
-
-    this.picture = picture;
-
-    for (Consumer<Optional<Uri>> consumer : this.pictureConsumers) {
-      consumer.accept(this.picture);
-    }
-  }
-
-  /**
-   * Adds the given {@link Consumer consumer} to the {@link #pictureConsumers list}.
-   *
-   * @param consumer
-   *   {@link Consumer} that will be added.
-   *
-   * @throws NullPointerException
-   *   If {@code consumer} is null.
-   */
-  public final void addPictureConsumer(Consumer<Optional<Uri>> consumer) {
-//    checkNotNull(consumer, "isNull(consumer)");
-    if (!this.pictureConsumers.contains(consumer)) {
-      this.pictureConsumers.add(consumer);
-    }
-  }
-
-  /**
-   * Removes the given {@link Consumer consumer} from the {@link #pictureConsumers list}.
-   *
-   * @param consumer
-   *   {@link Consumer} that will be removed.
-   *
-   * @throws NullPointerException
-   *   If {@code consumer} is null.
-   */
-  public final void removePictureConsumer(Consumer<Optional<Uri>> consumer) {
-//    checkNotNull(consumer, "isNull(consumer)");
-    if (this.pictureConsumers.contains(consumer)) {
-      this.pictureConsumers.remove(consumer);
-    }
+  public final String pictureUri() {
+    return this.pictureUri;
   }
 
   @Memoized
@@ -174,52 +85,55 @@ public abstract class User {
     private Email email;
     private String firstName;
     private String lastName;
-    private Optional<Uri> picture = Optional.absent();
+    private String pictureUri;
 
     private Builder() {
     }
 
     public final Builder id(Integer id) {
-//      this.id = checkNotNull(id, "isNull(id)");
+      this.id = ObjectHelper.checkNotNull(id, "id");
       return this;
     }
 
     public final Builder phoneNumber(PhoneNumber phoneNumber) {
-//      this.phoneNumber = checkNotNull(phoneNumber, "isNull(phoneNumber)");
+      this.phoneNumber = ObjectHelper.checkNotNull(phoneNumber, "phoneNumber");
       return this;
     }
 
     public final Builder email(Email email) {
-//      this.email = checkNotNull(email, "isNull(email)");
+      this.email = ObjectHelper.checkNotNull(email, "email");
       return this;
     }
 
     public final Builder firstName(String firstName) {
-//      checkArgument(!isNullOrEmpty(firstName), "isNullOrEmpty(firstName)");
-      this.firstName = firstName;
+      this.firstName = ObjectHelper.checkNotNull(firstName, "firstName");
       return this;
     }
 
     public final Builder lastName(String lastName) {
-//      checkArgument(!isNullOrEmpty(lastName), "isNullOrEmpty(lastName)");
-      this.lastName = lastName;
+      this.lastName = ObjectHelper.checkNotNull(lastName, "lastName");
       return this;
     }
 
-    public final Builder picture(Optional<Uri> picture) {
-//      this.picture = checkNotNull(picture, "isNull(picture)");
+    public final Builder picture(String pictureUri) {
+      this.pictureUri = ObjectHelper.checkNotNull(pictureUri, "pictureUri");
       return this;
     }
 
     public final User build() {
       BuilderChecker.create()
-        .addPropertyNameIfMissing("id", isNull(this.id))
-        .addPropertyNameIfMissing("phoneNumber", isNull(this.phoneNumber))
-        .addPropertyNameIfMissing("email", isNull(this.email))
-//        .addPropertyNameIfMissing("firstName", isNullOrEmpty(this.firstName))
-//        .addPropertyNameIfMissing("lastName", isNullOrEmpty(this.lastName))
+        .addPropertyNameIfMissing("id", ObjectHelper.isNull(this.id))
+        .addPropertyNameIfMissing("phoneNumber", ObjectHelper.isNull(this.phoneNumber))
+        .addPropertyNameIfMissing("email", ObjectHelper.isNull(this.email))
+        .addPropertyNameIfMissing("firstName", StringHelper.isNullOrEmpty(this.firstName))
+        .addPropertyNameIfMissing("lastName", StringHelper.isNullOrEmpty(this.lastName))
         .checkNoMissingProperties();
-      throw new UnsupportedOperationException("not implemented");
+
+      final User user = new AutoValue_User(this.id, this.phoneNumber, this.email);
+      user.firstName = this.firstName;
+      user.lastName = this.lastName;
+      user.pictureUri = this.pictureUri;
+      return user;
     }
   }
 }

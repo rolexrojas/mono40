@@ -14,7 +14,7 @@ public abstract class AuthorizationToken {
 
   public static AuthorizationToken create(String value) {
     if (StringHelper.isNullOrEmpty(value)) {
-      throw new IllegalArgumentException("StringHelper.isNullOrEmpty(value)");
+      throw new IllegalArgumentException("isNullOrEmpty(value)");
     }
     return new AutoValue_AuthorizationToken(value);
   }

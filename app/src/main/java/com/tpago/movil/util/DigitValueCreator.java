@@ -1,15 +1,11 @@
 package com.tpago.movil.util;
 
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-import static com.tpago.movil.util.ObjectHelper.isNull;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Helper for the creation of objects composed by a {@link String string} of {@link Digit digits}.
@@ -21,7 +17,7 @@ import static com.tpago.movil.util.ObjectHelper.isNull;
  */
 public final class DigitValueCreator<T> {
 
-  static <T> Builder<T> builder() {
+  public static <T> Builder<T> builder() {
     return new Builder<>();
   }
 
@@ -39,7 +35,8 @@ public final class DigitValueCreator<T> {
   /**
    * {@link Function} that formats the current {@link String string} of {@link Digit digits}.
    */
-  private final Optional<Function<String, String>> formatFunction;
+  @Nullable
+  private final Function<String, String> formatFunction;
 
   /**
    * {@link Function} that transforms the current {@link String string} of {@link Digit digits} to
@@ -81,7 +78,7 @@ public final class DigitValueCreator<T> {
    *   {@link Digit} that will be added.
    */
   public final void addDigit(@Digit int digit) {
-    if (this.additionPredicate.apply(this.digitList.size())) {
+    if (this.additionPredicate.test(this.digitList.size())) {
       this.digitList.add(digit);
       this.updateValue();
     }
@@ -103,8 +100,8 @@ public final class DigitValueCreator<T> {
    *
    * @return True if it can be created with the added {@link #digitList digits}, false otherwise.
    */
-  public final boolean canCreateValue() {
-    return this.formatPredicate.apply(this.digitString);
+  public final boolean canCreate() {
+    return this.formatPredicate.test(this.digitString);
   }
 
   /**
@@ -115,18 +112,19 @@ public final class DigitValueCreator<T> {
    * @throws IllegalStateException
    *   If a value with the added {@link #digitList digits} cannot be created.
    */
-  public final T createValue() {
-    checkState(this.canCreateValue(), "!canCreateValue()");
+  public final T create() {
+    if (!this.canCreate()) {
+      throw new IllegalStateException("!canCreateValue()");
+    }
     return this.mapperFunction.apply(this.digitString);
   }
 
   @Override
   public String toString() {
-    if (this.formatFunction.isPresent()) {
-      return this.formatFunction.get()
-        .apply(this.digitString);
-    } else {
+    if (ObjectHelper.isNull(this.formatFunction)) {
       return this.digitString;
+    } else {
+      return this.formatFunction.apply(this.digitString);
     }
   }
 
@@ -134,7 +132,7 @@ public final class DigitValueCreator<T> {
 
     private Predicate<Integer> additionPredicate;
     private Predicate<String> formatPredicate;
-    private Optional<Function<String, String>> formatFunction;
+    private Function<String, String> formatFunction;
     private Function<String, T> mapperFunction;
 
     private List<Integer> digitList;
@@ -146,22 +144,22 @@ public final class DigitValueCreator<T> {
     }
 
     public final Builder<T> additionPredicate(Predicate<Integer> additionPredicate) {
-      this.additionPredicate = checkNotNull(additionPredicate, "additionPredicate == null");
+      this.additionPredicate = ObjectHelper.checkNotNull(additionPredicate, "additionPredicate");
       return this;
     }
 
     public final Builder<T> formatPredicate(Predicate<String> formatPredicate) {
-      this.formatPredicate = checkNotNull(formatPredicate, "formatPredicate == null");
+      this.formatPredicate = ObjectHelper.checkNotNull(formatPredicate, "formatPredicate");
       return this;
     }
 
     public final Builder<T> formatFunction(Function<String, String> formatFunction) {
-      this.formatFunction = Optional.of(formatFunction);
+      this.formatFunction = ObjectHelper.checkNotNull(formatFunction, "formatFunction");
       return this;
     }
 
     public final Builder<T> mapperFunction(Function<String, T> mapperFunction) {
-      this.mapperFunction = checkNotNull(mapperFunction, "mapperFunction == null");
+      this.mapperFunction = ObjectHelper.checkNotNull(mapperFunction, "mapperFunction == null");
       return this;
     }
 
@@ -173,11 +171,11 @@ public final class DigitValueCreator<T> {
 
     public final DigitValueCreator<T> build() {
       BuilderChecker.create()
-        .addPropertyNameIfMissing("additionPredicate", isNull(this.additionPredicate))
-        .addPropertyNameIfMissing("formatPredicate", isNull(this.formatFunction))
-        .addPropertyNameIfMissing("formatFunction", isNull(this.formatFunction))
-        .addPropertyNameIfMissing("mapperFunction", isNull(this.mapperFunction))
+        .addPropertyNameIfMissing("additionPredicate", ObjectHelper.isNull(this.additionPredicate))
+        .addPropertyNameIfMissing("formatPredicate", ObjectHelper.isNull(this.formatFunction))
+        .addPropertyNameIfMissing("mapperFunction", ObjectHelper.isNull(this.mapperFunction))
         .checkNoMissingProperties();
+
       return new DigitValueCreator<>(this);
     }
   }

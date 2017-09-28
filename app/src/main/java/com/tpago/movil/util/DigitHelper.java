@@ -1,13 +1,8 @@
 package com.tpago.movil.util;
 
-import com.google.common.base.CharMatcher;
-import com.google.common.base.Joiner;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Strings.nullToEmpty;
 import static java.lang.Character.forDigit;
 import static java.lang.String.format;
 
@@ -17,9 +12,6 @@ import static java.lang.String.format;
  * @author hecvasro
  */
 public final class DigitHelper {
-
-  private static final char CHAR_ZERO = toChar(Digit.ZERO);
-  private static final char CHAR_NINE = toChar(Digit.NINE);
 
   /**
    * Transforms the given {@link Character charater} into its {@link Digit digit} representation.
@@ -67,8 +59,7 @@ public final class DigitHelper {
    *   If {@code digitList} is null.
    */
   public static String toDigitString(List<Integer> digitList) {
-    return Joiner.on("")
-      .join(checkNotNull(digitList, "isNull(digitList)"));
+    return StringHelper.join("", ObjectHelper.checkNotNull(digitList, "digitList"));
   }
 
   /**
@@ -88,8 +79,8 @@ public final class DigitHelper {
    * Character characters}.
    */
   public static String removeNonDigits(String s) {
-    return CharMatcher.inRange(CHAR_ZERO, CHAR_NINE)
-      .retainFrom(nullToEmpty(s));
+    return StringHelper.emptyIfNull(s)
+      .replaceAll("\\D", "");
   }
 
   /**

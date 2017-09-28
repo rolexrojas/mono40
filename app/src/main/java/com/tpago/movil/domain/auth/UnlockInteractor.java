@@ -8,7 +8,7 @@ import io.reactivex.Single;
 /**
  * @author hecvasro
  */
-public interface Unlocker {
+public interface UnlockInteractor {
 
   Single<Result<Placeholder>> unlock();
 }

@@ -46,6 +46,9 @@ public abstract class Email implements Comparable<Email>, Parcelable {
     return new AutoValue_Email(s);
   }
 
+  Email() {
+  }
+
   public abstract String value();
 
   @Memoized

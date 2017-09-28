@@ -3,18 +3,16 @@ package com.tpago.movil.domain.auth;
 import com.tpago.movil.util.Placeholder;
 import com.tpago.movil.util.Result;
 
-import java.security.PublicKey;
-
 import io.reactivex.Single;
 
 /**
  * @author hecvasro
  */
-public interface AltUnlockMethodService {
+public interface AltAuthMethodService {
 
   Single<Result<Placeholder>> clearPublicKey();
 
-  Single<Result<Placeholder>> setPublicKey(PublicKey publicKey);
+  Single<Result<Placeholder>> setPublicKey(String publicKey);
 
-  Single<Result<Placeholder>> verifySignature(byte[] signature);
+  Single<Result<Placeholder>> verifySignature(String signature);
 }

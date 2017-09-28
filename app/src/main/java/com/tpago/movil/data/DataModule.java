@@ -2,7 +2,8 @@ package com.tpago.movil.data;
 
 import android.content.Context;
 
-import com.tpago.movil.data.bus.BusModule;
+import com.tpago.movil.data.api.DataApiModule;
+import com.tpago.movil.data.bus.DataBusModule;
 
 import javax.inject.Singleton;
 
@@ -17,7 +18,8 @@ import dagger.Provides;
 @Module(
   includes = {
     DataFlavorModule.class,
-    BusModule.class
+    DataApiModule.class,
+    DataBusModule.class
   }
 )
 public final class DataModule {

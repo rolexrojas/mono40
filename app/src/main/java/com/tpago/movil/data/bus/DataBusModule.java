@@ -13,7 +13,7 @@ import dagger.Provides;
  * @author Hector Vasquez
  */
 @Module
-public final class BusModule {
+public final class DataBusModule {
 
   @Provides
   @Singleton

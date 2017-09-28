@@ -1,17 +1,23 @@
 package com.tpago.movil.domain.auth;
 
 import com.tpago.movil.domain.Email;
+import com.tpago.movil.domain.Password;
 import com.tpago.movil.domain.PhoneNumber;
 import com.tpago.movil.domain.user.User;
 import com.tpago.movil.util.Result;
 
 import io.reactivex.Single;
 
+/**
+ * @author hecvasro
+ */
 public interface AuthService {
 
   Single<Result<User>> signIn(
     PhoneNumber phoneNumber,
-    Email username,
+    Email email,
+    Password password,
+    boolean shouldDeactivatePreviousDevice,
     String deviceId
   );
 }

@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.tpago.movil.util.DigitHelper;
+import com.tpago.movil.util.DigitValueCreator;
+import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
 
 import java.lang.annotation.Retention;
@@ -81,9 +83,9 @@ public abstract class PhoneNumber implements Comparable<PhoneNumber>, Parcelable
   }
 
   /**
-   * Creates a phone number from the given {@link String string}.
+   * Creates an instance from the given {@link String string}.
    *
-   * @return A phone number created from the given {@link String string}.
+   * @return An instance created from the given {@link String string}.
    *
    * @throws IllegalArgumentException
    *   If {@code s} is not a {@link #isValid(String) valid} phone number.
@@ -94,6 +96,30 @@ public abstract class PhoneNumber implements Comparable<PhoneNumber>, Parcelable
       throw new IllegalArgumentException(String.format("!isValid(%1$s, false)", sanitizedString));
     }
     return new AutoValue_PhoneNumber(sanitizedString);
+  }
+
+  private static DigitValueCreator<PhoneNumber> creator(String value) {
+    return DigitValueCreator.<PhoneNumber>builder()
+      .additionPredicate((i) -> i < 10)
+      .formatPredicate((s) -> isValid(s, false))
+      .formatFunction(PhoneNumber::format)
+      .mapperFunction(PhoneNumber::create)
+      .value(value)
+      .build();
+  }
+
+  public static DigitValueCreator<PhoneNumber> creator(PhoneNumber phoneNumber) {
+    return creator(
+      ObjectHelper.checkNotNull(phoneNumber, "phoneNumber")
+        .value()
+    );
+  }
+
+  public static DigitValueCreator<PhoneNumber> creator() {
+    return creator("");
+  }
+
+  PhoneNumber() {
   }
 
   public abstract String value();

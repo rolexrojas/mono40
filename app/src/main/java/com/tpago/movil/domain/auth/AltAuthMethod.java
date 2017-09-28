@@ -6,16 +6,16 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Alternative unlock method enumeration
+ * Alternative authentication method enumeration
  *
  * @author hecvasro
  */
 @IntDef({
-  AltUnlockMethod.CODE,
-  AltUnlockMethod.FINGERPRINT
+  AltAuthMethod.CODE,
+  AltAuthMethod.FINGERPRINT
 })
 @Retention(RetentionPolicy.SOURCE)
-public @interface AltUnlockMethod {
+public @interface AltAuthMethod {
 
   int CODE = 0;
   int FINGERPRINT = 1;
