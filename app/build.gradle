@@ -40,6 +40,19 @@ android {
   flavorDimensions 'deviceType', 'environment'
 
   productFlavors {
+    mock {
+      dimension 'environment'
+
+      def flavorName = 'mock'
+
+      applicationIdSuffix ".${flavorName}"
+
+      resValue 'string', 'app_name', "${appName}-${flavorName}"
+
+      buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'false'
+      buildConfigField 'String', 'API_URL', 'null'
+    }
+
     development {
       dimension 'environment'
 
@@ -50,7 +63,7 @@ android {
       resValue 'string', 'app_name', "${appName}-${flavorName}"
 
       buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'false'
-      buildConfigField 'String', 'API_URL', '""'
+      buildConfigField 'String', 'API_URL', '"http://172.19.1.103:8081/api/neo/"'
     }
 
     staging {
@@ -63,7 +76,7 @@ android {
       resValue 'string', 'app_name', "${appName}-${flavorName}"
 
       buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'true'
-      buildConfigField 'String', 'API_URL', '""'
+      buildConfigField 'String', 'API_URL', '"https://tpagonet-dev.gcs-systems.com/api/neo/"'
     }
 
     production {
@@ -72,7 +85,7 @@ android {
       resValue 'string', 'app_name', appName
 
       buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'true'
-      buildConfigField 'String', 'API_URL', '""'
+      buildConfigField 'String', 'API_URL', '"https://tpagonet.gcs-systems.com/api/neo/"'
     }
 
     emulatedDevice {
