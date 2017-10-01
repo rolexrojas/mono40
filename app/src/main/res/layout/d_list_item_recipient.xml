@@ -67,7 +67,7 @@
       android:textSize="16sp"/>
     <TextView
       android:id="@+id/recipient.extra"
-      fontPath="@string/font_gothamRounded_book"
+      fontPath="@string/gothamRoundedBookFont"
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:layout_weight="1"

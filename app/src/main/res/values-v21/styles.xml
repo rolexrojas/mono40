@@ -9,7 +9,14 @@
     <!-- TODO: Add letterSpacing of 0.8sp -->
   </style>
 
+  <!-- Toolbar styles -->
+  <style name="ToolbarText.Subtitle" parent="ToolbarText.Subtitle">
+    <item name="android:letterSpacing">0.05</item>
+  </style>
+
   <!-- TODO: Remove every style from this point downwards -->
+
+
   <!-- [START] App styles -->
   <style name="D.Widget.Button.Dark.Gradient" parent="D.Base.Widget.Button.Dark.Gradient">
     <item name="android:background">@drawable/d_widget_button_dark_gradient</item>
@@ -60,12 +67,6 @@
       name="Dep.App.Widget.CommercePaymentOptionReady"
       parent="Dep.Base.Widget.CommercePaymentOptionReady">
       <item name="android:letterSpacing">@dimen/commerce_payment_option_ready_text_letter_spacing</item>
-    </style>
-
-    <style
-      name="Dep.App.Text.Widget.Toolbar.Subtitle"
-      parent="Dep.Base.Text.Widget.Toolbar.Subtitle">
-      <item name="android:letterSpacing">@dimen/text.letter_spacing.small</item>
     </style>
 
     <style

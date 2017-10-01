@@ -6,6 +6,8 @@ import android.support.multidex.MultiDexApplication;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.BuildConfig;
+import com.tpago.movil.app.*;
+import com.tpago.movil.app.AppComponent;
 import com.tpago.movil.d.DepAppModule;
 
 import javax.inject.Inject;
@@ -28,6 +30,8 @@ public abstract class App extends MultiDexApplication {
   private com.tpago.movil.app.AppComponent component;
 
   private boolean visible = false;
+
+  @Inject ComponentBuilderSupplier componentBuilderSupplier;
 
   @Inject
   OkHttpClient httpClient;
@@ -56,8 +60,12 @@ public abstract class App extends MultiDexApplication {
     Picasso.setSingletonInstance(picasso);
   }
 
-  public final AppComponent getComponent() {
+  public final AppComponent component() {
     return component;
+  }
+
+  public final ComponentBuilderSupplier componentBuilderSupplier() {
+    return this.componentBuilderSupplier;
   }
 
   public final boolean isVisible() {

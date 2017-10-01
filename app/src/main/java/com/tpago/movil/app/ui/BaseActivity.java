@@ -29,8 +29,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
   private Unbinder unbinder;
 
-  @Inject protected EventBus eventBus;
   @Inject protected StringMapper stringMapper;
+  @Inject protected EventBus eventBus;
+  @Inject @BackButton protected NavButtonClickHandler backButtonClickHandler;
 
   /**
    * Layout resource identifier of the activity
@@ -53,7 +54,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
 
     // Sets the layout of the activity.
-    setContentView(this.layoutResId());
+    this.setContentView(this.layoutResId());
 
     // Binds all annotated resources, views and methods.
     this.unbinder = ButterKnife.bind(this);
@@ -65,6 +66,13 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     // Registers the activity to the event bus.
     this.eventBus.register(this);
+  }
+
+  @Override
+  public void onBackPressed() {
+    if (this.backButtonClickHandler.onNavButtonClicked()) {
+      super.onBackPressed();
+    }
   }
 
   @Override

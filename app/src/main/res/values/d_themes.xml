@@ -10,7 +10,7 @@
   <style
     name="Dep.ToolbarTheme"
     parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-    <item name="fontPath">@string/font_gothamRounded_book</item>
+    <item name="fontPath">@string/gothamRoundedBookFont</item>
     <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
   </style>
 </resources>

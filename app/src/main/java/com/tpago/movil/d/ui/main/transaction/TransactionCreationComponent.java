@@ -1,5 +1,6 @@
 package com.tpago.movil.d.ui.main.transaction;
 
+import com.tpago.movil.app.ui.BaseActivityModule;
 import com.tpago.movil.dep.ActivityModule;
 import com.tpago.movil.app.ui.ActivityScope;
 import com.tpago.movil.dep.AppComponent;
@@ -33,6 +34,7 @@ import dagger.Component;
 @Component(
   dependencies = AppComponent.class,
   modules = {
+    BaseActivityModule.class,
     ActivityModule.class,
     TransactionCreationModule.class
   })

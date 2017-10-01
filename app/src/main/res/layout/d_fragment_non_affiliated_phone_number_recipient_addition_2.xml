@@ -16,7 +16,7 @@
 
   <TextView
     android:id="@+id/text_view"
-    fontPath="@string/font_gothamRounded_book"
+    fontPath="@string/gothamRoundedBookFont"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginEnd="24dp"

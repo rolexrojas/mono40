@@ -50,7 +50,7 @@ public final class InitActivity extends BaseActivity implements InitContainer {
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // Initializes the dependency injector.
-    component = App.get(this).getComponent()
+    component = App.get(this).component()
       .plus(new ActivityModule(this), new InitModule());
     // Injects all the annotated dependencies.
     component.inject(this);

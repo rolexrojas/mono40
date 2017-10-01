@@ -5,6 +5,7 @@ import com.tpago.movil.dep.UserStore;
 import com.tpago.movil.app.ui.FragmentScope;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.domain.auth.alt.AltAuthManager;
 import com.tpago.movil.util.ObjectHelper;
 
 import dagger.Module;
@@ -29,17 +30,19 @@ public final class SettingsModule {
   @Provides
   @FragmentScope
   SettingsPresenter presenter(
+    StringMapper stringMapper,
+    AltAuthManager altAuthManager,
     UserStore userStore,
     ProductManager productManager,
-    ConfigManager configManager,
-    StringMapper stringMapper
+    ConfigManager configManager
   ) {
     return SettingsPresenter.builder()
+      .stringMapper(stringMapper)
+      .altAuthManager(altAuthManager)
+      .presentation(this.presentation)
       .userStore(userStore)
       .productManager(productManager)
       .configManager(configManager)
-      .stringMapper(stringMapper)
-      .presentation(this.presentation)
       .build();
   }
 }

@@ -95,7 +95,7 @@ public final class OwnTransactionCreationActivity extends AppCompatActivity impl
     unbinder = ButterKnife.bind(this);
 
     App.get(this)
-      .getComponent()
+      .component()
       .inject(this);
 
     setSupportActionBar(this.toolbar);

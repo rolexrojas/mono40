@@ -110,7 +110,7 @@ public class TransactionCreationActivity
       final Recipient recipient = bundle.getParcelable(KEY_RECIPIENT);
       // Injects all the annotated dependencies.
       component = DaggerTransactionCreationComponent.builder()
-        .appComponent(((App) getApplication()).getComponent())
+        .appComponent(((App) getApplication()).component())
         .transactionCreationModule(new TransactionCreationModule(transactionCategory, recipient))
         .build();
       component.inject(this);

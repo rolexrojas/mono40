@@ -2,6 +2,7 @@ package com.tpago.movil.d.ui.main.recipient.addition;
 
 import android.content.Context;
 
+import com.tpago.movil.app.ui.BaseActivityModule;
 import com.tpago.movil.dep.ActivityModule;
 import com.tpago.movil.app.ui.ActivityScope;
 import com.tpago.movil.dep.AppComponent;
@@ -20,6 +21,7 @@ import dagger.Component;
 @Component(
   dependencies = AppComponent.class,
   modules = {
+    BaseActivityModule.class,
     ActivityModule.class,
     DepActivityModule.class,
     AddRecipientModule.class

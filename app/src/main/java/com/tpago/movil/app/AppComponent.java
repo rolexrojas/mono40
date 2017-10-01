@@ -9,6 +9,8 @@ import dagger.Component;
 @Singleton
 @Component(
   modules = {
+    AppComponentBuilderModule.class,
+    AppModule.class,
     DataModule.class,
     com.tpago.movil.dep.AppModule.class
   }

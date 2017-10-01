@@ -24,6 +24,7 @@ import com.tpago.movil.dep.init.InitModule;
 import com.tpago.movil.dep.main.MainComponent;
 import com.tpago.movil.dep.main.MainModule;
 import com.tpago.movil.dep.net.NetworkService;
+import com.tpago.movil.domain.auth.alt.AltAuthManager;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -32,6 +33,8 @@ import org.greenrobot.eventbus.EventBus;
  */
 @Deprecated
 public interface AppComponent {
+
+  AltAuthManager altAuthManager();
 
   @Deprecated
   BalanceManager provideBalanceManager();

@@ -10,6 +10,7 @@ import com.tpago.movil.util.StringHelper;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -69,14 +70,8 @@ public final class AltAuthManager {
       .doOnComplete(() -> this.store.set(this.methodKey, method.name()));
   }
 
-  /**
-   * @throws IllegalStateException
-   *   If it isn't {@link #isEnabled() enabled}.
-   */
   public final AltAuthMethod getEnabledMethod() {
-    this.checkEnabled();
-
-    return AltAuthMethod.valueOf(this.store.get(this.methodKey));
+    return this.store.isSet(this.methodKey) ? AltAuthMethod.valueOf(this.store.get(this.methodKey)) : null;
   }
 
   private byte[] createSignature(PrivateKey privateKey, AltAuthSignData data) throws Exception {
@@ -115,13 +110,15 @@ public final class AltAuthManager {
 
   public static final class Builder {
 
+    private final List<Action> onDisabledActionList;
+
     private KeyValueStore store;
     private AltAuthService service;
     private String methodKey;
     private String signAlgName;
-    private List<Action> onDisabledActionList;
 
     private Builder() {
+      this.onDisabledActionList = new ArrayList<>();
     }
 
     public final Builder store(KeyValueStore store) {

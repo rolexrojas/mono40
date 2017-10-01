@@ -11,7 +11,7 @@ interface SettingsPresentation extends Presentation {
 
   void setPrimaryPaymentMethodSettingsOptionSecondaryText(String text);
 
-  void setUnlockMethodSettingsOptionSecondaryText(String text);
+  void setAltAuthMethodMethodSettingsOptionSecondaryText(String text);
 
   void setTimeoutSettingsOptionSecondaryText(String text);
 

@@ -143,7 +143,7 @@ public class DepMainActivity
     unbinder = ButterKnife.bind(this);
     // Injects all the annotated dependencies.
     component = DaggerDepMainComponent.builder()
-      .appComponent(((App) getApplication()).getComponent())
+      .appComponent(((App) getApplication()).component())
       .mainModule(new MainModule(((Session) getIntent().getParcelableExtra(KEY_SESSION)), this))
       .depActivityModule(new DepActivityModule(this))
       .fragmentActivityModule(

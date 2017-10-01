@@ -94,7 +94,7 @@
           android:gravity="center_vertical|end"/>
         <RadioButton
           android:id="@+id/radio_button_pay_period"
-          fontPath="@string/font_gothamRounded_book"
+          fontPath="@string/gothamRoundedBookFont"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_alignParentStart="true"
@@ -122,7 +122,7 @@
           android:gravity="center_vertical|end"/>
         <RadioButton
           android:id="@+id/radio_button_pay_total"
-          fontPath="@string/font_gothamRounded_book"
+          fontPath="@string/gothamRoundedBookFont"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_alignParentStart="true"

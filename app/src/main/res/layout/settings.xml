@@ -40,7 +40,7 @@
       android:text="@string/security"/>
 
     <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
-      android:id="@+id/unlockMethodSettingsOption"
+      android:id="@+id/altAuthMethodSettingsOption"
       style="@style/SettingsOption"
       app:primaryText="@string/unlockMethodSettingsOption"/>
 

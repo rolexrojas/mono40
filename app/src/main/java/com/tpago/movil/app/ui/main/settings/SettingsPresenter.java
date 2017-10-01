@@ -1,5 +1,6 @@
 package com.tpago.movil.app.ui.main.settings;
 
+import com.tpago.movil.app.ui.main.settings.auth.alt.UiAltAuthMethodHelper;
 import com.tpago.movil.d.domain.Banks;
 import com.tpago.movil.dep.ConfigManager;
 import com.tpago.movil.dep.User;
@@ -9,6 +10,7 @@ import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.ProductType;
 import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.domain.auth.alt.AltAuthManager;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
@@ -24,23 +26,33 @@ final class SettingsPresenter extends Presenter<SettingsPresentation> {
     return new Builder();
   }
 
+  private final StringMapper stringMapper;
+  private final AltAuthManager altAuthManager;
+
   private final UserStore userStore;
   private final ProductManager productManager;
   private final ConfigManager configManager;
-  private final StringMapper stringMapper;
 
   private SettingsPresenter(Builder builder) {
     super(builder.presentation);
 
+    this.stringMapper = builder.stringMapper;
+    this.altAuthManager = builder.altAuthManager;
+
     this.userStore = builder.userStore;
     this.productManager = builder.productManager;
     this.configManager = builder.configManager;
-    this.stringMapper = builder.stringMapper;
   }
 
   @Override
   public void onPresentationResumed() {
     super.onPresentationResumed();
+
+    this.presentation.setAltAuthMethodMethodSettingsOptionSecondaryText(
+      this.stringMapper.apply(
+        UiAltAuthMethodHelper.findStringResId(this.altAuthManager.getEnabledMethod())
+      )
+    );
 
     final User user = this.userStore.get();
     this.presentation.setProfileSettingsOptionSecondaryText(user.name());
@@ -59,7 +71,7 @@ final class SettingsPresenter extends Presenter<SettingsPresentation> {
       );
     }
 
-    this.presentation.setUnlockMethodSettingsOptionSecondaryText(null);
+    this.presentation.setAltAuthMethodMethodSettingsOptionSecondaryText(null);
 
     this.presentation.setTimeoutSettingsOptionSecondaryText(null);
 
@@ -68,13 +80,30 @@ final class SettingsPresenter extends Presenter<SettingsPresentation> {
 
   static final class Builder {
 
+    private StringMapper stringMapper;
+    private AltAuthManager altAuthManager;
+    private SettingsPresentation presentation;
+
     private UserStore userStore;
     private ProductManager productManager;
     private ConfigManager configManager;
-    private StringMapper stringMapper;
-    private SettingsPresentation presentation;
 
     private Builder() {
+    }
+
+    final Builder stringMapper(StringMapper stringMapper) {
+      this.stringMapper = ObjectHelper.checkNotNull(stringMapper, "stringMapper");
+      return this;
+    }
+
+    final Builder altAuthManager(AltAuthManager altAuthManager) {
+      this.altAuthManager = ObjectHelper.checkNotNull(altAuthManager, "altAuthManager");
+      return this;
+    }
+
+    final Builder presentation(SettingsPresentation presentation) {
+      this.presentation = ObjectHelper.checkNotNull(presentation, "presentation");
+      return this;
     }
 
     final Builder userStore(UserStore userStore) {
@@ -92,23 +121,14 @@ final class SettingsPresenter extends Presenter<SettingsPresentation> {
       return this;
     }
 
-    final Builder stringMapper(StringMapper stringMapper) {
-      this.stringMapper = ObjectHelper.checkNotNull(stringMapper, "stringMapper");
-      return this;
-    }
-
-    final Builder presentation(SettingsPresentation presentation) {
-      this.presentation = ObjectHelper.checkNotNull(presentation, "presentation");
-      return this;
-    }
-
     final SettingsPresenter build() {
       BuilderChecker.create()
+        .addPropertyNameIfMissing("stringMapper", ObjectHelper.isNull(this.stringMapper))
+        .addPropertyNameIfMissing("altAuthManager", ObjectHelper.isNull(this.altAuthManager))
+        .addPropertyNameIfMissing("presentation", ObjectHelper.isNull(this.presentation))
         .addPropertyNameIfMissing("userStore", ObjectHelper.isNull(this.userStore))
         .addPropertyNameIfMissing("productManager", ObjectHelper.isNull(this.productManager))
         .addPropertyNameIfMissing("configManager", ObjectHelper.isNull(this.configManager))
-        .addPropertyNameIfMissing("stringMapper", ObjectHelper.isNull(this.stringMapper))
-        .addPropertyNameIfMissing("presentation", ObjectHelper.isNull(this.presentation))
         .checkNoMissingProperties();
 
       return new SettingsPresenter(this);

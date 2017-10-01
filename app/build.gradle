@@ -99,6 +99,31 @@ android {
     }
   }
 
+  sourceSets {
+    def commonDirName = 'src/common/java'
+
+    development {
+      java.srcDirs = [
+        commonDirName,
+        'src/development/java'
+      ]
+    }
+
+    staging {
+      java.srcDirs = [
+        commonDirName,
+        'src/staging/java'
+      ]
+    }
+
+    production {
+      java.srcDirs = [
+        commonDirName,
+        'src/production/java'
+      ]
+    }
+  }
+
   signingConfigs {
     debug {
       storeFile rootProject.file('keystores/debug.jks')

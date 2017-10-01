@@ -113,7 +113,7 @@ public class AddRecipientActivity extends
       .getString(KEY_CATEGORY);
     final Category category = Category.valueOf(categoryName);
     component = DaggerAddRecipientComponent.builder()
-      .appComponent(((App) getApplication()).getComponent())
+      .appComponent(((App) getApplication()).component())
       .depActivityModule(new DepActivityModule(this))
       .addRecipientModule(new AddRecipientModule(category))
       .build();

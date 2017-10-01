@@ -99,7 +99,7 @@ public class RecentTransactionsActivity
     recyclerView.addItemDecoration(divider);
     // Injects all the dependencies.
     final RecentTransactionsComponent component = DaggerRecentTransactionsComponent.builder()
-      .appComponent(((App) getApplication()).getComponent())
+      .appComponent(((App) getApplication()).component())
       .build();
     component.inject(this);
     // Attaches the screen to the presenter.

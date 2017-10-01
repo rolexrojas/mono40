@@ -142,7 +142,7 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    App.get(getContext()).getComponent().inject(this);
+    App.get(getContext()).component().inject(this);
   }
 
   @Nullable

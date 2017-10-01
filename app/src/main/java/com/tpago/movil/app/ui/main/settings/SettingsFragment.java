@@ -7,9 +7,11 @@ import android.support.annotation.StringRes;
 
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.ActivityQualifier;
+import com.tpago.movil.app.ui.FragmentActivity;
 import com.tpago.movil.app.ui.FragmentReplacer;
 import com.tpago.movil.app.ui.main.BaseMainFragment;
 import com.tpago.movil.app.ui.main.profile.ProfileFragment;
+import com.tpago.movil.app.ui.main.settings.auth.alt.AltAuthMethodFragment;
 import com.tpago.movil.d.ui.main.DepMainActivity;
 
 import javax.inject.Inject;
@@ -26,12 +28,14 @@ public final class SettingsFragment extends BaseMainFragment implements Settings
     return new SettingsFragment();
   }
 
-  @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
+  @Inject
+  @ActivityQualifier
+  FragmentReplacer fragmentReplacer;
   @Inject SettingsPresenter presenter;
 
   @BindView(R.id.profileSettingsOption) MultiLineSettingsOption profileSettingsOption;
   @BindView(R.id.primaryPaymentMethodSettingsOption) MultiLineSettingsOption primaryPaymentMethodSettingsOption;
-  @BindView(R.id.unlockMethodSettingsOption) MultiLineSettingsOption unlockMethodSettingsOption;
+  @BindView(R.id.altAuthMethodSettingsOption) MultiLineSettingsOption altAuthMethodSettingsOption;
   @BindView(R.id.timeoutSettingsOption) MultiLineSettingsOption timeoutSettingsOption;
   @BindView(R.id.lockOnExitSettingsOption) ToggleableSettingsOption lockOnExitSettingsOption;
 
@@ -60,9 +64,14 @@ public final class SettingsFragment extends BaseMainFragment implements Settings
     // TODO
   }
 
-  @OnClick(R.id.unlockMethodSettingsOption)
-  final void onUnlockMethodSettingsOptionClicked() {
-    // TODO
+  @OnClick(R.id.altAuthMethodSettingsOption)
+  final void onAltAuthMethodSettingsOptionClicked() {
+    this.startActivity(
+      FragmentActivity.getLaunchIntent(
+        this.getContext(),
+        AltAuthMethodFragment.creator()
+      )
+    );
   }
 
   @OnClick(R.id.timeoutSettingsOption)
@@ -116,8 +125,8 @@ public final class SettingsFragment extends BaseMainFragment implements Settings
   }
 
   @Override
-  public void setUnlockMethodSettingsOptionSecondaryText(String text) {
-    this.unlockMethodSettingsOption.secondaryText(text);
+  public void setAltAuthMethodMethodSettingsOptionSecondaryText(String text) {
+    this.altAuthMethodSettingsOption.secondaryText(text);
   }
 
   @Override

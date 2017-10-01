@@ -263,7 +263,7 @@ public final class DisbursementActivity
     super.onCreate(savedInstanceState);
 
     App.get(this)
-      .getComponent()
+      .component()
       .inject(this);
 
     final Bundle bundle;
