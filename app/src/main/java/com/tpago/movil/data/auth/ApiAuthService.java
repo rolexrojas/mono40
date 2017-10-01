@@ -1,5 +1,7 @@
-package com.tpago.movil.data.api;
+package com.tpago.movil.data.auth;
 
+import com.tpago.movil.data.api.Api;
+import com.tpago.movil.data.api.ApiSignInBody;
 import com.tpago.movil.domain.Email;
 import com.tpago.movil.domain.Password;
 import com.tpago.movil.domain.PhoneNumber;
@@ -30,13 +32,13 @@ final class ApiAuthService implements AuthService {
     PhoneNumber phoneNumber,
     Email email,
     Password password,
-    boolean shouldDeactivatePreviousDevice,
-    String deviceId
+    String deviceId,
+    boolean shouldDeactivatePreviousDevice
   ) {
-    final SignInBody signInBody = SignInBody.builder()
-      .phoneNumber(phoneNumber.value())
-      .email(email.value())
-      .password(password.value())
+    final ApiSignInBody apiSignInBody = ApiSignInBody.builder()
+      .phoneNumber(phoneNumber)
+      .email(email)
+      .password(password)
       .deviceId(deviceId)
       .build();
 

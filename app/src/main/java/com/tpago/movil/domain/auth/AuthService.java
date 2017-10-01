@@ -9,6 +9,8 @@ import com.tpago.movil.util.Result;
 import io.reactivex.Single;
 
 /**
+ * Authorization service
+ *
  * @author hecvasro
  */
 public interface AuthService {
@@ -17,7 +19,7 @@ public interface AuthService {
     PhoneNumber phoneNumber,
     Email email,
     Password password,
-    boolean shouldDeactivatePreviousDevice,
-    String deviceId
+    String deviceId,
+    boolean shouldDeactivatePreviousDevice
   );
 }

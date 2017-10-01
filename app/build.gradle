@@ -35,6 +35,8 @@ android {
         ]
       }
     }
+
+    buildConfigField 'String', 'AUTH_METHOD_CODE_SUBJECT', "\"CN=${appName},OU=IT,O=GCS Systems,C=DO\""
   }
 
   flavorDimensions 'deviceType', 'environment'

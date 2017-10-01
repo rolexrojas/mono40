@@ -1,5 +1,7 @@
 package com.tpago.movil.util;
 
+import android.support.annotation.Nullable;
+
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 
@@ -20,6 +22,7 @@ public abstract class FailureData {
 
   public abstract int code();
 
+  @Nullable
   public abstract String description();
 
   @Memoized
@@ -38,7 +41,7 @@ public abstract class FailureData {
 
     public abstract Builder code(int code);
 
-    public abstract Builder description(String description);
+    public abstract Builder description(@Nullable String description);
 
     public abstract FailureData build();
   }

@@ -2,8 +2,6 @@ package com.tpago.movil.data.api;
 
 import com.google.gson.Gson;
 import com.tpago.movil.BuildConfig;
-import com.tpago.movil.domain.auth.AltAuthMethodService;
-import com.tpago.movil.domain.auth.AuthService;
 
 import javax.inject.Singleton;
 
@@ -31,17 +29,5 @@ public class DataApiModule {
       .build();
 
     return retrofit.create(Api.class);
-  }
-
-  @Provides
-  @Singleton
-  AuthService authService(Api api) {
-    return ApiAuthService.create(api);
-  }
-
-  @Provides
-  @Singleton
-  AltAuthMethodService altAuthMethodService(Api api) {
-    throw new UnsupportedOperationException("not implemented");
   }
 }

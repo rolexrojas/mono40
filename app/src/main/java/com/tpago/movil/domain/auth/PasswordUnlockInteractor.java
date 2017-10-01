@@ -36,8 +36,8 @@ public final class PasswordUnlockInteractor implements UnlockInteractor {
       this.user.phoneNumber(),
       this.user.email(),
       this.password,
-      false,
-      this.deviceId
+      this.deviceId,
+      false
     )
       .map(PlaceholderResultMapperFunction.create());
   }

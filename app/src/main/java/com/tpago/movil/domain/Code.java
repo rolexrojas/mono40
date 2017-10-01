@@ -2,11 +2,12 @@ package com.tpago.movil.domain;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
+import com.tpago.movil.util.DigitHelper;
 import com.tpago.movil.util.DigitValueCreator;
 import com.tpago.movil.util.ObjectHelper;
 
 /**
- * Code representation
+ * FailureCode representation
  *
  * @author hecvasro
  */
@@ -14,6 +15,14 @@ import com.tpago.movil.util.ObjectHelper;
 public abstract class Code {
 
   private static final int LENGTH = 4;
+
+  public static Code create(String s) {
+    final String ss = DigitHelper.removeNonDigits(s);
+    if (s.length() != LENGTH) {
+      throw new IllegalArgumentException(String.format("\"%1$s\".length() != %2$s", ss, LENGTH));
+    }
+    return new AutoValue_Code(ss);
+  }
 
   private static DigitValueCreator<Code> creator(String value) {
     return DigitValueCreator.<Code>builder()
@@ -39,6 +48,17 @@ public abstract class Code {
   }
 
   public abstract String value();
+
+  @Memoized
+  public char[] toCharArray() {
+    final String value = this.value();
+    final int length = value.length();
+    final char[] array = new char[length];
+    for (int i = 0; i < length; i++) {
+      array[i] = value.charAt(i);
+    }
+    return array;
+  }
 
   @Memoized
   @Override

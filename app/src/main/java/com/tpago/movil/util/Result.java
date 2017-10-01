@@ -23,7 +23,7 @@ public class Result<T> {
    * @throws NullPointerException
    *   If {@code failureData} is {@code null}.
    */
-  public static <T> Result<T> create(FailureData failureData) {
+  public static <T, C> Result<T> create(FailureData failureData) {
     return new Result<>(null, ObjectHelper.checkNotNull(failureData, "failureData"));
   }
 

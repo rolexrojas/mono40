@@ -3,7 +3,9 @@ package com.tpago.movil.data;
 import android.content.Context;
 
 import com.tpago.movil.data.api.DataApiModule;
+import com.tpago.movil.data.auth.DataAuthModule;
 import com.tpago.movil.data.bus.DataBusModule;
+import com.tpago.movil.domain.KeyValueStore;
 
 import javax.inject.Singleton;
 
@@ -19,6 +21,7 @@ import dagger.Provides;
   includes = {
     DataFlavorModule.class,
     DataApiModule.class,
+    DataAuthModule.class,
     DataBusModule.class
   }
 )
@@ -28,5 +31,11 @@ public final class DataModule {
   @Singleton
   StringMapper stringMapper(Context context) {
     return context::getString;
+  }
+
+  @Provides
+  @Singleton
+  KeyValueStore keyValueStore(Context context) {
+    return SharedPreferencesKeyValueStore.create(context);
   }
 }

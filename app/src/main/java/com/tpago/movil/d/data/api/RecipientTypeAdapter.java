@@ -121,7 +121,7 @@ public class RecipientTypeAdapter
         .getAsString();
       final BillRecipient b = new BillRecipient(partner, contractNumber, label);
 //      if (jo.has(PROPERTY_BALANCE)) {
-//        b.setBalance((BillBalance) context.deserialize(jo.get(PROPERTY_BALANCE), BillBalance.class));
+//        b.setBalance((BillBalance) context.deserialize(jo.generate(PROPERTY_BALANCE), BillBalance.class));
 //      }
       return b;
     } else if (type == PRODUCT) {
@@ -132,9 +132,9 @@ public class RecipientTypeAdapter
       final ProductRecipient p = new ProductRecipient(product, label);
 //      if (jo.has(PROPERTY_BALANCE)) {
 //        if (Product.checkIfCreditCard(product)) {
-//          p.setBalance((CreditCardBillBalance) context.deserialize(jo.get(PROPERTY_BALANCE), CreditCardBillBalance.class));
+//          p.setBalance((CreditCardBillBalance) context.deserialize(jo.generate(PROPERTY_BALANCE), CreditCardBillBalance.class));
 //        } else {
-//          p.setBalance((LoanBillBalance) context.deserialize(jo.get(PROPERTY_BALANCE), LoanBillBalance.class));
+//          p.setBalance((LoanBillBalance) context.deserialize(jo.generate(PROPERTY_BALANCE), LoanBillBalance.class));
 //        }
 //      }
       return p;
