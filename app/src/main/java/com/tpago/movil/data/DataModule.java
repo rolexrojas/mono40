@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.tpago.movil.data.api.DataApiModule;
 import com.tpago.movil.data.auth.DataAuthModule;
+import com.tpago.movil.data.net.DataNetModule;
 import com.tpago.movil.domain.KeyValueStore;
 
 import javax.inject.Singleton;
@@ -20,7 +21,8 @@ import dagger.Provides;
   includes = {
     DataFlavorModule.class,
     DataApiModule.class,
-    DataAuthModule.class
+    DataAuthModule.class,
+    DataNetModule.class
   }
 )
 public final class DataModule {

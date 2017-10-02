@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicReference;
  *
  * @author hecvasro
  */
-class AuthTokenStore {
+public class AuthTokenStore {
 
   static AuthTokenStore create() {
     return new AuthTokenStore();
@@ -23,16 +23,16 @@ class AuthTokenStore {
     this.reference = new AtomicReference<>();
   }
 
-  final void clear() {
+  public final void clear() {
     this.reference.set(null);
   }
 
-  final void set(AuthToken authToken) {
+  public final void set(AuthToken authToken) {
     this.reference.set(ObjectHelper.checkNotNull(authToken, "authToken"));
   }
 
   @Nullable
-  final AuthToken get() {
+  public final AuthToken get() {
     return this.reference.get();
   }
 }

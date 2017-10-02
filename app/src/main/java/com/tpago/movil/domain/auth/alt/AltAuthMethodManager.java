@@ -66,8 +66,7 @@ public final class AltAuthMethodManager {
 
     return ObjectHelper.checkNotNull(generator, "generator")
       .generate()
-      .map(this.service::enable)
-      .toCompletable()
+      .flatMapCompletable(this.service::enable)
       .doOnComplete(
         () -> this.store.set(
           this.methodKey,

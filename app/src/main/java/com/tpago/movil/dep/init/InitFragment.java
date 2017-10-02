@@ -9,6 +9,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 
 import com.tpago.movil.R;
+import com.tpago.movil.data.net.AuthToken;
+import com.tpago.movil.data.net.AuthTokenStore;
 import com.tpago.movil.dep.Session;
 import com.tpago.movil.dep.User;
 import com.tpago.movil.dep.UserStore;
@@ -39,15 +41,13 @@ public final class InitFragment extends BaseInitFragment {
 
   private Subscription subscription = Subscriptions.unsubscribed();
 
-  @Inject UserStore userStore;
-  @Inject Session.Builder sessionBuilder;
-
-  @Inject SessionRepo sessionRepo;
-  @Inject InitialDataLoader initialDataLoader;
-
   @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
-
+  @Inject AuthTokenStore authTokenStore;
+  @Inject InitialDataLoader initialDataLoader;
   @Inject LogoAnimator logoAnimator;
+  @Inject Session.Builder sessionBuilder;
+  @Inject SessionRepo sessionRepo;
+  @Inject UserStore userStore;
 
   private boolean werePermissionsRequested = false;
 
@@ -74,6 +74,7 @@ public final class InitFragment extends BaseInitFragment {
           .value(),
         session.getToken());
       sessionRepo.setSession(s);
+      this.authTokenStore.set(AuthToken.create(session.getToken()));
       subscription = initialDataLoader.load(session)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
