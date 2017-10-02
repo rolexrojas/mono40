@@ -7,6 +7,8 @@ import com.tpago.movil.app.ui.Presentation;
  */
 interface ProfilePresentation extends Presentation {
 
+  void setProfilePictureUri(String uri);
+
   void setFirstNameTextInputContent(String content);
 
   void setLastNameTextInputContent(String content);

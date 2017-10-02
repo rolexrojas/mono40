@@ -92,12 +92,6 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
     super.onResume();
 
     this.presenter.onPresentationResumed();
-
-    Picasso.with(this.getContext())
-      .load(Uri.parse("https://www.biography.com/.image/t_share/MTIwNjA4NjMzOTAyODkyNTU2/nelson-mandela-9397017-1-402.jpg"))
-      .resizeDimen(R.dimen.largeProfilePictureSize, R.dimen.largeProfilePictureSize)
-      .transform(new CircleTransformation())
-      .into(this.pictureImageView);
   }
 
   @Override
@@ -145,6 +139,15 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
         .doOnUnsubscribe(this.takeoverLoader::hide)
         .subscribe(this::handleSignOutSuccess, this::handleSignOutFailure);
     }
+  }
+
+  @Override
+  public void setProfilePictureUri(String uri) {
+    Picasso.with(this.getContext())
+      .load(uri)
+      .resizeDimen(R.dimen.largeProfilePictureSize, R.dimen.largeProfilePictureSize)
+      .transform(new CircleTransformation())
+      .into(this.pictureImageView);
   }
 
   @Override
