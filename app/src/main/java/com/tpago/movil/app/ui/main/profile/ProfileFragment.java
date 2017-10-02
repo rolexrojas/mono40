@@ -10,10 +10,11 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.R;
+import com.tpago.movil.app.ui.AlertData;
+import com.tpago.movil.app.ui.AlertManager;
+import com.tpago.movil.app.ui.TakeoverLoader;
 import com.tpago.movil.data.picasso.CircleTransformation;
 import com.tpago.movil.dep.UserStore;
-import com.tpago.movil.app.ui.AlertShowEventHelper;
-import com.tpago.movil.app.ui.TakeoverLoaderHelper;
 import com.tpago.movil.app.ui.main.BaseMainFragment;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.RecipientManager;
@@ -24,8 +25,6 @@ import com.tpago.movil.d.ui.main.DepMainActivity;
 import com.tpago.movil.data.StringMapper;
 import com.tpago.movil.dep.init.InitActivity;
 import com.tpago.movil.dep.widget.TextInput;
-
-import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
@@ -48,9 +47,10 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
 
   private Subscription signOutSubscription = Subscriptions.unsubscribed();
 
-  @Inject EventBus eventBus;
-  @Inject ProfilePresenter presenter;
   @Inject StringMapper stringMapper;
+  @Inject AlertManager alertManager;
+  @Inject TakeoverLoader takeoverLoader;
+  @Inject ProfilePresenter presenter;
 
   @Inject PosBridge posBridge;
   @Inject UserStore userStore;
@@ -122,14 +122,14 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
       activity.startActivity(InitActivity.getLaunchIntent(activity));
       activity.finish();
     } else {
-      this.eventBus.post(AlertShowEventHelper.createForUnexpectedFailure(this.stringMapper));
+      this.alertManager.show(AlertData.genericFailureData(this.stringMapper));
     }
   }
 
   private void handleSignOutFailure(Throwable throwable) {
-    Timber.e("handleSignOutFailure(%1$s)", throwable);
+    Timber.e(throwable, "Signing out");
 
-    this.eventBus.post(AlertShowEventHelper.createForUnexpectedFailure(this.stringMapper));
+    this.alertManager.show(AlertData.genericFailureData(this.stringMapper));
   }
 
   @OnClick(R.id.signOutSettingsOption)
@@ -141,8 +141,8 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
       this.signOutSubscription = this.posBridge.unregister(phoneNumber)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe(TakeoverLoaderHelper.createShowEventAction(this.eventBus))
-        .doOnUnsubscribe(TakeoverLoaderHelper.createHideEventAction(this.eventBus))
+        .doOnSubscribe(this.takeoverLoader::show)
+        .doOnUnsubscribe(this.takeoverLoader::hide)
         .subscribe(this::handleSignOutSuccess, this::handleSignOutFailure);
     }
   }

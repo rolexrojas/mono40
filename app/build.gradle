@@ -29,7 +29,6 @@ android {
     javaCompileOptions {
       annotationProcessorOptions {
         arguments = [
-          'eventBusIndex': 'com.tpago.movil.data.bus.BusIndex',
           'autovaluegson.defaultCollectionsToEmpty': 'true',
           'autovaluegson.mutableAdaptersWithDefaultSetters': 'true'
         ]
@@ -228,10 +227,6 @@ dependencies {
   compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
     transitive = true
   }
-
-  def eventBusGroupId = 'org.greenrobot'
-  annotationProcessor "${eventBusGroupId}:eventbus-annotation-processor:3.0.1"
-  compile "${eventBusGroupId}:eventbus:3.0.0"
 
   compile 'com.theartofdev.edmodo:android-image-cropper:2.4.7'
 

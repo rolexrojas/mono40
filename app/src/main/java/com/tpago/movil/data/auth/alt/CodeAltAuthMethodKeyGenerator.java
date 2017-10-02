@@ -4,11 +4,14 @@ import android.content.Context;
 import android.security.KeyPairGeneratorSpec;
 
 import com.tpago.movil.domain.Code;
+import com.tpago.movil.domain.auth.alt.AltAuthMethod;
+import com.tpago.movil.domain.auth.alt.AltAuthMethodKeyGenerator;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.PublicKey;
 import java.security.spec.AlgorithmParameterSpec;
 
 import io.reactivex.Single;
@@ -16,7 +19,7 @@ import io.reactivex.Single;
 /**
  * @author hecvasro
  */
-public final class CodeAuthMethodKeyPairGenerator implements AltAuthMethodKeyPairGenerator {
+public final class CodeAltAuthMethodKeyGenerator implements AltAuthMethodKeyGenerator {
 
   private final Context context;
   private final CodeAuthMethodStore store;
@@ -24,7 +27,7 @@ public final class CodeAuthMethodKeyPairGenerator implements AltAuthMethodKeyPai
 
   private final Code code;
 
-  private CodeAuthMethodKeyPairGenerator(Creator creator, Code code) {
+  private CodeAltAuthMethodKeyGenerator(Creator creator, Code code) {
     this.context = creator.context;
     this.store = creator.store;
     this.configData = creator.configData;
@@ -32,7 +35,12 @@ public final class CodeAuthMethodKeyPairGenerator implements AltAuthMethodKeyPai
     this.code = ObjectHelper.checkNotNull(code, "code");
   }
 
-  private KeyPair generate() throws Exception {
+  @Override
+  public AltAuthMethod method() {
+    return AltAuthMethod.CODE;
+  }
+
+  private KeyPair generateKeyPair() throws Exception {
     final KeyPairGenerator generator = KeyPairGenerator.getInstance(
       this.configData.keyGenAlgName(),
       this.configData.providerName()
@@ -53,9 +61,10 @@ public final class CodeAuthMethodKeyPairGenerator implements AltAuthMethodKeyPai
   }
 
   @Override
-  public Single<KeyPair> get() {
-    return Single.defer(() -> Single.just(this.generate()))
-      .doOnSuccess((keyPair) -> this.store.set(keyPair.getPublic(), this.code));
+  public Single<PublicKey> generate() {
+    return Single.defer(() -> Single.just(this.generateKeyPair()))
+      .map(KeyPair::getPublic)
+      .doOnSuccess((publicKey) -> this.store.set(publicKey, this.code));
   }
 
   public static final class Creator {
@@ -74,8 +83,8 @@ public final class CodeAuthMethodKeyPairGenerator implements AltAuthMethodKeyPai
       this.store = builder.store;
     }
 
-    public final CodeAuthMethodKeyPairGenerator create(Code code) {
-      return new CodeAuthMethodKeyPairGenerator(this, code);
+    public final CodeAltAuthMethodKeyGenerator create(Code code) {
+      return new CodeAltAuthMethodKeyGenerator(this, code);
     }
 
     static final class Builder {

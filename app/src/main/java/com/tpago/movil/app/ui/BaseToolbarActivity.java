@@ -20,7 +20,9 @@ public abstract class BaseToolbarActivity extends BaseActivity {
 
   @BindView(R.id.toolbar) protected Toolbar toolbar;
 
-  @Inject @HomeButton protected NavButtonClickHandler homeButtonClickHandler;
+  @Inject
+  @HomeButton
+  protected NavButtonClickHandler homeButtonClickHandler;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,18 +33,17 @@ public abstract class BaseToolbarActivity extends BaseActivity {
 
     final ActionBar actionBar = ObjectHelper.checkNotNull(this.getSupportActionBar(), "actionBar");
     actionBar.setDisplayShowHomeEnabled(true);
-    actionBar.setDisplayShowTitleEnabled(true);
-  }
-
-  public final Toolbar toolbar() {
-    return this.toolbar;
+    actionBar.setDisplayHomeAsUpEnabled(true);
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case android.R.id.home:
-        return this.homeButtonClickHandler.onNavButtonClicked();
+        if (!this.homeButtonClickHandler.onNavButtonClicked()) {
+          this.finish();
+        }
+        return true;
       default:
         return super.onOptionsItemSelected(item);
     }

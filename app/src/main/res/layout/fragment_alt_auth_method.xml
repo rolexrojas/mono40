@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   style="@style/SettingsContainer"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
@@ -11,4 +12,39 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="@string/chooseAnAlternativeAuthenticationMethod"/>
+
+  <android.support.v4.widget.Space
+    style="@style/Divider.Space.Normal"/>
+
+  <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+
+      <com.tpago.movil.app.ui.main.settings.SelectableSettingsOption
+        android:id="@+id/fingerprintOption"
+        style="@style/SettingsOption"
+        app:primaryText="@string/fingerprint"/>
+
+      <View
+        android:id="@+id/fingerprintOptionDivider"
+        style="@style/Divider.Line"/>
+
+      <com.tpago.movil.app.ui.main.settings.SelectableSettingsOption
+        android:id="@+id/codeOption"
+        style="@style/SettingsOption"
+        app:primaryText="@string/code"/>
+
+      <View style="@style/Divider.Line"/>
+
+      <com.tpago.movil.app.ui.main.settings.SelectableSettingsOption
+        android:id="@+id/noneOption"
+        style="@style/SettingsOption"
+        app:primaryText="@string/usePassword"/>
+    </LinearLayout>
+  </ScrollView>
 </LinearLayout>

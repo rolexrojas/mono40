@@ -8,7 +8,6 @@ import com.tpago.movil.util.Result;
 import com.tpago.movil.util.StringHelper;
 
 import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.security.Signature;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,19 +19,19 @@ import io.reactivex.functions.Action;
 /**
  * @author hecvasro
  */
-public final class AltAuthManager {
+public final class AltAuthMethodManager {
 
   public static Builder builder() {
     return new Builder();
   }
 
   private final KeyValueStore store;
-  private final AltAuthService service;
+  private final AltAuthMethodService service;
   private final String methodKey;
   private final String signAlgName;
   private final List<Action> onDisabledActionList;
 
-  private AltAuthManager(Builder builder) {
+  private AltAuthMethodManager(Builder builder) {
     this.store = builder.store;
     this.service = builder.service;
     this.methodKey = builder.methodKey;
@@ -60,18 +59,28 @@ public final class AltAuthManager {
    * @throws IllegalStateException
    *   If it is {@link #isEnabled() enabled}.
    */
-  public final Completable enable(AltAuthMethod method, PublicKey publicKey) {
-    ObjectHelper.checkNotNull(method, "method");
-    ObjectHelper.checkNotNull(publicKey, "publicKey");
-
+  public final Completable enable(AltAuthMethodKeyGenerator generator) {
     this.checkEnabled();
 
-    return this.service.enable(publicKey)
-      .doOnComplete(() -> this.store.set(this.methodKey, method.name()));
+    return ObjectHelper.checkNotNull(generator, "generator")
+      .generate()
+      .map(this.service::enable)
+      .toCompletable()
+      .doOnComplete(
+        () -> this.store.set(
+          this.methodKey,
+          generator.method()
+            .name()
+        )
+      );
   }
 
-  public final AltAuthMethod getEnabledMethod() {
-    return this.store.isSet(this.methodKey) ? AltAuthMethod.valueOf(this.store.get(this.methodKey)) : null;
+  public final AltAuthMethod getActiveMethod() {
+    if (this.store.isSet(this.methodKey)) {
+      return AltAuthMethod.valueOf(this.store.get(this.methodKey));
+    } else {
+      return null;
+    }
   }
 
   private byte[] createSignature(PrivateKey privateKey, AltAuthSignData data) throws Exception {
@@ -113,7 +122,7 @@ public final class AltAuthManager {
     private final List<Action> onDisabledActionList;
 
     private KeyValueStore store;
-    private AltAuthService service;
+    private AltAuthMethodService service;
     private String methodKey;
     private String signAlgName;
 
@@ -126,7 +135,7 @@ public final class AltAuthManager {
       return this;
     }
 
-    public final Builder service(AltAuthService service) {
+    public final Builder service(AltAuthMethodService service) {
       this.service = ObjectHelper.checkNotNull(service, "service");
       return this;
     }
@@ -151,7 +160,7 @@ public final class AltAuthManager {
       return this;
     }
 
-    public final AltAuthManager build() {
+    public final AltAuthMethodManager build() {
       BuilderChecker.create()
         .addPropertyNameIfMissing("store", ObjectHelper.isNull(this.store))
         .addPropertyNameIfMissing("service", ObjectHelper.isNull(this.service))
@@ -159,7 +168,7 @@ public final class AltAuthManager {
         .addPropertyNameIfMissing("signAlgName", StringHelper.isNullOrEmpty(this.signAlgName))
         .checkNoMissingProperties();
 
-      return new AltAuthManager(this);
+      return new AltAuthMethodManager(this);
     }
   }
 }

@@ -1,4 +1,4 @@
-package com.tpago.movil.app;
+package com.tpago.movil.app.di;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;

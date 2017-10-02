@@ -42,7 +42,7 @@
     <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
       android:id="@+id/altAuthMethodSettingsOption"
       style="@style/SettingsOption"
-      app:primaryText="@string/unlockMethodSettingsOption"/>
+      app:primaryText="@string/alternativeAuthenticationMethod"/>
 
     <View
       style="@style/Divider.Line"

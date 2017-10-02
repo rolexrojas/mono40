@@ -6,13 +6,18 @@ import android.support.annotation.StringRes;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
+import com.tpago.movil.R;
 import com.tpago.movil.data.StringMapper;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 @AutoValue
-public abstract class AlertShowEvent {
+public abstract class AlertData {
+
+  private static AtomicReference<AlertData> GENERIC = new AtomicReference<>();
 
   private static DialogInterface.OnClickListener createButtonListener(ButtonAction action) {
     return ObjectHelper.isNotNull(action) ? (d, i) -> action.accept() : null;
@@ -22,40 +27,53 @@ public abstract class AlertShowEvent {
     return new Builder(stringMapper);
   }
 
-  abstract String title();
+  public static AlertData genericFailureData(StringMapper stringMapper) {
+    AlertData data = GENERIC.get();
+    if (ObjectHelper.isNull(data)) {
+      data = builder(stringMapper)
+        .title(R.string.weAreSorry)
+        .message(R.string.anUnexpectedErrorOccurred)
+        .positiveButton(R.string.ok)
+        .build();
+      GENERIC.set(data);
+    }
+    return data;
+  }
 
-  abstract String message();
+  public abstract String title();
 
-  abstract String positiveButtonText();
+  public abstract String message();
+
+  public abstract String positiveButtonText();
 
   @Nullable
-  abstract ButtonAction positiveButtonAction();
+  public abstract ButtonAction positiveButtonAction();
 
   @Nullable
-  abstract String negativeButtonText();
+  public abstract String negativeButtonText();
 
   @Nullable
-  abstract ButtonAction negativeButtonAction();
+  public abstract ButtonAction negativeButtonAction();
 
   @Nullable
   @Memoized
-  DialogInterface.OnClickListener positiveButtonListener() {
+  public DialogInterface.OnClickListener positiveButtonListener() {
     return createButtonListener(this.positiveButtonAction());
   }
 
   @Nullable
   @Memoized
-  DialogInterface.OnClickListener negativeButtonListener() {
+  public DialogInterface.OnClickListener negativeButtonListener() {
     return createButtonListener(this.negativeButtonAction());
   }
 
   @Memoized
   @Override
-  public abstract int hashCode();
+  public abstract String toString();
 
   @Memoized
   @Override
-  public abstract String toString();
+  public abstract int hashCode();
 
   interface ButtonAction {
 
@@ -78,7 +96,7 @@ public abstract class AlertShowEvent {
     }
 
     public final Builder title(String title) {
-      this.title = ObjectHelper.checkNotNull(StringHelper.emptyIfNull(title), "title");
+      this.title = ObjectHelper.checkNotNull(title, "title");
       return this;
     }
 
@@ -87,7 +105,7 @@ public abstract class AlertShowEvent {
     }
 
     public final Builder message(String message) {
-      this.message = ObjectHelper.checkNotNull(StringHelper.emptyIfNull(message), "message");
+      this.message = ObjectHelper.checkNotNull(message, "message");
       return this;
     }
 
@@ -96,7 +114,7 @@ public abstract class AlertShowEvent {
     }
 
     public final Builder positiveButton(String text) {
-      this.positiveButtonText = ObjectHelper.checkNotNull(StringHelper.emptyIfNull(text), "text");
+      this.positiveButtonText = ObjectHelper.checkNotNull(text, "text");
       return this;
     }
 
@@ -105,7 +123,7 @@ public abstract class AlertShowEvent {
     }
 
     public final Builder positiveButton(String text, ButtonAction action) {
-      this.positiveButtonText = ObjectHelper.checkNotNull(StringHelper.emptyIfNull(text), "text");
+      this.positiveButtonText = ObjectHelper.checkNotNull(text, "text");
       this.positiveButtonAction = ObjectHelper.checkNotNull(action, "action");
       return this;
     }
@@ -115,7 +133,7 @@ public abstract class AlertShowEvent {
     }
 
     public final Builder negativeButton(String text) {
-      this.negativeButtonText = ObjectHelper.checkNotNull(StringHelper.emptyIfNull(text), "text");
+      this.negativeButtonText = ObjectHelper.checkNotNull(text, "text");
       return this;
     }
 
@@ -124,7 +142,7 @@ public abstract class AlertShowEvent {
     }
 
     public final Builder negativeButton(String text, ButtonAction action) {
-      this.negativeButtonText = ObjectHelper.checkNotNull(StringHelper.emptyIfNull(text), "text");
+      this.negativeButtonText = ObjectHelper.checkNotNull(text, "text");
       this.negativeButtonAction = ObjectHelper.checkNotNull(action, "action");
       return this;
     }
@@ -133,7 +151,7 @@ public abstract class AlertShowEvent {
       return this.negativeButton(this.stringMapper.apply(id), action);
     }
 
-    public final AlertShowEvent build() {
+    public final AlertData build() {
       BuilderChecker.create()
         .addPropertyNameIfMissing("title", StringHelper.isNullOrEmpty(this.title))
         .addPropertyNameIfMissing("message", StringHelper.isNullOrEmpty(this.message))
@@ -143,7 +161,7 @@ public abstract class AlertShowEvent {
         )
         .checkNoMissingProperties();
 
-      return new AutoValue_AlertShowEvent(
+      return new AutoValue_AlertData(
         this.title,
         this.message,
         this.positiveButtonText,

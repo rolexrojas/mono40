@@ -6,8 +6,8 @@ import android.support.multidex.MultiDexApplication;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.BuildConfig;
-import com.tpago.movil.app.*;
 import com.tpago.movil.app.AppComponent;
+import com.tpago.movil.app.di.ComponentBuilderSupplier;
 import com.tpago.movil.d.DepAppModule;
 
 import javax.inject.Inject;

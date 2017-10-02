@@ -186,7 +186,7 @@ public final class DisbursementFragment extends ChildFragment<MainContainer> imp
       );
     } else {
       Dialogs.builder(this.getActivity())
-        .setTitle(R.string.we_are_sorry)
+        .setTitle(R.string.weAreSorry)
         .setMessage(
           "No tiene cuentas bancarias afiliadas para acreditar su avance de efectivo desde su tarjeta. Favor enrole sus cuentas e intente de nuevo."
         )

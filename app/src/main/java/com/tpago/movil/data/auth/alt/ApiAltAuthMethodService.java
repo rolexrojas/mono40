@@ -2,7 +2,7 @@ package com.tpago.movil.data.auth.alt;
 
 import com.tpago.movil.data.api.Api;
 import com.tpago.movil.data.api.ApiEnableAltAuthBody;
-import com.tpago.movil.domain.auth.alt.AltAuthService;
+import com.tpago.movil.domain.auth.alt.AltAuthMethodService;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.Placeholder;
 import com.tpago.movil.util.Result;
@@ -15,15 +15,15 @@ import io.reactivex.Single;
 /**
  * @author hecvasro
  */
-final class ApiAltAuthService implements AltAuthService {
+final class ApiAltAuthMethodService implements AltAuthMethodService {
 
-  public static ApiAltAuthService create(Api api) {
-    return new ApiAltAuthService(api);
+  public static ApiAltAuthMethodService create(Api api) {
+    return new ApiAltAuthMethodService(api);
   }
 
   private final Api api;
 
-  private ApiAltAuthService(Api api) {
+  private ApiAltAuthMethodService(Api api) {
     this.api = ObjectHelper.checkNotNull(api, "api");
   }
 

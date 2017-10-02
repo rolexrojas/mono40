@@ -14,7 +14,7 @@ import io.reactivex.Single;
  *
  * @author hecvasro
  */
-public interface AltAuthService {
+public interface AltAuthMethodService {
 
   /**
    * @param publicKey

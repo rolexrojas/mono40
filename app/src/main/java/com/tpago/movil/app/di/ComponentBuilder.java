@@ -1,4 +1,4 @@
-package com.tpago.movil.app;
+package com.tpago.movil.app.di;
 
 /**
  * @author hecvasro

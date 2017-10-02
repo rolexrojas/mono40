@@ -1,49 +1,36 @@
 package com.tpago.movil.app.ui;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 
-import com.google.auto.value.AutoValue;
-import com.tpago.movil.R;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
- * @author Hector Vasquez
+ * @author hecvasro
  */
-public final class TakeoverLoader extends BaseDialogFragment {
+public final class TakeoverLoader implements Loader {
 
-  public static final String TAG = TakeoverLoader.class.getSimpleName();
+  private static final String TAG = TakeoverLoader.class.getCanonicalName();
 
-  public static TakeoverLoader create() {
-    return new TakeoverLoader();
+  public static TakeoverLoader create(FragmentManager fragmentManager) {
+    return new TakeoverLoader(fragmentManager);
+  }
+
+  private final FragmentManager fragmentManager;
+
+  private TakeoverLoader(FragmentManager fragmentManager) {
+    this.fragmentManager = ObjectHelper.checkNotNull(fragmentManager, "fragmentManager");
   }
 
   @Override
-  protected int layoutResId() {
-    return R.layout.loader_takeover;
+  public void show() {
+    this.hide();
+
+    TakeoverLoaderDialogFragment.create()
+      .show(this.fragmentManager, TAG);
   }
 
   @Override
-  public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    // Sets the style of the dialog fragment.
-    this.setStyle(DialogFragment.STYLE_NO_FRAME, R.style.TakeoverLoaderTheme);
-  }
-
-  @AutoValue
-  public static abstract class ShowEvent {
-
-    public static ShowEvent create() {
-      return new AutoValue_TakeoverLoader_ShowEvent();
-    }
-  }
-
-  @AutoValue
-  public static abstract class HideEvent {
-
-    public static HideEvent create() {
-      return new AutoValue_TakeoverLoader_HideEvent();
-    }
+  public void hide() {
+    FragmentHelper.dismissByTag(this.fragmentManager, TAG);
   }
 }

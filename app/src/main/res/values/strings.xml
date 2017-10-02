@@ -15,11 +15,10 @@
   <string name="settings">Ajustes</string>
 
   <!-- Phrases -->
+  <string name="alternativeAuthenticationMethod">Desbloquear rápido</string>
+  <string name="anUnexpectedErrorOccurred">En estos momentos no podemos procesar esta solicitud. Favor intentar nuevamente.</string>
   <string name="changeMyPassword">Cambiar mi contraseña</string>
   <string name="chooseAnAlternativeAuthenticationMethod">Para tu seguridad requerimos bloquear el App. Selecciona entre estas opciones para iniciar de manera rápida.</string>
-  <string name="error_unexpected_dialog_message">En estos momentos no podemos procesar esta solicitud. Favor intentar nuevamente.</string>
-  <string name="error_unexpected_dialog_positiveButton">@string/ok</string>
-  <string name="error_unexpected_dialog_title">@string/weAreSorry</string>
   <string name="lockOnExitSettingsOption">Bloquear al salir</string>
   <string name="myProfile">Mi perfil</string>
   <string name="pinSettingsOption">Cambiar PIN tPago</string>
@@ -27,7 +26,6 @@
   <string name="profileSettingsOption">Editar mi perfil</string>
   <string name="signOut">Desvincular dispositivo</string>
   <string name="timeoutSettingsOption">Bloquear automáticamente</string>
-  <string name="unlockMethodSettingsOption">Desbloquear rápido</string>
   <string name="usePassword">Ninguno, utilizar contraseña</string>
   <string name="weAreSorry">¡Lo sentimos!</string>
 
@@ -102,7 +100,7 @@
   <string name="dialog_product_addition_positive_action">Activar</string>
   <string name="dialog_product_addition_title">¡Listo para activar!</string>
   <string name="dialog_title_already_associated_device">Cuenta vinculada a otro celular</string>
-  <string name="dialog_title_feature_not_available">@string/we_are_sorry</string>
+  <string name="dialog_title_feature_not_available">@string/weAreSorry</string>
   <string name="disburse">Retirar</string>
   <string name="does_not_match">No concuerda</string>
   <string name="done_with_exclamation_mark">¡Listo!</string>
@@ -287,7 +285,6 @@
   <string name="unlock_button">@string/unlock</string>
   <string name="unlock_input_hint_password">@string/password</string>
   <string name="unlock_label_title">¡Bienvenido, %1$s!</string>
-  <string name="we_are_sorry">¡Lo sentimos!</string>
   <string name="welcome">¡Bienvenido!</string>
   <string name="widget_editable_label_content_font">@string/font_gothamRounded_light</string>
   <string name="widget_text_input_background_path_data">M0,44 H240</string>

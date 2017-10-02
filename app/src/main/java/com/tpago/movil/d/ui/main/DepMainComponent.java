@@ -2,7 +2,7 @@ package com.tpago.movil.d.ui.main;
 
 import android.content.Context;
 
-import com.tpago.movil.app.ui.BaseActivityModule;
+import com.tpago.movil.app.ui.ActivityModule;
 import com.tpago.movil.dep.Session;
 import com.tpago.movil.dep.User;
 import com.tpago.movil.dep.UserStore;
@@ -28,7 +28,7 @@ import com.tpago.movil.d.ui.main.recipient.index.disburse.DisbursementFragment;
 import com.tpago.movil.data.StringMapper;
 import com.tpago.movil.dep.main.MainModule;
 import com.tpago.movil.dep.net.NetworkService;
-import com.tpago.movil.domain.auth.alt.AltAuthManager;
+import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
 
 import dagger.Component;
 
@@ -40,7 +40,7 @@ import dagger.Component;
 @Component(
   dependencies = AppComponent.class,
   modules = {
-    BaseActivityModule.class,
+    ActivityModule.class,
     FragmentActivityModule.class,
     DepActivityModule.class,
     MainModule.class,
@@ -54,7 +54,7 @@ public interface DepMainComponent extends ActivityComponent {
 
   StringMapper stringMapper();
 
-  AltAuthManager altAuthManager();
+  AltAuthMethodManager altAuthManager();
 
   SettingsComponent create(SettingsModule module);
 

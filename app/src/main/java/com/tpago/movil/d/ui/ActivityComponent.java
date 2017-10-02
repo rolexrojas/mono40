@@ -1,7 +1,7 @@
 package com.tpago.movil.d.ui;
 
 import com.tpago.movil.app.ui.ActivityScope;
-import com.tpago.movil.app.ui.BaseActivityModule;
+import com.tpago.movil.app.ui.ActivityModule;
 import com.tpago.movil.dep.AppComponent;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
@@ -14,7 +14,7 @@ import dagger.Component;
 @Component(
   dependencies = AppComponent.class,
   modules = {
-    BaseActivityModule.class,
+    ActivityModule.class,
     DepActivityModule.class
   }
 )

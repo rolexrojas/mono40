@@ -28,9 +28,7 @@ public final class SettingsFragment extends BaseMainFragment implements Settings
     return new SettingsFragment();
   }
 
-  @Inject
-  @ActivityQualifier
-  FragmentReplacer fragmentReplacer;
+  @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
   @Inject SettingsPresenter presenter;
 
   @BindView(R.id.profileSettingsOption) MultiLineSettingsOption profileSettingsOption;
@@ -125,7 +123,7 @@ public final class SettingsFragment extends BaseMainFragment implements Settings
   }
 
   @Override
-  public void setAltAuthMethodMethodSettingsOptionSecondaryText(String text) {
+  public void setAltAuthMethodOption(String text) {
     this.altAuthMethodSettingsOption.secondaryText(text);
   }
 

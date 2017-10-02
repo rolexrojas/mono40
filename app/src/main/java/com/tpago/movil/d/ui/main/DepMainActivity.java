@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import com.tpago.movil.app.ui.ActivityModule;
 import com.tpago.movil.dep.Session;
 import com.tpago.movil.dep.TimeOutManager;
 import com.tpago.movil.app.ui.ActivityQualifier;
@@ -143,15 +144,10 @@ public class DepMainActivity
     unbinder = ButterKnife.bind(this);
     // Injects all the annotated dependencies.
     component = DaggerDepMainComponent.builder()
+      .activityModule(ActivityModule.create(this))
       .appComponent(((App) getApplication()).component())
       .mainModule(new MainModule(((Session) getIntent().getParcelableExtra(KEY_SESSION)), this))
       .depActivityModule(new DepActivityModule(this))
-      .fragmentActivityModule(
-        FragmentActivityModule.create(
-          this.getSupportFragmentManager(),
-          R.id.container
-        )
-      )
       .build();
     component.inject(this);
     // Prepares the action bar.
@@ -265,7 +261,7 @@ public class DepMainActivity
           this.setChildFragment(DisbursementFragment.create());
         } else {
           Dialogs.builder(this)
-            .setTitle(R.string.we_are_sorry)
+            .setTitle(R.string.weAreSorry)
             .setMessage(
               "No tiene tarjetas de crédito afiliadas para realizar esta transacción. Favor enrole sus tarjetas e intente de nuevo."
             )

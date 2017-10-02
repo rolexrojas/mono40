@@ -5,8 +5,8 @@ import android.content.Context;
 import com.tpago.movil.BuildConfig;
 import com.tpago.movil.data.api.Api;
 import com.tpago.movil.domain.KeyValueStore;
-import com.tpago.movil.domain.auth.alt.AltAuthManager;
-import com.tpago.movil.domain.auth.alt.AltAuthService;
+import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
+import com.tpago.movil.domain.auth.alt.AltAuthMethodService;
 
 import java.math.BigInteger;
 import java.security.KeyStore;
@@ -27,8 +27,8 @@ public final class DataAltAuthModule {
 
   @Provides
   @Singleton
-  AltAuthService altAuthService(Api api) {
-    return ApiAltAuthService.create(api);
+  AltAuthMethodService altAuthService(Api api) {
+    return ApiAltAuthMethodService.create(api);
   }
 
   @Provides
@@ -72,12 +72,12 @@ public final class DataAltAuthModule {
 
   @Provides
   @Singleton
-  CodeAuthMethodKeyPairGenerator.Creator codeAuthMethodKeyPairGenerator(
+  CodeAltAuthMethodKeyGenerator.Creator codeAuthMethodKeyPairGenerator(
     Context context,
     CodeAuthMethodStore store,
     AltAuthConfigData configData
   ) {
-    return CodeAuthMethodKeyPairGenerator.Creator
+    return CodeAltAuthMethodKeyGenerator.Creator
       .builder()
       .context(context)
       .store(store)
@@ -87,14 +87,14 @@ public final class DataAltAuthModule {
 
   @Provides
   @Singleton
-  AltAuthManager altAuthManager(
+  AltAuthMethodManager altAuthManager(
     KeyValueStore store,
-    AltAuthService service,
+    AltAuthMethodService service,
     AltAuthConfigData data,
     KeyStore keyStore,
     CodeAuthMethodStore codeAuthMethodStore
   ) {
-    return AltAuthManager.builder()
+    return AltAuthMethodManager.builder()
       .store(store)
       .service(service)
       .methodKey(data.methodKey())

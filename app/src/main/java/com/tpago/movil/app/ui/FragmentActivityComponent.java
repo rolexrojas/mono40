@@ -1,6 +1,6 @@
 package com.tpago.movil.app.ui;
 
-import com.tpago.movil.app.ComponentBuilder;
+import com.tpago.movil.app.di.ComponentBuilder;
 
 import dagger.Subcomponent;
 
@@ -10,7 +10,8 @@ import dagger.Subcomponent;
 @ActivityScope
 @Subcomponent(
   modules = {
-    BaseActivityModule.class,
+    FragmentActivityComponentBuilderModule.class,
+    ActivityModule.class,
     ToolbarActivityModule.class,
     FragmentActivityModule.class
   }
@@ -22,7 +23,7 @@ public interface FragmentActivityComponent {
   @Subcomponent.Builder
   interface Builder extends ComponentBuilder<FragmentActivityComponent> {
 
-    Builder baseActivityModule(BaseActivityModule module);
+    Builder activityModule(ActivityModule module);
 
     Builder toolbarActivityModule(ToolbarActivityModule module);
 

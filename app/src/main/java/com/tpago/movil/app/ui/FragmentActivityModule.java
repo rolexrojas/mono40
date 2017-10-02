@@ -1,42 +1,39 @@
 package com.tpago.movil.app.ui;
 
-import android.support.annotation.IdRes;
+import android.app.Activity;
+import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
-import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.R;
+import com.tpago.movil.app.di.ComponentBuilder;
+import com.tpago.movil.app.di.ComponentBuilderSupplier;
+
+import java.util.Map;
 
 import dagger.Module;
 import dagger.Provides;
 
 /**
- * {@link Module} that contains providers for objects that related to {@link
- * android.support.v4.app.Fragment fragments} and belong to the {@link android.content.Context
- * context} of an {@link android.app.Activity}.
+ * {@link Module} that contains providers for objects that related to {@link Fragment fragments} and
+ * belong to the {@link Context context} of an {@link Activity}.
  *
  * @author hecvasro
  */
 @Module
 public final class FragmentActivityModule {
 
-  public static FragmentActivityModule create(
-    FragmentManager fragmentManager,
-    int viewContainerId
-  ) {
-    return new FragmentActivityModule(fragmentManager, viewContainerId);
-  }
-
-  private final FragmentManager fragmentManager;
-  private final int viewContainerId;
-
-  private FragmentActivityModule(FragmentManager fragmentManager, @IdRes int viewContainerId) {
-    this.fragmentManager = ObjectHelper.checkNotNull(fragmentManager, "manager");
-    this.viewContainerId = viewContainerId;
+  @Provides
+  @ActivityScope
+  @ActivityQualifier
+  ComponentBuilderSupplier componentBuilderSupplier(Map<Class<?>, ComponentBuilder> map) {
+    return ComponentBuilderSupplier.create(map);
   }
 
   @Provides
   @ActivityScope
   @ActivityQualifier
-  FragmentReplacer fragmentReplacer() {
-    return FragmentReplacer.create(this.fragmentManager, this.viewContainerId);
+  FragmentReplacer fragmentReplacer(FragmentManager fragmentManager) {
+    return FragmentReplacer.create(fragmentManager, R.id.containerFrameLayout);
   }
 }

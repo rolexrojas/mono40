@@ -1,5 +1,6 @@
 package com.tpago.movil.app.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +8,7 @@ import android.support.annotation.Nullable;
 
 import com.tpago.movil.R;
 import com.tpago.movil.app.App;
-import com.tpago.movil.app.ui.main.FragmentCreator;
+import com.tpago.movil.app.di.ComponentBuilderSupplier;
 import com.tpago.movil.util.ObjectHelper;
 
 import javax.inject.Inject;
@@ -28,8 +29,18 @@ public final class FragmentActivity extends BaseToolbarActivity {
     return intent;
   }
 
+  public static FragmentActivity get(Activity activity) {
+    ObjectHelper.checkNotNull(activity, "activity");
+    if (!(activity instanceof FragmentActivity)) {
+      throw new IllegalArgumentException("!(activity instanceof FragmentActivity)");
+    }
+
+    return (FragmentActivity) activity;
+  }
+
   private FragmentActivityComponent component;
 
+  @Inject @ActivityQualifier ComponentBuilderSupplier componentBuilderSupplier;
   @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
 
   @Override
@@ -45,12 +56,7 @@ public final class FragmentActivity extends BaseToolbarActivity {
     this.component = App.get(this)
       .componentBuilderSupplier()
       .get(FragmentActivity.class, FragmentActivityComponent.Builder.class)
-      .fragmentActivityModule(
-        FragmentActivityModule.create(
-          this.getSupportFragmentManager(),
-          R.id.containerFrameLayout
-        )
-      )
+      .activityModule(ActivityModule.create(this))
       .build();
 
     // Injects all annotated dependencies.
@@ -68,5 +74,9 @@ public final class FragmentActivity extends BaseToolbarActivity {
 
   public final FragmentActivityComponent component() {
     return this.component;
+  }
+
+  public final ComponentBuilderSupplier componentBuilderSupplier() {
+    return this.componentBuilderSupplier;
   }
 }

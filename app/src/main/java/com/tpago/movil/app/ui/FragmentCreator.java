@@ -1,4 +1,4 @@
-package com.tpago.movil.app.ui.main;
+package com.tpago.movil.app.ui;
 
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;

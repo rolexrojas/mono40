@@ -1,21 +1,16 @@
 package com.tpago.movil.app.ui.main.settings;
 
-import com.tpago.movil.app.ui.main.settings.auth.alt.UiAltAuthMethodHelper;
-import com.tpago.movil.d.domain.Banks;
+import com.tpago.movil.R;
 import com.tpago.movil.dep.ConfigManager;
 import com.tpago.movil.dep.User;
 import com.tpago.movil.dep.UserStore;
 import com.tpago.movil.app.ui.Presenter;
-import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
-import com.tpago.movil.d.domain.ProductType;
 import com.tpago.movil.data.StringMapper;
-import com.tpago.movil.domain.auth.alt.AltAuthManager;
+import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
+import com.tpago.movil.domain.auth.alt.AltAuthMethod;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.ObjectHelper;
-import com.tpago.movil.util.StringHelper;
-
-import java.util.Arrays;
 
 /**
  * @author hecvasro
@@ -27,7 +22,7 @@ final class SettingsPresenter extends Presenter<SettingsPresentation> {
   }
 
   private final StringMapper stringMapper;
-  private final AltAuthManager altAuthManager;
+  private final AltAuthMethodManager altAuthMethodManager;
 
   private final UserStore userStore;
   private final ProductManager productManager;
@@ -37,7 +32,7 @@ final class SettingsPresenter extends Presenter<SettingsPresentation> {
     super(builder.presentation);
 
     this.stringMapper = builder.stringMapper;
-    this.altAuthManager = builder.altAuthManager;
+    this.altAuthMethodManager = builder.altAuthMethodManager;
 
     this.userStore = builder.userStore;
     this.productManager = builder.productManager;
@@ -48,40 +43,25 @@ final class SettingsPresenter extends Presenter<SettingsPresentation> {
   public void onPresentationResumed() {
     super.onPresentationResumed();
 
-    this.presentation.setAltAuthMethodMethodSettingsOptionSecondaryText(
-      this.stringMapper.apply(
-        UiAltAuthMethodHelper.findStringResId(this.altAuthManager.getEnabledMethod())
-      )
-    );
-
+    // Initializes the edit profile option.
     final User user = this.userStore.get();
     this.presentation.setProfileSettingsOptionSecondaryText(user.name());
 
-    final Product primaryPaymentMethod = this.productManager.getDefaultPaymentOption();
-    if (ObjectHelper.isNotNull(primaryPaymentMethod)) {
-      this.presentation.setPrimaryPaymentMethodSettingsOptionSecondaryText(
-        StringHelper.join(
-          " ",
-          Arrays.asList(
-            this.stringMapper.apply(ProductType.findStringId(primaryPaymentMethod)),
-            Banks.getName(primaryPaymentMethod.getBank()),
-            primaryPaymentMethod.getAlias()
-          )
-        )
-      );
+    // Initializes the alternative authentication method option.
+    final AltAuthMethod method = this.altAuthMethodManager.getActiveMethod();
+    final int altAuthMethodStringId;
+    if (ObjectHelper.isNull(method)) {
+      altAuthMethodStringId = R.string.usePassword;
+    } else {
+      altAuthMethodStringId = method.stringId;
     }
-
-    this.presentation.setAltAuthMethodMethodSettingsOptionSecondaryText(null);
-
-    this.presentation.setTimeoutSettingsOptionSecondaryText(null);
-
-    this.presentation.setLockOnExitSettingsOptionChecked(true);
+    this.presentation.setAltAuthMethodOption(this.stringMapper.apply(altAuthMethodStringId));
   }
 
   static final class Builder {
 
     private StringMapper stringMapper;
-    private AltAuthManager altAuthManager;
+    private AltAuthMethodManager altAuthMethodManager;
     private SettingsPresentation presentation;
 
     private UserStore userStore;
@@ -96,8 +76,11 @@ final class SettingsPresenter extends Presenter<SettingsPresentation> {
       return this;
     }
 
-    final Builder altAuthManager(AltAuthManager altAuthManager) {
-      this.altAuthManager = ObjectHelper.checkNotNull(altAuthManager, "altAuthManager");
+    final Builder altAuthManager(AltAuthMethodManager altAuthMethodManager) {
+      this.altAuthMethodManager = ObjectHelper.checkNotNull(
+        altAuthMethodManager,
+        "altAuthMethodManager"
+      );
       return this;
     }
 
@@ -124,7 +107,10 @@ final class SettingsPresenter extends Presenter<SettingsPresentation> {
     final SettingsPresenter build() {
       BuilderChecker.create()
         .addPropertyNameIfMissing("stringMapper", ObjectHelper.isNull(this.stringMapper))
-        .addPropertyNameIfMissing("altAuthManager", ObjectHelper.isNull(this.altAuthManager))
+        .addPropertyNameIfMissing(
+          "altAuthMethodManager",
+          ObjectHelper.isNull(this.altAuthMethodManager)
+        )
         .addPropertyNameIfMissing("presentation", ObjectHelper.isNull(this.presentation))
         .addPropertyNameIfMissing("userStore", ObjectHelper.isNull(this.userStore))
         .addPropertyNameIfMissing("productManager", ObjectHelper.isNull(this.productManager))
