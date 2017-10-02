@@ -37,17 +37,13 @@
     android:alpha="0.1"
     android:background="@color/common_black"/>
 
-  <com.tpago.movil.d.ui.view.widget.pad.DepNumPad
+  <com.tpago.movil.app.ui.NumPad
     android:id="@+id/transaction_creation.num_pad"
+    style="@style/NumPad.Light"
     android:layout_width="match_parent"
     android:layout_height="0dp"
-    android:layout_marginBottom="16dp"
-    android:layout_marginEnd="32dp"
-    android:layout_marginStart="32dp"
-    android:layout_marginTop="16dp"
     android:layout_weight="1"
-    app:deleteEnabled="true"
-    app:dotEnabled="true"/>
+    app:dotButtonEnabled="true"/>
 
   <Button
     android:id="@+id/action.transfer"

@@ -8,6 +8,7 @@ import com.squareup.picasso.Picasso;
 import com.tpago.movil.BuildConfig;
 import com.tpago.movil.app.AppComponent;
 import com.tpago.movil.app.di.ComponentBuilderSupplier;
+import com.tpago.movil.app.di.ComponentBuilderSupplierContainer;
 import com.tpago.movil.d.DepAppModule;
 
 import javax.inject.Inject;
@@ -21,7 +22,7 @@ import static com.tpago.movil.dep.Preconditions.assertNotNull;
  * @author hecvasro
  */
 @Deprecated
-public abstract class App extends MultiDexApplication {
+public abstract class App extends MultiDexApplication implements ComponentBuilderSupplierContainer {
 
   public static App get(Context context) {
     return (App) assertNotNull(context, "context == null").getApplicationContext();
@@ -60,12 +61,9 @@ public abstract class App extends MultiDexApplication {
     Picasso.setSingletonInstance(picasso);
   }
 
+  @Deprecated
   public final AppComponent component() {
     return component;
-  }
-
-  public final ComponentBuilderSupplier componentBuilderSupplier() {
-    return this.componentBuilderSupplier;
   }
 
   public final boolean isVisible() {
@@ -82,5 +80,10 @@ public abstract class App extends MultiDexApplication {
     initTimber();
     initDagger();
     initializePicasso();
+  }
+
+  @Override
+  public ComponentBuilderSupplier componentBuilderSupplier() {
+    return this.componentBuilderSupplier;
   }
 }

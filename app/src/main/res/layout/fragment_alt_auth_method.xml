@@ -14,7 +14,7 @@
     android:text="@string/chooseAnAlternativeAuthenticationMethod"/>
 
   <android.support.v4.widget.Space
-    style="@style/Divider.Space.Normal"/>
+    style="@style/VerticalDivider.Space.Normal"/>
 
   <ScrollView
     android:layout_width="match_parent"
@@ -32,14 +32,14 @@
 
       <View
         android:id="@+id/fingerprintOptionDivider"
-        style="@style/Divider.Line"/>
+        style="@style/VerticalDivider.Line"/>
 
       <com.tpago.movil.app.ui.main.settings.SelectableSettingsOption
         android:id="@+id/codeOption"
         style="@style/SettingsOption"
         app:primaryText="@string/code"/>
 
-      <View style="@style/Divider.Line"/>
+      <View style="@style/VerticalDivider.Line"/>
 
       <com.tpago.movil.app.ui.main.settings.SelectableSettingsOption
         android:id="@+id/noneOption"

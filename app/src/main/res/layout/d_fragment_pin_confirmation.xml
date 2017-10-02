@@ -12,9 +12,9 @@
     android:background="@drawable/d_background_pin_confirmation">
 
     <LinearLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
       android:id="@+id/linear_layout_container"
       style="@style/PinConfirmationContainer"
-      xmlns:android="http://schemas.android.com/apk/res/android"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="vertical">
@@ -57,17 +57,11 @@
         android:layout_marginStart="60dp"
         android:layout_marginTop="16dp"/>
 
-      <com.tpago.movil.d.ui.view.widget.pad.DepNumPad
+      <com.tpago.movil.app.ui.NumPad
         android:id="@+id/num_pad"
+        style="@style/NumPad.Dark"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        app:deleteEnabled="true"
-        app:dotEnabled="false"
-        app:tintColor="@color/common_white"/>
+        android:layout_height="match_parent"/>
     </LinearLayout>
   </FrameLayout>
 </io.codetail.widget.RevealFrameLayout>

@@ -3,7 +3,8 @@ package com.tpago.movil.app.ui.main.settings.auth.alt;
 import com.tpago.movil.app.ui.AlertData;
 import com.tpago.movil.app.ui.AlertManager;
 import com.tpago.movil.app.ui.Presenter;
-import com.tpago.movil.app.ui.TakeoverLoader;
+import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
+import com.tpago.movil.app.ui.main.code.CodeCreator;
 import com.tpago.movil.data.StringMapper;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodKeyGenerator;
 import com.tpago.movil.data.auth.alt.CodeAltAuthMethodKeyGenerator;
@@ -36,6 +37,7 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
   private final StringMapper stringMapper;
   private final AlertManager alertManager;
   private final TakeoverLoader takeoverLoader;
+  private final CodeCreator codeCreator;
 
   private Disposable disposable = Disposables.disposed();
 
@@ -49,12 +51,11 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
     this.stringMapper = builder.stringMapper;
     this.alertManager = builder.alertManager;
     this.takeoverLoader = builder.takeoverLoader;
+    this.codeCreator = builder.codeCreator;
   }
 
   private void handleCompletion() {
-    this.updateSelection();
-
-    // TODO: Go back
+    this.presentation.finish();
   }
 
   private void handleError(Throwable throwable, String message) {
@@ -74,6 +75,8 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
     this.disposable = completable
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
+      .doOnSubscribe((d) -> this.takeoverLoader.show())
+      .doOnTerminate(this.takeoverLoader::hide)
       .subscribe(
         this::handleCompletion,
         (throwable) -> this.handleError(throwable, "Enabling alt auth method")
@@ -92,19 +95,22 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
     if (this.altAuthMethodManager.getActiveMethod() == AltAuthMethod.CODE) {
       this.handleCompletion();
     } else {
-      // TODO: Ask for code, create key generator, and enable method.
+      this.codeCreator.create(
+        CodeCreator.RequestType.ALTAUTH,
+        (code) -> this.enableMethod(this.codeAltAuthMethodKeyGeneratorCreator.create(code))
+      );
     }
   }
 
   final void onNoneOptionClicked() {
-    if (this.altAuthMethodManager.isEnabled()) {
+    if (!this.altAuthMethodManager.isEnabled()) {
       this.handleCompletion();
     } else {
       this.disposable = this.altAuthMethodManager.disable()
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe((d) -> this.takeoverLoader.show())
-        .doOnComplete(this.takeoverLoader::hide)
+        .doOnTerminate(this.takeoverLoader::hide)
         .subscribe(
           this::handleCompletion,
           (throwable) -> this.handleError(throwable, "Disabling alt auth method")
@@ -153,6 +159,7 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
     private StringMapper stringMapper;
     private AlertManager alertManager;
     private TakeoverLoader takeoverLoader;
+    private CodeCreator codeCreator;
 
     private AltAuthMethodPresentation presentation;
 
@@ -184,6 +191,11 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
       return this;
     }
 
+    final Builder codeCreator(CodeCreator codeCreator) {
+      this.codeCreator = ObjectHelper.checkNotNull(codeCreator, "codeCreator");
+      return this;
+    }
+
     final Builder presentation(AltAuthMethodPresentation presentation) {
       this.presentation = ObjectHelper.checkNotNull(presentation, "presentation");
       return this;
@@ -202,6 +214,7 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
         .addPropertyNameIfMissing("stringMapper", ObjectHelper.isNull(this.stringMapper))
         .addPropertyNameIfMissing("alertManager", ObjectHelper.isNull(this.alertManager))
         .addPropertyNameIfMissing("takeoverLoader", ObjectHelper.isNull(this.takeoverLoader))
+        .addPropertyNameIfMissing("codeCreator", ObjectHelper.isNull(this.codeCreator))
         .addPropertyNameIfMissing("presentation", ObjectHelper.isNull(this.presentation))
         .checkNoMissingProperties();
 

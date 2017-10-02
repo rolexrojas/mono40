@@ -14,11 +14,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+
 import com.tpago.movil.R;
+import com.tpago.movil.app.ui.NumPad;
 import com.tpago.movil.dep.api.DCurrencies;
 import com.tpago.movil.dep.App;
 import com.tpago.movil.d.data.Formatter;
@@ -32,27 +35,29 @@ import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
-import com.tpago.movil.d.ui.view.widget.pad.DepNumPad;
-import com.tpago.movil.d.ui.view.widget.pad.Digit;
-import com.tpago.movil.d.ui.view.widget.pad.Dot;
 import com.tpago.movil.d.domain.ErrorCode;
 import com.tpago.movil.d.domain.FailureData;
 import com.tpago.movil.d.domain.Result;
 import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
 import com.tpago.movil.dep.net.NetworkService;
+import com.tpago.movil.util.Action;
+
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.function.Consumer;
+
 import javax.inject.Inject;
+
 import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -61,10 +66,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  */
 public final class DisbursementActivity
   extends AppCompatActivity
-  implements PaymentMethodChooser.OnPaymentMethodChosenListener,
-  DepNumPad.OnDigitClickedListener,
-  DepNumPad.OnDotClickedListener,
-  DepNumPad.OnDeleteClickedListener {
+  implements PaymentMethodChooser.OnPaymentMethodChosenListener {
+
   private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
 
   private static final String KEY_PRODUCT_FUNDING = "fundingProduct";
@@ -92,7 +95,8 @@ public final class DisbursementActivity
       if (mustShowDot) {
         formattedValue += ".";
       }
-    } else if (fraction.multiply(fractionOffset).compareTo(TEN) < 0) {
+    } else if (fraction.multiply(fractionOffset)
+      .compareTo(TEN) < 0) {
       formattedValue = formattedValue.substring(0, formattedValue.length() - 1);
     }
     return formattedValue;
@@ -117,13 +121,17 @@ public final class DisbursementActivity
   @BindView(R.id.payment_method_chooser) PaymentMethodChooser paymentMethodChooser;
   @BindView(R.id.toolbar) Toolbar toolbar;
   @BindView(R.id.transaction_creation_amount) PrefixableTextView amountTextView;
-  @BindView(R.id.transaction_creation_num_pad) DepNumPad numPad;
+  @BindView(R.id.transaction_creation_num_pad) NumPad numPad;
 
   @Inject DepApiBridge depApiBridge;
   @Inject NetworkService networkService;
   @Inject ProductManager productManager;
   @Inject SessionManager sessionManager;
   @Inject StringHelper stringHelper;
+
+  private Consumer<Integer> numPadDigitConsumer;
+  private Action numPadDotAction;
+  private Action numPadDeleteAction;
 
   private void updateAmountText() {
     this.amountTextView.setContent(
@@ -178,7 +186,9 @@ public final class DisbursementActivity
             result = Result.create(
               FailureData.create(
                 ErrorCode.UNEXPECTED,
-                pinValidationResult.getError().getDescription()));
+                pinValidationResult.getError()
+                  .getDescription()
+              ));
           }
         } else {
           result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
@@ -188,36 +198,31 @@ public final class DisbursementActivity
     })
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(new Consumer<Result<String,ErrorCode>>() {
-          @Override
-          public void accept(Result<String, ErrorCode> result) {
-            if (result.isSuccessful()) {
-              setTransferResult(true, result.getSuccessData());
-            } else {
-              setTransferResult(false, null);
+      .subscribe((result) -> {
+          if (result.isSuccessful()) {
+            setTransferResult(true, result.getSuccessData());
+          } else {
+            setTransferResult(false, null);
 
-              final FailureData<ErrorCode> failureData = result.getFailureData();
-              switch (failureData.getCode()) {
-                case INCORRECT_PIN:
-                  showGenericErrorDialog(stringHelper.resolve(R.string.error_incorrect_pin));
-                  break;
-                case UNAVAILABLE_NETWORK:
-                  showUnavailableNetworkError();
-                  break;
-                default:
-                  showGenericErrorDialog(failureData.getDescription());
-                  break;
-              }
+            final FailureData<ErrorCode> failureData = result.getFailureData();
+            switch (failureData.getCode()) {
+              case INCORRECT_PIN:
+                showGenericErrorDialog(stringHelper.resolve(R.string.error_incorrect_pin));
+                break;
+              case UNAVAILABLE_NETWORK:
+                showUnavailableNetworkError();
+                break;
+              default:
+                showGenericErrorDialog(failureData.getDescription());
+                break;
             }
           }
-        }, new Consumer<Throwable>() {
-          @Override
-          public void accept(Throwable throwable) {
-            Timber.e(throwable);
-            setTransferResult(false, null);
-            showGenericErrorDialog();
-          }
-        });
+        }, (throwable) -> {
+          Timber.e(throwable);
+          setTransferResult(false, null);
+          showGenericErrorDialog();
+        }
+      );
   }
 
   @OnClick(R.id.action_transfer)
@@ -316,9 +321,12 @@ public final class DisbursementActivity
     this.amountTextView.setPrefix(DCurrencies.map(this.fundingProduct.getCurrency()));
     this.updateAmountText();
 
-    this.numPad.setOnDigitClickedListener(this);
-    this.numPad.setOnDotClickedListener(this);
-    this.numPad.setOnDeleteClickedListener(this);
+    this.numPadDigitConsumer = this::onDigitClicked;
+    this.numPad.addDigitConsumer(this.numPadDigitConsumer);
+    this.numPadDotAction = this::onDotClicked;
+    this.numPad.addDotAction(this.numPadDotAction);
+    this.numPadDeleteAction = this::onDeleteClicked;
+    this.numPad.addDeleteAction(this.numPadDeleteAction);
   }
 
   @Override
@@ -342,6 +350,13 @@ public final class DisbursementActivity
 
   @Override
   protected void onDestroy() {
+    this.numPad.removeDeleteAction(this.numPadDeleteAction);
+    this.numPadDeleteAction = null;
+    this.numPad.removeDotAction(this.numPadDotAction);
+    this.numPadDotAction = null;
+    this.numPad.removeDigitConsumer(this.numPadDigitConsumer);
+    this.numPadDigitConsumer = null;
+
     this.unbinder.unbind();
 
     super.onDestroy();
@@ -353,9 +368,8 @@ public final class DisbursementActivity
     this.showTransferButtonAsEnabled();
   }
 
-  @Override
-  public void onDigitClicked(@NonNull Digit digit) {
-    BigDecimal addition = BigDecimal.valueOf(digit.getValue());
+  public final void onDigitClicked(int digit) {
+    BigDecimal addition = BigDecimal.valueOf(digit);
     if (this.mustShowDot && this.fractionOffset.compareTo(HUNDRED) < 0) {
       this.value = this.value.add(
         addition.divide(
@@ -373,16 +387,14 @@ public final class DisbursementActivity
     }
   }
 
-  @Override
-  public void onDotClicked(@NonNull Dot dot) {
+  public final void onDotClicked() {
     if (!this.mustShowDot) {
       this.mustShowDot = true;
       this.updateAmountText();
     }
   }
 
-  @Override
-  public void onDeleteClicked() {
+  public final void onDeleteClicked() {
     final int result = this.value.compareTo(ZERO);
     if (result > 0) {
       final BigDecimal fraction = getFraction(this.value);

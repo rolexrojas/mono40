@@ -20,9 +20,7 @@ public abstract class BaseToolbarActivity extends BaseActivity {
 
   @BindView(R.id.toolbar) protected Toolbar toolbar;
 
-  @Inject
-  @HomeButton
-  protected NavButtonClickHandler homeButtonClickHandler;
+  @Inject @HomeButton protected NavButtonClickHandler homeButtonClickHandler;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -1,4 +1,4 @@
-package com.tpago.movil.app.ui;
+package com.tpago.movil.app.ui.loader;
 
 /**
  * @author hecvasro

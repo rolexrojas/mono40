@@ -95,6 +95,19 @@ public final class StringHelper {
     }
   }
 
+  public static String repeat(String s, int length) {
+    if (isNullOrEmpty(s)) {
+      return "";
+    } else {
+      final StringBuilder builder = new StringBuilder();
+      while (length > 0) {
+        builder.append(s);
+        length--;
+      }
+      return builder.toString();
+    }
+  }
+
   private StringHelper() {
   }
 }

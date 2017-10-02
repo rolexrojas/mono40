@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <!-- Spaces -->
+  <!-- Space dimensions -->
   <dimen name="smallHorizontalSpace">15dp</dimen>
   <dimen name="normalHorizontalSpace">20dp</dimen>
+  <dimen name="largeHorizontalSpace">32dp</dimen>
+  <dimen name="hugeHorizontalSpace">64dp</dimen>
   <dimen name="smallVerticalSpace">16dp</dimen>
   <dimen name="normalVerticalSpace">32dp</dimen>
 
-  <!-- Icons -->
+  <!-- Icon dimensions -->
   <dimen name="tinyIconSize">18dp</dimen>
   <dimen name="smallIconSize">20dp</dimen>
   <dimen name="normalIconSize">24dp</dimen>
   <dimen name="largeIconSize">36dp</dimen>
   
-  <!-- Images -->
+  <!-- Toolbar dimensions -->
+  <dimen name="normalToolbarHeight">64dp</dimen>
+
+  <!-- Image dimensions -->
   <dimen name="normalProfilePictureSize">80dp</dimen>
   <dimen name="largeProfilePictureSize">120dp</dimen>
 
@@ -99,12 +104,10 @@
   <dimen name="space_vertical_normal">32dp</dimen>
   <dimen name="space_vertical_small">20dp</dimen>
   <dimen name="tab_indicator_dot_thickness">4dp</dimen>
-  <dimen name="toolbar_height">64dp</dimen>
   <dimen name="transaction_creation_text_widget_amount_value_max">75sp</dimen>
   <dimen name="transaction_creation_text_widget_amount_value_min">@dimen/app_text_widget_auto_resizeable_prefixable_text_view_content_min</dimen>
   <dimen name="tutorial_tab_highlight_offset_x">15dp</dimen>
   <dimen name="tutorial_tab_highlight_offset_y">15dp</dimen>
-  <dimen name="widget_app_toolbar_height">64dp</dimen>
   <dimen name="widget_button_dark_gradient_height">50dp</dimen>
   <dimen name="widget_button_height_normal">36dp</dimen>
   <dimen name="widget_button_radius">2dp</dimen>

@@ -14,6 +14,18 @@ import static java.lang.String.format;
 public final class DigitHelper {
 
   /**
+   * Removes all non-{@link Digit digit} {@link Character characters} from the given {@link String
+   * string}.
+   *
+   * @return A copy of the given {@link String string} with only {@link Digit digit} {@link
+   * Character characters}.
+   */
+  public static String removeNonDigits(String s) {
+    return StringHelper.emptyIfNull(s)
+      .replaceAll("\\D", "");
+  }
+
+  /**
    * Transforms the given {@link Character charater} into its {@link Digit digit} representation.
    *
    * @return {@link Digit} representation of the given {@link Character character}.
@@ -63,27 +75,6 @@ public final class DigitHelper {
   }
 
   /**
-   * Transforms the given {@link Digit digit} into its {@link Character character} representation.
-   *
-   * @return {@link Character} representation of the given {@link Digit digit}.
-   */
-  private static char toChar(@Digit int digit) {
-    return forDigit(digit, 10);
-  }
-
-  /**
-   * Removes all non-{@link Digit digit} {@link Character characters} from the given {@link String
-   * string}.
-   *
-   * @return A copy of the given {@link String string} with only {@link Digit digit} {@link
-   * Character characters}.
-   */
-  public static String removeNonDigits(String s) {
-    return StringHelper.emptyIfNull(s)
-      .replaceAll("\\D", "");
-  }
-
-  /**
    * Transforms the given {@link String string} to a {@link List list} of {@link Digit digits}.
    *
    * @return A {@link List list} of {@link Digit digits} created from the given {@link String
@@ -96,6 +87,15 @@ public final class DigitHelper {
       digitList.add(toDigit(digitString.charAt(i)));
     }
     return digitList;
+  }
+
+  /**
+   * Transforms the given {@link Digit digit} into its {@link Character character} representation.
+   *
+   * @return {@link Character} representation of the given {@link Digit digit}.
+   */
+  private static char toChar(@Digit int digit) {
+    return forDigit(digit, 10);
   }
 
   private DigitHelper() {

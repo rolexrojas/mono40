@@ -35,7 +35,7 @@
           android:layout_marginStart="25dp"
           android:gravity="bottom|end"/>
         <TextView
-          fontPath="@string/font_gothamRounded_medium"
+          fontPath="@string/gothamRoundedMediumFont"
           android:layout_width="wrap_content"
           android:layout_height="match_parent"
           android:layout_alignParentStart="true"

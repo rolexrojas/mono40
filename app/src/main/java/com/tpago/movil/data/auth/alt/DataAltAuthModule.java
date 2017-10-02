@@ -58,7 +58,9 @@ public final class DataAltAuthModule {
   @Singleton
   KeyStore keyStore(AltAuthConfigData data) {
     try {
-      return KeyStore.getInstance(data.providerName());
+      final KeyStore keyStore = KeyStore.getInstance(data.providerName());
+      keyStore.load(null);
+      return keyStore;
     } catch (Exception exception) {
       throw new RuntimeException(exception);
     }

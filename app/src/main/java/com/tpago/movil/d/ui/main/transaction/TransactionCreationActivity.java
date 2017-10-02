@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.tpago.movil.app.ui.ActivityModule;
 import com.tpago.movil.dep.App;
 import com.tpago.movil.R;
 import com.tpago.movil.d.domain.Product;
@@ -111,6 +112,7 @@ public class TransactionCreationActivity
       // Injects all the annotated dependencies.
       component = DaggerTransactionCreationComponent.builder()
         .appComponent(((App) getApplication()).component())
+        .activityModule(ActivityModule.create(this))
         .transactionCreationModule(new TransactionCreationModule(transactionCategory, recipient))
         .build();
       component.inject(this);

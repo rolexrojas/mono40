@@ -14,6 +14,7 @@ import dagger.Provides;
 /**
  * @author hecvasro
  */
+@Deprecated
 @Module
 public final class MainModule {
   private final Session session;

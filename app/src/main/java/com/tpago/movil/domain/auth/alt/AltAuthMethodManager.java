@@ -60,7 +60,9 @@ public final class AltAuthMethodManager {
    *   If it is {@link #isEnabled() enabled}.
    */
   public final Completable enable(AltAuthMethodKeyGenerator generator) {
-    this.checkEnabled();
+    if (this.isEnabled()) {
+      throw new IllegalStateException("this.isEnabled()");
+    }
 
     return ObjectHelper.checkNotNull(generator, "generator")
       .generate()

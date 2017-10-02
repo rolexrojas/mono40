@@ -93,8 +93,10 @@ public final class SettingsFragment extends BaseMainFragment implements Settings
 
     // Injects all annotated dependencies.
     DepMainActivity.get(this.getActivity())
-      .getComponent()
-      .create(SettingsModule.create(this))
+      .componentBuilderSupplier()
+      .get(SettingsFragment.class, SettingsComponent.Builder.class)
+      .settingsModule(SettingsModule.create(this))
+      .build()
       .inject(this);
   }
 

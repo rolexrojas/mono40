@@ -19,8 +19,10 @@ import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.api.ApiError;
+import com.tpago.movil.data.gson.PlaceholderTypeAdapter;
 import com.tpago.movil.dep.data.AssetUriBuilder;
 import com.tpago.movil.d.domain.Bank;
+import com.tpago.movil.util.Placeholder;
 
 import javax.inject.Singleton;
 
@@ -40,6 +42,7 @@ public final class GsonModule {
 
     return new GsonBuilder()
       .setDateFormat("dd/MM/yyyy")
+      .registerTypeAdapter(Placeholder.class, PlaceholderTypeAdapter.create())
       .registerTypeAdapter(Bank.class, bankTypeAdapter)
       .registerTypeAdapter(ApiError.class, new ApiErrorTypeAdapter())
       .registerTypeAdapter(InitialData.class, new InitialDataDeserializer())

@@ -1,5 +1,6 @@
 package com.tpago.movil.app.ui.main.settings;
 
+import com.tpago.movil.app.di.ComponentBuilder;
 import com.tpago.movil.app.ui.FragmentScope;
 
 import dagger.Subcomponent;
@@ -12,4 +13,10 @@ import dagger.Subcomponent;
 public interface SettingsComponent {
 
   void inject(SettingsFragment fragment);
+
+  @Subcomponent.Builder
+  interface Builder extends ComponentBuilder<SettingsComponent> {
+
+    Builder settingsModule(SettingsModule module);
+  }
 }

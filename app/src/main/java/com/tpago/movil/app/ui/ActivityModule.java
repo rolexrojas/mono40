@@ -2,7 +2,12 @@ package com.tpago.movil.app.ui;
 
 import android.support.v4.app.FragmentManager;
 
+import com.tpago.movil.app.di.ComponentBuilder;
+import com.tpago.movil.app.di.ComponentBuilderSupplier;
+import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.util.ObjectHelper;
+
+import java.util.Map;
 
 import dagger.Module;
 import dagger.Provides;
@@ -21,6 +26,13 @@ public final class ActivityModule {
 
   private ActivityModule(BaseActivity activity) {
     this.activity = ObjectHelper.checkNotNull(activity, "activity");
+  }
+
+  @Provides
+  @ActivityScope
+  @ActivityQualifier
+  ComponentBuilderSupplier componentBuilderSupplier(Map<Class<?>, ComponentBuilder> map) {
+    return ComponentBuilderSupplier.create(map);
   }
 
   @Provides

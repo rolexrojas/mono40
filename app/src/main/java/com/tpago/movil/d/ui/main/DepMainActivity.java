@@ -18,14 +18,16 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import com.tpago.movil.app.di.ComponentBuilderSupplier;
 import com.tpago.movil.app.ui.ActivityModule;
+import com.tpago.movil.app.ui.main.MainComponent;
+import com.tpago.movil.d.ui.DepActivityModule;
 import com.tpago.movil.dep.Session;
 import com.tpago.movil.dep.TimeOutManager;
 import com.tpago.movil.app.ui.ActivityQualifier;
 import com.tpago.movil.dep.App;
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.FragmentReplacer;
-import com.tpago.movil.app.ui.FragmentActivityModule;
 import com.tpago.movil.app.ui.main.settings.SettingsFragment;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
@@ -35,7 +37,6 @@ import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.domain.util.EventBus;
 import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.StringHelper;
-import com.tpago.movil.d.ui.DepActivityModule;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.SwitchableContainerActivity;
@@ -87,9 +88,8 @@ public class DepMainActivity
 
   private boolean shouldRequestAuthentication = false;
 
-  @Inject
-  @ActivityQualifier
-  FragmentReplacer fragmentReplacer;
+  @Inject @ActivityQualifier ComponentBuilderSupplier componentBuilderSupplier;
+  @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
 
   @Inject TimeOutManager timeOutManager;
 
@@ -127,6 +127,10 @@ public class DepMainActivity
     return i;
   }
 
+  public final ComponentBuilderSupplier componentBuilderSupplier() {
+    return this.componentBuilderSupplier;
+  }
+
   @Override
   public boolean dispatchTouchEvent(MotionEvent ev) {
     eventBus.dispatch(new ResetEvent());
@@ -143,11 +147,12 @@ public class DepMainActivity
     super.onCreate(savedInstanceState);
     unbinder = ButterKnife.bind(this);
     // Injects all the annotated dependencies.
-    component = DaggerDepMainComponent.builder()
+    this.component = App.get(this)
+      .componentBuilderSupplier()
+      .get(DepMainActivity.class, MainComponent.Builder.class)
       .activityModule(ActivityModule.create(this))
-      .appComponent(((App) getApplication()).component())
-      .mainModule(new MainModule(((Session) getIntent().getParcelableExtra(KEY_SESSION)), this))
       .depActivityModule(new DepActivityModule(this))
+      .mainModule(new MainModule(((Session) getIntent().getParcelableExtra(KEY_SESSION)), this))
       .build();
     component.inject(this);
     // Prepares the action bar.

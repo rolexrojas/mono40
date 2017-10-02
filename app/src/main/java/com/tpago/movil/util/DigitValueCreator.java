@@ -172,7 +172,7 @@ public final class DigitValueCreator<T> {
     public final DigitValueCreator<T> build() {
       BuilderChecker.create()
         .addPropertyNameIfMissing("additionPredicate", ObjectHelper.isNull(this.additionPredicate))
-        .addPropertyNameIfMissing("formatPredicate", ObjectHelper.isNull(this.formatFunction))
+        .addPropertyNameIfMissing("formatPredicate", ObjectHelper.isNull(this.formatPredicate))
         .addPropertyNameIfMissing("mapperFunction", ObjectHelper.isNull(this.mapperFunction))
         .checkNoMissingProperties();
 

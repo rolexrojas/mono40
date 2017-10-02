@@ -10,7 +10,7 @@
   <com.tpago.movil.d.ui.view.widget.PrefixableTextView
     android:id="@+id/view_amount"
     style="@style/D.Screen.Products.Text.Widget.Amount.Content"
-    fontPath="@string/font_gothamRounded_medium"
+    fontPath="@string/gothamRoundedMediumFont"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentEnd="true"

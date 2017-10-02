@@ -17,7 +17,7 @@ import dagger.Provides;
  */
 @Deprecated
 @Module
-class DepMainModule {
+public class DepMainModule {
 
   @Provides
   @ActivityScope

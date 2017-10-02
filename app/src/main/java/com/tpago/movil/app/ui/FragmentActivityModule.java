@@ -6,10 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.tpago.movil.R;
-import com.tpago.movil.app.di.ComponentBuilder;
-import com.tpago.movil.app.di.ComponentBuilderSupplier;
-
-import java.util.Map;
 
 import dagger.Module;
 import dagger.Provides;
@@ -22,13 +18,6 @@ import dagger.Provides;
  */
 @Module
 public final class FragmentActivityModule {
-
-  @Provides
-  @ActivityScope
-  @ActivityQualifier
-  ComponentBuilderSupplier componentBuilderSupplier(Map<Class<?>, ComponentBuilder> map) {
-    return ComponentBuilderSupplier.create(map);
-  }
 
   @Provides
   @ActivityScope

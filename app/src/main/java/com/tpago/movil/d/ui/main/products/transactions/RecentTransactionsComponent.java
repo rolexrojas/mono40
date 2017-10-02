@@ -11,11 +11,11 @@ import dagger.Component;
  */
 @ActivityScope
 @Component(
+  dependencies = AppComponent.class,
   modules = {
     ActivityModule.class,
     RecentTransactionsModule.class
-  },
-  dependencies = AppComponent.class
+  }
 )
 interface RecentTransactionsComponent {
 

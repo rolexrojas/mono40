@@ -1,6 +1,8 @@
 package com.tpago.movil.app.ui;
 
 import com.tpago.movil.app.di.ComponentBuilder;
+import com.tpago.movil.app.ui.main.code.CodeCreatorModule;
+import com.tpago.movil.app.ui.main.code.CodeCreatorPresentationComponentBuilderModule;
 
 import dagger.Subcomponent;
 
@@ -10,10 +12,12 @@ import dagger.Subcomponent;
 @ActivityScope
 @Subcomponent(
   modules = {
-    FragmentActivityComponentBuilderModule.class,
     ActivityModule.class,
+    CodeCreatorModule.class,
+    CodeCreatorPresentationComponentBuilderModule.class,
+    FragmentActivityComponentBuilderModule.class,
+    FragmentActivityModule.class,
     ToolbarActivityModule.class,
-    FragmentActivityModule.class
   }
 )
 public interface FragmentActivityComponent {

@@ -6,6 +6,8 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.tpago.movil.app.App;
+import com.tpago.movil.app.di.ComponentBuilderSupplier;
 import com.tpago.movil.data.StringMapper;
 
 import javax.inject.Inject;
@@ -21,9 +23,11 @@ public abstract class BaseActivity extends AppCompatActivity {
 
   private Unbinder unbinder;
 
-  @Inject protected StringMapper stringMapper;
-  @Inject protected AlertManager alertManager;
+  protected ComponentBuilderSupplier parentComponentBuilderSupplier;
+
   @Inject @BackButton protected NavButtonClickHandler backButtonClickHandler;
+  @Inject protected AlertManager alertManager;
+  @Inject protected StringMapper stringMapper;
 
   /**
    * Layout resource identifier of the activity
@@ -45,16 +49,18 @@ public abstract class BaseActivity extends AppCompatActivity {
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    // Sets the layout of the activity.
     this.setContentView(this.layoutResId());
 
-    // Binds all annotated resources, views and methods.
     this.unbinder = ButterKnife.bind(this);
+
+    this.parentComponentBuilderSupplier = App.get(this)
+      .componentBuilderSupplier();
   }
 
   @Override
   protected void onDestroy() {
-    // Unbinds all annotated resources, views and methods.
+    this.parentComponentBuilderSupplier = null;
+
     this.unbinder.unbind();
 
     super.onDestroy();

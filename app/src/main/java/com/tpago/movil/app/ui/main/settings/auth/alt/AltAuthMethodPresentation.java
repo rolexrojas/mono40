@@ -14,4 +14,6 @@ public interface AltAuthMethodPresentation extends Presentation {
   void setCodeOptionSelection(boolean selected);
 
   void setNoneOptionSelection(boolean selected);
+
+  void finish();
 }

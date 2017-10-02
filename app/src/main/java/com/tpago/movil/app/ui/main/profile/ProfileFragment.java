@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso;
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.AlertData;
 import com.tpago.movil.app.ui.AlertManager;
-import com.tpago.movil.app.ui.TakeoverLoader;
+import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.data.picasso.CircleTransformation;
 import com.tpago.movil.dep.UserStore;
 import com.tpago.movil.app.ui.main.BaseMainFragment;

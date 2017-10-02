@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.tpago.movil.util.Action;
 import com.tpago.movil.util.Digit;
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.ActivityQualifier;
@@ -19,7 +20,9 @@ import com.tpago.movil.dep.init.signin.SignInFragment;
 import com.tpago.movil.dep.widget.EditableLabel;
 import com.tpago.movil.dep.widget.FullSizeLoadIndicator;
 import com.tpago.movil.dep.widget.LoadIndicator;
-import com.tpago.movil.dep.widget.NumPad;
+import com.tpago.movil.app.ui.NumPad;
+
+import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
@@ -33,9 +36,7 @@ import butterknife.Unbinder;
  */
 public final class PhoneNumberInitFragment
   extends BaseInitFragment
-  implements PhoneNumberInitPresenter.View,
-  NumPad.OnDigitClickedListener,
-  NumPad.OnDeleteClickedListener {
+  implements PhoneNumberInitPresenter.View {
   public static PhoneNumberInitFragment create() {
     return new PhoneNumberInitFragment();
   }
@@ -50,6 +51,9 @@ public final class PhoneNumberInitFragment
 
   @Inject LogoAnimator logoAnimator;
   @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
+
+  private Consumer<Integer> numPadDigitConsumer;
+  private Action numPadDeleteAction;
 
   @OnClick(R.id.button_move_to_next_screen)
   void onNextButtonClicked() {
@@ -87,9 +91,11 @@ public final class PhoneNumberInitFragment
   public void onStart() {
     super.onStart();
     // Adds a listener that gets notified each time a digit button of the num pad is clicked.
-    numPad.setOnDigitClickedListener(this);
+    this.numPadDigitConsumer = this::onDigitClicked;
+    this.numPad.addDigitConsumer(this.numPadDigitConsumer);
     // Adds a listener that gets notified each time the delete button of the num pad is clicked.
-    numPad.setOnDeleteClickedListener(this);
+    this.numPadDeleteAction = this::onDeleteClicked;
+    this.numPad.addDeleteAction(this.numPadDeleteAction);
     // Starts the presenter.
     presenter.onViewStarted();
   }
@@ -106,10 +112,13 @@ public final class PhoneNumberInitFragment
     super.onStop();
     // Stops the presenter.
     presenter.onViewStopped();
-    // Removes the listener that gets notified each time a digit button of the num pad is clicked.
-    numPad.setOnDigitClickedListener(null);
     // Removes the listener that gets notified each time the delete button of the num pad is clicked.
-    numPad.setOnDeleteClickedListener(null);
+    this.numPad.removeDeleteAction(this.numPadDeleteAction);
+    this.numPadDeleteAction = null;
+    // Removes the listener that gets notified each time a digit button of the num pad is clicked.
+    this.numPad.removeDigitConsumer(this.numPadDigitConsumer);
+    this.numPadDigitConsumer = null;
+
   }
 
   @Override
@@ -180,13 +189,11 @@ public final class PhoneNumberInitFragment
       .commit();
   }
 
-  @Override
-  public void onDigitClicked(@Digit int digit) {
+  public final void onDigitClicked(@Digit int digit) {
     presenter.addDigit(digit);
   }
 
-  @Override
-  public void onDeleteClicked() {
+  public final void onDeleteClicked() {
     presenter.removeDigit();
   }
 

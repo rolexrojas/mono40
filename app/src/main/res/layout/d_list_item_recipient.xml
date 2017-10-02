@@ -55,7 +55,7 @@
     android:orientation="vertical">
     <TextView
       android:id="@+id/recipient.label"
-      fontPath="@string/font_gothamRounded_medium"
+      fontPath="@string/gothamRoundedMediumFont"
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:layout_weight="1"

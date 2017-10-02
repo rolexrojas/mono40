@@ -21,8 +21,6 @@ import com.tpago.movil.data.StringMapper;
 import com.tpago.movil.d.domain.BankProvider;
 import com.tpago.movil.dep.init.InitComponent;
 import com.tpago.movil.dep.init.InitModule;
-import com.tpago.movil.dep.main.MainComponent;
-import com.tpago.movil.dep.main.MainModule;
 import com.tpago.movil.dep.net.NetworkService;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
 
@@ -54,9 +52,6 @@ public interface AppComponent {
 
   @Deprecated
   InitialDataLoader provideInitialDataLoader();
-
-  @Deprecated
-  MainComponent plus(ActivityModule activityModule, MainModule mainModule);
 
   @Deprecated
   NetworkService provideNetworkService();

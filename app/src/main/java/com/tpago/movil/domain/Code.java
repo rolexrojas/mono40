@@ -5,6 +5,7 @@ import com.google.auto.value.extension.memoized.Memoized;
 import com.tpago.movil.util.DigitHelper;
 import com.tpago.movil.util.DigitValueCreator;
 import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.util.StringHelper;
 
 /**
  * FailureCode representation
@@ -28,6 +29,7 @@ public abstract class Code {
     return DigitValueCreator.<Code>builder()
       .additionPredicate((i) -> i < LENGTH)
       .formatPredicate((s) -> s.length() == LENGTH)
+      .formatFunction((s) -> StringHelper.repeat("•", s.length()))
       .mapperFunction(AutoValue_Code::new)
       .value(value)
       .build();
@@ -48,17 +50,6 @@ public abstract class Code {
   }
 
   public abstract String value();
-
-  @Memoized
-  public char[] toCharArray() {
-    final String value = this.value();
-    final int length = value.length();
-    final char[] array = new char[length];
-    for (int i = 0; i < length; i++) {
-      array[i] = value.charAt(i);
-    }
-    return array;
-  }
 
   @Memoized
   @Override

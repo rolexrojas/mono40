@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.tpago.movil.R;
+import com.tpago.movil.app.ui.NumPad;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.domain.Product;
@@ -21,18 +22,17 @@ import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.main.transaction.TransactionCategory;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
-import com.tpago.movil.d.ui.view.widget.pad.Digit;
-import com.tpago.movil.d.ui.view.widget.pad.Dot;
-import com.tpago.movil.d.ui.view.widget.pad.DepNumPad;
 import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
 import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
 import com.tpago.movil.dep.text.Texts;
+import com.tpago.movil.util.Action;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
@@ -47,10 +47,7 @@ import butterknife.Unbinder;
 public class PhoneNumberTransactionCreationFragment
   extends ChildFragment<TransactionCreationContainer>
   implements PhoneNumberTransactionCreationScreen,
-  PaymentMethodChooser.OnPaymentMethodChosenListener,
-  DepNumPad.OnDigitClickedListener,
-  DepNumPad.OnDotClickedListener,
-  DepNumPad.OnDeleteClickedListener {
+  PaymentMethodChooser.OnPaymentMethodChosenListener {
 
   private static final BigDecimal ZERO = BigDecimal.ZERO;
   private static final BigDecimal ONE = BigDecimal.ONE;
@@ -75,7 +72,7 @@ public class PhoneNumberTransactionCreationFragment
   @BindView(R.id.transaction_creation_amount)
   PrefixableTextView amountTextView;
   @BindView(R.id.transaction_creation_num_pad)
-  DepNumPad numPad;
+  NumPad numPad;
   @BindView(R.id.action_recharge)
   Button rechargeActionButton;
   @BindView(R.id.action_transfer)
@@ -86,6 +83,10 @@ public class PhoneNumberTransactionCreationFragment
 
   private boolean mustShowDot = false;
   private BigDecimal fractionOffset = ONE;
+
+  private Consumer<Integer> numPadDigitConsumer;
+  private Action numPadDotAction;
+  private Action numPadDeleteAction;
 
   @NonNull
   public static PhoneNumberTransactionCreationFragment newInstance() {
@@ -174,9 +175,12 @@ public class PhoneNumberTransactionCreationFragment
     // Adds a listener that gets notified every time a payment option is chosen.
     paymentMethodChooser.setOnPaymentMethodChosenListener(this);
     // Adds a listener that gets notified every time a num pad button is pressed.
-    numPad.setOnDigitClickedListener(this);
-    numPad.setOnDotClickedListener(this);
-    numPad.setOnDeleteClickedListener(this);
+    this.numPadDigitConsumer = this::onDigitClicked;
+    this.numPad.addDigitConsumer(this.numPadDigitConsumer);
+    this.numPadDotAction = this::onDotClicked;
+    this.numPad.addDotAction(this.numPadDotAction);
+    this.numPadDeleteAction = this::onDeleteClicked;
+    this.numPad.addDeleteAction(this.numPadDeleteAction);
 
     if (this.transactionCategory == TRANSFER) {
       this.transferActionButton.setVisibility(View.VISIBLE);
@@ -214,9 +218,13 @@ public class PhoneNumberTransactionCreationFragment
   public void onDestroyView() {
     super.onDestroyView();
     // Removes the listener that gets notified every time a num pad button is pressed.
-    numPad.setOnDeleteClickedListener(null);
-    numPad.setOnDotClickedListener(null);
-    numPad.setOnDigitClickedListener(null);
+    this.numPad.removeDeleteAction(this.numPadDeleteAction);
+    this.numPadDeleteAction = null;
+    this.numPad.removeDotAction(this.numPadDotAction);
+    this.numPadDotAction = null;
+    this.numPad.removeDigitConsumer(this.numPadDigitConsumer);
+    this.numPadDigitConsumer = null;
+
     // Removes the listener that gets notified every time a payment option is chosen.
     paymentMethodChooser.setOnPaymentMethodChosenListener(null);
     // Detaches the screen from the presenter.
@@ -301,9 +309,8 @@ public class PhoneNumberTransactionCreationFragment
       .finish(false, null);
   }
 
-  @Override
-  public void onDigitClicked(@NonNull Digit digit) {
-    BigDecimal addition = BigDecimal.valueOf(digit.getValue());
+  public final void onDigitClicked(int digit) {
+    BigDecimal addition = BigDecimal.valueOf(digit);
     if (mustShowDot && fractionOffset.compareTo(HUNDRED) < 0) {
       value.set(
         value.get()
@@ -322,16 +329,14 @@ public class PhoneNumberTransactionCreationFragment
     }
   }
 
-  @Override
-  public void onDotClicked(@NonNull Dot dot) {
+  public final void onDotClicked() {
     if (!mustShowDot) {
       mustShowDot = true;
       updateAmountText();
     }
   }
 
-  @Override
-  public void onDeleteClicked() {
+  public final void onDeleteClicked() {
     final int result = value.get()
       .compareTo(ZERO);
     if (result > 0) {

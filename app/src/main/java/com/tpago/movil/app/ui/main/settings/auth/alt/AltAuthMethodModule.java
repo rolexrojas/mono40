@@ -2,7 +2,8 @@ package com.tpago.movil.app.ui.main.settings.auth.alt;
 
 import com.tpago.movil.app.ui.AlertManager;
 import com.tpago.movil.app.ui.FragmentScope;
-import com.tpago.movil.app.ui.TakeoverLoader;
+import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
+import com.tpago.movil.app.ui.main.code.CodeCreator;
 import com.tpago.movil.data.StringMapper;
 import com.tpago.movil.data.auth.alt.CodeAltAuthMethodKeyGenerator;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
@@ -34,7 +35,8 @@ public final class AltAuthMethodModule {
     CodeAltAuthMethodKeyGenerator.Creator codeAltAuthMethodKeyGeneratorCreator,
     StringMapper stringMapper,
     AlertManager alertManager,
-    TakeoverLoader takeoverLoader
+    TakeoverLoader takeoverLoader,
+    CodeCreator codeCreator
   ) {
     return AltAuthMethodPresenter.builder()
       .altAuthMethodManager(altAuthMethodManager)
@@ -42,6 +44,7 @@ public final class AltAuthMethodModule {
       .stringMapper(stringMapper)
       .alertManager(alertManager)
       .takeoverLoader(takeoverLoader)
+      .codeCreator(codeCreator)
       .presentation(this.presentation)
       .build();
   }

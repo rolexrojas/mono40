@@ -15,7 +15,7 @@
       android:layout_gravity="center_horizontal"
       style="@style/ProfilePicturePlaceholder.Light.Large"/>
 
-    <Space style="@style/Divider.Space.Normal"/>
+    <Space style="@style/VerticalDivider.Space.Normal"/>
 
     <!-- Fist name -->
     <TextView
@@ -27,9 +27,9 @@
       style="@style/ProfileInput"
       android:enabled="false"/>
 
-    <View style="@style/Divider.Line"/>
+    <View style="@style/VerticalDivider.Line"/>
 
-    <android.support.v4.widget.Space style="@style/Divider.Space.Small"/>
+    <android.support.v4.widget.Space style="@style/VerticalDivider.Space.Small"/>
 
     <!-- Last name -->
     <TextView
@@ -41,9 +41,9 @@
       style="@style/ProfileInput"
       android:enabled="false"/>
 
-    <View style="@style/Divider.Line"/>
+    <View style="@style/VerticalDivider.Line"/>
 
-    <android.support.v4.widget.Space style="@style/Divider.Space.Small"/>
+    <android.support.v4.widget.Space style="@style/VerticalDivider.Space.Small"/>
 
     <!-- Phone number -->
     <TextView
@@ -56,9 +56,9 @@
       android:drawableEnd="@drawable/profile_input_indicator_uneditable"
       android:enabled="false"/>
 
-    <View style="@style/Divider.Line"/>
+    <View style="@style/VerticalDivider.Line"/>
 
-    <android.support.v4.widget.Space style="@style/Divider.Space.Small"/>
+    <android.support.v4.widget.Space style="@style/VerticalDivider.Space.Small"/>
 
     <!-- Email -->
     <TextView
@@ -71,7 +71,7 @@
       android:drawableEnd="@drawable/profile_input_indicator_uneditable"
       android:enabled="false"/>
 
-    <View style="@style/Divider.Line"/>
+    <View style="@style/VerticalDivider.Line"/>
 
     <!-- Change password -->
     <com.tpago.movil.app.ui.main.settings.SingleLineSettingsOption
@@ -81,7 +81,7 @@
       app:primaryText="@string/changeMyPassword"/>
 
     <View
-      style="@style/Divider.Line"
+      style="@style/VerticalDivider.Line"
       android:visibility="gone"/>
 
     <!-- Sign out -->

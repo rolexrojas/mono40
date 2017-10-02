@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.tpago.movil.util.Action;
 import com.tpago.movil.util.Digit;
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.FragmentQualifier;
@@ -16,7 +17,9 @@ import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.dep.widget.EditableLabel;
 import com.tpago.movil.dep.widget.FullSizeLoadIndicator;
 import com.tpago.movil.dep.widget.LoadIndicator;
-import com.tpago.movil.dep.widget.NumPad;
+import com.tpago.movil.app.ui.NumPad;
+
+import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
@@ -29,9 +32,7 @@ import butterknife.Unbinder;
  */
 public final class PinRegisterFormFragment
   extends BaseRegisterFragment
-  implements PinRegisterFormPresenter.View,
-  NumPad.OnDigitClickedListener,
-  NumPad.OnDeleteClickedListener {
+  implements PinRegisterFormPresenter.View {
   private Unbinder unbinder;
   private LoadIndicator loadIndicator;
   private PinRegisterFormPresenter presenter;
@@ -40,6 +41,9 @@ public final class PinRegisterFormFragment
 
   @BindView(R.id.editable_label_pin) EditableLabel pinEditableLabel;
   @BindView(R.id.num_pad) NumPad numPad;
+
+  private Consumer<Integer> numPadDigitConsumer;
+  private Action numPadDeleteAction;
 
   static PinRegisterFormFragment create() {
     return new PinRegisterFormFragment();
@@ -83,18 +87,23 @@ public final class PinRegisterFormFragment
   public void onResume() {
     super.onResume();
     // Adds a listener that gets notified each time a digit button of the num pad is clicked.
-    numPad.setOnDigitClickedListener(this);
+    this.numPadDigitConsumer = this::onDigitClicked;
+    this.numPad.addDigitConsumer(this.numPadDigitConsumer);
     // Adds a listener that gets notified each time the delete button of the num pad is clicked.
-    numPad.setOnDeleteClickedListener(this);
+    this.numPadDeleteAction = this::onDeleteClicked;
+    this.numPad.addDeleteAction(this.numPadDeleteAction);
   }
 
   @Override
   public void onPause() {
-    super.onPause();
-    // Removes the listener that gets notified each time a digit button of the num pad is clicked.
-    numPad.setOnDigitClickedListener(null);
     // Removes the listener that gets notified each time the delete button of the num pad is clicked.
-    numPad.setOnDeleteClickedListener(null);
+    this.numPad.removeDeleteAction(this.numPadDeleteAction);
+    this.numPadDeleteAction = null;
+    // Removes the listener that gets notified each time a digit button of the num pad is clicked.
+    this.numPad.removeDigitConsumer(this.numPadDigitConsumer);
+    this.numPadDigitConsumer = null;
+
+    super.onPause();
   }
 
   @Override
@@ -115,13 +124,11 @@ public final class PinRegisterFormFragment
     unbinder.unbind();
   }
 
-  @Override
-  public void onDigitClicked(@Digit int digit) {
+  public final void onDigitClicked(@Digit int digit) {
     presenter.onDigitButtonClicked(digit);
   }
 
-  @Override
-  public void onDeleteClicked() {
+  public final void onDeleteClicked() {
     presenter.onDeleteButtonClicked();
   }
 

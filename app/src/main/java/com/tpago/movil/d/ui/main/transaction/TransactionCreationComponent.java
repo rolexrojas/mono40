@@ -2,7 +2,6 @@ package com.tpago.movil.d.ui.main.transaction;
 
 import com.tpago.movil.app.ui.ActivityModule;
 import com.tpago.movil.app.ui.ActivityScope;
-import com.tpago.movil.dep.AppComponent;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Product;
@@ -19,6 +18,7 @@ import com.tpago.movil.d.ui.main.transaction.products.CreditCardTransactionCreat
 import com.tpago.movil.d.ui.main.transaction.products.CreditCardTransactionCreationPresenter;
 import com.tpago.movil.d.ui.main.transaction.products.LoanTransactionCreationFragment;
 import com.tpago.movil.d.ui.main.transaction.products.LoanTransactionCreationPresenter;
+import com.tpago.movil.dep.AppComponent;
 import com.tpago.movil.dep.net.NetworkService;
 
 import java.math.BigDecimal;
@@ -36,7 +36,8 @@ import dagger.Component;
     ActivityModule.class,
     com.tpago.movil.dep.ActivityModule.class,
     TransactionCreationModule.class
-  })
+  }
+)
 public interface TransactionCreationComponent {
 
   void inject(TransactionCreationActivity activity);

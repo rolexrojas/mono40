@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import com.tpago.movil.R;
 import com.tpago.movil.app.App;
 import com.tpago.movil.app.di.ComponentBuilderSupplier;
+import com.tpago.movil.app.di.ComponentBuilderSupplierContainer;
 import com.tpago.movil.util.ObjectHelper;
 
 import javax.inject.Inject;
@@ -16,7 +17,8 @@ import javax.inject.Inject;
 /**
  * @author hecvasro
  */
-public final class FragmentActivity extends BaseToolbarActivity {
+public final class FragmentActivity extends BaseToolbarActivity implements
+  ComponentBuilderSupplierContainer {
 
   private static final String KEY_CREATOR = "creator";
 
@@ -32,7 +34,7 @@ public final class FragmentActivity extends BaseToolbarActivity {
   public static FragmentActivity get(Activity activity) {
     ObjectHelper.checkNotNull(activity, "activity");
     if (!(activity instanceof FragmentActivity)) {
-      throw new IllegalArgumentException("!(activity instanceof FragmentActivity)");
+      throw new ClassCastException("!(activity instanceof FragmentActivity)");
     }
 
     return (FragmentActivity) activity;
@@ -53,8 +55,7 @@ public final class FragmentActivity extends BaseToolbarActivity {
     super.onCreate(savedInstanceState);
 
     // Initializes the dependency injector.
-    this.component = App.get(this)
-      .componentBuilderSupplier()
+    this.component = this.parentComponentBuilderSupplier
       .get(FragmentActivity.class, FragmentActivityComponent.Builder.class)
       .activityModule(ActivityModule.create(this))
       .build();
@@ -76,7 +77,8 @@ public final class FragmentActivity extends BaseToolbarActivity {
     return this.component;
   }
 
-  public final ComponentBuilderSupplier componentBuilderSupplier() {
+  @Override
+  public ComponentBuilderSupplier componentBuilderSupplier() {
     return this.componentBuilderSupplier;
   }
 }

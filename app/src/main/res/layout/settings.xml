@@ -18,7 +18,7 @@
       style="@style/SettingsOption"
       app:primaryText="@string/profileSettingsOption"/>
 
-    <android.support.v4.widget.Space style="@style/Divider.Space.Normal"/>
+    <android.support.v4.widget.Space style="@style/VerticalDivider.Space.Normal"/>
 
     <TextView
       style="@style/SettingsSectionTitle"
@@ -32,7 +32,7 @@
       app:primaryText="@string/primaryPaymentMethodSettingsOption"/>
 
     <android.support.v4.widget.Space
-      style="@style/Divider.Space.Normal"
+      style="@style/VerticalDivider.Space.Normal"
       android:visibility="gone"/>
 
     <TextView
@@ -42,10 +42,10 @@
     <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
       android:id="@+id/altAuthMethodSettingsOption"
       style="@style/SettingsOption"
-      app:primaryText="@string/alternativeAuthenticationMethod"/>
+      app:primaryText="@string/altAuthMethod"/>
 
     <View
-      style="@style/Divider.Line"
+      style="@style/VerticalDivider.Line"
       android:visibility="gone"/>
 
     <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
@@ -55,7 +55,7 @@
       app:primaryText="@string/timeoutSettingsOption"/>
 
     <View
-      style="@style/Divider.Line"
+      style="@style/VerticalDivider.Line"
       android:visibility="gone"/>
 
     <com.tpago.movil.app.ui.main.settings.ToggleableSettingsOption
@@ -65,7 +65,7 @@
       app:primaryText="@string/lockOnExitSettingsOption"/>
 
     <View
-      style="@style/Divider.Line"
+      style="@style/VerticalDivider.Line"
       android:visibility="gone"/>
 
     <com.tpago.movil.app.ui.main.settings.SingleLineSettingsOption

@@ -12,6 +12,7 @@
   <color name="erraticState_dark">#F8E81C</color>
   <color name="erraticState_dark_50">#7FF8E81C</color>
   <color name="primary">#9C188F</color>
+  <color name="primaryAlpha94">#F29C188F</color>
   <color name="primaryDark">#6D1764</color>
   <color name="primary_05">#0D9C188F</color>
   <color name="primary_20">#339C188F</color>
@@ -21,6 +22,10 @@
   <color name="whiteAlpha50">#7FFFFFFF</color>
   <color name="white_20">#33FFFFFF</color>
   <color name="white_90">#E5FFFFFF</color>
+
+  <!-- Num pad -->
+  <color name="numPadDark">@color/white</color>
+  <color name="numPadLight">#333</color>
 
   <!-- Settings -->
   <color name="normalSettingsText">#333</color>

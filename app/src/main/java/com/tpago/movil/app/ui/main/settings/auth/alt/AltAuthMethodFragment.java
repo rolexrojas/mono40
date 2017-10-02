@@ -1,14 +1,15 @@
 package com.tpago.movil.app.ui.main.settings.auth.alt;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.google.auto.value.AutoValue;
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.BaseFragment;
 import com.tpago.movil.app.ui.FragmentActivity;
 import com.tpago.movil.app.ui.FragmentCreator;
+import com.tpago.movil.app.ui.InjectableFragment;
 import com.tpago.movil.app.ui.main.settings.SelectableSettingsOption;
 
 import javax.inject.Inject;
@@ -19,7 +20,8 @@ import butterknife.OnClick;
 /**
  * @author hecvasro
  */
-public final class AltAuthMethodFragment extends BaseFragment implements AltAuthMethodPresentation {
+public final class AltAuthMethodFragment extends InjectableFragment
+  implements AltAuthMethodPresentation {
 
   public static FragmentCreator creator() {
     return new AutoValue_AltAuthMethodFragment_Creator();
@@ -29,6 +31,7 @@ public final class AltAuthMethodFragment extends BaseFragment implements AltAuth
   @BindView(R.id.fingerprintOptionDivider) View fingerprintOptionDivider;
 
   @BindView(R.id.codeOption) SelectableSettingsOption codeOption;
+
   @BindView(R.id.noneOption) SelectableSettingsOption noneOption;
 
   @Inject AltAuthMethodPresenter presenter;
@@ -58,8 +61,7 @@ public final class AltAuthMethodFragment extends BaseFragment implements AltAuth
     super.onViewCreated(view, savedInstanceState);
 
     // Injects all annotated dependencies.
-    FragmentActivity.get(this.getActivity())
-      .componentBuilderSupplier()
+    this.parentComponentBuilderSupplier
       .get(AltAuthMethodFragment.class, AltAuthMethodComponent.Builder.class)
       .altAuthMethodModule(AltAuthMethodModule.create(this))
       .build()
@@ -72,7 +74,7 @@ public final class AltAuthMethodFragment extends BaseFragment implements AltAuth
 
     // Sets the title.
     FragmentActivity.get(this.getActivity())
-      .setTitle(R.string.alternativeAuthenticationMethod);
+      .setTitle(R.string.altAuthMethod);
   }
 
   @Override
@@ -112,6 +114,12 @@ public final class AltAuthMethodFragment extends BaseFragment implements AltAuth
   @Override
   public void setNoneOptionSelection(boolean selected) {
     this.noneOption.selected(selected);
+  }
+
+  @Override
+  public void finish() {
+    this.getActivity()
+      .finish();
   }
 
   @AutoValue
