@@ -20,6 +20,9 @@ public interface Api {
   @POST("account/fingerprint-authorization")
   Single<Placeholder> enableAltAuth(@Body ApiEnableAltAuthBody body);
 
+  @POST("signin/fingerprint")
+  Single<Response<User>> verifySignedData(@Body ApiVerifyAltAuthBody body);
+
   @DELETE("account/public-key/account/1")
   Single<Placeholder> disableAltAuth();
 }

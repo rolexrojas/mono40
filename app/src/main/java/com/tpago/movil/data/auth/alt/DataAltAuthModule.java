@@ -74,7 +74,7 @@ public final class DataAltAuthModule {
 
   @Provides
   @Singleton
-  CodeAltAuthMethodKeyGenerator.Creator codeAuthMethodKeyPairGenerator(
+  CodeAltAuthMethodKeyGenerator.Creator codeAuthMethodKeyPairGeneratorCreator(
     Context context,
     CodeAuthMethodStore store,
     AltAuthConfigData configData
@@ -84,6 +84,21 @@ public final class DataAltAuthModule {
       .context(context)
       .store(store)
       .configData(configData)
+      .build();
+  }
+
+  @Provides
+  @Singleton
+  CodeAltAuthMethodKeySupplier.Creator codeAuthMethodKeyPairSupplierCreator(
+    KeyStore keyStore,
+    AltAuthConfigData altAuthConfigData,
+    CodeAuthMethodStore codeAuthMethodStore
+  ) {
+    return CodeAltAuthMethodKeySupplier.Creator
+      .builder()
+      .keyStore(keyStore)
+      .altAuthMethodConfigData(altAuthConfigData)
+      .configAuthMethodStore(codeAuthMethodStore)
       .build();
   }
 

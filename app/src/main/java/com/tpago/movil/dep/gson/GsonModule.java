@@ -55,7 +55,7 @@ public final class GsonModule {
       .registerTypeAdapter(PhoneNumberRecipient.class, new RecipientTypeAdapter())
       .registerTypeAdapter(NonAffiliatedPhoneNumberRecipient.class, new RecipientTypeAdapter())
       .registerTypeAdapter(BillRecipient.class, new RecipientTypeAdapter())
-      .registerTypeAdapterFactory(GeneratedTypeAdapterFactory.create())
+      .registerTypeAdapterFactory(DecoratedGeneratedTypeAdapterFactory.create())
       .create();
   }
 }
