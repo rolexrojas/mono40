@@ -40,6 +40,8 @@ public abstract class AltAuthMethodConfigData {
 
   public abstract Date codeMethodEndDate();
 
+  public abstract String codeCipherTransformation();
+
   @Memoized
   @Override
   public abstract String toString();
@@ -71,6 +73,8 @@ public abstract class AltAuthMethodConfigData {
     abstract Builder codeMethodStartDate(Date date);
 
     abstract Builder codeMethodEndDate(Date date);
+
+    abstract Builder codeCipherTransformation(String codeCipherTransformation);
 
     abstract AltAuthMethodConfigData build();
   }

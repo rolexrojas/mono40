@@ -42,6 +42,7 @@ public final class DataAltAuthModule {
       .codeMethodSerialNumber(BigInteger.ONE)
       .codeMethodStartDate(startCalendar.getTime())
       .codeMethodEndDate(endCalendar.getTime())
+      .codeCipherTransformation("RSA/ECB/PKCS1Padding")
       .build();
   }
 

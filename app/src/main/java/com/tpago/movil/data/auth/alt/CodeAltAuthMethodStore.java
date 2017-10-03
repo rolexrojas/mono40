@@ -56,7 +56,8 @@ final class CodeAltAuthMethodStore {
 
     final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-    final Cipher cipher = Cipher.getInstance(this.altAuthMethodConfigData.keyGenAlgName());
+    final Cipher cipher = Cipher
+      .getInstance(this.altAuthMethodConfigData.codeCipherTransformation());
     cipher.init(Cipher.ENCRYPT_MODE, publicKey);
     final CipherOutputStream cipherOutputStream = new CipherOutputStream(
       outputStream,
@@ -80,7 +81,8 @@ final class CodeAltAuthMethodStore {
 
     final String encryptedCode = this.keyValueStore.get(KEY);
 
-    final Cipher cipher = Cipher.getInstance(this.altAuthMethodConfigData.keyGenAlgName());
+    final Cipher cipher = Cipher
+      .getInstance(this.altAuthMethodConfigData.codeCipherTransformation());
     cipher.init(Cipher.DECRYPT_MODE, privateKey);
     final CipherInputStream cipherInputStream = new CipherInputStream(
       new ByteArrayInputStream(Base64.decode(encryptedCode, Base64.DEFAULT)),
