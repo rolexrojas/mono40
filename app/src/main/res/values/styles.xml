@@ -244,7 +244,7 @@
   <style name="Base.CodeCreatorSubtitle" parent="Base.CodeCreatorText">
     <item name="android:lineSpacingExtra">10sp</item>
     <item name="android:textSize">15sp</item>
-    <item name="fontPath">@string/gothamRoundedMediumFont</item>
+    <item name="fontPath">@string/gothamRoundedBookFont</item>
   </style>
 
   <style name="CodeCreatorSubtitle" parent="Base.CodeCreatorSubtitle"/>

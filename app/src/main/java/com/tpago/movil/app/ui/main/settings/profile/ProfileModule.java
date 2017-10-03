@@ -1,4 +1,4 @@
-package com.tpago.movil.app.ui.main.profile;
+package com.tpago.movil.app.ui.main.settings.profile;
 
 import com.tpago.movil.dep.UserStore;
 import com.tpago.movil.app.ui.FragmentScope;

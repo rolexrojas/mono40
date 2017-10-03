@@ -1,4 +1,4 @@
-package com.tpago.movil.app.ui.main.profile;
+package com.tpago.movil.app.ui.main.settings.profile;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -12,9 +12,9 @@ import com.tpago.movil.R;
 import com.tpago.movil.app.ui.AlertData;
 import com.tpago.movil.app.ui.AlertManager;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
+import com.tpago.movil.app.ui.main.BaseMainFragment;
 import com.tpago.movil.data.picasso.CircleTransformation;
 import com.tpago.movil.dep.UserStore;
-import com.tpago.movil.app.ui.main.BaseMainFragment;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.domain.pos.PosBridge;
@@ -24,6 +24,7 @@ import com.tpago.movil.d.ui.main.DepMainActivity;
 import com.tpago.movil.data.StringMapper;
 import com.tpago.movil.dep.init.InitActivity;
 import com.tpago.movil.dep.widget.TextInput;
+import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
 
 import javax.inject.Inject;
 
@@ -46,27 +47,27 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
 
   private Subscription signOutSubscription = Subscriptions.unsubscribed();
 
-  @Inject StringMapper stringMapper;
-  @Inject AlertManager alertManager;
-  @Inject TakeoverLoader takeoverLoader;
-  @Inject ProfilePresenter presenter;
-
-  @Inject PosBridge posBridge;
-  @Inject UserStore userStore;
-  @Inject SessionManager sessionManager;
-  @Inject ProductManager productManager;
-  @Inject RecipientManager recipientManager;
-
   @BindView(R.id.pictureImageView) ImageView pictureImageView;
   @BindView(R.id.firstNameTextInput) TextInput firstNameTextInput;
   @BindView(R.id.lastNameTextInput) TextInput lastNameTextInput;
   @BindView(R.id.phoneNumberTextInput) TextInput phoneNumberTextInput;
   @BindView(R.id.emailTextInput) TextInput emailTextInput;
 
-  @Override
+  @Inject AlertManager alertManager;
+  @Inject AltAuthMethodManager altAuthMethodManager;
+  @Inject PosBridge posBridge;
+  @Inject ProductManager productManager;
+  @Inject ProfilePresenter presenter;
+  @Inject RecipientManager recipientManager;
+  @Inject SessionManager sessionManager;
+  @Inject StringMapper stringMapper;
+  @Inject TakeoverLoader takeoverLoader;
+  @Inject UserStore userStore;
+
   @StringRes
+  @Override
   protected int titleResId() {
-    return R.string.myProfile;
+    return R.string.profile;
   }
 
   @Override
@@ -106,6 +107,9 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
 
   private void handleSignOutSuccess(PosResult result) {
     if (result.isSuccessful()) {
+      this.altAuthMethodManager.disable()
+        .blockingAwait();
+
       this.recipientManager.clear();
       this.productManager.clear();
       this.sessionManager.deactivate();
@@ -133,6 +137,12 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
         .value();
       this.signOutSubscription = this.posBridge.unregister(phoneNumber)
         .subscribeOn(Schedulers.io())
+        .doOnSuccess((result) -> {
+          if (result.isSuccessful()) {
+            this.altAuthMethodManager.disable()
+              .blockingAwait();
+          }
+        })
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(this.takeoverLoader::show)
         .doOnUnsubscribe(this.takeoverLoader::hide)

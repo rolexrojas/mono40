@@ -26,11 +26,9 @@ public final class AltAuthMethodFragment extends InjectableFragment
     return new AutoValue_AltAuthMethodFragment_Creator();
   }
 
+  @BindView(R.id.codeOption) SelectableSettingsOption codeOption;
   @BindView(R.id.fingerprintOption) SelectableSettingsOption fingerprintOption;
   @BindView(R.id.fingerprintOptionDivider) View fingerprintOptionDivider;
-
-  @BindView(R.id.codeOption) SelectableSettingsOption codeOption;
-
   @BindView(R.id.noneOption) SelectableSettingsOption noneOption;
 
   @Inject AltAuthMethodPresenter presenter;

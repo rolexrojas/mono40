@@ -10,7 +10,7 @@ import com.tpago.movil.app.ui.ActivityQualifier;
 import com.tpago.movil.app.ui.FragmentActivity;
 import com.tpago.movil.app.ui.FragmentReplacer;
 import com.tpago.movil.app.ui.main.BaseMainFragment;
-import com.tpago.movil.app.ui.main.profile.ProfileFragment;
+import com.tpago.movil.app.ui.main.settings.profile.ProfileFragment;
 import com.tpago.movil.app.ui.main.settings.auth.alt.AltAuthMethodFragment;
 import com.tpago.movil.d.ui.main.DepMainActivity;
 

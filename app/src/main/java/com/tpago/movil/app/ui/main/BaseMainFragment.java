@@ -8,6 +8,7 @@ import com.tpago.movil.d.ui.main.DepMainActivity;
 /**
  * @author hecvasro
  */
+@Deprecated
 public abstract class BaseMainFragment extends BaseFragment {
 
   @StringRes
