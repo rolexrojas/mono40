@@ -58,13 +58,12 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
     this.presentation.finish();
   }
 
-  private void handleError(Throwable throwable, String message) {
-    Timber.e(throwable, message);
-
-    this.alertManager.show(AlertData.genericFailureData(this.stringMapper));
+  private void handleError(Throwable throwable, String message, Object... argList) {
+    Timber.e(throwable, message, argList);
+    this.alertManager.show(AlertData.createForGenericFailure(this.stringMapper));
   }
 
-  private void enableMethod(AltAuthMethodKeyGenerator generator) {
+  private void onEnableButtonClicked(AltAuthMethodKeyGenerator generator) {
     final Completable completable;
     if (this.altAuthMethodManager.isEnabled()) {
       completable = this.altAuthMethodManager.disable()
@@ -79,11 +78,15 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
       .doOnTerminate(this.takeoverLoader::hide)
       .subscribe(
         this::handleCompletion,
-        (throwable) -> this.handleError(throwable, "Enabling alt auth method")
+        (throwable) -> this.handleError(
+          throwable,
+          "onEnableButtonClicked(%1$s)",
+          generator.method()
+        )
       );
   }
 
-  final void onFingerprintOptionClicked() {
+  final void onEnableFingerprintButtonClicked() {
     if (this.altAuthMethodManager.getActiveMethod() == AltAuthMethod.FINGERPRINT) {
       this.handleCompletion();
     } else {
@@ -91,18 +94,18 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
     }
   }
 
-  final void onCodeOptionClicked() {
+  final void onEnableCodeButtonClicked() {
     if (this.altAuthMethodManager.getActiveMethod() == AltAuthMethod.CODE) {
       this.handleCompletion();
     } else {
       this.codeCreator.create(
-        CodeCreator.RequestType.ALTAUTH,
-        (code) -> this.enableMethod(this.codeAltAuthMethodKeyGeneratorCreator.create(code))
+        CodeCreator.RequestType.ALT_AUTH,
+        (code) -> this.onEnableButtonClicked(this.codeAltAuthMethodKeyGeneratorCreator.create(code))
       );
     }
   }
 
-  final void onNoneOptionClicked() {
+  final void onDisableButtonClicked() {
     if (!this.altAuthMethodManager.isEnabled()) {
       this.handleCompletion();
     } else {
@@ -113,7 +116,7 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
         .doOnTerminate(this.takeoverLoader::hide)
         .subscribe(
           this::handleCompletion,
-          (throwable) -> this.handleError(throwable, "Disabling alt auth method")
+          (throwable) -> this.handleError(throwable, "onDisableButtonClicked()")
         );
     }
   }

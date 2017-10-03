@@ -20,16 +20,13 @@ final class SharedPreferencesKeyValueStore implements KeyValueStore {
     this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
   }
 
-  private static String checkNotNullNorEmpty(String s, String argumentName) {
-    if (StringHelper.isNullOrEmpty(s)) {
+  private static String checkNotNullNorEmpty(String value, String argumentName) {
+    if (StringHelper.isNullOrEmpty(value)) {
       throw new IllegalArgumentException(
-        String.format(
-          "StringHelper.isNullOrEmpty(%1$s)",
-          argumentName
-        )
+        String.format("StringHelper.isNullOrEmpty(%1$s)", argumentName)
       );
     }
-    return s;
+    return value;
   }
 
   @Override

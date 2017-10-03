@@ -6,7 +6,7 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * {@link Module} that contains providers for objects that belong to the data layer of emulated
+ * {@link Module} that contains providers for objects that belong to the value layer of emulated
  * devices.
  */
 @Module

@@ -6,6 +6,7 @@ import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.google.gson.annotations.SerializedName;
 import com.tpago.movil.domain.user.User;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * @author hecvasro
@@ -51,6 +52,8 @@ public abstract class ApiVerifyAltAuthBody {
     abstract Builder userPhoneNumber(String userPhoneNumber);
 
     public final Builder user(User user) {
+      ObjectHelper.checkNotNull(user, "user");
+
       return this.userId(user.id())
         .userPhoneNumber(
           user.phoneNumber()
@@ -63,12 +66,7 @@ public abstract class ApiVerifyAltAuthBody {
     abstract Builder signedData(String signedData);
 
     public final Builder signedData(byte[] signedData) {
-      return this.signedData(
-        Base64.encodeToString(
-          signedData,
-          Base64.DEFAULT
-        )
-      );
+      return this.signedData(Base64.encodeToString(signedData, Base64.DEFAULT));
     }
 
     public abstract ApiVerifyAltAuthBody build();

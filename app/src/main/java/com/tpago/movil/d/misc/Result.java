@@ -39,9 +39,9 @@ public abstract class Result<C, D> {
   }
 
   /**
-   * Gets the data of the result.
+   * Gets the value of the result.
    *
-   * @return Result data.
+   * @return Result value.
    */
   public final D getData() {
     return data;

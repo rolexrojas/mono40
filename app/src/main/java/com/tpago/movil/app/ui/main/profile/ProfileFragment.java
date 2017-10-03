@@ -1,7 +1,6 @@
 package com.tpago.movil.app.ui.main.profile;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -116,14 +115,14 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
       activity.startActivity(InitActivity.getLaunchIntent(activity));
       activity.finish();
     } else {
-      this.alertManager.show(AlertData.genericFailureData(this.stringMapper));
+      this.alertManager.show(AlertData.createForGenericFailure(this.stringMapper));
     }
   }
 
   private void handleSignOutFailure(Throwable throwable) {
     Timber.e(throwable, "Signing out");
 
-    this.alertManager.show(AlertData.genericFailureData(this.stringMapper));
+    this.alertManager.show(AlertData.createForGenericFailure(this.stringMapper));
   }
 
   @OnClick(R.id.signOutSettingsOption)

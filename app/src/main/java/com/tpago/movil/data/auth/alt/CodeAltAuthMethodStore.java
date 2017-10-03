@@ -4,6 +4,7 @@ import android.util.Base64;
 
 import com.tpago.movil.domain.Code;
 import com.tpago.movil.domain.KeyValueStore;
+import com.tpago.movil.domain.KeyValueStoreHelper;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.io.ByteArrayInputStream;
@@ -19,27 +20,43 @@ import javax.crypto.CipherOutputStream;
 /**
  * @author hecvasro
  */
-final class CodeAuthMethodStore {
+final class CodeAltAuthMethodStore {
 
-  static CodeAuthMethodStore create(KeyValueStore store, AltAuthConfigData configData) {
-    return new CodeAuthMethodStore(store, configData);
+  private static final String KEY = KeyValueStoreHelper
+    .createKey(CodeAltAuthMethodStore.class, "Code");
+
+  static CodeAltAuthMethodStore create(
+    KeyValueStore keyValueStore,
+    AltAuthMethodConfigData altAuthMethodConfigData
+  ) {
+    return new CodeAltAuthMethodStore(keyValueStore, altAuthMethodConfigData);
   }
 
-  private final KeyValueStore store;
-  private final AltAuthConfigData configData;
+  private final KeyValueStore keyValueStore;
+  private final AltAuthMethodConfigData altAuthMethodConfigData;
 
-  private CodeAuthMethodStore(KeyValueStore store, AltAuthConfigData configData) {
-    this.store = ObjectHelper.checkNotNull(store, "store");
-    this.configData = ObjectHelper.checkNotNull(configData, "configData");
+  private CodeAltAuthMethodStore(
+    KeyValueStore keyValueStore,
+    AltAuthMethodConfigData altAuthMethodConfigData
+  ) {
+    this.keyValueStore = ObjectHelper.checkNotNull(keyValueStore, "codeAltAuthMethodStore");
+    this.altAuthMethodConfigData = ObjectHelper.checkNotNull(
+      altAuthMethodConfigData,
+      "altAuthMethodConfigData"
+    );
   }
 
   final void set(PublicKey publicKey, Code code) throws Exception {
     ObjectHelper.checkNotNull(publicKey, "publicKey");
     ObjectHelper.checkNotNull(code, "code");
 
+    if (this.keyValueStore.isSet(KEY)) {
+      throw new IllegalStateException(String.format("keyValueStore.isSet(%1$s)", KEY));
+    }
+
     final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-    final Cipher cipher = Cipher.getInstance(this.configData.keyGenAlgName());
+    final Cipher cipher = Cipher.getInstance(this.altAuthMethodConfigData.keyGenAlgName());
     cipher.init(Cipher.ENCRYPT_MODE, publicKey);
     final CipherOutputStream cipherOutputStream = new CipherOutputStream(
       outputStream,
@@ -51,34 +68,22 @@ final class CodeAuthMethodStore {
     );
     cipherOutputStream.close();
 
-    this.store.set(
-      this.configData.codeMethodKey(),
-      Base64.encodeToString(
-        outputStream.toByteArray(),
-        Base64.DEFAULT
-      )
-    );
+    this.keyValueStore.set(KEY, Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT));
   }
 
   final Code get(PrivateKey privateKey) throws Exception {
     ObjectHelper.checkNotNull(privateKey, "privateKey");
 
-    final String key = this.configData.codeMethodKey();
-    if (!this.store.isSet(key)) {
-      throw new IllegalStateException(String.format("!this.store.isSet(%1$s)", key));
+    if (!this.keyValueStore.isSet(KEY)) {
+      throw new IllegalStateException(String.format("!keyValueStore.isSet(%1$s)", KEY));
     }
 
-    final String encryptedCode = this.store.get(key);
+    final String encryptedCode = this.keyValueStore.get(KEY);
 
-    final Cipher cipher = Cipher.getInstance(this.configData.keyGenAlgName());
+    final Cipher cipher = Cipher.getInstance(this.altAuthMethodConfigData.keyGenAlgName());
     cipher.init(Cipher.DECRYPT_MODE, privateKey);
     final CipherInputStream cipherInputStream = new CipherInputStream(
-      new ByteArrayInputStream(
-        Base64.decode(
-          encryptedCode,
-          Base64.DEFAULT
-        )
-      ),
+      new ByteArrayInputStream(Base64.decode(encryptedCode, Base64.DEFAULT)),
       cipher
     );
     final ArrayList<Byte> valueList = new ArrayList<>();
@@ -95,6 +100,6 @@ final class CodeAuthMethodStore {
   }
 
   final void clear() {
-    this.store.remove(this.configData.codeMethodKey());
+    this.keyValueStore.remove(KEY);
   }
 }

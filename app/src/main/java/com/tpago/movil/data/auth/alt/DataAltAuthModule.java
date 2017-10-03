@@ -6,7 +6,6 @@ import com.tpago.movil.BuildConfig;
 import com.tpago.movil.data.api.Api;
 import com.tpago.movil.domain.KeyValueStore;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
-import com.tpago.movil.domain.auth.alt.AltAuthMethodService;
 
 import java.math.BigInteger;
 import java.security.KeyStore;
@@ -27,26 +26,18 @@ public final class DataAltAuthModule {
 
   @Provides
   @Singleton
-  AltAuthMethodService altAuthService(Api api) {
-    return ApiAltAuthMethodService.create(api);
-  }
-
-  @Provides
-  @Singleton
-  AltAuthConfigData altAuthData() {
+  AltAuthMethodConfigData altAuthMethodConfigData() {
     final Calendar startCalendar = Calendar.getInstance();
 
     final Calendar endCalendar = Calendar.getInstance();
     endCalendar.add(Calendar.YEAR, 50);
 
-    return AltAuthConfigData.builder()
+    return AltAuthMethodConfigData.builder()
       .providerName("AndroidKeyStore")
       .keyAlias("AltAuth.Key")
       .keyGenAlgName("RSA")
       .keyGenAlgParamSpec(new RSAKeyGenParameterSpec(2048, RSAKeyGenParameterSpec.F4))
       .signAlgName("SHA1withRSA")
-      .methodKey("AltAuth.Method")
-      .codeMethodKey("AltAuth.Method.Code")
       .codeMethodSubject(new X500Principal(BuildConfig.AUTH_METHOD_CODE_SUBJECT))
       .codeMethodSerialNumber(BigInteger.ONE)
       .codeMethodStartDate(startCalendar.getTime())
@@ -56,10 +47,12 @@ public final class DataAltAuthModule {
 
   @Provides
   @Singleton
-  KeyStore keyStore(AltAuthConfigData data) {
+  KeyStore keyStore(AltAuthMethodConfigData data) {
     try {
       final KeyStore keyStore = KeyStore.getInstance(data.providerName());
+
       keyStore.load(null);
+
       return keyStore;
     } catch (Exception exception) {
       throw new RuntimeException(exception);
@@ -68,22 +61,24 @@ public final class DataAltAuthModule {
 
   @Provides
   @Singleton
-  CodeAuthMethodStore codeAuthMethodStore(KeyValueStore store, AltAuthConfigData configData) {
-    return CodeAuthMethodStore.create(store, configData);
+  CodeAltAuthMethodStore codeAltAuthMethodStore(
+    KeyValueStore keyValueStore,
+    AltAuthMethodConfigData altAuthMethodConfigData
+  ) {
+    return CodeAltAuthMethodStore.create(keyValueStore, altAuthMethodConfigData);
   }
 
   @Provides
   @Singleton
   CodeAltAuthMethodKeyGenerator.Creator codeAuthMethodKeyPairGeneratorCreator(
     Context context,
-    CodeAuthMethodStore store,
-    AltAuthConfigData configData
+    AltAuthMethodConfigData configData,
+    CodeAltAuthMethodStore store
   ) {
-    return CodeAltAuthMethodKeyGenerator.Creator
-      .builder()
+    return CodeAltAuthMethodKeyGenerator.Creator.builder()
       .context(context)
-      .store(store)
-      .configData(configData)
+      .altAuthMethodConfigData(configData)
+      .codeAltAuthMethodStore(store)
       .build();
   }
 
@@ -91,14 +86,13 @@ public final class DataAltAuthModule {
   @Singleton
   CodeAltAuthMethodKeySupplier.Creator codeAuthMethodKeyPairSupplierCreator(
     KeyStore keyStore,
-    AltAuthConfigData altAuthConfigData,
-    CodeAuthMethodStore codeAuthMethodStore
+    AltAuthMethodConfigData altAuthMethodConfigData,
+    CodeAltAuthMethodStore codeAltAuthMethodStore
   ) {
-    return CodeAltAuthMethodKeySupplier.Creator
-      .builder()
+    return CodeAltAuthMethodKeySupplier.Creator.builder()
       .keyStore(keyStore)
-      .altAuthMethodConfigData(altAuthConfigData)
-      .configAuthMethodStore(codeAuthMethodStore)
+      .altAuthMethodConfigData(altAuthMethodConfigData)
+      .configAuthMethodStore(codeAltAuthMethodStore)
       .build();
   }
 
@@ -106,18 +100,17 @@ public final class DataAltAuthModule {
   @Singleton
   AltAuthMethodManager altAuthManager(
     KeyValueStore store,
-    AltAuthMethodService service,
-    AltAuthConfigData data,
+    Api api,
+    AltAuthMethodConfigData data,
     KeyStore keyStore,
-    CodeAuthMethodStore codeAuthMethodStore
+    CodeAltAuthMethodStore codeAltAuthMethodStore
   ) {
     return AltAuthMethodManager.builder()
-      .store(store)
-      .service(service)
-      .methodKey(data.methodKey())
+      .keyValueStore(store)
+      .api(api)
       .signAlgName(data.signAlgName())
-      .addOnDisabledAction(() -> keyStore.deleteEntry(data.keyAlias()))
-      .addOnDisabledAction(codeAuthMethodStore::clear)
+      .addRollbackAction(() -> keyStore.deleteEntry(data.keyAlias()))
+      .addRollbackAction(codeAltAuthMethodStore::clear)
       .build();
   }
 }

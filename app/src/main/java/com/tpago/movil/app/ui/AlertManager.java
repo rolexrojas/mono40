@@ -21,7 +21,7 @@ public final class AlertManager {
   }
 
   public final void show(AlertData data) {
-    ObjectHelper.checkNotNull(data, "data");
+    ObjectHelper.checkNotNull(data, "value");
 
     final AlertDialog alertDialog = new AlertDialog.Builder(this.activity)
       .setTitle(data.title())

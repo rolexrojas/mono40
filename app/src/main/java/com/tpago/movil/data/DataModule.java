@@ -2,6 +2,7 @@ package com.tpago.movil.data;
 
 import android.content.Context;
 
+import com.tpago.movil.BuildConfig;
 import com.tpago.movil.data.api.DataApiModule;
 import com.tpago.movil.data.auth.DataAuthModule;
 import com.tpago.movil.data.net.DataNetModule;
@@ -13,7 +14,7 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * {@link Module} that contains providers for objects that belong to the data layer.
+ * {@link Module} that contains providers for objects that belong to the value layer.
  *
  * @author hecvasro
  */
@@ -36,6 +37,11 @@ public final class DataModule {
   @Provides
   @Singleton
   KeyValueStore keyValueStore(Context context) {
-    return SharedPreferencesKeyValueStore.create(context);
+    final KeyValueStore keyValueStore = SharedPreferencesKeyValueStore.create(context);
+    if (BuildConfig.DEBUG) {
+      return DebugKeyValueStore.create(keyValueStore);
+    } else {
+      return keyValueStore;
+    }
   }
 }

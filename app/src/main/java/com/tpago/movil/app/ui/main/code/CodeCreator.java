@@ -69,7 +69,7 @@ public final class CodeCreator {
 
   public enum RequestType {
     PIN,
-    ALTAUTH
+    ALT_AUTH
   }
 
   @AutoValue

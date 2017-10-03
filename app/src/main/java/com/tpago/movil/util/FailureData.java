@@ -6,7 +6,7 @@ import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 
 /**
- * Failure data representation
+ * Failure value representation
  *
  * @author hecvasro
  */

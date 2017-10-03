@@ -43,7 +43,7 @@ public final class ApiUtils {
                 if (!assertData || Utils.isNotNull(data)) {
                   return Observable.just(data);
                 } else {
-                  return Observable.error(new NullPointerException("Result's data is missing"));
+                  return Observable.error(new NullPointerException("Result's value is missing"));
                 }
               } else if (Utils.isNotNull(doOnFailure)) {
                 return doOnFailure.call(result.getCode());

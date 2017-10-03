@@ -1,7 +1,7 @@
 package com.tpago.movil.data.auth.alt;
 
 import com.tpago.movil.domain.Code;
-import com.tpago.movil.domain.auth.alt.AltAuthFailureCode;
+import com.tpago.movil.domain.auth.alt.AltAuthMethodKeySupplier;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.FailureData;
 import com.tpago.movil.util.ObjectHelper;
@@ -17,29 +17,29 @@ import io.reactivex.Single;
  */
 public final class CodeAltAuthMethodKeySupplier implements AltAuthMethodKeySupplier {
 
-  private final AltAuthConfigData altAuthConfigData;
+  private final AltAuthMethodConfigData altAuthMethodConfigData;
   private final KeyStore keyStore;
-  private final CodeAuthMethodStore codeAuthMethodStore;
+  private final CodeAltAuthMethodStore codeAltAuthMethodStore;
 
   private final Code code;
 
   private CodeAltAuthMethodKeySupplier(Creator creator, Code code) {
-    this.altAuthConfigData = creator.altAuthConfigData;
+    this.altAuthMethodConfigData = creator.altAuthMethodConfigData;
     this.keyStore = creator.keyStore;
-    this.codeAuthMethodStore = creator.codeAuthMethodStore;
+    this.codeAltAuthMethodStore = creator.codeAltAuthMethodStore;
 
     this.code = ObjectHelper.checkNotNull(code, "code");
   }
 
-  private Result<PrivateKey> getResult() throws Exception {
+  private Result<PrivateKey> getPrivateKey() throws Exception {
     final PrivateKey privateKey = (PrivateKey) this.keyStore
-      .getKey(this.altAuthConfigData.keyAlias(), null);
-    final Code code = this.codeAuthMethodStore.get(privateKey);
-    if (code.equals(this.code)) {
+      .getKey(this.altAuthMethodConfigData.keyAlias(), null);
+    final Code code = this.codeAltAuthMethodStore.get(privateKey);
+    if (this.code.equals(code)) {
       return Result.create(privateKey);
     } else {
       final FailureData failureData = FailureData.builder()
-        .code(AltAuthFailureCode.UNAUTHORIZED)
+        .code(FailureCode.UNAUTHORIZED)
         .build();
       return Result.create(failureData);
     }
@@ -47,7 +47,7 @@ public final class CodeAltAuthMethodKeySupplier implements AltAuthMethodKeySuppl
 
   @Override
   public Single<Result<PrivateKey>> get() {
-    return Single.defer(() -> Single.just(this.getResult()));
+    return Single.defer(() -> Single.just(this.getPrivateKey()));
   }
 
   public static final class Creator {
@@ -56,14 +56,14 @@ public final class CodeAltAuthMethodKeySupplier implements AltAuthMethodKeySuppl
       return new Builder();
     }
 
-    private final AltAuthConfigData altAuthConfigData;
+    private final AltAuthMethodConfigData altAuthMethodConfigData;
     private final KeyStore keyStore;
-    private final CodeAuthMethodStore codeAuthMethodStore;
+    private final CodeAltAuthMethodStore codeAltAuthMethodStore;
 
     private Creator(Builder builder) {
-      this.altAuthConfigData = builder.altAuthConfigData;
+      this.altAuthMethodConfigData = builder.altAuthMethodConfigData;
       this.keyStore = builder.keyStore;
-      this.codeAuthMethodStore = builder.codeAuthMethodStore;
+      this.codeAltAuthMethodStore = builder.codeAltAuthMethodStore;
     }
 
     public final CodeAltAuthMethodKeySupplier create(Code code) {
@@ -73,14 +73,17 @@ public final class CodeAltAuthMethodKeySupplier implements AltAuthMethodKeySuppl
     static final class Builder {
 
       private KeyStore keyStore;
-      private CodeAuthMethodStore codeAuthMethodStore;
-      private AltAuthConfigData altAuthConfigData;
+      private CodeAltAuthMethodStore codeAltAuthMethodStore;
+      private AltAuthMethodConfigData altAuthMethodConfigData;
 
       private Builder() {
       }
 
-      final Builder altAuthMethodConfigData(AltAuthConfigData configData) {
-        this.altAuthConfigData = ObjectHelper.checkNotNull(configData, "altAuthConfigData");
+      final Builder altAuthMethodConfigData(AltAuthMethodConfigData altAuthMethodConfigData) {
+        this.altAuthMethodConfigData = ObjectHelper.checkNotNull(
+          altAuthMethodConfigData,
+          "altAuthMethodConfigData"
+        );
         return this;
       }
 
@@ -89,16 +92,25 @@ public final class CodeAltAuthMethodKeySupplier implements AltAuthMethodKeySuppl
         return this;
       }
 
-      final Builder configAuthMethodStore(CodeAuthMethodStore store) {
-        this.codeAuthMethodStore = ObjectHelper.checkNotNull(store, "codeAuthMethodStore");
+      final Builder configAuthMethodStore(CodeAltAuthMethodStore codeAltAuthMethodStore) {
+        this.codeAltAuthMethodStore = ObjectHelper.checkNotNull(
+          codeAltAuthMethodStore,
+          "codeAltAuthMethodStore"
+        );
         return this;
       }
 
       final Creator build() {
         BuilderChecker.create()
-          .addPropertyNameIfMissing("altAuthConfigData", ObjectHelper.isNull(this.altAuthConfigData))
+          .addPropertyNameIfMissing(
+            "altAuthMethodConfigData",
+            ObjectHelper.isNull(this.altAuthMethodConfigData)
+          )
           .addPropertyNameIfMissing("keyStore", ObjectHelper.isNull(this.keyStore))
-          .addPropertyNameIfMissing("codeAuthMethodStore", ObjectHelper.isNull(this.codeAuthMethodStore))
+          .addPropertyNameIfMissing(
+            "codeAltAuthMethodStore",
+            ObjectHelper.isNull(this.codeAltAuthMethodStore)
+          )
           .checkNoMissingProperties();
 
         return new Creator(this);

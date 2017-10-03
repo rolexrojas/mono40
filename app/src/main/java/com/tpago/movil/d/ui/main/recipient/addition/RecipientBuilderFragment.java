@@ -55,7 +55,7 @@ import timber.log.Timber;
 public class RecipientBuilderFragment extends Fragment {
 
   private static final String KEY_KEYWORD = "keyword";
-  private static final String KEY_DATA = "data";
+  private static final String KEY_DATA = "value";
 
   private String keyword;
   private Parcelable data;

@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @AutoValue
 public abstract class AlertData {
 
-  private static AtomicReference<AlertData> GENERIC = new AtomicReference<>();
+  private static AtomicReference<AlertData> GENERIC_FAILURE = new AtomicReference<>();
 
   private static DialogInterface.OnClickListener createButtonListener(ButtonAction action) {
     return ObjectHelper.isNotNull(action) ? (d, i) -> action.accept() : null;
@@ -27,15 +27,15 @@ public abstract class AlertData {
     return new Builder(stringMapper);
   }
 
-  public static AlertData genericFailureData(StringMapper stringMapper) {
-    AlertData data = GENERIC.get();
+  public static AlertData createForGenericFailure(StringMapper stringMapper) {
+    AlertData data = GENERIC_FAILURE.get();
     if (ObjectHelper.isNull(data)) {
       data = builder(stringMapper)
         .title(R.string.weAreSorry)
         .message(R.string.anUnexpectedErrorOccurred)
         .positiveButton(R.string.ok)
         .build();
-      GENERIC.set(data);
+      GENERIC_FAILURE.set(data);
     }
     return data;
   }

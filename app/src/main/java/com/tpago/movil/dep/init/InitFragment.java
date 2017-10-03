@@ -95,7 +95,7 @@ public final class InitFragment extends BaseInitFragment {
         }, new Action1<Throwable>() {
           @Override
           public void call(Throwable throwable) {
-            Timber.e(throwable, "Loading initial data");
+            Timber.e(throwable, "Loading initial value");
             final Activity activity = getActivity();
             new AlertDialog.Builder(activity)
               .setTitle(R.string.error_generic_title)

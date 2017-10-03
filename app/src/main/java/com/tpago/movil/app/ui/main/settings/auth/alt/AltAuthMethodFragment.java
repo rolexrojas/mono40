@@ -1,6 +1,5 @@
 package com.tpago.movil.app.ui.main.settings.auth.alt;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -38,17 +37,17 @@ public final class AltAuthMethodFragment extends InjectableFragment
 
   @OnClick(R.id.fingerprintOption)
   final void onFingerprintOptionClicked() {
-    this.presenter.onFingerprintOptionClicked();
+    this.presenter.onEnableFingerprintButtonClicked();
   }
 
   @OnClick(R.id.codeOption)
   final void onCodeOptionClicked() {
-    this.presenter.onCodeOptionClicked();
+    this.presenter.onEnableCodeButtonClicked();
   }
 
   @OnClick(R.id.noneOption)
   final void onNoneOptionClicked() {
-    this.presenter.onNoneOptionClicked();
+    this.presenter.onDisableButtonClicked();
   }
 
   @Override

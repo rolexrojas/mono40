@@ -1,6 +1,10 @@
 package com.tpago.movil.domain.auth.alt;
 
+import android.support.annotation.Nullable;
+
+import com.tpago.movil.data.api.Api;
 import com.tpago.movil.domain.KeyValueStore;
+import com.tpago.movil.domain.KeyValueStoreHelper;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.Placeholder;
@@ -21,22 +25,39 @@ import io.reactivex.functions.Action;
  */
 public final class AltAuthMethodManager {
 
+  private static final String KEY = KeyValueStoreHelper
+    .createKey(AltAuthMethodManager.class, "Method");
+
   public static Builder builder() {
     return new Builder();
   }
 
-  private final KeyValueStore store;
-  private final AltAuthMethodService service;
-  private final String methodKey;
+  private final KeyValueStore keyValueStore;
+  private final Api api;
+
   private final String signAlgName;
-  private final List<Action> onDisabledActionList;
+  private final List<Action> rollbackActionList;
 
   private AltAuthMethodManager(Builder builder) {
-    this.store = builder.store;
-    this.service = builder.service;
-    this.methodKey = builder.methodKey;
+    this.keyValueStore = builder.keyValueStore;
+    this.api = builder.api;
+
     this.signAlgName = builder.signAlgName;
-    this.onDisabledActionList = builder.onDisabledActionList;
+
+    this.rollbackActionList = builder.rollbackActionList;
+    this.rollbackActionList.add(() -> this.keyValueStore.remove(KEY));
+  }
+
+  private void checkEnabled() {
+    if (!this.isEnabled()) {
+      throw new IllegalStateException("!this.isEnabled()");
+    }
+  }
+
+  private void executeRollback() throws Exception {
+    for (Action rollbackAction : this.rollbackActionList) {
+      rollbackAction.run();
+    }
   }
 
   /**
@@ -46,13 +67,7 @@ public final class AltAuthMethodManager {
    * otherwise false.
    */
   public final boolean isEnabled() {
-    return this.store.isSet(this.methodKey);
-  }
-
-  private void checkEnabled() {
-    if (!this.isEnabled()) {
-      throw new IllegalStateException("!this.isEnabled()");
-    }
+    return this.keyValueStore.isSet(KEY);
   }
 
   /**
@@ -60,34 +75,32 @@ public final class AltAuthMethodManager {
    *   If it is {@link #isEnabled() enabled}.
    */
   public final Completable enable(AltAuthMethodKeyGenerator generator) {
+    ObjectHelper.checkNotNull(generator, "generator");
     if (this.isEnabled()) {
       throw new IllegalStateException("this.isEnabled()");
     }
 
-    return ObjectHelper.checkNotNull(generator, "generator")
-      .generate()
-      .flatMapCompletable(this.service::enable)
-      .doOnComplete(
-        () -> this.store.set(
-          this.methodKey,
-          generator.method()
-            .name()
-        )
-      );
+    final String methodName = generator.method()
+      .name();
+    return generator.generate()
+      .flatMapCompletable(this.api::enableAltAuthMethod)
+      .doOnComplete(() -> this.keyValueStore.set(KEY, methodName))
+      .doOnError((throwable) -> this.executeRollback());
   }
 
+  @Nullable
   public final AltAuthMethod getActiveMethod() {
-    if (this.store.isSet(this.methodKey)) {
-      return AltAuthMethod.valueOf(this.store.get(this.methodKey));
+    if (this.keyValueStore.isSet(KEY)) {
+      return AltAuthMethod.valueOf(this.keyValueStore.get(KEY));
     } else {
       return null;
     }
   }
 
-  private byte[] createSignature(PrivateKey privateKey, AltAuthSignData data) throws Exception {
+  private byte[] createSignedData(PrivateKey key, byte[] data) throws Exception {
     final Signature signature = Signature.getInstance(this.signAlgName);
-    signature.initSign(privateKey);
-    signature.update(data.toByteArray());
+    signature.initSign(key);
+    signature.update(data);
     return signature.sign();
   }
 
@@ -95,54 +108,41 @@ public final class AltAuthMethodManager {
    * @throws IllegalStateException
    *   If it isn't {@link #isEnabled() enabled}.
    */
-  public final Single<Result<Placeholder>> verify(PrivateKey privateKey, AltAuthSignData data) {
-    ObjectHelper.checkNotNull(privateKey, "privateKey");
+  public final Single<Result<Placeholder>> verify(AltAuthMethodVerifyData data, PrivateKey key) {
     ObjectHelper.checkNotNull(data, "data");
+    ObjectHelper.checkNotNull(key, "key");
 
     this.checkEnabled();
 
-    return Single.defer(() -> Single.just(this.createSignature(privateKey, data)))
-      .flatMap(this.service::verify);
+    return Single.defer(() -> Single.just(this.createSignedData(key, data.toByteArray())))
+      .flatMap((signedData) -> this.api.verifyAltAuthMethod(data, signedData));
   }
 
   public final Completable disable() {
     this.checkEnabled();
 
-    Completable completable = this.service.disable()
-      .doOnComplete(() -> this.store.remove(this.methodKey));
-
-    for (Action action : this.onDisabledActionList) {
-      completable = completable.doOnComplete(action);
-    }
-
-    return completable;
+    return this.api.disableAltAuthMethod()
+      .doOnComplete(this::executeRollback);
   }
 
   public static final class Builder {
 
-    private final List<Action> onDisabledActionList;
+    private KeyValueStore keyValueStore;
+    private Api api;
 
-    private KeyValueStore store;
-    private AltAuthMethodService service;
-    private String methodKey;
     private String signAlgName;
+    private List<Action> rollbackActionList = new ArrayList<>();
 
     private Builder() {
-      this.onDisabledActionList = new ArrayList<>();
     }
 
-    public final Builder store(KeyValueStore store) {
-      this.store = ObjectHelper.checkNotNull(store, "store");
+    public final Builder api(Api api) {
+      this.api = ObjectHelper.checkNotNull(api, "api");
       return this;
     }
 
-    public final Builder service(AltAuthMethodService service) {
-      this.service = ObjectHelper.checkNotNull(service, "service");
-      return this;
-    }
-
-    public final Builder methodKey(String methodKey) {
-      this.methodKey = ObjectHelper.checkNotNull(methodKey, "methodKey");
+    public final Builder keyValueStore(KeyValueStore keyValueStore) {
+      this.keyValueStore = ObjectHelper.checkNotNull(keyValueStore, "keyValueStore");
       return this;
     }
 
@@ -151,21 +151,15 @@ public final class AltAuthMethodManager {
       return this;
     }
 
-    public final Builder addOnDisabledAction(Action onDisabledAction) {
-      this.onDisabledActionList.add(
-        ObjectHelper.checkNotNull(
-          onDisabledAction,
-          "onDisabledAction"
-        )
-      );
+    public final Builder addRollbackAction(Action rollbackAction) {
+      this.rollbackActionList.add(ObjectHelper.checkNotNull(rollbackAction, "rollbackAction"));
       return this;
     }
 
     public final AltAuthMethodManager build() {
       BuilderChecker.create()
-        .addPropertyNameIfMissing("store", ObjectHelper.isNull(this.store))
-        .addPropertyNameIfMissing("service", ObjectHelper.isNull(this.service))
-        .addPropertyNameIfMissing("methodKey", StringHelper.isNullOrEmpty(this.methodKey))
+        .addPropertyNameIfMissing("keyValueStore", ObjectHelper.isNull(this.keyValueStore))
+        .addPropertyNameIfMissing("api", ObjectHelper.isNull(this.api))
         .addPropertyNameIfMissing("signAlgName", StringHelper.isNullOrEmpty(this.signAlgName))
         .checkNoMissingProperties();
 
