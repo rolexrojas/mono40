@@ -107,9 +107,6 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
 
   private void handleSignOutSuccess(PosResult result) {
     if (result.isSuccessful()) {
-      this.altAuthMethodManager.disable()
-        .blockingAwait();
-
       this.recipientManager.clear();
       this.productManager.clear();
       this.sessionManager.deactivate();

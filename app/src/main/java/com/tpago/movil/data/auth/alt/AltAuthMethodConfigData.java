@@ -13,7 +13,7 @@ import javax.security.auth.x500.X500Principal;
  * @author hecvasro
  */
 @AutoValue
-abstract class AltAuthMethodConfigData {
+public abstract class AltAuthMethodConfigData {
 
   static Builder builder() {
     return new AutoValue_AltAuthMethodConfigData.Builder();
@@ -22,23 +22,23 @@ abstract class AltAuthMethodConfigData {
   AltAuthMethodConfigData() {
   }
 
-  abstract String providerName();
+  public abstract String providerName();
 
-  abstract String keyAlias();
+  public abstract String keyAlias();
 
-  abstract String keyGenAlgName();
+  public abstract String keyGenAlgName();
 
-  abstract AlgorithmParameterSpec keyGenAlgParamSpec();
+  public abstract AlgorithmParameterSpec keyGenAlgParamSpec();
 
-  abstract String signAlgName();
+  public abstract String signAlgName();
 
-  abstract X500Principal codeMethodSubject();
+  public abstract X500Principal codeMethodSubject();
 
-  abstract BigInteger codeMethodSerialNumber();
+  public abstract BigInteger codeMethodSerialNumber();
 
-  abstract Date codeMethodStartDate();
+  public abstract Date codeMethodStartDate();
 
-  abstract Date codeMethodEndDate();
+  public abstract Date codeMethodEndDate();
 
   @Memoized
   @Override
