@@ -8,7 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.tpago.movil.domain.PhoneNumber;
+import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.Recipient;

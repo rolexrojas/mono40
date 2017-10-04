@@ -211,14 +211,11 @@ public final class ProductManager {
     return resultList;
   }
 
-  public final boolean setDefaultPaymentOption(
-    final String authToken,
-    final Product paymentOption
-  ) {
+  public final boolean setDefaultPaymentOption(final Product paymentOption) {
     if (paymentOption.equals(defaultPaymentOption)) {
       return true;
     } else {
-      final ApiResult<Void> result = apiBridge.setDefaultPaymentOption(authToken, paymentOption);
+      final ApiResult<Void> result = apiBridge.setDefaultPaymentOption(paymentOption);
       if (result.isSuccessful()) {
         defaultPaymentOption = paymentOption;
         sharedPreferences.edit()

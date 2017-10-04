@@ -22,7 +22,6 @@ import com.tpago.movil.R;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
-import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.domain.Bank;
@@ -65,8 +64,6 @@ public class RecipientBuilderFragment extends Fragment {
 
   private Disposable subscription = Disposables.disposed();
 
-  @Inject
-  SessionManager sessionManager;
   @Inject
   DepApiBridge apiBridge;
   @Inject
@@ -128,12 +125,7 @@ public class RecipientBuilderFragment extends Fragment {
               public SingleSource<Result<Recipient, ErrorCode>> call() throws Exception {
                 final Result<Recipient, ErrorCode> result;
                 if (networkService.checkIfAvailable()) {
-                  final String authToken = sessionManager.getSession()
-                    .getAuthToken();
-                  final ApiResult<Boolean> pinValidationResult = apiBridge.validatePin(
-                    authToken,
-                    pin
-                  );
+                  final ApiResult<Boolean> pinValidationResult = apiBridge.validatePin(pin);
                   if (pinValidationResult.isSuccessful()) {
                     if (pinValidationResult.getData()) {
                       final RecipientBuilder.Result builderResult = builder.build(content, pin)
@@ -242,15 +234,11 @@ public class RecipientBuilderFragment extends Fragment {
     data = bundle.getParcelable(KEY_DATA);
     if (data instanceof Partner) {
       builder = new BillRecipientBuilder(
-        sessionManager.getSession()
-          .getAuthToken(),
         apiBridge,
         (Partner) data
       );
     } else {
       builder = new ProductRecipientBuilder(
-        sessionManager.getSession()
-          .getAuthToken(),
         apiBridge,
         (Bank) data
       );

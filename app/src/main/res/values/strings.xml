@@ -256,9 +256,8 @@
   <string name="see_bank_branches">Ver sucursales bancarias</string>
   <string name="sign_in">Iniciar sesión</string>
   <string name="sign_in_button">@string/sign_in</string>
-  <string name="sign_in_error_description">Tanto el correo electrónico como la contraseña son requeridos.</string>
-  <string name="sign_in_error_positive_button_text">@string/ok</string>
-  <string name="sign_in_error_title">Credenciales incorrectos</string>
+  <string name="bothUsernameAndPasswordAreRequired">Tanto el correo electrónico como la contraseña son requeridos.</string>
+  <string name="incorrectCredentials">Credenciales incorrectos</string>
   <string name="sign_in_input_hint_email">@string/email</string>
   <string name="sign_in_input_hint_password">@string/password</string>
   <string name="sign_in_label_description">Iniciar sesión con usuario y contraseña de tPago</string>

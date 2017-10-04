@@ -830,8 +830,8 @@
 
   <style name="Dep.Base.Theme"
          parent="Theme.AppCompat.Light.NoActionBar">
-    <!--<item name="android:buttonStyle">@style/Dep.App.Widget.Button</item>-->
-    <!--<item name="android:editTextStyle">@style/Dep.App.Widget.EditText</item>-->
+    <!--<item updateName="android:buttonStyle">@style/Dep.App.Widget.Button</item>-->
+    <!--<item updateName="android:editTextStyle">@style/Dep.App.Widget.EditText</item>-->
     <item name="android:windowBackground">@color/d_window_background_default</item>
     <item name="autoResizeablePrefixableTextViewStyle">
       @style/Dep.App.Widget.AutoResizeablePrefixableTextView

@@ -40,6 +40,7 @@ import timber.log.Timber;
  */
 @Deprecated
 final class PurchasePresenter extends Presenter<PurchaseScreen> {
+
   private final StringHelper stringHelper;
   private final ProductManager productManager;
   private final EventBus eventBus;
@@ -49,7 +50,6 @@ final class PurchasePresenter extends Presenter<PurchaseScreen> {
   private final NetworkService networkService;
   private final DepApiBridge depApiBridge;
   private final String phoneNumber;
-  private final String authToken;
 
   private Subscription productAdditionEventSubscription = Subscriptions.unsubscribed();
   private Subscription activationSubscription = Subscriptions.unsubscribed();
@@ -64,8 +64,8 @@ final class PurchasePresenter extends Presenter<PurchaseScreen> {
     PosBridge posBridge,
     NetworkService networkService,
     DepApiBridge depApiBridge,
-    String phoneNumber,
-    String authToken) {
+    String phoneNumber
+  ) {
     this.stringHelper = stringHelper;
     this.productManager = productManager;
     this.eventBus = eventBus;
@@ -75,7 +75,6 @@ final class PurchasePresenter extends Presenter<PurchaseScreen> {
     this.networkService = networkService;
     this.depApiBridge = depApiBridge;
     this.phoneNumber = phoneNumber;
-    this.authToken = authToken;
   }
 
   final void start() {
@@ -87,14 +86,16 @@ final class PurchasePresenter extends Presenter<PurchaseScreen> {
         public void call(final Event event) {
           screenDialogCreator.create(stringHelper.dialogProductAdditionTitle())
             .message(stringHelper.dialogProductAdditionMessage())
-            .positiveAction(stringHelper.dialogProductAdditionPositiveAction(),
+            .positiveAction(
+              stringHelper.dialogProductAdditionPositiveAction(),
               new AppDialog.OnActionClickedListener() {
                 @Override
                 public void onActionClicked(@NonNull AppDialog.Action action) {
                   eventBus.release(event);
                   screen.requestPin();
                 }
-              })
+              }
+            )
             .negativeAction(stringHelper.dialogProductAdditionNegativeAction())
             .build()
             .show();
@@ -149,12 +150,13 @@ final class PurchasePresenter extends Presenter<PurchaseScreen> {
           public Single<Result<Boolean, ErrorCode>> call() throws Exception {
             final Result<Boolean, ErrorCode> result;
             if (networkService.checkIfAvailable()) {
-              final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(authToken, pin);
+              final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(pin);
               if (pinValidationResult.isSuccessful()) {
                 if (pinValidationResult.getData()) {
                   boolean flag = false;
                   final StringBuilder builder = new StringBuilder();
-                  final List<Pair<Product, PosResult>> productRegistrationResultList = productManager
+                  final List<Pair<Product, PosResult>> productRegistrationResultList
+                    = productManager
                     .registerPaymentOptionList(phoneNumber, pin);
                   for (Pair<Product, PosResult> pair : productRegistrationResultList) {
                     flag |= pair.second.isSuccessful();
@@ -174,7 +176,9 @@ final class PurchasePresenter extends Presenter<PurchaseScreen> {
                 result = Result.create(
                   FailureData.create(
                     ErrorCode.UNEXPECTED,
-                    pinValidationResult.getError().getDescription()));
+                    pinValidationResult.getError()
+                      .getDescription()
+                  ));
               }
             } else {
               result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));

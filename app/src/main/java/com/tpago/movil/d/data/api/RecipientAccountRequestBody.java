@@ -40,5 +40,5 @@ public abstract class RecipientAccountRequestBody {
   @SerializedName("query-fee") abstract BigDecimal queryFee();
   @SerializedName("default-account") abstract boolean isDefaultPaymentMethod();
   @SerializedName("payable") abstract boolean isPaymentMethod();
-  @SerializedName("recipient-name") abstract String name();
+  @SerializedName("recipient-updateName") abstract String name();
 }

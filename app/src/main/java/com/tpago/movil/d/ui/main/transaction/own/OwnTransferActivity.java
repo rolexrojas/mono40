@@ -21,7 +21,6 @@ import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
-import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
@@ -124,7 +123,6 @@ public final class OwnTransferActivity
   @Inject DepApiBridge depApiBridge;
   @Inject NetworkService networkService;
   @Inject ProductManager productManager;
-  @Inject SessionManager sessionManager;
   @Inject StringHelper stringHelper;
 
   private Consumer<Integer> numPadDigitConsumer;
@@ -151,16 +149,10 @@ public final class OwnTransferActivity
       public SingleSource<Result<String, ErrorCode>> call() throws Exception {
         final Result<String, ErrorCode> result;
         if (networkService.checkIfAvailable()) {
-          final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(
-            sessionManager.getSession()
-              .getAuthToken(),
-            pin
-          );
+          final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(pin);
           if (pinValidationResult.isSuccessful()) {
             if (pinValidationResult.getData()) {
               final ApiResult<String> transactionResult = depApiBridge.transferTo(
-                sessionManager.getSession()
-                  .getAuthToken(),
                 fundingProduct,
                 destinationProduct,
                 value,

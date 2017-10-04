@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
 import com.tpago.movil.dep.Partner;
-import com.tpago.movil.domain.PhoneNumber;
+import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.domain.Balance;
 import com.tpago.movil.d.domain.CreditCardBillBalance;
@@ -47,23 +47,13 @@ import rx.functions.Func1;
 @Deprecated
 class RetrofitApiBridge implements DepApiBridge {
 
-  private static final Func1<Void, Void> MAP_FUNC_VOID = new Func1<Void, Void>() {
-    @Override
-    public Void call(Void aVoid) {
-      return aVoid;
-    }
-  };
+  private static final Func1<Void, Void> MAP_FUNC_VOID = (v) -> v;
 
   private final ApiService apiService;
   private final Converter<ResponseBody, ApiError> errorConverter;
 
   private static <T> Func1<T, T> identityMapFunc() {
-    return new Func1<T, T>() {
-      @Override
-      public T call(T t) {
-        return t;
-      }
-    };
+    return (t) -> t;
   }
 
   RetrofitApiBridge(ApiService apiService, Converter<ResponseBody, ApiError> errorConverter) {
@@ -127,9 +117,9 @@ class RetrofitApiBridge implements DepApiBridge {
    */
   @NonNull
   @Override
-  public Observable<ApiResult<InitialData>> initialLoad(@NonNull String authToken) {
-    return apiService.initialLoad(authToken)
-      .compose(this.<InitialData>transformToApiResult());
+  public Observable<ApiResult<InitialData>> initialLoad() {
+    return this.apiService.initialLoad()
+      .compose(this.transformToApiResult());
   }
 
   /**
@@ -138,8 +128,8 @@ class RetrofitApiBridge implements DepApiBridge {
   @NonNull
   @Override
   public ApiResult<Balance> queryBalance(
-    @NonNull String authToken,
-    @NonNull Product product, @NonNull String pin
+    @NonNull Product product,
+    @NonNull String pin
   ) {
     final Func1<Response<? extends Balance>, Observable<ApiResult<Balance>>> func1
       = new Func1<Response<? extends Balance>, Observable<ApiResult<Balance>>>() {
@@ -162,13 +152,13 @@ class RetrofitApiBridge implements DepApiBridge {
     final BalanceQueryRequestBody request = BalanceQueryRequestBody.create(product, pin);
     final Observable<ApiResult<Balance>> observable;
     if (Product.checkIfCreditCard(product)) {
-      observable = apiService.creditCardBalance(authToken, request)
+      observable = apiService.creditCardBalance(request)
         .flatMap(func1);
     } else if (Product.checkIfLoan(product)) {
-      observable = apiService.loanBalance(authToken, request)
+      observable = apiService.loanBalance(request)
         .flatMap(func1);
     } else {
-      observable = apiService.accountBalance(authToken, request)
+      observable = apiService.accountBalance(request)
         .flatMap(func1);
     }
     return observable
@@ -181,9 +171,9 @@ class RetrofitApiBridge implements DepApiBridge {
    */
   @NonNull
   @Override
-  public Observable<ApiResult<List<Transaction>>> recentTransactions(@NonNull String authToken) {
-    return apiService.recentTransactions(authToken)
-      .compose(this.<List<Transaction>>transformToApiResult());
+  public Observable<ApiResult<List<Transaction>>> recentTransactions() {
+    return apiService.recentTransactions()
+      .compose(this.transformToApiResult());
   }
 
   /**
@@ -191,18 +181,15 @@ class RetrofitApiBridge implements DepApiBridge {
    */
   @NonNull
   @Override
-  public Observable<ApiResult<List<Recipient>>> recipients(@NonNull String authToken) {
-    return apiService.getBills(authToken)
+  public Observable<ApiResult<List<Recipient>>> recipients() {
+    return apiService.getBills()
       .flatMap(mapToApiResult(BillResponseBody.mapFunc()));
   }
 
   @NonNull
   @Override
-  public Observable<ApiResult<Boolean>> checkIfAffiliated(
-    @NonNull String authToken,
-    @NonNull String phoneNumber
-  ) {
-    return apiService.checkIfAssociated(authToken, phoneNumber)
+  public Observable<ApiResult<Boolean>> checkIfAffiliated(@NonNull String phoneNumber) {
+    return apiService.checkIfAssociated(phoneNumber)
       .flatMap(new Func1<Response<Void>, Observable<ApiResult<Boolean>>>() {
         @Override
         public Observable<ApiResult<Boolean>> call(Response<Void> response) {
@@ -229,7 +216,6 @@ class RetrofitApiBridge implements DepApiBridge {
   @NonNull
   @Override
   public Observable<ApiResult<String>> transferTo(
-    final String authToken,
     final Product product,
     final Recipient recipient,
     final BigDecimal amount,
@@ -238,7 +224,6 @@ class RetrofitApiBridge implements DepApiBridge {
     if (recipient instanceof AccountRecipient) {
       final AccountRecipient r = (AccountRecipient) recipient;
       return apiService.transferToNonAffiliated(
-        authToken,
         TransferToNonAffiliatedRequestBody.create(
           ProductInfo.create(product),
           ProductInfo.create(r.product()),
@@ -250,7 +235,6 @@ class RetrofitApiBridge implements DepApiBridge {
     } else if (recipient instanceof NonAffiliatedPhoneNumberRecipient) {
       final NonAffiliatedPhoneNumberRecipient napnr = (NonAffiliatedPhoneNumberRecipient) recipient;
       return apiService.fetchProductInfo(
-        authToken,
         RecipientAccountInfoRequestBody.create(napnr.getBank(), napnr.getAccountNumber())
       )
         .flatMap(mapToApiResult(RetrofitApiBridge.identityMapFunc()))
@@ -259,7 +243,6 @@ class RetrofitApiBridge implements DepApiBridge {
           public Observable<ApiResult<String>> call(ApiResult<ProductInfo> apiResult) {
             if (apiResult.isSuccessful()) {
               return apiService.transferToNonAffiliated(
-                authToken,
                 TransferToNonAffiliatedRequestBody.create(
                   ProductInfo.create(product),
                   apiResult.getData(),
@@ -280,7 +263,6 @@ class RetrofitApiBridge implements DepApiBridge {
     } else {
       final PhoneNumberRecipient pnr = (PhoneNumberRecipient) recipient;
       return apiService.fetchCustomer(
-        authToken,
         pnr.getPhoneNumber()
           .value()
       )
@@ -290,7 +272,6 @@ class RetrofitApiBridge implements DepApiBridge {
           public Observable<ApiResult<String>> call(ApiResult<Customer> result) {
             if (result.isSuccessful()) {
               return apiService.transferToAffiliated(
-                authToken,
                 TransferToAffiliatedRequestBody.create(
                   product,
                   pnr,
@@ -315,14 +296,12 @@ class RetrofitApiBridge implements DepApiBridge {
 
   @Override
   public Observable<ApiResult<String>> transferTo(
-    String authToken,
     Product fundingProduct,
     Product destinationProduct,
     BigDecimal amount,
     String pin
   ) {
     return apiService.transferTo(
-      authToken,
       TransferToOwnRequestBody.builder()
         .fundingProduct(fundingProduct)
         .recipientProduct(destinationProduct)
@@ -334,10 +313,10 @@ class RetrofitApiBridge implements DepApiBridge {
   }
 
   @Override
-  public ApiResult<Void> setDefaultPaymentOption(String authToken, Product product) {
+  public ApiResult<Void> setDefaultPaymentOption(Product product) {
     final Map<String, String> body = new HashMap<>();
     body.put("alias", product.getAlias());
-    return apiService.setDefaultPaymentOption(authToken, body)
+    return apiService.setDefaultPaymentOption(body)
       .flatMap(mapToApiResult(MAP_FUNC_VOID))
       .toBlocking()
       .single();
@@ -345,12 +324,10 @@ class RetrofitApiBridge implements DepApiBridge {
 
   @Override
   public Observable<ApiResult<Pair<String, Product>>> checkAccountNumber(
-    String authToken,
     Bank bank,
     String accountNumber
   ) {
     return apiService.fetchProductInfo(
-      authToken,
       RecipientAccountInfoRequestBody.create(bank, accountNumber)
     )
       .flatMap(mapToApiResult(new Func1<ProductInfo, Pair<String, Product>>() {
@@ -376,34 +353,29 @@ class RetrofitApiBridge implements DepApiBridge {
 
   @Override
   public Observable<ApiResult<List<Bank>>> banks() {
-    return this.apiService.banks(null)
+    return this.apiService.banks()
       .flatMap(mapToApiResult(BankListRequestResponse.mapFunc()));
   }
 
   @Override
-  public Observable<ApiResult<List<Partner>>> partners(String authToken) {
-    return apiService.partners(authToken)
+  public Observable<ApiResult<List<Partner>>> partners() {
+    return apiService.partners()
       .flatMap(mapToApiResult(PartnerListRequestResponse.mapFunc()));
   }
 
   @Override
   public Observable<ApiResult<Void>> addBill(
-    String authToken,
     Partner partner,
     String contractNumber,
     String pin
   ) {
-    return apiService.addBill(
-      authToken,
-      BillRequestBody.create(partner, contractNumber, pin)
-    )
+    return apiService.addBill(BillRequestBody.create(partner, contractNumber, pin))
       .flatMap(mapToApiResult(MAP_FUNC_VOID));
   }
 
   @Override
-  public ApiResult<Void> removeBill(String authToken, BillRecipient bill, String pin) {
+  public ApiResult<Void> removeBill(BillRecipient bill, String pin) {
     return apiService.removeBill(
-      authToken,
       BillRequestBody.create(bill.getPartner(), bill.getContractNumber(), pin)
     )
       .flatMap(mapToApiResult(MAP_FUNC_VOID))
@@ -412,12 +384,8 @@ class RetrofitApiBridge implements DepApiBridge {
   }
 
   @Override
-  public ApiResult<BillBalance> queryBalance(
-    String authToken,
-    BillRecipient recipient
-  ) {
+  public ApiResult<BillBalance> queryBalance(BillRecipient recipient) {
     return apiService.queryBalance(
-      authToken,
       BillRequestBody.create(recipient.getPartner(), recipient.getContractNumber(), null)
     )
       .flatMap(mapToApiResult(RetrofitApiBridge.<BillBalance>identityMapFunc()))
@@ -426,10 +394,10 @@ class RetrofitApiBridge implements DepApiBridge {
   }
 
   @Override
-  public ApiResult<ProductBillBalance> queryBalance(String authToken, ProductRecipient recipient) {
+  public ApiResult<ProductBillBalance> queryBalance(ProductRecipient recipient) {
     final Product product = recipient.getProduct();
     if (Product.checkIfCreditCard(product)) {
-      return apiService.queryCreditCardBillBalance(authToken, product)
+      return apiService.queryCreditCardBillBalance(product)
         .flatMap(mapToApiResult(new Func1<CreditCardBillBalance, ProductBillBalance>() {
           @Override
           public ProductBillBalance call(CreditCardBillBalance productBillBalance) {
@@ -439,7 +407,7 @@ class RetrofitApiBridge implements DepApiBridge {
         .toBlocking()
         .single();
     } else {
-      return apiService.queryLoanBalance(authToken, product)
+      return apiService.queryLoanBalance(product)
         .flatMap(mapToApiResult(new Func1<LoanBillBalance, ProductBillBalance>() {
           @Override
           public ProductBillBalance call(LoanBillBalance productBillBalance) {
@@ -453,16 +421,12 @@ class RetrofitApiBridge implements DepApiBridge {
 
   @Override
   public Observable<ApiResult<String>> payBill(
-    String authToken,
     BillRecipient bill,
     Product fundingAccount,
     BillRecipient.Option option,
     String pin
   ) {
-    return apiService.payBill(
-      authToken,
-      PayBillRequestBody.create(fundingAccount, bill, pin, option)
-    )
+    return apiService.payBill(PayBillRequestBody.create(fundingAccount, bill, pin, option))
       .flatMap(mapToApiResult(new Func1<Void, String>() {
         @Override
         public String call(Void aVoid) {
@@ -473,7 +437,6 @@ class RetrofitApiBridge implements DepApiBridge {
 
   @Override
   public Observable<ApiResult<PaymentResult>> payCreditCardBill(
-    String authToken,
     BigDecimal amountToPay,
     CreditCardBillBalance.Option option,
     String pin,
@@ -487,13 +450,12 @@ class RetrofitApiBridge implements DepApiBridge {
       .fundingAccount(ProductInfo.create(fundingAccount))
       .creditCard(creditCard)
       .build();
-    return apiService.payCreditCardBill(authToken, body)
+    return apiService.payCreditCardBill(body)
       .flatMap(mapToApiResult(RetrofitApiBridge.<PaymentResult>identityMapFunc()));
   }
 
   @Override
   public Observable<ApiResult<PaymentResult>> payLoanBill(
-    String authToken,
     BigDecimal amountToPay,
     LoanBillBalance.Option option,
     String pin,
@@ -507,29 +469,29 @@ class RetrofitApiBridge implements DepApiBridge {
       .fundingAccount(ProductInfo.create(fundingAccount))
       .loan(loan)
       .build();
-    return apiService.payLoanBill(authToken, body)
+    return apiService.payLoanBill(body)
       .flatMap(mapToApiResult(RetrofitApiBridge.<PaymentResult>identityMapFunc()));
   }
 
   @Override
-  public ApiResult<Boolean> validatePin(String authToken, String pin) {
-    return apiService.validatePin(authToken, ValidatePinRequestBody.create(pin))
+  public ApiResult<Boolean> validatePin(String pin) {
+    return apiService.validatePin(ValidatePinRequestBody.create(pin))
       .flatMap(mapToApiResult(RetrofitApiBridge.<Boolean>identityMapFunc()))
       .toBlocking()
       .single();
   }
 
   @Override
-  public ApiResult<Customer.State> fetchCustomerState(String authToken, String phoneNumber) {
-    return apiService.fetchCustomerStatus(authToken, phoneNumber)
+  public ApiResult<Customer.State> fetchCustomerState(String phoneNumber) {
+    return apiService.fetchCustomerStatus(phoneNumber)
       .flatMap(mapToApiResult(FetchCustomerStateResponseBody.mapFunc()))
       .toBlocking()
       .single();
   }
 
   @Override
-  public ApiResult<Customer> fetchCustomer(String authToken, String phoneNumber) {
-    return apiService.fetchCustomer(authToken, phoneNumber)
+  public ApiResult<Customer> fetchCustomer(String phoneNumber) {
+    return apiService.fetchCustomer(phoneNumber)
       .flatMap(mapToApiResult(RetrofitApiBridge.<Customer>identityMapFunc()))
       .toBlocking()
       .single();
@@ -537,7 +499,6 @@ class RetrofitApiBridge implements DepApiBridge {
 
   @Override
   public Observable<ApiResult<String>> recharge(
-    String authToken,
     Partner carrier,
     PhoneNumber phoneNumber,
     Product fundingAccount,
@@ -551,13 +512,12 @@ class RetrofitApiBridge implements DepApiBridge {
       .amount(amount)
       .pin(pin)
       .build();
-    return apiService.recharge(authToken, body)
+    return apiService.recharge(body)
       .flatMap(mapToApiResult(TransferResponseBody.mapFunc()));
   }
 
   @Override
   public ApiResult<String> advanceCash(
-    String authToken,
     Product fundingAccount,
     Product recipientAccount,
     BigDecimal amount,
@@ -569,7 +529,7 @@ class RetrofitApiBridge implements DepApiBridge {
       .amount(amount)
       .pin(pin)
       .build();
-    return apiService.advanceCash(authToken, body)
+    return apiService.advanceCash(body)
       .flatMap(mapToApiResult(TransferResponseBody.mapFunc()))
       .toBlocking()
       .single();

@@ -8,16 +8,11 @@ import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.tpago.movil.R;
 import com.tpago.movil.data.StringMapper;
-import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 @AutoValue
 public abstract class AlertData {
-
-  private static AtomicReference<AlertData> GENERIC_FAILURE = new AtomicReference<>();
 
   private static DialogInterface.OnClickListener createButtonListener(ButtonAction action) {
     return ObjectHelper.isNotNull(action) ? (d, i) -> action.accept() : null;
@@ -28,16 +23,8 @@ public abstract class AlertData {
   }
 
   public static AlertData createForGenericFailure(StringMapper stringMapper) {
-    AlertData data = GENERIC_FAILURE.get();
-    if (ObjectHelper.isNull(data)) {
-      data = builder(stringMapper)
-        .title(R.string.weAreSorry)
-        .message(R.string.anUnexpectedErrorOccurred)
-        .positiveButton(R.string.ok)
-        .build();
-      GENERIC_FAILURE.set(data);
-    }
-    return data;
+    return builder(stringMapper)
+      .build();
   }
 
   public abstract String title();
@@ -75,7 +62,7 @@ public abstract class AlertData {
   @Override
   public abstract int hashCode();
 
-  interface ButtonAction {
+  public interface ButtonAction {
 
     void accept();
   }
@@ -95,8 +82,8 @@ public abstract class AlertData {
       this.stringMapper = stringMapper;
     }
 
-    public final Builder title(String title) {
-      this.title = ObjectHelper.checkNotNull(title, "title");
+    public final Builder title(@Nullable String title) {
+      this.title = title;
       return this;
     }
 
@@ -104,8 +91,8 @@ public abstract class AlertData {
       return this.title(this.stringMapper.apply(id));
     }
 
-    public final Builder message(String message) {
-      this.message = ObjectHelper.checkNotNull(message, "message");
+    public final Builder message(@Nullable String message) {
+      this.message = message;
       return this;
     }
 
@@ -113,53 +100,44 @@ public abstract class AlertData {
       return this.message(this.stringMapper.apply(id));
     }
 
-    public final Builder positiveButton(String text) {
-      this.positiveButtonText = ObjectHelper.checkNotNull(text, "text");
+    public final Builder positiveButtonText(@Nullable String text) {
+      this.positiveButtonText = text;
       return this;
     }
 
-    public final Builder positiveButton(@StringRes int id) {
-      return this.positiveButton(this.stringMapper.apply(id));
+    public final Builder positiveButtonText(@StringRes int id) {
+      return this.positiveButtonText(this.stringMapper.apply(id));
     }
 
-    public final Builder positiveButton(String text, ButtonAction action) {
-      this.positiveButtonText = ObjectHelper.checkNotNull(text, "text");
-      this.positiveButtonAction = ObjectHelper.checkNotNull(action, "action");
+    public final Builder positiveButtonAction(@Nullable ButtonAction action) {
+      this.positiveButtonAction = action;
       return this;
     }
 
-    public final Builder positiveButton(@StringRes int id, ButtonAction action) {
-      return this.positiveButton(this.stringMapper.apply(id), action);
-    }
-
-    public final Builder negativeButton(String text) {
-      this.negativeButtonText = ObjectHelper.checkNotNull(text, "text");
+    public final Builder negativeButtonText(@Nullable String text) {
+      this.negativeButtonText = text;
       return this;
     }
 
-    public final Builder negativeButton(@StringRes int id) {
-      return this.negativeButton(this.stringMapper.apply(id));
+    public final Builder negativeButtonText(@StringRes int id) {
+      return this.negativeButtonText(this.stringMapper.apply(id));
     }
 
-    public final Builder negativeButton(String text, ButtonAction action) {
-      this.negativeButtonText = ObjectHelper.checkNotNull(text, "text");
-      this.negativeButtonAction = ObjectHelper.checkNotNull(action, "action");
+    public final Builder negativeButtonAction(@Nullable ButtonAction action) {
+      this.negativeButtonAction = action;
       return this;
-    }
-
-    public final Builder negativeButton(@StringRes int id, ButtonAction action) {
-      return this.negativeButton(this.stringMapper.apply(id), action);
     }
 
     public final AlertData build() {
-      BuilderChecker.create()
-        .addPropertyNameIfMissing("title", StringHelper.isNullOrEmpty(this.title))
-        .addPropertyNameIfMissing("message", StringHelper.isNullOrEmpty(this.message))
-        .addPropertyNameIfMissing(
-          "positiveButtonText",
-          StringHelper.isNullOrEmpty(this.positiveButtonText)
-        )
-        .checkNoMissingProperties();
+      if (StringHelper.isNullOrEmpty(this.title)) {
+        this.title = this.stringMapper.apply(R.string.weAreSorry);
+      }
+      if (StringHelper.isNullOrEmpty(this.message)) {
+        this.message = this.stringMapper.apply(R.string.anUnexpectedErrorOccurred);
+      }
+      if (StringHelper.isNullOrEmpty(this.positiveButtonText)) {
+        this.positiveButtonText = this.stringMapper.apply(R.string.ok);
+      }
 
       return new AutoValue_AlertData(
         this.title,

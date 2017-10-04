@@ -2,9 +2,9 @@ package com.tpago.movil.domain.auth.alt;
 
 import android.support.annotation.Nullable;
 
-import com.tpago.movil.data.api.Api;
-import com.tpago.movil.domain.KeyValueStore;
-import com.tpago.movil.domain.KeyValueStoreHelper;
+import com.tpago.movil.api.Api;
+import com.tpago.movil.KeyValueStore;
+import com.tpago.movil.KeyValueStoreHelper;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.Placeholder;

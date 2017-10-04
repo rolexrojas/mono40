@@ -9,7 +9,9 @@ import com.tpago.movil.dep.Preconditions;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class LogoAnimator {
+
   private final Logo logo;
   private final long duration;
 
@@ -33,7 +35,8 @@ public final class LogoAnimator {
     animator.playTogether(
       ObjectAnimator.ofFloat(logo, View.TRANSLATION_Y, translationY),
       ObjectAnimator.ofFloat(logo, View.SCALE_X, scaleX),
-      ObjectAnimator.ofFloat(logo, View.SCALE_Y, scaleY));
+      ObjectAnimator.ofFloat(logo, View.SCALE_Y, scaleY)
+    );
     animator.setDuration(duration);
     animator.start();
   }

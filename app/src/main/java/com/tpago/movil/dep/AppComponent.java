@@ -2,16 +2,15 @@ package com.tpago.movil.dep;
 
 import android.content.Context;
 
+import com.tpago.movil.app.ui.*;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.BalanceManager;
 import com.tpago.movil.d.domain.InitialDataLoader;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.RecipientManager;
-import com.tpago.movil.d.domain.TransactionRepo;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.pos.PosBridge;
-import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.main.recipient.addition.NonAffiliatedPhoneNumberRecipientAddition1Fragment;
 import com.tpago.movil.d.ui.main.recipient.addition.NonAffiliatedPhoneNumberRecipientAddition2Fragment;
 import com.tpago.movil.d.ui.main.recipient.index.disburse.DisbursementActivity;
@@ -23,12 +22,15 @@ import com.tpago.movil.dep.init.InitComponent;
 import com.tpago.movil.dep.init.InitModule;
 import com.tpago.movil.dep.net.NetworkService;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
+import com.tpago.movil.session.SessionManager;
 
 /**
  * @author hecvasro
  */
 @Deprecated
 public interface AppComponent {
+
+  SessionManager sessionManager();
 
   AltAuthMethodManager altAuthManager();
 
@@ -48,7 +50,11 @@ public interface AppComponent {
   DepApiBridge provideApiBridge();
 
   @Deprecated
-  InitComponent plus(ActivityModule activityModule, InitModule initModule);
+  InitComponent plus(
+    com.tpago.movil.app.ui.ActivityModule activityModule,
+    ActivityModule depActivityModule,
+    InitModule initModule
+  );
 
   @Deprecated
   InitialDataLoader provideInitialDataLoader();
@@ -69,16 +75,10 @@ public interface AppComponent {
   SchedulerProvider provideSchedulerProvider();
 
   @Deprecated
-  SessionManager provideSessionManager();
-
-  @Deprecated
   StringHelper provideStringHelper();
 
   @Deprecated
   StringMapper stringMapper();
-
-  @Deprecated
-  TransactionRepo provideTransactionRepo();
 
   @Deprecated
   UserStore provideUserStore();

@@ -20,16 +20,13 @@ import rx.functions.Func1;
  */
 class ProductRecipientBuilder extends RecipientBuilder {
 
-  private final String authToken;
   private final DepApiBridge apiBridge;
   private final Bank bank;
 
   ProductRecipientBuilder(
-    String authToken,
     DepApiBridge apiBridge,
     Bank bank
   ) {
-    this.authToken = authToken;
     this.apiBridge = apiBridge;
     this.bank = bank;
   }
@@ -51,7 +48,7 @@ class ProductRecipientBuilder extends RecipientBuilder {
 
   @Override
   public Observable<Result> build(final String number, final String pin) {
-    return this.apiBridge.checkAccountNumber(this.authToken, this.bank, number)
+    return this.apiBridge.checkAccountNumber(this.bank, number)
       .map(new Func1<ApiResult<Pair<String, Product>>, Result>() {
         @Override
         public Result call(ApiResult<Pair<String, Product>> result) {

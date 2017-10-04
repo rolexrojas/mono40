@@ -52,7 +52,7 @@ public abstract class Partner implements Parcelable {
   @SerializedName("partner-id")
   public abstract String getId();
 
-  @SerializedName("partner-name")
+  @SerializedName("partner-updateName")
   public abstract String getName();
 
   @SerializedName("image-url")

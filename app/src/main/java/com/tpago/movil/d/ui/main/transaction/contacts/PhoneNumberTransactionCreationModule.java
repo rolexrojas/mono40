@@ -5,7 +5,6 @@ import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.api.DepApiBridge;
-import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.main.transaction.TransactionCategory;
 import com.tpago.movil.dep.net.NetworkService;
 
@@ -17,6 +16,7 @@ import dagger.Provides;
  */
 @Module
 class PhoneNumberTransactionCreationModule {
+
   @Provides
   @FragmentScope
   PhoneNumberTransactionCreationPresenter providePresenter(
@@ -24,7 +24,6 @@ class PhoneNumberTransactionCreationModule {
     Recipient recipient,
     NetworkService networkService,
     DepApiBridge depApiBridge,
-    SessionManager sessionManager,
     StringHelper stringHelper,
     TransactionCategory transactionCategory
   ) {
@@ -33,7 +32,6 @@ class PhoneNumberTransactionCreationModule {
       recipient,
       networkService,
       depApiBridge,
-      sessionManager.getSession().getAuthToken(),
       stringHelper,
       transactionCategory
     );

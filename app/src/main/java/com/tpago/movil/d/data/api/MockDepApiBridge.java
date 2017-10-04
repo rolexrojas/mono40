@@ -27,7 +27,7 @@ import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.dep.MockData;
 import com.tpago.movil.dep.Partner;
-import com.tpago.movil.domain.PhoneNumber;
+import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.util.DigitHelper;
 
 import java.math.BigDecimal;
@@ -52,7 +52,7 @@ final class MockDepApiBridge implements DepApiBridge {
 
   @NonNull
   @Override
-  public Observable<ApiResult<InitialData>> initialLoad(@NonNull String authToken) {
+  public Observable<ApiResult<InitialData>> initialLoad() {
     return Observable.just(
       new ApiResult<>(
         ApiCode.OK,
@@ -69,7 +69,6 @@ final class MockDepApiBridge implements DepApiBridge {
   @NonNull
   @Override
   public ApiResult<Balance> queryBalance(
-    String authToken,
     Product product,
     String pin
   ) {
@@ -86,7 +85,7 @@ final class MockDepApiBridge implements DepApiBridge {
 
   @NonNull
   @Override
-  public Observable<ApiResult<List<Transaction>>> recentTransactions(@NonNull String authToken) {
+  public Observable<ApiResult<List<Transaction>>> recentTransactions() {
     return Observable.just(
       new ApiResult<>(
         ApiCode.OK,
@@ -99,7 +98,7 @@ final class MockDepApiBridge implements DepApiBridge {
 
   @NonNull
   @Override
-  public Observable<ApiResult<List<Recipient>>> recipients(@NonNull String authToken) {
+  public Observable<ApiResult<List<Recipient>>> recipients() {
     return Observable.just(
       new ApiResult<>(
         ApiCode.OK,
@@ -112,7 +111,6 @@ final class MockDepApiBridge implements DepApiBridge {
   @NonNull
   @Override
   public Observable<ApiResult<Boolean>> checkIfAffiliated(
-    @NonNull String authToken,
     @NonNull String phoneNumber
   ) {
     final List<Integer> digitList = DigitHelper.toDigitList(phoneNumber);
@@ -130,7 +128,10 @@ final class MockDepApiBridge implements DepApiBridge {
 
   @Override
   public Observable<ApiResult<String>> transferTo(
-    String authToken, Product product, Recipient recipient, BigDecimal amount, String pin
+    Product product,
+    Recipient recipient,
+    BigDecimal amount,
+    String pin
   ) {
     return Observable.just(
       new ApiResult<>(
@@ -144,7 +145,6 @@ final class MockDepApiBridge implements DepApiBridge {
 
   @Override
   public Observable<ApiResult<String>> transferTo(
-    String authToken,
     Product fundingProduct,
     Product destinationProduct,
     BigDecimal amount,
@@ -161,15 +161,14 @@ final class MockDepApiBridge implements DepApiBridge {
   }
 
   @Override
-  public ApiResult<Void> setDefaultPaymentOption(
-    String authToken, Product paymentOption
-  ) {
+  public ApiResult<Void> setDefaultPaymentOption(Product paymentOption) {
     return new ApiResult<>(ApiCode.OK, null, null);
   }
 
   @Override
   public Observable<ApiResult<Pair<String, Product>>> checkAccountNumber(
-    String authToken, Bank bank, String accountNumber
+    Bank bank,
+    String accountNumber
   ) {
     return Observable.just(
       new ApiResult<>(
@@ -201,7 +200,7 @@ final class MockDepApiBridge implements DepApiBridge {
   }
 
   @Override
-  public Observable<ApiResult<List<Partner>>> partners(String authToken) {
+  public Observable<ApiResult<List<Partner>>> partners() {
     final List<Partner> partnerList = new ArrayList<>(MockData.PARTNER_SET);
     return Observable.just(new ApiResult<>(ApiCode.OK, partnerList, null))
       .delay(1L, TimeUnit.SECONDS);
@@ -209,22 +208,23 @@ final class MockDepApiBridge implements DepApiBridge {
 
   @Override
   public Observable<ApiResult<Void>> addBill(
-    String authToken, Partner partner, String contractNumber, String pin
+    Partner partner,
+    String contractNumber,
+    String pin
   ) {
     return Observable.just(new ApiResult<>(ApiCode.OK, null, null));
   }
 
   @Override
   public ApiResult<Void> removeBill(
-    String authToken, BillRecipient bill, String pin
+    BillRecipient bill,
+    String pin
   ) {
     return new ApiResult<>(ApiCode.OK, null, null);
   }
 
   @Override
-  public ApiResult<BillBalance> queryBalance(
-    String authToken, BillRecipient recipient
-  ) {
+  public ApiResult<BillBalance> queryBalance(BillRecipient recipient) {
     final BillBalance balance = BillBalance.builder()
       .setDate("27/09/2017")
       .setTotal(BigDecimal.valueOf(1825 * 2))
@@ -234,9 +234,7 @@ final class MockDepApiBridge implements DepApiBridge {
   }
 
   @Override
-  public ApiResult<ProductBillBalance> queryBalance(
-    String authToken, ProductRecipient recipient
-  ) {
+  public ApiResult<ProductBillBalance> queryBalance(ProductRecipient recipient) {
     final Product product = recipient.getProduct();
     final ProductBillBalance balance;
     if (Product.checkIfCreditCard(product)) {
@@ -261,7 +259,6 @@ final class MockDepApiBridge implements DepApiBridge {
 
   @Override
   public Observable<ApiResult<String>> payBill(
-    String authToken,
     BillRecipient bill,
     Product fundingAccount,
     BillRecipient.Option option,
@@ -279,7 +276,6 @@ final class MockDepApiBridge implements DepApiBridge {
 
   @Override
   public Observable<ApiResult<PaymentResult>> payCreditCardBill(
-    String authToken,
     BigDecimal amountToPay,
     CreditCardBillBalance.Option option,
     String pin,
@@ -298,7 +294,6 @@ final class MockDepApiBridge implements DepApiBridge {
 
   @Override
   public Observable<ApiResult<PaymentResult>> payLoanBill(
-    String authToken,
     BigDecimal amountToPay,
     LoanBillBalance.Option option,
     String pin,
@@ -316,14 +311,12 @@ final class MockDepApiBridge implements DepApiBridge {
   }
 
   @Override
-  public ApiResult<Boolean> validatePin(String authToken, String pin) {
+  public ApiResult<Boolean> validatePin(String pin) {
     return new ApiResult<>(ApiCode.OK, true, null);
   }
 
   @Override
-  public ApiResult<Customer.State> fetchCustomerState(
-    String authToken, String phoneNumber
-  ) {
+  public ApiResult<Customer.State> fetchCustomerState(String phoneNumber) {
     final List<Integer> digitList = DigitHelper.toDigitList(phoneNumber);
     final int digitListSize = digitList.size();
     final Customer.State state;
@@ -340,13 +333,12 @@ final class MockDepApiBridge implements DepApiBridge {
   }
 
   @Override
-  public ApiResult<Customer> fetchCustomer(String authToken, String phoneNumber) {
+  public ApiResult<Customer> fetchCustomer(String phoneNumber) {
     return new ApiResult<>(ApiCode.OK, Customer.create("Nelson Mandela"), null);
   }
 
   @Override
   public Observable<ApiResult<String>> recharge(
-    String authToken,
     Partner carrier,
     PhoneNumber phoneNumber,
     Product fundingAccount,
@@ -365,7 +357,6 @@ final class MockDepApiBridge implements DepApiBridge {
 
   @Override
   public ApiResult<String> advanceCash(
-    String authToken,
     Product fundingAccount,
     Product recipientAccount,
     BigDecimal amount,

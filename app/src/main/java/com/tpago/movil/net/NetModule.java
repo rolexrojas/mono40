@@ -1,8 +1,9 @@
-package com.tpago.movil.data.net;
+package com.tpago.movil.net;
 
 import android.content.Context;
 
 import com.tpago.movil.dep.io.Files;
+import com.tpago.movil.session.AccessTokenStore;
 
 import javax.inject.Singleton;
 
@@ -18,7 +19,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
  * @author hecvasro
  */
 @Module
-public final class DataNetModule {
+public final class NetModule {
 
   private static Interceptor createLoggingInterceptor() {
     return new HttpLoggingInterceptor()
@@ -38,21 +39,15 @@ public final class DataNetModule {
 
   @Provides
   @Singleton
-  AuthTokenStore authTokenStore() {
-    return AuthTokenStore.create();
-  }
-
-  @Provides
-  @Singleton
   Cache provideCache(Context context) {
     return new Cache(Files.createInternalCacheDirectory(context), Integer.MAX_VALUE);
   }
 
   @Provides
   @Singleton
-  OkHttpClient okHttpClient(Cache cache, AuthTokenStore authTokenStore) {
+  OkHttpClient okHttpClient(Cache cache, AccessTokenStore accessTokenStore) {
     return new OkHttpClient.Builder()
-      .addInterceptor(AuthInterceptor.create(authTokenStore))
+      .addInterceptor(AuthInterceptor.create(accessTokenStore))
       .addInterceptor(createLoggingInterceptor())
       .addInterceptor(createUserAgentInterceptor())
       .cache(cache)

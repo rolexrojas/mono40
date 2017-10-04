@@ -5,7 +5,7 @@ import android.util.Base64;
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.google.gson.annotations.SerializedName;
-import com.tpago.movil.domain.user.User;
+import com.tpago.movil.user.User;
 import com.tpago.movil.util.ObjectHelper;
 
 /**

@@ -2,9 +2,9 @@ package com.tpago.movil.data.auth.alt;
 
 import android.util.Base64;
 
-import com.tpago.movil.domain.Code;
-import com.tpago.movil.domain.KeyValueStore;
-import com.tpago.movil.domain.KeyValueStoreHelper;
+import com.tpago.movil.Code;
+import com.tpago.movil.KeyValueStore;
+import com.tpago.movil.KeyValueStoreHelper;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.io.ByteArrayInputStream;

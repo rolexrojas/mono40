@@ -19,6 +19,7 @@ import dagger.Provides;
 @Module
 @Deprecated
 public class DepActivityModule {
+
   private final AppCompatActivity activity;
 
   /**

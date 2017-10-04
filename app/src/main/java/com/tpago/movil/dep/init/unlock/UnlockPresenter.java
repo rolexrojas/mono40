@@ -1,37 +1,26 @@
 package com.tpago.movil.dep.init.unlock;
 
-import android.support.v4.util.Pair;
-import com.tpago.movil.domain.Email;
-import com.tpago.movil.domain.PhoneNumber;
-import com.tpago.movil.R;
-import com.tpago.movil.dep.Session;
-import com.tpago.movil.dep.User;
-import com.tpago.movil.dep.UserStore;
-import com.tpago.movil.dep.api.DApiBridge;
-import com.tpago.movil.dep.api.DApiData;
-import com.tpago.movil.dep.api.UserData;
-import com.tpago.movil.dep.Presenter;
-import com.tpago.movil.d.domain.ErrorCode;
-import com.tpago.movil.d.domain.FailureData;
-import com.tpago.movil.d.domain.Result;
-import com.tpago.movil.dep.init.InitComponent;
-import com.tpago.movil.dep.net.HttpResult;
-import com.tpago.movil.dep.net.NetworkService;
-import com.tpago.movil.dep.reactivex.Disposables;
-import com.tpago.movil.dep.text.Texts;
-import com.tpago.movil.dep.Objects;
-import com.tpago.movil.dep.Preconditions;
+import android.net.Uri;
 
-import java.io.File;
-import java.util.concurrent.Callable;
+import com.tpago.movil.Password;
+import com.tpago.movil.R;
+import com.tpago.movil.app.ui.AlertData;
+import com.tpago.movil.app.ui.AlertManager;
+import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
+import com.tpago.movil.data.DeviceIdSupplier;
+import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.dep.Presenter;
+import com.tpago.movil.dep.init.InitComponent;
+import com.tpago.movil.reactivex.DisposableHelper;
+import com.tpago.movil.session.SessionManager;
+import com.tpago.movil.user.User;
+import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.util.Placeholder;
 
 import javax.inject.Inject;
 
-import io.reactivex.Single;
-import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -39,154 +28,129 @@ import timber.log.Timber;
  * @author hecvasro
  */
 public final class UnlockPresenter extends Presenter<UnlockPresenter.View> {
+
   private static String sanitize(String content) {
-    return Objects.checkIfNull(content) ? "" : content.trim();
+    return ObjectHelper.firstNonNull(content, "")
+      .trim();
   }
 
   private String passwordTextInputContent;
   private boolean isPasswordTextInputContentValid = false;
 
-  private Disposable disposable = Disposables.disposed();
+  private Disposable disposable = io.reactivex.disposables.Disposables.disposed();
 
-  @Inject UserStore userStore;
-  @Inject Session.Builder sessionBuilder;
-  @Inject DApiBridge depApiBridge;
-  @Inject NetworkService networkService;
+  @Inject AlertManager alertManager;
+  @Inject DeviceIdSupplier deviceIdSupplier;
+  @Inject SessionManager sessionManager;
+  @Inject StringMapper stringMapper;
+  @Inject TakeoverLoader takeoverLoader;
 
   UnlockPresenter(View view, InitComponent component) {
     super(view);
+
     // Injects all the annotated dependencies.
-    Preconditions.assertNotNull(component, "component == null")
+    ObjectHelper.checkNotNull(component, "component")
       .inject(this);
   }
 
   private void updateView() {
-    if (isPasswordTextInputContentValid) {
-      view.showPasswordTextInputAsErratic(false);
+    if (this.isPasswordTextInputContentValid) {
+      this.view.showPasswordTextInputAsErratic(false);
     }
-    view.showUnlockButtonAsEnabled(isPasswordTextInputContentValid);
+    this.view.showUnlockButtonAsEnabled(this.isPasswordTextInputContentValid);
   }
 
   private void startLoading() {
-    view.setUnlockButtonEnabled(false);
-    view.showUnlockButtonAsEnabled(false);
-    view.startLoading();
+    this.view.setUnlockButtonEnabled(false);
+    this.view.showUnlockButtonAsEnabled(false);
+
+    this.takeoverLoader.show();
   }
 
   private void stopLoading() {
-    view.stopLoading();
-    view.showUnlockButtonAsEnabled(isPasswordTextInputContentValid);
-    view.setUnlockButtonEnabled(isPasswordTextInputContentValid);
+    this.takeoverLoader.hide();
+
+    this.view.showUnlockButtonAsEnabled(this.isPasswordTextInputContentValid);
+    this.view.setUnlockButtonEnabled(this.isPasswordTextInputContentValid);
   }
 
   final void onPasswordTextInputContentChanged(String content) {
     final String sanitizedContent = sanitize(content);
-    if (!sanitizedContent.equals(passwordTextInputContent)) {
-      passwordTextInputContent = sanitizedContent;
-      isPasswordTextInputContentValid = Texts.checkIfNotEmpty(passwordTextInputContent);
-      updateView();
+    if (!sanitizedContent.equals(this.passwordTextInputContent)) {
+      this.passwordTextInputContent = sanitizedContent;
+      this.isPasswordTextInputContentValid = Password.isValid(this.passwordTextInputContent);
+
+      this.updateView();
     }
   }
 
+  final void handleSuccess(com.tpago.movil.util.Result<Placeholder> result) {
+    if (result.isSuccessful()) {
+      this.view.moveToInitScreen();
+    } else {
+      final com.tpago.movil.util.FailureData failureData = result.failureData();
+
+      final AlertData data = AlertData.builder(this.stringMapper)
+        .message(failureData.description())
+        .build();
+      this.alertManager.show(data);
+    }
+  }
+
+  private void handleError(Throwable throwable) {
+    Timber.e(throwable, "Opening session with password");
+
+    this.alertManager.show(AlertData.createForGenericFailure(this.stringMapper));
+  }
+
   final void onUnlockButtonClicked() {
-    if (isPasswordTextInputContentValid) {
-      final User user = userStore.get();
-      final PhoneNumber phoneNumber = user.phoneNumber();
-      final Email email = user.email();
-      disposable = Single.defer(new Callable<SingleSource<Result<Pair<UserData, String>, ErrorCode>>>() {
-        @Override
-        public SingleSource<Result<Pair<UserData, String>, ErrorCode>> call() throws Exception {
-            final Result<Pair<UserData, String>, ErrorCode> result;
-            if (networkService.checkIfAvailable()) {
-              final HttpResult<DApiData<Pair<UserData, String>>> apiResult = depApiBridge
-                .signIn(phoneNumber, email, passwordTextInputContent, false)
-                .blockingGet();
-              final DApiData<Pair<UserData, String>> apiResultData = apiResult.getData();
-              if (apiResult.isSuccessful()) {
-                result = Result.create(apiResultData.getValue());
-              } else {
-                result = Result.create(
-                  FailureData.create(
-                    ErrorCode.UNEXPECTED,
-                    apiResultData.getError().getDescription())
-                );
-              }
-            } else {
-              result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
-            }
-            return Single.just(result);
-        }
-      })
+    if (this.isPasswordTextInputContentValid) {
+      final Password password = Password.create(this.passwordTextInputContent);
+      final String deviceId = this.deviceIdSupplier.get();
+
+      this.disposable = this.sessionManager.openSession(password, deviceId)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe(new Consumer<Disposable>() {
-          @Override
-          public void accept(Disposable disposable) throws Exception {
-            startLoading();
-          }
-        })
-        .subscribe(new Consumer<Result<Pair<UserData, String>, ErrorCode>>() {
-          @Override
-          public void accept(Result<Pair<UserData, String>, ErrorCode> result) throws Exception {
-            stopLoading();
-            if (result.isSuccessful()) {
-              final Pair<UserData, String> successData = result.getSuccessData();
-              userStore.set(successData.first);
-              sessionBuilder.setToken(successData.second);
-              view.moveToInitScreen();
-            } else {
-              final FailureData<ErrorCode> failureData = result.getFailureData();
-              switch (failureData.getCode()) {
-                case UNAVAILABLE_NETWORK:
-                  view.showUnavailableNetworkError();
-                  break;
-                default:
-                  view.showGenericErrorDialog(failureData.getDescription());
-                  break;
-              }
-            }
-          }
-        }, new Consumer<Throwable>() {
-          @Override
-          public void accept(Throwable throwable) throws Exception {
-            Timber.e(throwable);
-            stopLoading();
-            view.showGenericErrorDialog();
-          }
-        });
+        .doOnSubscribe((disposable) -> this.startLoading())
+        .doFinally(this::stopLoading)
+        .subscribe(this::handleSuccess, this::handleError);
     } else {
-      view.showPasswordTextInputAsErratic(true);
-      view.showDialog(
-        R.string.sign_in_error_title,
-        R.string.sign_in_error_description,
-        R.string.sign_in_error_positive_button_text);
+      this.view.showPasswordTextInputAsErratic(true);
+
+      final AlertData data = AlertData.builder(this.stringMapper)
+        .title(R.string.incorrectCredentials)
+        .message(R.string.bothUsernameAndPasswordAreRequired)
+        .build();
+      this.alertManager.show(data);
     }
   }
 
   @Override
   public void onViewStarted() {
     super.onViewStarted();
-    final User user = userStore.get();
-    view.setAvatarImageContent(user.avatar().getFile());
-    view.setTitleLabelContent(user.firstName());
-    view.setPasswordTextInputContent(passwordTextInputContent);
-    updateView();
+
+    final User user = this.sessionManager.getUser();
+
+    this.view.setUserPictureUri(user.pictureUri());
+    this.view.setUserFirstName(user.firstName());
+
+    this.view.setPasswordTextInputContent(this.passwordTextInputContent);
+
+    this.updateView();
   }
 
   @Override
   public void onViewStopped() {
+    DisposableHelper.dispose(this.disposable);
+
     super.onViewStopped();
-    Disposables.dispose(disposable);
   }
 
   interface View extends Presenter.View {
-    void showDialog(int titleId, String message, int positiveButtonTextId);
 
-    void showDialog(int titleId, int messageId, int positiveButtonTextId);
+    void setUserPictureUri(Uri pictureUri);
 
-    void setAvatarImageContent(File file);
-
-    void setTitleLabelContent(String content);
+    void setUserFirstName(String firstName);
 
     void setPasswordTextInputContent(String content);
 
@@ -196,14 +160,6 @@ public final class UnlockPresenter extends Presenter<UnlockPresenter.View> {
 
     void showUnlockButtonAsEnabled(boolean showAsEnabled);
 
-    void startLoading();
-
-    void stopLoading();
-
     void moveToInitScreen();
-
-    void showGenericErrorDialog(String message);
-    void showGenericErrorDialog();
-    void showUnavailableNetworkError();
   }
 }

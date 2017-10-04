@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.api.ApiUtils;
-import com.tpago.movil.d.domain.session.SessionManager;
 
 import java.util.List;
 
@@ -17,15 +16,11 @@ import rx.Observable;
  */
 @Deprecated
 public class DecoratedTransactionProvider implements TransactionProvider {
-  private final TransactionRepo transactionRepo;
-  private final DepApiBridge apiBridge;
-  private final com.tpago.movil.d.domain.session.SessionManager sessionManager;
 
-  public DecoratedTransactionProvider(@NonNull TransactionRepo transactionRepo,
-    @NonNull DepApiBridge apiBridge, @NonNull SessionManager sessionManager) {
-    this.transactionRepo = transactionRepo;
+  private final DepApiBridge apiBridge;
+
+  public DecoratedTransactionProvider(@NonNull DepApiBridge apiBridge) {
     this.apiBridge = apiBridge;
-    this.sessionManager = sessionManager;
   }
 
   /**
@@ -34,10 +29,7 @@ public class DecoratedTransactionProvider implements TransactionProvider {
   @NonNull
   @Override
   public Observable<List<Transaction>> getAll() {
-    return apiBridge.recentTransactions(
-      sessionManager.getSession()
-        .getAuthToken()
-    )
+    return apiBridge.recentTransactions()
       .compose(ApiUtils.<List<Transaction>>handleApiResult(true));
   }
 }

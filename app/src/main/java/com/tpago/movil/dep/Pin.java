@@ -14,6 +14,7 @@ import static com.tpago.movil.util.DigitHelper.toDigitString;
 @Deprecated
 @AutoValue
 public abstract class Pin {
+
   private static final String MASK = "•";
 
   private static final int LENGTH = 4;
@@ -25,6 +26,7 @@ public abstract class Pin {
   public abstract String getValue();
 
   public static final class Builder {
+
     private final List<Integer> digits;
 
     public Builder() {

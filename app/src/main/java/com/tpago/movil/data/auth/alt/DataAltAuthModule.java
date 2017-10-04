@@ -3,8 +3,8 @@ package com.tpago.movil.data.auth.alt;
 import android.content.Context;
 
 import com.tpago.movil.BuildConfig;
-import com.tpago.movil.data.api.Api;
-import com.tpago.movil.domain.KeyValueStore;
+import com.tpago.movil.api.Api;
+import com.tpago.movil.KeyValueStore;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
 
 import java.math.BigInteger;

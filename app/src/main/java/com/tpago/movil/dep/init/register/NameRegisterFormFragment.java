@@ -78,7 +78,7 @@ public final class NameRegisterFormFragment
     super.onResume();
     // Shows the keyboard.
     Keyboard.show(firstNameTextInput);
-    // Attaches the first name text input to the presenter.
+    // Attaches the first updateName text input to the presenter.
     firstNameTextWatcher = new BaseTextWatcher() {
       @Override
       public void afterTextChanged(Editable s) {
@@ -86,7 +86,7 @@ public final class NameRegisterFormFragment
       }
     };
     firstNameTextInput.addTextChangedListener(firstNameTextWatcher);
-    // Attaches the last name text input to the presenter.
+    // Attaches the last updateName text input to the presenter.
     lastNameTextWatcher = new BaseTextWatcher() {
       @Override
       public void afterTextChanged(Editable s) {
@@ -108,11 +108,11 @@ public final class NameRegisterFormFragment
   @Override
   public void onPause() {
     super.onPause();
-    // Detaches the last name text input from the presenter.
+    // Detaches the last updateName text input from the presenter.
     lastNameTextInput.setOnEditorActionListener(null);
     lastNameTextInput.removeTextChangedListener(lastNameTextWatcher);
     lastNameTextWatcher = null;
-    // Detaches the first name text input from the presenter.
+    // Detaches the first updateName text input from the presenter.
     firstNameTextInput.removeTextChangedListener(firstNameTextWatcher);
     lastNameTextWatcher = null;
   }

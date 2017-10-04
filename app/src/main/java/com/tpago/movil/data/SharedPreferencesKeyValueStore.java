@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
-import com.tpago.movil.domain.KeyValueStore;
+import com.tpago.movil.KeyValueStore;
 import com.tpago.movil.util.StringHelper;
 
 final class SharedPreferencesKeyValueStore implements KeyValueStore {

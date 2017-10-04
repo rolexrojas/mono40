@@ -2,9 +2,9 @@ package com.tpago.movil.d.ui.main.recipient.addition;
 
 import com.tpago.movil.app.ui.ActivityScope;
 import com.tpago.movil.d.domain.RecipientManager;
-import com.tpago.movil.d.domain.session.SessionManager;
 
 import com.tpago.movil.d.ui.main.recipient.index.category.Category;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -28,15 +28,7 @@ class AddRecipientModule {
 
   @Provides
   @ActivityScope
-  AddRecipientPresenter providePresenter(
-    SessionManager sessionManager,
-    RecipientManager recipientManager
-  ) {
-    return new AddRecipientPresenter(
-      sessionManager.getSession()
-        .getAuthToken(),
-      recipientManager,
-      this.category
-    );
+  AddRecipientPresenter providePresenter(RecipientManager recipientManager) {
+    return new AddRecipientPresenter(recipientManager, this.category);
   }
 }

@@ -14,7 +14,6 @@ import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
-import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.tpago.movil.d.domain.ErrorCode;
 import com.tpago.movil.d.domain.FailureData;
@@ -62,7 +61,6 @@ public class LoanTransactionCreationPresenter
   @Inject ProductManager productManager;
   @Inject Recipient recipient;
   @Inject RecipientManager recipientManager;
-  @Inject SessionManager sessionManager;
   @Inject StringHelper stringHelper;
 
   private LoanBillBalance.Option option;
@@ -102,15 +100,12 @@ public class LoanTransactionCreationPresenter
       public SingleSource<Result<PaymentResult, ErrorCode>> call() throws Exception {
         final Result<PaymentResult, ErrorCode> result;
         if (networkService.checkIfAvailable()) {
-          final String authToken = sessionManager.getSession()
-            .getAuthToken();
-          final ApiResult<Boolean> pinValidationResult = apiBridge.validatePin(authToken, pin);
+          final ApiResult<Boolean> pinValidationResult = apiBridge.validatePin(pin);
           if (pinValidationResult.isSuccessful()) {
             if (pinValidationResult.getData()) {
               final ProductRecipient r = (ProductRecipient) recipient;
               final LoanBillBalance b = (LoanBillBalance) r.getBalance();
               final ApiResult<PaymentResult> transactionResult = apiBridge.payLoanBill(
-                authToken,
                 amountToPay(b, option),
                 option,
                 pin,

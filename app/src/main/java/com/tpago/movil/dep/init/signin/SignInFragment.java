@@ -1,9 +1,7 @@
 package com.tpago.movil.dep.init.signin;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -13,20 +11,15 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.ActivityQualifier;
 import com.tpago.movil.app.ui.FragmentReplacer;
-import com.tpago.movil.dep.InformationalDialogFragment;
-import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.dep.init.BaseInitFragment;
 import com.tpago.movil.dep.init.InitFragment;
 import com.tpago.movil.dep.init.LogoAnimator;
 import com.tpago.movil.dep.text.BaseTextWatcher;
-import com.tpago.movil.dep.widget.FullSizeLoadIndicator;
 import com.tpago.movil.dep.widget.Keyboard;
-import com.tpago.movil.dep.widget.LoadIndicator;
 import com.tpago.movil.dep.widget.TextInput;
 
 import javax.inject.Inject;
@@ -40,20 +33,23 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 public final class SignInFragment extends BaseInitFragment implements SignInPresenter.View {
+
   public static SignInFragment create() {
     return new SignInFragment();
   }
 
   private Unbinder unbinder;
-  private LoadIndicator loadIndicator;
 
   private TextWatcher emailTextInputTextWatcher;
   private TextWatcher passwordTextInputTextWatcher;
 
   private SignInPresenter presenter;
 
+  @Inject
+  @ActivityQualifier
+  FragmentReplacer fragmentReplacer;
+
   @Inject LogoAnimator logoAnimator;
-  @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
 
   @BindView(R.id.text_input_email) TextInput emailTextInput;
   @BindView(R.id.text_input_password) TextInput passwordTextInput;
@@ -67,8 +63,10 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
     // Injects all the annotated dependencies.
-    getInitComponent().inject(this);
+    getInitComponent()
+      .inject(this);
   }
 
   @Nullable
@@ -76,7 +74,8 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
   public View onCreateView(
     LayoutInflater inflater,
     @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(R.layout.fragment_sign_in, container, false);
   }
 
@@ -85,8 +84,6 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
     super.onViewCreated(view, savedInstanceState);
     // Binds all the annotated resources, views and methods.
     unbinder = ButterKnife.bind(this, view);
-    // Creates the load indicator.
-    loadIndicator = new FullSizeLoadIndicator(getChildFragmentManager());
     // Creates the presenter.
     presenter = new SignInPresenter(this, getInitComponent());
   }
@@ -135,11 +132,11 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
   @Override
   public void onPause() {
     super.onPause();
-    // Detaches the last name text input from the presenter.
+    // Detaches the last updateName text input from the presenter.
     passwordTextInput.setOnEditorActionListener(null);
     passwordTextInput.removeTextChangedListener(passwordTextInputTextWatcher);
     passwordTextInputTextWatcher = null;
-    // Detaches the first name text input from the presenter.
+    // Detaches the first updateName text input from the presenter.
     emailTextInput.removeTextChangedListener(emailTextInputTextWatcher);
     emailTextInputTextWatcher = null;
   }
@@ -156,21 +153,8 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
     super.onDestroyView();
     // Destroys the presenter.
     presenter = null;
-    // Destroys the load indicator.
-    loadIndicator = null;
     // Unbinds all the annotated resources, views and method.
     unbinder.unbind();
-  }
-
-  @Override
-  public void showDialog(int titleId, String message, int positiveButtonTextId) {
-    InformationalDialogFragment.create(getString(titleId), message, getString(positiveButtonTextId))
-      .show(getChildFragmentManager(), null);
-  }
-
-  @Override
-  public void showDialog(int titleId, int messageId, int positiveButtonTextId) {
-    showDialog(titleId, getString(messageId), positiveButtonTextId);
   }
 
   @Override
@@ -204,56 +188,9 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
   }
 
   @Override
-  public void startLoading() {
-    loadIndicator.start();
-  }
-
-  @Override
-  public void stopLoading() {
-    loadIndicator.stop();
-  }
-
-  @Override
-  public void checkIfUserWantsToForceSignIn() {
-    new AlertDialog.Builder(getActivity())
-      .setTitle(R.string.dialog_title_already_associated_device)
-      .setMessage(R.string.dialog_message_already_associated_device)
-      .setNegativeButton(R.string.dialog_negative_text_already_associated_device, null)
-      .setPositiveButton(
-        R.string.dialog_positive_text_already_associated_device,
-        new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            presenter.onSignInForcingButtonClicked();
-          }
-        })
-      .create()
-      .show();
-  }
-
-  @Override
   public void moveToInitScreen() {
     fragmentReplacer.begin(InitFragment.create())
       .transition(FragmentReplacer.Transition.FIFO)
       .commit();
-  }
-
-  @Override
-  public void showGenericErrorDialog(String message) {
-    Dialogs.builder(getContext())
-      .setTitle(R.string.error_generic_title)
-      .setMessage(message)
-      .setPositiveButton(R.string.error_positive_button_text, null)
-      .show();
-  }
-
-  @Override
-  public void showGenericErrorDialog() {
-    showGenericErrorDialog(getString(R.string.error_generic));
-  }
-
-  @Override
-  public void showUnavailableNetworkError() {
-    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG).show();
   }
 }

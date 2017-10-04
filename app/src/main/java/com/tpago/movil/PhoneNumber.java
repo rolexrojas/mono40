@@ -1,4 +1,4 @@
-package com.tpago.movil.domain;
+package com.tpago.movil;
 
 import android.os.Parcelable;
 import android.support.annotation.IntDef;

@@ -1,6 +1,6 @@
 package com.tpago.movil.dep.init.unlock;
 
-import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -13,25 +13,18 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.ActivityQualifier;
 import com.tpago.movil.app.ui.FragmentReplacer;
-import com.tpago.movil.dep.InformationalDialogFragment;
-import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.data.picasso.CircleTransformation;
 import com.tpago.movil.dep.init.BaseInitFragment;
 import com.tpago.movil.dep.init.InitFragment;
 import com.tpago.movil.dep.init.LogoAnimator;
 import com.tpago.movil.dep.text.BaseTextWatcher;
-import com.tpago.movil.dep.widget.FullSizeLoadIndicator;
 import com.tpago.movil.dep.widget.Keyboard;
-import com.tpago.movil.dep.widget.LoadIndicator;
 import com.tpago.movil.dep.widget.TextInput;
-
-import java.io.File;
 
 import javax.inject.Inject;
 
@@ -44,19 +37,22 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 public final class UnlockFragment extends BaseInitFragment implements UnlockPresenter.View {
+
   public static UnlockFragment create() {
     return new UnlockFragment();
   }
 
   private Unbinder unbinder;
-  private LoadIndicator loadIndicator;
 
   private TextWatcher passwordTextInputTextWatcher;
 
   private UnlockPresenter presenter;
 
+  @Inject
+  @ActivityQualifier
+  FragmentReplacer fragmentReplacer;
+
   @Inject LogoAnimator logoAnimator;
-  @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
 
   @BindView(R.id.image_view_avatar) ImageView avatarImageView;
   @BindView(R.id.label_title) TextView titleLabel;
@@ -64,15 +60,17 @@ public final class UnlockFragment extends BaseInitFragment implements UnlockPres
   @BindView(R.id.button_unlock) Button unlockButton;
 
   @OnClick(R.id.button_unlock)
-  void onUnlockButtonClicked() {
-    presenter.onUnlockButtonClicked();
+  final void onUnlockButtonClicked() {
+    this.presenter.onUnlockButtonClicked();
   }
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
     // Injects all the annotated dependencies.
-    getInitComponent().inject(this);
+    getInitComponent()
+      .inject(this);
   }
 
   @Nullable
@@ -80,7 +78,8 @@ public final class UnlockFragment extends BaseInitFragment implements UnlockPres
   public View onCreateView(
     LayoutInflater inflater,
     @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(R.layout.fragment_unlock, container, false);
   }
 
@@ -89,8 +88,6 @@ public final class UnlockFragment extends BaseInitFragment implements UnlockPres
     super.onViewCreated(view, savedInstanceState);
     // Binds all the annotated resources, views and methods.
     unbinder = ButterKnife.bind(this, view);
-    // Creates the load indicator.
-    loadIndicator = new FullSizeLoadIndicator(getChildFragmentManager());
     // Creates the presenter.
     presenter = new UnlockPresenter(this, getInitComponent());
   }
@@ -131,7 +128,7 @@ public final class UnlockFragment extends BaseInitFragment implements UnlockPres
   @Override
   public void onPause() {
     super.onPause();
-    // Detaches the last name text input from the presenter.
+    // Detaches the last updateName text input from the presenter.
     passwordTextInput.setOnEditorActionListener(null);
     passwordTextInput.removeTextChangedListener(passwordTextInputTextWatcher);
     passwordTextInputTextWatcher = null;
@@ -149,37 +146,22 @@ public final class UnlockFragment extends BaseInitFragment implements UnlockPres
     super.onDestroyView();
     // Destroys the presenter.
     presenter = null;
-    // Destroys the load indicator.
-    loadIndicator = null;
     // Unbinds all the annotated resources, views and method.
     unbinder.unbind();
   }
 
   @Override
-  public void showDialog(int titleId, String message, int positiveButtonTextId) {
-    InformationalDialogFragment.create(getString(titleId), message, getString(positiveButtonTextId))
-      .show(getChildFragmentManager(), null);
-  }
-
-  @Override
-  public void showDialog(int titleId, int messageId, int positiveButtonTextId) {
-    showDialog(titleId, getString(messageId), positiveButtonTextId);
-  }
-
-  @Override
-  public void setAvatarImageContent(File file) {
-    final Context context = getActivity();
-    Picasso.with(context).invalidate(file);
-    Picasso.with(context)
-      .load(file)
+  public void setUserPictureUri(Uri pictureUri) {
+    Picasso.with(this.getContext())
+      .load(pictureUri)
       .resizeDimen(R.dimen.normalProfilePictureSize, R.dimen.normalProfilePictureSize)
       .transform(new CircleTransformation())
       .noFade()
-      .into(avatarImageView);
+      .into(this.avatarImageView);
   }
 
   @Override
-  public void setTitleLabelContent(String content) {
+  public void setUserFirstName(String content) {
     titleLabel.setText(String.format(getString(R.string.unlock_label_title), content));
   }
 
@@ -204,38 +186,9 @@ public final class UnlockFragment extends BaseInitFragment implements UnlockPres
   }
 
   @Override
-  public void startLoading() {
-    loadIndicator.start();
-  }
-
-  @Override
-  public void stopLoading() {
-    loadIndicator.stop();
-  }
-
-  @Override
   public void moveToInitScreen() {
     fragmentReplacer.begin(InitFragment.create())
       .transition(FragmentReplacer.Transition.FIFO)
       .commit();
-  }
-
-  @Override
-  public void showGenericErrorDialog(String message) {
-    Dialogs.builder(getContext())
-      .setTitle(R.string.error_generic_title)
-      .setMessage(message)
-      .setPositiveButton(R.string.error_positive_button_text, null)
-      .show();
-  }
-
-  @Override
-  public void showGenericErrorDialog() {
-    showGenericErrorDialog(getString(R.string.error_generic));
-  }
-
-  @Override
-  public void showUnavailableNetworkError() {
-    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG).show();
   }
 }

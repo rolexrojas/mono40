@@ -22,7 +22,6 @@ import com.tpago.movil.app.di.ComponentBuilderSupplier;
 import com.tpago.movil.app.ui.ActivityModule;
 import com.tpago.movil.app.ui.main.MainComponent;
 import com.tpago.movil.d.ui.DepActivityModule;
-import com.tpago.movil.dep.Session;
 import com.tpago.movil.dep.TimeOutManager;
 import com.tpago.movil.app.ui.ActivityQualifier;
 import com.tpago.movil.dep.App;
@@ -33,7 +32,6 @@ import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.ResetEvent;
 import com.tpago.movil.d.domain.pos.PosBridge;
-import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.domain.util.EventBus;
 import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.StringHelper;
@@ -48,6 +46,7 @@ import com.tpago.movil.d.ui.view.widget.SlidingPaneLayout;
 import com.tpago.movil.dep.init.InitActivity;
 import com.tpago.movil.dep.main.MainModule;
 import com.tpago.movil.dep.main.purchase.NonNfcPurchaseFragment;
+import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.dep.Objects;
 
@@ -88,8 +87,15 @@ public class DepMainActivity
 
   private boolean shouldRequestAuthentication = false;
 
-  @Inject @ActivityQualifier ComponentBuilderSupplier componentBuilderSupplier;
-  @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
+  @Inject
+  @ActivityQualifier
+  ComponentBuilderSupplier componentBuilderSupplier;
+
+  @Inject SessionManager sessionManager;
+
+  @Inject
+  @ActivityQualifier
+  FragmentReplacer fragmentReplacer;
 
   @Inject TimeOutManager timeOutManager;
 
@@ -97,8 +103,6 @@ public class DepMainActivity
   StringHelper stringHelper;
   @Inject
   MainPresenter presenter;
-  @Inject
-  SessionManager sessionManager;
   @Inject
   EventBus eventBus;
   @Inject
@@ -118,13 +122,8 @@ public class DepMainActivity
   ImageButton deleteImageButton;
 
   @NonNull
-  public static Intent getLaunchIntent(
-    Context context,
-    Session session
-  ) {
-    final Intent i = new Intent(context, DepMainActivity.class);
-    i.putExtra(KEY_SESSION, session);
-    return i;
+  public static Intent getLaunchIntent(Context context) {
+    return new Intent(context, DepMainActivity.class);
   }
 
   public final ComponentBuilderSupplier componentBuilderSupplier() {
@@ -152,7 +151,7 @@ public class DepMainActivity
       .get(DepMainActivity.class, MainComponent.Builder.class)
       .activityModule(ActivityModule.create(this))
       .depActivityModule(new DepActivityModule(this))
-      .mainModule(new MainModule(((Session) getIntent().getParcelableExtra(KEY_SESSION)), this))
+      .mainModule(new MainModule(this))
       .build();
     component.inject(this);
     // Prepares the action bar.
@@ -284,7 +283,7 @@ public class DepMainActivity
           .commit();
         break;
       case R.id.main_menuItem_exit:
-        this.sessionManager.deactivate();
+        this.sessionManager.closeSession();
 
         this.startActivity(InitActivity.getLaunchIntent(this));
         this.finish();

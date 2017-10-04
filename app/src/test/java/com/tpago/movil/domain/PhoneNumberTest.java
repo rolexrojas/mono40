@@ -1,5 +1,7 @@
 package com.tpago.movil.domain;
 
+import com.tpago.movil.PhoneNumber;
+
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;

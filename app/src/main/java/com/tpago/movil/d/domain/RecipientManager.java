@@ -111,11 +111,8 @@ public final class RecipientManager {
   }
 
   @Deprecated
-  public final Observable<Boolean> checkIfAffiliated(
-    final String authToken,
-    final String phoneNumber
-  ) {
-    return apiBridge.checkIfAffiliated(authToken, phoneNumber)
+  public final Observable<Boolean> checkIfAffiliated(final String phoneNumber) {
+    return apiBridge.checkIfAffiliated(phoneNumber)
       .compose(ApiUtils.<Boolean>handleApiResult(true));
   }
 

@@ -1,6 +1,6 @@
 package com.tpago.movil.data.auth.alt;
 
-import com.tpago.movil.domain.Code;
+import com.tpago.movil.Code;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodKeySupplier;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.FailureData;

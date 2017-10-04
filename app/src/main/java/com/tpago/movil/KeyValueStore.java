@@ -1,4 +1,4 @@
-package com.tpago.movil.domain;
+package com.tpago.movil;
 
 import android.support.annotation.Nullable;
 

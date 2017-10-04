@@ -2,7 +2,6 @@ package com.tpago.movil.d.ui.main;
 
 import android.content.Context;
 
-import com.tpago.movil.dep.Session;
 import com.tpago.movil.dep.User;
 import com.tpago.movil.dep.UserStore;
 import com.tpago.movil.app.ui.main.settings.profile.ProfileComponent;
@@ -13,7 +12,6 @@ import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.BalanceManager;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.pos.PosBridge;
-import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.domain.util.EventBus;
 import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.ui.ActivityComponent;
@@ -54,10 +52,6 @@ public interface DepMainComponent extends ActivityComponent {
   RecipientManager provideRecipientManager();
 
   SchedulerProvider provideSchedulerProvider();
-
-  Session provideSession();
-
-  SessionManager provideSessionManager();
 
   StringHelper provideMessageHelper();
 

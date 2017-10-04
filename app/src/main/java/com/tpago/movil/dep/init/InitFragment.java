@@ -9,19 +9,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 
 import com.tpago.movil.R;
-import com.tpago.movil.data.net.AuthToken;
-import com.tpago.movil.data.net.AuthTokenStore;
-import com.tpago.movil.dep.Session;
-import com.tpago.movil.dep.User;
-import com.tpago.movil.dep.UserStore;
 import com.tpago.movil.app.ui.ActivityQualifier;
 import com.tpago.movil.app.ui.FragmentReplacer;
 import com.tpago.movil.dep.Permissions;
 import com.tpago.movil.d.domain.InitialDataLoader;
-import com.tpago.movil.d.domain.session.SessionRepo;
 import com.tpago.movil.d.ui.main.DepMainActivity;
 import com.tpago.movil.dep.init.intro.IntroFragment;
 import com.tpago.movil.dep.init.unlock.UnlockFragment;
+import com.tpago.movil.session.SessionManager;
 
 import javax.inject.Inject;
 
@@ -37,17 +32,17 @@ import timber.log.Timber;
  * @author hecvasro
  */
 public final class InitFragment extends BaseInitFragment {
+
   private static final int REQUEST_CODE_PHONE = 0;
 
   private Subscription subscription = Subscriptions.unsubscribed();
 
+  @Inject SessionManager sessionManager;
+
   @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
-  @Inject AuthTokenStore authTokenStore;
-  @Inject InitialDataLoader initialDataLoader;
+
   @Inject LogoAnimator logoAnimator;
-  @Inject Session.Builder sessionBuilder;
-  @Inject SessionRepo sessionRepo;
-  @Inject UserStore userStore;
+  @Inject InitialDataLoader initialDataLoader;
 
   private boolean werePermissionsRequested = false;
 
@@ -56,26 +51,16 @@ public final class InitFragment extends BaseInitFragment {
   }
 
   private void resolve() {
-    if (!userStore.isSet()) {
-      fragmentReplacer.begin(IntroFragment.create())
+    if (!this.sessionManager.isUserSet()) {
+      this.fragmentReplacer.begin(IntroFragment.create())
         .transition(FragmentReplacer.Transition.SRFO)
         .commit();
-    } else if (!sessionBuilder.canBuild()) {
-      fragmentReplacer.begin(UnlockFragment.create())
+    } else if (!this.sessionManager.isSessionOpen()) {
+      this.fragmentReplacer.begin(UnlockFragment.create())
         .transition(FragmentReplacer.Transition.FIFO)
         .commit();
     } else {
-      final User user = userStore.get();
-      final Session session = sessionBuilder.build();
-      final com.tpago.movil.d.domain.session.Session s
-        = new com.tpago.movil.d.domain.session.Session(
-        user.phoneNumber().value(),
-        user.email()
-          .value(),
-        session.getToken());
-      sessionRepo.setSession(s);
-      this.authTokenStore.set(AuthToken.create(session.getToken()));
-      subscription = initialDataLoader.load(session)
+      this.subscription = this.initialDataLoader.load()
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(new Action1<Subscription>() {
@@ -89,7 +74,7 @@ public final class InitFragment extends BaseInitFragment {
           @Override
           public void call() {
             final Activity activity = getActivity();
-            activity.startActivity(DepMainActivity.getLaunchIntent(activity, session));
+            activity.startActivity(DepMainActivity.getLaunchIntent(activity));
             activity.finish();
           }
         }, new Action1<Throwable>() {
@@ -107,7 +92,8 @@ public final class InitFragment extends BaseInitFragment {
                   public void onClick(DialogInterface dialog, int which) {
                     activity.finish();
                   }
-                })
+                }
+              )
               .create()
               .show();
           }
@@ -135,7 +121,8 @@ public final class InitFragment extends BaseInitFragment {
         this,
         REQUEST_CODE_PHONE,
         Manifest.permission.READ_PHONE_STATE,
-        Manifest.permission.READ_SMS);
+        Manifest.permission.READ_SMS
+      );
     } else {
       // TODO: Let the user know that those permissions are required.
     }

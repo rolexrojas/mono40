@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.tpago.movil.dep.Partner;
-import com.tpago.movil.domain.PhoneNumber;
+import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.User;
 import com.tpago.movil.dep.UserStore;
@@ -74,7 +74,6 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
 
   private final NetworkService networkService;
   private final DepApiBridge depApiBridge;
-  private final String authToken;
 
   private final Category category;
   private final CategoryFilter categoryFilter;
@@ -104,7 +103,6 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
     UserStore userStore,
     NetworkService networkService,
     DepApiBridge depApiBridge,
-    String authToken,
     Category category
   ) {
     this.stringHelper = stringHelper;
@@ -113,7 +111,6 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
 
     this.networkService = networkService;
     this.depApiBridge = depApiBridge;
-    this.authToken = authToken;
 
     this.category = category;
     this.categoryFilter = CategoryFilter.create(this.category);
@@ -268,11 +265,11 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
             final Result<Customer, ErrorCode> result;
             if (networkService.checkIfAvailable()) {
               final ApiResult<Customer.State> customerStateResult = depApiBridge
-                .fetchCustomerState(authToken, phoneNumber.value());
+                .fetchCustomerState(phoneNumber.value());
               if (customerStateResult.isSuccessful()) {
                 if (Customer.checkIfCanBeFetched(customerStateResult.getData())) {
                   final ApiResult<Customer> customerResult = depApiBridge
-                    .fetchCustomer(authToken, phoneNumber.value());
+                    .fetchCustomer(phoneNumber.value());
                   if (customerResult.isSuccessful()) {
                     result = Result.create(customerResult.getData());
                   } else {
@@ -363,11 +360,11 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
             final Result<String, ErrorCode> result;
             if (networkService.checkIfAvailable()) {
               final ApiResult<Customer.State> customerStateResult = depApiBridge
-                .fetchCustomerState(authToken, phoneNumber.value());
+                .fetchCustomerState(phoneNumber.value());
               if (customerStateResult.isSuccessful()) {
                 if (Customer.checkIfCanBeFetched(customerStateResult.getData())) {
                   final ApiResult<Customer> customerResult = depApiBridge
-                    .fetchCustomer(authToken, phoneNumber.value());
+                    .fetchCustomer(phoneNumber.value());
                   if (customerResult.isSuccessful()) {
                     result = Result.create(
                       customerResult.getData()
@@ -516,7 +513,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
               final Result<BillBalance, ErrorCode> result;
               if (networkService.checkIfAvailable()) {
                 final ApiResult<BillBalance> queryBalanceResult = depApiBridge
-                  .queryBalance(authToken, billRecipient);
+                  .queryBalance(billRecipient);
                 if (queryBalanceResult.isSuccessful()) {
                   result = Result.create(queryBalanceResult.getData());
                 } else {
@@ -585,7 +582,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
               final Result<ProductBillBalance, ErrorCode> result;
               if (networkService.checkIfAvailable()) {
                 final ApiResult<ProductBillBalance> queryBalanceResult = depApiBridge
-                  .queryBalance(authToken, productRecipient);
+                  .queryBalance(productRecipient);
                 if (queryBalanceResult.isSuccessful()) {
                   result = Result.create(queryBalanceResult.getData());
                 } else {
@@ -657,10 +654,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
           public SingleSource<Result<Map<Recipient, Boolean>, ErrorCode>> call() throws Exception {
             final Result<Map<Recipient, Boolean>, ErrorCode> result;
             if (networkService.checkIfAvailable()) {
-              final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(
-                authToken,
-                pin
-              );
+              final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(pin);
               if (pinValidationResult.isSuccessful()) {
                 if (pinValidationResult.getData()) {
                   final Map<Recipient, Boolean> resultMap = new HashMap<>();
@@ -668,7 +662,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
                     boolean resultFlag = true;
                     if (Recipient.checkIfBill(recipient)) {
                       final ApiResult<Void> recipientRemovalResult = depApiBridge
-                        .removeBill(authToken, (BillRecipient) recipient, pin);
+                        .removeBill((BillRecipient) recipient, pin);
                       resultFlag = recipientRemovalResult.isSuccessful();
                     }
                     if (resultFlag) {

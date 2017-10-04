@@ -15,7 +15,6 @@ import com.tpago.movil.dep.App;
 import com.tpago.movil.R;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.api.DepApiBridge;
-import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.ui.DepActivityModule;
@@ -49,8 +48,6 @@ public class AddRecipientActivity extends
   private AddRecipientComponent component;
   private LoadIndicator loadIndicator;
 
-  @Inject
-  SessionManager sessionManager;
   @Inject
   DepApiBridge apiBridge;
   @Inject

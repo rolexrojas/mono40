@@ -2,10 +2,16 @@ package com.tpago.movil.data.api;
 
 import android.util.Base64;
 
+import com.tpago.movil.Code;
+import com.tpago.movil.Email;
+import com.tpago.movil.Password;
+import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.data.auth.alt.AltAuthMethodConfigData;
-import com.tpago.movil.domain.KeyValueStore;
-import com.tpago.movil.domain.KeyValueStoreHelper;
+import com.tpago.movil.KeyValueStore;
+import com.tpago.movil.KeyValueStoreHelper;
+import com.tpago.movil.api.Api;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodVerifyData;
+import com.tpago.movil.user.User;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.FailureData;
 import com.tpago.movil.util.ObjectHelper;
@@ -66,6 +72,28 @@ final class MockApi implements Api {
   }
 
   @Override
+  public Single<Result<User>> signUp(
+    PhoneNumber phoneNumber,
+    Email email,
+    Password password,
+    Code pin,
+    String deviceId
+  ) {
+    return Single.error(new UnsupportedOperationException("not implemented"));
+  }
+
+  @Override
+  public Single<Result<User>> signIn(
+    PhoneNumber phoneNumber,
+    Email email,
+    Password password,
+    String deviceId,
+    boolean shouldDeactivatePreviousDevice
+  ) {
+    return Single.error(new UnsupportedOperationException("not implemented"));
+  }
+
+  @Override
   public Completable enableAltAuthMethod(PublicKey publicKey) {
     return Completable.fromAction(() -> this.enableAltAuthMethod_(publicKey))
       .compose(completableDelayTransformer());
@@ -98,7 +126,7 @@ final class MockApi implements Api {
     final PublicKey publicKey = this.altAuthMethodPublicKeyReference.get();
     if (ObjectHelper.isNull(publicKey)) {
       final FailureData failureData = FailureData.builder()
-        .code(FailureCode.UNEXPECTED)
+        .code(FailureData.Code.UNAVAILABLE_SERVICE)
         .build();
       return Result.create(failureData);
     } else {
@@ -109,7 +137,7 @@ final class MockApi implements Api {
         return Result.create(Placeholder.get());
       } else {
         final FailureData failureData = FailureData.builder()
-          .code(FailureCode.UNAUTHORIZED)
+          .code(FailureData.Code.UNAVAILABLE_SERVICE)
           .build();
         return Result.create(failureData);
       }

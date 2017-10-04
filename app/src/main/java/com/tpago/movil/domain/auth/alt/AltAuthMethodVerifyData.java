@@ -2,7 +2,7 @@ package com.tpago.movil.domain.auth.alt;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
-import com.tpago.movil.domain.user.User;
+import com.tpago.movil.user.User;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.io.ByteArrayOutputStream;

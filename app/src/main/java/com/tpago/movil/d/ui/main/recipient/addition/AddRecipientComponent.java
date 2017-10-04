@@ -7,7 +7,6 @@ import com.tpago.movil.app.ui.ActivityScope;
 import com.tpago.movil.dep.AppComponent;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.domain.api.DepApiBridge;
-import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.ActivityComponent;
 import com.tpago.movil.d.ui.DepActivityModule;
 
@@ -39,6 +38,4 @@ public interface AddRecipientComponent extends ActivityComponent {
   DepApiBridge provideApiBridge();
 
   SchedulerProvider provideSchedulerProvider();
-
-  SessionManager provideSessionManager();
 }

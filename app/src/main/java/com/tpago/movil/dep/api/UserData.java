@@ -37,10 +37,10 @@ public abstract class UserData {
   @SerializedName("email")
   public abstract String email();
 
-  @SerializedName("name")
+  @SerializedName("updateName")
   public abstract String firstName();
 
-  @SerializedName("last-name")
+  @SerializedName("last-updateName")
   public abstract String lastName();
 
   @SerializedName("profilePicUrl")

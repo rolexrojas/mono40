@@ -24,7 +24,6 @@ import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
-import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
@@ -70,8 +69,6 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
   @Inject
   DepApiBridge apiBridge;
   @Inject
-  SessionManager sessionManager;
-  @Inject
   Recipient recipient;
   @Inject
   AtomicReference<Product> fundingAccount;
@@ -89,8 +86,6 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
 
   private void transferTo(String pin) {
     transferSubscription = apiBridge.transferTo(
-      sessionManager.getSession()
-        .getAuthToken(),
       fundingAccount.get(),
       recipient,
       value.get(),
@@ -143,15 +138,13 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
         .show();
       textInput.setErraticStateEnabled(true);
     } else {
-      final String authToken = sessionManager.getSession()
-        .getAuthToken();
       final Bank bank;
       if (recipient instanceof AccountRecipient) {
         bank = ((AccountRecipient) recipient).bank();
       } else {
         bank = ((NonAffiliatedPhoneNumberRecipient) recipient).getBank();
       }
-      checkSubscription = apiBridge.checkAccountNumber(authToken, bank, content)
+      checkSubscription = apiBridge.checkAccountNumber(bank, content)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(this.loadIndicator::start)

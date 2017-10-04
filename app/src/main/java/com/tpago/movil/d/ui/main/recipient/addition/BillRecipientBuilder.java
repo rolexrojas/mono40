@@ -19,17 +19,14 @@ import timber.log.Timber;
  */
 class BillRecipientBuilder extends RecipientBuilder {
 
-  private final String authToken;
   private final DepApiBridge apiBridge;
 
   private final Partner partner;
 
   BillRecipientBuilder(
-    String authToken,
     DepApiBridge apiBridge,
     Partner partner
   ) {
-    this.authToken = authToken;
     this.apiBridge = apiBridge;
     this.partner = partner;
   }
@@ -51,7 +48,7 @@ class BillRecipientBuilder extends RecipientBuilder {
 
   @Override
   public Observable<Result> build(final String number, final String pin) {
-    return apiBridge.addBill(authToken, partner, number, pin)
+    return apiBridge.addBill(partner, number, pin)
       .map(new Func1<ApiResult<Void>, Result>() {
         @Override
         public Result call(ApiResult<Void> result) {
@@ -59,7 +56,7 @@ class BillRecipientBuilder extends RecipientBuilder {
             final BillRecipient recipient = new BillRecipient(partner, number);
             try {
               final ApiResult<BillBalance> queryBalanceResult = apiBridge
-                .queryBalance(authToken, recipient);
+                .queryBalance(recipient);
               if (queryBalanceResult.isSuccessful()) {
                 recipient.setBalance(queryBalanceResult.getData());
               }

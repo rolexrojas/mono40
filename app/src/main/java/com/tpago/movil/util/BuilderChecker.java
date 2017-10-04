@@ -21,7 +21,7 @@ public final class BuilderChecker {
   }
 
   /**
-   * Adds the given property name to the missing properties if the given flag is true and it hasn't
+   * Adds the given property updateName to the missing properties if the given flag is true and it hasn't
    * been added yet.
    *
    * @throws IllegalArgumentException

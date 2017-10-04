@@ -1,7 +1,6 @@
 package com.tpago.movil.dep.init;
 
 import com.tpago.movil.R;
-import com.tpago.movil.dep.Session;
 import com.tpago.movil.app.ui.ActivityQualifier;
 import com.tpago.movil.app.ui.ActivityScope;
 import com.tpago.movil.dep.BaseActivity;
@@ -15,16 +14,11 @@ import dagger.Provides;
  */
 @Module
 public final class InitModule {
+
   @Provides
   @ActivityScope
   InitData provideInitData() {
     return new InitData();
-  }
-
-  @Provides
-  @ActivityScope
-  Session.Builder provideSessionBuilder() {
-    return new Session.Builder();
   }
 
   @Provides
@@ -40,6 +34,8 @@ public final class InitModule {
     return new LogoAnimator(
       ((InitActivity) activity).logo,
       ((InitActivity) activity).placeholderView,
-      activity.getResources().getInteger(R.integer.anim_duration_test));
+      activity.getResources()
+        .getInteger(R.integer.anim_duration_test)
+    );
   }
 }

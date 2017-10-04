@@ -6,7 +6,7 @@ import com.tpago.movil.R;
 import com.tpago.movil.app.ui.AlertData;
 import com.tpago.movil.app.ui.AlertManager;
 import com.tpago.movil.data.StringMapper;
-import com.tpago.movil.domain.Code;
+import com.tpago.movil.Code;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.Digit;
 import com.tpago.movil.util.DigitValueCreator;
@@ -75,7 +75,7 @@ final class AltAuthCodeCreatorPresenter extends CodeCreatorPresenter {
           final AlertData data = AlertData.builder(this.stringMapper)
             .title(R.string.weAreSorry)
             .message(R.string.altAuthMethodCodeMismatch)
-            .positiveButton(R.string.ok)
+            .positiveButtonText(R.string.ok)
             .build();
           this.alertManager.show(data);
         }

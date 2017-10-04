@@ -19,7 +19,6 @@ import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.pos.PosResult;
-import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.main.DepMainActivity;
 import com.tpago.movil.data.StringMapper;
 import com.tpago.movil.dep.init.InitActivity;
@@ -59,7 +58,6 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
   @Inject ProductManager productManager;
   @Inject ProfilePresenter presenter;
   @Inject RecipientManager recipientManager;
-  @Inject SessionManager sessionManager;
   @Inject StringMapper stringMapper;
   @Inject TakeoverLoader takeoverLoader;
   @Inject UserStore userStore;
@@ -109,7 +107,6 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
     if (result.isSuccessful()) {
       this.recipientManager.clear();
       this.productManager.clear();
-      this.sessionManager.deactivate();
       this.userStore.clear();
 
       final Activity activity = this.getActivity();

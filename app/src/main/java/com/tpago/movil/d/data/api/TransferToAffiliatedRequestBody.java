@@ -49,5 +49,5 @@ public abstract class TransferToAffiliatedRequestBody {
   @SerializedName("pin") abstract String getPin();
   @SerializedName("amount") abstract BigDecimal getAmount();
   @SerializedName("recipient-msisdn") abstract String getRecipientMsisdn();
-  @Nullable @SerializedName("recipient-name") abstract String getRecipientName();
+  @Nullable @SerializedName("recipient-updateName") abstract String getRecipientName();
 }

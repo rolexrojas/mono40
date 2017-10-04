@@ -8,7 +8,7 @@ import static com.tpago.movil.dep.Objects.checkIfNull;
 import android.support.annotation.NonNull;
 
 import com.tpago.movil.dep.Partner;
-import com.tpago.movil.domain.PhoneNumber;
+import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.api.DCurrencies;
 import com.tpago.movil.d.data.StringHelper;
@@ -56,7 +56,6 @@ class PhoneNumberTransactionCreationPresenter
 
   private final NetworkService networkService;
   private final DepApiBridge depApiBridge;
-  private final String authToken;
   private final StringHelper stringHelper;
 
   private final TransactionCategory transactionCategory;
@@ -71,7 +70,6 @@ class PhoneNumberTransactionCreationPresenter
     @NonNull Recipient recipient,
     NetworkService networkService,
     DepApiBridge depApiBridge,
-    String authToken,
     StringHelper stringHelper,
     TransactionCategory transactionCategory
   ) {
@@ -80,7 +78,6 @@ class PhoneNumberTransactionCreationPresenter
 
     this.networkService = networkService;
     this.depApiBridge = depApiBridge;
-    this.authToken = authToken;
     this.stringHelper = stringHelper;
 
     this.transactionCategory = transactionCategory;
@@ -161,11 +158,10 @@ class PhoneNumberTransactionCreationPresenter
       public SingleSource<Result<String, ErrorCode>> call() throws Exception {
         final Result<String, ErrorCode> result;
         if (networkService.checkIfAvailable()) {
-          final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(authToken, pin);
+          final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(pin);
           if (pinValidationResult.isSuccessful()) {
             if (pinValidationResult.getData()) {
               final ApiResult<String> transactionResult = depApiBridge.transferTo(
-                authToken,
                 paymentOption,
                 recipient,
                 value,
@@ -255,7 +251,6 @@ class PhoneNumberTransactionCreationPresenter
     }
 
     rechargeSubscription = depApiBridge.recharge(
-      authToken,
       carrier,
       phoneNumber,
       paymentOption,

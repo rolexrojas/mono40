@@ -19,7 +19,7 @@ import butterknife.Unbinder;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.dep.Partner;
-import com.tpago.movil.domain.PhoneNumber;
+import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.api.ApiImageUriBuilder;
 import com.tpago.movil.dep.api.DCurrencies;
@@ -32,7 +32,6 @@ import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.domain.UserRecipient;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
-import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
@@ -78,8 +77,6 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
   private Subscription rechargeSubscription = Subscriptions.unsubscribed();
 
   @Inject
-  SessionManager sessionManager;
-  @Inject
   RecipientManager recipientManager;
   @Inject
   DepApiBridge apiBridge;
@@ -117,8 +114,6 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
     }
 
     rechargeSubscription = this.apiBridge.recharge(
-      this.sessionManager.getSession()
-        .getAuthToken(),
       carrier,
       phoneNumber,
       this.fundingAccount.get(),
@@ -211,8 +206,7 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
   @Override
   public void onResume() {
     super.onResume();
-    subscription = apiBridge.partners(sessionManager.getSession()
-      .getAuthToken())
+    subscription = apiBridge.partners()
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
       .doOnSubscribe(new Action0() {

@@ -69,7 +69,7 @@ class SelectedItemDecoration extends RecyclerView.ItemDecoration {
   }
 
   /**
-   * TODO: Find a better name for this interface.
+   * TODO: Find a better updateName for this interface.
    */
   interface Provider {
     /**

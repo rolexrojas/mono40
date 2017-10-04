@@ -9,8 +9,8 @@ import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.tpago.movil.dep.api.UserData;
 import com.tpago.movil.dep.content.SharedPreferencesCreator;
-import com.tpago.movil.domain.Email;
-import com.tpago.movil.domain.PhoneNumber;
+import com.tpago.movil.Email;
+import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.util.concurrent.atomic.AtomicReference;

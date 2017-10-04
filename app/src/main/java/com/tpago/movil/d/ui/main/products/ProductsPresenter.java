@@ -39,6 +39,7 @@ import timber.log.Timber;
  */
 @Deprecated
 class ProductsPresenter extends Presenter<ProductsScreen> {
+
   private final SchedulerProvider schedulerProvider;
   private final EventBus eventBus;
   private final ProductManager productManager;
@@ -46,7 +47,6 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
 
   private final NetworkService networkService;
   private final DepApiBridge depApiBridge;
-  private final String authToken;
   private final StringHelper stringHelper;
 
   private CompositeSubscription compositeSubscription;
@@ -58,8 +58,8 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
     @NonNull BalanceManager balanceManager,
     NetworkService networkService,
     DepApiBridge depApiBridge,
-    String authToken,
-    StringHelper stringHelper) {
+    StringHelper stringHelper
+  ) {
     this.schedulerProvider = schedulerProvider;
     this.eventBus = eventBus;
     this.productManager = productManager;
@@ -67,7 +67,6 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
 
     this.networkService = networkService;
     this.depApiBridge = depApiBridge;
-    this.authToken = authToken;
     this.stringHelper = stringHelper;
   }
 
@@ -80,7 +79,8 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
       .subscribe(new Action1<Event>() {
         @Override
         public void call(Event event) {
-          if (event.getType().equals(EventType.PRODUCT_BALANCE_EXPIRATION)) {
+          if (event.getType()
+            .equals(EventType.PRODUCT_BALANCE_EXPIRATION)) {
             screen.setBalance(((BalanceExpirationEvent) event).getProduct(), null);
           }
         }
@@ -120,18 +120,20 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
           public Single<Result<Pair<Long, Balance>, ErrorCode>> call() throws Exception {
             final Result<Pair<Long, Balance>, ErrorCode> result;
             if (networkService.checkIfAvailable()) {
-              final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(authToken, pin);
+              final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(pin);
               if (pinValidationResult.isSuccessful()) {
                 if (pinValidationResult.getData()) {
                   final ApiResult<Pair<Long, Balance>> queryBalanceResult = balanceManager
-                    .queryBalance(authToken, product, pin);
+                    .queryBalance(product, pin);
                   if (queryBalanceResult.isSuccessful()) {
                     result = Result.create(queryBalanceResult.getData());
                   } else {
                     result = Result.create(
                       FailureData.create(
                         ErrorCode.UNEXPECTED,
-                        queryBalanceResult.getError().getDescription()));
+                        queryBalanceResult.getError()
+                          .getDescription()
+                      ));
                   }
                 } else {
                   result = Result.create(FailureData.create(ErrorCode.INCORRECT_PIN));
@@ -140,7 +142,9 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
                 result = Result.create(
                   FailureData.create(
                     ErrorCode.UNEXPECTED,
-                    pinValidationResult.getError().getDescription()));
+                    pinValidationResult.getError()
+                      .getDescription()
+                  ));
               }
             } else {
               result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));

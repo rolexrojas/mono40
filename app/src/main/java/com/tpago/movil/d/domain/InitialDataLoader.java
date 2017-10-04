@@ -2,7 +2,6 @@ package com.tpago.movil.d.domain;
 
 import android.content.Context;
 
-import com.tpago.movil.dep.Session;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 
@@ -33,8 +32,8 @@ public final class InitialDataLoader {
     this.context = context;
   }
 
-  @Deprecated public final Completable load(final Session session) {
-    return apiBridge.initialLoad(session.getToken())
+  @Deprecated public final Completable load() {
+    return apiBridge.initialLoad()
       .doOnNext(new Action1<ApiResult<InitialData>>() {
         @Override
         public void call(ApiResult<InitialData> result) {

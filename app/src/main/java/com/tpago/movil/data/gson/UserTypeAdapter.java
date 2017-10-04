@@ -1,12 +1,14 @@
 package com.tpago.movil.data.gson;
 
+import android.net.Uri;
+
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.tpago.movil.dep.api.UserData;
-import com.tpago.movil.domain.Email;
-import com.tpago.movil.domain.PhoneNumber;
-import com.tpago.movil.domain.user.User;
+import com.tpago.movil.Email;
+import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.user.User;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.io.IOException;
@@ -37,7 +39,7 @@ public final class UserTypeAdapter extends TypeAdapter<User> {
         .email(Email.create(userData.email()))
         .firstName(userData.firstName())
         .lastName(userData.lastName())
-        .picture(userData.pictureUri())
+        .pictureUri(Uri.parse(userData.pictureUri()))
         .build();
     }
     return user;
@@ -47,6 +49,11 @@ public final class UserTypeAdapter extends TypeAdapter<User> {
   public void write(JsonWriter writer, User user) throws IOException {
     UserData userData = null;
     if (ObjectHelper.isNotNull(user)) {
+      final Uri pictureUri = user.pictureUri();
+      String pictureString = null;
+      if (ObjectHelper.isNotNull(pictureUri)) {
+        pictureString = pictureUri.getPath();
+      }
       userData = UserData.createBuilder()
         .id(user.id())
         .phoneNumber(
@@ -59,7 +66,7 @@ public final class UserTypeAdapter extends TypeAdapter<User> {
         )
         .firstName(user.firstName())
         .lastName(user.lastName())
-        .pictureUri(user.pictureUri())
+        .pictureUri(pictureString)
         .build();
     }
     this.typeAdapter.write(writer, userData);

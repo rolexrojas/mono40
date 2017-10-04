@@ -3,7 +3,7 @@ package com.tpago.movil.data.gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.tpago.movil.domain.Currency;
+import com.tpago.movil.Currency;
 
 import java.io.IOException;
 

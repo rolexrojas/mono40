@@ -1,37 +1,28 @@
 package com.tpago.movil.dep.init.signin;
 
-import android.support.v4.util.Pair;
-import com.tpago.movil.domain.Email;
-import com.tpago.movil.domain.PhoneNumber;
+import com.tpago.movil.Email;
+import com.tpago.movil.Password;
+import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
-import com.tpago.movil.dep.Session;
-import com.tpago.movil.dep.UserStore;
-import com.tpago.movil.dep.api.DApiBridge;
-import com.tpago.movil.dep.api.DApiData;
-import com.tpago.movil.dep.api.DApiError;
-import com.tpago.movil.dep.api.UserData;
+import com.tpago.movil.app.ui.AlertData;
+import com.tpago.movil.app.ui.AlertManager;
+import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
+import com.tpago.movil.data.DeviceIdSupplier;
+import com.tpago.movil.data.StringMapper;
 import com.tpago.movil.dep.Presenter;
-import com.tpago.movil.d.domain.ErrorCode;
-import com.tpago.movil.d.domain.FailureData;
-import com.tpago.movil.d.domain.Result;
 import com.tpago.movil.dep.init.InitComponent;
 import com.tpago.movil.dep.init.InitData;
-import com.tpago.movil.dep.net.HttpResult;
-import com.tpago.movil.dep.net.NetworkService;
-import com.tpago.movil.dep.reactivex.Disposables;
-import com.tpago.movil.dep.text.Texts;
-import com.tpago.movil.dep.Objects;
-import com.tpago.movil.dep.Preconditions;
-
-import java.util.concurrent.Callable;
+import com.tpago.movil.reactivex.DisposableHelper;
+import com.tpago.movil.session.SessionManager;
+import com.tpago.movil.user.User;
+import com.tpago.movil.util.FailureData;
+import com.tpago.movil.util.ObjectHelper;
 
 import javax.inject.Inject;
 
-import io.reactivex.Single;
-import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
+import io.reactivex.disposables.Disposables;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -39,29 +30,33 @@ import timber.log.Timber;
  * @author hecvasro
  */
 public final class SignInPresenter extends Presenter<SignInPresenter.View> {
+
+  private static String sanitize(String content) {
+    return ObjectHelper.firstNonNull(content, "")
+      .trim();
+  }
+
   private String emailTextInputContent;
   private boolean isEmailTextInputContentValid = false;
   private String passwordTextInputContent;
   private boolean isPasswordTextInputContentValid = false;
 
-  private boolean shouldForce = false;
+  private boolean shouldDeactivatePreviousDevice = false;
 
   private Disposable disposable = Disposables.disposed();
 
-  @Inject UserStore userStore;
+  @Inject AlertManager alertManager;
+  @Inject DeviceIdSupplier deviceIdSupplier;
   @Inject InitData initData;
-  @Inject Session.Builder sessionBuilder;
-  @Inject DApiBridge depApiBridge;
-  @Inject NetworkService networkService;
-
-  private static String sanitize(String content) {
-    return Objects.checkIfNull(content) ? "" : content.trim();
-  }
+  @Inject SessionManager sessionManager;
+  @Inject StringMapper stringMapper;
+  @Inject TakeoverLoader takeoverLoader;
 
   public SignInPresenter(View view, InitComponent component) {
     super(view);
+
     // Injects all the annotated dependencies.
-    Preconditions.assertNotNull(component, "component == null")
+    ObjectHelper.checkNotNull(component, "component")
       .inject(this);
   }
 
@@ -76,156 +71,137 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
   }
 
   private void startLoading() {
-    view.setSignInButtonEnabled(false);
-    view.showSignInButtonAsEnabled(false);
-    view.startLoading();
+    this.view.setSignInButtonEnabled(false);
+    this.view.showSignInButtonAsEnabled(false);
+
+    this.takeoverLoader.show();
   }
 
   private void stopLoading() {
-    view.stopLoading();
-    view.showSignInButtonAsEnabled(isEmailTextInputContentValid && isPasswordTextInputContentValid);
-    view.setSignInButtonEnabled(isEmailTextInputContentValid && isPasswordTextInputContentValid);
+    this.takeoverLoader.hide();
+
+    this.view.showSignInButtonAsEnabled(
+      this.isEmailTextInputContentValid && this.isPasswordTextInputContentValid
+    );
+    this.view.setSignInButtonEnabled(
+      this.isEmailTextInputContentValid && this.isPasswordTextInputContentValid
+    );
   }
 
   final void onEmailTextInputContentChanged(String content) {
     final String sanitizedContent = sanitize(content);
-    if (!sanitizedContent.equals(emailTextInputContent)) {
-      emailTextInputContent = sanitizedContent;
-      isEmailTextInputContentValid = Email.isValid(emailTextInputContent);
-      updateView();
+    if (!sanitizedContent.equals(this.emailTextInputContent)) {
+      this.emailTextInputContent = sanitizedContent;
+      this.isEmailTextInputContentValid = Email.isValid(this.emailTextInputContent);
+
+      this.updateView();
     }
   }
 
   final void onPasswordTextInputContentChanged(String content) {
     final String sanitizedContent = sanitize(content);
-    if (!sanitizedContent.equals(passwordTextInputContent)) {
-      passwordTextInputContent = sanitizedContent;
-      isPasswordTextInputContentValid = Texts.checkIfNotEmpty(passwordTextInputContent);
-      updateView();
+    if (!sanitizedContent.equals(this.passwordTextInputContent)) {
+      this.passwordTextInputContent = sanitizedContent;
+      this.isPasswordTextInputContentValid = Password.isValid(this.passwordTextInputContent);
+
+      this.updateView();
     }
   }
 
+  private void handleSuccess(com.tpago.movil.util.Result<User> result) {
+    if (result.isSuccessful()) {
+      this.view.moveToInitScreen();
+    } else {
+      final com.tpago.movil.util.FailureData failureData = result.failureData();
+
+      final AlertData.Builder dataBuilder = AlertData.builder(this.stringMapper);
+      if (failureData.code() == FailureData.Code.ALREADY_ASSOCIATED_DEVICE) {
+        dataBuilder
+          .title(R.string.dialog_title_already_associated_device)
+          .message(R.string.dialog_message_already_associated_device)
+          .positiveButtonText(R.string.dialog_positive_text_already_associated_device)
+          .positiveButtonAction(this::onSignInForcingButtonClicked)
+          .negativeButtonText(R.string.dialog_negative_text_already_associated_device);
+      } else {
+        dataBuilder.message(failureData.description());
+      }
+      this.alertManager.show(dataBuilder.build());
+    }
+  }
+
+  private void handleError(Throwable throwable) {
+    Timber.e(throwable, "Signing in");
+
+    this.alertManager.show(AlertData.createForGenericFailure(this.stringMapper));
+  }
+
   final void onSignInButtonClicked() {
-    if (isEmailTextInputContentValid && isPasswordTextInputContentValid) {
-      final PhoneNumber phoneNumber = initData.getPhoneNumber();
-      final Email email = Email.create(emailTextInputContent);
-      disposable = Single.defer(new Callable<SingleSource<Result<Pair<UserData, String>, ErrorCode>>>() {
-        @Override
-        public SingleSource<Result<Pair<UserData, String>, ErrorCode>> call() throws Exception {
-          final Result<Pair<UserData, String>, ErrorCode> result;
-          if (networkService.checkIfAvailable()) {
-            final HttpResult<DApiData<Pair<UserData, String>>> apiResult = depApiBridge
-              .signIn(phoneNumber, email, passwordTextInputContent, shouldForce)
-              .blockingGet();
-            final DApiData<Pair<UserData, String>> apiResultData = apiResult.getData();
-            if (apiResult.isSuccessful()) {
-              result = Result.create(apiResultData.getValue());
-            } else {
-              final DApiError apiResultError = apiResultData.getError();
-              ErrorCode resultErrorCode = ErrorCode.UNEXPECTED;
-              String resultErrorDescription = apiResultError.getDescription();
-              if (apiResultError.getCode().equals(DApiError.Code.ALREADY_ASSOCIATED_DEVICE)) {
-                resultErrorCode = ErrorCode.ALREADY_ASSOCIATED_DEVICE;
-              }
-              result = Result.create(FailureData.create(resultErrorCode, resultErrorDescription));
-            }
-          } else {
-            result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
-          }
-          return Single.just(result);
-        }
-      })
+    if (this.isEmailTextInputContentValid && this.isPasswordTextInputContentValid) {
+      final PhoneNumber phoneNumber = this.initData.getPhoneNumber();
+      final Email email = Email.create(this.emailTextInputContent);
+      final Password password = Password.create(this.passwordTextInputContent);
+      final String deviceId = this.deviceIdSupplier.get();
+
+      this.disposable = this.sessionManager.init(
+        phoneNumber,
+        email,
+        password,
+        deviceId,
+        this.shouldDeactivatePreviousDevice
+      )
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe(new Consumer<Disposable>() {
-          @Override
-          public void accept(Disposable disposable) throws Exception {
-            startLoading();
-          }
-        })
-        .subscribe(new Consumer<Result<Pair<UserData, String>, ErrorCode>>() {
-          @Override
-          public void accept(Result<Pair<UserData, String>, ErrorCode> result) throws Exception {
-            stopLoading();
-            if (result.isSuccessful()) {
-              final Pair<UserData, String> successData = result.getSuccessData();
-              userStore.set(successData.first);
-              sessionBuilder.setToken(successData.second);
-              view.moveToInitScreen();
-            } else {
-              final FailureData<ErrorCode> failureData = result.getFailureData();
-              switch (failureData.getCode()) {
-                case UNAVAILABLE_NETWORK:
-                  view.showUnavailableNetworkError();
-                  break;
-                case ALREADY_ASSOCIATED_DEVICE:
-                  view.checkIfUserWantsToForceSignIn();
-                  break;
-                default:
-                  view.showGenericErrorDialog(failureData.getDescription());
-                  break;
-              }
-            }
-          }
-        }, new Consumer<Throwable>() {
-          @Override
-          public void accept(Throwable throwable) throws Exception {
-            Timber.e(throwable);
-            stopLoading();
-            view.showGenericErrorDialog();
-          }
-        });
+        .doOnSubscribe((d) -> this.startLoading())
+        .doFinally(this::stopLoading)
+        .subscribe(this::handleSuccess, this::handleError);
     } else {
-      view.showEmailTextInputAsErratic(!isEmailTextInputContentValid);
-      view.showPasswordTextInputAsErratic(!isPasswordTextInputContentValid);
-      view.showDialog(
-        R.string.sign_in_error_title,
-        R.string.sign_in_error_description,
-        R.string.sign_in_error_positive_button_text);
+      this.view.showEmailTextInputAsErratic(!this.isEmailTextInputContentValid);
+      this.view.showPasswordTextInputAsErratic(!this.isPasswordTextInputContentValid);
+
+      final AlertData data = AlertData.builder(this.stringMapper)
+        .title(R.string.incorrectCredentials)
+        .message(R.string.bothUsernameAndPasswordAreRequired)
+        .build();
+      this.alertManager.show(data);
     }
   }
 
   final void onSignInForcingButtonClicked() {
-    shouldForce = true;
-    onSignInButtonClicked();
+    this.shouldDeactivatePreviousDevice = true;
+    this.onSignInButtonClicked();
   }
 
   @Override
   public void onViewStarted() {
     super.onViewStarted();
-    view.setEmailTextInputContent(emailTextInputContent);
-    view.setPasswordTextInputContent(passwordTextInputContent);
-    updateView();
+
+    this.view.setEmailTextInputContent(this.emailTextInputContent);
+    this.view.setPasswordTextInputContent(this.passwordTextInputContent);
+
+    this.updateView();
   }
 
   @Override
   public void onViewStopped() {
+    DisposableHelper.dispose(this.disposable);
+
     super.onViewStopped();
-    Disposables.dispose(disposable);
   }
 
   interface View extends Presenter.View {
-    void showDialog(int titleId, String message, int positiveButtonTextId);
-    void showDialog(int titleId, int messageId, int positiveButtonTextId);
 
     void setEmailTextInputContent(String content);
+
     void showEmailTextInputAsErratic(boolean showAsErratic);
 
     void setPasswordTextInputContent(String content);
+
     void showPasswordTextInputAsErratic(boolean showAsErratic);
 
     void setSignInButtonEnabled(boolean enabled);
+
     void showSignInButtonAsEnabled(boolean showAsEnabled);
 
-    void startLoading();
-    void stopLoading();
-
-    void checkIfUserWantsToForceSignIn();
-
     void moveToInitScreen();
-
-    void showGenericErrorDialog(String message);
-    void showGenericErrorDialog();
-    void showUnavailableNetworkError();
   }
 }

@@ -3,7 +3,7 @@ package com.tpago.movil.dep.api;
 import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
-import com.tpago.movil.domain.PhoneNumber;
+import com.tpago.movil.PhoneNumber;
 
 import io.reactivex.functions.Function;
 

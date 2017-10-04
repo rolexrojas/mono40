@@ -8,7 +8,6 @@ import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.api.DepApiBridge;
-import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.main.transaction.bills.BillTransactionCreationFragment;
 import com.tpago.movil.d.ui.main.transaction.bills.BillTransactionCreationPresenter;
 import com.tpago.movil.d.ui.main.transaction.contacts.CarrierSelectionFragment;
@@ -75,8 +74,6 @@ public interface TransactionCreationComponent {
   SchedulerProvider provideSchedulerProvider();
 
   StringHelper provideStringHelper();
-
-  SessionManager provideSessionManager();
 
   TransactionCategory transactionCategory();
 }

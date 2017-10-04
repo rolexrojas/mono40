@@ -21,7 +21,7 @@ public class Contact implements Matchable {
    */
   private final PhoneNumber phoneNumber;
   /**
-   * Contact's name.
+   * Contact's updateName.
    */
   private final String name;
   /**
@@ -35,7 +35,7 @@ public class Contact implements Matchable {
    * @param phoneNumber
    *   Contact's {@link PhoneNumber phone number}.
    * @param name
-   *   Contact's name.
+   *   Contact's updateName.
    * @param pictureUri
    *   Contact's picture {@link Uri uri}.
    */
@@ -56,9 +56,9 @@ public class Contact implements Matchable {
   }
 
   /**
-   * Gets the name of the contact.
+   * Gets the updateName of the contact.
    *
-   * @return Contact's name.
+   * @return Contact's updateName.
    */
   @NonNull
   public final String getName() {
@@ -88,7 +88,7 @@ public class Contact implements Matchable {
 
   @Override
   public String toString() {
-    return Contact.class.getSimpleName() + ":{phoneNumber='" + phoneNumber + "',name='" + name
+    return Contact.class.getSimpleName() + ":{phoneNumber='" + phoneNumber + "',updateName='" + name
       + "',pictureUri='" + pictureUri + "'}";
   }
 

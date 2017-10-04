@@ -1,4 +1,4 @@
-package com.tpago.movil.domain;
+package com.tpago.movil;
 
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
@@ -12,7 +12,7 @@ public final class KeyValueStoreHelper {
 
   public static String createKey(Class<?> containerType, String name) {
     ObjectHelper.checkNotNull(containerType, "containerType");
-    ObjectHelper.checkNotNull(name, "name");
+    ObjectHelper.checkNotNull(name, "updateName");
 
     return StringHelper.join(".", Arrays.asList(containerType.getCanonicalName(), name));
   }

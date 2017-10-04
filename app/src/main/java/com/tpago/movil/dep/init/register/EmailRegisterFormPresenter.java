@@ -1,6 +1,6 @@
 package com.tpago.movil.dep.init.register;
 
-import com.tpago.movil.domain.Email;
+import com.tpago.movil.Email;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.content.StringResolver;
 import com.tpago.movil.dep.Objects;

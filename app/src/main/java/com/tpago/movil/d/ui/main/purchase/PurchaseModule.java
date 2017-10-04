@@ -2,7 +2,6 @@ package com.tpago.movil.d.ui.main.purchase;
 
 import android.content.Context;
 
-import com.tpago.movil.dep.Session;
 import com.tpago.movil.dep.User;
 import com.tpago.movil.app.ui.FragmentScope;
 import com.tpago.movil.d.data.StringHelper;
@@ -21,12 +20,14 @@ import dagger.Provides;
  */
 @Module
 class PurchaseModule {
+
   @Provides
   @FragmentScope
   PurchasePaymentOptionBinder providePaymentOptionBinder(
     User user,
     Context context,
-    StringHelper stringHelper) {
+    StringHelper stringHelper
+  ) {
     return new PurchasePaymentOptionBinder(user, context, stringHelper);
   }
 
@@ -40,8 +41,8 @@ class PurchaseModule {
     PosBridge posBridge,
     NetworkService networkService,
     DepApiBridge depApiBridge,
-    User user,
-    Session session) {
+    User user
+  ) {
     return new PurchasePresenter(
       stringHelper,
       productManager,
@@ -50,7 +51,8 @@ class PurchaseModule {
       posBridge,
       networkService,
       depApiBridge,
-      user.phoneNumber().value(),
-      session.getToken());
+      user.phoneNumber()
+        .value()
+    );
   }
 }

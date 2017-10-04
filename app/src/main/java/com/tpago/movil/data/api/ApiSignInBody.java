@@ -5,9 +5,9 @@ import com.google.auto.value.extension.memoized.Memoized;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.tpago.movil.domain.Email;
-import com.tpago.movil.domain.Password;
-import com.tpago.movil.domain.PhoneNumber;
+import com.tpago.movil.Email;
+import com.tpago.movil.Password;
+import com.tpago.movil.PhoneNumber;
 
 /**
  * @author hecvasro

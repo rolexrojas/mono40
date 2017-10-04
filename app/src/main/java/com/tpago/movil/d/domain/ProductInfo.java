@@ -43,5 +43,5 @@ public abstract class ProductInfo {
   @SerializedName("query-fee") public abstract BigDecimal getQueryFee();
   @SerializedName("payable") public abstract boolean isPaymentMethod();
   @SerializedName("default-account") public abstract boolean isDefaultPaymentMethod();
-  @SerializedName("recipient-name") @Nullable public abstract String getRecipientName();
+  @SerializedName("recipient-updateName") @Nullable public abstract String getRecipientName();
 }

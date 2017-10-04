@@ -2,7 +2,7 @@ package com.tpago.movil.data;
 
 import android.support.annotation.Nullable;
 
-import com.tpago.movil.domain.KeyValueStore;
+import com.tpago.movil.KeyValueStore;
 import com.tpago.movil.util.ObjectHelper;
 
 import timber.log.Timber;

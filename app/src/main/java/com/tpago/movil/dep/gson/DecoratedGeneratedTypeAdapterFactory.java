@@ -6,7 +6,7 @@ import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
 import com.tpago.movil.data.gson.UserTypeAdapter;
 import com.tpago.movil.dep.api.UserData;
-import com.tpago.movil.domain.user.User;
+import com.tpago.movil.user.User;
 
 final class DecoratedGeneratedTypeAdapterFactory implements TypeAdapterFactory {
 

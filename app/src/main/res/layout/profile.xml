@@ -17,7 +17,7 @@
 
     <Space style="@style/VerticalDivider.Space.Normal"/>
 
-    <!-- Fist name -->
+    <!-- Fist updateName -->
     <TextView
       style="@style/ProfileLabel"
       android:text="@string/firstName"/>
@@ -31,7 +31,7 @@
 
     <android.support.v4.widget.Space style="@style/VerticalDivider.Space.Small"/>
 
-    <!-- Last name -->
+    <!-- Last updateName -->
     <TextView
       style="@style/ProfileLabel"
       android:text="@string/lastName"/>

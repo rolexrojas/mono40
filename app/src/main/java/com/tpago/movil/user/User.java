@@ -1,13 +1,18 @@
-package com.tpago.movil.domain.user;
+package com.tpago.movil.user;
+
+import android.net.Uri;
+import android.support.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
-import com.tpago.movil.domain.Email;
-import com.tpago.movil.domain.PhoneNumber;
+import com.tpago.movil.Email;
+import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.util.BuilderChecker;
-import com.tpago.movil.dep.Consumer;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User representation
@@ -24,7 +29,9 @@ public abstract class User {
   private String firstName;
   private String lastName;
 
-  private String pictureUri;
+  private List<NameConsumer> nameConsumerList = new ArrayList<>();
+
+  private Uri pictureUri;
 
   User() {
   }
@@ -48,25 +55,45 @@ public abstract class User {
   }
 
   /**
-   * Sets its name and notifies each subscribed {@link Consumer consumer} that it was set.
+   * Sets its updateName.
    *
    * @throws IllegalArgumentException
    *   If {@code firstName} is null or empty.
    * @throws IllegalArgumentException
    *   If {@code lastName} is null or empty.
    */
-  public final void name(String firstName, String lastName) {
+  public final void updateName(String firstName, String lastName) {
     if (!StringHelper.isNullOrEmpty(firstName)) {
       throw new IllegalArgumentException("!isNullOrEmpty(firstName)");
     }
-    this.firstName = firstName;
     if (!StringHelper.isNullOrEmpty(lastName)) {
       throw new IllegalArgumentException("!isNullOrEmpty(lastName)");
     }
+
+    this.firstName = firstName;
     this.lastName = lastName;
+
+    for (NameConsumer consumer : this.nameConsumerList) {
+      consumer.accept(this.firstName, this.lastName);
+    }
   }
 
-  public final String pictureUri() {
+  public final void addNameConsumer(NameConsumer consumer) {
+    ObjectHelper.checkNotNull(consumer, "consumer");
+    if (!this.nameConsumerList.contains(consumer)) {
+      this.nameConsumerList.add(consumer);
+    }
+  }
+
+  public final void removeNameConsumer(NameConsumer consumer) {
+    ObjectHelper.checkNotNull(consumer, "consumer");
+    if (this.nameConsumerList.contains(consumer)) {
+      this.nameConsumerList.remove(consumer);
+    }
+  }
+
+  @Nullable
+  public final Uri pictureUri() {
     return this.pictureUri;
   }
 
@@ -81,11 +108,14 @@ public abstract class User {
   public static final class Builder {
 
     private Integer id;
+
     private PhoneNumber phoneNumber;
     private Email email;
+
     private String firstName;
     private String lastName;
-    private String pictureUri;
+
+    private Uri pictureUri;
 
     private Builder() {
     }
@@ -115,8 +145,8 @@ public abstract class User {
       return this;
     }
 
-    public final Builder picture(String pictureUri) {
-      this.pictureUri = ObjectHelper.checkNotNull(pictureUri, "pictureUri");
+    public final Builder pictureUri(@Nullable Uri pictureUri) {
+      this.pictureUri = pictureUri;
       return this;
     }
 

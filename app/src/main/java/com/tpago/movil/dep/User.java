@@ -5,8 +5,8 @@ import static com.tpago.movil.dep.Objects.checkIfNotNull;
 import static com.tpago.movil.dep.Preconditions.assertNotNull;
 
 import com.google.auto.value.AutoValue;
-import com.tpago.movil.domain.Email;
-import com.tpago.movil.domain.PhoneNumber;
+import com.tpago.movil.Email;
+import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.util.ObjectHelper;
 
 /**
@@ -16,7 +16,7 @@ import com.tpago.movil.util.ObjectHelper;
 @AutoValue
 public abstract class User {
 
-  static Builder createBuilder() {
+  public static Builder createBuilder() {
     return new AutoValue_User.Builder();
   }
 

@@ -10,8 +10,8 @@ import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.ui.Presenter;
 import com.tpago.movil.d.ui.main.recipient.index.category.Category;
 import com.tpago.movil.d.ui.misc.UiUtils;
-import com.tpago.movil.domain.PhoneNumber;
-import com.tpago.movil.dep.Preconditions;
+import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.util.ObjectHelper;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -26,18 +26,13 @@ import timber.log.Timber;
  */
 class AddRecipientPresenter extends Presenter<AddRecipientScreen> {
 
-  private final String authToken;
   private final RecipientManager recipientManager;
-
   private final Category category;
 
   private Subscription checkIfAffiliatedSubscription = Subscriptions.unsubscribed();
 
-  AddRecipientPresenter(String authToken, RecipientManager recipientManager, Category category) {
-    this.authToken = Preconditions.assertNotNull(authToken, "authToken == null");
-    this.recipientManager = Preconditions
-      .assertNotNull(recipientManager, "recipientManager == null");
-
+  AddRecipientPresenter(RecipientManager recipientManager, Category category) {
+    this.recipientManager = ObjectHelper.checkNotNull(recipientManager, "recipientManager");
     this.category = category;
   }
 
@@ -49,9 +44,10 @@ class AddRecipientPresenter extends Presenter<AddRecipientScreen> {
   void add(@NonNull final Contact contact) {
     assertScreen();
     if (checkIfAffiliatedSubscription.isUnsubscribed()) {
-      final String phoneNumber = contact.getPhoneNumber().toString();
+      final String phoneNumber = contact.getPhoneNumber()
+        .toString();
       checkIfAffiliatedSubscription = recipientManager
-        .checkIfAffiliated(authToken, phoneNumber)
+        .checkIfAffiliated(phoneNumber)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(new Action0() {

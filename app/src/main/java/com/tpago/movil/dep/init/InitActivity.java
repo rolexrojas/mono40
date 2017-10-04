@@ -25,13 +25,16 @@ import butterknife.BindView;
  * @author hecvasro
  */
 public final class InitActivity extends BaseActivity implements InitContainer {
+
   public static Intent getLaunchIntent(Context context) {
     return new Intent(context, InitActivity.class);
   }
 
   private InitComponent component;
 
-  @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
+  @Inject
+  @ActivityQualifier
+  FragmentReplacer fragmentReplacer;
 
   @BindColor(R.color.common_background_gradient_dark_start) int backgroundStartColor;
   @BindColor(R.color.common_background_gradient_dark_end) int backgroundEndColor;
@@ -50,8 +53,13 @@ public final class InitActivity extends BaseActivity implements InitContainer {
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // Initializes the dependency injector.
-    component = App.get(this).component()
-      .plus(new ActivityModule(this), new InitModule());
+    component = App.get(this)
+      .component()
+      .plus(
+        com.tpago.movil.app.ui.ActivityModule.create(this),
+        new ActivityModule(this),
+        new InitModule()
+      );
     // Injects all the annotated dependencies.
     component.inject(this);
     // Adds a listener that gets notified when all the views has been laid out.
@@ -70,7 +78,8 @@ public final class InitActivity extends BaseActivity implements InitContainer {
             new RadialGradientDrawable(
               backgroundStartColor,
               backgroundEndColor,
-              rootView.getHeight()));
+              rootView.getHeight()
+            ));
           // Initializes the application.
           fragmentReplacer.begin(InitFragment.create())
             .commit();

@@ -5,7 +5,7 @@ import android.net.Uri;
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.google.common.base.Optional;
-import com.tpago.movil.domain.Currency;
+import com.tpago.movil.Currency;
 import com.tpago.movil.domain.balance.AvailableBalance;
 import com.tpago.movil.domain.balance.BalanceStore;
 import com.tpago.movil.domain.balance.PayableBalance;

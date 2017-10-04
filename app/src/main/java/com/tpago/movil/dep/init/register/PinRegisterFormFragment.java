@@ -5,18 +5,13 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.tpago.movil.util.Action;
 import com.tpago.movil.util.Digit;
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.FragmentQualifier;
 import com.tpago.movil.app.ui.FragmentReplacer;
-import com.tpago.movil.dep.InformationalDialogFragment;
-import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.dep.widget.EditableLabel;
-import com.tpago.movil.dep.widget.FullSizeLoadIndicator;
-import com.tpago.movil.dep.widget.LoadIndicator;
 import com.tpago.movil.app.ui.NumPad;
 
 import java.util.function.Consumer;
@@ -30,14 +25,15 @@ import butterknife.Unbinder;
 /**
  * @author hecvasro
  */
-public final class PinRegisterFormFragment
-  extends BaseRegisterFragment
+public final class PinRegisterFormFragment extends BaseRegisterFragment
   implements PinRegisterFormPresenter.View {
+
   private Unbinder unbinder;
-  private LoadIndicator loadIndicator;
   private PinRegisterFormPresenter presenter;
 
-  @Inject @FragmentQualifier FragmentReplacer fragmentReplacer;
+  @Inject
+  @FragmentQualifier
+  FragmentReplacer fragmentReplacer;
 
   @BindView(R.id.editable_label_pin) EditableLabel pinEditableLabel;
   @BindView(R.id.num_pad) NumPad numPad;
@@ -52,8 +48,10 @@ public final class PinRegisterFormFragment
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
     // Injects all the annotated dependencies.
-    getRegisterComponent().inject(this);
+    getRegisterComponent()
+      .inject(this);
   }
 
   @Nullable
@@ -61,7 +59,8 @@ public final class PinRegisterFormFragment
   public View onCreateView(
     LayoutInflater inflater,
     @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(R.layout.fragment_register_form_pin, container, false);
   }
 
@@ -70,8 +69,6 @@ public final class PinRegisterFormFragment
     super.onViewCreated(view, savedInstanceState);
     // Binds all the annotated resources, views and methods.
     unbinder = ButterKnife.bind(this, view);
-    // Creates the load indicator.
-    loadIndicator = new FullSizeLoadIndicator(getChildFragmentManager());
     // Creates the presenter.
     presenter = new PinRegisterFormPresenter(this, getRegisterComponent());
   }
@@ -118,8 +115,6 @@ public final class PinRegisterFormFragment
     super.onDestroyView();
     // Destroys the presenter.
     presenter = null;
-    // Destroys the load indicator.
-    loadIndicator = null;
     // Unbinds all the annotated resources, views and methods.
     unbinder.unbind();
   }
@@ -133,32 +128,8 @@ public final class PinRegisterFormFragment
   }
 
   @Override
-  public void showDialog(int titleId, String message, int positiveButtonTextId) {
-    InformationalDialogFragment.create(
-      getString(titleId),
-      message,
-      getString(positiveButtonTextId))
-      .show(getChildFragmentManager(), null);
-  }
-
-  @Override
-  public void showDialog(int titleId, int messageId, int positiveButtonTextId) {
-    showDialog(titleId, getString(messageId), positiveButtonTextId);
-  }
-
-  @Override
   public void setTextInputContent(String content) {
     pinEditableLabel.setText(content);
-  }
-
-  @Override
-  public void startLoading() {
-    loadIndicator.start();
-  }
-
-  @Override
-  public void stopLoading() {
-    loadIndicator.stop();
   }
 
   @Override
@@ -167,24 +138,5 @@ public final class PinRegisterFormFragment
       .addToBackStack()
       .transition(FragmentReplacer.Transition.SRFO)
       .commit();
-  }
-
-  @Override
-  public void showGenericErrorDialog(String message) {
-    Dialogs.builder(getContext())
-      .setTitle(R.string.error_generic_title)
-      .setMessage(message)
-      .setPositiveButton(R.string.error_positive_button_text, null)
-      .show();
-  }
-
-  @Override
-  public void showGenericErrorDialog() {
-    showGenericErrorDialog(getString(R.string.error_generic));
-  }
-
-  @Override
-  public void showUnavailableNetworkError() {
-    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG).show();
   }
 }

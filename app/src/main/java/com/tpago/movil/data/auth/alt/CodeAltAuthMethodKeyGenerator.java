@@ -3,7 +3,7 @@ package com.tpago.movil.data.auth.alt;
 import android.content.Context;
 import android.security.KeyPairGeneratorSpec;
 
-import com.tpago.movil.domain.Code;
+import com.tpago.movil.Code;
 import com.tpago.movil.domain.auth.alt.AltAuthMethod;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodKeyGenerator;
 import com.tpago.movil.util.BuilderChecker;
