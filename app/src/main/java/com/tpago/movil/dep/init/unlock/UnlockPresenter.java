@@ -14,8 +14,10 @@ import com.tpago.movil.dep.init.InitComponent;
 import com.tpago.movil.reactivex.DisposableHelper;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.user.User;
+import com.tpago.movil.util.FailureData;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.Placeholder;
+import com.tpago.movil.util.Result;
 
 import javax.inject.Inject;
 
@@ -84,11 +86,11 @@ public final class UnlockPresenter extends Presenter<UnlockPresenter.View> {
     }
   }
 
-  final void handleSuccess(com.tpago.movil.util.Result<Placeholder> result) {
+  final void handleSuccess(Result<Placeholder> result) {
     if (result.isSuccessful()) {
       this.view.moveToInitScreen();
     } else {
-      final com.tpago.movil.util.FailureData failureData = result.failureData();
+      final FailureData failureData = result.failureData();
 
       final AlertData data = AlertData.builder(this.stringMapper)
         .message(failureData.description())
@@ -150,7 +152,7 @@ public final class UnlockPresenter extends Presenter<UnlockPresenter.View> {
 
     void setUserPictureUri(Uri pictureUri);
 
-    void setUserFirstName(String firstName);
+    void setUserFirstName(String userFirstName);
 
     void setPasswordTextInputContent(String content);
 

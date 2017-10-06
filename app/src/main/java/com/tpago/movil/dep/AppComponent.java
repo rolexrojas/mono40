@@ -81,9 +81,6 @@ public interface AppComponent {
   StringMapper stringMapper();
 
   @Deprecated
-  UserStore provideUserStore();
-
-  @Deprecated
   com.tpago.movil.d.domain.util.EventBus provideEventBus();
 
   @Deprecated

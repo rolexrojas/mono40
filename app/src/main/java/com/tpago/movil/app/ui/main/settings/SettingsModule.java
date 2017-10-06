@@ -1,10 +1,10 @@
 package com.tpago.movil.app.ui.main.settings;
 
 import com.tpago.movil.dep.ConfigManager;
-import com.tpago.movil.dep.UserStore;
 import com.tpago.movil.app.ui.FragmentScope;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.dep.User;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
 import com.tpago.movil.util.ObjectHelper;
 
@@ -32,7 +32,7 @@ public final class SettingsModule {
   SettingsPresenter presenter(
     StringMapper stringMapper,
     AltAuthMethodManager altAuthMethodManager,
-    UserStore userStore,
+    User user,
     ProductManager productManager,
     ConfigManager configManager
   ) {
@@ -40,7 +40,7 @@ public final class SettingsModule {
       .stringMapper(stringMapper)
       .altAuthManager(altAuthMethodManager)
       .presentation(this.presentation)
-      .userStore(userStore)
+      .user(user)
       .productManager(productManager)
       .configManager(configManager)
       .build();

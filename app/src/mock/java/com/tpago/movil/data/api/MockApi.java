@@ -11,6 +11,7 @@ import com.tpago.movil.KeyValueStore;
 import com.tpago.movil.KeyValueStoreHelper;
 import com.tpago.movil.api.Api;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodVerifyData;
+import com.tpago.movil.session.AccessTokenStore;
 import com.tpago.movil.user.User;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.FailureData;
@@ -53,22 +54,25 @@ final class MockApi implements Api {
     return new Builder();
   }
 
+  private final AccessTokenStore accessTokenStore;
   private final KeyValueStore keyValueStore;
-  private final AltAuthMethodConfigData altAuthMethodConfigData;
 
+  private final User user = User.builder()
+    .id(1)
+    .phoneNumber(PhoneNumber.create("8098829887"))
+    .email(Email.create("hecvasro@gmail.com"))
+    .firstName("Hector")
+    .lastName("Vasquez")
+    .build();
+
+  private final AltAuthMethodConfigData altAuthMethodConfigData;
   private AtomicReference<PublicKey> altAuthMethodPublicKeyReference = new AtomicReference<>();
 
   private MockApi(Builder builder) {
+    this.accessTokenStore = builder.accessTokenStore;
     this.keyValueStore = builder.keyValueStore;
-    this.altAuthMethodConfigData = builder.altAuthMethodConfigData;
-  }
 
-  private void enableAltAuthMethod_(PublicKey publicKey) throws Exception {
-    this.altAuthMethodPublicKeyReference.set(publicKey);
-    this.keyValueStore.set(
-      KEY_ALT_AUTH_METHOD,
-      Base64.encodeToString(publicKey.getEncoded(), Base64.DEFAULT)
-    );
+    this.altAuthMethodConfigData = builder.altAuthMethodConfigData;
   }
 
   @Override
@@ -79,7 +83,9 @@ final class MockApi implements Api {
     Code pin,
     String deviceId
   ) {
-    return Single.error(new UnsupportedOperationException("not implemented"));
+    return Single.defer(() -> Single.just(Result.create(this.user)))
+      .doOnSuccess((result) -> this.accessTokenStore.set(this.user.toString()))
+      .compose(singleDelayTransformer());
   }
 
   @Override
@@ -90,7 +96,17 @@ final class MockApi implements Api {
     String deviceId,
     boolean shouldDeactivatePreviousDevice
   ) {
-    return Single.error(new UnsupportedOperationException("not implemented"));
+    return Single.defer(() -> Single.just(Result.create(this.user)))
+      .doOnSuccess((result) -> this.accessTokenStore.set(this.user.toString()))
+      .compose(singleDelayTransformer());
+  }
+
+  private void enableAltAuthMethod_(PublicKey publicKey) throws Exception {
+    this.altAuthMethodPublicKeyReference.set(publicKey);
+    this.keyValueStore.set(
+      KEY_ALT_AUTH_METHOD,
+      Base64.encodeToString(publicKey.getEncoded(), Base64.NO_WRAP)
+    );
   }
 
   @Override
@@ -109,7 +125,7 @@ final class MockApi implements Api {
           new X509EncodedKeySpec(
             Base64.decode(
               this.keyValueStore.get(KEY_ALT_AUTH_METHOD),
-              Base64.DEFAULT
+              Base64.NO_WRAP
             )
           )
         );
@@ -150,6 +166,11 @@ final class MockApi implements Api {
     byte[] signedData
   ) {
     return Single.defer(() -> Single.just(this.verifyAltAuthMethod_(data, signedData)))
+      .doOnSuccess((result) -> {
+        if (result.isSuccessful()) {
+          this.accessTokenStore.set(this.user.toString());
+        }
+      })
       .compose(singleDelayTransformer());
   }
 
@@ -166,10 +187,17 @@ final class MockApi implements Api {
 
   static final class Builder {
 
+    private AccessTokenStore accessTokenStore;
     private KeyValueStore keyValueStore;
+
     private AltAuthMethodConfigData altAuthMethodConfigData;
 
     private Builder() {
+    }
+
+    final Builder accessTokenStore(AccessTokenStore accessTokenStore) {
+      this.accessTokenStore = ObjectHelper.checkNotNull(accessTokenStore, "accessTokenStore");
+      return this;
     }
 
     final Builder keyValueStore(KeyValueStore keyValueStore) {

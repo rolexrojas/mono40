@@ -1,13 +1,10 @@
 package com.tpago.movil.d.ui.main.recipient.index.category;
 
-import com.tpago.movil.dep.UserStore;
 import com.tpago.movil.app.ui.FragmentScope;
-import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.data.StringHelper;
-import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.domain.api.DepApiBridge;
-import com.tpago.movil.d.domain.pos.PosBridge;
+import com.tpago.movil.dep.User;
 import com.tpago.movil.dep.net.NetworkService;
 
 import dagger.Module;
@@ -35,18 +32,15 @@ class RecipientCategoryModule {
   @FragmentScope
   RecipientCategoryPresenter providePresenter(
     StringHelper stringHelper,
-    SchedulerProvider schedulerProvider,
     RecipientManager recipientManager,
-    ProductManager productManager,
-    PosBridge posBridge,
-    UserStore userStore,
+    User user,
     NetworkService networkService,
     DepApiBridge depApiBridge
   ) {
     return new RecipientCategoryPresenter(
+      user,
       stringHelper,
       recipientManager,
-      userStore,
       networkService,
       depApiBridge,
       this.category

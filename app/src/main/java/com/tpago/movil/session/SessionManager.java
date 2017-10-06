@@ -12,10 +12,13 @@ import com.tpago.movil.util.Placeholder;
 import com.tpago.movil.util.Result;
 
 import java.security.PrivateKey;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
+import io.reactivex.functions.Action;
 
 /**
  * @author hecvasro
@@ -30,12 +33,16 @@ public final class SessionManager {
   private final Api api;
   private final UserStore userStore;
 
-  private AtomicReference<User> userReference;
+  private final List<Action> clearActionList;
+
+  private AtomicReference<User> userReference = new AtomicReference<>();
 
   private SessionManager(Builder builder) {
     this.accessTokenStore = builder.accessTokenStore;
     this.api = builder.api;
     this.userStore = builder.userStore;
+
+    this.clearActionList = builder.clearActionList;
   }
 
   private void checkUserIsSet() {
@@ -56,6 +63,12 @@ public final class SessionManager {
     }
   }
 
+  private void checkSessionIsNotOpen() {
+    if (this.isSessionOpen()) {
+      throw new IllegalStateException("this.isSessionOpen()");
+    }
+  }
+
   private void setUserReference(User user) {
     // TODO: Add name consumer that updates the API.
     // TODO: Add picture consumer that updates the API.
@@ -64,11 +77,14 @@ public final class SessionManager {
     this.userReference.set(user);
   }
 
+  private void setUser(User user) {
+    this.userStore.set(user);
+    this.setUserReference(user);
+  }
+
   private void handleInitSuccess(Result<User> result) {
     if (result.isSuccessful()) {
-      final User user = result.successData();
-      this.userStore.set(user);
-      this.setUserReference(user);
+      this.setUser(result.successData());
     }
   }
 
@@ -122,14 +138,20 @@ public final class SessionManager {
     ObjectHelper.checkNotNull(password, "password");
     ObjectHelper.checkNotNull(deviceId, "deviceId");
 
+    this.checkSessionIsNotOpen();
+
     return this.api.signIn(user.phoneNumber(), user.email(), password, deviceId, false)
       .map(this::handleOpenSessionResult);
   }
 
-  public final Single<Result<Placeholder>> openSession(
-    Single<Result<PrivateKey>> privateKey,
-    String deviceId
-  ) {
+  public final Single<Result<Placeholder>> openSession(PrivateKey privateKey, String deviceId) {
+    final User user = this.getUser();
+
+    ObjectHelper.checkNotNull(privateKey, "privateKey");
+    ObjectHelper.checkNotNull(deviceId, "deviceId");
+
+    this.checkSessionIsNotOpen();
+
     return Single.error(new UnsupportedOperationException("not implemented"));
   }
 
@@ -138,13 +160,18 @@ public final class SessionManager {
   }
 
   public final void closeSession() {
+    this.checkUserIsSet();
     this.checkSessionIsOpen();
 
     this.accessTokenStore.clear();
   }
 
-  public final Completable reset() {
-    return Completable.error(new UnsupportedOperationException("not implemented"));
+  public final Completable clear() {
+    Completable completable = Completable.fromAction(this::closeSession);
+    for (Action clearAction : this.clearActionList) {
+      completable = completable.doOnComplete(clearAction);
+    }
+    return completable;
   }
 
   static final class Builder {
@@ -153,7 +180,10 @@ public final class SessionManager {
     private Api api;
     private UserStore userStore;
 
+    private List<Action> clearActionList;
+
     private Builder() {
+      this.clearActionList = new ArrayList<>();
     }
 
     final Builder accessTokenStore(AccessTokenStore accessTokenStore) {
@@ -168,6 +198,14 @@ public final class SessionManager {
 
     final Builder userStore(UserStore userStore) {
       this.userStore = ObjectHelper.checkNotNull(userStore, "userStore");
+      return this;
+    }
+
+    final Builder addClearAction(Action clearAction) {
+      ObjectHelper.checkNotNull(clearAction, "clearAction");
+      if (!this.clearActionList.contains(clearAction)) {
+        this.clearActionList.add(clearAction);
+      }
       return this;
     }
 

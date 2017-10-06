@@ -3,7 +3,6 @@ package com.tpago.movil.d.ui.main;
 import android.content.Context;
 
 import com.tpago.movil.dep.User;
-import com.tpago.movil.dep.UserStore;
 import com.tpago.movil.app.ui.main.settings.profile.ProfileComponent;
 import com.tpago.movil.app.ui.main.settings.profile.ProfileModule;
 import com.tpago.movil.d.data.StringHelper;
@@ -56,6 +55,4 @@ public interface DepMainComponent extends ActivityComponent {
   StringHelper provideMessageHelper();
 
   User provideUser();
-
-  UserStore provideUserStore();
 }

@@ -6,7 +6,9 @@ import android.support.annotation.NonNull;
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.tpago.movil.domain.company.Company;
+import com.tpago.movil.util.ObjectHelper;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -22,6 +24,13 @@ public abstract class Bank extends Company implements Comparable<Bank> {
   }
 
   Bank() {
+  }
+
+  public abstract BigDecimal transferCostRate();
+
+  public final BigDecimal calculateTransferCost(BigDecimal amount) {
+    return ObjectHelper.checkNotNull(amount, "amount")
+      .multiply(this.transferCostRate());
   }
 
   @Memoized
@@ -52,6 +61,8 @@ public abstract class Bank extends Company implements Comparable<Bank> {
     public abstract Builder logoUriTemplate(String logoUriTemplate);
 
     public abstract Builder logoUriMap(Map<String, Uri> logoUriMap);
+
+    public abstract Builder transferCostRate(BigDecimal transferCostRate);
 
     public abstract Bank build();
   }

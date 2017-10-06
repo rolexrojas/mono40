@@ -19,7 +19,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 import com.tpago.movil.R;
-import com.tpago.movil.dep.UserStore;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.domain.Product;
@@ -30,6 +29,7 @@ import com.tpago.movil.d.ui.main.MainContainer;
 import com.tpago.movil.d.ui.main.list.ListItemAdapter;
 import com.tpago.movil.d.ui.main.list.ListItemHolderCreatorFactory;
 import com.tpago.movil.d.ui.main.recipient.index.category.TransactionSummaryDialogFragment;
+import com.tpago.movil.dep.User;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import javax.inject.Inject;
@@ -65,7 +65,7 @@ public final class DisbursementFragment extends ChildFragment<MainContainer> imp
   RecyclerView recyclerView;
 
   @Inject
-  UserStore userStore;
+  User user;
   @Inject
   StringHelper stringHelper;
   @Inject

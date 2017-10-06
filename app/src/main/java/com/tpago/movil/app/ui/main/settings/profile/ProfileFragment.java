@@ -14,16 +14,17 @@ import com.tpago.movil.app.ui.AlertManager;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.app.ui.main.BaseMainFragment;
 import com.tpago.movil.data.picasso.CircleTransformation;
-import com.tpago.movil.dep.UserStore;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.pos.PosResult;
 import com.tpago.movil.d.ui.main.DepMainActivity;
 import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.dep.User;
 import com.tpago.movil.dep.init.InitActivity;
 import com.tpago.movil.dep.widget.TextInput;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
+import com.tpago.movil.session.SessionManager;
 
 import javax.inject.Inject;
 
@@ -58,9 +59,10 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
   @Inject ProductManager productManager;
   @Inject ProfilePresenter presenter;
   @Inject RecipientManager recipientManager;
+  @Inject SessionManager sessionManager;
   @Inject StringMapper stringMapper;
   @Inject TakeoverLoader takeoverLoader;
-  @Inject UserStore userStore;
+  @Inject User user;
 
   @StringRes
   @Override
@@ -107,7 +109,6 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
     if (result.isSuccessful()) {
       this.recipientManager.clear();
       this.productManager.clear();
-      this.userStore.clear();
 
       final Activity activity = this.getActivity();
       activity.startActivity(InitActivity.getLaunchIntent(activity));
@@ -126,14 +127,13 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
   @OnClick(R.id.signOutSettingsOption)
   final void onSignOutSettingsOptionClicked() {
     if (this.signOutSubscription.isUnsubscribed()) {
-      final String phoneNumber = this.userStore.get()
-        .phoneNumber()
+      final String phoneNumber = this.user.phoneNumber()
         .value();
       this.signOutSubscription = this.posBridge.unregister(phoneNumber)
         .subscribeOn(Schedulers.io())
         .doOnSuccess((result) -> {
           if (result.isSuccessful()) {
-            this.altAuthMethodManager.disable()
+            this.sessionManager.clear()
               .blockingAwait();
           }
         })

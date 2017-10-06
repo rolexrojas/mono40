@@ -13,7 +13,6 @@ import com.tpago.movil.dep.Partner;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.User;
-import com.tpago.movil.dep.UserStore;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.domain.BillBalance;
@@ -68,20 +67,17 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
 
   private static final long DEFAULT_IME_SPAN_QUERY = 300L; // 0.3 seconds.
 
+  private final User user;
+
   private final StringHelper stringHelper;
   private final RecipientManager recipientManager;
-  private final UserStore userStore;
-
   private final NetworkService networkService;
   private final DepApiBridge depApiBridge;
-
   private final Category category;
   private final CategoryFilter categoryFilter;
-
   private final UserRecipient userRecipient;
   private final String userRecipientLabelForTransfers;
   private final String userRecipientLabelForRecharges;
-
   private final RecipientComparator recipientComparator;
 
   private boolean deleting = false;
@@ -98,27 +94,23 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
   private Disposable recipientRemovalSubscription = Disposables.disposed();
 
   RecipientCategoryPresenter(
+    User user,
     @NonNull StringHelper stringHelper,
     @NonNull RecipientManager recipientManager,
-    UserStore userStore,
     NetworkService networkService,
     DepApiBridge depApiBridge,
     Category category
   ) {
+    this.user = user;
     this.stringHelper = stringHelper;
     this.recipientManager = recipientManager;
-    this.userStore = userStore;
-
     this.networkService = networkService;
     this.depApiBridge = depApiBridge;
-
     this.category = category;
     this.categoryFilter = CategoryFilter.create(this.category);
-
-    this.userRecipient = new UserRecipient(this.userStore.get());
+    this.userRecipient = new UserRecipient(this.user);
     this.userRecipientLabelForTransfers = "Entre mis cuentas";
     this.userRecipientLabelForRecharges = "Mi teléfono";
-
     this.recipientComparator = RecipientComparator.create();
   }
 
@@ -452,7 +444,6 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
 
     final boolean isUser = recipient instanceof UserRecipient;
     if (isUser) {
-      final User user = this.userStore.get();
       final UserRecipient userRecipient = (UserRecipient) recipient;
 
       final Partner carrierA = user.carrier();

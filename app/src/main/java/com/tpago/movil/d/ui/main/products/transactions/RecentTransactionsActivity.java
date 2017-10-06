@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tpago.movil.app.ui.ActivityModule;
 import com.tpago.movil.dep.App;
 import com.tpago.movil.R;
 import com.tpago.movil.d.misc.Utils;
@@ -42,6 +43,7 @@ public class RecentTransactionsActivity
   extends DepBaseActivity
   implements RecentTransactionsScreen,
   SwipeRefreshLayout.OnRefreshListener {
+
   private Unbinder unbinder;
   private Adapter adapter;
   private LoadIndicator loadIndicator;
@@ -85,7 +87,8 @@ public class RecentTransactionsActivity
     recyclerView.setHasFixedSize(true);
     recyclerView.setItemAnimator(null);
     recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,
-      false));
+      false
+    ));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(this)
       .drawable(R.drawable.d_divider)
       .marginResId(R.dimen.space_horizontal_normal)
@@ -100,6 +103,7 @@ public class RecentTransactionsActivity
     // Injects all the dependencies.
     final RecentTransactionsComponent component = DaggerRecentTransactionsComponent.builder()
       .appComponent(((App) getApplication()).component())
+      .activityModule(ActivityModule.create(this))
       .build();
     component.inject(this);
     // Attaches the screen to the presenter.
@@ -126,7 +130,7 @@ public class RecentTransactionsActivity
     // Detaches the screen from the presenter.
     presenter.detachScreen();
     // Removes the listener that gets notified every time the content must be refreshed.
-    swipeRefreshLayout.setOnRefreshListener(null);
+//    swipeRefreshLayout.setOnRefreshListener(null);
     // Unbinds all the annotated views and methods.
     unbinder.unbind();
   }
@@ -174,6 +178,7 @@ public class RecentTransactionsActivity
    * TODO
    */
   private class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
     private static final int TYPE_GROUP_TITLE = 0;
     private static final int TYPE_TRANSACTION = 1;
 
@@ -231,7 +236,8 @@ public class RecentTransactionsActivity
       final Object item = items.get(position);
       final int type = getItemViewType(position);
       if (type == TYPE_GROUP_TITLE) {
-        ((GroupItemViewHolder) holder).getTextView().setText(Formatter.date((Date) item));
+        ((GroupItemViewHolder) holder).getTextView()
+          .setText(Formatter.date((Date) item));
       } else {
         final Transaction transaction = (Transaction) item;
         final TransactionItemViewHolder transactionHolder = (TransactionItemViewHolder) holder;

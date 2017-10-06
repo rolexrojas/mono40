@@ -2,7 +2,6 @@ package com.tpago.movil.dep;
 
 import android.content.Context;
 
-import com.google.gson.Gson;
 import com.tpago.movil.dep.content.SharedPreferencesCreator;
 import com.tpago.movil.dep.content.StringResolver;
 import com.tpago.movil.data.DeviceIdSupplier;
@@ -74,16 +73,6 @@ public final class AppModule {
   @Singleton
   ConfigManager provideConfigManager(SharedPreferencesCreator sharedPreferencesCreator) {
     return new ConfigManager(sharedPreferencesCreator);
-  }
-
-  @Provides
-  @Singleton
-  UserStore provideUserStore(
-    Gson gson,
-    SharedPreferencesCreator sharedPreferencesCreator,
-    Avatar avatar
-  ) {
-    return new UserStore(gson, sharedPreferencesCreator, avatar);
   }
 
   @Provides

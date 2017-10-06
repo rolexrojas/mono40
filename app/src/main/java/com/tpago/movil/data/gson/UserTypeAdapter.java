@@ -10,6 +10,7 @@ import com.tpago.movil.Email;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.user.User;
 import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.util.StringHelper;
 
 import java.io.IOException;
 
@@ -33,13 +34,18 @@ public final class UserTypeAdapter extends TypeAdapter<User> {
     final UserData userData = this.typeAdapter.read(reader);
     User user = null;
     if (ObjectHelper.isNotNull(userData)) {
+      final String uriString = userData.pictureUri();
+      Uri pictureUri = null;
+      if (!StringHelper.isNullOrEmpty(uriString)) {
+        pictureUri = Uri.parse(uriString);
+      }
       user = User.builder()
         .id(userData.id())
         .phoneNumber(PhoneNumber.create(userData.phoneNumber()))
         .email(Email.create(userData.email()))
         .firstName(userData.firstName())
         .lastName(userData.lastName())
-        .pictureUri(Uri.parse(userData.pictureUri()))
+        .pictureUri(pictureUri)
         .build();
     }
     return user;

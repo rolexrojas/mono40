@@ -161,8 +161,8 @@ public final class UnlockFragment extends BaseInitFragment implements UnlockPres
   }
 
   @Override
-  public void setUserFirstName(String content) {
-    titleLabel.setText(String.format(getString(R.string.unlock_label_title), content));
+  public void setUserFirstName(String userFirstName) {
+    titleLabel.setText(String.format(getString(R.string.unlock_label_title), userFirstName));
   }
 
   @Override

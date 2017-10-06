@@ -12,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.tpago.movil.R;
-import com.tpago.movil.dep.UserStore;
 import com.tpago.movil.dep.App;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.data.util.BinderFactory;
@@ -21,6 +20,7 @@ import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.list.ListItemAdapter;
 import com.tpago.movil.d.ui.main.list.ListItemHolderCreatorFactory;
+import com.tpago.movil.session.SessionManager;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import javax.inject.Inject;
@@ -65,7 +65,7 @@ public final class OwnTransactionCreationActivity extends AppCompatActivity impl
   RecyclerView recyclerView;
 
   @Inject
-  UserStore userStore;
+  SessionManager sessionManager;
   @Inject
   StringHelper stringHelper;
   @Inject
@@ -107,7 +107,7 @@ public final class OwnTransactionCreationActivity extends AppCompatActivity impl
       public void run() {
         toolbar.setTitle("Transacción entre cuentas");
         toolbar.setSubtitle(
-          userStore.get()
+          sessionManager.getUser()
             .phoneNumber()
             .formattedValued()
         );
@@ -127,7 +127,7 @@ public final class OwnTransactionCreationActivity extends AppCompatActivity impl
       .build();
     adapter = new ListItemAdapter(holderCreatorFactory, holderBinderFactory);
     for (Product product : productManager.getProductList()) {
-      if (!Product.checkIfCreditCard(product) && !Product.checkIfLoan(product)) {
+      if (Product.checkIfAccount(product)) {
         adapter.add(product);
       }
     }
@@ -162,9 +162,11 @@ public final class OwnTransactionCreationActivity extends AppCompatActivity impl
 
   @Override
   public void onButtonClicked(int position) {
+    final Product selectedProduct = ((Product) this.adapter.get(position));
+
     boolean hasAccounts = false;
     for (Product product : this.productManager.getProductList()) {
-      if (checkIfAccount(product)) {
+      if (checkIfAccount(product) && !product.equals(selectedProduct)) {
         hasAccounts = true;
         break;
       }
@@ -181,7 +183,7 @@ public final class OwnTransactionCreationActivity extends AppCompatActivity impl
       Dialogs.builder(this)
         .setTitle(R.string.weAreSorry)
         .setMessage(
-          "No tiene cuentas bancarias afiliadas para acreditar su avance de efectivo desde su tarjeta. Favor enrole sus cuentas e intente de nuevo."
+          "No tiene cuentas bancarias afiliadas para recibir la transferencia. Favor enrole sus cuentas e intente de nuevo."
         )
         .setPositiveButton(R.string.ok, null)
         .show();

@@ -3,7 +3,6 @@ package com.tpago.movil.app.ui.main.settings;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.ConfigManager;
 import com.tpago.movil.dep.User;
-import com.tpago.movil.dep.UserStore;
 import com.tpago.movil.app.ui.Presenter;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.data.StringMapper;
@@ -24,7 +23,7 @@ final class SettingsPresenter extends Presenter<SettingsPresentation> {
   private final StringMapper stringMapper;
   private final AltAuthMethodManager altAuthMethodManager;
 
-  private final UserStore userStore;
+  private final User user;
   private final ProductManager productManager;
   private final ConfigManager configManager;
 
@@ -34,7 +33,7 @@ final class SettingsPresenter extends Presenter<SettingsPresentation> {
     this.stringMapper = builder.stringMapper;
     this.altAuthMethodManager = builder.altAuthMethodManager;
 
-    this.userStore = builder.userStore;
+    this.user = builder.user;
     this.productManager = builder.productManager;
     this.configManager = builder.configManager;
   }
@@ -44,7 +43,6 @@ final class SettingsPresenter extends Presenter<SettingsPresentation> {
     super.onPresentationResumed();
 
     // Initializes the edit profile option.
-    final User user = this.userStore.get();
     this.presentation.setProfileSettingsOptionSecondaryText(user.name());
 
     // Initializes the alternative authentication method option.
@@ -64,7 +62,7 @@ final class SettingsPresenter extends Presenter<SettingsPresentation> {
     private AltAuthMethodManager altAuthMethodManager;
     private SettingsPresentation presentation;
 
-    private UserStore userStore;
+    private User user;
     private ProductManager productManager;
     private ConfigManager configManager;
 
@@ -89,8 +87,8 @@ final class SettingsPresenter extends Presenter<SettingsPresentation> {
       return this;
     }
 
-    final Builder userStore(UserStore userStore) {
-      this.userStore = ObjectHelper.checkNotNull(userStore, "userStore");
+    final Builder user(User user) {
+      this.user = ObjectHelper.checkNotNull(user, "userStore");
       return this;
     }
 
@@ -112,7 +110,7 @@ final class SettingsPresenter extends Presenter<SettingsPresentation> {
           ObjectHelper.isNull(this.altAuthMethodManager)
         )
         .addPropertyNameIfMissing("presentation", ObjectHelper.isNull(this.presentation))
-        .addPropertyNameIfMissing("userStore", ObjectHelper.isNull(this.userStore))
+        .addPropertyNameIfMissing("user", ObjectHelper.isNull(this.user))
         .addPropertyNameIfMissing("productManager", ObjectHelper.isNull(this.productManager))
         .addPropertyNameIfMissing("configManager", ObjectHelper.isNull(this.configManager))
         .checkNoMissingProperties();

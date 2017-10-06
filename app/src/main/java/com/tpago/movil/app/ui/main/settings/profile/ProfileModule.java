@@ -1,7 +1,7 @@
 package com.tpago.movil.app.ui.main.settings.profile;
 
-import com.tpago.movil.dep.UserStore;
 import com.tpago.movil.app.ui.FragmentScope;
+import com.tpago.movil.dep.User;
 import com.tpago.movil.util.ObjectHelper;
 
 import dagger.Module;
@@ -25,9 +25,9 @@ public final class ProfileModule {
 
   @Provides
   @FragmentScope
-  ProfilePresenter createProfilePresenter(UserStore userStore) {
+  ProfilePresenter createProfilePresenter(User user) {
     return ProfilePresenter.builder()
-      .userStore(userStore)
+      .user(user)
       .presentation(this.presentation)
       .build();
   }

@@ -39,7 +39,9 @@ public final class InitFragment extends BaseInitFragment {
 
   @Inject SessionManager sessionManager;
 
-  @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
+  @Inject
+  @ActivityQualifier
+  FragmentReplacer fragmentReplacer;
 
   @Inject LogoAnimator logoAnimator;
   @Inject InitialDataLoader initialDataLoader;
@@ -104,13 +106,16 @@ public final class InitFragment extends BaseInitFragment {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
     // Injects all annotated dependencies.
-    getInitComponent().inject(this);
+    getInitComponent()
+      .inject(this);
   }
 
   @Override
   public void onResume() {
     super.onResume();
+
     final Context context = getContext();
     if (Permissions.checkIfGranted(context, Manifest.permission.READ_PHONE_STATE)
       && Permissions.checkIfGranted(context, Manifest.permission.READ_SMS)) {
@@ -130,9 +135,10 @@ public final class InitFragment extends BaseInitFragment {
 
   @Override
   public void onStop() {
-    super.onStop();
     if (!subscription.isUnsubscribed()) {
       subscription.unsubscribe();
     }
+
+    super.onStop();
   }
 }

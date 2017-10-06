@@ -1,7 +1,6 @@
 package com.tpago.movil.app.ui.main.settings.profile;
 
 import com.tpago.movil.dep.User;
-import com.tpago.movil.dep.UserStore;
 import com.tpago.movil.app.ui.Presenter;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.ObjectHelper;
@@ -15,19 +14,18 @@ final class ProfilePresenter extends Presenter<ProfilePresentation> {
     return new Builder();
   }
 
-  private final UserStore userStore;
+  private final User user;
 
   private ProfilePresenter(Builder builder) {
     super(builder.presentation);
 
-    this.userStore = builder.userStore;
+    this.user = builder.user;
   }
 
   @Override
   public void onPresentationResumed() {
     super.onPresentationResumed();
 
-    final User user = this.userStore.get();
     this.presentation.setFirstNameTextInputContent(user.firstName());
     this.presentation.setLastNameTextInputContent(user.lastName());
     this.presentation.setPhoneNumberTextInputContent(
@@ -42,14 +40,14 @@ final class ProfilePresenter extends Presenter<ProfilePresentation> {
 
   static final class Builder {
 
-    private UserStore userStore;
+    private User user;
     private ProfilePresentation presentation;
 
     private Builder() {
     }
 
-    final Builder userStore(UserStore userStore) {
-      this.userStore = ObjectHelper.checkNotNull(userStore, "userStore");
+    final Builder user(User user) {
+      this.user = ObjectHelper.checkNotNull(user, "user");
       return this;
     }
 
@@ -60,7 +58,7 @@ final class ProfilePresenter extends Presenter<ProfilePresentation> {
 
     final ProfilePresenter build() {
       BuilderChecker.create()
-        .addPropertyNameIfMissing("userStore", ObjectHelper.isNull(this.userStore))
+        .addPropertyNameIfMissing("user", ObjectHelper.isNull(this.user))
         .addPropertyNameIfMissing("presentation", ObjectHelper.isNull(this.presentation))
         .checkNoMissingProperties();
 
