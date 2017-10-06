@@ -107,11 +107,28 @@ public final class AltAuthMethodManager {
     }
   }
 
+  private byte[] createSignedData(Signature signature, byte[] data) throws Exception {
+    signature.update(data);
+    return signature.sign();
+  }
+
   private byte[] createSignedData(PrivateKey key, byte[] data) throws Exception {
     final Signature signature = Signature.getInstance(this.signAlgName);
     signature.initSign(key);
-    signature.update(data);
-    return signature.sign();
+    return createSignedData(signature, data);
+  }
+
+  public final Single<Result<Placeholder>> verify(
+    AltAuthMethodVerifyData data,
+    Signature signature
+  ) {
+    ObjectHelper.checkNotNull(data, "data");
+    ObjectHelper.checkNotNull(signature, "signature");
+
+    this.checkEnabled();
+
+    return Single.defer(() -> Single.just(this.createSignedData(signature, data.toByteArray())))
+      .flatMap((signedData) -> this.api.verifyAltAuthMethod(data, signedData));
   }
 
   /**

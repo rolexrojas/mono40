@@ -39,7 +39,7 @@ public final class DataAltAuthModule {
       .keyAlias("AltAuth.Key")
       .keyGenAlgName("RSA")
       .keyGenAlgParamSpec(new RSAKeyGenParameterSpec(2048, RSAKeyGenParameterSpec.F4))
-      .signAlgName("SHA1withRSA")
+      .signAlgName("SHA256withRSA")
       .codeMethodSubject(new X500Principal(BuildConfig.AUTH_METHOD_CODE_SUBJECT))
       .codeMethodSerialNumber(BigInteger.ONE)
       .codeMethodStartDate(startCalendar.getTime())

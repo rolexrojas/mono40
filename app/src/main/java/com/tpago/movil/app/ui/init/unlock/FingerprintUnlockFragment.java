@@ -77,7 +77,7 @@ public final class FingerprintUnlockFragment extends BaseUnlockFragment {
         .map(Result::successData)
         .blockingGet();
 
-      final Signature signature = Signature.getInstance("SHA256withRSA");
+      final Signature signature = Signature.getInstance(this.altAuthMethodConfigData.signAlgName());
       signature.initSign(privateKey);
 
       this.fingerprintManager.authenticate(
@@ -107,7 +107,11 @@ public final class FingerprintUnlockFragment extends BaseUnlockFragment {
               .user(sessionManager.getUser())
               .deviceId(deviceIdSupplier.get())
               .build();
-            disposable = altAuthMethodManager.verify(data, privateKey)
+            disposable = altAuthMethodManager.verify(
+              data,
+              result.getCryptoObject()
+                .getSignature()
+            )
               .subscribeOn(Schedulers.io())
               .observeOn(AndroidSchedulers.mainThread())
               .doOnSubscribe((disposable) -> takeoverLoader.show())
