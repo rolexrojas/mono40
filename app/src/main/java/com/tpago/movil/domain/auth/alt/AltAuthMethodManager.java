@@ -76,17 +76,27 @@ public final class AltAuthMethodManager {
    */
   public final Completable enable(AltAuthMethodKeyGenerator generator) {
     ObjectHelper.checkNotNull(generator, "generator");
-    if (this.isEnabled()) {
-      throw new IllegalStateException("this.isEnabled()");
-    }
 
-    final String methodName = generator.method()
-      .name();
-    return generator.generate()
-      .flatMapCompletable(this.api::enableAltAuthMethod)
-      .doOnComplete(() -> this.keyValueStore.set(KEY, methodName))
-      .doOnError((throwable) -> this.executeRollback());
+    final AltAuthMethod method = generator.method();
+    final AltAuthMethod currentMethod = this.getActiveMethod();
+    if (method.equals(currentMethod)) {
+      return Completable.complete();
+    } else {
+      final Completable completable = ObjectHelper.checkNotNull(generator, "generator")
+        .generate()
+        .flatMapCompletable(this.api::enableAltAuthMethod)
+        .doOnComplete(() -> this.keyValueStore.set(KEY, method.name()))
+        .doOnError((throwable) -> this.executeRollback());
+
+      if (ObjectHelper.isNull(currentMethod)) {
+        return completable;
+      } else {
+        return this.disable()
+          .concatWith(completable);
+      }
+    }
   }
+
 
   @Nullable
   public final AltAuthMethod getActiveMethod() {

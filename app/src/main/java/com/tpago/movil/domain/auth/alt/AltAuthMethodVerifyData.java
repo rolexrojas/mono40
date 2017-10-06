@@ -3,14 +3,11 @@ package com.tpago.movil.domain.auth.alt;
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.tpago.movil.user.User;
-import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.util.StringHelper;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.security.SecureRandom;
-
-import timber.log.Timber;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author hecvasro
@@ -37,40 +34,19 @@ public abstract class AltAuthMethodVerifyData {
 
   @Memoized
   public byte[] toByteArray() throws Exception {
-    final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    final List<Object> tokenList = new ArrayList<>();
 
-    DataOutputStream dataOutputStream = null;
-    try {
-      dataOutputStream = new DataOutputStream(byteArrayOutputStream);
+    final User user = this.user();
+    tokenList.add(user.id());
+    tokenList.add(
+      user.phoneNumber()
+        .value()
+    );
 
-      final User user = this.user();
-      dataOutputStream.writeLong(user.id());
-      dataOutputStream.writeUTF(
-        user.phoneNumber()
-          .value()
-      );
+    tokenList.add(this.deviceId());
 
-      dataOutputStream.writeUTF(this.deviceId());
-
-      dataOutputStream.writeLong(this.nonce());
-
-      return byteArrayOutputStream.toByteArray();
-    } catch (IOException exception) {
-      throw new RuntimeException(exception);
-    } finally {
-      try {
-        if (ObjectHelper.isNotNull(dataOutputStream)) {
-          dataOutputStream.close();
-        }
-      } catch (IOException exception) {
-        Timber.e(exception, "dataOutputStream.close()");
-      }
-      try {
-        byteArrayOutputStream.close();
-      } catch (IOException exception) {
-        Timber.e(exception, "byteArrayOutputStream.close()");
-      }
-    }
+    return StringHelper.join(":", tokenList)
+      .getBytes("UTF-8");
   }
 
   @Memoized

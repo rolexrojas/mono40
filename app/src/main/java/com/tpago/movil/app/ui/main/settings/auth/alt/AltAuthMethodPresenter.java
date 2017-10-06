@@ -6,6 +6,7 @@ import com.tpago.movil.app.ui.Presenter;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.app.ui.main.code.CodeCreator;
 import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.data.auth.alt.FingerprintAltAuthMethodKeyGenerator;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodKeyGenerator;
 import com.tpago.movil.data.auth.alt.CodeAltAuthMethodKeyGenerator;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
@@ -33,6 +34,7 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
   private final AltAuthMethodManager altAuthMethodManager;
 
   private final CodeAltAuthMethodKeyGenerator.Creator codeAltAuthMethodKeyGeneratorCreator;
+  private final FingerprintAltAuthMethodKeyGenerator fingerprintAltAuthMethodKeyGenerator;
 
   private final StringMapper stringMapper;
   private final AlertManager alertManager;
@@ -47,6 +49,7 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
     this.altAuthMethodManager = builder.altAuthMethodManager;
 
     this.codeAltAuthMethodKeyGeneratorCreator = builder.codeAltAuthMethodKeyGeneratorCreator;
+    this.fingerprintAltAuthMethodKeyGenerator = builder.fingerprintAltAuthMethodKeyGenerator;
 
     this.stringMapper = builder.stringMapper;
     this.alertManager = builder.alertManager;
@@ -64,14 +67,7 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
   }
 
   private void onEnableButtonClicked(AltAuthMethodKeyGenerator generator) {
-    final Completable completable;
-    if (this.altAuthMethodManager.isEnabled()) {
-      completable = this.altAuthMethodManager.disable()
-        .concatWith(this.altAuthMethodManager.enable(generator));
-    } else {
-      completable = this.altAuthMethodManager.enable(generator);
-    }
-    this.disposable = completable
+    this.disposable = this.altAuthMethodManager.enable(generator)
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
       .doOnSubscribe((d) -> this.takeoverLoader.show())
@@ -90,7 +86,7 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
     if (this.altAuthMethodManager.getActiveMethod() == AltAuthMethod.FINGERPRINT) {
       this.handleCompletion();
     } else {
-      // TODO: Ask for permissions, create key generator, and enable method.
+      this.onEnableButtonClicked(this.fingerprintAltAuthMethodKeyGenerator);
     }
   }
 
@@ -142,8 +138,6 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
   public void onPresentationResumed() {
     super.onPresentationResumed();
 
-    this.presentation.setFingerprintAlhAuthMethodOptionVisibility(false);
-
     this.updateSelection();
   }
 
@@ -158,6 +152,7 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
 
     private AltAuthMethodManager altAuthMethodManager;
     private CodeAltAuthMethodKeyGenerator.Creator codeAltAuthMethodKeyGeneratorCreator;
+    private FingerprintAltAuthMethodKeyGenerator fingerprintAltAuthMethodKeyGenerator;
 
     private StringMapper stringMapper;
     private AlertManager alertManager;
@@ -176,6 +171,11 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
 
     final Builder codeAltAuthMethodKeyGeneratorCreator(CodeAltAuthMethodKeyGenerator.Creator creator) {
       this.codeAltAuthMethodKeyGeneratorCreator = ObjectHelper.checkNotNull(creator, "creator");
+      return this;
+    }
+
+    final Builder fingerprintAltAuthMethodKeyGenerator(FingerprintAltAuthMethodKeyGenerator generator) {
+      this.fingerprintAltAuthMethodKeyGenerator = ObjectHelper.checkNotNull(generator, "generator");
       return this;
     }
 

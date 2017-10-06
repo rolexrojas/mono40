@@ -38,7 +38,7 @@ final class AuthInterceptor implements Interceptor {
     // Adds the current access token as a header, if any.
     final String currentAccessToken = this.accessTokenStore.get();
     if (!StringHelper.isNullOrEmpty(currentAccessToken)) {
-      requestBuilder.header("Authorization", currentAccessToken);
+      requestBuilder.header("Authorization", String.format("Bearer %1$s", currentAccessToken));
     }
 
     final Response response = chain.proceed(requestBuilder.build());

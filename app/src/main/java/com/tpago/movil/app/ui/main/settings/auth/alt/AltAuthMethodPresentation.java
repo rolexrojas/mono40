@@ -7,8 +7,6 @@ import com.tpago.movil.app.ui.Presentation;
  */
 public interface AltAuthMethodPresentation extends Presentation {
 
-  void setFingerprintAlhAuthMethodOptionVisibility(boolean visible);
-
   void setFingerprintOptionSelection(boolean selected);
 
   void setCodeOptionSelection(boolean selected);

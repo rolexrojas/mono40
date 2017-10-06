@@ -1,15 +1,24 @@
 package com.tpago.movil.app.ui.main.settings.auth.alt;
 
+import android.annotation.TargetApi;
+import android.app.KeyguardManager;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import android.view.View;
 
 import com.google.auto.value.AutoValue;
 import com.tpago.movil.R;
+import com.tpago.movil.app.ui.AlertData;
+import com.tpago.movil.app.ui.AlertManager;
 import com.tpago.movil.app.ui.FragmentActivity;
 import com.tpago.movil.app.ui.FragmentCreator;
 import com.tpago.movil.app.ui.InjectableFragment;
 import com.tpago.movil.app.ui.main.settings.SelectableSettingsOption;
+import com.tpago.movil.data.StringMapper;
 
 import javax.inject.Inject;
 
@@ -33,9 +42,29 @@ public final class AltAuthMethodFragment extends InjectableFragment
 
   @Inject AltAuthMethodPresenter presenter;
 
+  @Inject KeyguardManager keyguardManager;
+  @Inject FingerprintManagerCompat fingerprintManager;
+
+  @Inject StringMapper stringMapper;
+  @Inject AlertManager alertManager;
+
+  @TargetApi(Build.VERSION_CODES.M)
   @OnClick(R.id.fingerprintOption)
   final void onFingerprintOptionClicked() {
-    this.presenter.onEnableFingerprintButtonClicked();
+    if (!this.keyguardManager.isDeviceSecure() || !this.fingerprintManager.hasEnrolledFingerprints()) {
+      final AlertData alertData = AlertData.builder(this.stringMapper)
+        .message(
+          "Es requerido que active la autenticación con huellas digitales del dispositivo para continuar.\nProceda a hacerlo desde la sección de Seguridad de su dispositivo."
+        )
+        .negativeButtonText("Seguridad")
+        .negativeButtonAction(
+          () -> this.startActivity(new Intent(Settings.ACTION_SECURITY_SETTINGS))
+        )
+        .build();
+      this.alertManager.show(alertData);
+    } else {
+      this.presenter.onEnableFingerprintButtonClicked();
+    }
   }
 
   @OnClick(R.id.codeOption)
@@ -78,6 +107,10 @@ public final class AltAuthMethodFragment extends InjectableFragment
   public void onResume() {
     super.onResume();
 
+    final int visibility = this.fingerprintManager.isHardwareDetected() ? View.VISIBLE : View.GONE;
+    this.fingerprintOption.setVisibility(visibility);
+    this.fingerprintOptionDivider.setVisibility(visibility);
+
     // Resumes the presenter.
     this.presenter.onPresentationResumed();
   }
@@ -88,14 +121,6 @@ public final class AltAuthMethodFragment extends InjectableFragment
     this.presenter.onPresentationPaused();
 
     super.onPause();
-  }
-
-  @Override
-  public void setFingerprintAlhAuthMethodOptionVisibility(boolean visible) {
-    final int visibility = visible ? View.VISIBLE : View.GONE;
-
-    this.fingerprintOption.setVisibility(visibility);
-    this.fingerprintOptionDivider.setVisibility(visibility);
   }
 
   @Override

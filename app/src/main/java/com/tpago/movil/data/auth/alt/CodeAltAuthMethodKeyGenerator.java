@@ -43,10 +43,11 @@ public final class CodeAltAuthMethodKeyGenerator implements AltAuthMethodKeyGene
   }
 
   private KeyPair generateKeyPair() throws Exception {
-    final KeyPairGenerator generator = KeyPairGenerator.getInstance(
-      this.altAuthMethodConfigData.keyGenAlgName(),
-      this.altAuthMethodConfigData.providerName()
-    );
+    final KeyPairGenerator generator = KeyPairGenerator
+      .getInstance(
+        this.altAuthMethodConfigData.keyGenAlgName(),
+        this.altAuthMethodConfigData.providerName()
+      );
 
     final AlgorithmParameterSpec algParamSpec = new KeyPairGeneratorSpec.Builder(this.context)
       .setAlias(this.altAuthMethodConfigData.keyAlias())

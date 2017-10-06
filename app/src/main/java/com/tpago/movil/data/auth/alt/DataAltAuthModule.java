@@ -1,6 +1,8 @@
 package com.tpago.movil.data.auth.alt;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
+import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 
 import com.tpago.movil.BuildConfig;
 import com.tpago.movil.api.Api;
@@ -95,6 +97,35 @@ public final class DataAltAuthModule {
       .altAuthMethodConfigData(altAuthMethodConfigData)
       .configAuthMethodStore(codeAltAuthMethodStore)
       .build();
+  }
+
+  @Provides
+  @Singleton
+  @Nullable
+  FingerprintAltAuthMethodKeyGenerator fingerprintAltAuthMethodKeyGenerator(
+    FingerprintManagerCompat fingerprintManager,
+    AltAuthMethodConfigData altAuthMethodConfigData
+  ) {
+    if (fingerprintManager.isHardwareDetected()) {
+      return FingerprintAltAuthMethodKeyGenerator.create(altAuthMethodConfigData);
+    } else {
+      return null;
+    }
+  }
+
+  @Provides
+  @Singleton
+  @Nullable
+  FingerprintAltAuthMethodKeySupplier fingerprintAltAuthMethodKeySupplier(
+    FingerprintManagerCompat fingerprintManager,
+    AltAuthMethodConfigData altAuthMethodConfigData,
+    KeyStore keyStore
+  ) {
+    if (fingerprintManager.isHardwareDetected()) {
+      return FingerprintAltAuthMethodKeySupplier.create(altAuthMethodConfigData, keyStore);
+    } else {
+      return null;
+    }
   }
 
   @Provides
