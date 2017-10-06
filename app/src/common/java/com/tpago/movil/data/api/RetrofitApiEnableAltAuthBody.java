@@ -4,6 +4,8 @@ import android.util.Base64;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.tpago.movil.util.ObjectHelper;
 
@@ -13,13 +15,17 @@ import java.security.PublicKey;
  * @author hecvasro
  */
 @AutoValue
-public abstract class ApiEnableAltAuthBody {
+public abstract class RetrofitApiEnableAltAuthBody {
 
-  public static Builder builder() {
-    return new AutoValue_ApiEnableAltAuthBody.Builder();
+  public static TypeAdapter<RetrofitApiEnableAltAuthBody> typeAdapter(Gson gson) {
+    return new AutoValue_RetrofitApiEnableAltAuthBody.GsonTypeAdapter(gson);
   }
 
-  ApiEnableAltAuthBody() {
+  public static Builder builder() {
+    return new AutoValue_RetrofitApiEnableAltAuthBody.Builder();
+  }
+
+  RetrofitApiEnableAltAuthBody() {
   }
 
   @SerializedName("public-key")
@@ -46,11 +52,11 @@ public abstract class ApiEnableAltAuthBody {
         Base64.encodeToString(
           ObjectHelper.checkNotNull(publicKey, "publicKey")
             .getEncoded(),
-          Base64.DEFAULT
+          Base64.NO_WRAP
         )
       );
     }
 
-    public abstract ApiEnableAltAuthBody build();
+    public abstract RetrofitApiEnableAltAuthBody build();
   }
 }

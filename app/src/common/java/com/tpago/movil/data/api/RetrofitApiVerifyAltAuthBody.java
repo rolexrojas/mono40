@@ -4,6 +4,8 @@ import android.util.Base64;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.tpago.movil.user.User;
 import com.tpago.movil.util.ObjectHelper;
@@ -12,13 +14,17 @@ import com.tpago.movil.util.ObjectHelper;
  * @author hecvasro
  */
 @AutoValue
-public abstract class ApiVerifyAltAuthBody {
+public abstract class RetrofitApiVerifyAltAuthBody {
 
-  public static Builder builder() {
-    return new AutoValue_ApiVerifyAltAuthBody.Builder();
+  public static TypeAdapter<RetrofitApiVerifyAltAuthBody> typeAdapter(Gson gson) {
+    return new AutoValue_RetrofitApiVerifyAltAuthBody.GsonTypeAdapter(gson);
   }
 
-  ApiVerifyAltAuthBody() {
+  public static Builder builder() {
+    return new AutoValue_RetrofitApiVerifyAltAuthBody.Builder();
+  }
+
+  RetrofitApiVerifyAltAuthBody() {
   }
 
   @SerializedName("account-id")
@@ -66,9 +72,9 @@ public abstract class ApiVerifyAltAuthBody {
     abstract Builder signedData(String signedData);
 
     public final Builder signedData(byte[] signedData) {
-      return this.signedData(Base64.encodeToString(signedData, Base64.DEFAULT));
+      return this.signedData(Base64.encodeToString(signedData, Base64.NO_WRAP));
     }
 
-    public abstract ApiVerifyAltAuthBody build();
+    public abstract RetrofitApiVerifyAltAuthBody build();
   }
 }

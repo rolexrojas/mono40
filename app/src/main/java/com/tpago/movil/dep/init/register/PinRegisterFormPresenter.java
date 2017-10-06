@@ -77,11 +77,21 @@ public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPre
     if (this.pinCreator.canCreate()) {
       final PhoneNumber phoneNumber = this.registerData.getPhoneNumber();
       final Email email = this.registerData.getEmail();
+      final String firstName = this.registerData.getFirstName();
+      final String lastName = this.registerData.getLastName();
       final Password password = Password.create(this.registerData.getPassword());
       final Code pin = this.pinCreator.create();
       final String deviceId = this.deviceIdSupplier.get();
 
-      this.disposable = this.api.signUp(phoneNumber, email, password, pin, deviceId)
+      this.disposable = this.api.signUp(
+        phoneNumber,
+        email,
+        firstName,
+        lastName,
+        password,
+        pin,
+        deviceId
+      )
         .subscribeOn(Schedulers.io())
         .flatMap((result) -> {
           if (result.isSuccessful()) {

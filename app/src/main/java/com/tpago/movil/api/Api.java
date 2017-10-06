@@ -26,6 +26,8 @@ public interface Api {
   Single<Result<User>> signUp(
     PhoneNumber phoneNumber,
     Email email,
+    String firstName,
+    String lastName,
     Password password,
     Code pin,
     String deviceId
