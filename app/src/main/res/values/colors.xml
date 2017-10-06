@@ -19,6 +19,7 @@
   <color name="primary_50">#7F9C188F</color>
   <color name="transparent">@android:color/transparent</color>
   <color name="white">#FFF</color>
+  <color name="whiteAlpha10">#20FFFFFF</color>
   <color name="whiteAlpha50">#7FFFFFFF</color>
   <color name="white_20">#33FFFFFF</color>
   <color name="white_90">#E5FFFFFF</color>

@@ -94,7 +94,7 @@ public final class AvatarFormFragment extends BaseRegisterFragment {
         .invalidate(file);
       Picasso.with(context)
         .load(file)
-        .resizeDimen(R.dimen.normalProfilePictureSize, R.dimen.normalProfilePictureSize)
+        .resizeDimen(R.dimen.normalImageSize, R.dimen.normalImageSize)
         .transform(new CircleTransformation())
         .placeholder(R.drawable.profile_picture_placeholder_dark)
         .error(R.drawable.profile_picture_placeholder_dark)

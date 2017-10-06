@@ -124,7 +124,9 @@
     <item name="android:layout_width">0dp</item>
   </style>
 
-  <style name="Base.TextNumPadButton" parent="Base.NumPadCell">
+  <style name="NumPadCell" parent="Base.NumPadCell"/>
+
+  <style name="Base.TextNumPadButton" parent="NumPadCell">
     <item name="android:gravity">center</item>
     <item name="android:lineSpacingExtra">2sp</item>
     <item name="android:textSize">24sp</item>
@@ -133,11 +135,12 @@
 
   <style name="TextNumPadButton" parent="Base.TextNumPadButton"/>
 
-  <style name="Base.ImageNumPadButton" parent="Base.NumPadCell"/>
+  <style name="Base.ImageNumPadButton" parent="NumPadCell"/>
 
   <style name="ImageNumPadButton" parent="Base.ImageNumPadButton"/>
 
   <style name="Base.NumPad">
+    <item name="android:orientation">vertical</item>
     <item name="android:paddingBottom">@dimen/smallVerticalSpace</item>
     <item name="android:paddingEnd">@dimen/largeHorizontalSpace</item>
     <item name="android:paddingStart">@dimen/largeHorizontalSpace</item>
@@ -161,7 +164,23 @@
 
   <style name="NumPad.Light" parent="Base.NumPad.Light"/>
 
-  <!-- Profile picture styles -->
+  <!-- User picture styles -->
+  <style name="Base.UserPicture"/>
+
+  <style name="Base.UserPicture.Large">
+    <item name="android:layout_height">@dimen/largeImageSize</item>
+    <item name="android:layout_width">@dimen/largeImageSize</item>
+  </style>
+
+  <style name="UserPicture.Large" parent="Base.UserPicture.Large"/>
+
+  <style name="Base.UserPicture.Normal">
+    <item name="android:layout_height">@dimen/normalHorizontalSpace</item>
+    <item name="android:layout_width">@dimen/normalImageSize</item>
+  </style>
+
+  <style name="UserPicture.Normal" parent="Base.UserPicture.Normal"/>
+
   <style name="Base.ProfilePicturePlaceholder"/>
 
   <style name="Base.ProfilePicturePlaceholder.Dark">
@@ -169,8 +188,8 @@
   </style>
 
   <style name="Base.ProfilePicturePlaceholder.Dark.Normal">
-    <item name="android:layout_height">@dimen/normalProfilePictureSize</item>
-    <item name="android:layout_width">@dimen/normalProfilePictureSize</item>
+    <item name="android:layout_height">@dimen/normalImageSize</item>
+    <item name="android:layout_width">@dimen/normalImageSize</item>
   </style>
 
   <style name="ProfilePicturePlaceholder.Dark.Normal" parent="Base.ProfilePicturePlaceholder.Dark.Normal"/>
@@ -180,8 +199,8 @@
   </style>
 
   <style name="Base.ProfilePicturePlaceholder.Light.Large">
-    <item name="android:layout_height">@dimen/largeProfilePictureSize</item>
-    <item name="android:layout_width">@dimen/largeProfilePictureSize</item>
+    <item name="android:layout_height">@dimen/largeImageSize</item>
+    <item name="android:layout_width">@dimen/largeImageSize</item>
   </style>
 
   <style name="ProfilePicturePlaceholder.Light.Large" parent="Base.ProfilePicturePlaceholder.Light.Large"/>
@@ -257,7 +276,7 @@
   <style name="Base.SettingsText.Title">
     <item name="android:textAllCaps">true</item>
     <item name="android:textSize">10sp</item>
-    <item name="fontPath">@string/font_gothamRounded_bold</item>
+    <item name="fontPath">@string/gothamRoundedBoldFont</item>
   </style>
 
   <style name="SettingsText.Title" parent="Base.SettingsText.Title"/>
@@ -545,7 +564,7 @@
     <item name="android:layout_width">125dp</item>
     <item name="android:textColor">@color/common_primary</item>
     <item name="android:textSize">14sp</item>
-    <item name="fontPath">@string/font_gothamRounded_bold</item>
+    <item name="fontPath">@string/gothamRoundedBoldFont</item>
   </style>
 
   <style name="D.Base.Widget.Button.Dark">
@@ -731,7 +750,7 @@
   <style name="D.Base.Transactions.Label.PaymentMethodChooser.Primary">
     <item name="android:textColor">#333</item>
     <item name="android:textSize">14sp</item>
-    <item name="fontPath">@string/font_gothamRounded_bold</item>
+    <item name="fontPath">@string/gothamRoundedBoldFont</item>
   </style>
 
   <style name="D.Base.Transactions.Label.PaymentMethodChooser.Secondary">
@@ -799,7 +818,7 @@
     <item name="android:textAllCaps">true</item>
     <item name="android:textColor">@color/d_primary</item>
     <item name="android:textSize">14sp</item>
-    <item name="fontPath">@string/font_gothamRounded_bold</item>
+    <item name="fontPath">@string/gothamRoundedBoldFont</item>
   </style>
 
   <style name="Dep.Base.Widget"/>
@@ -1217,7 +1236,7 @@
     parent="Dep.Base.Text.Bank.Name"/>
 
   <style name="Dep.App.Text.Bank.Name.Bold">
-    <item name="fontPath">@string/font_gothamRounded_bold</item>
+    <item name="fontPath">@string/gothamRoundedBoldFont</item>
   </style>
 
   <style
@@ -1304,7 +1323,7 @@
     parent="TextAppearance.Design.Tab">
     <item name="android:textColor">#666</item>
     <item name="android:textSize">10sp</item>
-    <item name="fontPath">@string/font_gothamRounded_bold</item>
+    <item name="fontPath">@string/gothamRoundedBoldFont</item>
   </style>
 
   <style

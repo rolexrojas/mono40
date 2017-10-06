@@ -148,7 +148,7 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
   public void setProfilePictureUri(String uri) {
     Picasso.with(this.getContext())
       .load(uri)
-      .resizeDimen(R.dimen.largeProfilePictureSize, R.dimen.largeProfilePictureSize)
+      .resizeDimen(R.dimen.largeImageSize, R.dimen.largeImageSize)
       .transform(new CircleTransformation())
       .into(this.pictureImageView);
   }

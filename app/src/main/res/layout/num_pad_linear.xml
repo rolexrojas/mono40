@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  style="@style/NumPad.Dark"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@drawable/d_container_background_dark">
+
+  <LinearLayout style="@style/NumPadRow">
+
+    <Button
+      android:id="@+id/digitOneNumPadButton"
+      style="@style/TextNumPadButton"
+      android:text="1"/>
+
+    <Button
+      android:id="@+id/digitTwoNumPadButton"
+      style="@style/TextNumPadButton"
+      android:text="2"/>
+
+    <Button
+      android:id="@+id/digitThreeNumPadButton"
+      style="@style/TextNumPadButton"
+      android:text="3"/>
+  </LinearLayout>
+
+  <LinearLayout style="@style/NumPadRow">
+
+    <Button
+      android:id="@+id/digitFourNumPadButton"
+      style="@style/TextNumPadButton"
+      android:text="4"/>
+
+    <Button
+      android:id="@+id/digitFiveNumPadButton"
+      style="@style/TextNumPadButton"
+      android:text="5"/>
+
+    <Button
+      android:id="@+id/digitSixNumPadButton"
+      style="@style/TextNumPadButton"
+      android:text="6"/>
+  </LinearLayout>
+
+  <LinearLayout style="@style/NumPadRow">
+
+    <Button
+      android:id="@+id/digitSevenNumPadButton"
+      style="@style/TextNumPadButton"
+      android:text="7"/>
+
+    <Button
+      android:id="@+id/digitEightNumPadButton"
+      style="@style/TextNumPadButton"
+      android:text="8"/>
+
+    <Button
+      android:id="@+id/digitNineNumPadButton"
+      style="@style/TextNumPadButton"
+      android:text="9"/>
+  </LinearLayout>
+
+  <LinearLayout style="@style/NumPadRow">
+
+    <Button
+      android:id="@+id/dotNumPadButton"
+      style="@style/TextNumPadButton"
+      android:text="."/>
+
+    <Button
+      android:id="@+id/digitZeroNumPadButton"
+      style="@style/TextNumPadButton"
+      android:text="0"/>
+
+    <ImageButton
+      android:id="@+id/deleteNumPadButton"
+      style="@style/ImageNumPadButton"/>
+  </LinearLayout>
+</LinearLayout>

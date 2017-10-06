@@ -49,7 +49,7 @@ final class SettingsPresenter extends Presenter<SettingsPresentation> {
     final AltAuthMethod method = this.altAuthMethodManager.getActiveMethod();
     final int altAuthMethodStringId;
     if (ObjectHelper.isNull(method)) {
-      altAuthMethodStringId = R.string.usePassword;
+      altAuthMethodStringId = R.string.noneUsePassword;
     } else {
       altAuthMethodStringId = method.stringId;
     }

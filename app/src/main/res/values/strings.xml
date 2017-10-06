@@ -21,24 +21,29 @@
   <string name="changeMyPassword">Cambiar mi contraseña</string>
   <string name="chooseAnAlternativeAuthenticationMethod">Para tu seguridad requerimos bloquear el App. Selecciona entre estas opciones para iniciar de manera rápida.</string>
   <string name="confirmCodeForAltAuth">Confirma código para desbloqueo rápido</string>
+  <string name="forgotMyCode">Olvidé mi código</string>
   <string name="inputCodeForAltAuth">Ingresa código para desbloqueo rápido</string>
   <string name="lockOnExitSettingsOption">Bloquear al salir</string>
   <string name="myProfile">Mi perfil</string>
+  <string name="noneUsePassword">Ninguno, utilizar contraseña</string>
   <string name="pinSettingsOption">Cambiar PIN tPago</string>
   <string name="primaryPaymentMethodSettingsOption">Cuenta de fondos primaria</string>
   <string name="profileSettingsOption">Editar mi perfil</string>
   <string name="signOut">Desvincular dispositivo</string>
   <string name="timeoutSettingsOption">Bloquear automáticamente</string>
-  <string name="usePassword">Ninguno, utilizar contraseña</string>
+  <string name="unlockWithFingerprint">Desbloquea con huella digital</string>
+  <string name="usePassword">Usar contraseña</string>
   <string name="weAreSorry">¡Lo sentimos!</string>
+  <string name="welcomeUser">¡Bienvenido, %1$s!</string>
 
   <!-- Fonts -->
-  <string name="font_gothamRounded_bold">fonts/GothamRounded/Bold.otf</string>
-  <string name="gothamRoundedBookFont">fonts/GothamRounded/Book.otf</string>
   <string name="font_gothamRounded_light">fonts/GothamRounded/Light.otf</string>
-  <string name="gothamRoundedMediumFont">fonts/GothamRounded/Medium.otf</string>
   <string name="font_roboto_medium">fonts/Roboto/Medium.ttf</string>
   <string name="font_roboto_regular">fonts/Roboto/Regular.ttf</string>
+  <string name="gothamRoundedBoldFont">fonts/GothamRounded/Bold.otf</string>
+  <string name="gothamRoundedBookFont">fonts/GothamRounded/Book.otf</string>
+  <string name="gothamRoundedBookItalicFont">fonts/GothamRounded/BookItalic.otf</string>
+  <string name="gothamRoundedMediumFont">fonts/GothamRounded/Medium.otf</string>
 
   <!-- TODO: Remove every string from this point downwards -->
   <string name="about">Acerca de</string>

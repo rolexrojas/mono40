@@ -44,7 +44,7 @@
       <com.tpago.movil.app.ui.main.settings.SelectableSettingsOption
         android:id="@+id/noneOption"
         style="@style/SettingsOption"
-        app:primaryText="@string/usePassword"/>
+        app:primaryText="@string/noneUsePassword"/>
     </LinearLayout>
   </ScrollView>
 </LinearLayout>

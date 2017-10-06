@@ -159,8 +159,8 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
       this.view.showPasswordTextInputAsErratic(!this.isPasswordTextInputContentValid);
 
       final AlertData data = AlertData.builder(this.stringMapper)
-        .title(R.string.incorrectCredentials)
-        .message(R.string.bothUsernameAndPasswordAreRequired)
+        .title(R.string.register_form_password_error_title)
+        .message(R.string.register_form_password_error_message)
         .build();
       this.alertManager.show(data);
     }

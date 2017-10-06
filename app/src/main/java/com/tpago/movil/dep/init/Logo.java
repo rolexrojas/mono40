@@ -29,6 +29,7 @@ import io.reactivex.functions.Consumer;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class Logo extends FrameLayout {
   private static final long FRAME_DURATION = 2000L;
 

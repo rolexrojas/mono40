@@ -51,7 +51,8 @@ public abstract class FailureData {
     Code.INVALID_PIN,
     Code.UNASSOCIATED_PHONE_NUMBER,
     Code.UNASSOCIATED_PROFILE,
-    Code.UNAVAILABLE_SERVICE
+    Code.UNAVAILABLE_SERVICE,
+    Code.INCORRECT_CODE
   })
   @Retention(RetentionPolicy.SOURCE)
   public @interface Code {
@@ -69,6 +70,8 @@ public abstract class FailureData {
     int UNASSOCIATED_PHONE_NUMBER = 216;
     int UNASSOCIATED_PROFILE = 144;
     int UNAVAILABLE_SERVICE = 14;
+
+    int INCORRECT_CODE = 7000;
   }
 
   @AutoValue.Builder

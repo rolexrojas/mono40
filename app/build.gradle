@@ -169,6 +169,10 @@ repositories {
   jcenter()
 
   maven {
+    url 'https://maven.google.com'
+  }
+
+  maven {
     url 'https://maven.fabric.io/public'
   }
 
@@ -247,6 +251,8 @@ dependencies {
   compile "${supportLibraryGroupId}:percent:${supportLibraryVersion}"
   compile "${supportLibraryGroupId}:recyclerview-v7:${supportLibraryVersion}"
   compile "${supportLibraryGroupId}:multidex:1.0.1"
+
+  compile "${supportLibraryGroupId}.constraint:constraint-layout:1.0.2"
 
   compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
 

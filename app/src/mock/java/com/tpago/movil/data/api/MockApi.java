@@ -120,7 +120,7 @@ final class MockApi implements Api {
     final boolean isNull = ObjectHelper.isNull(this.altAuthMethodPublicKeyReference.get());
     if (isSet && isNull) {
       final PublicKey publicKey = KeyFactory
-        .getInstance(this.altAuthMethodConfigData.signAlgName())
+        .getInstance(this.altAuthMethodConfigData.keyGenAlgName())
         .generatePublic(
           new X509EncodedKeySpec(
             Base64.decode(

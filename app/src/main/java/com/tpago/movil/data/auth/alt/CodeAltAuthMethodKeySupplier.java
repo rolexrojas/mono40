@@ -39,7 +39,7 @@ public final class CodeAltAuthMethodKeySupplier implements AltAuthMethodKeySuppl
       return Result.create(privateKey);
     } else {
       final FailureData failureData = FailureData.builder()
-        .code(FailureCode.UNAUTHORIZED)
+        .code(FailureData.Code.INCORRECT_CODE)
         .build();
       return Result.create(failureData);
     }

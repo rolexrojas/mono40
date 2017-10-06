@@ -1,5 +1,6 @@
 package com.tpago.movil.dep.init;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import com.tpago.movil.dep.BaseActivity;
 import com.tpago.movil.app.ui.FragmentReplacer;
 import com.tpago.movil.dep.graphics.RadialGradientDrawable;
 import com.tpago.movil.dep.Objects;
+import com.tpago.movil.util.ObjectHelper;
 
 import javax.inject.Inject;
 
@@ -24,10 +26,19 @@ import butterknife.BindView;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class InitActivity extends BaseActivity implements InitContainer {
 
   public static Intent getLaunchIntent(Context context) {
     return new Intent(context, InitActivity.class);
+  }
+
+  public static InitActivity get(Activity activity) {
+    ObjectHelper.checkNotNull(activity, "activity");
+    if (!(activity instanceof InitActivity)) {
+      throw new ClassCastException("!(activity instanceof DepMainActivity)");
+    }
+    return (InitActivity) activity;
   }
 
   private InitComponent component;

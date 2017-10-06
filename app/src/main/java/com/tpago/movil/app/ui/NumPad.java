@@ -65,9 +65,6 @@ public final class NumPad extends LinearLayout {
 
     array.recycle();
 
-    // Sets its orientation.
-    this.setOrientation(VERTICAL);
-
     // Inflates its layout.
     LayoutInflater.from(context)
       .inflate(R.layout.num_pad, this);

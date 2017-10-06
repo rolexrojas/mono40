@@ -3,27 +3,25 @@ package com.tpago.movil.dep.init;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 
-import com.tpago.movil.R;
+import com.tpago.movil.app.ui.AlertData;
+import com.tpago.movil.app.ui.AlertManager;
+import com.tpago.movil.app.ui.init.unlock.UnlockFragment;
 import com.tpago.movil.app.ui.ActivityQualifier;
 import com.tpago.movil.app.ui.FragmentReplacer;
+import com.tpago.movil.data.StringMapper;
 import com.tpago.movil.dep.Permissions;
 import com.tpago.movil.d.domain.InitialDataLoader;
 import com.tpago.movil.d.ui.main.DepMainActivity;
 import com.tpago.movil.dep.init.intro.IntroFragment;
-import com.tpago.movil.dep.init.unlock.UnlockFragment;
 import com.tpago.movil.session.SessionManager;
 
 import javax.inject.Inject;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
@@ -39,9 +37,9 @@ public final class InitFragment extends BaseInitFragment {
 
   @Inject SessionManager sessionManager;
 
-  @Inject
-  @ActivityQualifier
-  FragmentReplacer fragmentReplacer;
+  @Inject StringMapper stringMapper;
+  @Inject AlertManager alertManager;
+  @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
 
   @Inject LogoAnimator logoAnimator;
   @Inject InitialDataLoader initialDataLoader;
@@ -50,6 +48,22 @@ public final class InitFragment extends BaseInitFragment {
 
   public static InitFragment create() {
     return new InitFragment();
+  }
+
+  private void resetAndStartLogoAnimator() {
+    this.logoAnimator.reset();
+    this.logoAnimator.start();
+  }
+
+  private void handleSuccess() {
+    final Activity activity = this.getActivity();
+    activity.startActivity(DepMainActivity.getLaunchIntent(activity));
+    activity.finish();
+  }
+
+  private void handleError(Throwable throwable) {
+    Timber.e(throwable, "Loading initial data");
+    this.alertManager.show(AlertData.createForGenericFailure(this.stringMapper));
   }
 
   private void resolve() {
@@ -65,41 +79,8 @@ public final class InitFragment extends BaseInitFragment {
       this.subscription = this.initialDataLoader.load()
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe(new Action1<Subscription>() {
-          @Override
-          public void call(Subscription subscription) {
-            logoAnimator.reset();
-            logoAnimator.start();
-          }
-        })
-        .subscribe(new Action0() {
-          @Override
-          public void call() {
-            final Activity activity = getActivity();
-            activity.startActivity(DepMainActivity.getLaunchIntent(activity));
-            activity.finish();
-          }
-        }, new Action1<Throwable>() {
-          @Override
-          public void call(Throwable throwable) {
-            Timber.e(throwable, "Loading initial value");
-            final Activity activity = getActivity();
-            new AlertDialog.Builder(activity)
-              .setTitle(R.string.error_generic_title)
-              .setMessage(R.string.error_generic)
-              .setPositiveButton(
-                R.string.error_positive_button_text,
-                new DialogInterface.OnClickListener() {
-                  @Override
-                  public void onClick(DialogInterface dialog, int which) {
-                    activity.finish();
-                  }
-                }
-              )
-              .create()
-              .show();
-          }
-        });
+        .doOnSubscribe((s) -> this.resetAndStartLogoAnimator())
+        .subscribe(this::handleSuccess, this::handleError);
     }
   }
 
@@ -119,7 +100,7 @@ public final class InitFragment extends BaseInitFragment {
     final Context context = getContext();
     if (Permissions.checkIfGranted(context, Manifest.permission.READ_PHONE_STATE)
       && Permissions.checkIfGranted(context, Manifest.permission.READ_SMS)) {
-      resolve();
+      this.resolve();
     } else if (!werePermissionsRequested) {
       werePermissionsRequested = true;
       Permissions.requestPermissions(
