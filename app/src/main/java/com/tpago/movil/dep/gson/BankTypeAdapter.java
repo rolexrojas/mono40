@@ -21,7 +21,7 @@ import static com.tpago.movil.dep.Preconditions.assertNotNull;
 final class BankTypeAdapter extends TypeAdapter<Bank> {
   private static final String PROPERTY_CODE = "bank-code";
   private static final String PROPERTY_ID = "bank-id";
-  private static final String PROPERTY_NAME = "bank-updateName";
+  private static final String PROPERTY_NAME = "bank-name";
   private static final String PROPERTY_LOGO_URI_TEMPLATE = "bank-logo-uri";
 
   private final AssetUriBuilder assetUriBuilder;
