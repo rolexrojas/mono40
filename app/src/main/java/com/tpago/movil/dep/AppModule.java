@@ -12,7 +12,6 @@ import com.tpago.movil.d.DepAppModule;
 import com.tpago.movil.dep.api.ApiModule;
 import com.tpago.movil.d.data.DepDataModule;
 import com.tpago.movil.d.domain.DomainModule;
-import com.tpago.movil.dep.gson.GsonModule;
 import com.tpago.movil.dep.net.NetModule;
 
 import javax.inject.Singleton;
@@ -32,7 +31,6 @@ import dagger.Provides;
     DepAppModule.class,
     DepDataModule.class,
     DomainModule.class,
-    GsonModule.class,
     NetModule.class
   }
 )

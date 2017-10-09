@@ -1,4 +1,4 @@
-package com.tpago.movil.dep.gson;
+package com.tpago.movil.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -10,6 +10,7 @@ import com.tpago.movil.d.data.api.ProductTypeAdapter;
 import com.tpago.movil.d.data.api.RecipientTypeAdapter;
 import com.tpago.movil.d.domain.AccountBalance;
 import com.tpago.movil.d.domain.Balance;
+import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.CreditCardBalance;
 import com.tpago.movil.d.domain.InitialData;
@@ -19,9 +20,7 @@ import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.api.ApiError;
-import com.tpago.movil.data.gson.PlaceholderTypeAdapter;
 import com.tpago.movil.dep.data.AssetUriBuilder;
-import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.util.Placeholder;
 
 import javax.inject.Singleton;
@@ -32,12 +31,12 @@ import dagger.Provides;
 /**
  * @author hecvasro
  */
-@Deprecated
 @Module
 public final class GsonModule {
+
   @Provides
   @Singleton
-  Gson provideGson(AssetUriBuilder assetUriBuilder) {
+  Gson gson(AssetUriBuilder assetUriBuilder) {
     final TypeAdapter<Bank> bankTypeAdapter = new BankTypeAdapter(assetUriBuilder);
 
     return new GsonBuilder()
@@ -55,7 +54,7 @@ public final class GsonModule {
       .registerTypeAdapter(PhoneNumberRecipient.class, new RecipientTypeAdapter())
       .registerTypeAdapter(NonAffiliatedPhoneNumberRecipient.class, new RecipientTypeAdapter())
       .registerTypeAdapter(BillRecipient.class, new RecipientTypeAdapter())
-      .registerTypeAdapterFactory(DecoratedGeneratedTypeAdapterFactory.create())
+      .registerTypeAdapterFactory(DecoratedAutoValueTypeAdapterFactory.create())
       .create();
   }
 }

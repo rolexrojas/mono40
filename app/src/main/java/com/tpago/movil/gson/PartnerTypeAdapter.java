@@ -1,37 +1,38 @@
-package com.tpago.movil.data.gson;
+package com.tpago.movil.gson;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.tpago.movil.domain.company.LogoUriMapper;
-import com.tpago.movil.domain.product.Bank;
+import com.tpago.movil.domain.payment.Partner;
 
 import java.io.IOException;
 
 /**
- * {@link TypeAdapter Adapter} implementation that transforms {@link Bank banks} to and from JSON.
+ * {@link TypeAdapter Adapter} implementation that transforms {@link Partner partners} to and from
+ * JSON.
  *
  * @author hecvasro
  */
-public class BankTypeAdapter extends TypeAdapter<Bank> {
+public class PartnerTypeAdapter extends TypeAdapter<Partner> {
 
-  public static BankTypeAdapter create(LogoUriMapper logoUriMapper) {
+  public static PartnerTypeAdapter create(LogoUriMapper logoUriMapper) {
     throw new UnsupportedOperationException("not implemented");
   }
 
   private final LogoUriMapper logoUriMapper;
 
-  private BankTypeAdapter() {
+  private PartnerTypeAdapter() {
     throw new UnsupportedOperationException("not implemented");
   }
 
   @Override
-  public Bank read(JsonReader reader) throws IOException {
+  public Partner read(JsonReader reader) throws IOException {
     throw new UnsupportedOperationException("not implemented");
   }
 
   @Override
-  public void write(JsonWriter writer, Bank bank) throws IOException {
+  public void write(JsonWriter writer, Partner bank) throws IOException {
     throw new UnsupportedOperationException("not implemented");
   }
 }

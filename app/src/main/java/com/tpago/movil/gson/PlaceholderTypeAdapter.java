@@ -1,4 +1,4 @@
-package com.tpago.movil.data.gson;
+package com.tpago.movil.gson;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;

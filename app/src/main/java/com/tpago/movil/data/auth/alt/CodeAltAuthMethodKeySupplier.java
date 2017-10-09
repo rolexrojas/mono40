@@ -1,6 +1,7 @@
 package com.tpago.movil.data.auth.alt;
 
 import com.tpago.movil.Code;
+import com.tpago.movil.api.Api;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodKeySupplier;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.FailureData;
@@ -39,7 +40,7 @@ public final class CodeAltAuthMethodKeySupplier implements AltAuthMethodKeySuppl
       return Result.create(privateKey);
     } else {
       final FailureData failureData = FailureData.builder()
-        .code(FailureData.Code.INCORRECT_CODE)
+        .code(Api.FailureCode.INCORRECT_CODE)
         .build();
       return Result.create(failureData);
     }

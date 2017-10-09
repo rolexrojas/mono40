@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.R;
+import com.tpago.movil.api.Api;
 import com.tpago.movil.app.ui.ActivityQualifier;
 import com.tpago.movil.app.ui.AlertData;
 import com.tpago.movil.app.ui.AlertManager;
@@ -60,7 +61,7 @@ public abstract class BaseUnlockFragment extends BaseFragment {
       String message = failureData.description();
 
       final int code = failureData.code();
-      if (code == FailureData.Code.INCORRECT_CODE) {
+      if (code == Api.FailureCode.INCORRECT_CODE) {
         title = "Código incorrecto";
         message = "El código introducido no coincide con el código utilizado durante la configuración del desbloqueo rápido.";
       }

@@ -4,6 +4,7 @@ import com.tpago.movil.Email;
 import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
+import com.tpago.movil.api.Api;
 import com.tpago.movil.app.ui.AlertData;
 import com.tpago.movil.app.ui.AlertManager;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
@@ -15,7 +16,6 @@ import com.tpago.movil.dep.init.InitData;
 import com.tpago.movil.reactivex.DisposableHelper;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.user.User;
-import com.tpago.movil.util.FailureData;
 import com.tpago.movil.util.ObjectHelper;
 
 import javax.inject.Inject;
@@ -115,7 +115,7 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
       final com.tpago.movil.util.FailureData failureData = result.failureData();
 
       final AlertData.Builder dataBuilder = AlertData.builder(this.stringMapper);
-      if (failureData.code() == FailureData.Code.ALREADY_ASSOCIATED_DEVICE) {
+      if (failureData.code() == Api.FailureCode.ALREADY_ASSOCIATED_DEVICE) {
         dataBuilder
           .title(R.string.dialog_title_already_associated_device)
           .message(R.string.dialog_message_already_associated_device)

@@ -48,12 +48,38 @@ public interface Api {
   Completable disableAltAuthMethod();
 
   @IntDef({
-    FailureCode.UNEXPECTED
+    FailureCode.ALREADY_ASSOCIATED_DEVICE,
+    FailureCode.ALREADY_ASSOCIATED_PROFILE,
+    FailureCode.ALREADY_REGISTERED_EMAIL,
+    FailureCode.ALREADY_REGISTERED_USERNAME,
+    FailureCode.INCORRECT_USERNAME_AND_PASSWORD,
+    FailureCode.INVALID_DEVICE_ID,
+    FailureCode.INVALID_EMAIL,
+    FailureCode.INVALID_PASSWORD,
+    FailureCode.INVALID_PHONE_NUMBER,
+    FailureCode.INVALID_PIN,
+    FailureCode.UNASSOCIATED_PHONE_NUMBER,
+    FailureCode.UNASSOCIATED_PROFILE,
+    FailureCode.UNAVAILABLE_SERVICE,
+    FailureCode.INCORRECT_CODE
   })
   @Retention(RetentionPolicy.SOURCE)
   @interface FailureCode {
 
-    int UNAUTHORIZED = 401;
-    int UNEXPECTED = 500;
+    int ALREADY_ASSOCIATED_DEVICE = 112;
+    int ALREADY_ASSOCIATED_PROFILE = 12;
+    int ALREADY_REGISTERED_EMAIL = 55;
+    int ALREADY_REGISTERED_USERNAME = 21;
+    int INCORRECT_USERNAME_AND_PASSWORD = 4;
+    int INVALID_DEVICE_ID = 9;
+    int INVALID_EMAIL = 0;
+    int INVALID_PASSWORD = 1618;
+    int INVALID_PHONE_NUMBER = 13;
+    int INVALID_PIN = 16;
+    int UNASSOCIATED_PHONE_NUMBER = 216;
+    int UNASSOCIATED_PROFILE = 144;
+    int UNAVAILABLE_SERVICE = 14;
+
+    int INCORRECT_CODE = 7000;
   }
 }
