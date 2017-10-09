@@ -11,6 +11,7 @@ import com.tpago.movil.Email;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.user.User;
 import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.util.StringHelper;
 
 import java.io.IOException;
 
@@ -25,6 +26,9 @@ final class UserTypeAdapter extends TypeAdapter<User> {
   private static final String PROPERTY_NAME_FIRST_NAME = "name";
   private static final String PROPERTY_NAME_LAST_NAME = "last-name";
   private static final String PROPERTY_NAME_PICTURE_URI = "profilePicUrl";
+
+  private static final String PROPERTY_DEFAULT_FIRST_NAME = "Usuario";
+  private static final String PROPERTY_DEFAULT_LAST_NAME = "tPago";
 
   static UserTypeAdapter create(Gson gson) {
     return new UserTypeAdapter(gson);
@@ -67,10 +71,18 @@ final class UserTypeAdapter extends TypeAdapter<User> {
             builder.email(this.emailTypeAdapter.read(reader));
             break;
           case PROPERTY_NAME_FIRST_NAME:
-            builder.firstName(this.stringTypeAdapter.read(reader));
+            String firstName = this.stringTypeAdapter.read(reader);
+            if (StringHelper.isNullOrEmpty(firstName)) {
+              firstName = PROPERTY_DEFAULT_FIRST_NAME;
+            }
+            builder.firstName(firstName);
             break;
           case PROPERTY_NAME_LAST_NAME:
-            builder.lastName(this.stringTypeAdapter.read(reader));
+            String lastName = this.stringTypeAdapter.read(reader);
+            if (StringHelper.isNullOrEmpty(lastName)) {
+              lastName = PROPERTY_DEFAULT_LAST_NAME;
+            }
+            builder.lastName(lastName);
             break;
           case PROPERTY_NAME_PICTURE_URI:
             builder.pictureUri(this.uriTypeAdapter.read(reader));

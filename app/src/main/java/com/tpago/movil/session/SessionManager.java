@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Completable;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.functions.Action;
 
@@ -33,6 +34,7 @@ public final class SessionManager {
   private final Api api;
   private final UserStore userStore;
 
+  private final List<Action> closeActionList;
   private final List<Action> clearActionList;
 
   private SessionManager(Builder builder) {
@@ -40,7 +42,13 @@ public final class SessionManager {
     this.api = builder.api;
     this.userStore = builder.userStore;
 
-    this.clearActionList = builder.clearActionList;
+    this.closeActionList = new ArrayList<>();
+    this.closeActionList.add(this.accessTokenStore::clear);
+    this.closeActionList.addAll(builder.closeActionList);
+
+    this.clearActionList = new ArrayList<>();
+    this.clearActionList.add(this.userStore::clear);
+    this.clearActionList.addAll(builder.clearActionList);
   }
 
   private void checkUserIsSet() {
@@ -67,20 +75,9 @@ public final class SessionManager {
     }
   }
 
-  private void initUser(User user) {
-    // TODO: Add name consumer that updates the API.
-    // TODO: Add picture consumer that updates the API.
-    // TODO: Add carrier consumer that updates the API.
-  }
-
-  private void setUser(User user) {
-    this.userStore.set(user);
-    this.initUser(user);
-  }
-
   private void handleInitSuccess(Result<User> result) {
     if (result.isSuccessful()) {
-      this.setUser(result.successData());
+      this.userStore.set(result.successData());
     }
   }
 
@@ -153,20 +150,20 @@ public final class SessionManager {
     return this.accessTokenStore.isSet();
   }
 
-  public final void closeSession() {
+  public final Completable closeSession() {
     this.checkUserIsSet();
     this.checkSessionIsOpen();
 
-    this.userStore.clear();
-    this.accessTokenStore.clear();
+    return Observable.fromIterable(this.closeActionList)
+      .flatMapCompletable(Completable::fromAction);
   }
 
   public final Completable clear() {
-    Completable completable = Completable.fromAction(this::closeSession);
-    for (Action clearAction : this.clearActionList) {
-      completable = completable.doOnComplete(clearAction);
-    }
-    return completable;
+    return this.closeSession()
+      .concatWith(
+        Observable.fromIterable(this.clearActionList)
+          .flatMapCompletable(Completable::fromAction)
+      );
   }
 
   static final class Builder {
@@ -175,9 +172,11 @@ public final class SessionManager {
     private Api api;
     private UserStore userStore;
 
+    private List<Action> closeActionList;
     private List<Action> clearActionList;
 
     private Builder() {
+      this.closeActionList = new ArrayList<>();
       this.clearActionList = new ArrayList<>();
     }
 
@@ -193,6 +192,14 @@ public final class SessionManager {
 
     final Builder userStore(UserStore userStore) {
       this.userStore = ObjectHelper.checkNotNull(userStore, "userStore");
+      return this;
+    }
+
+    final Builder addCloseAction(Action closeAction) {
+      ObjectHelper.checkNotNull(closeAction, "closeAction");
+      if (!this.closeActionList.contains(closeAction)) {
+        this.closeActionList.add(closeAction);
+      }
       return this;
     }
 

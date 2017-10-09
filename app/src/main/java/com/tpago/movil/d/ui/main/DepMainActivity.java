@@ -283,7 +283,8 @@ public class DepMainActivity
           .commit();
         break;
       case R.id.main_menuItem_exit:
-        this.sessionManager.closeSession();
+        this.sessionManager.closeSession()
+          .blockingAwait();
 
         this.startActivity(InitActivity.getLaunchIntent(this));
         this.finish();
