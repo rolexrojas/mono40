@@ -1,5 +1,6 @@
 package com.tpago.movil.session;
 
+import com.tpago.movil.Code;
 import com.tpago.movil.Email;
 import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
@@ -14,7 +15,6 @@ import com.tpago.movil.util.Result;
 import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
@@ -34,8 +34,6 @@ public final class SessionManager {
   private final UserStore userStore;
 
   private final List<Action> clearActionList;
-
-  private AtomicReference<User> userReference = new AtomicReference<>();
 
   private SessionManager(Builder builder) {
     this.accessTokenStore = builder.accessTokenStore;
@@ -69,17 +67,15 @@ public final class SessionManager {
     }
   }
 
-  private void setUserReference(User user) {
+  private void initUser(User user) {
     // TODO: Add name consumer that updates the API.
     // TODO: Add picture consumer that updates the API.
     // TODO: Add carrier consumer that updates the API.
-
-    this.userReference.set(user);
   }
 
   private void setUser(User user) {
     this.userStore.set(user);
-    this.setUserReference(user);
+    this.initUser(user);
   }
 
   private void handleInitSuccess(Result<User> result) {
@@ -91,16 +87,26 @@ public final class SessionManager {
   public final Single<Result<User>> init(
     PhoneNumber phoneNumber,
     Email email,
+    String firstName,
+    String lastName,
+    Password password,
+    Code pin,
+    String deviceId
+  ) {
+    this.checkUserIsNotSet();
+
+    return this.api.signUp(phoneNumber, email, firstName, lastName, password, pin, deviceId)
+      .doOnSuccess(this::handleInitSuccess);
+  }
+
+  public final Single<Result<User>> init(
+    PhoneNumber phoneNumber,
+    Email email,
     Password password,
     String deviceId,
     boolean shouldDeactivatePreviousDevice
   ) {
     this.checkUserIsNotSet();
-
-    ObjectHelper.checkNotNull(phoneNumber, "phoneNumber");
-    ObjectHelper.checkNotNull(email, "email");
-    ObjectHelper.checkNotNull(password, "password");
-    ObjectHelper.checkNotNull(deviceId, "deviceId");
 
     return this.api.signIn(phoneNumber, email, password, deviceId, shouldDeactivatePreviousDevice)
       .doOnSuccess(this::handleInitSuccess);
@@ -113,12 +119,7 @@ public final class SessionManager {
   public final User getUser() {
     this.checkUserIsSet();
 
-    User user = this.userReference.get();
-    if (ObjectHelper.isNull(user)) {
-      user = this.userStore.get();
-      this.setUserReference(user);
-    }
-    return user;
+    return this.userStore.get();
   }
 
   private Result<Placeholder> handleOpenSessionResult(Result<?> result) {
@@ -133,23 +134,16 @@ public final class SessionManager {
   }
 
   public final Single<Result<Placeholder>> openSession(Password password, String deviceId) {
-    final User user = this.getUser();
-
-    ObjectHelper.checkNotNull(password, "password");
-    ObjectHelper.checkNotNull(deviceId, "deviceId");
-
+    this.checkUserIsSet();
     this.checkSessionIsNotOpen();
 
+    final User user = this.getUser();
     return this.api.signIn(user.phoneNumber(), user.email(), password, deviceId, false)
       .map(this::handleOpenSessionResult);
   }
 
   public final Single<Result<Placeholder>> openSession(PrivateKey privateKey, String deviceId) {
-    final User user = this.getUser();
-
-    ObjectHelper.checkNotNull(privateKey, "privateKey");
-    ObjectHelper.checkNotNull(deviceId, "deviceId");
-
+    this.checkUserIsSet();
     this.checkSessionIsNotOpen();
 
     return Single.error(new UnsupportedOperationException("not implemented"));
@@ -163,6 +157,7 @@ public final class SessionManager {
     this.checkUserIsSet();
     this.checkSessionIsOpen();
 
+    this.userStore.clear();
     this.accessTokenStore.clear();
   }
 

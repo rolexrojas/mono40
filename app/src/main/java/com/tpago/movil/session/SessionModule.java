@@ -34,8 +34,12 @@ public final class SessionModule {
       .api(api)
       .userStore(userStore)
       .addClearAction(
-        () -> altAuthMethodManager.disable()
-          .blockingAwait()
+        () -> {
+          if (altAuthMethodManager.isEnabled()) {
+            altAuthMethodManager.disable()
+              .blockingAwait();
+          }
+        }
       )
       .build();
   }

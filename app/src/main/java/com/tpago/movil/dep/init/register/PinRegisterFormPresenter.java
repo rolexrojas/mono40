@@ -4,7 +4,6 @@ import com.tpago.movil.Code;
 import com.tpago.movil.Email;
 import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
-import com.tpago.movil.api.Api;
 import com.tpago.movil.app.ui.AlertData;
 import com.tpago.movil.app.ui.AlertManager;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
@@ -21,7 +20,6 @@ import com.tpago.movil.util.ObjectHelper;
 
 import javax.inject.Inject;
 
-import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -33,7 +31,6 @@ import timber.log.Timber;
 public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPresenter.View> {
 
   @Inject AlertManager alertManager;
-  @Inject Api api;
   @Inject DeviceIdSupplier deviceIdSupplier;
   @Inject RegisterData registerData;
   @Inject SessionManager sessionManager;
@@ -83,7 +80,7 @@ public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPre
       final Code pin = this.pinCreator.create();
       final String deviceId = this.deviceIdSupplier.get();
 
-      this.disposable = this.api.signUp(
+      this.disposable = this.sessionManager.init(
         phoneNumber,
         email,
         firstName,
@@ -93,19 +90,9 @@ public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPre
         deviceId
       )
         .subscribeOn(Schedulers.io())
-        .flatMap((result) -> {
-          if (result.isSuccessful()) {
-            return this.sessionManager.init(phoneNumber, email, password, deviceId, false);
-          } else {
-            return Single.just(result);
-          }
-        })
         .doOnSuccess((result) -> {
           if (result.isSuccessful()) {
-            final User user = result.successData();
-
-            user.updateName(this.registerData.getFirstName(), this.registerData.getLastName());
-            // TODO: Update picture.
+            // TODO: Set and upload picture.
           }
         })
         .observeOn(AndroidSchedulers.mainThread())
