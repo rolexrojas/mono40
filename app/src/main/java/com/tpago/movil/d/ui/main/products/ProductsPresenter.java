@@ -111,9 +111,7 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
 
   void queryBalance(@NonNull final Product product, @NonNull final String pin) {
     assertScreen();
-    if (balanceManager.hasValidBalance(product)) {
-      screen.setBalance(product, balanceManager.getBalance(product));
-    } else if (Utils.isNotNull(compositeSubscription)) {
+    if (Utils.isNotNull(compositeSubscription)) {
       final Subscription subscription = Single
         .defer(new Callable<Single<Result<Pair<Long, Balance>, ErrorCode>>>() {
           @Override

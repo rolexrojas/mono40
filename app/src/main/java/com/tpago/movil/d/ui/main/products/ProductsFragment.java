@@ -58,6 +58,7 @@ public class ProductsFragment
   ListItemHolder.OnClickListener,
   ProductListItemHolder.OnQueryBalanceButtonPressedListener,
   ShowRecentTransactionsListItemHolder.OnShowRecentTransactionsButtonClickedListener {
+
   private Unbinder unbinder;
   private ListItemAdapter adapter;
   private LoadIndicator loadIndicator;
@@ -90,7 +91,8 @@ public class ProductsFragment
         }
       },
       x,
-      y);
+      y
+    );
   }
 
   @OnClick(R.id.button_add_another_account)
@@ -111,8 +113,10 @@ public class ProductsFragment
 
   @Nullable
   @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+  public View onCreateView(
+    LayoutInflater inflater, @Nullable ViewGroup container,
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(R.layout.d_fragment_products, container, false);
   }
 
@@ -126,16 +130,19 @@ public class ProductsFragment
       .Builder()
       .addCreator(
         ShowRecentTransactionsItem.class,
-        new ShowRecentTransactionsListItemHolderCreator(this))
+        new ShowRecentTransactionsListItemHolderCreator(this)
+      )
       .addCreator(
         ProductItem.class,
-        new ProductListItemHolderCreator(this, this))
+        new ProductListItemHolderCreator(this, this)
+      )
       .build();
     final BinderFactory holderBinderFactory = new BinderFactory.Builder()
       .addBinder(
         ProductItem.class,
         ProductListItemHolder.class,
-        new ProductListItemHolderBinder(stringHelper))
+        new ProductListItemHolderBinder(stringHelper)
+      )
       .build();
     adapter = new ListItemAdapter(holderCreatorFactory, holderBinderFactory);
     recyclerView.setAdapter(adapter);
@@ -143,7 +150,8 @@ public class ProductsFragment
     recyclerView.setItemAnimator(null);
     final Context context = getContext();
     final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context,
-      LinearLayoutManager.VERTICAL, false) {
+      LinearLayoutManager.VERTICAL, false
+    ) {
       @Override
       public void onLayoutCompleted(RecyclerView.State state) {
         super.onLayoutCompleted(state);
@@ -160,7 +168,8 @@ public class ProductsFragment
             addAnotherAccountButton.setEnabled(flag);
             addAnotherAccountButton.setVisibility(flag ? View.VISIBLE : View.INVISIBLE);
             Timber.d("RecyclerView.LastChild.Bottom (%1$d) < Button.Top (%2$d) = %3$s",
-              lastChildBottom, buttonTop, flag);
+              lastChildBottom, buttonTop, flag
+            );
           }
         }
       }
@@ -264,7 +273,8 @@ public class ProductsFragment
 
   @Override
   public void showUnavailableNetworkError() {
-    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG).show();
+    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG)
+      .show();
   }
 
   @Nullable
@@ -282,7 +292,8 @@ public class ProductsFragment
     queryBalance(
       ((ProductItem) adapter.get(position)).getProduct(),
       location[0],
-      location[1]);
+      location[1]
+    );
   }
 
   @Override
