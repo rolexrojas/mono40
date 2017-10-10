@@ -114,7 +114,7 @@ public final class PasswordUnlockFragment extends BaseUnlockFragment {
   public void onPause() {
     this.userPasswordTextInput.setOnEditorActionListener(null);
     this.userPasswordTextInput.removeTextChangedListener(this.userPasswordTextWatcher);
-    this.userPasswordTextInput = null;
+    this.userPasswordTextWatcher = null;
 
     super.onPause();
   }
