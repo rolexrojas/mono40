@@ -1,6 +1,9 @@
 package com.tpago.movil.d.ui.main.transaction.products;
 
 import com.tpago.movil.R;
+import com.tpago.movil.app.ui.AlertData;
+import com.tpago.movil.app.ui.AlertManager;
+import com.tpago.movil.data.StringMapper;
 import com.tpago.movil.dep.api.DCurrencies;
 import com.tpago.movil.dep.Presenter;
 import com.tpago.movil.d.data.Formatter;
@@ -44,7 +47,11 @@ import static java.math.BigDecimal.ZERO;
 public class CreditCardTransactionCreationPresenter
   extends Presenter<CreditCardTransactionCreationPresenter.View> {
 
-  private static BigDecimal amountToPay(CreditCardBillBalance b, CreditCardBillBalance.Option o) {
+  private static BigDecimal amountToPay(
+    CreditCardBillBalance b,
+    CreditCardBillBalance.Option o,
+    BigDecimal a
+  ) {
     switch (o) {
       case PERIOD:
         return b.periodAmount();
@@ -53,7 +60,7 @@ public class CreditCardTransactionCreationPresenter
       case CURRENT:
         return b.currentAmount();
       default:
-        return ZERO;
+        return a;
     }
   }
 
@@ -64,8 +71,13 @@ public class CreditCardTransactionCreationPresenter
   @Inject RecipientManager recipientManager;
   @Inject StringHelper stringHelper;
 
+  @Inject StringMapper stringMapper;
+  @Inject AlertManager alertManager;
+
   private CreditCardBillBalance.Option option;
   private Disposable paymentSubscription = Disposables.disposed();
+
+  private BigDecimal otherAmount = BigDecimal.ZERO;
 
   CreditCardTransactionCreationPresenter(View view, TransactionCreationComponent component) {
     super(view);
@@ -79,19 +91,28 @@ public class CreditCardTransactionCreationPresenter
     this.view.setOptionChecked(this.option);
   }
 
+  final void onOtherAmountChanged(BigDecimal otherAmount) {
+    this.otherAmount = ObjectHelper.firstNonNull(otherAmount, BigDecimal.ZERO);
+  }
+
   final void onPayButtonClicked() {
     final ProductRecipient r = (ProductRecipient) recipient;
     final CreditCardBillBalance b = (CreditCardBillBalance) r.getBalance();
-    view.requestPin(
-      recipient.getLabel(),
-      Formatter.amount(
-        DCurrencies.map(
-          ((ProductRecipient) recipient).getProduct()
-            .getCurrency()
-        ),
-        amountToPay(b, option)
-      )
+
+    final String c = DCurrencies.map(
+      ((ProductRecipient) recipient).getProduct()
+        .getCurrency()
     );
+    final BigDecimal a = amountToPay(b, option, otherAmount);
+    final String fa = Formatter.amount(c, a);
+    if (a.compareTo(ZERO) <= 0) {
+      final AlertData alertData = AlertData.builder(this.stringMapper)
+        .message("No es posible realizar pagos de " + fa + ". Favor seleccionar otra opción.")
+        .build();
+      this.alertManager.show(alertData);
+    } else {
+      view.requestPin(recipient.getLabel(), fa);
+    }
   }
 
   final void onPinRequestFinished(final Product product, final String pin) {
@@ -107,7 +128,7 @@ public class CreditCardTransactionCreationPresenter
               final ProductRecipient r = (ProductRecipient) recipient;
               final CreditCardBillBalance b = (CreditCardBillBalance) r.getBalance();
               final ApiResult<PaymentResult> transactionResult = apiBridge.payCreditCardBill(
-                amountToPay(b, option),
+                amountToPay(b, option, otherAmount),
                 option,
                 pin,
                 product,

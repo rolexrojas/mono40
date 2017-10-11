@@ -29,10 +29,11 @@ public final class Keyboard {
   }
 
   public static void hide(View view) {
-    ObjectHelper.checkNotNull(view, "view");
-    final InputMethodManager imm = getInputMethodManager(view);
-    if (ObjectHelper.isNotNull(imm)) {
-      imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+    if (ObjectHelper.isNotNull(view)) {
+      final InputMethodManager imm = getInputMethodManager(view);
+      if (ObjectHelper.isNotNull(imm)) {
+        imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+      }
     }
   }
 

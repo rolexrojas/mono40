@@ -46,8 +46,7 @@ public class PurchasePaymentDialogFragment
 
   @BindView(R.id.commerce_payment_option) View paymentOptionContainerView;
   @BindView(R.id.commerce_payment_message) TextView commercePaymentMessageTextView;
-  @BindView(R.id.purchase_payment_indicator_confirmation) ImageView
-    purchasePaymentIndicatorConfirmationImageView;
+  @BindView(R.id.purchase_payment_indicator_confirmation) ImageView purchasePaymentIndicatorConfirmationImageView;
 
   private OnDismissedListener onDismissedListener;
 

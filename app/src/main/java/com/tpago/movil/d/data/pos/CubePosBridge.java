@@ -268,7 +268,9 @@ class CubePosBridge implements PosBridge {
     } else {
       observable = Observable.just(createResult("selectCard", identifier));
     }
-    return observable.doOnNext(new LogAction1("selectCard", identifier));
+    return observable
+      .doOnNext(new LogAction1("selectCard", identifier))
+      .doOnUnsubscribe(this.cubeSdk::CancelPayment);
   }
 
   @Override

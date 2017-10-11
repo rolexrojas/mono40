@@ -144,7 +144,7 @@ final class MockApi implements Api {
     final PublicKey publicKey = this.altAuthMethodPublicKeyReference.get();
     if (ObjectHelper.isNull(publicKey)) {
       final FailureData failureData = FailureData.builder()
-        .code(FailureData.Code.UNAVAILABLE_SERVICE)
+        .code(Api.FailureCode.UNAVAILABLE_SERVICE)
         .build();
       return Result.create(failureData);
     } else {
@@ -155,7 +155,7 @@ final class MockApi implements Api {
         return Result.create(Placeholder.get());
       } else {
         final FailureData failureData = FailureData.builder()
-          .code(FailureData.Code.UNAVAILABLE_SERVICE)
+          .code(Api.FailureCode.UNAVAILABLE_SERVICE)
           .build();
         return Result.create(failureData);
       }
