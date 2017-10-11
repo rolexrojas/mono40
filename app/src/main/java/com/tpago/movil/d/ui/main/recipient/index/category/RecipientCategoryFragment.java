@@ -22,7 +22,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.tpago.movil.R;
+import com.tpago.movil.app.ui.AlertData;
+import com.tpago.movil.app.ui.AlertManager;
 import com.tpago.movil.d.domain.AccountRecipient;
+import com.tpago.movil.d.domain.Product;
+import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.UserRecipient;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.data.util.BinderFactory;
@@ -47,6 +51,7 @@ import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.view.widget.SearchView;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
+import com.tpago.movil.data.StringMapper;
 import com.tpago.movil.util.ObjectHelper;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
@@ -99,6 +104,10 @@ public class RecipientCategoryFragment
   Category category;
   @Inject
   RecipientCategoryPresenter presenter;
+
+  @Inject StringMapper stringMapper;
+  @Inject AlertManager alertManager;
+  @Inject ProductManager productManager;
 
   @NonNull
   public static RecipientCategoryFragment create(Category category) {
@@ -473,10 +482,24 @@ public class RecipientCategoryFragment
       if (item instanceof UserRecipient) {
         final Context context = this.getContext();
         if (category == TRANSFER) {
-          this.startActivityForResult(
-            OwnTransactionCreationActivity.createLaunchIntent(context),
-            REQUEST_CODE_TRANSACTION_CREATION
-          );
+          boolean hasAccounts = false;
+          for (Product product : this.productManager.getProductList()) {
+            if (Product.checkIfAccount(product)) {
+              hasAccounts = true;
+              break;
+            }
+          }
+          if (hasAccounts) {
+            this.startActivityForResult(
+              OwnTransactionCreationActivity.createLaunchIntent(context),
+              REQUEST_CODE_TRANSACTION_CREATION
+            );
+          } else {
+            final AlertData alertData = AlertData.builder(this.stringMapper)
+              .message("No hay cuentas activas asociadas a este teléfono.")
+              .build();
+            this.alertManager.show(alertData);
+          }
         } else {
           this.startActivityForResult(
             TransactionCreationActivity.getLaunchIntent(

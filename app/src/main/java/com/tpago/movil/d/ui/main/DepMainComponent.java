@@ -2,6 +2,7 @@ package com.tpago.movil.d.ui.main;
 
 import android.content.Context;
 
+import com.tpago.movil.app.ui.AlertManager;
 import com.tpago.movil.dep.User;
 import com.tpago.movil.app.ui.main.settings.profile.ProfileComponent;
 import com.tpago.movil.app.ui.main.settings.profile.ProfileModule;
@@ -29,6 +30,8 @@ public interface DepMainComponent extends ActivityComponent {
   void inject(DisbursementFragment fragment);
 
   StringMapper stringMapper();
+
+  AlertManager alertManager();
 
   AltAuthMethodManager altAuthManager();
 
