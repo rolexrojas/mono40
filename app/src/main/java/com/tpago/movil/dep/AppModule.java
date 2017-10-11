@@ -13,6 +13,7 @@ import com.tpago.movil.dep.api.ApiModule;
 import com.tpago.movil.d.data.DepDataModule;
 import com.tpago.movil.d.domain.DomainModule;
 import com.tpago.movil.dep.net.NetModule;
+import com.tpago.movil.util.ObjectHelper;
 
 import javax.inject.Singleton;
 
@@ -39,7 +40,7 @@ public final class AppModule {
   private final App app;
 
   AppModule(App app) {
-    this.app = Preconditions.assertNotNull(app, "app == null");
+    this.app = ObjectHelper.checkNotNull(app, "app");
   }
 
   @Provides

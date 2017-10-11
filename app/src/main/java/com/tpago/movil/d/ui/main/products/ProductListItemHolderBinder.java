@@ -16,18 +16,18 @@ import com.tpago.movil.d.domain.ProductType;
 import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
 import com.tpago.movil.d.domain.LogoStyle;
 import com.tpago.movil.dep.Dates;
-
-import static com.tpago.movil.dep.Objects.checkIfNull;
-import static com.tpago.movil.dep.Preconditions.assertNotNull;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * @author hecvasro
  */
-class ProductListItemHolderBinder implements ListItemHolderBinder<ProductItem, ProductListItemHolder> {
+class ProductListItemHolderBinder
+  implements ListItemHolderBinder<ProductItem, ProductListItemHolder> {
+
   private final StringHelper stringHelper;
 
   ProductListItemHolderBinder(StringHelper stringHelper) {
-    this.stringHelper = assertNotNull(stringHelper, "stringHelper == null");
+    this.stringHelper = stringHelper;
   }
 
   @Override
@@ -49,11 +49,11 @@ class ProductListItemHolderBinder implements ListItemHolderBinder<ProductItem, P
     final Balance balance = item.getBalance();
     final int productTypeAnchorId;
     final RelativeLayout.LayoutParams productTypeLayoutParams
-       = (RelativeLayout.LayoutParams) holder.productTypeTextView.getLayoutParams();
+      = (RelativeLayout.LayoutParams) holder.productTypeTextView.getLayoutParams();
     final int productIdentifierAnchorId;
     final RelativeLayout.LayoutParams productIdentifierLayoutParams
       = (RelativeLayout.LayoutParams) holder.productIdentifierTextView.getLayoutParams();
-    if (checkIfNull(balance)) {
+    if (ObjectHelper.isNull(balance)) {
       holder.productBalanceTextView.setVisibility(View.GONE);
       holder.queryTimeTextView.setVisibility(View.GONE);
       holder.queryBalanceButton.setVisibility(View.VISIBLE);

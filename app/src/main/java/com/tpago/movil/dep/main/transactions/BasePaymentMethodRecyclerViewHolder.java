@@ -3,7 +3,7 @@ package com.tpago.movil.dep.main.transactions;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.tpago.movil.dep.Preconditions;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * @author hecvasro
@@ -16,10 +16,11 @@ abstract class BasePaymentMethodRecyclerViewHolder<H extends BasePaymentMethodHo
   BasePaymentMethodRecyclerViewHolder(
     final View itemView,
     final H internalHolder,
-    final OnPaymentMethodViewHolderClickedListener onClickedListener) {
+    final OnPaymentMethodViewHolderClickedListener onClickedListener
+  ) {
     super(itemView);
-    this.internalHolder = Preconditions.assertNotNull(internalHolder, "internalHolder == null");
-    Preconditions.assertNotNull(onClickedListener, "onClickedListener == null");
+    this.internalHolder = ObjectHelper.checkNotNull(internalHolder, "internalHolder");
+    ObjectHelper.checkNotNull(onClickedListener, "onClickedListener");
     this.itemView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -29,6 +30,7 @@ abstract class BasePaymentMethodRecyclerViewHolder<H extends BasePaymentMethodHo
   }
 
   interface OnPaymentMethodViewHolderClickedListener {
+
     void onPaymentMethodViewHolderClicked(int position);
   }
 }

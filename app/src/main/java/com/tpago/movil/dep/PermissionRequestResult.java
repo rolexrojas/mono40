@@ -1,6 +1,7 @@
 package com.tpago.movil.dep;
 
 import com.google.auto.value.AutoValue;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,9 +12,10 @@ import java.util.Map;
 @Deprecated
 @AutoValue
 public abstract class PermissionRequestResult {
+
   public static PermissionRequestResult create(String[] permissions, int[] results) {
-    Preconditions.assertNotNull(permissions, "permissions == null");
-    Preconditions.assertNotNull(results, "results == null");
+    ObjectHelper.checkNotNull(permissions, "permissions");
+    ObjectHelper.checkNotNull(results, "results");
     if (permissions.length != results.length) {
       throw new IllegalArgumentException("permissions.length != results.length");
     }

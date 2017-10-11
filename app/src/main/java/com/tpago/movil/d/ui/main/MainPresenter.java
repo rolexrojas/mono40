@@ -18,13 +18,12 @@ import rx.functions.Action1;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-import static com.tpago.movil.dep.Preconditions.assertNotNull;
-
 /**
  * @author hecvasro
  */
 @Deprecated
 final class MainPresenter extends Presenter<MainScreen> {
+
   private final StringHelper stringHelper;
   private final EventBus eventBus;
   private final BalanceManager balanceManager;
@@ -40,12 +39,13 @@ final class MainPresenter extends Presenter<MainScreen> {
     EventBus eventBus,
     BalanceManager balanceManager,
     AppDialog.Creator screenDialogCreator,
-    PosBridge posBridge) {
-    this.stringHelper = assertNotNull(stringHelper, "stringHelper == null");
-    this.eventBus = assertNotNull(eventBus, "eventBus == null");
-    this.balanceManager = assertNotNull(balanceManager, "balanceManager == null");
-    this.screenDialogCreator = assertNotNull(screenDialogCreator, "screenDialogCreator");
-    this.posBridge = assertNotNull(posBridge, "posBridge == null");
+    PosBridge posBridge
+  ) {
+    this.stringHelper = stringHelper;
+    this.eventBus = eventBus;
+    this.balanceManager = balanceManager;
+    this.screenDialogCreator = screenDialogCreator;
+    this.posBridge = posBridge;
   }
 
   final void create() {
@@ -65,14 +65,16 @@ final class MainPresenter extends Presenter<MainScreen> {
               alreadyAskedForActivation = true;
               screenDialogCreator.create(stringHelper.dialogProductAdditionTitle())
                 .message(stringHelper.dialogProductAdditionMessage())
-                .positiveAction(stringHelper.dialogProductAdditionPositiveAction(),
+                .positiveAction(
+                  stringHelper.dialogProductAdditionPositiveAction(),
                   new AppDialog.OnActionClickedListener() {
                     @Override
                     public void onActionClicked(@NonNull AppDialog.Action action) {
                       eventBus.release(event);
                       screen.openPurchaseScreen();
                     }
-                  })
+                  }
+                )
                 .negativeAction(stringHelper.dialogProductAdditionNegativeAction())
                 .build()
                 .show();

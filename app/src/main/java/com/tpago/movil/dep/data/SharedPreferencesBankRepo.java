@@ -7,16 +7,16 @@ import com.tpago.movil.dep.content.SharedPreferencesCreator;
 import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.d.domain.BankRepo;
 import com.tpago.movil.dep.Sets;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.Set;
-
-import static com.tpago.movil.dep.Preconditions.assertNotNull;
 
 /**
  * @author hecvasro
  */
 @Deprecated
 final class SharedPreferencesBankRepo implements BankRepo {
+
   private static final String KEY_ID_SET = "idSet";
 
   private final Gson gson;
@@ -25,12 +25,13 @@ final class SharedPreferencesBankRepo implements BankRepo {
   private final Set<String> idSet;
 
   SharedPreferencesBankRepo(Gson gson, SharedPreferencesCreator sharedPreferencesCreator) {
-    this.gson = assertNotNull(gson, "gson == null");
-    this.sharedPreferences = assertNotNull(
+    this.gson = ObjectHelper.checkNotNull(gson, "gson");
+    this.sharedPreferences = ObjectHelper.checkNotNull(
       sharedPreferencesCreator,
-      "sharedPreferencesCreator == null")
+      "sharedPreferencesCreator"
+    )
       .create(SharedPreferencesBankRepo.class.getCanonicalName());
-    this.idSet = this.sharedPreferences.getStringSet(KEY_ID_SET, Sets.<String>createSet());
+    this.idSet = this.sharedPreferences.getStringSet(KEY_ID_SET, Sets.createSet());
   }
 
   @Override
@@ -52,7 +53,7 @@ final class SharedPreferencesBankRepo implements BankRepo {
 
   @Override
   public void saveAll(Set<Bank> bankSet) {
-    assertNotNull(bankSet, "bankSet == null");
+    ObjectHelper.checkNotNull(bankSet, "bankSet");
     reset();
     final SharedPreferences.Editor editor = sharedPreferences.edit();
     for (Bank bank : bankSet) {

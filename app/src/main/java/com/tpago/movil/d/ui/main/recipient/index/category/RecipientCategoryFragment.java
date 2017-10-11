@@ -24,7 +24,6 @@ import android.widget.Toast;
 import com.tpago.movil.R;
 import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.domain.UserRecipient;
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.domain.Recipient;
@@ -48,7 +47,7 @@ import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.view.widget.SearchView;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
-import com.tpago.movil.dep.Objects;
+import com.tpago.movil.util.ObjectHelper;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import javax.inject.Inject;
@@ -204,7 +203,7 @@ public class RecipientCategoryFragment
   @Override
   public void onResume() {
     super.onResume();
-    if (Utils.isNotNull(requestResult)) {
+    if (ObjectHelper.isNotNull(requestResult)) {
       final Recipient recipient = requestResult.second.first;
       final int code = requestResult.first;
       if (code == REQUEST_CODE_TRANSACTION_CREATION || code == REQUEST_CODE_OWN_TRANSACTION_CREATION) {
@@ -271,21 +270,21 @@ public class RecipientCategoryFragment
     if (requestCode == REQUEST_CODE_RECIPIENT_ADDITION) {
       if (resultCode == Activity.RESULT_OK) {
         final Recipient recipient = AddRecipientActivity.deserializeResult(data);
-        if (Utils.isNotNull(recipient)) {
+        if (ObjectHelper.isNotNull(recipient)) {
           requestResult = Pair.create(requestCode, Pair.create(recipient, (String) null));
         }
       }
     } else if (requestCode == REQUEST_CODE_TRANSACTION_CREATION) {
       if (resultCode == Activity.RESULT_OK) {
         final Pair<Recipient, String> result = TransactionCreationActivity.deserializeResult(data);
-        if (Utils.isNotNull(result)) {
+        if (ObjectHelper.isNotNull(result)) {
           requestResult = Pair.create(requestCode, result);
         }
       }
     } else if (requestCode == REQUEST_CODE_OWN_TRANSACTION_CREATION) {
       if (resultCode == Activity.RESULT_OK) {
         final String transactionId = OwnTransactionCreationActivity.deserializeResult(data);
-        if (Objects.checkIfNotNull(transactionId)) {
+        if (ObjectHelper.isNotNull(transactionId)) {
           requestResult = Pair.create(requestCode, Pair.create((Recipient) null, transactionId));
         }
       }
@@ -306,12 +305,12 @@ public class RecipientCategoryFragment
   @Override
   public void showLoadIndicator(boolean fullscreen) {
     if (fullscreen) {
-      if (Utils.isNull(fullScreenLoadIndicator)) {
+      if (ObjectHelper.isNull(fullScreenLoadIndicator)) {
         fullScreenLoadIndicator = new FullScreenLoadIndicator(getChildFragmentManager());
       }
       currentLoadIndicator = fullScreenLoadIndicator;
     } else {
-      if (Utils.isNull(loadIndicator)) {
+      if (ObjectHelper.isNull(loadIndicator)) {
         loadIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
       }
       currentLoadIndicator = loadIndicator;
@@ -321,7 +320,7 @@ public class RecipientCategoryFragment
 
   @Override
   public void hideLoadIndicator() {
-    if (Utils.isNotNull(currentLoadIndicator)) {
+    if (ObjectHelper.isNotNull(currentLoadIndicator)) {
       currentLoadIndicator.hide();
       currentLoadIndicator = null;
     }

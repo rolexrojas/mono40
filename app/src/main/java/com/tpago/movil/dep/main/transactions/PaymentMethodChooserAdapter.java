@@ -1,8 +1,7 @@
 package com.tpago.movil.dep.main.transactions;
 
 import com.tpago.movil.d.domain.Product;
-import com.tpago.movil.dep.Objects;
-import com.tpago.movil.dep.Preconditions;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +10,7 @@ import java.util.List;
  * @author hecvasro
  */
 final class PaymentMethodChooserAdapter {
+
   private static final int POSITION_INVALID = -1;
   private static final int POSITION_SELECTED = 0;
 
@@ -23,8 +23,8 @@ final class PaymentMethodChooserAdapter {
   private Observer observer;
 
   PaymentMethodChooserAdapter(OnItemSelectedListener onItemSelectedListener) {
-    this.onItemSelectedListener = Preconditions
-      .assertNotNull(onItemSelectedListener, "onItemSelectedChangedListener == null");
+    this.onItemSelectedListener = ObjectHelper
+      .checkNotNull(onItemSelectedListener, "onItemSelectedChangedListener");
   }
 
   final void setObserver(Observer observer) {
@@ -32,15 +32,15 @@ final class PaymentMethodChooserAdapter {
   }
 
   final void setItemList(List<Product> paymentMethodList) {
-    Preconditions.assertNotNull(paymentMethodList, "paymentMethodLister == null");
+    ObjectHelper.checkNotNull(paymentMethodList, "paymentMethodLister");
     this.selectedItemPreviousPosition = POSITION_INVALID;
-    if (Objects.checkIfNull(this.paymentMethodList)) {
+    if (ObjectHelper.isNull(this.paymentMethodList)) {
       this.paymentMethodList = new ArrayList<>();
     } else {
       this.paymentMethodList.clear();
     }
     this.paymentMethodList.addAll(paymentMethodList);
-    if (Objects.checkIfNotNull(this.observer)) {
+    if (ObjectHelper.isNotNull(this.observer)) {
       this.observer.onDataSetChanged();
     }
     this.onItemSelectedListener.onItemSelectedChanged(this.paymentMethodList.get(POSITION_SELECTED));
@@ -70,17 +70,19 @@ final class PaymentMethodChooserAdapter {
     final Product pm = paymentMethodListCopy.get(selectedItemPreviousPosition);
     paymentMethodList.remove(pm);
     paymentMethodList.add(POSITION_SELECTED, pm);
-    if (Objects.checkIfNotNull(observer)) {
+    if (ObjectHelper.isNotNull(observer)) {
       observer.onDataSetChanged();
     }
     onItemSelectedListener.onItemSelectedChanged(pm);
   }
 
   interface Observer {
+
     void onDataSetChanged();
   }
 
   interface OnItemSelectedListener {
+
     void onItemSelectedChanged(Product product);
   }
 }

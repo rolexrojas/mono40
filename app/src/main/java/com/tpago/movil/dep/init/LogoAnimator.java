@@ -4,7 +4,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.view.View;
 
-import com.tpago.movil.dep.Preconditions;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * @author hecvasro
@@ -19,9 +19,9 @@ public final class LogoAnimator {
   private final float movedAndScaledTranslationY;
 
   LogoAnimator(Logo logo, View anchor, long duration) {
-    this.logo = Preconditions.assertNotNull(logo, "logo == null");
+    this.logo = ObjectHelper.checkNotNull(logo, "logo");
     this.duration = duration;
-    Preconditions.assertNotNull(anchor, "anchor == null");
+    ObjectHelper.checkNotNull(anchor, "anchor");
     final float aY = anchor.getY();
     final float aH = anchor.getHeight();
     final float lY = logo.getY();

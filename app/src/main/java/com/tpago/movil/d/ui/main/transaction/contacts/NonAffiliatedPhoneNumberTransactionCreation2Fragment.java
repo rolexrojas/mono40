@@ -31,11 +31,11 @@ import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
 import com.tpago.movil.d.domain.LogoStyle;
 import com.tpago.movil.dep.text.Texts;
-import com.tpago.movil.dep.Objects;
 import com.tpago.movil.dep.widget.FullSizeLoadIndicator;
 import com.tpago.movil.dep.widget.Keyboard;
 import com.tpago.movil.dep.widget.LoadIndicator;
 import com.tpago.movil.dep.widget.TextInput;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.math.BigDecimal;
 import java.util.concurrent.atomic.AtomicReference;
@@ -221,7 +221,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final TransactionCreationComponent c = getContainer().getComponent();
-    if (Objects.checkIfNotNull(c)) {
+    if (ObjectHelper.isNotNull(c)) {
       c.inject(this);
     }
   }

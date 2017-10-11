@@ -18,6 +18,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.io.Files;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.io.File;
 
@@ -29,6 +30,7 @@ import timber.log.Timber;
  */
 @Deprecated
 public final class AvatarCreationDialogFragment extends DialogFragment {
+
   private static final String KEY_OUTPUT_FILE = "outputFile";
 
   private static final String PERMISSION_CAMERA
@@ -45,7 +47,7 @@ public final class AvatarCreationDialogFragment extends DialogFragment {
   private static final int RESULT_CODE_OK = Activity.RESULT_OK;
 
   public static AvatarCreationDialogFragment create(File outputFile) {
-    Preconditions.assertNotNull(outputFile, "outputFile == null");
+    ObjectHelper.checkNotNull(outputFile, "outputFile");
     final Bundle args = new Bundle();
     args.putSerializable(KEY_OUTPUT_FILE, outputFile);
     final AvatarCreationDialogFragment fragment = new AvatarCreationDialogFragment();
@@ -69,14 +71,14 @@ public final class AvatarCreationDialogFragment extends DialogFragment {
 
   private void requestImageUsingCamera() {
     final Context context = getContext();
-    if (Objects.checkIfNull(temporaryFile)) {
+    if (ObjectHelper.isNull(temporaryFile)) {
       try {
         temporaryFile = Files.createExternalPictureFile(context);
       } catch (IllegalStateException exception) {
         Timber.w(exception, "Creating a temporary image file for camera output");
       }
     }
-    if (Objects.checkIfNull(temporaryFile)) {
+    if (ObjectHelper.isNull(temporaryFile)) {
       // TODO: Let the user know that the temporary image couldn't be created.
     } else {
       final Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -100,7 +102,8 @@ public final class AvatarCreationDialogFragment extends DialogFragment {
   public void onRequestPermissionsResult(
     int requestCode,
     @NonNull String[] permissions,
-    @NonNull int[] results) {
+    @NonNull int[] results
+  ) {
     super.onRequestPermissionsResult(requestCode, permissions, results);
     final PermissionRequestResult result = PermissionRequestResult.create(permissions, results);
     if (result.isSuccessful()) {
@@ -134,7 +137,7 @@ public final class AvatarCreationDialogFragment extends DialogFragment {
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // Retrieves the avatar file from the arguments.
-    final Bundle args = Preconditions.assertNotNull(getArguments(), "getArguments() == null");
+    final Bundle args = ObjectHelper.checkNotNull(this.getArguments(), "this.getArguments()");
     if (!args.containsKey(KEY_OUTPUT_FILE)) {
       throw new IllegalArgumentException("args.containsKey('outputFile') == false");
     }
@@ -181,7 +184,8 @@ public final class AvatarCreationDialogFragment extends DialogFragment {
             AvatarCreationDialogFragment.this,
             REQUEST_CODE_GALLERY,
             PERMISSION_READ_EXTERNAL_STORAGE,
-            PERMISSION_WRITE_EXTERNAL_STORAGE);
+            PERMISSION_WRITE_EXTERNAL_STORAGE
+          );
         }
       }
     });
@@ -201,7 +205,8 @@ public final class AvatarCreationDialogFragment extends DialogFragment {
             REQUEST_CODE_CAMERA,
             PERMISSION_CAMERA,
             PERMISSION_READ_EXTERNAL_STORAGE,
-            PERMISSION_WRITE_EXTERNAL_STORAGE);
+            PERMISSION_WRITE_EXTERNAL_STORAGE
+          );
         }
       }
     });
@@ -222,7 +227,7 @@ public final class AvatarCreationDialogFragment extends DialogFragment {
   public void onDestroy() {
     super.onDestroy();
     // Clears the temporary file.
-    if (Objects.checkIfNotNull(temporaryFile)) {
+    if (ObjectHelper.isNotNull(temporaryFile)) {
       if (temporaryFile.exists()) {
         temporaryFile.delete();
       }

@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 
 import com.tpago.movil.dep.Partner;
 import com.tpago.movil.R;
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.main.list.ListItemHolder;
@@ -26,6 +25,7 @@ import com.tpago.movil.d.ui.main.list.NoResultsListItemItem;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.tpago.movil.d.domain.Bank;
+import com.tpago.movil.util.ObjectHelper;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import javax.inject.Inject;
@@ -148,7 +148,7 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
 
   @Nullable
   public LoadIndicator getRefreshIndicator() {
-    if (Utils.isNull(loadIndicator) && Utils.isNotNull(swipeRefreshLayout)) {
+    if (ObjectHelper.isNull(loadIndicator) && ObjectHelper.isNotNull(swipeRefreshLayout)) {
       loadIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
     }
     return loadIndicator;

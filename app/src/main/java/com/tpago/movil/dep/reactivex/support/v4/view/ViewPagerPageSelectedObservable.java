@@ -2,7 +2,7 @@ package com.tpago.movil.dep.reactivex.support.v4.view;
 
 import android.support.v4.view.ViewPager;
 
-import com.tpago.movil.dep.Preconditions;
+import com.tpago.movil.util.ObjectHelper;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -13,10 +13,11 @@ import io.reactivex.android.MainThreadDisposable;
  */
 @Deprecated
 final class ViewPagerPageSelectedObservable extends Observable<Integer> {
+
   private final ViewPager viewPager;
 
   ViewPagerPageSelectedObservable(ViewPager viewPager) {
-    this.viewPager = Preconditions.assertNotNull(viewPager, "viewPager == null");
+    this.viewPager = ObjectHelper.checkNotNull(viewPager, "viewPager");
   }
 
   @Override
@@ -27,13 +28,15 @@ final class ViewPagerPageSelectedObservable extends Observable<Integer> {
     observer.onNext(viewPager.getCurrentItem());
   }
 
-  private static final class Listener extends MainThreadDisposable implements ViewPager.OnPageChangeListener {
+  private static final class Listener extends MainThreadDisposable
+    implements ViewPager.OnPageChangeListener {
+
     private final ViewPager viewPager;
     private final Observer<? super Integer> observer;
 
     Listener(ViewPager viewPager, Observer<? super Integer> observer) {
-      this.viewPager = Preconditions.assertNotNull(viewPager, "viewPager == null");
-      this.observer = Preconditions.assertNotNull(observer, "observer == null");
+      this.viewPager = ObjectHelper.checkNotNull(viewPager, "viewPager");
+      this.observer = ObjectHelper.checkNotNull(observer, "observer");
     }
 
     @Override

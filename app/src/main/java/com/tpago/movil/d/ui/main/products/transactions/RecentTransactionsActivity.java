@@ -16,13 +16,13 @@ import android.view.ViewGroup;
 import com.tpago.movil.app.ui.ActivityModule;
 import com.tpago.movil.dep.App;
 import com.tpago.movil.R;
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Transaction;
 import com.tpago.movil.d.ui.DepBaseActivity;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
+import com.tpago.movil.util.ObjectHelper;
 import com.yqritc.recyclerviewflexibledivider.FlexibleDividerDecoration;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
@@ -137,7 +137,7 @@ public class RecentTransactionsActivity
 
   @Nullable
   public LoadIndicator getRefreshIndicator() {
-    if (Utils.isNull(loadIndicator) && Utils.isNotNull(swipeRefreshLayout)) {
+    if (ObjectHelper.isNull(loadIndicator) && ObjectHelper.isNotNull(swipeRefreshLayout)) {
       loadIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
     }
     return loadIndicator;
@@ -145,21 +145,21 @@ public class RecentTransactionsActivity
 
   @Override
   public void clear() {
-    if (Utils.isNotNull(adapter)) {
+    if (ObjectHelper.isNotNull(adapter)) {
       adapter.clear();
     }
   }
 
   @Override
   public void add(@NonNull Date date) {
-    if (Utils.isNotNull(adapter)) {
+    if (ObjectHelper.isNotNull(adapter)) {
       adapter.add(date);
     }
   }
 
   @Override
   public void add(@NonNull Transaction transaction) {
-    if (Utils.isNotNull(adapter)) {
+    if (ObjectHelper.isNotNull(adapter)) {
       adapter.add(transaction);
     }
   }

@@ -1,6 +1,7 @@
 package com.tpago.movil.dep;
 
 import com.tpago.movil.dep.reactivex.Disposables;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,32 +9,25 @@ import java.util.List;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
 
 /**
  * @author hecvasro
  */
 @Deprecated
 public final class TimeOutManager {
+
   private final ConfigManager configManager;
   private final TimeOutHandler timeOutHandler;
 
-  private final List<Object> lockList
-    = new ArrayList<>();
-  private final ConfigManager.OnTimeOutChangedListener onTimeOutChangedListener
-    = new ConfigManager.OnTimeOutChangedListener() {
-    @Override
-    public void onTimeOutChanged(TimeOut timeOut) {
-      reset();
-    }
-  };
+  private final List<Object> lockList = new ArrayList<>();
+  private final ConfigManager.OnTimeOutChangedListener onTimeOutChangedListener = (to) -> reset();
 
   private boolean started = false;
   private Disposable disposable = Disposables.disposed();
 
   public TimeOutManager(ConfigManager configManager, TimeOutHandler timeOutHandler) {
-    this.configManager = Preconditions.assertNotNull(configManager, "configManager == null");
-    this.timeOutHandler = Preconditions.assertNotNull(timeOutHandler, "timeOutHandler == null");
+    this.configManager = ObjectHelper.checkNotNull(configManager, "configManager");
+    this.timeOutHandler = ObjectHelper.checkNotNull(timeOutHandler, "timeOutHandler");
   }
 
   private void startInternally() {
@@ -41,12 +35,7 @@ public final class TimeOutManager {
     disposable = Completable.complete()
       .delay(timeOut.getValue(), TimeOut.getUnit())
       .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(new Action() {
-        @Override
-        public void run() throws Exception {
-          timeOutHandler.handleTimeOut();
-        }
-      });
+      .subscribe(this.timeOutHandler::handleTimeOut);
     configManager.addOnTimeOutChangedListener(onTimeOutChangedListener);
   }
 
@@ -77,7 +66,7 @@ public final class TimeOutManager {
   }
 
   public final void addLock(Object lock) {
-    Preconditions.assertNotNull(lock, "lock == null");
+    ObjectHelper.checkNotNull(lock, "lock");
     if (!lockList.contains(lock)) {
       lockList.add(lock);
       if (started) {
@@ -87,7 +76,7 @@ public final class TimeOutManager {
   }
 
   public final void removeLock(Object lock) {
-    Preconditions.assertNotNull(lock, "lock == null");
+    ObjectHelper.checkNotNull(lock, "lock");
     if (lockList.contains(lock)) {
       lockList.remove(lock);
       if (started && lockList.isEmpty()) {
@@ -97,6 +86,7 @@ public final class TimeOutManager {
   }
 
   public interface TimeOutHandler {
+
     void handleTimeOut();
   }
 }

@@ -11,6 +11,7 @@ import okhttp3.HttpUrl;
  */
 @Module
 public final class ApiUrlFlavorModule {
+
   @Provides
   @Singleton
   HttpUrl provideBaseUrl() {

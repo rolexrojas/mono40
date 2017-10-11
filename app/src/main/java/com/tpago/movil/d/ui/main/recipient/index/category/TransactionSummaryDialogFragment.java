@@ -18,8 +18,7 @@ import com.tpago.movil.R;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.RecipientType;
 import com.tpago.movil.d.ui.Dialogs;
-import com.tpago.movil.dep.Objects;
-import com.tpago.movil.dep.Preconditions;
+import com.tpago.movil.util.ObjectHelper;
 
 import butterknife.ButterKnife;
 
@@ -56,7 +55,7 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
   public void onAttach(Context context) {
     super.onAttach(context);
     final Fragment f = getParentFragment();
-    if (Objects.checkIfNotNull(f) && f instanceof OnSaveButtonClickedListener) {
+    if (ObjectHelper.isNotNull(f) && f instanceof OnSaveButtonClickedListener) {
       listener = (OnSaveButtonClickedListener) f;
     }
   }
@@ -64,7 +63,7 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    final Bundle bundle = Preconditions.assertNotNull(getArguments(), "getArguments() == null");
+    final Bundle bundle = ObjectHelper.checkNotNull(this.getArguments(), "this.getArguments()");
     recipient = bundle.getParcelable(KEY_RECIPIENT);
     alreadyExists = bundle.getBoolean(KEY_ALREADY_EXISTS);
     transactionId = bundle.getString(KEY_TRANSACTION_ID);
@@ -83,9 +82,10 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
       builder.setPositiveButton(R.string.action_save, new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-          if (Objects.checkIfNotNull(listener)) {
+          if (ObjectHelper.isNotNull(listener)) {
             final EditText editText = ButterKnife.findById(getDialog(), R.id.edit_text);
-            listener.onSaveButtonClicked(recipient,
+            listener.onSaveButtonClicked(
+              recipient,
               editText.getText()
                 .toString()
                 .trim()

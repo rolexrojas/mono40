@@ -4,14 +4,14 @@ import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.MoreObjects;
 import com.tpago.movil.d.domain.util.StringUtils;
+import com.tpago.movil.util.DigitHelper;
+import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.util.StringHelper;
 
-import static com.google.common.base.Strings.emptyToNull;
-import static com.tpago.movil.util.DigitHelper.removeNonDigits;
+import java.util.Arrays;
+
 import static com.tpago.movil.d.domain.RecipientType.ACCOUNT;
-import static com.tpago.movil.util.ObjectHelper.isNotNull;
 
 /**
  * @author hecvasro
@@ -62,7 +62,7 @@ public final class AccountRecipient extends Recipient {
   }
 
   public final void number(String number) {
-    this.number = removeNonDigits(number);
+    this.number = DigitHelper.removeNonDigits(number);
   }
 
   public final Bank bank() {
@@ -79,28 +79,30 @@ public final class AccountRecipient extends Recipient {
 
   public final void product(Product product) {
     this.product = product;
-    if (isNotNull(this.product)) {
+    if (ObjectHelper.isNotNull(this.product)) {
       this.bank = this.product.getBank();
     }
   }
 
   public final boolean canAcceptTransfers() {
-    return isNotNull(this.bank) && isNotNull(this.product);
+    return ObjectHelper.isNotNull(this.bank) && ObjectHelper.isNotNull(this.product);
   }
 
   @Override
   public String toString() {
-    return MoreObjects.toStringHelper(this)
-      .add("bank", this.bank)
-      .add("number", this.number)
-      .add("product", this.product)
-      .toString();
+    return AccountRecipient.class.getSimpleName()
+      + "{"
+      + "\"bank\"=" + this.bank.toString()
+      + ","
+      + "\"number\"=" + this.number
+      + ","
+      + "\"product\"=" + this.product
+      + "}";
   }
 
   @Override
   public String getId() {
-    return Joiner.on('-')
-      .join(this.getType(), this.number);
+    return StringHelper.join("-", Arrays.asList(this.getType(), this.number));
   }
 
   @NonNull
@@ -113,8 +115,8 @@ public final class AccountRecipient extends Recipient {
   public boolean matches(@Nullable String query) {
     return super.matches(query)
       || StringUtils.matches(this.number, query)
-      || (isNotNull(this.bank) && StringUtils.matches(this.bank.getName(), query))
-      || (isNotNull(this.product) && StringUtils.matches(this.product.getAlias(), query));
+      || (ObjectHelper.isNotNull(this.bank) && StringUtils.matches(this.bank.getName(), query))
+      || (ObjectHelper.isNotNull(this.product) && StringUtils.matches(this.product.getAlias(), query));
   }
 
   @Override
@@ -159,7 +161,7 @@ public final class AccountRecipient extends Recipient {
     }
 
     public final Builder label(String label) {
-      this.label = emptyToNull(label);
+      this.label = StringHelper.nullIfEmpty(label);
       return this;
     }
 

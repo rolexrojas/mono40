@@ -4,24 +4,26 @@ import android.net.Uri;
 
 import com.tpago.movil.dep.DisplayDensity;
 import com.tpago.movil.d.domain.LogoStyle;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.tpago.movil.dep.Preconditions.assertNotNull;
 
 /**
  * @author hecvasro
  */
 @Deprecated
 public final class AssetUriBuilder {
+
   private static final String PLACEHOLDER_SIZE = "{size}";
   private static final String PLACEHOLDER_STYLE = "{style}";
 
   private final String displayDensityName;
 
   public AssetUriBuilder(DisplayDensity displayDensity) {
-    displayDensityName = assertNotNull(displayDensity, "displayDensity == null").name().toLowerCase();
+    displayDensityName = ObjectHelper.checkNotNull(displayDensity, "displayDensity")
+      .name()
+      .toLowerCase();
   }
 
   public final Uri build(String template, @LogoStyle String style) {
@@ -32,6 +34,7 @@ public final class AssetUriBuilder {
   }
 
   private static final class InternalBuilder {
+
     private static void assertPlaceholder(String template, String placeholder) {
       if (!template.contains(placeholder)) {
         throw new IllegalArgumentException("template.contains('" + placeholder + "') == false");
@@ -46,12 +49,12 @@ public final class AssetUriBuilder {
     private final Map<String, String> replacementMap = new HashMap<>();
 
     private InternalBuilder(String template) {
-      this.template = assertNotNull(template, "template == null");
+      this.template = ObjectHelper.checkNotNull(template, "template");
     }
 
     final InternalBuilder putReplacement(String placeholder, String replacement) {
-      assertNotNull(placeholder, "placeholder == null");
-      assertNotNull(replacement, "replacement == null");
+      ObjectHelper.checkNotNull(placeholder, "placeholder");
+      ObjectHelper.checkNotNull(replacement, "replacement");
       replacementMap.put(placeholder, replacement);
       return this;
     }

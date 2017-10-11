@@ -3,19 +3,20 @@ package com.tpago.movil.dep.widget;
 import android.view.View;
 
 import com.tpago.movil.R;
-
-import static com.tpago.movil.dep.Preconditions.assertNotNull;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * @author hecvasro
  */
 @Deprecated
 final class ErraticViewHelper implements ErraticView {
-  private static final int[] ARRAY_DRAWABLE_STATE_ERRATIC = new int[] { R.attr.state_erratic };
+
+  private static final int[] ARRAY_DRAWABLE_STATE_ERRATIC = new int[]{R.attr.state_erratic};
 
   private static int[] mergeDrawableStateArrays(
     int[] baseStateArray,
-    int[] additionalStateArray) {
+    int[] additionalStateArray
+  ) {
     final int n = baseStateArray.length;
     int i = n - 1;
     while (i >= 0 && baseStateArray[i] == 0) {
@@ -30,7 +31,7 @@ final class ErraticViewHelper implements ErraticView {
   private boolean erraticStateEnabled = false;
 
   ErraticViewHelper(View view) {
-    this.view = assertNotNull(view, "view == null");
+    this.view = ObjectHelper.checkNotNull(view, "view");
   }
 
   final int getExtraSpace(int extraSpace) {

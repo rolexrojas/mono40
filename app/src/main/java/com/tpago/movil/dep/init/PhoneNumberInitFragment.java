@@ -37,6 +37,7 @@ import butterknife.Unbinder;
 public final class PhoneNumberInitFragment
   extends BaseInitFragment
   implements PhoneNumberInitPresenter.View {
+
   public static PhoneNumberInitFragment create() {
     return new PhoneNumberInitFragment();
   }
@@ -50,7 +51,9 @@ public final class PhoneNumberInitFragment
   @BindView(R.id.button_move_to_next_screen) Button nextButton;
 
   @Inject LogoAnimator logoAnimator;
-  @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
+  @Inject
+  @ActivityQualifier
+  FragmentReplacer fragmentReplacer;
 
   private Consumer<Integer> numPadDigitConsumer;
   private Action numPadDeleteAction;
@@ -72,7 +75,8 @@ public final class PhoneNumberInitFragment
   public View onCreateView(
     LayoutInflater inflater,
     @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(R.layout.d_fragment_init_phone_number, container, false);
   }
 
@@ -88,30 +92,28 @@ public final class PhoneNumberInitFragment
   }
 
   @Override
-  public void onStart() {
-    super.onStart();
+  public void onResume() {
+    super.onResume();
+
+    // Moves the logo out of the screen.
+    logoAnimator.moveOutOfScreen();
+
     // Adds a listener that gets notified each time a digit button of the num pad is clicked.
     this.numPadDigitConsumer = this::onDigitClicked;
     this.numPad.addDigitConsumer(this.numPadDigitConsumer);
     // Adds a listener that gets notified each time the delete button of the num pad is clicked.
     this.numPadDeleteAction = this::onDeleteClicked;
     this.numPad.addDeleteAction(this.numPadDeleteAction);
+
     // Starts the presenter.
     presenter.onViewStarted();
   }
 
   @Override
-  public void onResume() {
-    super.onResume();
-    // Moves the logo out of the screen.
-    logoAnimator.moveOutOfScreen();
-  }
-
-  @Override
-  public void onStop() {
-    super.onStop();
+  public void onPause() {
     // Stops the presenter.
     presenter.onViewStopped();
+
     // Removes the listener that gets notified each time the delete button of the num pad is clicked.
     this.numPad.removeDeleteAction(this.numPadDeleteAction);
     this.numPadDeleteAction = null;
@@ -119,6 +121,7 @@ public final class PhoneNumberInitFragment
     this.numPad.removeDigitConsumer(this.numPadDigitConsumer);
     this.numPadDigitConsumer = null;
 
+    super.onPause();
   }
 
   @Override
@@ -213,6 +216,7 @@ public final class PhoneNumberInitFragment
 
   @Override
   public void showUnavailableNetworkError() {
-    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG).show();
+    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG)
+      .show();
   }
 }

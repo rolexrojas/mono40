@@ -3,7 +3,6 @@ package com.tpago.movil.d.ui.main.transaction.contacts;
 import static com.tpago.movil.d.domain.Product.checkIfCreditCard;
 import static com.tpago.movil.d.ui.main.transaction.TransactionCategory.RECHARGE;
 import static com.tpago.movil.d.ui.main.transaction.TransactionCategory.TRANSFER;
-import static com.tpago.movil.dep.Objects.checkIfNull;
 
 import android.support.annotation.NonNull;
 
@@ -28,6 +27,7 @@ import com.tpago.movil.d.domain.FailureData;
 import com.tpago.movil.d.domain.Result;
 import com.tpago.movil.dep.net.NetworkService;
 import com.tpago.movil.dep.reactivex.Disposables;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -145,7 +145,7 @@ class PhoneNumberTransactionCreationPresenter
       carrier = r.getCarrier();
     }
 
-    if (checkIfNull(carrier)) {
+    if (ObjectHelper.isNull(carrier)) {
       this.screen.requestCarrier();
     } else {
       this.screen.requestPin();

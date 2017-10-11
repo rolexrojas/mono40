@@ -1,8 +1,9 @@
 package com.tpago.movil.domain.balance;
 
+import android.support.annotation.Nullable;
+
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
-import com.google.common.base.Optional;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -39,7 +40,8 @@ public abstract class PayableBalance extends Balance {
   /**
    * Minimum amount that can be paid.
    */
-  public abstract Optional<BigDecimal> minimumAmount();
+  @Nullable
+  public abstract BigDecimal minimumAmount();
 
   @Memoized
   @Override
@@ -61,7 +63,7 @@ public abstract class PayableBalance extends Balance {
 
     public abstract Builder periodAmount(BigDecimal periodAmount);
 
-    public abstract Builder minimumAmount(Optional<BigDecimal> minimumAmount);
+    public abstract Builder minimumAmount(@Nullable BigDecimal minimumAmount);
 
     public abstract PayableBalance build();
   }

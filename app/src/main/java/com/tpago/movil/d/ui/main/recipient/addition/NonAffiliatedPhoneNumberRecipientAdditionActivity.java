@@ -13,7 +13,7 @@ import com.tpago.movil.R;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.ui.DepBaseActivity;
-import com.tpago.movil.dep.Objects;
+import com.tpago.movil.util.ObjectHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,6 +23,7 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 public class NonAffiliatedPhoneNumberRecipientAdditionActivity extends DepBaseActivity {
+
   private static final String KEY_RECIPIENT = "recipient";
 
   private Unbinder unbinder;
@@ -39,7 +40,8 @@ public class NonAffiliatedPhoneNumberRecipientAdditionActivity extends DepBaseAc
 
   public static Intent getLaunchIntent(
     Context context,
-    NonAffiliatedPhoneNumberRecipient recipient) {
+    NonAffiliatedPhoneNumberRecipient recipient
+  ) {
     final Intent i = new Intent(context, NonAffiliatedPhoneNumberRecipientAdditionActivity.class);
     i.putExtra(KEY_RECIPIENT, recipient);
     return i;
@@ -53,7 +55,7 @@ public class NonAffiliatedPhoneNumberRecipientAdditionActivity extends DepBaseAc
   }
 
   public static Recipient deserializeResult(Intent data) {
-    if (Objects.checkIfNull(data)) {
+    if (ObjectHelper.isNull(data)) {
       return null;
     } else {
       return data.getParcelableExtra(KEY_RECIPIENT);
@@ -71,7 +73,7 @@ public class NonAffiliatedPhoneNumberRecipientAdditionActivity extends DepBaseAc
     unbinder = ButterKnife.bind(this);
     setSupportActionBar(toolbar);
     final ActionBar actionBar = getSupportActionBar();
-    if (Objects.checkIfNotNull(actionBar)) {
+    if (ObjectHelper.isNotNull(actionBar)) {
       actionBar.setDisplayHomeAsUpEnabled(true);
       actionBar.setTitle(R.string.add_recipient_title);
     }

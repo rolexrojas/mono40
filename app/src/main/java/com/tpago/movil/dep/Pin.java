@@ -2,6 +2,7 @@ package com.tpago.movil.dep;
 
 import com.google.auto.value.AutoValue;
 import com.tpago.movil.util.Digit;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public abstract class Pin {
     }
 
     public final Builder addDigit(@Digit int digit) {
-      Preconditions.assertNotNull(digit, "digit == null");
+      ObjectHelper.checkNotNull(digit, "digit");
       if (!canBuild()) {
         digits.add(digit);
       }

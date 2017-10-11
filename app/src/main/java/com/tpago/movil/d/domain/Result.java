@@ -1,12 +1,13 @@
 package com.tpago.movil.d.domain;
 
-import static com.tpago.movil.dep.Preconditions.assertNotNull;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * @author hecvasro
  */
 @Deprecated
 public final class Result<T, C> {
+
   public static <T, C> Result<T, C> create(T successData) {
     return new Result<>(true, successData, null);
   }
@@ -23,11 +24,11 @@ public final class Result<T, C> {
   private Result(boolean successful, T successData, FailureData<C> failureData) {
     this.successful = successful;
     if (successful) {
-      this.successData = assertNotNull(successData, "successData == null");
+      this.successData = ObjectHelper.checkNotNull(successData, "successData");
       this.failureData = null;
     } else {
       this.successData = null;
-      this.failureData = assertNotNull(failureData, "failureData == null");
+      this.failureData = ObjectHelper.checkNotNull(failureData, "failureData");
     }
   }
 

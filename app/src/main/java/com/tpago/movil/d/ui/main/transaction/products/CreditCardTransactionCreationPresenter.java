@@ -20,8 +20,7 @@ import com.tpago.movil.d.domain.FailureData;
 import com.tpago.movil.d.domain.Result;
 import com.tpago.movil.dep.net.NetworkService;
 import com.tpago.movil.dep.reactivex.Disposables;
-import com.tpago.movil.dep.Objects;
-import com.tpago.movil.dep.Preconditions;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -71,7 +70,7 @@ public class CreditCardTransactionCreationPresenter
   CreditCardTransactionCreationPresenter(View view, TransactionCreationComponent component) {
     super(view);
     // Injects all the annotated dependencies.
-    Preconditions.assertNotNull(component, "component == null")
+    ObjectHelper.checkNotNull(component, "component")
       .inject(this);
   }
 
@@ -196,7 +195,7 @@ public class CreditCardTransactionCreationPresenter
     BigDecimal periodValue = ZERO;
     BigDecimal minimumValue = ZERO;
     final CreditCardBillBalance b = (CreditCardBillBalance) r.getBalance();
-    if (Objects.checkIfNotNull(b)) {
+    if (ObjectHelper.isNotNull(b)) {
       dueDate = b.dueDate();
       totalValue = b.currentAmount();
       periodValue = b.periodAmount();

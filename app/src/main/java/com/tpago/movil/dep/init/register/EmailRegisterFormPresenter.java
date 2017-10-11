@@ -3,26 +3,29 @@ package com.tpago.movil.dep.init.register;
 import com.tpago.movil.Email;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.content.StringResolver;
-import com.tpago.movil.dep.Objects;
+import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.util.StringHelper;
 
 /**
  * @author hecvasro
  */
 final class EmailRegisterFormPresenter
   extends RegisterFormPresenter<EmailRegisterFormPresenter.View> {
+
   private String textInputContent;
   private boolean isTextInputContentValid = false;
   private String confirmationTextInputContent;
   private boolean isConfirmationTextInputContentValid = false;
 
   private static String sanitize(String content) {
-    return Objects.checkIfNull(content) ? "" : content.trim();
+    return StringHelper.emptyIfNull(content)
+      .trim();
   }
 
   EmailRegisterFormPresenter(View view, StringResolver stringResolver, RegisterData registerData) {
     super(view, stringResolver, registerData);
     final Email email = this.registerData.getEmail();
-    if (Objects.checkIfNull(email)) {
+    if (ObjectHelper.isNull(email)) {
       this.textInputContent = null;
       this.isTextInputContentValid = false;
       this.confirmationTextInputContent = null;
@@ -39,7 +42,7 @@ final class EmailRegisterFormPresenter
     return Email.isValid(textInputContent);
   }
 
-  private boolean checkIfConfirmationTextInputContentIsValid(){
+  private boolean checkIfConfirmationTextInputContentIsValid() {
     return Email.isValid(confirmationTextInputContent)
       && confirmationTextInputContent.equals(textInputContent);
   }
@@ -83,7 +86,8 @@ final class EmailRegisterFormPresenter
       view.showDialog(
         stringResolver.resolve(R.string.register_form_email_error_title),
         stringResolver.resolve(R.string.register_form_email_error_message),
-        stringResolver.resolve(R.string.register_form_email_error_positive_button_text));
+        stringResolver.resolve(R.string.register_form_email_error_positive_button_text)
+      );
       view.showTextInputContentAsErratic(!checkIfTextInputContentIsValid());
       view.showConfirmationTextInputContentAsErratic(!checkIfConfirmationTextInputContentIsValid());
     }
@@ -98,6 +102,7 @@ final class EmailRegisterFormPresenter
   }
 
   interface View extends RegisterFormPresenter.View {
+
     void setTextInputContent(String content);
 
     void showTextInputContentAsErratic(boolean showAsErratic);

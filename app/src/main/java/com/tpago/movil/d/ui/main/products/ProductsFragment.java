@@ -18,7 +18,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.tpago.movil.dep.api.DCurrencies;
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.MainContainer;
@@ -36,6 +35,7 @@ import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Balance;
 import com.tpago.movil.d.ui.ChildFragment;
+import com.tpago.movil.util.ObjectHelper;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import javax.inject.Inject;
@@ -45,8 +45,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import timber.log.Timber;
-
-import static com.tpago.movil.dep.Objects.checkIfNotNull;
 
 /**
  * @author hecvasro
@@ -161,7 +159,7 @@ public class ProductsFragment
         final int lastChildPosition = findLastVisibleItemPosition();
         if (lastChildPosition >= 0) {
           final View lastChild = recyclerView.getChildAt(lastChildPosition);
-          if (Utils.isNotNull(lastChild) && Utils.isNotNull(addAnotherAccountButton)) {
+          if (ObjectHelper.isNotNull(lastChild) && ObjectHelper.isNotNull(addAnotherAccountButton)) {
             final int lastChildBottom = lastChild.getBottom();
             final int buttonTop = addAnotherAccountButton.getTop();
             final boolean flag = lastChildBottom < buttonTop;
@@ -237,7 +235,10 @@ public class ProductsFragment
 
   @Override
   public void onBalanceQueried(Product product, Pair<Long, Balance> balance) {
-    PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), checkIfNotNull(balance));
+    PinConfirmationDialogFragment.dismiss(
+      getChildFragmentManager(),
+      ObjectHelper.isNotNull(balance)
+    );
     setBalance(product, balance);
   }
 
@@ -279,7 +280,7 @@ public class ProductsFragment
 
   @Nullable
   public LoadIndicator getRefreshIndicator() {
-    if (Utils.isNull(loadIndicator) && Utils.isNotNull(swipeRefreshLayout)) {
+    if (ObjectHelper.isNull(loadIndicator) && ObjectHelper.isNotNull(swipeRefreshLayout)) {
       loadIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
     }
     return loadIndicator;

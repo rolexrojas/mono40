@@ -21,8 +21,7 @@ import com.tpago.movil.d.domain.Product;
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.d.domain.ProductType;
 import com.tpago.movil.d.domain.LogoStyle;
-import com.tpago.movil.dep.Objects;
-import com.tpago.movil.dep.Preconditions;
+import com.tpago.movil.util.ObjectHelper;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
@@ -30,6 +29,7 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
  * @author hecvasro
  */
 final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePaymentOptionHolder> {
+
   private final User user;
   private final Context context;
 
@@ -38,9 +38,10 @@ final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePayme
   PurchasePaymentOptionBinder(
     User user,
     Context context,
-    StringHelper stringHelper) {
-    this.user = Preconditions.assertNotNull(user, "user == null");
-    this.context = Preconditions.assertNotNull(context, "context == null");
+    StringHelper stringHelper
+  ) {
+    this.user = user;
+    this.context = context;
     this.stringHelper = stringHelper;
   }
 
@@ -80,7 +81,11 @@ final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePayme
       backgroundImageView.setVisibility(View.VISIBLE);
       Picasso.with(context)
         .load(backgroundUri)
-        .transform(new RoundedCornersTransformation(context.getResources().getDimensionPixelOffset(R.dimen.commerce_payment_option_border_radius_extra), 0)) // TODO: Remove once images are updated on the API.
+        .transform(new RoundedCornersTransformation(
+          context.getResources()
+            .getDimensionPixelOffset(R.dimen.commerce_payment_option_border_radius_extra),
+          0
+        )) // TODO: Remove once images are updated on the API.
         .noFade()
         .into(backgroundImageView);
 
@@ -92,7 +97,7 @@ final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePayme
     }
 
     final Drawable backgroundDrawable = holder.getRootViewBackground();
-    if (Objects.checkIfNotNull(backgroundDrawable)) {
+    if (ObjectHelper.isNotNull(backgroundDrawable)) {
       backgroundDrawable
         .mutate()
         .setColorFilter(backgroundColor, PorterDuff.Mode.SRC_IN);

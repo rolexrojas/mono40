@@ -3,6 +3,7 @@ package com.tpago.movil.dep;
 import android.content.SharedPreferences;
 
 import com.tpago.movil.dep.content.SharedPreferencesCreator;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,14 +13,15 @@ import java.util.List;
  */
 @Deprecated
 public final class ConfigManager {
+
   private static final String KEY_TIME_OUT = "timeOut";
 
   private final SharedPreferences sharedPreferences;
   private final List<OnTimeOutChangedListener> onTimeOutChangedListenerList;
 
   public ConfigManager(SharedPreferencesCreator sharedPreferencesCreator) {
-    this.sharedPreferences = Preconditions
-      .assertNotNull(sharedPreferencesCreator, "sharedPreferencesCreator == null")
+    this.sharedPreferences = ObjectHelper
+      .checkNotNull(sharedPreferencesCreator, "sharedPreferencesCreator")
       .create(ConfigManager.class.getCanonicalName());
     this.onTimeOutChangedListenerList = new ArrayList<>();
   }
@@ -30,14 +32,14 @@ public final class ConfigManager {
   }
 
   public final void addOnTimeOutChangedListener(OnTimeOutChangedListener listener) {
-    Preconditions.assertNotNull(listener, "listener == null");
+    ObjectHelper.checkNotNull(listener, "listener");
     if (!onTimeOutChangedListenerList.contains(listener)) {
       onTimeOutChangedListenerList.add(listener);
     }
   }
 
   public final void removeOnTimeOutChangedListener(OnTimeOutChangedListener listener) {
-    Preconditions.assertNotNull(listener, "listener == null");
+    ObjectHelper.checkNotNull(listener, "listener");
     if (onTimeOutChangedListenerList.contains(listener)) {
       onTimeOutChangedListenerList.remove(listener);
     }
@@ -45,7 +47,11 @@ public final class ConfigManager {
 
   public final void setTimeOut(TimeOut timeOut) {
     sharedPreferences.edit()
-      .putString(KEY_TIME_OUT, Preconditions.assertNotNull(timeOut, "timeOut == null").name())
+      .putString(
+        KEY_TIME_OUT,
+        ObjectHelper.checkNotNull(timeOut, "timeOut")
+          .name()
+      )
       .apply();
     for (OnTimeOutChangedListener listener : onTimeOutChangedListenerList) {
       listener.onTimeOutChanged(timeOut);
@@ -53,6 +59,7 @@ public final class ConfigManager {
   }
 
   public interface OnTimeOutChangedListener {
+
     void onTimeOutChanged(TimeOut timeOut);
   }
 }

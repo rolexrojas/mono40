@@ -44,8 +44,8 @@ class AddRecipientPresenter extends Presenter<AddRecipientScreen> {
   void add(@NonNull final Contact contact) {
     assertScreen();
     if (checkIfAffiliatedSubscription.isUnsubscribed()) {
-      final String phoneNumber = contact.getPhoneNumber()
-        .toString();
+      final String phoneNumber = contact.phoneNumber()
+        .value();
       checkIfAffiliatedSubscription = recipientManager
         .checkIfAffiliated(phoneNumber)
         .subscribeOn(Schedulers.io())
@@ -60,9 +60,9 @@ class AddRecipientPresenter extends Presenter<AddRecipientScreen> {
           @Override
           public void call(Boolean isAffiliated) {
             UiUtils.hideRefreshIndicator(screen);
-            final String contactPhoneNumber = contact.getPhoneNumber()
-              .toString();
-            final String contactName = contact.getName();
+            final String contactPhoneNumber = contact.phoneNumber()
+              .value();
+            final String contactName = contact.name();
             if (isAffiliated) {
               final Recipient recipient = new PhoneNumberRecipient(
                 PhoneNumber.create(contactPhoneNumber),

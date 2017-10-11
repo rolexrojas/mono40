@@ -1,17 +1,17 @@
 package com.tpago.movil.dep.init.register;
 
 import com.tpago.movil.Email;
+import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
-import com.tpago.movil.d.domain.Password;
 import com.tpago.movil.dep.init.InitData;
-import com.tpago.movil.dep.text.Texts;
-
-import static com.tpago.movil.dep.Preconditions.assertNotNull;
+import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.util.StringHelper;
 
 /**
  * @author hecvasro
  */
 final class RegisterData {
+
   private final InitData initData;
 
   private String firstName;
@@ -20,7 +20,7 @@ final class RegisterData {
   private String password;
 
   RegisterData(InitData initData) {
-    this.initData = assertNotNull(initData, "initData == null");
+    this.initData = ObjectHelper.checkNotNull(initData, "initData");
   }
 
   final PhoneNumber getPhoneNumber() {
@@ -41,14 +41,14 @@ final class RegisterData {
   }
 
   final void setName(String firstName, String lastName) {
-    assertNotNull(firstName, "firstName == null");
-    if (Texts.checkIfEmpty(firstName)) {
-      throw new IllegalArgumentException("Texts.checkIfEmpty(firstName) == true");
+    ObjectHelper.checkNotNull(firstName, "firstName");
+    if (StringHelper.isNullOrEmpty(firstName)) {
+      throw new IllegalArgumentException("StringHelper.isNullOrEmpty(firstName)");
     }
     this.firstName = firstName;
-    assertNotNull(lastName, "lastName == null");
-    if (Texts.checkIfEmpty(lastName)) {
-      throw new IllegalArgumentException("Texts.checkIfEmpty(lastName) == true");
+    ObjectHelper.checkNotNull(lastName, "lastName");
+    if (StringHelper.isNullOrEmpty(lastName)) {
+      throw new IllegalArgumentException("StringHelper.isNullOrEmpty(lastName)");
     }
     this.lastName = lastName;
   }
@@ -58,7 +58,7 @@ final class RegisterData {
   }
 
   final void setEmail(Email email) {
-    this.email = assertNotNull(email, "email == null");
+    this.email = ObjectHelper.checkNotNull(email, "email");
   }
 
   final String getPassword() {
@@ -66,9 +66,9 @@ final class RegisterData {
   }
 
   final void setPassword(String password) {
-    assertNotNull(password, "password == null");
-    if (!Password.checkIfValid(password)) {
-      throw new IllegalArgumentException("Password.checkIfValid(password) == false");
+    ObjectHelper.checkNotNull(password, "password");
+    if (!Password.isValid(password)) {
+      throw new IllegalArgumentException("!Password.isValid(password)");
     }
     this.password = password;
   }

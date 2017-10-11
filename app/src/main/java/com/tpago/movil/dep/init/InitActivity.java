@@ -15,7 +15,6 @@ import com.tpago.movil.R;
 import com.tpago.movil.dep.BaseActivity;
 import com.tpago.movil.app.ui.FragmentReplacer;
 import com.tpago.movil.dep.graphics.RadialGradientDrawable;
-import com.tpago.movil.dep.Objects;
 import com.tpago.movil.util.ObjectHelper;
 
 import javax.inject.Inject;
@@ -81,7 +80,7 @@ public final class InitActivity extends BaseActivity implements InitContainer {
         public void onGlobalLayout() {
           // Removes the listener that gets notified when all the views has been laid out.
           final ViewTreeObserver observer = rootView.getViewTreeObserver();
-          if (Objects.checkIfNotNull(observer)) {
+          if (ObjectHelper.isNotNull(observer)) {
             observer.removeOnGlobalLayoutListener(this);
           }
           // Sets the background of the activity.

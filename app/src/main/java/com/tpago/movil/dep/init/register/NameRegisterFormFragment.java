@@ -15,9 +15,9 @@ import android.widget.TextView;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.content.StringResolver;
 import com.tpago.movil.dep.text.BaseTextWatcher;
-import com.tpago.movil.dep.Objects;
 import com.tpago.movil.dep.widget.Keyboard;
 import com.tpago.movil.dep.widget.TextInput;
+import com.tpago.movil.util.ObjectHelper;
 
 import javax.inject.Inject;
 
@@ -29,6 +29,7 @@ import butterknife.BindView;
 public final class NameRegisterFormFragment
   extends RegisterFormFragment<NameRegisterFormPresenter>
   implements NameRegisterFormPresenter.View {
+
   static NameRegisterFormFragment create() {
     return new NameRegisterFormFragment();
   }
@@ -46,7 +47,7 @@ public final class NameRegisterFormFragment
 
   @Override
   protected NameRegisterFormPresenter getPresenter() {
-    if (Objects.checkIfNull(presenter)) {
+    if (ObjectHelper.isNull(presenter)) {
       presenter = new NameRegisterFormPresenter(this, stringResolver, registerData);
     }
     return presenter;
@@ -61,7 +62,8 @@ public final class NameRegisterFormFragment
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // Injects all the annotated dependencies.
-    getRegisterComponent().inject(this);
+    getRegisterComponent()
+      .inject(this);
   }
 
   @Nullable
@@ -69,7 +71,8 @@ public final class NameRegisterFormFragment
   public View onCreateView(
     LayoutInflater inflater,
     @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(R.layout.fragment_register_form_name, container, false);
   }
 

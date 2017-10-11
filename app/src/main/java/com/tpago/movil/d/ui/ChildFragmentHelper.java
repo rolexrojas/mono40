@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import com.tpago.movil.d.misc.Utils;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * TODO
@@ -13,6 +13,7 @@ import com.tpago.movil.d.misc.Utils;
  * @author hecvasro
  */
 public final class ChildFragmentHelper<T extends Container<?>> implements ContainerChild<T> {
+
   /**
    * TODO
    */
@@ -32,7 +33,7 @@ public final class ChildFragmentHelper<T extends Container<?>> implements Contai
   @SuppressWarnings("unchecked")
   private ChildFragmentHelper(@Nullable Fragment parentFragment, @NonNull Activity parentActivity)
     throws ClassCastException {
-    if (Utils.isNotNull(parentFragment)) {
+    if (ObjectHelper.isNotNull(parentFragment)) {
       if (!(parentFragment instanceof Container<?>)) {
         throw new ClassCastException("Parent fragment must implement the 'Container' interface");
       } else {
@@ -64,7 +65,8 @@ public final class ChildFragmentHelper<T extends Container<?>> implements Contai
    */
   @NonNull
   public static <T extends Container<?>> ChildFragmentHelper<T> attach(
-    @Nullable Fragment parentFragment, @NonNull Activity parentActivity) throws ClassCastException {
+    @Nullable Fragment parentFragment, @NonNull Activity parentActivity
+  ) throws ClassCastException {
     return new ChildFragmentHelper<>(parentFragment, parentActivity);
   }
 

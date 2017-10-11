@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 
-import com.tpago.movil.d.misc.Utils;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * TODO
@@ -15,13 +15,16 @@ import com.tpago.movil.d.misc.Utils;
  * @author hecvasro
  */
 public final class AppDialog {
+
   private final AlertDialog alertDialog;
 
-  private AppDialog(@NonNull final Context context, @NonNull final String title,
+  private AppDialog(
+    @NonNull final Context context, @NonNull final String title,
     @Nullable final String message, @Nullable final String positiveActionText,
     @Nullable final OnActionClickedListener positiveActionListener,
     @Nullable final String negativeActionText,
-    @Nullable final OnActionClickedListener negativeActionListener) {
+    @Nullable final OnActionClickedListener negativeActionListener
+  ) {
     final AlertDialog.Builder builder = new AlertDialog.Builder(context)
       .setCancelable(false)
       .setTitle(title);
@@ -32,7 +35,7 @@ public final class AppDialog {
       builder.setPositiveButton(positiveActionText, new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-          if (Utils.isNotNull(positiveActionListener)) {
+          if (ObjectHelper.isNotNull(positiveActionListener)) {
             positiveActionListener.onActionClicked(Action.POSITIVE);
           }
         }
@@ -42,7 +45,7 @@ public final class AppDialog {
       builder.setNegativeButton(negativeActionText, new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-          if (Utils.isNotNull(negativeActionListener)) {
+          if (ObjectHelper.isNotNull(negativeActionListener)) {
             negativeActionListener.onActionClicked(Action.NEGATIVE);
           }
         }
@@ -61,10 +64,12 @@ public final class AppDialog {
   }
 
   public interface OnActionClickedListener {
+
     void onActionClicked(@NonNull Action action);
   }
 
   public static final class Builder {
+
     private final Context context;
     private final String title;
     private String message;
@@ -85,8 +90,10 @@ public final class AppDialog {
     }
 
     @NonNull
-    public final Builder positiveAction(@NonNull String text,
-      @Nullable OnActionClickedListener listener) {
+    public final Builder positiveAction(
+      @NonNull String text,
+      @Nullable OnActionClickedListener listener
+    ) {
       positiveActionText = text;
       positiveActionListener = listener;
       return this;
@@ -98,8 +105,10 @@ public final class AppDialog {
     }
 
     @NonNull
-    public final Builder negativeAction(@NonNull String text,
-      @Nullable OnActionClickedListener listener) {
+    public final Builder negativeAction(
+      @NonNull String text,
+      @Nullable OnActionClickedListener listener
+    ) {
       negativeActionText = text;
       negativeActionListener = listener;
       return this;
@@ -119,12 +128,14 @@ public final class AppDialog {
         positiveActionText,
         positiveActionListener,
         negativeActionText,
-        negativeActionListener);
+        negativeActionListener
+      );
     }
   }
 
   @Deprecated
   public static final class Creator {
+
     private final Context context;
 
     public Creator(@NonNull Context context) {

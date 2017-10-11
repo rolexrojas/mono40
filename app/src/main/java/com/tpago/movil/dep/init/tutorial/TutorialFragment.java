@@ -16,8 +16,8 @@ import com.tpago.movil.app.ui.ActivityQualifier;
 import com.tpago.movil.app.ui.FragmentReplacer;
 import com.tpago.movil.dep.init.BaseInitFragment;
 import com.tpago.movil.dep.init.InitFragment;
-import com.tpago.movil.dep.Preconditions;
 import com.tpago.movil.dep.widget.AutoTabSwitcher;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +33,7 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 public final class TutorialFragment extends BaseInitFragment {
+
   private static final int TAB_COUNT = 4;
 
   public static TutorialFragment create() {
@@ -43,7 +44,9 @@ public final class TutorialFragment extends BaseInitFragment {
   private AutoTabSwitcher autoTabSwitcher;
   private AutoTabUpdater autoTabUpdater;
 
-  @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
+  @Inject
+  @ActivityQualifier
+  FragmentReplacer fragmentReplacer;
 
   @BindView(R.id.image_view_art) ImageView artImageView;
   @BindView(R.id.tab_layout) TabLayout tabLayout;
@@ -67,7 +70,8 @@ public final class TutorialFragment extends BaseInitFragment {
   public View onCreateView(
     LayoutInflater inflater,
     @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(R.layout.fragment_tutorial, container, false);
   }
 
@@ -115,11 +119,13 @@ public final class TutorialFragment extends BaseInitFragment {
   }
 
   private static class TabAdapter extends android.support.v4.app.FragmentPagerAdapter {
+
     private static final List<Integer> TAB_LIST_TITLE = Arrays.asList(
       R.string.tutorial_tab_label_title_01,
       R.string.tutorial_tab_label_title_02,
       R.string.tutorial_tab_label_title_03,
-      R.string.tutorial_tab_label_title_04);
+      R.string.tutorial_tab_label_title_04
+    );
     private static final List<Integer> TAB_LIST_DESCRIPTION = Arrays.asList(
       R.string.tutorial_tab_label_description_01,
       R.string.tutorial_tab_label_description_02,
@@ -135,7 +141,8 @@ public final class TutorialFragment extends BaseInitFragment {
     public Fragment getItem(int position) {
       return TutorialTabFragment.create(
         TAB_LIST_TITLE.get(position),
-        TAB_LIST_DESCRIPTION.get(position));
+        TAB_LIST_DESCRIPTION.get(position)
+      );
     }
 
     @Override
@@ -145,18 +152,20 @@ public final class TutorialFragment extends BaseInitFragment {
   }
 
   private static class AutoTabUpdater extends ViewPager.SimpleOnPageChangeListener {
+
     private static final List<Integer> TAB_LIST_ART = Arrays.asList(
       R.drawable.tutorial_tab_art_01,
       R.drawable.tutorial_tab_art_02,
       R.drawable.tutorial_tab_art_03,
-      R.drawable.tutorial_tab_art_04);
+      R.drawable.tutorial_tab_art_04
+    );
 
     private final ViewPager viewPager;
     private final ImageView imageView;
 
     AutoTabUpdater(ViewPager viewPager, ImageView imageView) {
-      this.viewPager = Preconditions.assertNotNull(viewPager, "viewPager == null");
-      this.imageView = Preconditions.assertNotNull(imageView, "imageView == null");
+      this.viewPager = ObjectHelper.checkNotNull(viewPager, "viewPager");
+      this.imageView = ObjectHelper.checkNotNull(imageView, "imageView");
     }
 
     private void update(int position) {

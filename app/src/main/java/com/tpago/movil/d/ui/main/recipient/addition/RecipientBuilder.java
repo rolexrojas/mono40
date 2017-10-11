@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.tpago.movil.d.domain.Recipient;
-import com.tpago.movil.dep.Objects;
+import com.tpago.movil.util.ObjectHelper;
 
 import rx.Observable;
 
@@ -37,7 +37,7 @@ abstract class RecipientBuilder {
     }
 
     public final boolean isSuccessful() {
-      return Objects.checkIfNotNull(recipient);
+      return ObjectHelper.isNotNull(recipient);
     }
 
     public final Recipient getData() {

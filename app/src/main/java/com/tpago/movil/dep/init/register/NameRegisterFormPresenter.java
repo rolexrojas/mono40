@@ -3,25 +3,29 @@ package com.tpago.movil.dep.init.register;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.content.StringResolver;
 import com.tpago.movil.dep.text.Texts;
-import com.tpago.movil.dep.Objects;
+import com.tpago.movil.util.StringHelper;
 
 /**
  * @author hecvasro
  */
-final class NameRegisterFormPresenter extends RegisterFormPresenter<NameRegisterFormPresenter.View> {
+final class NameRegisterFormPresenter
+  extends RegisterFormPresenter<NameRegisterFormPresenter.View> {
+
   private String firstName;
   private boolean isFirstNameValid = false;
   private String lastName;
   private boolean isLastNameValid = false;
 
   private static String sanitize(String value) {
-    return Objects.checkIfNull(value) ? "" : value.trim();
+    return StringHelper.emptyIfNull(value)
+      .trim();
   }
 
   NameRegisterFormPresenter(
     NameRegisterFormPresenter.View view,
     StringResolver stringResolver,
-    RegisterData registerData) {
+    RegisterData registerData
+  ) {
     super(view, stringResolver, registerData);
     this.firstName = sanitize(this.registerData.getFirstName());
     this.isFirstNameValid = Texts.checkIfNotEmpty(this.firstName);
@@ -66,7 +70,8 @@ final class NameRegisterFormPresenter extends RegisterFormPresenter<NameRegister
       view.showDialog(
         stringResolver.resolve(R.string.register_form_name_error_title),
         stringResolver.resolve(R.string.register_form_name_error_message),
-        stringResolver.resolve(R.string.register_form_name_error_positive_button_text));
+        stringResolver.resolve(R.string.register_form_name_error_positive_button_text)
+      );
       view.showFirstNameTextInputAsErratic(!isFirstNameValid);
       view.showLastNameTextInputAsErratic(!isLastNameValid);
     }
@@ -81,6 +86,7 @@ final class NameRegisterFormPresenter extends RegisterFormPresenter<NameRegister
   }
 
   interface View extends RegisterFormPresenter.View {
+
     void setFirstNameTextInputContent(String content);
 
     void showFirstNameTextInputAsErratic(boolean showAsErratic);

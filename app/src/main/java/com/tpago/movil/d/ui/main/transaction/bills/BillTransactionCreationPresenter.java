@@ -18,8 +18,7 @@ import com.tpago.movil.d.domain.FailureData;
 import com.tpago.movil.d.domain.Result;
 import com.tpago.movil.dep.net.NetworkService;
 import com.tpago.movil.dep.reactivex.Disposables;
-import com.tpago.movil.dep.Objects;
-import com.tpago.movil.dep.Preconditions;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -56,7 +55,7 @@ public class BillTransactionCreationPresenter
   BillTransactionCreationPresenter(View view, TransactionCreationComponent component) {
     super(view);
     // Injects all the annotated dependencies.
-    Preconditions.assertNotNull(component, "component == null")
+    ObjectHelper.checkNotNull(component, "component")
       .inject(this);
   }
 
@@ -171,7 +170,7 @@ public class BillTransactionCreationPresenter
     BigDecimal totalValue = ZERO;
     BigDecimal minimumValue = ZERO;
     final BillBalance b = r.getBalance();
-    if (Objects.checkIfNotNull(b)) {
+    if (ObjectHelper.isNotNull(b)) {
       dueDate = b.getDate();
       totalValue = b.getTotal();
       minimumValue = b.getMinimum();

@@ -1,6 +1,6 @@
 package com.tpago.movil.dep.reactivex;
 
-import com.tpago.movil.dep.Preconditions;
+import com.tpago.movil.util.ObjectHelper;
 
 import io.reactivex.disposables.Disposable;
 
@@ -9,12 +9,13 @@ import io.reactivex.disposables.Disposable;
  */
 @Deprecated
 public final class Disposables {
+
   public static Disposable disposed() {
     return io.reactivex.disposables.Disposables.disposed();
   }
 
   public static void dispose(Disposable disposable) {
-    disposable = Preconditions.assertNotNull(disposable, "disposable == null");
+    disposable = ObjectHelper.checkNotNull(disposable, "disposable");
     if (!disposable.isDisposed()) {
       disposable.dispose();
     }

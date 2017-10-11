@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.ViewSwitcher;
 
 import com.tpago.movil.R;
-import com.tpago.movil.dep.Objects;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +31,7 @@ import io.reactivex.functions.Consumer;
  */
 @Deprecated
 public final class Logo extends FrameLayout {
+
   private static final long FRAME_DURATION = 2000L;
 
   private static final long FRAME_DURATION_CROSS = Math.round(FRAME_DURATION * 0.33F);
@@ -54,7 +55,8 @@ public final class Logo extends FrameLayout {
   }
 
   private void initializeAnimatedLogo() {
-    LayoutInflater.from(getContext()).inflate(R.layout.d_widget_logo, this);
+    LayoutInflater.from(getContext())
+      .inflate(R.layout.d_widget_logo, this);
   }
 
   @Override
@@ -95,14 +97,13 @@ public final class Logo extends FrameLayout {
   }
 
   private static final class DrawableIdIterator {
+
     private final Integer[] drawableIdArray;
 
     private int current = 0;
 
     private DrawableIdIterator(Integer[] drawableIdArray) {
-      if (Objects.checkIfNull(drawableIdArray)) {
-        throw new NullPointerException("drawable == null");
-      }
+      ObjectHelper.checkNotNull(drawableIdArray, "drawableIdArray");
       if (drawableIdArray.length < 2) {
         throw new IllegalArgumentException("drawable.length < 2");
       }
@@ -124,6 +125,7 @@ public final class Logo extends FrameLayout {
     }
 
     static final class Builder {
+
       private final List<Integer> drawableIdList;
 
       Builder() {
@@ -144,6 +146,7 @@ public final class Logo extends FrameLayout {
   }
 
   private static final class DrawableSwitcher {
+
     private final int coverId;
     private final DrawableIdIterator iterator;
 

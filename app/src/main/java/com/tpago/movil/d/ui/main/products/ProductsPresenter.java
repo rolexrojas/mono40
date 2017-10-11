@@ -7,7 +7,6 @@ import com.tpago.movil.R;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.domain.Product;
@@ -23,6 +22,7 @@ import com.tpago.movil.d.domain.ErrorCode;
 import com.tpago.movil.d.domain.FailureData;
 import com.tpago.movil.d.domain.Result;
 import com.tpago.movil.dep.net.NetworkService;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.concurrent.Callable;
 
@@ -103,7 +103,7 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
 
   final void stop() {
     assertScreen();
-    if (Utils.isNotNull(compositeSubscription)) {
+    if (ObjectHelper.isNotNull(compositeSubscription)) {
       RxUtils.unsubscribe(compositeSubscription);
       compositeSubscription = null;
     }
@@ -111,7 +111,7 @@ class ProductsPresenter extends Presenter<ProductsScreen> {
 
   void queryBalance(@NonNull final Product product, @NonNull final String pin) {
     assertScreen();
-    if (Utils.isNotNull(compositeSubscription)) {
+    if (ObjectHelper.isNotNull(compositeSubscription)) {
       final Subscription subscription = Single
         .defer(new Callable<Single<Result<Pair<Long, Balance>, ErrorCode>>>() {
           @Override

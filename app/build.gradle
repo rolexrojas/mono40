@@ -228,8 +228,6 @@ dependencies {
   annotationProcessor "${daggerGroupId}:dagger-compiler:${daggerVersion}"
   compile "${daggerGroupId}:dagger:${daggerVersion}"
 
-  compile 'com.google.guava:guava:23.0-android'
-
   compile 'com.jakewharton.timber:timber:4.5.1'
 
   compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
@@ -254,7 +252,6 @@ dependencies {
   compile "${supportLibraryGroupId}:design:${supportLibraryVersion}"
   compile "${supportLibraryGroupId}:percent:${supportLibraryVersion}"
   compile "${supportLibraryGroupId}:recyclerview-v7:${supportLibraryVersion}"
-  compile "${supportLibraryGroupId}:multidex:1.0.1"
 
   compile "${supportLibraryGroupId}.constraint:constraint-layout:1.0.2"
 
@@ -267,7 +264,6 @@ dependencies {
   // Deprecated dependencies
   compile "${retrofitGroupId}:adapter-rxjava:${retrofitVersion}"
   compile "com.github.ozodrukh:CircularReveal:2.0.1"
-  compile "com.googlecode.libphonenumber:libphonenumber:8.0.1"
   compile "com.jakewharton.rxbinding:rxbinding:0.4.0"
   compile "com.tbruyelle.rxpermissions:rxpermissions:0.9.0"
   compile "de.hdodenhof:circleimageview:2.1.0"

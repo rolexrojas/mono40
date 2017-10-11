@@ -39,9 +39,9 @@ public final class FlavorDataApiModule {
       .responseBodyConverter(FailureData.class, new Annotation[0]);
     final RetrofitApiFailureDataMapper retrofitApiFailureDataMapper
       = RetrofitApiFailureDataMapper.create(apiFailureDataConverter);
-    final RetrofitApiResultMapper.Builder retrofitApiResultMapperBUilder = RetrofitApiResultMapper
+    final RetrofitApiResultMapper.Builder retrofitApiResultMapperBuilder = RetrofitApiResultMapper
       .builder(retrofitApiFailureDataMapper);
 
-    return RetrofitApiImpl.create(api, retrofitApiResultMapperBUilder);
+    return RetrofitApiImpl.create(api, retrofitApiResultMapperBuilder);
   }
 }

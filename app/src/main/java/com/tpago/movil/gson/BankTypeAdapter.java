@@ -8,17 +8,16 @@ import com.tpago.movil.dep.data.AssetUriBuilder;
 import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.d.domain.LogoStyle;
 import com.tpago.movil.d.domain.LogoUriMap;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.io.IOException;
-
-import static com.tpago.movil.dep.Objects.checkIfNull;
-import static com.tpago.movil.dep.Preconditions.assertNotNull;
 
 /**
  * @author hecvasro
  */
 @Deprecated
 final class BankTypeAdapter extends TypeAdapter<Bank> {
+
   private static final String PROPERTY_CODE = "bank-code";
   private static final String PROPERTY_ID = "bank-id";
   private static final String PROPERTY_NAME = "bank-name";
@@ -27,7 +26,7 @@ final class BankTypeAdapter extends TypeAdapter<Bank> {
   private final AssetUriBuilder assetUriBuilder;
 
   BankTypeAdapter(AssetUriBuilder assetUriBuilder) {
-    this.assetUriBuilder = assertNotNull(assetUriBuilder, "assetUriBuilder == null");
+    this.assetUriBuilder = ObjectHelper.checkNotNull(assetUriBuilder, "assetUriBuilder");
   }
 
   @Override
@@ -85,7 +84,7 @@ final class BankTypeAdapter extends TypeAdapter<Bank> {
 
   @Override
   public void write(JsonWriter writer, Bank bank) throws IOException {
-    if (checkIfNull(bank)) {
+    if (ObjectHelper.isNull(bank)) {
       writer.nullValue();
     } else {
       writer.beginObject();

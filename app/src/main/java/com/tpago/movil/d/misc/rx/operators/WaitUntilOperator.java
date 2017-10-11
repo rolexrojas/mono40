@@ -2,7 +2,7 @@ package com.tpago.movil.d.misc.rx.operators;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.d.misc.Utils;
+import com.tpago.movil.util.ObjectHelper;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -15,6 +15,7 @@ import rx.observers.SerializedSubscriber;
  */
 @Deprecated
 public class WaitUntilOperator<T, O> implements Observable.Operator<T, T> {
+
   /**
    * TODO
    */
@@ -52,7 +53,7 @@ public class WaitUntilOperator<T, O> implements Observable.Operator<T, T> {
 
       @Override
       public void onNext(O o) {
-        if (Utils.isNotNull(lastT)) {
+        if (ObjectHelper.isNotNull(lastT)) {
           tSubscriber.onNext(lastT);
         }
       }

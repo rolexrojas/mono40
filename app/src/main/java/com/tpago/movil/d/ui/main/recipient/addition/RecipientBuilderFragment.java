@@ -31,7 +31,6 @@ import com.tpago.movil.d.domain.Result;
 import com.tpago.movil.dep.net.NetworkService;
 import com.tpago.movil.dep.reactivex.Disposables;
 import com.tpago.movil.dep.text.Texts;
-import com.tpago.movil.dep.Preconditions;
 import com.tpago.movil.dep.widget.TextInput;
 
 import java.util.concurrent.Callable;
@@ -229,7 +228,7 @@ public class RecipientBuilderFragment extends Fragment {
     super.onCreate(savedInstanceState);
     ((AddRecipientActivity) getActivity()).getComponent()
       .inject(this);
-    final Bundle bundle = Preconditions.assertNotNull(getArguments(), "getArguments() == null");
+    final Bundle bundle = this.getArguments();
     keyword = bundle.getString(KEY_KEYWORD);
     data = bundle.getParcelable(KEY_DATA);
     if (data instanceof Partner) {

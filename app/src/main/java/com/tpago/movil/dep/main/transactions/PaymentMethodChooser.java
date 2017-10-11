@@ -8,7 +8,7 @@ import android.widget.RelativeLayout;
 
 import com.tpago.movil.R;
 import com.tpago.movil.d.domain.Product;
-import com.tpago.movil.dep.Objects;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.List;
 
@@ -18,6 +18,7 @@ import java.util.List;
 public class PaymentMethodChooser
   extends RelativeLayout
   implements PaymentMethodChooserAdapter.OnItemSelectedListener {
+
   private PaymentMethodChooserAdapter paymentMethodChooserAdapter;
   private PaymentMethodChooserPopup paymentMethodChooserPopup;
 
@@ -42,7 +43,8 @@ public class PaymentMethodChooser
   }
 
   private void initializePaymentMethodChooser(Context context) {
-    LayoutInflater.from(context).inflate(R.layout.widget_payment_method_chooser, this);
+    LayoutInflater.from(context)
+      .inflate(R.layout.widget_payment_method_chooser, this);
   }
 
   public final void setPaymentMethodList(List<Product> paymentMethodList) {
@@ -77,13 +79,14 @@ public class PaymentMethodChooser
   @Override
   public void onItemSelectedChanged(Product product) {
     paymentMethodHolderBinder.bind(product, paymentMethodHolder);
-    if (Objects.checkIfNotNull(onPaymentMethodChosenListener)) {
+    if (ObjectHelper.isNotNull(onPaymentMethodChosenListener)) {
       onPaymentMethodChosenListener.onPaymentMethodChosen(product);
     }
     paymentMethodChooserPopup.dismiss();
   }
 
   public interface OnPaymentMethodChosenListener {
+
     void onPaymentMethodChosen(Product product);
   }
 }

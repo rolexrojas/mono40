@@ -40,7 +40,7 @@ import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
-import com.tpago.movil.dep.Objects;
+import com.tpago.movil.util.ObjectHelper;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.math.BigDecimal;
@@ -161,7 +161,7 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final TransactionCreationComponent c = getContainer().getComponent();
-    if (Objects.checkIfNotNull(c)) {
+    if (ObjectHelper.isNotNull(c)) {
       c.inject(this);
     }
   }
@@ -219,7 +219,7 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
         @Override
         public void call(ApiResult<List<Partner>> result) {
           if (result.isSuccessful()) {
-            if (Objects.checkIfNull(carrierList)) {
+            if (ObjectHelper.isNull(carrierList)) {
               carrierList = new ArrayList<>();
             } else {
               adapter.notifyItemRangeRemoved(0, carrierList.size());

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.tpago.movil.R;
 import com.tpago.movil.dep.text.Texts;
+import com.tpago.movil.util.ObjectHelper;
 
 import butterknife.ButterKnife;
 
@@ -20,6 +21,7 @@ import butterknife.ButterKnife;
  */
 @Deprecated
 public final class InformationalDialogFragment extends DialogFragment {
+
   private static final String KEY_TITLE = "titleText";
   private static final String KEY_MESSAGE = "messageText";
   private static final String KEY_TEXT_BUTTON_POSITIVE = "positiveButtonText";
@@ -36,7 +38,8 @@ public final class InformationalDialogFragment extends DialogFragment {
     String title,
     String message,
     String positiveButtonText,
-    String negativeButtonText) {
+    String negativeButtonText
+  ) {
     final Bundle bundle = new Bundle();
     if (Texts.checkIfEmpty(title)) {
       throw new IllegalArgumentException("Texts.checkIfEmpty(title) == true");
@@ -61,7 +64,8 @@ public final class InformationalDialogFragment extends DialogFragment {
   public static InformationalDialogFragment create(
     String title,
     String message,
-    String positiveButtonText) {
+    String positiveButtonText
+  ) {
     return create(title, message, positiveButtonText, null);
   }
 
@@ -70,7 +74,7 @@ public final class InformationalDialogFragment extends DialogFragment {
     super.onAttach(context);
     // Attaches the result handler.
     final Fragment targetFragment = getTargetFragment();
-    if (Objects.checkIfNotNull(targetFragment) && targetFragment instanceof ResultHandler) {
+    if (ObjectHelper.isNotNull(targetFragment) && targetFragment instanceof ResultHandler) {
       resultHandler = (ResultHandler) targetFragment;
     }
   }
@@ -78,7 +82,7 @@ public final class InformationalDialogFragment extends DialogFragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    final Bundle args = Preconditions.assertNotNull(getArguments(), "getArguments() == null");
+    final Bundle args = ObjectHelper.checkNotNull(this.getArguments(), "this.getArguments()");
     if (!args.containsKey(KEY_TITLE)) {
       throw new IllegalArgumentException("args.containsKey(KEY_TITLE) == false");
     }
@@ -106,7 +110,7 @@ public final class InformationalDialogFragment extends DialogFragment {
       .setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-          if (Objects.checkIfNotNull(resultHandler)) {
+          if (ObjectHelper.isNotNull(resultHandler)) {
             resultHandler.onPositiveResult();
           }
         }
@@ -116,7 +120,7 @@ public final class InformationalDialogFragment extends DialogFragment {
       builder.setNegativeButton(negativeButtonText, new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-          if (Objects.checkIfNotNull(resultHandler)) {
+          if (ObjectHelper.isNotNull(resultHandler)) {
             resultHandler.onNegativeResult();
           }
         }
@@ -140,6 +144,7 @@ public final class InformationalDialogFragment extends DialogFragment {
   }
 
   public interface ResultHandler {
+
     void onPositiveResult();
 
     void onNegativeResult();

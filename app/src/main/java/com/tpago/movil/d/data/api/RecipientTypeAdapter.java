@@ -5,8 +5,6 @@ import static com.tpago.movil.d.domain.RecipientType.BILL;
 import static com.tpago.movil.d.domain.RecipientType.NON_AFFILIATED_PHONE_NUMBER;
 import static com.tpago.movil.d.domain.RecipientType.PHONE_NUMBER;
 import static com.tpago.movil.d.domain.RecipientType.PRODUCT;
-import static com.tpago.movil.util.ObjectHelper.isNotNull;
-import static com.tpago.movil.dep.Objects.checkIfNotNull;
 
 import android.text.TextUtils;
 
@@ -29,6 +27,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.tpago.movil.dep.text.Texts;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.lang.reflect.Type;
 
@@ -184,7 +183,7 @@ public class RecipientTypeAdapter
           .value()
       );
       final Partner carrier = r.getCarrier();
-      if (checkIfNotNull(carrier)) {
+      if (ObjectHelper.isNotNull(carrier)) {
         jsonObject.add(PROPERTY_CARRIER, context.serialize(r.getCarrier(), Partner.class));
       }
     } else if (type == NON_AFFILIATED_PHONE_NUMBER) {
@@ -194,17 +193,17 @@ public class RecipientTypeAdapter
         r.getPhoneNumber()
           .value()
       );
-      if (checkIfNotNull(r.getBank())) {
+      if (ObjectHelper.isNotNull(r.getBank())) {
         jsonObject.add(PROPERTY_BANK, context.serialize(r.getBank(), Bank.class));
       }
       if (Texts.checkIfNotEmpty(r.getAccountNumber())) {
         jsonObject.addProperty(PROPERTY_ACCOUNT_NUMBER, r.getAccountNumber());
       }
-      if (checkIfNotNull(r.getProduct())) {
+      if (ObjectHelper.isNotNull(r.getProduct())) {
         jsonObject.add(PROPERTY_PRODUCT, context.serialize(r.getProduct(), Product.class));
       }
       final Partner carrier = r.getCarrier();
-      if (checkIfNotNull(carrier)) {
+      if (ObjectHelper.isNotNull(carrier)) {
         jsonObject.add(PROPERTY_CARRIER, context.serialize(r.getCarrier(), Partner.class));
       }
     } else if (type == BILL) {
@@ -230,11 +229,11 @@ public class RecipientTypeAdapter
       final AccountRecipient r = (AccountRecipient) src;
       jsonObject.addProperty(PROPERTY_ACCOUNT_NUMBER, r.number());
       final Bank bank = r.bank();
-      if (isNotNull(bank)) {
+      if (ObjectHelper.isNotNull(bank)) {
         jsonObject.add(PROPERTY_BANK, context.serialize(bank, Bank.class));
       }
       final Product product = r.product();
-      if (isNotNull(product)) {
+      if (ObjectHelper.isNotNull(product)) {
         jsonObject.add(PROPERTY_PRODUCT, context.serialize(product, Product.class));
       }
     }

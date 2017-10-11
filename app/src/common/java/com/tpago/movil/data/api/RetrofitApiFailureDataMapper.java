@@ -8,6 +8,9 @@ import io.reactivex.functions.Function;
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
 
+/**
+ * @author hecvasro
+ */
 final class RetrofitApiFailureDataMapper implements Function<ResponseBody, FailureData> {
 
   static RetrofitApiFailureDataMapper create(Converter<ResponseBody, FailureData> converter) {

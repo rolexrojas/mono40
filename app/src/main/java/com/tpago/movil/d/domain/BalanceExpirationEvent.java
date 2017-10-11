@@ -2,9 +2,9 @@ package com.tpago.movil.d.domain;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.domain.util.Event;
 import com.tpago.movil.d.domain.util.EventType;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * {@link Event} that represents the expiration of the {@link Balance balance} of a {@link Product
@@ -14,6 +14,7 @@ import com.tpago.movil.d.domain.util.EventType;
  */
 @Deprecated
 public class BalanceExpirationEvent extends Event {
+
   /**
    * TODO
    */
@@ -42,7 +43,7 @@ public class BalanceExpirationEvent extends Event {
 
   @Override
   public boolean equals(Object object) {
-    return super.equals(object) || (Utils.isNotNull(object)
+    return super.equals(object) || (ObjectHelper.isNotNull(object)
       && object instanceof BalanceExpirationEvent
       && ((BalanceExpirationEvent) object).product.equals(product));
   }

@@ -2,13 +2,9 @@ package com.tpago.movil.d.ui.main.recipient.index.category;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
+import com.tpago.movil.util.DigitHelper;
 
 import java.util.regex.Pattern;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.tpago.movil.util.DigitHelper.removeNonDigits;
-import static com.tpago.movil.d.ui.main.recipient.index.category.Action.Type.ADD_ACCOUNT;
-import static com.tpago.movil.d.ui.main.recipient.index.category.Action.Type.TRANSACTION_WITH_ACCOUNT;
 
 /**
  * @author hecvasro
@@ -29,7 +25,7 @@ abstract class AccountAction extends Action {
    * false otherwise.
    */
   private static boolean isProductNumber(String s, boolean shouldSanitize) {
-    return PATTERN.matcher(shouldSanitize ? removeNonDigits(s) : s)
+    return PATTERN.matcher(shouldSanitize ? DigitHelper.removeNonDigits(s) : s)
       .matches();
   }
 
@@ -54,19 +50,7 @@ abstract class AccountAction extends Action {
    *   If {@code s} is not a {@link #isProductNumber(String) valid} {@link Product product} number.
    */
   static AccountAction create(Type type, String s) {
-    checkArgument(
-      type == TRANSACTION_WITH_ACCOUNT || type == ADD_ACCOUNT,
-      "%1$s != %2$s && %1$s != %3$s",
-      type,
-      TRANSACTION_WITH_ACCOUNT,
-      ADD_ACCOUNT
-    );
-    final String sanitizedString = removeNonDigits(s);
-    checkArgument(
-      isProductNumber(sanitizedString, false),
-      "!isValid(%1$s, false)",
-      sanitizedString
-    );
+    final String sanitizedString = DigitHelper.removeNonDigits(s);
     return new AutoValue_AccountAction(type, sanitizedString);
   }
 

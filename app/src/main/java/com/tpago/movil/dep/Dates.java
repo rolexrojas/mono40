@@ -5,12 +5,14 @@ import android.support.annotation.PluralsRes;
 import android.support.annotation.StringRes;
 
 import com.tpago.movil.R;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * @author hecvasro
  */
 @Deprecated
 public final class Dates {
+
   private static final Character SEPARATOR = ' ';
 
   @StringRes private static final int PREFIX_ID_FUTURE = R.string.relative_time_prefix_future;
@@ -37,7 +39,7 @@ public final class Dates {
   }
 
   public static String createRelativeTimeString(Context context, long time) {
-    Preconditions.assertNotNull(context, "context == null");
+    ObjectHelper.checkNotNull(context, "context");
 
     final long currentTime = System.currentTimeMillis();
     final long diff = currentTime - time;
@@ -81,7 +83,8 @@ public final class Dates {
     if (shouldSuffixIdBePluralized) {
       builder
         .append(SEPARATOR)
-        .append(context.getResources().getQuantityString(suffixId, count));
+        .append(context.getResources()
+          .getQuantityString(suffixId, count));
     } else {
       builder.append(context.getString(suffixId));
     }

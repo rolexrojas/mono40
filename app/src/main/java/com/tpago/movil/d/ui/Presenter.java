@@ -2,7 +2,7 @@ package com.tpago.movil.d.ui;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.d.misc.Utils;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * TODO
@@ -10,6 +10,7 @@ import com.tpago.movil.d.misc.Utils;
  * @author hecvasro
  */
 public abstract class Presenter<S extends Screen> {
+
   protected S screen;
 
   /**
@@ -18,7 +19,7 @@ public abstract class Presenter<S extends Screen> {
    * @return TODO
    */
   private boolean isScreenAttached() {
-    return Utils.isNotNull(screen);
+    return ObjectHelper.isNotNull(screen);
   }
 
   /**

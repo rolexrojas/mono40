@@ -1,6 +1,7 @@
 package com.tpago.movil.domain.balance;
 
-import com.google.common.base.Optional;
+import android.support.annotation.Nullable;
+
 import com.tpago.movil.dep.Consumer;
 
 import java.util.List;
@@ -21,8 +22,8 @@ public class BalanceStore<T extends Balance> {
     throw new UnsupportedOperationException("not implemented");
   }
 
-  private Optional<T> balance;
-  private final List<Consumer<Optional<T>>> consumers;
+  private T balance;
+  private final List<Consumer<T>> consumers;
 
   private BalanceStore() {
     throw new UnsupportedOperationException("not implemented");
@@ -64,7 +65,8 @@ public class BalanceStore<T extends Balance> {
    *
    * @return Current {@link Balance balance}, if set.
    */
-  public final Optional<T> get() {
+  @Nullable
+  public final T get() {
     throw new UnsupportedOperationException("not implemented");
   }
 

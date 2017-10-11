@@ -11,8 +11,7 @@ import com.tpago.movil.d.domain.ProductType;
 import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
 import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.d.domain.LogoStyle;
-
-import static com.tpago.movil.dep.Preconditions.assertNotNull;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * @author hecvasro
@@ -23,7 +22,7 @@ class OwnProductListItemHolderBinder
   private final StringHelper stringHelper;
 
   OwnProductListItemHolderBinder(StringHelper stringHelper) {
-    this.stringHelper = assertNotNull(stringHelper, "stringHelper == null");
+    this.stringHelper = ObjectHelper.checkNotNull(stringHelper, "stringHelper");
   }
 
   @Override

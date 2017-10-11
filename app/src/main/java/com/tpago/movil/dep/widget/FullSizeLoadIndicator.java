@@ -10,39 +10,41 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tpago.movil.R;
-import com.tpago.movil.dep.Objects;
-import com.tpago.movil.dep.Preconditions;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * @author hecvasro
  */
 @Deprecated
 public final class FullSizeLoadIndicator implements LoadIndicator {
+
   private static final String TAG = FullSizeLoadIndicator.class.getSimpleName();
 
   private final FragmentManager fragmentManager;
 
   public FullSizeLoadIndicator(FragmentManager fragmentManager) {
-    this.fragmentManager = Preconditions.assertNotNull(fragmentManager, "fragmentManager == null");
+    this.fragmentManager = ObjectHelper.checkNotNull(fragmentManager, "fragmentManager");
   }
 
   @Override
   public void start() {
     final Fragment fragment = fragmentManager.findFragmentByTag(TAG);
-    if (Objects.checkIfNull(fragment)) {
-      FullSizeLoadIndicatorDialogFragment.create().show(fragmentManager, TAG);
+    if (ObjectHelper.isNull(fragment)) {
+      FullSizeLoadIndicatorDialogFragment.create()
+        .show(fragmentManager, TAG);
     }
   }
 
   @Override
   public void stop() {
     final Fragment fragment = fragmentManager.findFragmentByTag(TAG);
-    if (Objects.checkIfNotNull(fragment) && fragment instanceof FullSizeLoadIndicatorDialogFragment) {
+    if (ObjectHelper.isNotNull(fragment) && fragment instanceof FullSizeLoadIndicatorDialogFragment) {
       ((DialogFragment) fragment).dismiss();
     }
   }
 
   public static final class FullSizeLoadIndicatorDialogFragment extends DialogFragment {
+
     static FullSizeLoadIndicatorDialogFragment create() {
       return new FullSizeLoadIndicatorDialogFragment();
     }
@@ -58,7 +60,8 @@ public final class FullSizeLoadIndicator implements LoadIndicator {
     public View onCreateView(
       LayoutInflater inflater,
       @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
+      @Nullable Bundle savedInstanceState
+    ) {
       return inflater.inflate(R.layout.widget_load_indicator_full_size, container, false);
     }
   }

@@ -3,23 +3,27 @@ package com.tpago.movil.dep.init.register;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.content.StringResolver;
 import com.tpago.movil.d.domain.Password;
-import com.tpago.movil.dep.Objects;
+import com.tpago.movil.util.StringHelper;
 
 /**
  * @author hecvasro
  */
-final class PasswordRegisterFormPresenter extends RegisterFormPresenter<PasswordRegisterFormPresenter.View> {
+final class PasswordRegisterFormPresenter
+  extends RegisterFormPresenter<PasswordRegisterFormPresenter.View> {
+
   private String textInputContent;
   private String confirmationTextInputContent;
 
   private static String sanitize(String content) {
-    return Objects.checkIfNull(content) ? "" : content.trim();
+    return StringHelper.emptyIfNull(content)
+      .trim();
   }
 
   PasswordRegisterFormPresenter(
     View view,
     StringResolver stringResolver,
-    RegisterData registerData) {
+    RegisterData registerData
+  ) {
     super(view, stringResolver, registerData);
     this.textInputContent = this.registerData.getPassword();
     this.confirmationTextInputContent = this.textInputContent;
@@ -74,7 +78,8 @@ final class PasswordRegisterFormPresenter extends RegisterFormPresenter<Password
       view.showDialog(
         stringResolver.resolve(R.string.register_form_password_error_title),
         stringResolver.resolve(R.string.register_form_password_error_message),
-        stringResolver.resolve(R.string.register_form_password_error_positive_button_text));
+        stringResolver.resolve(R.string.register_form_password_error_positive_button_text)
+      );
       view.showTextInputContentAsErratic(!checkIfTextInputContentValid());
       view.showConfirmationTextInputContentAsErratic(!checkIfConfirmationTextInputContentValid());
     }
@@ -89,9 +94,13 @@ final class PasswordRegisterFormPresenter extends RegisterFormPresenter<Password
   }
 
   interface View extends RegisterFormPresenter.View {
+
     void setTextInputContent(String content);
+
     void showTextInputContentAsErratic(boolean showAsErratic);
+
     void setConfirmationTextInputContent(String content);
+
     void showConfirmationTextInputContentAsErratic(boolean showAsErratic);
 
     void hideKeyboard();

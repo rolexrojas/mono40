@@ -1,14 +1,12 @@
 package com.tpago.movil.d.domain;
 
-import static com.tpago.movil.dep.Objects.checkIfNull;
-import static com.tpago.movil.dep.Preconditions.assertNotNull;
-
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.tpago.movil.dep.content.SharedPreferencesCreator;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.api.ApiUtils;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,20 +38,16 @@ public final class RecipientManager {
     Gson gson,
     DepApiBridge apiBridge
   ) {
-    this.sharedPreferences =
-      assertNotNull(sharedPreferencesCreator, "sharedPreferencesCreator == null")
-        .create(RecipientManager.class.getCanonicalName());
-    this.gson =
-      assertNotNull(gson, "gson == null");
-
-    this.indexSet = this.sharedPreferences.getStringSet(KEY_INDEX_SET, new HashSet<String>());
-
-    this.apiBridge = assertNotNull(apiBridge, "apiBridge == null");
+    this.sharedPreferences = sharedPreferencesCreator
+      .create(RecipientManager.class.getCanonicalName());
+    this.gson = gson;
+    this.indexSet = this.sharedPreferences.getStringSet(KEY_INDEX_SET, new HashSet<>());
+    this.apiBridge = apiBridge;
   }
 
   @Deprecated
   final void syncRecipients(final List<Recipient> remoteRecipientList) {
-    if (checkIfNull(this.recipientList)) {
+    if (ObjectHelper.isNull(this.recipientList)) {
       this.recipientList = new ArrayList<>();
     } else {
       this.recipientList.clear();

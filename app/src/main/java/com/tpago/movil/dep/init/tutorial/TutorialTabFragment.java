@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tpago.movil.R;
-import com.tpago.movil.dep.Preconditions;
+import com.tpago.movil.util.ObjectHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,6 +19,7 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 public final class TutorialTabFragment extends Fragment {
+
   private static final String KEY_TITLE_ID = "titleId";
   private static final String KEY_DESCRIPTION_ID = "descriptionId";
 
@@ -41,7 +42,8 @@ public final class TutorialTabFragment extends Fragment {
   public View onCreateView(
     LayoutInflater inflater,
     @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(R.layout.fragment_tutorial_tab, container, false);
   }
 
@@ -51,7 +53,7 @@ public final class TutorialTabFragment extends Fragment {
     // Binds all annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
     // Populates the art, title and description fields.
-    final Bundle args = Preconditions.assertNotNull(getArguments(), "getArguments() == null");
+    final Bundle args = ObjectHelper.checkNotNull(getArguments(), "getArguments()");
     titleTextView.setText(args.getInt(KEY_TITLE_ID));
     descriptionTextView.setText(args.getInt(KEY_DESCRIPTION_ID));
   }

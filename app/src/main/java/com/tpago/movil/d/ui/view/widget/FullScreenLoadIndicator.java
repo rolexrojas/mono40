@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tpago.movil.R;
-import com.tpago.movil.d.misc.Utils;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * TODO
@@ -19,6 +19,7 @@ import com.tpago.movil.d.misc.Utils;
  * @author hecvasro
  */
 public class FullScreenLoadIndicator implements LoadIndicator {
+
   /**
    * TODO
    */
@@ -42,8 +43,9 @@ public class FullScreenLoadIndicator implements LoadIndicator {
   @Override
   public void show() {
     final Fragment fragment = fragmentManager.findFragmentByTag(TAG);
-    if (Utils.isNull(fragment)) {
-      FullScreenLoadIndicatorDialogFragment.newInstance().show(fragmentManager, TAG);
+    if (ObjectHelper.isNull(fragment)) {
+      FullScreenLoadIndicatorDialogFragment.newInstance()
+        .show(fragmentManager, TAG);
     }
   }
 
@@ -59,6 +61,7 @@ public class FullScreenLoadIndicator implements LoadIndicator {
    * TODO
    */
   public static class FullScreenLoadIndicatorDialogFragment extends DialogFragment {
+
     /**
      * TODO
      *
@@ -77,8 +80,10 @@ public class FullScreenLoadIndicator implements LoadIndicator {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
+    public View onCreateView(
+      LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState
+    ) {
       return inflater.inflate(R.layout.d_full_screen_load_indicator, container, false);
     }
   }

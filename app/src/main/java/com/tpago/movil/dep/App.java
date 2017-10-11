@@ -1,7 +1,7 @@
 package com.tpago.movil.dep;
 
+import android.app.Application;
 import android.content.Context;
-import android.support.multidex.MultiDexApplication;
 
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
@@ -10,22 +10,22 @@ import com.tpago.movil.app.AppComponent;
 import com.tpago.movil.app.di.ComponentBuilderSupplier;
 import com.tpago.movil.app.di.ComponentBuilderSupplierContainer;
 import com.tpago.movil.d.DepAppModule;
+import com.tpago.movil.util.ObjectHelper;
 
 import javax.inject.Inject;
 
 import okhttp3.OkHttpClient;
 import timber.log.Timber;
 
-import static com.tpago.movil.dep.Preconditions.assertNotNull;
-
 /**
  * @author hecvasro
  */
 @Deprecated
-public abstract class App extends MultiDexApplication implements ComponentBuilderSupplierContainer {
+public abstract class App extends Application implements ComponentBuilderSupplierContainer {
 
   public static App get(Context context) {
-    return (App) assertNotNull(context, "context == null").getApplicationContext();
+    return (App) ObjectHelper.checkNotNull(context, "context")
+      .getApplicationContext();
   }
 
   private com.tpago.movil.app.AppComponent component;
@@ -33,9 +33,7 @@ public abstract class App extends MultiDexApplication implements ComponentBuilde
   private boolean visible = false;
 
   @Inject ComponentBuilderSupplier componentBuilderSupplier;
-
-  @Inject
-  OkHttpClient httpClient;
+  @Inject OkHttpClient httpClient;
 
   private void initTimber() {
     if (BuildConfig.DEBUG) {

@@ -1,7 +1,7 @@
 package com.tpago.movil.dep.init;
 
 import com.tpago.movil.PhoneNumber;
-import com.tpago.movil.dep.Preconditions;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * @author hecvasro
@@ -15,7 +15,7 @@ public final class InitData {
   }
 
   final void setPhoneNumber(PhoneNumber phoneNumber, @PhoneNumber.State int phoneNumberState) {
-    this.phoneNumber = Preconditions.assertNotNull(phoneNumber, "phoneNumber == null");
+    this.phoneNumber = ObjectHelper.checkNotNull(phoneNumber, "phoneNumber");
     this.phoneNumberState = phoneNumberState;
   }
 

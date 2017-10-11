@@ -6,15 +6,14 @@ import static com.tpago.movil.d.domain.RecipientType.NON_AFFILIATED_PHONE_NUMBER
 import static com.tpago.movil.d.domain.RecipientType.PHONE_NUMBER;
 import static com.tpago.movil.d.domain.RecipientType.PRODUCT;
 import static com.tpago.movil.d.domain.RecipientType.USER;
-import static com.tpago.movil.dep.Objects.checkIfNotNull;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.domain.util.StringUtils;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.Comparator;
 
@@ -49,11 +48,11 @@ public abstract class Recipient implements Parcelable, Matchable {
   }
 
   public static boolean acceptsPayments(Recipient recipient) {
-    return checkIfNotNull(recipient) && (recipient.type == BILL || recipient.type == PRODUCT);
+    return ObjectHelper.isNotNull(recipient) && (recipient.type == BILL || recipient.type == PRODUCT);
   }
 
   public static boolean acceptsTransfers(Recipient recipient) {
-    return checkIfNotNull(recipient)
+    return ObjectHelper.isNotNull(recipient)
       && (
       recipient.type == PHONE_NUMBER
         || recipient.type == NON_AFFILIATED_PHONE_NUMBER
@@ -62,7 +61,7 @@ public abstract class Recipient implements Parcelable, Matchable {
   }
 
   public static boolean acceptsRecharges(Recipient recipient) {
-    return checkIfNotNull(recipient)
+    return ObjectHelper.isNotNull(recipient)
       && (
       recipient.type == USER
         || recipient.type == PHONE_NUMBER
@@ -71,7 +70,7 @@ public abstract class Recipient implements Parcelable, Matchable {
   }
 
   public static boolean acceptsDisburses(Recipient recipient) {
-    return checkIfNotNull(recipient)
+    return ObjectHelper.isNotNull(recipient)
       && recipient.type == PRODUCT
       && Product.checkIfCreditCard(((ProductRecipient) recipient).getProduct());
   }
@@ -182,7 +181,7 @@ public abstract class Recipient implements Parcelable, Matchable {
 
   @Override
   public boolean matches(@Nullable String query) {
-    return Utils.isNotNull(label) && StringUtils.matches(label, query);
+    return ObjectHelper.isNotNull(label) && StringUtils.matches(label, query);
   }
 
   @Override

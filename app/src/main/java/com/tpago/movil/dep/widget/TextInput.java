@@ -4,13 +4,14 @@ import android.content.Context;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 
-import com.tpago.movil.dep.Objects;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * @author hecvasro
  */
 @Deprecated
 public class TextInput extends AppCompatEditText implements ErraticView {
+
   private ErraticViewHelper erraticViewHelper;
 
   public TextInput(Context context) {
@@ -34,11 +35,12 @@ public class TextInput extends AppCompatEditText implements ErraticView {
 
   @Override
   protected int[] onCreateDrawableState(int extraSpace) {
-    if (Objects.checkIfNull(erraticViewHelper)) {
+    if (ObjectHelper.isNull(erraticViewHelper)) {
       return super.onCreateDrawableState(extraSpace);
     } else {
       return erraticViewHelper.onCreateDrawableState(
-        super.onCreateDrawableState(erraticViewHelper.getExtraSpace(extraSpace)));
+        super.onCreateDrawableState(erraticViewHelper.getExtraSpace(extraSpace))
+      );
     }
   }
 

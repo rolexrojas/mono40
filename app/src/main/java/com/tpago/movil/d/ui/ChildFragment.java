@@ -5,12 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 public abstract class ChildFragment<T extends Container<?>> extends Fragment
   implements ContainerChild<T> {
+
   private ChildFragmentHelper<T> helper;
 
   @Override

@@ -32,7 +32,7 @@ import com.tpago.movil.d.domain.LogoStyle;
 import com.tpago.movil.d.domain.ErrorCode;
 import com.tpago.movil.d.domain.Result;
 import com.tpago.movil.dep.reactivex.Disposables;
-import com.tpago.movil.dep.Objects;
+import com.tpago.movil.util.ObjectHelper;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.ArrayList;
@@ -50,8 +50,6 @@ import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
-
-import static com.tpago.movil.dep.Objects.checkIfNull;
 
 /**
  * @author hecvasro
@@ -81,7 +79,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment extends
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final TransactionCreationComponent c = getContainer().getComponent();
-    if (Objects.checkIfNotNull(c)) {
+    if (ObjectHelper.isNotNull(c)) {
       c.inject(this);
     }
   }
@@ -138,7 +136,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment extends
         @Override
         public void accept(Result<Set<Bank>, ErrorCode> result) throws Exception {
           if (result.isSuccessful()) {
-            if (checkIfNull(bankList)) {
+            if (ObjectHelper.isNull(bankList)) {
               bankList = new ArrayList<>();
             } else {
               adapter.notifyItemRangeRemoved(0, bankList.size());

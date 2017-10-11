@@ -2,7 +2,6 @@ package com.tpago.movil.d.ui.main.recipient.index.disburse;
 
 import static android.app.Activity.RESULT_OK;
 import static com.tpago.movil.d.domain.Product.checkIfCreditCard;
-import static com.tpago.movil.dep.Objects.checkIfNotNull;
 
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +29,7 @@ import com.tpago.movil.d.ui.main.list.ListItemAdapter;
 import com.tpago.movil.d.ui.main.list.ListItemHolderCreatorFactory;
 import com.tpago.movil.d.ui.main.recipient.index.category.TransactionSummaryDialogFragment;
 import com.tpago.movil.dep.User;
+import com.tpago.movil.util.ObjectHelper;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import javax.inject.Inject;
@@ -151,7 +151,7 @@ public final class DisbursementFragment extends ChildFragment<MainContainer> imp
   public void onResume() {
     super.onResume();
 
-    if (checkIfNotNull(this.requestResult)) {
+    if (ObjectHelper.isNotNull(this.requestResult)) {
       TransactionSummaryDialogFragment.create(null, true, requestResult)
         .show(getChildFragmentManager(), null);
       this.requestResult = null;

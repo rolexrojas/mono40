@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import com.tpago.movil.R;
 import com.tpago.movil.d.domain.Product;
-import com.tpago.movil.dep.Preconditions;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * @author hecvasro
@@ -15,7 +15,8 @@ import com.tpago.movil.dep.Preconditions;
 final class PaymentMethodChooserRecyclerViewAdapter
   extends RecyclerView.Adapter<BasePaymentMethodRecyclerViewHolder<? extends BasePaymentMethodHolder>>
   implements PaymentMethodChooserAdapter.Observer,
-    BasePaymentMethodRecyclerViewHolder.OnPaymentMethodViewHolderClickedListener {
+  BasePaymentMethodRecyclerViewHolder.OnPaymentMethodViewHolderClickedListener {
+
   private static final int TYPE_ITEM = 0;
   private static final int TYPE_ITEM_SELECTED = 1;
 
@@ -26,11 +27,12 @@ final class PaymentMethodChooserRecyclerViewAdapter
 
   PaymentMethodChooserRecyclerViewAdapter(
     Context context,
-    PaymentMethodChooserAdapter paymentMethodChooserAdapter) {
-    Preconditions.assertNotNull(context, "context == null");
+    PaymentMethodChooserAdapter paymentMethodChooserAdapter
+  ) {
+    ObjectHelper.checkNotNull(context, "context");
     this.paymentMethodHolderBinder = new PaymentMethodHolderBinder(context);
     this.selectedPaymentMethodHolderBinder = new SelectedPaymentMethodHolderBinder(context);
-    Preconditions.assertNotNull(paymentMethodChooserAdapter, "paymentMethodChooserAdapter == null");
+    ObjectHelper.checkNotNull(paymentMethodChooserAdapter, "paymentMethodChooserAdapter");
     this.paymentMethodChooserAdapter = paymentMethodChooserAdapter;
     this.paymentMethodChooserAdapter.setObserver(this);
   }
@@ -38,32 +40,38 @@ final class PaymentMethodChooserRecyclerViewAdapter
   @Override
   public BasePaymentMethodRecyclerViewHolder<? extends BasePaymentMethodHolder> onCreateViewHolder(
     ViewGroup parent,
-    int viewType) {
+    int viewType
+  ) {
     final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
     if (viewType == TYPE_ITEM) {
       return new PaymentMethodRecyclerViewHolder(
         inflater.inflate(R.layout.widget_payment_method_chooser_popup_item, parent, false),
-        this);
+        this
+      );
     } else {
       return new SelectedPaymentMethodRecyclerViewHolder(
         inflater.inflate(R.layout.widget_payment_method_chooser_popup_item_selected, parent, false),
-        this);
+        this
+      );
     }
   }
 
   @Override
   public void onBindViewHolder(
     BasePaymentMethodRecyclerViewHolder<? extends BasePaymentMethodHolder> holder,
-    int position) {
+    int position
+  ) {
     final Product item = paymentMethodChooserAdapter.getItem(position);
     if (getItemViewType(position) == TYPE_ITEM) {
       paymentMethodHolderBinder.bind(
         item,
-        ((PaymentMethodRecyclerViewHolder) holder).internalHolder);
+        ((PaymentMethodRecyclerViewHolder) holder).internalHolder
+      );
     } else {
       selectedPaymentMethodHolderBinder.bind(
         item,
-        ((SelectedPaymentMethodRecyclerViewHolder) holder).internalHolder);
+        ((SelectedPaymentMethodRecyclerViewHolder) holder).internalHolder
+      );
     }
   }
 

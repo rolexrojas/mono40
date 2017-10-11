@@ -1,13 +1,13 @@
 package com.tpago.movil.dep.api;
 
-import com.tpago.movil.dep.Objects;
-import com.tpago.movil.dep.Preconditions;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * @author hecvasro
  */
 @Deprecated
 public final class DApiData<T> {
+
   private final T value;
   private final DApiError error;
 
@@ -20,12 +20,12 @@ public final class DApiData<T> {
   }
 
   private DApiData(T value, DApiError error) {
-    if (Objects.checkIfNull(error)) {
-      this.value = Preconditions.assertNotNull(value, "value == null");
+    if (ObjectHelper.isNull(error)) {
+      this.value = ObjectHelper.checkNotNull(value, "value");
       this.error = null;
     } else {
       this.value = null;
-      this.error = Preconditions.assertNotNull(error, "error == null");
+      this.error = ObjectHelper.checkNotNull(error, "error");
     }
   }
 

@@ -14,11 +14,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tpago.movil.R;
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.ui.FullScreenChildDialogFragment;
 import com.tpago.movil.d.ui.view.BaseAnimatorListener;
-import com.tpago.movil.dep.Objects;
+import com.tpago.movil.util.ObjectHelper;
 
 import javax.inject.Inject;
 
@@ -33,6 +32,7 @@ import butterknife.Unbinder;
 public class PurchasePaymentDialogFragment
   extends FullScreenChildDialogFragment<PurchaseContainer>
   implements PurchasePaymentScreen {
+
   private static final String EXTRA_PAYMENT_OPTION = "paymentOption";
 
   private Unbinder unbinder;
@@ -46,7 +46,8 @@ public class PurchasePaymentDialogFragment
 
   @BindView(R.id.commerce_payment_option) View paymentOptionContainerView;
   @BindView(R.id.commerce_payment_message) TextView commercePaymentMessageTextView;
-  @BindView(R.id.purchase_payment_indicator_confirmation) ImageView purchasePaymentIndicatorConfirmationImageView;
+  @BindView(R.id.purchase_payment_indicator_confirmation) ImageView
+    purchasePaymentIndicatorConfirmationImageView;
 
   private OnDismissedListener onDismissedListener;
 
@@ -67,9 +68,9 @@ public class PurchasePaymentDialogFragment
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
-    if (Objects.checkIfNotNull(getTargetFragment()) && getTargetFragment() instanceof OnDismissedListener) {
+    if (ObjectHelper.isNotNull(getTargetFragment()) && getTargetFragment() instanceof OnDismissedListener) {
       onDismissedListener = (OnDismissedListener) getTargetFragment();
-    } else if (Objects.checkIfNotNull(getParentFragment()) && getParentFragment() instanceof OnDismissedListener) {
+    } else if (ObjectHelper.isNotNull(getParentFragment()) && getParentFragment() instanceof OnDismissedListener) {
       onDismissedListener = (OnDismissedListener) getParentFragment();
     } else if (getActivity() instanceof OnDismissedListener) {
       onDismissedListener = (OnDismissedListener) getActivity();
@@ -80,8 +81,9 @@ public class PurchasePaymentDialogFragment
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // Asserts the payment option.
-    final Bundle bundle = Utils.isNotNull(savedInstanceState) ? savedInstanceState : getArguments();
-    if (Utils.isNull(bundle) || !bundle.containsKey(EXTRA_PAYMENT_OPTION)) {
+    final Bundle bundle
+      = ObjectHelper.isNotNull(savedInstanceState) ? savedInstanceState : getArguments();
+    if (ObjectHelper.isNull(bundle) || !bundle.containsKey(EXTRA_PAYMENT_OPTION)) {
       throw new NullPointerException("Argument " + EXTRA_PAYMENT_OPTION + " is missing");
     } else {
       // Retrieves the payment option from the arguments.
@@ -97,8 +99,10 @@ public class PurchasePaymentDialogFragment
 
   @Nullable
   @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+  public View onCreateView(
+    LayoutInflater inflater, @Nullable ViewGroup container,
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(R.layout.d_dialog_fragment_purchase_payment, container, false);
   }
 
@@ -117,7 +121,7 @@ public class PurchasePaymentDialogFragment
   public void onStart() {
     super.onStart();
     final Window window = getDialog().getWindow();
-    if (Objects.checkIfNotNull(window)) {
+    if (ObjectHelper.isNotNull(window)) {
       window.setWindowAnimations(R.style.PurchasePaymentAnimation);
     }
     presenter.start();
@@ -166,12 +170,13 @@ public class PurchasePaymentDialogFragment
   @Override
   public void onDismiss(DialogInterface dialog) {
     super.onDismiss(dialog);
-    if (Objects.checkIfNotNull(onDismissedListener)) {
+    if (ObjectHelper.isNotNull(onDismissedListener)) {
       onDismissedListener.onDismissed();
     }
   }
 
   interface OnDismissedListener {
+
     void onDismissed();
   }
 }

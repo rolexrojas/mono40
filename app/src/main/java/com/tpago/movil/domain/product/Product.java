@@ -1,10 +1,10 @@
 package com.tpago.movil.domain.product;
 
 import android.net.Uri;
+import android.support.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
-import com.google.common.base.Optional;
 import com.tpago.movil.Currency;
 import com.tpago.movil.domain.balance.AvailableBalance;
 import com.tpago.movil.domain.balance.BalanceStore;
@@ -65,9 +65,11 @@ public abstract class Product {
     throw new UnsupportedOperationException("not implemented");
   }
 
-  public abstract Optional<String> imageUriTemplate();
+  @Nullable
+  public abstract String imageUriTemplate();
 
-  public abstract Optional<Uri> imageUri();
+  @Nullable
+  public abstract Uri imageUri();
 
   /**
    * Indicates whether it's a payment method or not.
@@ -163,9 +165,9 @@ public abstract class Product {
 
     public abstract Builder balanceQueryCost(BigDecimal balanceQueryCost);
 
-    public abstract Builder imageUriTemplate(Optional<String> imageUriTemplate);
+    public abstract Builder imageUriTemplate(@Nullable String imageUriTemplate);
 
-    public abstract Builder imageUri(Optional<Uri> imageUri);
+    public abstract Builder imageUri(@Nullable Uri imageUri);
 
     public abstract Builder isPaymentMethod(boolean isPaymentMethod);
 

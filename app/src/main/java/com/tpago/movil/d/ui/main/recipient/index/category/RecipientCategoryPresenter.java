@@ -36,9 +36,7 @@ import com.tpago.movil.d.domain.FailureData;
 import com.tpago.movil.d.domain.Result;
 import com.tpago.movil.dep.net.NetworkService;
 import com.tpago.movil.dep.reactivex.Disposables;
-import com.tpago.movil.dep.text.Texts;
 import com.tpago.movil.util.ObjectHelper;
-import com.tpago.movil.dep.Objects;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -496,7 +494,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
       screen.setDeleteButtonEnabled(!selectedRecipientList.isEmpty());
     } else if (recipient instanceof BillRecipient) {
       final BillRecipient billRecipient = (BillRecipient) recipient;
-      if (Objects.checkIfNull(billRecipient.getBalance())) {
+      if (ObjectHelper.isNull(billRecipient.getBalance())) {
         queryBalanceSubscription = rx.Single
           .defer(new Callable<rx.Single<Result<BillBalance, ErrorCode>>>() {
             @Override
@@ -565,7 +563,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
       }
     } else if (recipient instanceof ProductRecipient) {
       final ProductRecipient productRecipient = (ProductRecipient) recipient;
-      if (Objects.checkIfNull(productRecipient.getBalance())) {
+      if (ObjectHelper.isNull(productRecipient.getBalance())) {
         queryBalanceSubscription = rx.Single
           .defer(new Callable<rx.Single<Result<ProductBillBalance, ErrorCode>>>() {
             @Override
@@ -696,10 +694,10 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
                   screen.remove(recipient);
                 } else {
                   String label = recipient.getLabel();
-                  if (Texts.checkIfEmpty(label)) {
+                  if (com.tpago.movil.util.StringHelper.isNullOrEmpty(label)) {
                     label = recipient.getIdentifier();
                   }
-                  if (Texts.checkIfEmpty(resultMessageContentBuilder)) {
+                  if (com.tpago.movil.util.StringHelper.isNullOrEmpty(resultMessageContentBuilder)) {
                     resultMessageContentBuilder.append("\n");
                   }
                   resultMessageContentBuilder
@@ -707,7 +705,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
                     .append(label);
                 }
               }
-              if (Texts.checkIfNotEmpty(resultMessageContentBuilder)) {
+              if (!com.tpago.movil.util.StringHelper.isNullOrEmpty(resultMessageContentBuilder)) {
                 final String resultMessage = new StringBuilder("Error al eliminar:")
                   .append("\n")
                   .append(resultMessageContentBuilder.toString())

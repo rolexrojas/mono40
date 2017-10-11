@@ -13,8 +13,7 @@ import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.pos.PosResult;
 import com.tpago.movil.d.domain.util.EventBus;
-import com.tpago.movil.dep.Objects;
-import com.tpago.movil.dep.Preconditions;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,13 +57,11 @@ public final class ProductManager {
     Lazy<PosBridge> posBridge
   ) {
 
-    this.sharedPreferences = Preconditions
-      .assertNotNull(sharedPreferencesCreator, "sharedPreferencesCreator == null")
+    this.sharedPreferences = sharedPreferencesCreator
       .create(ProductManager.class.getCanonicalName());
-    this.gson = Preconditions
-      .assertNotNull(gson, "gson == null");
+    this.gson = gson;
 
-    this.indexSet = this.sharedPreferences.getStringSet(KEY_INDEX_SET, new HashSet<String>());
+    this.indexSet = this.sharedPreferences.getStringSet(KEY_INDEX_SET, new HashSet<>());
 
     this.context = context;
     this.eventBus = eventBus;
@@ -74,7 +71,7 @@ public final class ProductManager {
 
   @Deprecated
   final void syncProducts(final List<Product> remoteProductList) {
-    if (Objects.checkIfNull(productList)) {
+    if (ObjectHelper.isNull(productList)) {
       productList = new ArrayList<>();
     }
     productList.clear();
@@ -140,7 +137,7 @@ public final class ProductManager {
     //    set local.default local.temporary
     //    set remote.default local.temporary
     //    clear local.temporary
-    if (Objects.checkIfNull(rdpo)) {
+    if (ObjectHelper.isNull(rdpo)) {
       defaultPaymentOption = null;
       editor.remove(KEY_DEFAULT_PAYMENT_OPTION_ID);
     } else {
@@ -158,11 +155,11 @@ public final class ProductManager {
     }
 
     Collections.sort(productList, Product.comparator());
-    if (Objects.checkIfNull(paymentOptionList)) {
+    if (ObjectHelper.isNull(paymentOptionList)) {
       paymentOptionList = new ArrayList<>();
     }
     paymentOptionList.clear();
-    if (Objects.checkIfNotNull(defaultPaymentOption)) {
+    if (ObjectHelper.isNotNull(defaultPaymentOption)) {
       paymentOptionList.add(defaultPaymentOption);
     }
     for (Product p : productList) {

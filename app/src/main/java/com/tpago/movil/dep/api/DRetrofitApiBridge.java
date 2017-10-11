@@ -1,14 +1,14 @@
 package com.tpago.movil.dep.api;
 
-import static com.tpago.movil.dep.Preconditions.assertNotNull;
-
 import android.support.v4.util.Pair;
+
 import com.tpago.movil.Email;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.dep.Pin;
 import com.tpago.movil.dep.DeviceManager;
 import com.tpago.movil.dep.net.HttpCode;
 import com.tpago.movil.dep.net.HttpResult;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.lang.annotation.Annotation;
 
@@ -38,7 +38,8 @@ final class DRetrofitApiBridge implements DApiBridge {
         if (response.isSuccessful()) {
           data = DApiData.create(mapperFunc.apply(response.body()));
         } else {
-          data = DApiData.create(apiErrorConverter.convert(response.errorBody()).getError());
+          data = DApiData.create(apiErrorConverter.convert(response.errorBody())
+            .getError());
         }
         return HttpResult.create(HttpCode.find(response.code()), data);
       }
@@ -48,7 +49,8 @@ final class DRetrofitApiBridge implements DApiBridge {
   private Function<Response<UserData>, HttpResult<DApiData<Pair<UserData, String>>>> mapToHttpResult() {
     return new Function<Response<UserData>, HttpResult<DApiData<Pair<UserData, String>>>>() {
       @Override
-      public HttpResult<DApiData<Pair<UserData, String>>> apply(Response<UserData> response) throws Exception {
+      public HttpResult<DApiData<Pair<UserData, String>>> apply(Response<UserData> response)
+        throws Exception {
         final DApiData<Pair<UserData, String>> data;
         if (response.isSuccessful()) {
           data = DApiData.create(
@@ -59,7 +61,8 @@ final class DRetrofitApiBridge implements DApiBridge {
             )
           );
         } else {
-          data = DApiData.create(apiErrorConverter.convert(response.errorBody()).getError());
+          data = DApiData.create(apiErrorConverter.convert(response.errorBody())
+            .getError());
         }
 
         return HttpResult.create(HttpCode.find(response.code()), data);
@@ -68,11 +71,14 @@ final class DRetrofitApiBridge implements DApiBridge {
   }
 
   DRetrofitApiBridge(DeviceManager deviceManager, Retrofit retrofit) {
-    this.deviceManager = assertNotNull(deviceManager, "deviceManager == null");
+    this.deviceManager = ObjectHelper.checkNotNull(deviceManager, "deviceManager");
 
-    assertNotNull(retrofit, "retrofit == null");
+    ObjectHelper.checkNotNull(retrofit, "retrofit");
     this.apiService = retrofit.create(DApiService.class);
-    this.apiErrorConverter = retrofit.responseBodyConverter(ApiErrorResponseBody.class, new Annotation[0]);
+    this.apiErrorConverter = retrofit.responseBodyConverter(
+      ApiErrorResponseBody.class,
+      new Annotation[0]
+    );
   }
 
   @Override
@@ -96,7 +102,8 @@ final class DRetrofitApiBridge implements DApiBridge {
         this.deviceManager.getId(),
         phoneNumber.value(),
         password,
-        pin.getValue())
+        pin.getValue()
+      )
     );
 
     return single.map(mapToHttpResult());

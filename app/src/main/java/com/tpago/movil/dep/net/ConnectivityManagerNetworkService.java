@@ -3,23 +3,28 @@ package com.tpago.movil.dep.net;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import static com.tpago.movil.dep.Objects.checkIfNotNull;
-import static com.tpago.movil.dep.Preconditions.assertNotNull;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * @author hecvasro
  */
 @Deprecated
 final class ConnectivityManagerNetworkService implements NetworkService {
+
   private final ConnectivityManager connectivityManager;
 
   ConnectivityManagerNetworkService(ConnectivityManager connectivityManager) {
-    this.connectivityManager = assertNotNull(connectivityManager, "connectivityManager == null");
+    this.connectivityManager = ObjectHelper
+      .checkNotNull(connectivityManager, "connectivityManager");
   }
 
   @Override
   public boolean checkIfAvailable() {
-    final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-    return checkIfNotNull(networkInfo) && networkInfo.isConnectedOrConnecting();
+    final NetworkInfo networkInfo = this.connectivityManager.getActiveNetworkInfo();
+    if (ObjectHelper.isNull(networkInfo)) {
+      return false;
+    } else {
+      return networkInfo.isConnectedOrConnecting();
+    }
   }
 }

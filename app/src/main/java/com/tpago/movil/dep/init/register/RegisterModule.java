@@ -5,7 +5,7 @@ import com.tpago.movil.app.ui.FragmentQualifier;
 import com.tpago.movil.app.ui.FragmentReplacer;
 import com.tpago.movil.app.ui.FragmentScope;
 import com.tpago.movil.dep.init.InitData;
-import com.tpago.movil.dep.Preconditions;
+import com.tpago.movil.util.ObjectHelper;
 
 import dagger.Module;
 import dagger.Provides;
@@ -15,10 +15,11 @@ import dagger.Provides;
  */
 @Module
 public class RegisterModule {
+
   private final RegisterFragment fragment;
 
   RegisterModule(RegisterFragment fragment) {
-    this.fragment = Preconditions.assertNotNull(fragment, "fragment == null");
+    this.fragment = ObjectHelper.checkNotNull(fragment, "fragment");
   }
 
   @Provides

@@ -18,15 +18,15 @@ import android.widget.FrameLayout;
 
 import com.tpago.movil.R;
 import com.tpago.movil.dep.text.BaseTextWatcher;
-
-import static com.tpago.movil.dep.text.Texts.checkIfEmpty;
-import static com.tpago.movil.dep.Objects.checkIfNotNull;
+import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.util.StringHelper;
 
 /**
  * @author hecvasro
  */
 @Deprecated
 public final class LabelFitterLayout extends FrameLayout {
+
   private static final float SIZE_RATIO = 2F;
 
   private static void assertChildCount(int childCount) {
@@ -68,7 +68,8 @@ public final class LabelFitterLayout extends FrameLayout {
   public LabelFitterLayout(
     @NonNull Context context,
     @Nullable AttributeSet attributeSet,
-    @AttrRes int defaultStyleAttribute) {
+    @AttrRes int defaultStyleAttribute
+  ) {
     super(context, attributeSet, defaultStyleAttribute);
     initializeLabelFitterLayout(context, attributeSet, defaultStyleAttribute);
   }
@@ -76,28 +77,32 @@ public final class LabelFitterLayout extends FrameLayout {
   private void initializeLabelFitterLayout(
     Context context,
     AttributeSet attributeSet,
-    int defaultStyleAttribute) {
+    int defaultStyleAttribute
+  ) {
     // Obtains all attributes from the given attribute set.
     final Resources resources = context.getResources();
     final TypedArray styledAttributes = context.obtainStyledAttributes(
       attributeSet,
       R.styleable.LabelFitterLayout,
       defaultStyleAttribute,
-      R.style.Widget_LabelFitterLayout);
+      R.style.Widget_LabelFitterLayout
+    );
     try {
       minTextSize = styledAttributes.getDimensionPixelOffset(
         R.styleable.LabelFitterLayout_minTextSize,
-        resources.getDimensionPixelOffset(R.dimen.widget_label_fitter_layout_text_size_min));
+        resources.getDimensionPixelOffset(R.dimen.widget_label_fitter_layout_text_size_min)
+      );
       maxTextSize = styledAttributes.getDimensionPixelOffset(
         R.styleable.LabelFitterLayout_maxTextSize,
-        resources.getDimensionPixelOffset(R.dimen.widget_label_fitter_layout_text_size_max));
+        resources.getDimensionPixelOffset(R.dimen.widget_label_fitter_layout_text_size_max)
+      );
     } finally {
       styledAttributes.recycle();
     }
   }
 
   private void initializeChildLabel(View childView) {
-    if (checkIfNotNull(childLabel) && checkIfNotNull(childLabelTextWatcher)) {
+    if (ObjectHelper.isNotNull(childLabel) && ObjectHelper.isNotNull(childLabelTextWatcher)) {
       childLabel.removeTextChangedListener(childLabelTextWatcher);
       childLabelTextWatcher = null;
       childLabel = null;
@@ -125,11 +130,11 @@ public final class LabelFitterLayout extends FrameLayout {
       return;
     }
     CharSequence currentText = childLabel.getText();
-    if (checkIfEmpty(currentText)) {
+    if (StringHelper.isNullOrEmpty(currentText)) {
       return;
     }
     final TransformationMethod transformationMethod = childLabel.getTransformationMethod();
-    if (checkIfNotNull(transformationMethod)) {
+    if (ObjectHelper.isNotNull(transformationMethod)) {
       currentText = transformationMethod.getTransformation(currentText, this);
     }
     final TextPaint currentTextPaint = childLabel.getPaint();

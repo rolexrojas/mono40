@@ -4,10 +4,10 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.util.Binder;
 import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.data.util.Holder;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +18,7 @@ import java.util.List;
  * @author hecvasro
  */
 public class ListItemAdapter extends RecyclerView.Adapter<ListItemHolder> {
+
   /**
    * TODO
    */
@@ -40,8 +41,10 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemHolder> {
    * @param binderFactory
    *   TODO
    */
-  public ListItemAdapter(@NonNull ListItemHolderCreatorFactory holderCreatorFactory,
-    @NonNull BinderFactory binderFactory) {
+  public ListItemAdapter(
+    @NonNull ListItemHolderCreatorFactory holderCreatorFactory,
+    @NonNull BinderFactory binderFactory
+  ) {
     this.holderCreatorFactory = holderCreatorFactory;
     this.binderFactory = binderFactory;
   }
@@ -181,7 +184,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemHolder> {
   public ListItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     final ListItemHolderCreator<? extends ListItemHolder> creator
       = holderCreatorFactory.getCreator(viewType);
-    if (Utils.isNull(creator)) {
+    if (ObjectHelper.isNull(creator)) {
       throw new NullPointerException("Creator for '" + viewType + "' is missing");
     } else {
       return creator.create(parent);
@@ -195,7 +198,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemHolder> {
     final Class<?> itemType = item.getClass();
     final Class<? extends Holder> holderType = holder.getClass();
     final Binder binder = binderFactory.getBinder(itemType, holderType);
-    if (Utils.isNotNull(binder)) {
+    if (ObjectHelper.isNotNull(binder)) {
       binder.bind(item, holder);
     }
   }

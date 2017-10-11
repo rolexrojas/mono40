@@ -13,8 +13,7 @@ import com.tpago.movil.d.domain.Result;
 import com.tpago.movil.dep.net.HttpResult;
 import com.tpago.movil.dep.net.NetworkService;
 import com.tpago.movil.dep.reactivex.Disposables;
-import com.tpago.movil.dep.Objects;
-import com.tpago.movil.dep.Preconditions;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +29,11 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-import static com.tpago.movil.util.DigitHelper.toDigitList;
-
 /**
  * @author hecvasro
  */
 public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPresenter.View> {
+
   @Inject
   DApiBridge apiBridge;
   @Inject
@@ -51,14 +49,14 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
   PhoneNumberInitPresenter(View view, InitComponent component) {
     super(view);
     // Injects all the annotated dependencies.
-    Preconditions.assertNotNull(component, "component == null")
+    ObjectHelper.checkNotNull(component, "component")
       .inject(this);
   }
 
   private void updateView() {
     final String phoneNumber = DigitHelper.toDigitString(phoneNumberDigits);
     isPhoneNumberValid = PhoneNumber.isValid(phoneNumber);
-    if (Objects.checkIfNotNull(view)) {
+    if (ObjectHelper.isNotNull(view)) {
       view.setTextInputContent(PhoneNumber.format(phoneNumber));
       view.showNextButtonAsEnabled(isPhoneNumberValid);
       if (isPhoneNumberValid) {
@@ -95,7 +93,8 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
 
   final void validate() {
     if (isPhoneNumberValid) {
-      final PhoneNumber phoneNumber = PhoneNumber.create(DigitHelper.toDigitString(phoneNumberDigits));
+      final PhoneNumber phoneNumber
+        = PhoneNumber.create(DigitHelper.toDigitString(phoneNumberDigits));
       disposable = Single
         .defer(new Callable<SingleSource<Result<Integer, ErrorCode>>>() {
           @Override
@@ -112,7 +111,9 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
                 result = Result.create(
                   FailureData.create(
                     ErrorCode.UNEXPECTED,
-                    resultData.getError().getDescription()));
+                    resultData.getError()
+                      .getDescription()
+                  ));
               }
             } else {
               result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
@@ -138,7 +139,8 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
                 view.showDialog(
                   R.string.init_phone_number_error_not_affiliated_title,
                   R.string.init_phone_number_error_not_affiliated_message,
-                  R.string.init_phone_number_error_not_affiliated_positive_button_text);
+                  R.string.init_phone_number_error_not_affiliated_positive_button_text
+                );
               } else {
                 initData.setPhoneNumber(phoneNumber, state);
                 if (state == PhoneNumber.State.REGISTERED) {
@@ -171,7 +173,8 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
       view.showDialog(
         R.string.init_phone_number_error_incorrect_number_title,
         R.string.init_phone_number_error_incorrect_number_message,
-        R.string.init_phone_number_error_incorrect_number_positive_button_text);
+        R.string.init_phone_number_error_incorrect_number_positive_button_text
+      );
       view.showTextInputAsErratic(true);
     }
   }
@@ -180,9 +183,9 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
   public void onViewStarted() {
     super.onViewStarted();
     final PhoneNumber phoneNumber = initData.getPhoneNumber();
-    if (Objects.checkIfNotNull(phoneNumber)) {
+    if (ObjectHelper.isNotNull(phoneNumber)) {
       phoneNumberDigits.clear();
-      phoneNumberDigits.addAll(toDigitList(phoneNumber.value()));
+      phoneNumberDigits.addAll(DigitHelper.toDigitList(phoneNumber.value()));
     }
     updateView();
   }
@@ -194,6 +197,7 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
   }
 
   interface View extends Presenter.View {
+
     void showDialog(int titleId, String message, int positiveButtonTextId);
 
     void showDialog(int titleId, int messageId, int positiveButtonTextId);
@@ -215,7 +219,9 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
     void moveToSignUpScreen();
 
     void showGenericErrorDialog(String message);
+
     void showGenericErrorDialog();
+
     void showUnavailableNetworkError();
   }
 }

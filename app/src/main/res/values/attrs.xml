@@ -7,6 +7,10 @@
     <attr name="deleteButtonDrawable" format="reference"/>
   </declare-styleable>
 
+  <declare-styleable name="MoneyLabel">
+    <attr name="currency" format="string|reference"/>
+  </declare-styleable>
+
   <declare-styleable name="SettingsOption">
     <attr name="primaryText" format="string|reference"/>
     <attr name="primaryTextColor" format="color|reference"/>

@@ -20,15 +20,13 @@ import android.widget.TextView;
 
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.NumPad;
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.ui.FullScreenDialogFragment;
 import com.tpago.movil.d.ui.view.BaseAnimatorListener;
 import com.tpago.movil.d.ui.view.widget.PinView;
-import com.tpago.movil.dep.Objects;
-import com.tpago.movil.dep.Preconditions;
 import com.tpago.movil.dep.widget.FullSizeLoadIndicator;
 import com.tpago.movil.dep.widget.LoadIndicator;
 import com.tpago.movil.util.Action;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.io.Serializable;
 import java.util.function.Consumer;
@@ -61,8 +59,8 @@ public class PinConfirmationDialogFragment
     int originX,
     int originY
   ) {
-    Preconditions.assertNotNull(fragmentManager, "fragmentManager == null");
-    Preconditions.assertNotNull(callback, "callback == null");
+    ObjectHelper.checkNotNull(fragmentManager, "fragmentManager");
+    ObjectHelper.checkNotNull(callback, "callback");
     final Bundle argumentBundle = new Bundle();
     argumentBundle.putString(KEY_ACTION_DESCRIPTION, actionDescription);
     argumentBundle.putInt(KEY_ORIGIN_X, originX);
@@ -74,9 +72,9 @@ public class PinConfirmationDialogFragment
   }
 
   public static void dismiss(FragmentManager fragmentManager, boolean succedded) {
-    Preconditions.assertNotNull(fragmentManager, "fragmentManager == null");
+    ObjectHelper.checkNotNull(fragmentManager, "fragmentManager");
     final Fragment fragment = fragmentManager.findFragmentByTag(TAG);
-    if (Objects.checkIfNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
+    if (ObjectHelper.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
       final PinConfirmationDialogFragment dialogFragment = (PinConfirmationDialogFragment) fragment;
       dialogFragment.loadIndicator.stop();
       if (succedded) {
@@ -115,7 +113,7 @@ public class PinConfirmationDialogFragment
   private Action numPadDeleteAction;
 
   private void finish() {
-    if (Utils.isNotNull(containerFrameLayout)) {
+    if (ObjectHelper.isNotNull(containerFrameLayout)) {
       // Prepares the background animator.
       final int radius = (int) Math.hypot(
         containerFrameLayout.getWidth(),
@@ -143,8 +141,9 @@ public class PinConfirmationDialogFragment
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    final Bundle bundle = Utils.isNotNull(savedInstanceState) ? savedInstanceState : getArguments();
-    if (Utils.isNotNull(bundle)) {
+    final Bundle bundle
+      = ObjectHelper.isNotNull(savedInstanceState) ? savedInstanceState : getArguments();
+    if (ObjectHelper.isNotNull(bundle)) {
       if (!bundle.containsKey(KEY_ORIGIN_X)) {
         throw new NullPointerException("Center X must be specified as an argument");
       } else if (!bundle.containsKey(KEY_ORIGIN_Y)) {
@@ -252,7 +251,7 @@ public class PinConfirmationDialogFragment
 
   @Override
   public void onConfirmationStarted(@NonNull String pin) {
-    if (Objects.checkIfNull(loadIndicator)) {
+    if (ObjectHelper.isNull(loadIndicator)) {
       loadIndicator = new FullSizeLoadIndicator(getChildFragmentManager());
     }
     loadIndicator.start();

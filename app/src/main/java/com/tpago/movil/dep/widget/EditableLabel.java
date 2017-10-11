@@ -3,13 +3,14 @@ package com.tpago.movil.dep.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import static com.tpago.movil.dep.Objects.checkIfNull;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * @author hecvasro
  */
 @Deprecated
 public class EditableLabel extends Label implements ErraticView {
+
   private ErraticViewHelper erraticViewHelper;
 
   public EditableLabel(Context context) {
@@ -33,7 +34,7 @@ public class EditableLabel extends Label implements ErraticView {
 
   @Override
   protected int[] onCreateDrawableState(int extraSpace) {
-    if (checkIfNull(erraticViewHelper)) {
+    if (ObjectHelper.isNull(erraticViewHelper)) {
       return super.onCreateDrawableState(extraSpace);
     } else {
       return erraticViewHelper.onCreateDrawableState(

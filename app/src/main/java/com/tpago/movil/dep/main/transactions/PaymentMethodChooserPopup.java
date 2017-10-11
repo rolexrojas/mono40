@@ -9,13 +9,13 @@ import android.view.WindowManager;
 import android.widget.PopupWindow;
 
 import com.tpago.movil.R;
-import com.tpago.movil.dep.Objects;
-import com.tpago.movil.dep.Preconditions;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * @author hecvasro
  */
 final class PaymentMethodChooserPopup {
+
   private final View parentView;
   private final PaymentMethodChooserAdapter paymentMethodChooserAdapter;
 
@@ -23,14 +23,15 @@ final class PaymentMethodChooserPopup {
 
   PaymentMethodChooserPopup(
     View parentView,
-    PaymentMethodChooserAdapter paymentMethodChooserAdapter) {
-    this.parentView = Preconditions.assertNotNull(parentView, "parentView == null");
-    this.paymentMethodChooserAdapter = Preconditions
-      .assertNotNull(paymentMethodChooserAdapter, "paymentMethodChooserAdapter == null");
+    PaymentMethodChooserAdapter paymentMethodChooserAdapter
+  ) {
+    this.parentView = ObjectHelper.checkNotNull(parentView, "parentView");
+    this.paymentMethodChooserAdapter = ObjectHelper
+      .checkNotNull(paymentMethodChooserAdapter, "paymentMethodChooserAdapter");
   }
 
   final void show() {
-    if (Objects.checkIfNull(popupWindow)) {
+    if (ObjectHelper.isNull(popupWindow)) {
       final Context context = parentView.getContext();
       final RecyclerView recyclerView = (RecyclerView) LayoutInflater
         .from(context)
@@ -38,20 +39,23 @@ final class PaymentMethodChooserPopup {
       recyclerView.setLayoutManager(new LinearLayoutManager(
         context,
         LinearLayoutManager.VERTICAL,
-        false));
+        false
+      ));
       recyclerView.setAdapter(new PaymentMethodChooserRecyclerViewAdapter(
         context,
-        paymentMethodChooserAdapter));
+        paymentMethodChooserAdapter
+      ));
       popupWindow = new PopupWindow(
         recyclerView,
         parentView.getWidth(),
-        WindowManager.LayoutParams.WRAP_CONTENT);
+        WindowManager.LayoutParams.WRAP_CONTENT
+      );
     }
     popupWindow.showAsDropDown(parentView, 0, -parentView.getHeight());
   }
 
   final void dismiss() {
-    if (Objects.checkIfNotNull(popupWindow)) {
+    if (ObjectHelper.isNotNull(popupWindow)) {
       popupWindow.dismiss();
     }
   }

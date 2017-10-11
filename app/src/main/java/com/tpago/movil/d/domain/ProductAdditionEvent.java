@@ -1,8 +1,8 @@
 package com.tpago.movil.d.domain;
 
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.domain.util.Event;
 import com.tpago.movil.d.domain.util.EventType;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * {@link Event} that represents the addition a {@link Product creditCard}.
@@ -11,14 +11,16 @@ import com.tpago.movil.d.domain.util.EventType;
  */
 @Deprecated
 public class ProductAdditionEvent extends Event {
+
   public ProductAdditionEvent() {
     super(EventType.PRODUCT_ADDITION, true);
   }
 
   @Override
   public boolean equals(Object object) {
-    return super.equals(object) || (Utils.isNotNull(object) && object instanceof Event
-      && ((Event) object).getType().equals(getType()));
+    return super.equals(object) || (ObjectHelper.isNotNull(object) && object instanceof Event
+      && ((Event) object).getType()
+      .equals(getType()));
   }
 
   @Override

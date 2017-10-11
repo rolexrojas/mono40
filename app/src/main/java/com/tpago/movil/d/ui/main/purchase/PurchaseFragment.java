@@ -20,7 +20,6 @@ import com.tpago.movil.R;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.domain.Product;
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.MainContainer;
@@ -28,6 +27,7 @@ import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.main.list.ListItemAdapter;
 import com.tpago.movil.d.ui.main.list.ListItemHolder;
 import com.tpago.movil.d.ui.main.list.ListItemHolderCreatorFactory;
+import com.tpago.movil.util.ObjectHelper;
 
 import javax.inject.Inject;
 
@@ -47,6 +47,7 @@ public class PurchaseFragment
   ListItemHolder.OnClickListener,
   SelectedItemDecoration.Provider,
   PurchasePaymentDialogFragment.OnDismissedListener {
+
   private static final String TAG_PAYMENT_SCREEN = "paymentScreen";
 
   private static final String KEY_ACTIVATE_AUTOMATICALLY = "activeAutomatically";
@@ -87,8 +88,12 @@ public class PurchaseFragment
       .depMainComponent(getContainer().getComponent())
       .build();
     component.inject(this);
-    final Bundle bundle = Utils.isNotNull(savedInstanceState) ? savedInstanceState : getArguments();
-    activateAutomatically = Utils.isNotNull(bundle) && bundle.getBoolean(KEY_ACTIVATE_AUTOMATICALLY, false);
+    final Bundle bundle
+      = ObjectHelper.isNotNull(savedInstanceState) ? savedInstanceState : getArguments();
+    activateAutomatically = ObjectHelper.isNotNull(bundle) && bundle.getBoolean(
+      KEY_ACTIVATE_AUTOMATICALLY,
+      false
+    );
   }
 
   @Nullable
@@ -96,7 +101,8 @@ public class PurchaseFragment
   public View onCreateView(
     LayoutInflater inflater,
     @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(R.layout.d_fragment_payments_commerce, container, false);
   }
 
@@ -121,19 +127,23 @@ public class PurchaseFragment
     recyclerView.setAdapter(adapter);
     recyclerView.setHasFixedSize(true);
     recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL,
-      false));
+      false
+    ));
     final Resources resources = getResources();
     recyclerView.addItemDecoration(
       new SpaceDividerItemDecoration(
         resources.getDimensionPixelSize(R.dimen.commerce_payment_option_margin)));
     final int borderWidth = resources.getDimensionPixelOffset(
       R.dimen.commerce_payment_option_border_width);
-    final int borderColor = ContextCompat.getColor(context,
-      R.color.d_commerce_payment_option_border);
+    final int borderColor = ContextCompat.getColor(
+      context,
+      R.color.d_commerce_payment_option_border
+    );
     final int borderRadius = resources.getDimensionPixelOffset(
       R.dimen.commerce_payment_option_border_radius);
     recyclerView.addItemDecoration(new SelectedItemDecoration(this, borderWidth, borderColor,
-      borderRadius));
+      borderRadius
+    ));
     // Attaches the screen to the presenter.
     presenter.attachScreen(this);
   }
@@ -210,7 +220,8 @@ public class PurchaseFragment
 
   @Override
   public void requestPin() {
-    final Display display = getActivity().getWindowManager().getDefaultDisplay();
+    final Display display = getActivity().getWindowManager()
+      .getDefaultDisplay();
     final Point size = new Point();
     display.getSize(size);
     final int originX = size.x / 2;
@@ -225,7 +236,8 @@ public class PurchaseFragment
         }
       },
       originX,
-      originY);
+      originY
+    );
   }
 
   @Override
@@ -254,7 +266,8 @@ public class PurchaseFragment
 
   @Override
   public void showUnavailableNetworkError() {
-    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG).show();
+    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG)
+      .show();
   }
 
   @Override

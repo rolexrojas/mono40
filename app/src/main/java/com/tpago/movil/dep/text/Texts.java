@@ -4,17 +4,18 @@ import android.content.Context;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
+import com.tpago.movil.util.ObjectHelper;
 
-import static com.tpago.movil.dep.Objects.checkIfNull;
+import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
 
 /**
  * @author hecvasro
  */
 @Deprecated
 public final class Texts {
+
   public static boolean checkIfEmpty(CharSequence s) {
-    return checkIfNull(s) || s.length() == 0;
+    return ObjectHelper.isNull(s) || s.length() == 0;
   }
 
   public static boolean checkIfNotEmpty(CharSequence s) {
@@ -35,12 +36,14 @@ public final class Texts {
     return builder.toString();
   }
 
+  @Deprecated
   public static CharSequence createContent(
     Context context,
     String content,
     String fontPath,
     int textColor,
-    int textSize) {
+    int textSize
+  ) {
     if (Texts.checkIfEmpty(content)) {
       return null;
     } else {

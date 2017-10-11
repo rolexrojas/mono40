@@ -1,13 +1,10 @@
 package com.tpago.movil.dep;
 
-import static com.tpago.movil.dep.text.Texts.checkIfEmpty;
-import static com.tpago.movil.dep.Objects.checkIfNotNull;
-import static com.tpago.movil.dep.Preconditions.assertNotNull;
-
 import com.google.auto.value.AutoValue;
 import com.tpago.movil.Email;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.util.StringHelper;
 
 /**
  * @author hecvasro
@@ -61,7 +58,7 @@ public abstract class User {
   final void id(int id) {
     this.id = id;
 
-    if (checkIfNotNull(this.onIdChangedListener)) {
+    if (ObjectHelper.isNotNull(this.onIdChangedListener)) {
       this.onIdChangedListener.onIdChanged(this.id);
     }
   }
@@ -75,21 +72,21 @@ public abstract class User {
   }
 
   public final void name(String firstName, String lastName) {
-    assertNotNull(firstName, "firstName == null");
-    if (checkIfEmpty(firstName)) {
-      throw new IllegalArgumentException("Texts.checkIfEmpty(firstName) == true");
+    ObjectHelper.checkNotNull(firstName, "firstName");
+    if (StringHelper.isNullOrEmpty(firstName)) {
+      throw new IllegalArgumentException("StringHelper.isNullOrEmpty(firstName)");
     }
     this.firstName = firstName;
 
-    assertNotNull(lastName, "lastName == null");
-    if (checkIfEmpty(lastName)) {
-      throw new IllegalArgumentException("Texts.checkIfEmpty(lastName) == true");
+    ObjectHelper.checkNotNull(lastName, "lastName");
+    if (StringHelper.isNullOrEmpty(lastName)) {
+      throw new IllegalArgumentException("StringHelper.isNullOrEmpty(lastName)");
     }
     this.lastName = lastName;
 
     this.name = this.firstName + " " + this.lastName;
 
-    if (checkIfNotNull(this.onNameChangedListener)) {
+    if (ObjectHelper.isNotNull(this.onNameChangedListener)) {
       this.onNameChangedListener.onNameChanged(this.firstName, this.lastName);
     }
   }

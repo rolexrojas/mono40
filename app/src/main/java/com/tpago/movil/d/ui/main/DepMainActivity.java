@@ -33,7 +33,6 @@ import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.ResetEvent;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.util.EventBus;
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.Dialogs;
@@ -48,7 +47,6 @@ import com.tpago.movil.dep.main.MainModule;
 import com.tpago.movil.dep.main.purchase.NonNfcPurchaseFragment;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.util.ObjectHelper;
-import com.tpago.movil.dep.Objects;
 
 import javax.inject.Inject;
 
@@ -157,7 +155,7 @@ public class DepMainActivity
     // Prepares the action bar.
     setSupportActionBar(toolbar);
     final ActionBar actionBar = getSupportActionBar();
-    if (Utils.isNotNull(actionBar)) {
+    if (ObjectHelper.isNotNull(actionBar)) {
       actionBar.setDisplayShowTitleEnabled(true);
     }
     // Prepares the toolbar.
@@ -296,8 +294,7 @@ public class DepMainActivity
   public void onBackPressed() {
     if (slidingPaneLayout.isOpen()) {
       slidingPaneLayout.closePane();
-    } else if (Objects.checkIfNull(onBackPressedListener) || !onBackPressedListener
-      .onBackPressed()) {
+    } else if (ObjectHelper.isNull(onBackPressedListener) || !onBackPressedListener.onBackPressed()) {
       super.onBackPressed();
     }
   }
@@ -311,7 +308,7 @@ public class DepMainActivity
   @Override
   public void setTitle(@Nullable String title) {
     final ActionBar actionBar = getSupportActionBar();
-    if (Utils.isNotNull(actionBar)) {
+    if (ObjectHelper.isNotNull(actionBar)) {
       actionBar.setTitle(title);
     }
   }

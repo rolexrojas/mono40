@@ -14,7 +14,6 @@ import com.tpago.movil.d.domain.util.EventBus;
 import com.tpago.movil.d.domain.util.EventType;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.ui.AppDialog;
 import com.tpago.movil.d.ui.Presenter;
@@ -22,7 +21,7 @@ import com.tpago.movil.d.domain.ErrorCode;
 import com.tpago.movil.d.domain.FailureData;
 import com.tpago.movil.d.domain.Result;
 import com.tpago.movil.dep.net.NetworkService;
-import com.tpago.movil.dep.Objects;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -116,7 +115,7 @@ final class PurchasePresenter extends Presenter<PurchaseScreen> {
       }
     }
     selectedProduct = productManager.getDefaultPaymentOption();
-    if (Objects.checkIfNotNull(selectedProduct)) {
+    if (ObjectHelper.isNotNull(selectedProduct)) {
       screen.markAsSelected(selectedProduct);
     }
   }
@@ -133,7 +132,7 @@ final class PurchasePresenter extends Presenter<PurchaseScreen> {
 
   void onPaymentOptionSelected(@NonNull Product product) {
     assertScreen();
-    if (Utils.isNotNull(selectedProduct) && selectedProduct.equals(product)) {
+    if (ObjectHelper.isNotNull(selectedProduct) && selectedProduct.equals(product)) {
       screen.openPaymentScreen(selectedProduct);
     } else {
       selectedProduct = product;

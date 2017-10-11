@@ -6,18 +6,16 @@ import android.os.Environment;
 import android.support.v4.content.FileProvider;
 
 import com.tpago.movil.BuildConfig;
-import com.tpago.movil.dep.Objects;
-import com.tpago.movil.dep.Preconditions;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.io.File;
-
-import static com.tpago.movil.dep.Preconditions.assertNotNull;
 
 /**
  * @author hecvasro
  */
 @Deprecated
 public final class Files {
+
   private static final String FORMAT_FILE_NAME_PICTURE = "%1$s.png";
 
   private static final String NAME_DIRECTORY_PICTURES
@@ -30,9 +28,9 @@ public final class Files {
   }
 
   public static File createExternalPictureFile(Context context) throws IllegalStateException {
-    assertNotNull(context, "context == null");
+    ObjectHelper.checkNotNull(context, "context");
     final File d = context.getExternalFilesDir(NAME_DIRECTORY_PICTURES);
-    if (Objects.checkIfNull(d)) {
+    if (ObjectHelper.isNull(d)) {
       throw new IllegalStateException("context.getExternalFilesDir(NAME_DIRECTORY_PICTURES) == null");
     }
     if (!d.exists()) {
@@ -42,11 +40,12 @@ public final class Files {
   }
 
   public static File createInternalCacheDirectory(Context context) {
-    return assertNotNull(context, "context == null").getCacheDir();
+    return ObjectHelper.checkNotNull(context, "context")
+      .getCacheDir();
   }
 
   public static File createInternalPictureFile(Context context, String name) {
-    assertNotNull(context, "context == null");
+    ObjectHelper.checkNotNull(context, "context");
     final File d = new File(context.getFilesDir(), NAME_DIRECTORY_PICTURES);
     if (!d.exists()) {
       d.mkdirs();
@@ -55,14 +54,15 @@ public final class Files {
   }
 
   public static Uri getFileUri(File file) {
-    return Uri.fromFile(Preconditions.assertNotNull(file, "file == null"));
+    return Uri.fromFile(ObjectHelper.checkNotNull(file, "file"));
   }
 
   public static Uri getFileUri(Context context, File file) {
     return FileProvider.getUriForFile(
-      assertNotNull(context, "context == null"),
+      ObjectHelper.checkNotNull(context, "context"),
       NAME_PROVIDER_FILE,
-      assertNotNull(file, "file == null"));
+      ObjectHelper.checkNotNull(file, "file")
+    );
   }
 
   private Files() {

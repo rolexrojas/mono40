@@ -2,7 +2,7 @@ package com.tpago.movil.dep;
 
 import android.content.Context;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * Device display density
@@ -27,7 +27,7 @@ public enum DisplayDensity {
    * @return Display density of the device.
    */
   public static DisplayDensity get(Context context) {
-    checkNotNull(context, "context == null");
+    ObjectHelper.checkNotNull(context, "context");
 
     final float value = context
       .getResources()
