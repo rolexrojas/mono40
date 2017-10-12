@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.tpago.movil.R;
-import com.tpago.movil.app.App;
 import com.tpago.movil.app.di.ComponentBuilderSupplier;
 import com.tpago.movil.app.di.ComponentBuilderSupplierContainer;
 import com.tpago.movil.util.ObjectHelper;
@@ -22,7 +21,7 @@ public final class FragmentActivity extends BaseToolbarActivity implements
 
   private static final String KEY_CREATOR = "creator";
 
-  public static Intent getLaunchIntent(Context context, FragmentCreator creator) {
+  public static Intent createLaunchIntent(Context context, FragmentCreator creator) {
     ObjectHelper.checkNotNull(context, "context");
     ObjectHelper.checkNotNull(creator, "creator");
 
@@ -41,8 +40,8 @@ public final class FragmentActivity extends BaseToolbarActivity implements
   }
 
   private FragmentActivityComponent component;
-
   @Inject @ActivityQualifier ComponentBuilderSupplier componentBuilderSupplier;
+
   @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
 
   @Override

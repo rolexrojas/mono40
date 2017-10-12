@@ -5,9 +5,11 @@
   <string name="accounts">Cuentas</string>
   <string name="code">Código</string>
   <string name="email">Correo electrónico</string>
+  <string name="enableAsVerb">Habilitar</string>
   <string name="fingerprint">Huella digital</string>
   <string name="firstName">Nombre</string>
   <string name="lastName">Apellido</string>
+  <string name="laterAsVerb">Mas tarde</string>
   <string name="ok">Ok</string>
   <string name="phoneNumber">Número de teléfono</string>
   <string name="profile">Perfil</string>
@@ -15,8 +17,9 @@
   <string name="settings">Ajustes</string>
 
   <!-- Phrases -->
-  <string name="altAuthMethod">Desbloquear rápido</string>
-  <string name="altAuthMethodCodeMismatch">Los códigos ingresados para el desbloqueo rápido no coinciden. Favor intentar nuevamente.</string>
+  <string name="altUnlockMethod">Desbloquear rápido</string>
+  <string name="altUnlockMethodCodeMismatch">Los códigos ingresados para el desbloqueo rápido no coinciden. Favor intentar nuevamente.</string>
+  <string name="altUnlockMethodEnableQuestion">¿Desea habilitar algún método de desbloqueo rápido?</string>
   <string name="anUnexpectedErrorOccurred">En estos momentos no podemos procesar esta solicitud. Favor intentar nuevamente.</string>
   <string name="changeMyPassword">Cambiar mi contraseña</string>
   <string name="chooseAnAlternativeAuthenticationMethod">Para tu seguridad requerimos bloquear el App. Selecciona entre estas opciones para iniciar de manera rápida.</string>
@@ -104,7 +107,7 @@
   <string name="dialog_positive_text_already_associated_device">Continuar</string>
   <string name="dialog_positive_text_feature_not_available">@string/ok</string>
   <string name="dialog_product_addition_message">Tu cuenta ya se agregó a %1$s. Actívala para tocar y pagar en tiendas y comercios.</string>
-  <string name="dialog_product_addition_negative_action">@string/later</string>
+  <string name="dialog_product_addition_negative_action">@string/laterAsVerb</string>
   <string name="dialog_product_addition_positive_action">Activar</string>
   <string name="dialog_product_addition_title">¡Listo para activar!</string>
   <string name="dialog_title_already_associated_device">Cuenta vinculada a otro celular</string>
@@ -167,7 +170,6 @@
   <string name="intro_tab_title_03">Pagos al instante</string>
   <string name="invoice">Factura</string>
   <string name="is_required">Es requerido</string>
-  <string name="later">Mas Tarde</string>
   <string name="learn_more">Aprende mas</string>
   <string name="list.no_results">No hay resultados para \'%1$s\'</string>
   <string name="list_item_divider">Separador</string>
@@ -244,7 +246,7 @@
   <string name="register_form_pin_label_description">Vinculación al celular, creación de perfil e inicio de sesión</string>
   <string name="register_form_pin_label_title">Confirma con tu PIN</string>
   <string name="register_summary_button_continue">@string/next</string>
-  <string name="register_summary_button_later">@string/later</string>
+  <string name="register_summary_button_later">@string/laterAsVerb</string>
   <string name="register_summary_label_description">Empecemos con mostrarte lo más básico de la nueva App.</string>
   <string name="register_summary_label_title">¡tPago esta listo!</string>
   <string name="relative_time_prefix_future">En</string>

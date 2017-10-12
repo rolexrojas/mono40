@@ -57,7 +57,7 @@ final class AltAuthCodeCreatorPresenter extends CodeCreatorPresenter {
   public void onPresentationResumed() {
     super.onPresentationResumed();
 
-    this.presentation.setTitle(this.stringMapper.apply(R.string.altAuthMethod));
+    this.presentation.setTitle(this.stringMapper.apply(R.string.altUnlockMethod));
     this.updateSubtitle();
   }
 
@@ -74,7 +74,7 @@ final class AltAuthCodeCreatorPresenter extends CodeCreatorPresenter {
         } else {
           final AlertData data = AlertData.builder(this.stringMapper)
             .title(R.string.weAreSorry)
-            .message(R.string.altAuthMethodCodeMismatch)
+            .message(R.string.altUnlockMethodCodeMismatch)
             .positiveButtonText(R.string.ok)
             .build();
           this.alertManager.show(data);

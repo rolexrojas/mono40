@@ -65,7 +65,7 @@ public final class SettingsFragment extends BaseMainFragment implements Settings
   @OnClick(R.id.altAuthMethodSettingsOption)
   final void onAltAuthMethodSettingsOptionClicked() {
     this.startActivity(
-      FragmentActivity.getLaunchIntent(
+      FragmentActivity.createLaunchIntent(
         this.getContext(),
         AltAuthMethodFragment.creator()
       )

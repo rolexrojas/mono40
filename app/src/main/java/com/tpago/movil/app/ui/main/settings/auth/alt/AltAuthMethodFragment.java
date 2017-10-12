@@ -100,7 +100,7 @@ public final class AltAuthMethodFragment extends InjectableFragment
 
     // Sets the title.
     FragmentActivity.get(this.getActivity())
-      .setTitle(R.string.altAuthMethod);
+      .setTitle(R.string.altUnlockMethod);
   }
 
   @Override

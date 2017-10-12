@@ -12,7 +12,7 @@ public abstract class BaseRegisterFragment extends Fragment {
   private RegisterComponent component;
 
   protected final RegisterComponent getRegisterComponent() {
-    if (ObjectHelper.isNull(component)) {
+    if (ObjectHelper.isNull(this.component)) {
       final Fragment f = ObjectHelper.checkNotNull(
         this.getParentFragment(),
         "this.getParentFragment()"
@@ -20,8 +20,8 @@ public abstract class BaseRegisterFragment extends Fragment {
       if (!(f instanceof RegisterContainer)) {
         throw new ClassCastException("!(this.getParentFragment() instanceof RegisterContainer)");
       }
-      component = ((RegisterContainer) f).getRegisterComponent();
+      this.component = ((RegisterContainer) f).getRegisterComponent();
     }
-    return component;
+    return this.component;
   }
 }

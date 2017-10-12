@@ -102,7 +102,7 @@ public final class AvatarFormFragment extends BaseRegisterFragment {
         .into(avatarImageView);
     } else {
       avatarImageView.setImageResource(R.drawable.profile_picture_placeholder_dark);
-      moveToNextScreenButton.setText(R.string.later);
+      moveToNextScreenButton.setText(R.string.laterAsVerb);
     }
   }
 
