@@ -6,7 +6,7 @@ import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.api.Api;
 import com.tpago.movil.user.User;
-import com.tpago.movil.user.UserStore;
+import com.tpago.movil.user.UserManager;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.Placeholder;
@@ -30,25 +30,29 @@ public final class SessionManager {
     return new Builder();
   }
 
-  private final AccessTokenStore accessTokenStore;
   private final Api api;
-  private final UserStore userStore;
+  private final AccessTokenManager accessTokenManager;
+  private final UserManager userManager;
 
   private final List<Action> closeActionList;
   private final List<Action> clearActionList;
 
   private SessionManager(Builder builder) {
-    this.accessTokenStore = builder.accessTokenStore;
     this.api = builder.api;
-    this.userStore = builder.userStore;
+    this.accessTokenManager = builder.accessTokenManager;
+    this.userManager = builder.userManager;
 
     this.closeActionList = new ArrayList<>();
-    this.closeActionList.add(this.accessTokenStore::clear);
+    this.closeActionList.add(this.accessTokenManager::clear);
     this.closeActionList.addAll(builder.closeActionList);
 
     this.clearActionList = new ArrayList<>();
-    this.clearActionList.add(this.userStore::clear);
+    this.clearActionList.add(this.userManager::clear);
     this.clearActionList.addAll(builder.clearActionList);
+  }
+
+  public final boolean isUserSet() {
+    return this.userManager.isSet();
   }
 
   private void checkUserIsSet() {
@@ -63,21 +67,9 @@ public final class SessionManager {
     }
   }
 
-  private void checkSessionIsOpen() {
-    if (!this.isSessionOpen()) {
-      throw new IllegalStateException("!this.isSessionOpen()");
-    }
-  }
-
-  private void checkSessionIsNotOpen() {
-    if (this.isSessionOpen()) {
-      throw new IllegalStateException("this.isSessionOpen()");
-    }
-  }
-
   private void handleInitSuccess(Result<User> result) {
     if (result.isSuccessful()) {
-      this.userStore.set(result.successData());
+      this.userManager.set(result.successData());
     }
   }
 
@@ -109,14 +101,24 @@ public final class SessionManager {
       .doOnSuccess(this::handleInitSuccess);
   }
 
-  public final boolean isUserSet() {
-    return this.userStore.isSet();
+  public final User getUser() {
+    return this.userManager.get();
   }
 
-  public final User getUser() {
-    this.checkUserIsSet();
+  private void checkSessionIsOpen() {
+    if (!this.isSessionOpen()) {
+      throw new IllegalStateException("!this.isSessionOpen()");
+    }
+  }
 
-    return this.userStore.get();
+  private void checkSessionIsNotOpen() {
+    if (this.isSessionOpen()) {
+      throw new IllegalStateException("this.isSessionOpen()");
+    }
+  }
+
+  public final boolean isSessionOpen() {
+    return this.accessTokenManager.isSet();
   }
 
   private Result<Placeholder> handleOpenSessionResult(Result<?> result) {
@@ -124,7 +126,7 @@ public final class SessionManager {
     if (result.isSuccessful()) {
       placeholderResult = Result.create(Placeholder.get());
     } else {
-      // TODO: Check if there is already a device associated, if true, reset/clear manager and notify client.
+      // TODO: Check if there is already a device associated, if true, reset/clear manager and notify observers.
       placeholderResult = Result.create(result.failureData());
     }
     return placeholderResult;
@@ -133,7 +135,6 @@ public final class SessionManager {
   public final Single<Result<Placeholder>> openSession(Password password, String deviceId) {
     this.checkUserIsSet();
     this.checkSessionIsNotOpen();
-
     final User user = this.getUser();
     return this.api.signIn(user.phoneNumber(), user.email(), password, deviceId, false)
       .map(this::handleOpenSessionResult);
@@ -142,18 +143,12 @@ public final class SessionManager {
   public final Single<Result<Placeholder>> openSession(PrivateKey privateKey, String deviceId) {
     this.checkUserIsSet();
     this.checkSessionIsNotOpen();
-
     return Single.error(new UnsupportedOperationException("not implemented"));
-  }
-
-  public final boolean isSessionOpen() {
-    return this.accessTokenStore.isSet();
   }
 
   public final Completable closeSession() {
     this.checkUserIsSet();
     this.checkSessionIsOpen();
-
     return Observable.fromIterable(this.closeActionList)
       .flatMapCompletable(Completable::fromAction);
   }
@@ -168,9 +163,9 @@ public final class SessionManager {
 
   static final class Builder {
 
-    private AccessTokenStore accessTokenStore;
+    private AccessTokenManager accessTokenManager;
     private Api api;
-    private UserStore userStore;
+    private UserManager userManager;
 
     private List<Action> closeActionList;
     private List<Action> clearActionList;
@@ -180,8 +175,8 @@ public final class SessionManager {
       this.clearActionList = new ArrayList<>();
     }
 
-    final Builder accessTokenStore(AccessTokenStore accessTokenStore) {
-      this.accessTokenStore = ObjectHelper.checkNotNull(accessTokenStore, "accessTokenStore");
+    final Builder accessTokenStore(AccessTokenManager accessTokenManager) {
+      this.accessTokenManager = ObjectHelper.checkNotNull(accessTokenManager, "accessTokenManager");
       return this;
     }
 
@@ -190,8 +185,8 @@ public final class SessionManager {
       return this;
     }
 
-    final Builder userStore(UserStore userStore) {
-      this.userStore = ObjectHelper.checkNotNull(userStore, "userStore");
+    final Builder userManager(UserManager userManager) {
+      this.userManager = ObjectHelper.checkNotNull(userManager, "userManager");
       return this;
     }
 
@@ -213,9 +208,12 @@ public final class SessionManager {
 
     final SessionManager build() {
       BuilderChecker.create()
-        .addPropertyNameIfMissing("accessTokenStore", ObjectHelper.isNull(this.accessTokenStore))
+        .addPropertyNameIfMissing(
+          "accessTokenManager",
+          ObjectHelper.isNull(this.accessTokenManager)
+        )
         .addPropertyNameIfMissing("api", ObjectHelper.isNull(this.api))
-        .addPropertyNameIfMissing("userStore", ObjectHelper.isNull(this.userStore))
+        .addPropertyNameIfMissing("userManager", ObjectHelper.isNull(this.userManager))
         .checkNoMissingProperties();
 
       return new SessionManager(this);

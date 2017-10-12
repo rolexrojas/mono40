@@ -213,6 +213,8 @@ dependencies {
   compile "${retrofitGroupId}:converter-gson:${retrofitVersion}"
   compile "${retrofitGroupId}:adapter-rxjava2:${retrofitVersion}"
 
+  compile 'com.birbit:android-priority-jobqueue:2.0.1' // TODO: Find a replacement. Code it?
+
   def autoValueVersion = '1.5'
   annotationProcessor "com.google.auto.value:auto-value:${autoValueVersion}"
   provided "com.jakewharton.auto.value:auto-value-annotations:${autoValueVersion}"

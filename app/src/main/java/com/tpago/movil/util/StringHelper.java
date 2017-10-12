@@ -10,22 +10,6 @@ import java.util.List;
 public final class StringHelper {
 
   /**
-   * Checks whether a given {@link CharSequence sequence} is empty o not.
-   *
-   * @param s
-   *   {@link CharSequence Sequence} that will be checked.
-   *
-   * @return True if the given {@link CharSequence sequence} is empty, or otherwise false.
-   *
-   * @throws NullPointerException
-   *   If {@code s} is null.
-   */
-  private static boolean isEmpty(CharSequence s) {
-    return ObjectHelper.checkNotNull(s, "s")
-      .length() == 0;
-  }
-
-  /**
    * Checks whether the a {@link String string} is {@code null} or empty.
    *
    * @param s
@@ -34,7 +18,14 @@ public final class StringHelper {
    * @return True if the given {@link String string} is null or empty, or otherwise false.
    */
   public static boolean isNullOrEmpty(CharSequence s) {
-    return ObjectHelper.isNull(s) || isEmpty(s);
+    return ObjectHelper.isNull(s) || s.length() == 0;
+  }
+
+  public static String checkIsNotNullNorEmpty(String s, String argumentName) {
+    if (StringHelper.isNullOrEmpty(s)) {
+      throw new IllegalArgumentException(String.format("isNullOrEmpty(%1$s)", argumentName));
+    }
+    return s;
   }
 
   /**

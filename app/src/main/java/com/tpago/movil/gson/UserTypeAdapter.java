@@ -9,6 +9,7 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.tpago.movil.Email;
 import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.payment.Carrier;
 import com.tpago.movil.user.User;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
@@ -25,7 +26,8 @@ final class UserTypeAdapter extends TypeAdapter<User> {
   private static final String PROPERTY_NAME_EMAIL = "email";
   private static final String PROPERTY_NAME_FIRST_NAME = "name";
   private static final String PROPERTY_NAME_LAST_NAME = "last-name";
-  private static final String PROPERTY_NAME_PICTURE_URI = "profilePicUrl";
+  private static final String PROPERTY_NAME_PICTURE = "profilePicUrl";
+  private static final String PROPERTY_NAME_CARRIER = "carrier";
 
   private static final String PROPERTY_DEFAULT_FIRST_NAME = "Usuario";
   private static final String PROPERTY_DEFAULT_LAST_NAME = "tPago";
@@ -34,6 +36,7 @@ final class UserTypeAdapter extends TypeAdapter<User> {
     return new UserTypeAdapter(gson);
   }
 
+  private final TypeAdapter<Carrier> carrierTypeAdapter;
   private final TypeAdapter<Email> emailTypeAdapter;
   private final TypeAdapter<Integer> integerTypeAdapter;
   private final TypeAdapter<PhoneNumber> phoneNumberTypeAdapter;
@@ -43,6 +46,7 @@ final class UserTypeAdapter extends TypeAdapter<User> {
   private UserTypeAdapter(Gson gson) {
     ObjectHelper.checkNotNull(gson, "gson");
 
+    this.carrierTypeAdapter = gson.getAdapter(Carrier.class);
     this.emailTypeAdapter = gson.getAdapter(Email.class);
     this.integerTypeAdapter = gson.getAdapter(Integer.class);
     this.phoneNumberTypeAdapter = gson.getAdapter(PhoneNumber.class);
@@ -84,8 +88,11 @@ final class UserTypeAdapter extends TypeAdapter<User> {
             }
             builder.lastName(lastName);
             break;
-          case PROPERTY_NAME_PICTURE_URI:
-            builder.pictureUri(this.uriTypeAdapter.read(reader));
+          case PROPERTY_NAME_PICTURE:
+            builder.picture(this.uriTypeAdapter.read(reader));
+            break;
+          case PROPERTY_NAME_CARRIER:
+            builder.carrier(this.carrierTypeAdapter.read(reader));
             break;
           default:
             reader.skipValue();
@@ -114,8 +121,10 @@ final class UserTypeAdapter extends TypeAdapter<User> {
       this.stringTypeAdapter.write(writer, user.firstName());
       writer.name(PROPERTY_NAME_LAST_NAME);
       this.stringTypeAdapter.write(writer, user.lastName());
-      writer.name(PROPERTY_NAME_PICTURE_URI);
-      this.uriTypeAdapter.write(writer, user.pictureUri());
+      writer.name(PROPERTY_NAME_PICTURE);
+      this.uriTypeAdapter.write(writer, user.picture());
+      writer.name(PROPERTY_NAME_CARRIER);
+      this.carrierTypeAdapter.write(writer, user.carrier());
       writer.endObject();
     }
   }

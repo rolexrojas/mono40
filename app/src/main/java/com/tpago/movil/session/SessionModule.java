@@ -2,7 +2,7 @@ package com.tpago.movil.session;
 
 import com.tpago.movil.api.Api;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
-import com.tpago.movil.user.UserStore;
+import com.tpago.movil.user.UserManager;
 
 import javax.inject.Singleton;
 
@@ -17,22 +17,22 @@ public final class SessionModule {
 
   @Provides
   @Singleton
-  AccessTokenStore sessionTokenStore() {
-    return AccessTokenStore.create();
+  AccessTokenManager sessionTokenStore() {
+    return AccessTokenManager.create();
   }
 
   @Provides
   @Singleton
   SessionManager sessionManager(
-    AccessTokenStore accessTokenStore,
+    AccessTokenManager accessTokenManager,
     Api api,
-    UserStore userStore,
+    UserManager userManager,
     AltAuthMethodManager altAuthMethodManager
   ) {
     return SessionManager.builder()
-      .accessTokenStore(accessTokenStore)
+      .accessTokenStore(accessTokenManager)
       .api(api)
-      .userStore(userStore)
+      .userManager(userManager)
       .addClearAction(
         () -> {
           if (altAuthMethodManager.isEnabled()) {

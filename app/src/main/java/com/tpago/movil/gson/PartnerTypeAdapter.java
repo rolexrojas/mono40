@@ -4,7 +4,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.tpago.movil.domain.company.LogoUriMapper;
-import com.tpago.movil.domain.payment.Partner;
+import com.tpago.movil.payment.Partner;
 
 import java.io.IOException;
 

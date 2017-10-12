@@ -3,8 +3,8 @@ package com.tpago.movil.data.auth.alt;
 import android.util.Base64;
 
 import com.tpago.movil.Code;
-import com.tpago.movil.KeyValueStore;
-import com.tpago.movil.KeyValueStoreHelper;
+import com.tpago.movil.store.Store;
+import com.tpago.movil.store.StoreHelper;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.io.ByteArrayInputStream;
@@ -22,24 +22,24 @@ import javax.crypto.CipherOutputStream;
  */
 final class CodeAltAuthMethodStore {
 
-  private static final String KEY = KeyValueStoreHelper
+  private static final String KEY = StoreHelper
     .createKey(CodeAltAuthMethodStore.class, "Code");
 
   static CodeAltAuthMethodStore create(
-    KeyValueStore keyValueStore,
+    Store store,
     AltAuthMethodConfigData altAuthMethodConfigData
   ) {
-    return new CodeAltAuthMethodStore(keyValueStore, altAuthMethodConfigData);
+    return new CodeAltAuthMethodStore(store, altAuthMethodConfigData);
   }
 
-  private final KeyValueStore keyValueStore;
+  private final Store store;
   private final AltAuthMethodConfigData altAuthMethodConfigData;
 
   private CodeAltAuthMethodStore(
-    KeyValueStore keyValueStore,
+    Store store,
     AltAuthMethodConfigData altAuthMethodConfigData
   ) {
-    this.keyValueStore = ObjectHelper.checkNotNull(keyValueStore, "codeAltAuthMethodStore");
+    this.store = ObjectHelper.checkNotNull(store, "codeAltAuthMethodStore");
     this.altAuthMethodConfigData = ObjectHelper.checkNotNull(
       altAuthMethodConfigData,
       "altAuthMethodConfigData"
@@ -50,8 +50,8 @@ final class CodeAltAuthMethodStore {
     ObjectHelper.checkNotNull(publicKey, "publicKey");
     ObjectHelper.checkNotNull(code, "code");
 
-    if (this.keyValueStore.isSet(KEY)) {
-      throw new IllegalStateException(String.format("keyValueStore.isSet(%1$s)", KEY));
+    if (this.store.isSet(KEY)) {
+      throw new IllegalStateException(String.format("store.isSet(%1$s)", KEY));
     }
 
     final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -69,17 +69,17 @@ final class CodeAltAuthMethodStore {
     );
     cipherOutputStream.close();
 
-    this.keyValueStore.set(KEY, Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT));
+    this.store.set(KEY, Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT));
   }
 
   final Code get(PrivateKey privateKey) throws Exception {
     ObjectHelper.checkNotNull(privateKey, "privateKey");
 
-    if (!this.keyValueStore.isSet(KEY)) {
-      throw new IllegalStateException(String.format("!keyValueStore.isSet(%1$s)", KEY));
+    if (!this.store.isSet(KEY)) {
+      throw new IllegalStateException(String.format("!store.isSet(%1$s)", KEY));
     }
 
-    final String encryptedCode = this.keyValueStore.get(KEY);
+    final String encryptedCode = this.store.get(KEY, String.class);
 
     final Cipher cipher = Cipher
       .getInstance(this.altAuthMethodConfigData.codeCipherTransformation());
@@ -102,6 +102,6 @@ final class CodeAltAuthMethodStore {
   }
 
   final void clear() {
-    this.keyValueStore.remove(KEY);
+    this.store.remove(KEY);
   }
 }

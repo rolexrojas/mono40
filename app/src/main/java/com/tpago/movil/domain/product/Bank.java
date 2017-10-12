@@ -20,7 +20,7 @@ import java.util.Map;
 public abstract class Bank extends Company implements Comparable<Bank> {
 
   public static Builder builder() {
-    throw new UnsupportedOperationException("not implemented");
+    return new AutoValue_Bank.Builder();
   }
 
   Bank() {
@@ -58,9 +58,9 @@ public abstract class Bank extends Company implements Comparable<Bank> {
 
     public abstract Builder name(String name);
 
-    public abstract Builder logoUriTemplate(String logoUriTemplate);
+    public abstract Builder logoTemplate(String logoTemplate);
 
-    public abstract Builder logoUriMap(Map<String, Uri> logoUriMap);
+    public abstract Builder styledLogos(Map<String, Uri> styledLogos);
 
     public abstract Builder transferCostRate(BigDecimal transferCostRate);
 

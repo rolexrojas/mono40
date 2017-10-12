@@ -2,11 +2,9 @@ package com.tpago.movil.data;
 
 import android.content.Context;
 
-import com.tpago.movil.BuildConfig;
 import com.tpago.movil.data.api.DataApiModule;
 import com.tpago.movil.data.auth.DataAuthModule;
 import com.tpago.movil.net.NetModule;
-import com.tpago.movil.KeyValueStore;
 
 import javax.inject.Singleton;
 
@@ -32,16 +30,5 @@ public final class DataModule {
   @Singleton
   StringMapper stringMapper(Context context) {
     return context::getString;
-  }
-
-  @Provides
-  @Singleton
-  KeyValueStore keyValueStore(Context context) {
-    final KeyValueStore keyValueStore = SharedPreferencesKeyValueStore.create(context);
-    if (BuildConfig.DEBUG) {
-      return DebugKeyValueStore.create(keyValueStore);
-    } else {
-      return keyValueStore;
-    }
   }
 }

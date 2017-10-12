@@ -7,11 +7,11 @@ import com.tpago.movil.Email;
 import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.data.auth.alt.AltAuthMethodConfigData;
-import com.tpago.movil.KeyValueStore;
-import com.tpago.movil.KeyValueStoreHelper;
+import com.tpago.movil.session.AccessTokenManager;
+import com.tpago.movil.store.Store;
+import com.tpago.movil.store.StoreHelper;
 import com.tpago.movil.api.Api;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodVerifyData;
-import com.tpago.movil.session.AccessTokenStore;
 import com.tpago.movil.user.User;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.FailureData;
@@ -47,15 +47,15 @@ final class MockApi implements Api {
     return (u) -> u.delay(DELAY_VALUE, DELAY_UNIT);
   }
 
-  private static final String KEY_ALT_AUTH_METHOD = KeyValueStoreHelper
+  private static final String KEY_ALT_AUTH_METHOD = StoreHelper
     .createKey(MockApi.class, "AltAuthMethod");
 
   static Builder builder() {
     return new Builder();
   }
 
-  private final AccessTokenStore accessTokenStore;
-  private final KeyValueStore keyValueStore;
+  private final AccessTokenManager accessTokenManager;
+  private final Store store;
 
   private final User user = User.builder()
     .id(1)
@@ -69,8 +69,8 @@ final class MockApi implements Api {
   private AtomicReference<PublicKey> altAuthMethodPublicKeyReference = new AtomicReference<>();
 
   private MockApi(Builder builder) {
-    this.accessTokenStore = builder.accessTokenStore;
-    this.keyValueStore = builder.keyValueStore;
+    this.accessTokenManager = builder.accessTokenManager;
+    this.store = builder.store;
 
     this.altAuthMethodConfigData = builder.altAuthMethodConfigData;
   }
@@ -86,7 +86,7 @@ final class MockApi implements Api {
     String deviceId
   ) {
     return Single.defer(() -> Single.just(Result.create(this.user)))
-      .doOnSuccess((result) -> this.accessTokenStore.set(this.user.toString()))
+      .doOnSuccess((result) -> this.accessTokenManager.set(this.user.toString()))
       .compose(singleDelayTransformer());
   }
 
@@ -99,13 +99,13 @@ final class MockApi implements Api {
     boolean shouldDeactivatePreviousDevice
   ) {
     return Single.defer(() -> Single.just(Result.create(this.user)))
-      .doOnSuccess((result) -> this.accessTokenStore.set(this.user.toString()))
+      .doOnSuccess((result) -> this.accessTokenManager.set(this.user.toString()))
       .compose(singleDelayTransformer());
   }
 
   private void enableAltAuthMethod_(PublicKey publicKey) throws Exception {
     this.altAuthMethodPublicKeyReference.set(publicKey);
-    this.keyValueStore.set(
+    this.store.set(
       KEY_ALT_AUTH_METHOD,
       Base64.encodeToString(publicKey.getEncoded(), Base64.NO_WRAP)
     );
@@ -118,7 +118,7 @@ final class MockApi implements Api {
   }
 
   private void loadAltAuthMethod() throws Exception {
-    final boolean isSet = this.keyValueStore.isSet(KEY_ALT_AUTH_METHOD);
+    final boolean isSet = this.store.isSet(KEY_ALT_AUTH_METHOD);
     final boolean isNull = ObjectHelper.isNull(this.altAuthMethodPublicKeyReference.get());
     if (isSet && isNull) {
       final PublicKey publicKey = KeyFactory
@@ -126,7 +126,7 @@ final class MockApi implements Api {
         .generatePublic(
           new X509EncodedKeySpec(
             Base64.decode(
-              this.keyValueStore.get(KEY_ALT_AUTH_METHOD),
+              this.store.get(KEY_ALT_AUTH_METHOD, String.class),
               Base64.NO_WRAP
             )
           )
@@ -170,7 +170,7 @@ final class MockApi implements Api {
     return Single.defer(() -> Single.just(this.verifyAltAuthMethod_(data, signedData)))
       .doOnSuccess((result) -> {
         if (result.isSuccessful()) {
-          this.accessTokenStore.set(this.user.toString());
+          this.accessTokenManager.set(this.user.toString());
         }
       })
       .compose(singleDelayTransformer());
@@ -178,7 +178,7 @@ final class MockApi implements Api {
 
   private void disableAltAuthMethod_() throws Exception {
     this.altAuthMethodPublicKeyReference.set(null);
-    this.keyValueStore.remove(KEY_ALT_AUTH_METHOD);
+    this.store.remove(KEY_ALT_AUTH_METHOD);
   }
 
   @Override
@@ -189,21 +189,21 @@ final class MockApi implements Api {
 
   static final class Builder {
 
-    private AccessTokenStore accessTokenStore;
-    private KeyValueStore keyValueStore;
+    private AccessTokenManager accessTokenManager;
+    private Store store;
 
     private AltAuthMethodConfigData altAuthMethodConfigData;
 
     private Builder() {
     }
 
-    final Builder accessTokenStore(AccessTokenStore accessTokenStore) {
-      this.accessTokenStore = ObjectHelper.checkNotNull(accessTokenStore, "accessTokenStore");
+    final Builder accessTokenStore(AccessTokenManager accessTokenManager) {
+      this.accessTokenManager = ObjectHelper.checkNotNull(accessTokenManager, "accessTokenManager");
       return this;
     }
 
-    final Builder keyValueStore(KeyValueStore keyValueStore) {
-      this.keyValueStore = ObjectHelper.checkNotNull(keyValueStore, "keyValueStore");
+    final Builder keyValueStore(Store store) {
+      this.store = ObjectHelper.checkNotNull(store, "store");
       return this;
     }
 
@@ -217,7 +217,7 @@ final class MockApi implements Api {
 
     final MockApi build() {
       BuilderChecker.create()
-        .addPropertyNameIfMissing("keyValueStore", ObjectHelper.isNull(this.keyValueStore))
+        .addPropertyNameIfMissing("store", ObjectHelper.isNull(this.store))
         .addPropertyNameIfMissing(
           "altAuthMethodConfigData",
           ObjectHelper.isNull(this.altAuthMethodConfigData)

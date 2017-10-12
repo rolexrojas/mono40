@@ -3,8 +3,8 @@ package com.tpago.movil.domain.auth.alt;
 import android.support.annotation.Nullable;
 
 import com.tpago.movil.api.Api;
-import com.tpago.movil.KeyValueStore;
-import com.tpago.movil.KeyValueStoreHelper;
+import com.tpago.movil.store.Store;
+import com.tpago.movil.store.StoreHelper;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.Placeholder;
@@ -22,30 +22,32 @@ import io.reactivex.functions.Action;
 
 /**
  * @author hecvasro
+ * @deprecated Use {@link com.tpago.movil.session.SessionManager} instead.
  */
+@Deprecated
 public final class AltAuthMethodManager {
 
-  private static final String KEY = KeyValueStoreHelper
+  private static final String KEY = StoreHelper
     .createKey(AltAuthMethodManager.class, "Method");
 
   public static Builder builder() {
     return new Builder();
   }
 
-  private final KeyValueStore keyValueStore;
+  private final Store store;
   private final Api api;
 
   private final String signAlgName;
   private final List<Action> rollbackActionList;
 
   private AltAuthMethodManager(Builder builder) {
-    this.keyValueStore = builder.keyValueStore;
+    this.store = builder.store;
     this.api = builder.api;
 
     this.signAlgName = builder.signAlgName;
 
     this.rollbackActionList = builder.rollbackActionList;
-    this.rollbackActionList.add(() -> this.keyValueStore.remove(KEY));
+    this.rollbackActionList.add(() -> this.store.remove(KEY));
   }
 
   private void checkEnabled() {
@@ -67,7 +69,7 @@ public final class AltAuthMethodManager {
    * otherwise false.
    */
   public final boolean isEnabled() {
-    return this.keyValueStore.isSet(KEY);
+    return this.store.isSet(KEY);
   }
 
   /**
@@ -85,7 +87,7 @@ public final class AltAuthMethodManager {
       final Completable completable = ObjectHelper.checkNotNull(generator, "generator")
         .generate()
         .flatMapCompletable(this.api::enableAltAuthMethod)
-        .doOnComplete(() -> this.keyValueStore.set(KEY, method.name()))
+        .doOnComplete(() -> this.store.set(KEY, method.name()))
         .doOnError((throwable) -> this.executeRollback());
 
       if (ObjectHelper.isNull(currentMethod)) {
@@ -100,8 +102,8 @@ public final class AltAuthMethodManager {
 
   @Nullable
   public final AltAuthMethod getActiveMethod() {
-    if (this.keyValueStore.isSet(KEY)) {
-      return AltAuthMethod.valueOf(this.keyValueStore.get(KEY));
+    if (this.store.isSet(KEY)) {
+      return AltAuthMethod.valueOf(this.store.get(KEY, String.class));
     } else {
       return null;
     }
@@ -154,7 +156,7 @@ public final class AltAuthMethodManager {
 
   public static final class Builder {
 
-    private KeyValueStore keyValueStore;
+    private Store store;
     private Api api;
 
     private String signAlgName;
@@ -168,8 +170,8 @@ public final class AltAuthMethodManager {
       return this;
     }
 
-    public final Builder keyValueStore(KeyValueStore keyValueStore) {
-      this.keyValueStore = ObjectHelper.checkNotNull(keyValueStore, "keyValueStore");
+    public final Builder keyValueStore(Store store) {
+      this.store = ObjectHelper.checkNotNull(store, "store");
       return this;
     }
 
@@ -185,7 +187,7 @@ public final class AltAuthMethodManager {
 
     public final AltAuthMethodManager build() {
       BuilderChecker.create()
-        .addPropertyNameIfMissing("keyValueStore", ObjectHelper.isNull(this.keyValueStore))
+        .addPropertyNameIfMissing("store", ObjectHelper.isNull(this.store))
         .addPropertyNameIfMissing("api", ObjectHelper.isNull(this.api))
         .addPropertyNameIfMissing("signAlgName", StringHelper.isNullOrEmpty(this.signAlgName))
         .checkNoMissingProperties();

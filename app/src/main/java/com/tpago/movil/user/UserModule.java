@@ -1,7 +1,7 @@
 package com.tpago.movil.user;
 
-import com.google.gson.Gson;
-import com.tpago.movil.KeyValueStore;
+import com.birbit.android.jobqueue.JobManager;
+import com.tpago.movil.store.Store;
 
 import javax.inject.Singleton;
 
@@ -16,7 +16,7 @@ public final class UserModule {
 
   @Provides
   @Singleton
-  UserStore userStore(Gson gson, KeyValueStore keyValueStore) {
-    return GsonKeyValueUserStore.create(gson, keyValueStore);
+  UserManager userManager(JobManager jobManager, Store store) {
+    return UserManager.create(jobManager, store);
   }
 }

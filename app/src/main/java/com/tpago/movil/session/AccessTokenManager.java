@@ -7,28 +7,26 @@ import com.tpago.movil.util.StringHelper;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * In-memory store for access tokens.
- *
  * @author hecvasro
  */
-public class AccessTokenStore {
+public class AccessTokenManager {
 
-  static AccessTokenStore create() {
-    return new AccessTokenStore();
+  static AccessTokenManager create() {
+    return new AccessTokenManager();
   }
 
   private final AtomicReference<String> reference;
 
-  private AccessTokenStore() {
+  private AccessTokenManager() {
     this.reference = new AtomicReference<>();
-  }
-
-  public final void set(String accessToken) {
-    this.reference.set(StringHelper.nullIfEmpty(accessToken));
   }
 
   public final boolean isSet() {
     return !StringHelper.isNullOrEmpty(this.reference.get());
+  }
+
+  public final void set(String accessToken) {
+    this.reference.set(StringHelper.nullIfEmpty(accessToken));
   }
 
   @Nullable

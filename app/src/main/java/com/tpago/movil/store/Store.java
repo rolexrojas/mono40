@@ -1,18 +1,18 @@
-package com.tpago.movil;
+package com.tpago.movil.store;
 
 import android.support.annotation.Nullable;
 
 /**
  * @author hecvasro
  */
-public interface KeyValueStore {
+public interface Store {
 
   boolean isSet(String key);
 
-  void set(String key, String value);
+  <T> void set(String key, T value);
 
   @Nullable
-  String get(String key);
+  <T> T get(String key, Class<T> valueType);
 
   void remove(String key);
 }

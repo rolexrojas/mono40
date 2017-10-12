@@ -3,6 +3,8 @@ package com.tpago.movil.dep;
 import android.app.Application;
 import android.content.Context;
 
+import com.birbit.android.jobqueue.Job;
+import com.birbit.android.jobqueue.di.DependencyInjector;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.BuildConfig;
@@ -10,6 +12,10 @@ import com.tpago.movil.app.AppComponent;
 import com.tpago.movil.app.di.ComponentBuilderSupplier;
 import com.tpago.movil.app.di.ComponentBuilderSupplierContainer;
 import com.tpago.movil.d.DepAppModule;
+import com.tpago.movil.job.JobModule;
+import com.tpago.movil.user.UpdateCarrierManagerJob;
+import com.tpago.movil.user.UpdateNameUserManagerJob;
+import com.tpago.movil.user.UpdatePictureUserManagerJob;
 import com.tpago.movil.util.ObjectHelper;
 
 import javax.inject.Inject;
@@ -21,7 +27,8 @@ import timber.log.Timber;
  * @author hecvasro
  */
 @Deprecated
-public abstract class App extends Application implements ComponentBuilderSupplierContainer {
+public abstract class App extends Application implements ComponentBuilderSupplierContainer,
+  DependencyInjector {
 
   public static App get(Context context) {
     return (App) ObjectHelper.checkNotNull(context, "context")
@@ -48,6 +55,7 @@ public abstract class App extends Application implements ComponentBuilderSupplie
     component = com.tpago.movil.app.DaggerAppComponent.builder()
       .appModule(new AppModule(this))
       .depAppModule(new DepAppModule(this))
+      .jobModule(JobModule.create(this))
       .build();
     component.inject(this);
   }
@@ -83,5 +91,16 @@ public abstract class App extends Application implements ComponentBuilderSupplie
   @Override
   public ComponentBuilderSupplier componentBuilderSupplier() {
     return this.componentBuilderSupplier;
+  }
+
+  @Override
+  public void inject(Job job) {
+    if (job instanceof UpdateNameUserManagerJob) {
+      this.component.inject((UpdateNameUserManagerJob) job);
+    } else if (job instanceof UpdatePictureUserManagerJob) {
+      this.component.inject((UpdatePictureUserManagerJob) job);
+    } else if (job instanceof UpdateCarrierManagerJob) {
+      this.component.inject((UpdateCarrierManagerJob) job);
+    }
   }
 }

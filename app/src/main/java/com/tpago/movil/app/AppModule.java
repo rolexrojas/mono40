@@ -2,6 +2,8 @@ package com.tpago.movil.app;
 
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 
 import com.tpago.movil.app.di.ComponentBuilder;
@@ -21,6 +23,12 @@ public final class AppModule {
   @Singleton
   ComponentBuilderSupplier componentBuilderSupplier(Map<Class<?>, ComponentBuilder> map) {
     return ComponentBuilderSupplier.create(map);
+  }
+
+  @Provides
+  @Singleton
+  SharedPreferences sharedPreferences(Context context) {
+    return PreferenceManager.getDefaultSharedPreferences(context);
   }
 
   @Provides

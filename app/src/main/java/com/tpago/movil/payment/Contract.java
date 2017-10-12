@@ -1,4 +1,4 @@
-package com.tpago.movil.domain.payment;
+package com.tpago.movil.payment;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;

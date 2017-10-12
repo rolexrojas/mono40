@@ -44,7 +44,9 @@ public abstract class BaseUnlockFragment extends BaseFragment {
   @Inject TakeoverLoader takeoverLoader;
 
   FragmentReplacer fragmentReplacer;
-  @Inject @ActivityQualifier FragmentReplacer activityFragmentReplacer;
+  @Inject
+  @ActivityQualifier
+  FragmentReplacer activityFragmentReplacer;
 
   @Inject LogoAnimator logoAnimator;
 
@@ -63,7 +65,8 @@ public abstract class BaseUnlockFragment extends BaseFragment {
       final int code = failureData.code();
       if (code == Api.FailureCode.INCORRECT_CODE) {
         title = "Código incorrecto";
-        message = "El código introducido no coincide con el código utilizado durante la configuración del desbloqueo rápido.";
+        message
+          = "El código introducido no coincide con el código utilizado durante la configuración del desbloqueo rápido.";
       }
 
       final AlertData alertData = AlertData.builder(this.stringMapper)
@@ -95,7 +98,7 @@ public abstract class BaseUnlockFragment extends BaseFragment {
     final User user = this.sessionManager.getUser();
 
     Picasso.with(this.getContext())
-      .load(user.pictureUri())
+      .load(user.picture())
       .resizeDimen(R.dimen.normalImageSize, R.dimen.normalImageSize)
       .noFade()
       .into(this.userPictureImageView);

@@ -1,6 +1,6 @@
 package com.tpago.movil.net;
 
-import com.tpago.movil.session.AccessTokenStore;
+import com.tpago.movil.session.AccessTokenManager;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
 
@@ -20,14 +20,14 @@ import okhttp3.Response;
  */
 final class AuthInterceptor implements Interceptor {
 
-  static AuthInterceptor create(AccessTokenStore accessTokenStore) {
-    return new AuthInterceptor(accessTokenStore);
+  static AuthInterceptor create(AccessTokenManager accessTokenManager) {
+    return new AuthInterceptor(accessTokenManager);
   }
 
-  private final AccessTokenStore accessTokenStore;
+  private final AccessTokenManager accessTokenManager;
 
-  private AuthInterceptor(AccessTokenStore accessTokenStore) {
-    this.accessTokenStore = ObjectHelper.checkNotNull(accessTokenStore, "accessTokenStore");
+  private AuthInterceptor(AccessTokenManager accessTokenManager) {
+    this.accessTokenManager = ObjectHelper.checkNotNull(accessTokenManager, "accessTokenManager");
   }
 
   @Override
@@ -36,7 +36,7 @@ final class AuthInterceptor implements Interceptor {
       .newBuilder();
 
     // Adds the current access token as a header, if any.
-    final String currentAccessToken = this.accessTokenStore.get();
+    final String currentAccessToken = this.accessTokenManager.get();
     if (!StringHelper.isNullOrEmpty(currentAccessToken)) {
       requestBuilder.header("Authorization", String.format("Bearer %1$s", currentAccessToken));
     }
@@ -46,7 +46,7 @@ final class AuthInterceptor implements Interceptor {
     // Saves the new access token token, if any.
     final String newAccessToken = response.header("token");
     if (!StringHelper.isNullOrEmpty(newAccessToken)) {
-      this.accessTokenStore.set(newAccessToken);
+      this.accessTokenManager.set(newAccessToken);
     }
 
     return response;

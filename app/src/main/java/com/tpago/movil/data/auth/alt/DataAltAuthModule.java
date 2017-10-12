@@ -6,7 +6,7 @@ import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 
 import com.tpago.movil.BuildConfig;
 import com.tpago.movil.api.Api;
-import com.tpago.movil.KeyValueStore;
+import com.tpago.movil.store.Store;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
 
 import java.math.BigInteger;
@@ -65,10 +65,10 @@ public final class DataAltAuthModule {
   @Provides
   @Singleton
   CodeAltAuthMethodStore codeAltAuthMethodStore(
-    KeyValueStore keyValueStore,
+    Store store,
     AltAuthMethodConfigData altAuthMethodConfigData
   ) {
-    return CodeAltAuthMethodStore.create(keyValueStore, altAuthMethodConfigData);
+    return CodeAltAuthMethodStore.create(store, altAuthMethodConfigData);
   }
 
   @Provides
@@ -131,7 +131,7 @@ public final class DataAltAuthModule {
   @Provides
   @Singleton
   AltAuthMethodManager altAuthManager(
-    KeyValueStore store,
+    Store store,
     Api api,
     AltAuthMethodConfigData data,
     KeyStore keyStore,
