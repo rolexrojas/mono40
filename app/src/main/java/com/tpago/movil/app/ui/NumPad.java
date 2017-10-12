@@ -11,12 +11,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.tpago.movil.R;
-import com.tpago.movil.util.Action;
+import com.tpago.movil.function.Action;
+import com.tpago.movil.function.Consumer;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import butterknife.BindView;
 import butterknife.BindViews;

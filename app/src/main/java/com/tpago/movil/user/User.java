@@ -7,6 +7,7 @@ import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.tpago.movil.Email;
 import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.function.Consumer;
 import com.tpago.movil.payment.Carrier;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.ObjectHelper;
@@ -14,7 +15,6 @@ import com.tpago.movil.util.StringHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * User representation

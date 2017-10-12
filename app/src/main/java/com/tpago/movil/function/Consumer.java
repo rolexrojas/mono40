@@ -1,4 +1,4 @@
-package com.tpago.movil.dep;
+package com.tpago.movil.function;
 
 /**
  * Functional interface that accepts an object of a given type.
@@ -8,7 +8,6 @@ package com.tpago.movil.dep;
  *
  * @author hecvasro
  */
-@Deprecated
 public interface Consumer<T> {
 
   /**

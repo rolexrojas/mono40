@@ -8,7 +8,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.tpago.movil.util.Action;
+import com.tpago.movil.function.Action;
+import com.tpago.movil.function.Consumer;
 import com.tpago.movil.util.Digit;
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.ActivityQualifier;
@@ -21,8 +22,6 @@ import com.tpago.movil.dep.widget.EditableLabel;
 import com.tpago.movil.dep.widget.FullSizeLoadIndicator;
 import com.tpago.movil.dep.widget.LoadIndicator;
 import com.tpago.movil.app.ui.NumPad;
-
-import java.util.function.Consumer;
 
 import javax.inject.Inject;
 

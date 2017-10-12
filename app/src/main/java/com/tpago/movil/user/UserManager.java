@@ -4,12 +4,12 @@ import android.net.Uri;
 
 import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.TagConstraint;
+import com.tpago.movil.function.Consumer;
 import com.tpago.movil.payment.Carrier;
 import com.tpago.movil.store.Store;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.io.File;
-import java.util.function.Consumer;
 
 /**
  * @author hecvasro

@@ -12,12 +12,11 @@ import com.tpago.movil.data.auth.alt.CodeAltAuthMethodKeySupplier;
 import com.tpago.movil.dep.init.InitActivity;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodVerifyData;
-import com.tpago.movil.util.Action;
+import com.tpago.movil.function.Action;
+import com.tpago.movil.function.Consumer;
 import com.tpago.movil.util.Digit;
 import com.tpago.movil.util.DigitValueCreator;
 import com.tpago.movil.util.Result;
-
-import java.util.function.Consumer;
 
 import javax.inject.Inject;
 

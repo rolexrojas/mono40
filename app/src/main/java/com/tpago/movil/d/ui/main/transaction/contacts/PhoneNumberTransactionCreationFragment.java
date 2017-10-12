@@ -26,13 +26,13 @@ import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
 import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
 import com.tpago.movil.dep.text.Texts;
-import com.tpago.movil.util.Action;
+import com.tpago.movil.function.Action;
+import com.tpago.movil.function.Consumer;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
 
 import javax.inject.Inject;
 

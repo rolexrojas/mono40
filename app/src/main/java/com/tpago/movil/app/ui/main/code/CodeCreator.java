@@ -6,9 +6,8 @@ import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.tpago.movil.app.ui.FragmentHelper;
 import com.tpago.movil.Code;
+import com.tpago.movil.function.Consumer;
 import com.tpago.movil.util.ObjectHelper;
-
-import java.util.function.Consumer;
 
 /**
  * @author hecvasro

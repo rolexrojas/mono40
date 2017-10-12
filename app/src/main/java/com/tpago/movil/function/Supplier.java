@@ -1,4 +1,4 @@
-package com.tpago.movil.util;
+package com.tpago.movil.function;
 
 /**
  * Functional interface that supplies an object of a given type.

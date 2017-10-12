@@ -10,9 +10,8 @@ import android.widget.TextView;
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.InjectableDialogFragment;
 import com.tpago.movil.app.ui.NumPad;
-import com.tpago.movil.util.Action;
-
-import java.util.function.Consumer;
+import com.tpago.movil.function.Action;
+import com.tpago.movil.function.Consumer;
 
 import javax.inject.Inject;
 

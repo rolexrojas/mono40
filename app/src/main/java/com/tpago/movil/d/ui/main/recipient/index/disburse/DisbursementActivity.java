@@ -39,7 +39,8 @@ import com.tpago.movil.d.domain.FailureData;
 import com.tpago.movil.d.domain.Result;
 import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
 import com.tpago.movil.dep.net.NetworkService;
-import com.tpago.movil.util.Action;
+import com.tpago.movil.function.Action;
+import com.tpago.movil.function.Consumer;
 
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
@@ -53,7 +54,6 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.function.Consumer;
 
 import javax.inject.Inject;
 

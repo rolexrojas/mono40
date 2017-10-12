@@ -2,7 +2,7 @@ package com.tpago.movil.domain.balance;
 
 import android.support.annotation.Nullable;
 
-import com.tpago.movil.dep.Consumer;
+import com.tpago.movil.function.Consumer;
 
 import java.util.List;
 

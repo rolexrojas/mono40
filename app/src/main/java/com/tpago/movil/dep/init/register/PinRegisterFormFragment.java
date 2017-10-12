@@ -6,15 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tpago.movil.util.Action;
+import com.tpago.movil.function.Action;
+import com.tpago.movil.function.Consumer;
 import com.tpago.movil.util.Digit;
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.FragmentQualifier;
 import com.tpago.movil.app.ui.FragmentReplacer;
 import com.tpago.movil.dep.widget.EditableLabel;
 import com.tpago.movil.app.ui.NumPad;
-
-import java.util.function.Consumer;
 
 import javax.inject.Inject;
 

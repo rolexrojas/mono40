@@ -25,11 +25,11 @@ import com.tpago.movil.d.ui.view.BaseAnimatorListener;
 import com.tpago.movil.d.ui.view.widget.PinView;
 import com.tpago.movil.dep.widget.FullSizeLoadIndicator;
 import com.tpago.movil.dep.widget.LoadIndicator;
-import com.tpago.movil.util.Action;
+import com.tpago.movil.function.Action;
+import com.tpago.movil.function.Consumer;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.io.Serializable;
-import java.util.function.Consumer;
 
 import butterknife.BindInt;
 import butterknife.BindView;
