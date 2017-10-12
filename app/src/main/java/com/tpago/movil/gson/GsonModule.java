@@ -3,6 +3,7 @@ package com.tpago.movil.gson;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
+import com.tpago.movil.company.LogoCatalogMapper;
 import com.tpago.movil.d.data.api.ApiErrorTypeAdapter;
 import com.tpago.movil.d.data.api.BalanceTypeAdapter;
 import com.tpago.movil.d.data.api.InitialDataDeserializer;
@@ -36,7 +37,7 @@ public final class GsonModule {
 
   @Provides
   @Singleton
-  Gson gson(AssetUriBuilder assetUriBuilder) {
+  Gson gson(LogoCatalogMapper logoCatalogMapper, AssetUriBuilder assetUriBuilder) {
     final TypeAdapter<Bank> bankTypeAdapter = new BankTypeAdapter(assetUriBuilder);
 
     return new GsonBuilder()
@@ -54,7 +55,7 @@ public final class GsonModule {
       .registerTypeAdapter(PhoneNumberRecipient.class, new RecipientTypeAdapter())
       .registerTypeAdapter(NonAffiliatedPhoneNumberRecipient.class, new RecipientTypeAdapter())
       .registerTypeAdapter(BillRecipient.class, new RecipientTypeAdapter())
-      .registerTypeAdapterFactory(DecoratedAutoValueTypeAdapterFactory.create())
+      .registerTypeAdapterFactory(DecoratedAutoValueTypeAdapterFactory.create(logoCatalogMapper))
       .create();
   }
 }

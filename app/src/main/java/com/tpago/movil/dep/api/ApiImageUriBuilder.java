@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.tpago.movil.dep.Partner;
-import com.tpago.movil.dep.DisplayDensity;
+import com.tpago.movil.DisplayDensity;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.dep.text.Texts;
 
@@ -18,8 +18,7 @@ public final class ApiImageUriBuilder {
     return template.replace(
       "{size}",
       DisplayDensity.get(context)
-        .name()
-        .toLowerCase()
+        .toString()
     );
   }
 

@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 
+import com.tpago.movil.DisplayDensity;
 import com.tpago.movil.app.di.ComponentBuilder;
 import com.tpago.movil.app.di.ComponentBuilderSupplier;
 
@@ -23,6 +24,12 @@ public final class AppModule {
   @Singleton
   ComponentBuilderSupplier componentBuilderSupplier(Map<Class<?>, ComponentBuilder> map) {
     return ComponentBuilderSupplier.create(map);
+  }
+
+  @Provides
+  @Singleton
+  DisplayDensity provideDisplayDensity(Context context) {
+    return DisplayDensity.get(context);
   }
 
   @Provides

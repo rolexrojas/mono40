@@ -2,7 +2,7 @@ package com.tpago.movil.payment;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.domain.company.Company;
+import com.tpago.movil.company.Company;
 
 /**
  * Partner representation

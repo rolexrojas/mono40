@@ -1,7 +1,8 @@
-package com.tpago.movil.dep;
+package com.tpago.movil;
 
 import android.content.Context;
 
+import com.tpago.movil.dep.App;
 import com.tpago.movil.util.ObjectHelper;
 
 /**
@@ -9,7 +10,6 @@ import com.tpago.movil.util.ObjectHelper;
  *
  * @author hecvasro
  */
-@Deprecated
 public enum DisplayDensity {
   LDPI(0.75F),
   MDPI(1.00F),

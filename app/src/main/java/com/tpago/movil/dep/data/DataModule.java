@@ -1,7 +1,7 @@
 package com.tpago.movil.dep.data;
 
 import com.google.gson.Gson;
-import com.tpago.movil.dep.DisplayDensity;
+import com.tpago.movil.DisplayDensity;
 import com.tpago.movil.dep.content.SharedPreferencesCreator;
 import com.tpago.movil.d.domain.BankRepo;
 

@@ -2,6 +2,7 @@ package com.tpago.movil.dep;
 
 import android.content.Context;
 
+import com.tpago.movil.DisplayDensity;
 import com.tpago.movil.dep.content.SharedPreferencesCreator;
 import com.tpago.movil.dep.content.StringResolver;
 import com.tpago.movil.data.DeviceIdSupplier;
@@ -47,12 +48,6 @@ public final class AppModule {
   @Singleton
   Context provideContext() {
     return app;
-  }
-
-  @Provides
-  @Singleton
-  DisplayDensity provideDisplayDensity(Context context) {
-    return DisplayDensity.get(context);
   }
 
   // Deprecated providers.

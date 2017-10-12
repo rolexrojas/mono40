@@ -1,10 +1,8 @@
-package com.tpago.movil.domain.company;
+package com.tpago.movil.company;
 
 import android.net.Uri;
 
 import com.tpago.movil.util.StringHelper;
-
-import java.util.Map;
 
 /**
  * Company representation
@@ -25,7 +23,7 @@ public abstract class Company {
 
   public abstract String logoTemplate();
 
-  public abstract Map<String, Uri> styledLogos();
+  public abstract LogoCatalog logoCatalog();
 
   /**
    * Transforms its {@link #logoTemplate() template} into an {@link Uri} for the given {@link
@@ -39,16 +37,18 @@ public abstract class Company {
    *   If {@code style} is not a valid {@link LogoStyle style}.
    */
   public final Uri logo(@LogoStyle String style) {
-    if (StringHelper.isNullOrEmpty(style)) {
-      throw new IllegalArgumentException("StringHelper.isNullOrEmpty(style)");
+    final LogoCatalog catalog = this.logoCatalog();
+    switch (StringHelper.checkIsNotNullNorEmpty(style, "style")) {
+      case LogoStyle.COLORED_24:
+        return catalog.colored24();
+      case LogoStyle.GRAY_20:
+        return catalog.gray20();
+      case LogoStyle.GRAY_36:
+        return catalog.gray36();
+      case LogoStyle.WHITE_36:
+        return catalog.white36();
+      default:
+        return Uri.EMPTY;
     }
-    final Map<String, Uri> styledLogos = this.styledLogos();
-    if (!styledLogos.containsKey(style)) {
-      throw new IllegalArgumentException(String.format(
-        "!styledLogoUris.contains(\"%1$s\")",
-        style
-      ));
-    }
-    return styledLogos.get(style);
   }
 }

@@ -1,15 +1,14 @@
 package com.tpago.movil.domain.product;
 
-import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
-import com.tpago.movil.domain.company.Company;
+import com.tpago.movil.company.Company;
+import com.tpago.movil.company.LogoCatalog;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.math.BigDecimal;
-import java.util.Map;
 
 /**
  * Bank representation
@@ -60,7 +59,7 @@ public abstract class Bank extends Company implements Comparable<Bank> {
 
     public abstract Builder logoTemplate(String logoTemplate);
 
-    public abstract Builder styledLogos(Map<String, Uri> styledLogos);
+    public abstract Builder logoCatalog(LogoCatalog logoHolder);
 
     public abstract Builder transferCostRate(BigDecimal transferCostRate);
 

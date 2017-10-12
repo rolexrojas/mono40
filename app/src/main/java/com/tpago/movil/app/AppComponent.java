@@ -1,5 +1,6 @@
 package com.tpago.movil.app;
 
+import com.tpago.movil.company.CompanyModule;
 import com.tpago.movil.data.DataModule;
 import com.tpago.movil.gson.GsonModule;
 import com.tpago.movil.job.JobModule;
@@ -20,6 +21,7 @@ import dagger.Component;
   modules = {
     AppComponentBuilderModule.class,
     AppModule.class,
+    CompanyModule.class,
     DataModule.class,
     GsonModule.class,
     JobModule.class,

@@ -1,5 +1,6 @@
 package com.tpago.movil.dep;
 
+import com.tpago.movil.DisplayDensity;
 import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.d.domain.LogoStyle;
 import com.tpago.movil.d.domain.LogoUriMap;

@@ -2,7 +2,7 @@ package com.tpago.movil.dep.data;
 
 import android.net.Uri;
 
-import com.tpago.movil.dep.DisplayDensity;
+import com.tpago.movil.DisplayDensity;
 import com.tpago.movil.d.domain.LogoStyle;
 import com.tpago.movil.util.ObjectHelper;
 

@@ -1,4 +1,4 @@
-package com.tpago.movil.domain.company;
+package com.tpago.movil.company;
 
 import android.support.annotation.StringDef;
 

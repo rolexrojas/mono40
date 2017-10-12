@@ -1,6 +1,6 @@
-package com.tpago.movil.domain.company;
+package com.tpago.movil.company;
 
-import com.tpago.movil.dep.DisplayDensity;
+import com.tpago.movil.DisplayDensity;
 
 import javax.inject.Singleton;
 
@@ -17,7 +17,7 @@ public final class CompanyModule {
 
   @Provides
   @Singleton
-  final LogoUriMapper logoUriMapper(DisplayDensity displayDensity) {
-    throw new UnsupportedOperationException("not implemented");
+  final LogoCatalogMapper logoCatalogMapper(DisplayDensity displayDensity) {
+    return LogoCatalogMapper.create(displayDensity);
   }
 }
