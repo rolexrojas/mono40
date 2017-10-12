@@ -2,10 +2,11 @@ package com.tpago.movil.util;
 
 import android.support.annotation.Nullable;
 
+import com.tpago.movil.function.Function;
+import com.tpago.movil.function.Predicate;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 /**
  * Helper for the creation of objects composed by a {@link String string} of {@link Digit digits}.
