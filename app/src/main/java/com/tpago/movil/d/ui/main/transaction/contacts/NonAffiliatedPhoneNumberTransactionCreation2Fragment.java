@@ -126,7 +126,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
   }
 
   @OnClick(R.id.button)
-  void onButtonClicked() {
+  final void onButtonClicked() {
     final String content = textInput.getText()
       .toString()
       .trim();
@@ -176,7 +176,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
                   Formatter
                     .amount(DCurrencies.map(fundingAccount.get()
                       .getCurrency()), value.get()),
-                  data.first,
+                  StringHelper.isNullOrEmpty(data.first) ? content : data.first,
                   Formatter.amount(
                     DCurrencies.map(fundingAccount.get()
                       .getCurrency()),
@@ -264,6 +264,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
       bank = r.getBank();
       number = r.getAccountNumber();
     }
+
     Picasso.with(getContext())
       .load(bank.getLogoUri(LogoStyle.PRIMARY_24))
       .noFade()
@@ -277,9 +278,10 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
       )
     );
 
-    Keyboard.show(textInput);
-    textInput.setText(number);
-    textInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+    Keyboard.show(this.textInput);
+
+    this.textInput.setText(number);
+    this.textInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
       @Override
       public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
