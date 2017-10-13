@@ -273,7 +273,9 @@
   <string name="start">Comenzar</string>
   <string name="total">Total</string>
   <string name="total_owed">Total adeudado</string>
-  <string name="transaction">Ingresa el número de cuenta del %1$s para realizar la transacción.</string>
+  <string name="accountNumberConfirmationMessage">%1$s el número de cuenta del %2$s para realizar la transacción.</string>
+  <string name="input">Ingresa</string>
+  <string name="confirm">Confirma</string>
   <string name="transaction_confirmation_title">¡Transacción exitosa!</string>
   <string name="transaction_creation.text.widget.amount.currency.font">@string/font_gothamRounded_light</string>
   <string name="transaction_creation.text.widget.amount.value.font">@string/font_gothamRounded_light</string>

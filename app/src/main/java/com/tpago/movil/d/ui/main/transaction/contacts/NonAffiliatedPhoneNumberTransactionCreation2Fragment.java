@@ -36,6 +36,7 @@ import com.tpago.movil.dep.widget.Keyboard;
 import com.tpago.movil.dep.widget.LoadIndicator;
 import com.tpago.movil.dep.widget.TextInput;
 import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.util.StringHelper;
 
 import java.math.BigDecimal;
 import java.util.concurrent.atomic.AtomicReference;
@@ -267,7 +268,15 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
       .load(bank.getLogoUri(LogoStyle.PRIMARY_24))
       .noFade()
       .into(imageView);
-    textView.setText(String.format(getString(R.string.transaction), Banks.getName(bank)));
+
+    this.textView.setText(
+      this.getString(
+        R.string.accountNumberConfirmationMessage,
+        this.getString(StringHelper.isNullOrEmpty(number) ? R.string.input : R.string.confirm),
+        Banks.getName(bank)
+      )
+    );
+
     Keyboard.show(textInput);
     textInput.setText(number);
     textInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {

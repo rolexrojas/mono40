@@ -177,7 +177,15 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
       .load(bank.getLogoUri(LogoStyle.PRIMARY_24))
       .noFade()
       .into(imageView);
-    textView.setText(String.format(getString(R.string.transaction), Banks.getName(bank)));
+
+    this.textView.setText(
+      this.getString(
+        R.string.accountNumberConfirmationMessage,
+        this.getString(R.string.input),
+        Banks.getName(bank)
+      )
+    );
+
     Keyboard.show(textInput);
     textInput.setText(recipient.getAccountNumber());
     textInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
