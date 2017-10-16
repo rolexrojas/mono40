@@ -8,11 +8,11 @@ import com.tpago.movil.util.Placeholder;
 import java.io.IOException;
 
 /**
- * @author
+ * @author hecvasro
  */
-public final class PlaceholderTypeAdapter extends TypeAdapter<Placeholder> {
+final class PlaceholderTypeAdapter extends TypeAdapter<Placeholder> {
 
-  public static PlaceholderTypeAdapter create() {
+  static PlaceholderTypeAdapter create() {
     return new PlaceholderTypeAdapter();
   }
 
@@ -21,12 +21,11 @@ public final class PlaceholderTypeAdapter extends TypeAdapter<Placeholder> {
 
   @Override
   public void write(JsonWriter writer, Placeholder placeholder) throws IOException {
-    writer.nullValue();
   }
 
   @Override
   public Placeholder read(JsonReader reader) throws IOException {
-    reader.nextNull();
+    reader.skipValue();
 
     return Placeholder.get();
   }

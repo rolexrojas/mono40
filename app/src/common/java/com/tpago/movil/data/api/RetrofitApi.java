@@ -30,6 +30,6 @@ public interface RetrofitApi {
   @POST("signin/fingerprint")
   Single<Response<Placeholder>> verifyAltAuthMethod(@Body RetrofitApiVerifyAltAuthBody body);
 
-  @DELETE("account/public-key/account/1")
+  @DELETE("account/public-key/account")
   Completable disableAltAuthMethod();
 }
