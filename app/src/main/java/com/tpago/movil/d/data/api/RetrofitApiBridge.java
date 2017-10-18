@@ -99,11 +99,9 @@ class RetrofitApiBridge implements DepApiBridge {
           return Observable.just(new ApiResult<>(ApiCode.OK, mapFunc.call(response.body()), null));
         } else {
           try {
-            return Observable.just(new ApiResult<B>(
-              ApiCode.fromValue(response.code()),
-              null,
-              errorConverter.convert(response.errorBody())
-            ));
+            final ApiCode apiCode = ApiCode.fromValue(response.code());
+            final ApiError apiError = errorConverter.convert(response.errorBody());
+            return Observable.just(new ApiResult<B>(apiCode, null, apiError));
           } catch (IOException exception) {
             return Observable.error(exception);
           }

@@ -360,12 +360,13 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
                         .getName()
                     );
                   } else {
-                    final ApiError apiError = customerStateResult.getError();
+                    final ApiError apiError = customerResult.getError();
                     result = Result.create(
                       FailureData.create(
                         ErrorCode.UNEXPECTED,
                         apiError.getDescription()
-                      ));
+                      )
+                    );
                   }
                 } else {
                   result = Result.create("");
