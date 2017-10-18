@@ -73,7 +73,6 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
   private final DepApiBridge depApiBridge;
   private final Category category;
   private final CategoryFilter categoryFilter;
-  private final UserRecipient userRecipient;
   private final String userRecipientLabelForTransfers;
   private final String userRecipientLabelForRecharges;
   private final RecipientComparator recipientComparator;
@@ -106,7 +105,6 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
     this.depApiBridge = depApiBridge;
     this.category = category;
     this.categoryFilter = CategoryFilter.create(this.category);
-    this.userRecipient = new UserRecipient(this.user);
     this.userRecipientLabelForTransfers = "Entre mis cuentas";
     this.userRecipientLabelForRecharges = "Mi teléfono";
     this.recipientComparator = RecipientComparator.create();
@@ -149,6 +147,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
             } else {
               label = userRecipientLabelForRecharges;
             }
+            final UserRecipient userRecipient = new UserRecipient(user);
             userRecipient.setLabel(label);
 
             userRecipientSource = Observable.just(userRecipient)

@@ -83,13 +83,35 @@ public final class UriBuilder {
    * @throws IllegalArgumentException
    *   If {@code placeholder} isn't contained in {@link #template template}.
    */
-  public final UriBuilder replacement(String placeholder, String replacement) {
+  private UriBuilder replacement(String placeholder, String replacement, boolean shouldWrap) {
     StringHelper.checkIsNotNullNorEmpty(placeholder, "placeholder");
     StringHelper.checkIsNotNullNorEmpty(replacement, "replacement");
-    final String wrappedPlaceholder = wrapPlaceholder(placeholder);
+
+    final String wrappedPlaceholder;
+    if (shouldWrap) {
+      wrappedPlaceholder = wrapPlaceholder(placeholder);
+    } else {
+      wrappedPlaceholder = placeholder;
+    }
+
     this.checkIsContained(wrappedPlaceholder);
+
     this.replacements.put(wrappedPlaceholder, replacement);
     return this;
+  }
+
+  /**
+   * Adds the given string as a replacement the given placeholder.
+   *
+   * @throws IllegalArgumentException
+   *   If {@code placeholder} is {@code null} or empty.
+   * @throws IllegalArgumentException
+   *   If {@code replacement} is {@code null} or empty.
+   * @throws IllegalArgumentException
+   *   If {@code placeholder} isn't contained in {@link #template template}.
+   */
+  public final UriBuilder replacement(String placeholder, String replacement) {
+    return this.replacement(placeholder, replacement, true);
   }
 
   /**
@@ -100,8 +122,9 @@ public final class UriBuilder {
    *   If {@code displayDensity} is null.
    */
   public final UriBuilder replacement(DisplayDensity displayDensity) {
-    ObjectHelper.checkNotNull(displayDensity, "displayDensity");
-    return this.replacement(DISPLAY_DENSITY_PLACEHOLDER, displayDensity.toString());
+    final String replacement = ObjectHelper.checkNotNull(displayDensity, "displayDensity")
+      .toString();
+    return this.replacement(DISPLAY_DENSITY_PLACEHOLDER, replacement, false);
   }
 
   public final Uri build() {

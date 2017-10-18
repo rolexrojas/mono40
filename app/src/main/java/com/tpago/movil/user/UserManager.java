@@ -1,7 +1,5 @@
 package com.tpago.movil.user;
 
-import android.net.Uri;
-
 import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.tpago.movil.function.Consumer;
@@ -39,6 +37,10 @@ public final class UserManager {
     }
   }
 
+  private void updateStore() {
+    this.store.set(KEY, this.user);
+  }
+
   public final boolean isSet() {
     return ObjectHelper.isNotNull(this.user);
   }
@@ -68,24 +70,24 @@ public final class UserManager {
 
   public final void updateName(String firstName, String lastName) {
     this.checkIsSet();
+
     this.user.updateName(firstName, lastName);
-    this.jobManager.addJobInBackground(UpdateNameUserManagerJob.create(firstName, lastName));
+    this.updateStore();
+    // TODO: Update API.
   }
 
   public final void updatePicture(File picture) {
     this.checkIsSet();
-    this.jobManager.addJobInBackground(UpdatePictureUserManagerJob.create(picture));
-  }
 
-  final void updatePicture(Uri picture) {
-    this.checkIsSet();
-    this.user.updatePicture(picture);
+    // TODO: Update API.
   }
 
   public final void updateCarrier(Carrier carrier) {
     this.checkIsSet();
+
     this.user.updateCarrier(carrier);
-    this.jobManager.addJobInBackground(UpdateCarrierManagerJob.create(carrier.code()));
+    this.updateStore();
+    // TODO: Update API.
   }
 
   public final void clear() {

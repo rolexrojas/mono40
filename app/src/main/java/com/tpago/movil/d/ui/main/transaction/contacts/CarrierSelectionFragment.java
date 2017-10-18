@@ -18,6 +18,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 import com.squareup.picasso.Picasso;
+import com.tpago.movil.company.LogoCatalog;
+import com.tpago.movil.company.LogoCatalogMapper;
 import com.tpago.movil.dep.Partner;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
@@ -40,6 +42,9 @@ import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
+import com.tpago.movil.payment.Carrier;
+import com.tpago.movil.payment.PartnerBuilderFactory;
+import com.tpago.movil.user.UserManager;
 import com.tpago.movil.util.ObjectHelper;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
@@ -75,6 +80,9 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
   private LoadIndicator loadIndicator;
   private Subscription subscription = Subscriptions.unsubscribed();
   private Subscription rechargeSubscription = Subscriptions.unsubscribed();
+
+  @Inject UserManager userManager;
+  @Inject LogoCatalogMapper logoCatalogMapper;
 
   @Inject
   RecipientManager recipientManager;
@@ -292,15 +300,28 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
     @Override
     public void onClick(View v) {
       final String phoneNumber;
+      final Partner p = carrierList.get(this.getAdapterPosition());
+
       if (recipient instanceof UserRecipient) {
         final UserRecipient r = (UserRecipient) recipient;
-        r.setCarrier(carrierList.get(this.getAdapterPosition()));
+        r.setCarrier(p);
+
+        final String logoTemplate = p.getImageUriTemplate();
+        final LogoCatalog logoCatalog = logoCatalogMapper.apply(logoTemplate);
+        final Carrier carrier = (Carrier) PartnerBuilderFactory.make(com.tpago.movil.payment.Partner.Type.CARRIER)
+          .code(p.getCode())
+          .id(p.getId())
+          .name(p.getName())
+          .logoTemplate(logoTemplate)
+          .logoCatalog(logoCatalog)
+          .build();
+        userManager.updateCarrier(carrier);
 
         phoneNumber = r.phoneNumber()
           .formattedValued();
       } else if (recipient instanceof NonAffiliatedPhoneNumberRecipient) {
         final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) recipient;
-        r.setCarrier(carrierList.get(this.getAdapterPosition()));
+        r.setCarrier(p);
 
 //        recipientManager.update(recipient);
 
@@ -308,7 +329,7 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
           .formattedValued();
       } else {
         final PhoneNumberRecipient r = (PhoneNumberRecipient) recipient;
-        r.setCarrier(carrierList.get(this.getAdapterPosition()));
+        r.setCarrier(p);
 
 //        recipientManager.update(recipient);
 
