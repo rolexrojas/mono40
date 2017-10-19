@@ -7,8 +7,8 @@ import com.tpago.movil.Email;
 import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.api.Api;
-import com.tpago.movil.domain.auth.alt.AltAuthMethodVerifyData;
 import com.tpago.movil.payment.Carrier;
+import com.tpago.movil.session.SessionOpeningSignatureData;
 import com.tpago.movil.session.User;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.Placeholder;
@@ -46,7 +46,7 @@ final class RetrofitApiImpl implements Api {
   }
 
   @Override
-  public Single<Result<User>> signUp(
+  public Single<Result<User>> createSession(
     PhoneNumber phoneNumber,
     Email email,
     String firstName,
@@ -69,7 +69,7 @@ final class RetrofitApiImpl implements Api {
   }
 
   @Override
-  public Single<Result<User>> signIn(
+  public Single<Result<User>> createSession(
     PhoneNumber phoneNumber,
     Email email,
     Password password,
@@ -113,7 +113,7 @@ final class RetrofitApiImpl implements Api {
   }
 
   @Override
-  public Completable enableAltAuthMethod(PublicKey publicKey) {
+  public Completable enableSessionOpeningMethod(PublicKey publicKey) {
     final RetrofitApiEnableAltAuthBody body = RetrofitApiEnableAltAuthBody.builder()
       .publicKey(publicKey)
       .build();
@@ -121,13 +121,13 @@ final class RetrofitApiImpl implements Api {
   }
 
   @Override
-  public Single<Result<Placeholder>> verifyAltAuthMethod(
-    AltAuthMethodVerifyData data,
+  public Single<Result<Placeholder>> openSession(
+    SessionOpeningSignatureData signatureData,
     byte[] signedData
   ) {
     final RetrofitApiVerifyAltAuthBody body = RetrofitApiVerifyAltAuthBody.builder()
-      .user(data.user())
-      .deviceId(data.deviceId())
+      .user(signatureData.user())
+      .deviceId(signatureData.deviceId())
       .signedData(signedData)
       .build();
     return this.retrofitApi.verifyAltAuthMethod(body)
@@ -135,7 +135,7 @@ final class RetrofitApiImpl implements Api {
   }
 
   @Override
-  public Completable disableAltAuthMethod() {
+  public Completable disableSessionOpeningMethod() {
     return this.retrofitApi.disableAltAuthMethod();
   }
 }
