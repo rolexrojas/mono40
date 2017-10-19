@@ -6,7 +6,7 @@ import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.pos.PosBridge;
-import com.tpago.movil.d.ui.ChildFragmentScope;
+import com.tpago.movil.app.ui.ChildFragmentScope;
 
 import dagger.Lazy;
 import dagger.Module;

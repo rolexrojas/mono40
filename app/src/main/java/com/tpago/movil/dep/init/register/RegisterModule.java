@@ -1,11 +1,12 @@
 package com.tpago.movil.dep.init.register;
 
+import android.support.v4.app.FragmentManager;
+
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.FragmentQualifier;
 import com.tpago.movil.app.ui.FragmentReplacer;
 import com.tpago.movil.app.ui.FragmentScope;
 import com.tpago.movil.dep.init.InitData;
-import com.tpago.movil.util.ObjectHelper;
 
 import dagger.Module;
 import dagger.Provides;
@@ -14,24 +15,18 @@ import dagger.Provides;
  * @author hecvasro
  */
 @Module
-public class RegisterModule {
+public final class RegisterModule {
 
-  private final RegisterFragment fragment;
-
-  RegisterModule(RegisterFragment fragment) {
-    this.fragment = ObjectHelper.checkNotNull(fragment, "fragment");
+  @Provides
+  @FragmentScope
+  @FragmentQualifier
+  FragmentReplacer provideFragmentReplacer(@FragmentQualifier FragmentManager fragmentManager) {
+    return FragmentReplacer.create(fragmentManager, R.id.view_container);
   }
 
   @Provides
   @FragmentScope
   RegisterData provideRegisterData(InitData initData) {
     return new RegisterData(initData);
-  }
-
-  @Provides
-  @FragmentScope
-  @FragmentQualifier
-  FragmentReplacer provideFragmentReplacer() {
-    return FragmentReplacer.create(fragment.getChildFragmentManager(), R.id.view_container);
   }
 }

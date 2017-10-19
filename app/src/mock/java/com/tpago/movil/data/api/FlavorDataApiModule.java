@@ -1,5 +1,7 @@
 package com.tpago.movil.data.api;
 
+import android.content.Context;
+
 import com.tpago.movil.session.SessionOpeningMethodConfigData;
 import com.tpago.movil.session.AccessTokenStore;
 import com.tpago.movil.store.Store;
@@ -20,12 +22,14 @@ public final class FlavorDataApiModule {
   @Singleton
   Api api(
     AccessTokenStore accessTokenStore,
-    SessionOpeningMethodConfigData sessionOpeningMethodConfigData,
+    SessionOpeningMethodConfigData configData,
+    Context context,
     Store store
   ) {
     return MockApi.builder()
       .accessTokenStore(accessTokenStore)
-      .altAuthMethodConfigData(sessionOpeningMethodConfigData)
+      .configData(configData)
+      .context(context)
       .store(store)
       .build();
   }

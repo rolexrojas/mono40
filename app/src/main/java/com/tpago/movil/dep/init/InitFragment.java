@@ -12,11 +12,13 @@ import com.tpago.movil.app.ui.init.unlock.UnlockFragment;
 import com.tpago.movil.app.ui.ActivityQualifier;
 import com.tpago.movil.app.ui.FragmentReplacer;
 import com.tpago.movil.data.StringMapper;
-import com.tpago.movil.dep.Permissions;
+import com.tpago.movil.app.ui.permission.PermissionHelper;
 import com.tpago.movil.d.domain.InitialDataLoader;
 import com.tpago.movil.d.ui.main.DepMainActivity;
 import com.tpago.movil.dep.init.intro.IntroFragment;
 import com.tpago.movil.session.SessionManager;
+
+import java.util.Arrays;
 
 import javax.inject.Inject;
 
@@ -39,7 +41,9 @@ public final class InitFragment extends BaseInitFragment {
 
   @Inject StringMapper stringMapper;
   @Inject AlertManager alertManager;
-  @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
+  @Inject
+  @ActivityQualifier
+  FragmentReplacer fragmentReplacer;
 
   @Inject LogoAnimator logoAnimator;
   @Inject InitialDataLoader initialDataLoader;
@@ -98,16 +102,18 @@ public final class InitFragment extends BaseInitFragment {
     super.onResume();
 
     final Context context = getContext();
-    if (Permissions.checkIfGranted(context, Manifest.permission.READ_PHONE_STATE)
-      && Permissions.checkIfGranted(context, Manifest.permission.READ_SMS)) {
+    if (PermissionHelper.isGranted(context, Manifest.permission.READ_PHONE_STATE)
+      && PermissionHelper.isGranted(context, Manifest.permission.READ_SMS)) {
       this.resolve();
     } else if (!werePermissionsRequested) {
       werePermissionsRequested = true;
-      Permissions.requestPermissions(
+      PermissionHelper.requestPermissions(
         this,
         REQUEST_CODE_PHONE,
-        Manifest.permission.READ_PHONE_STATE,
-        Manifest.permission.READ_SMS
+        Arrays.asList(
+          Manifest.permission.READ_PHONE_STATE,
+          Manifest.permission.READ_SMS
+        )
       );
     } else {
       // TODO: Let the user know that those permissions are required.

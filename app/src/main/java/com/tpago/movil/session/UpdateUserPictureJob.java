@@ -1,5 +1,8 @@
 package com.tpago.movil.session;
 
+import android.net.Uri;
+
+import com.tpago.movil.io.FileHelper;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.io.File;
@@ -25,11 +28,16 @@ public final class UpdateUserPictureJob extends SessionJob {
 
   @Override
   public void onAdded() {
-    // TODO: Evaluate if a copy of the file should be created.
+    this.sessionManager.getUser()
+      .updatePicture(Uri.fromFile(this.picture));
   }
 
   @Override
   public void onRun() throws Throwable {
-    // TODO
+    final User user = this.sessionManager.getUser();
+    final Uri newPicture = this.api.updateUserPicture(user, this.picture)
+      .blockingGet();
+    user.updatePicture(newPicture);
+    FileHelper.deleteFile(this.picture);
   }
 }

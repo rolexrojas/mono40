@@ -1,6 +1,7 @@
 package com.tpago.movil.dep.init;
 
 import com.tpago.movil.app.ui.ActivityModule;
+import com.tpago.movil.app.ui.FragmentModule;
 import com.tpago.movil.app.ui.init.unlock.CodeUnlockFragment;
 import com.tpago.movil.app.ui.init.unlock.FingerprintUnlockFragment;
 import com.tpago.movil.app.ui.init.unlock.PasswordUnlockFragment;
@@ -23,13 +24,13 @@ import dagger.Subcomponent;
 @Subcomponent(
   modules = {
     ActivityModule.class,
-    com.tpago.movil.dep.ActivityModule.class,
-    InitModule.class
+    InitModule.class,
+    com.tpago.movil.dep.ActivityModule.class
   }
 )
 public interface InitComponent {
 
-  RegisterComponent plus(RegisterModule module);
+  RegisterComponent plus(FragmentModule module);
 
   void inject(InitActivity activity);
 

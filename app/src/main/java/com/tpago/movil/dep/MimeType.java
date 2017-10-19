@@ -1,13 +1,18 @@
 package com.tpago.movil.dep;
 
+import android.support.annotation.StringDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * @author hecvasro
  */
-@Deprecated
-public final class MimeType {
-  public static final String IMAGE = "image/*";
+@StringDef({
+  MimeType.IMAGE
+})
+@Retention(RetentionPolicy.SOURCE)
+public @interface MimeType {
 
-  private MimeType() {
-    throw new AssertionError("Cannot be instantiated");
-  }
+  String IMAGE = "image/*";
 }

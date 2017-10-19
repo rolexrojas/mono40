@@ -54,7 +54,7 @@ public final class UserRecipient extends Recipient {
       .value();
     this.phoneNumber = user.phoneNumber();
     this.name = user.name();
-    this.pictureUri = user.avatar().exists() ? Uri.fromFile(user.avatar().getFile()) : Uri.EMPTY;
+    this.pictureUri = user.picture();
     this.carrier = user.carrier();
   }
 

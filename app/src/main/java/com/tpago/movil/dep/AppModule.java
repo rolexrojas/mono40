@@ -2,12 +2,10 @@ package com.tpago.movil.dep;
 
 import android.content.Context;
 
-import com.tpago.movil.DisplayDensity;
 import com.tpago.movil.dep.content.SharedPreferencesCreator;
 import com.tpago.movil.dep.content.StringResolver;
 import com.tpago.movil.data.DeviceIdSupplier;
 import com.tpago.movil.dep.data.DataModule;
-import com.tpago.movil.dep.io.Files;
 import com.tpago.movil.dep.content.ContentModule;
 import com.tpago.movil.d.DepAppModule;
 import com.tpago.movil.dep.api.ApiModule;
@@ -55,12 +53,6 @@ public final class AppModule {
   @Singleton
   DeviceManager provideDeviceManager(DeviceIdSupplier deviceIdSupplier) {
     return DeviceManager.create(deviceIdSupplier);
-  }
-
-  @Provides
-  @Singleton
-  Avatar provideAvatar(Context context) {
-    return Avatar.create(Files.createInternalPictureFile(context, Avatar.class.getSimpleName()));
   }
 
   @Provides

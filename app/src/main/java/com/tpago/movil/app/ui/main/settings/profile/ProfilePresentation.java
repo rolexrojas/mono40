@@ -1,5 +1,7 @@
 package com.tpago.movil.app.ui.main.settings.profile;
 
+import android.net.Uri;
+
 import com.tpago.movil.app.ui.Presentation;
 
 /**
@@ -7,13 +9,13 @@ import com.tpago.movil.app.ui.Presentation;
  */
 interface ProfilePresentation extends Presentation {
 
-  void setProfilePictureUri(String uri);
+  void setUserPicture(Uri uri);
 
-  void setFirstNameTextInputContent(String content);
+  void setUserFirstName(String content);
 
-  void setLastNameTextInputContent(String content);
+  void setUserLastName(String content);
 
-  void setPhoneNumberTextInputContent(String content);
+  void setUserPhoneNumber(String content);
 
-  void setEmailTextInputContent(String content);
+  void setUserEmail(String content);
 }

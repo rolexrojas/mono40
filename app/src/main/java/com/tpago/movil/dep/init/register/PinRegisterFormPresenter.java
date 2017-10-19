@@ -51,10 +51,13 @@ public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPre
 
   private void handleSuccess(com.tpago.movil.util.Result<User> result) {
     if (result.isSuccessful()) {
+      this.registerData.setSubmitted(true);
+
       this.view.moveToNextScreen();
     } else {
-      final com.tpago.movil.util.FailureData failureData = result.failureData();
+      this.registerData.setSubmitted(false);
 
+      final com.tpago.movil.util.FailureData failureData = result.failureData();
       final AlertData data = AlertData.builder(this.stringMapper)
         .message(failureData.description())
         .build();
@@ -65,6 +68,7 @@ public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPre
   private void handleError(Throwable throwable) {
     Timber.e(throwable, "Signing up");
 
+    this.registerData.setSubmitted(false);
     this.alertManager.show(AlertData.createForGenericFailure(this.stringMapper));
   }
 

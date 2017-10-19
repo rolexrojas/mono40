@@ -1,6 +1,6 @@
 package com.tpago.movil.d.ui.main.purchase;
 
-import com.tpago.movil.d.ui.ChildFragmentScope;
+import com.tpago.movil.app.ui.ChildFragmentScope;
 
 import dagger.Component;
 

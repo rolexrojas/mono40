@@ -5,10 +5,14 @@ import com.tpago.movil.util.Placeholder;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
+import okhttp3.MultipartBody;
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Part;
 
 /**
  * @author hecvasro
@@ -25,11 +29,21 @@ public interface RetrofitApi {
   Single<Response<User>> signIn(@Body RetrofitApiSignInBody body);
 
   @POST("account/fingerprint-authorization")
-  Completable enableAltAuthMethod(@Body RetrofitApiEnableAltAuthBody body);
+  Completable enableSessionOpeningMethod(@Body RetrofitApiEnableSessionOpeningBody body);
 
   @POST("signin/fingerprint")
-  Single<Response<Placeholder>> verifyAltAuthMethod(@Body RetrofitApiVerifyAltAuthBody body);
+  Single<Response<Placeholder>> openSession(@Body RetrofitApiOpenSessionBody body);
 
   @DELETE("account/public-key/account")
-  Completable disableAltAuthMethod();
+  Completable disableSessionOpeningMethod();
+
+  @PUT("account")
+  Completable updateUserName(@Body RetrofitApiUserNameData body);
+
+  @Multipart
+  @POST("account/upload/profile-pic")
+  Single<User> updateUserPicture(@Part MultipartBody.Part body);
+
+  @PUT("beneficiary")
+  Completable updateBeneficiary(@Body RetrofitApiBeneficiaryData body);
 }

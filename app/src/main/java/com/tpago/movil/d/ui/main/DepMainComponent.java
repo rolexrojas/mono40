@@ -3,6 +3,7 @@ package com.tpago.movil.d.ui.main;
 import android.content.Context;
 
 import com.tpago.movil.app.ui.AlertManager;
+import com.tpago.movil.app.ui.FragmentModule;
 import com.tpago.movil.dep.User;
 import com.tpago.movil.app.ui.main.settings.profile.ProfileComponent;
 import com.tpago.movil.app.ui.main.settings.profile.ProfileModule;
@@ -35,7 +36,7 @@ public interface DepMainComponent extends ActivityComponent {
 
   SessionManager sessionManager();
 
-  ProfileComponent create(ProfileModule module);
+  ProfileComponent create(FragmentModule fragmentModule, ProfileModule profileModule);
 
   BalanceManager provideBalanceManager();
 

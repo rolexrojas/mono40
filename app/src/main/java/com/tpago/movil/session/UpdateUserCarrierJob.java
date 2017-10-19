@@ -2,8 +2,6 @@ package com.tpago.movil.session;
 
 import com.tpago.movil.payment.Carrier;
 import com.tpago.movil.util.ObjectHelper;
-import com.tpago.movil.util.Placeholder;
-import com.tpago.movil.util.Result;
 
 /**
  * @author hecvasro
@@ -33,9 +31,7 @@ public final class UpdateUserCarrierJob extends SessionJob {
   @Override
   public void onRun() throws Throwable {
     final User user = this.sessionManager.getUser();
-    final Result<Placeholder> result = this.api.updateUserCarrier(user, this.carrier);
-    if (!result.isSuccessful()) {
-      // TODO: Handle request failure.
-    }
+    this.api.updateUserCarrier(user, this.carrier)
+      .blockingAwait();
   }
 }

@@ -1,7 +1,5 @@
 package com.tpago.movil.session;
 
-import com.tpago.movil.util.Placeholder;
-import com.tpago.movil.util.Result;
 import com.tpago.movil.util.StringHelper;
 
 /**
@@ -34,9 +32,7 @@ public final class UpdateUserNameJob extends SessionJob {
   @Override
   public void onRun() throws Throwable {
     final User user = this.sessionManager.getUser();
-    final Result<Placeholder> result = this.api.updateUserName(user, this.firstName, this.lastName);
-    if (!result.isSuccessful()) {
-      // TODO: Handle API error.
-    }
+    this.api.updateUserName(user, this.firstName, this.lastName)
+      .blockingAwait();
   }
 }

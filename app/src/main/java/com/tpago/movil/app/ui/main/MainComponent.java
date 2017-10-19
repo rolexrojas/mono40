@@ -22,10 +22,10 @@ import dagger.Subcomponent;
     ActivityModule.class,
     CodeCreatorModule.class,
     CodeCreatorPresentationComponentBuilderModule.class,
-    DepActivityModule.class,
-    DepMainModule.class,
     FragmentActivityModule.class,
     MainComponentBuilderModule.class,
+    DepActivityModule.class,
+    DepMainModule.class,
     MainModule.class,
   }
 )

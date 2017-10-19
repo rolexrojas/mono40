@@ -1,4 +1,4 @@
-package com.tpago.movil.d.ui;
+package com.tpago.movil.app.ui;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -7,8 +7,6 @@ import java.lang.annotation.RetentionPolicy;
 import javax.inject.Scope;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 @Retention(RetentionPolicy.RUNTIME)

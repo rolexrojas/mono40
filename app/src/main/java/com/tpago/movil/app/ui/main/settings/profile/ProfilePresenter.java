@@ -1,9 +1,18 @@
 package com.tpago.movil.app.ui.main.settings.profile;
 
-import com.tpago.movil.dep.User;
+import android.net.Uri;
+import android.support.v4.util.Pair;
+
 import com.tpago.movil.app.ui.Presenter;
+import com.tpago.movil.app.ui.picture.PictureCreator;
+import com.tpago.movil.session.SessionManager;
+import com.tpago.movil.session.User;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.ObjectHelper;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 /**
  * @author hecvasro
@@ -14,40 +23,88 @@ final class ProfilePresenter extends Presenter<ProfilePresentation> {
     return new Builder();
   }
 
-  private final User user;
+  private final SessionManager sessionManager;
+  private final PictureCreator pictureCreator;
+
+  private CompositeDisposable compositeDisposable;
 
   private ProfilePresenter(Builder builder) {
     super(builder.presentation);
 
-    this.user = builder.user;
+    this.sessionManager = builder.sessionManager;
+    this.pictureCreator = builder.pictureCreator;
+  }
+
+  final void onUserPictureClicked() {
+    final User user = this.sessionManager.getUser();
+    this.pictureCreator
+      .create(ObjectHelper.isNotNull(user.picture()), this.sessionManager::updatePicture);
+  }
+
+  private void updateUserPicture(Uri picture) {
+    this.presentation.setUserPicture(picture);
+  }
+
+  private void updateUserName(Pair<String, String> name) {
+    this.presentation.setUserFirstName(name.first);
+    this.presentation.setUserLastName(name.second);
   }
 
   @Override
   public void onPresentationResumed() {
     super.onPresentationResumed();
 
-    this.presentation.setFirstNameTextInputContent(user.firstName());
-    this.presentation.setLastNameTextInputContent(user.lastName());
-    this.presentation.setPhoneNumberTextInputContent(
+    final User user = this.sessionManager.getUser();
+
+    Disposable disposable;
+    this.compositeDisposable = new CompositeDisposable();
+
+    this.updateUserPicture(user.picture());
+    disposable = user.pictureChanges()
+      .observeOn(AndroidSchedulers.mainThread())
+      .subscribe(this::updateUserPicture);
+    this.compositeDisposable.add(disposable);
+
+    this.updateUserName(Pair.create(user.firstName(), user.lastName()));
+    disposable = user.nameChanges()
+      .observeOn(AndroidSchedulers.mainThread())
+      .subscribe(this::updateUserName);
+    this.compositeDisposable.add(disposable);
+
+    this.presentation.setUserPhoneNumber(
       user.phoneNumber()
         .formattedValued()
     );
-    this.presentation.setEmailTextInputContent(
+    this.presentation.setUserEmail(
       user.email()
         .value()
     );
   }
 
+  @Override
+  public void onPresentationPaused() {
+    this.compositeDisposable.dispose();
+    this.compositeDisposable = null;
+
+    super.onPresentationPaused();
+  }
+
   static final class Builder {
 
-    private User user;
+    private SessionManager sessionManager;
+    private PictureCreator pictureCreator;
     private ProfilePresentation presentation;
 
     private Builder() {
     }
 
-    final Builder user(User user) {
-      this.user = ObjectHelper.checkNotNull(user, "user");
+    final Builder sessionManager(SessionManager sessionManager) {
+      this.sessionManager = ObjectHelper.checkNotNull(sessionManager, "sessionManager");
+      return this;
+    }
+
+    final Builder pictureCreator(PictureCreator pictureCreator) {
+      this.pictureCreator = ObjectHelper.checkNotNull(pictureCreator, "pictureCreator");
       return this;
     }
 
@@ -58,10 +115,10 @@ final class ProfilePresenter extends Presenter<ProfilePresentation> {
 
     final ProfilePresenter build() {
       BuilderChecker.create()
-        .addPropertyNameIfMissing("user", ObjectHelper.isNull(this.user))
+        .addPropertyNameIfMissing("sessionManager", ObjectHelper.isNull(this.sessionManager))
+        .addPropertyNameIfMissing("pictureCreator", ObjectHelper.isNull(this.pictureCreator))
         .addPropertyNameIfMissing("presentation", ObjectHelper.isNull(this.presentation))
         .checkNoMissingProperties();
-
       return new ProfilePresenter(this);
     }
   }

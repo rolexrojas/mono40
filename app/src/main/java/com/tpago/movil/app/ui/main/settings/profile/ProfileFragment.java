@@ -1,6 +1,7 @@
 package com.tpago.movil.app.ui.main.settings.profile;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -9,8 +10,12 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.R;
+import com.tpago.movil.app.di.ComponentBuilderSupplier;
+import com.tpago.movil.app.di.ComponentBuilderSupplierContainer;
 import com.tpago.movil.app.ui.AlertData;
 import com.tpago.movil.app.ui.AlertManager;
+import com.tpago.movil.app.ui.FragmentModule;
+import com.tpago.movil.app.ui.FragmentQualifier;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.app.ui.main.BaseMainFragment;
 import com.tpago.movil.data.picasso.CircleTransformation;
@@ -34,7 +39,8 @@ import timber.log.Timber;
 /**
  * @author hecvasro
  */
-public final class ProfileFragment extends BaseMainFragment implements ProfilePresentation {
+public final class ProfileFragment extends BaseMainFragment implements ProfilePresentation,
+  ComponentBuilderSupplierContainer {
 
   public static ProfileFragment create() {
     return new ProfileFragment();
@@ -48,11 +54,17 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
   @BindView(R.id.phoneNumberTextInput) TextInput phoneNumberTextInput;
   @BindView(R.id.emailTextInput) TextInput emailTextInput;
 
+  @Inject @FragmentQualifier ComponentBuilderSupplier componentBuilderSupplier;
   @Inject AlertManager alertManager;
   @Inject ProfilePresenter presenter;
   @Inject SessionManager sessionManager;
   @Inject StringMapper stringMapper;
   @Inject TakeoverLoader takeoverLoader;
+
+  @OnClick(R.id.pictureImageView)
+  final void onPictureImageViewClicked() {
+    this.presenter.onUserPictureClicked();
+  }
 
   @StringRes
   @Override
@@ -73,7 +85,7 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
     // Injects all annotated dependencies.
     DepMainActivity.get(this.getActivity())
       .getComponent()
-      .create(ProfileModule.create(this))
+      .create(FragmentModule.create(this), ProfileModule.create(this))
       .inject(this);
   }
 
@@ -115,7 +127,7 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
   }
 
   @Override
-  public void setProfilePictureUri(String uri) {
+  public void setUserPicture(Uri uri) {
     Picasso.with(this.getContext())
       .load(uri)
       .resizeDimen(R.dimen.largeImageSize, R.dimen.largeImageSize)
@@ -124,22 +136,27 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
   }
 
   @Override
-  public void setFirstNameTextInputContent(String content) {
+  public void setUserFirstName(String content) {
     this.firstNameTextInput.setText(content);
   }
 
   @Override
-  public void setLastNameTextInputContent(String content) {
+  public void setUserLastName(String content) {
     this.lastNameTextInput.setText(content);
   }
 
   @Override
-  public void setPhoneNumberTextInputContent(String content) {
+  public void setUserPhoneNumber(String content) {
     this.phoneNumberTextInput.setText(content);
   }
 
   @Override
-  public void setEmailTextInputContent(String content) {
+  public void setUserEmail(String content) {
     this.emailTextInput.setText(content);
+  }
+
+  @Override
+  public ComponentBuilderSupplier componentBuilderSupplier() {
+    return this.componentBuilderSupplier;
   }
 }

@@ -111,9 +111,27 @@ public abstract class User {
     this.dispatchChanges();
   }
 
-  @Memoized
   @Override
-  public abstract String toString();
+  public String toString() {
+    return new StringBuilder("User")
+      .append("{")
+      .append("id=")
+      .append(this.id())
+      .append(",phoneNumber=")
+      .append(this.phoneNumber())
+      .append(",email=")
+      .append(this.email())
+      .append(",firstName=")
+      .append(this.firstName)
+      .append(",lastName=")
+      .append(this.lastName)
+      .append(",picture=")
+      .append(this.picture)
+      .append(",carrier=")
+      .append(this.carrier)
+      .append("}")
+      .toString();
+  }
 
   @Memoized
   @Override

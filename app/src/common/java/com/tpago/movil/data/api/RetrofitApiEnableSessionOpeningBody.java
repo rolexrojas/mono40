@@ -15,17 +15,17 @@ import java.security.PublicKey;
  * @author hecvasro
  */
 @AutoValue
-public abstract class RetrofitApiEnableAltAuthBody {
+public abstract class RetrofitApiEnableSessionOpeningBody {
 
-  public static TypeAdapter<RetrofitApiEnableAltAuthBody> typeAdapter(Gson gson) {
-    return new AutoValue_RetrofitApiEnableAltAuthBody.GsonTypeAdapter(gson);
+  public static TypeAdapter<RetrofitApiEnableSessionOpeningBody> typeAdapter(Gson gson) {
+    return new AutoValue_RetrofitApiEnableSessionOpeningBody.GsonTypeAdapter(gson);
   }
 
   public static Builder builder() {
-    return new AutoValue_RetrofitApiEnableAltAuthBody.Builder();
+    return new AutoValue_RetrofitApiEnableSessionOpeningBody.Builder();
   }
 
-  RetrofitApiEnableAltAuthBody() {
+  RetrofitApiEnableSessionOpeningBody() {
   }
 
   @SerializedName("public-key")
@@ -57,6 +57,6 @@ public abstract class RetrofitApiEnableAltAuthBody {
       );
     }
 
-    public abstract RetrofitApiEnableAltAuthBody build();
+    public abstract RetrofitApiEnableSessionOpeningBody build();
   }
 }

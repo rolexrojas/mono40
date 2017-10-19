@@ -1,5 +1,6 @@
 package com.tpago.movil.data.api;
 
+import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.Base64;
@@ -8,6 +9,7 @@ import com.tpago.movil.Code;
 import com.tpago.movil.Email;
 import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.io.FileHelper;
 import com.tpago.movil.session.SessionOpeningMethodConfigData;
 import com.tpago.movil.payment.Carrier;
 import com.tpago.movil.session.AccessTokenStore;
@@ -78,7 +80,8 @@ final class MockApi implements Api {
   }
 
   private final AccessTokenStore accessTokenStore;
-  private final SessionOpeningMethodConfigData sessionOpeningMethodConfigData;
+  private final Context context;
+  private final SessionOpeningMethodConfigData configData;
   private final Store store;
 
   private final AtomicInteger userId;
@@ -86,7 +89,8 @@ final class MockApi implements Api {
 
   private MockApi(Builder builder) {
     this.accessTokenStore = builder.accessTokenStore;
-    this.sessionOpeningMethodConfigData = builder.sessionOpeningMethodConfigData;
+    this.configData = builder.configData;
+    this.context = builder.context;
     this.store = builder.store;
 
     if (this.store.isSet(STORE_KEY_USER_ID)) {
@@ -240,7 +244,8 @@ final class MockApi implements Api {
   }
 
   @Override
-  public Result<Placeholder> updateUserName(User user, String firstName, String lastName) {
+  public Result<Placeholder> updateUserName(User user, String firstName, String lastName)
+    throws Exception {
     final Result<Placeholder> result;
 
     final String userStoreKey = createUserStoreKey(this.getAccessToken());
@@ -258,7 +263,7 @@ final class MockApi implements Api {
   }
 
   @Override
-  public Result<Uri> updateUserPicture(User user, File picture) {
+  public Result<Uri> updateUserPicture(User user, File picture) throws Exception {
     final Result<Uri> result;
 
     final String userStoreKey = createUserStoreKey(this.getAccessToken());
@@ -268,15 +273,32 @@ final class MockApi implements Api {
         .build();
       result = Result.create(failureData);
     } else {
-      this.store.set(userStoreKey, user);
-      result = Result.create(Uri.fromFile(picture));
+      final User storedUser = this.store.get(userStoreKey, User.class);
+      final Uri storedUserPicture = storedUser.picture();
+      if (ObjectHelper.isNotNull(storedUserPicture)) {
+        FileHelper.deleteFile(new File(storedUserPicture.getPath()));
+      }
+      final File newUserPictureFile = FileHelper
+        .createInternalPictureFileCopy(this.context, picture);
+      final Uri newUserPictureUri = Uri.fromFile(newUserPictureFile);
+      final User newUser = User.builder()
+        .id(storedUser.id())
+        .phoneNumber(storedUser.phoneNumber())
+        .email(storedUser.email())
+        .firstName(storedUser.firstName())
+        .lastName(storedUser.lastName())
+        .picture(newUserPictureUri)
+        .carrier(storedUser.carrier())
+        .build();
+      this.store.set(userStoreKey, newUser);
+      result = Result.create(newUserPictureUri);
     }
 
     return result;
   }
 
   @Override
-  public Result<Placeholder> updateUserCarrier(User user, Carrier carrier) {
+  public Result<Placeholder> updateUserCarrier(User user, Carrier carrier) throws Exception {
     final Result<Placeholder> result;
 
     final String userStoreKey = createUserStoreKey(this.getAccessToken());
@@ -335,9 +357,10 @@ final class MockApi implements Api {
     } else {
       final String publicKeyBase64 = this.store.get(userPublicKeyStoreKey, String.class);
       final PublicKey publicKey = KeyFactory
-        .getInstance(this.sessionOpeningMethodConfigData.keyGenAlgName())
+        .getInstance(this.configData.keyGenAlgName())
         .generatePublic(new X509EncodedKeySpec(Base64.decode(publicKeyBase64, Base64.NO_WRAP)));
-      final Signature signature = Signature.getInstance(this.sessionOpeningMethodConfigData.signAlgName());
+      final Signature signature
+        = Signature.getInstance(this.configData.signAlgName());
       signature.initVerify(publicKey);
       if (!signatureData.verify(signature, signedData)) {
         final FailureData failureData = FailureData.builder()
@@ -388,8 +411,9 @@ final class MockApi implements Api {
 
     private AccessTokenStore accessTokenStore;
     private Store store;
+    private Context context;
 
-    private SessionOpeningMethodConfigData sessionOpeningMethodConfigData;
+    private SessionOpeningMethodConfigData configData;
 
     private Builder() {
     }
@@ -399,11 +423,13 @@ final class MockApi implements Api {
       return this;
     }
 
-    final Builder altAuthMethodConfigData(SessionOpeningMethodConfigData sessionOpeningMethodConfigData) {
-      this.sessionOpeningMethodConfigData = ObjectHelper.checkNotNull(
-        sessionOpeningMethodConfigData,
-        "sessionOpeningMethodConfigData"
-      );
+    final Builder configData(SessionOpeningMethodConfigData configData) {
+      this.configData = ObjectHelper.checkNotNull(configData, "configData");
+      return this;
+    }
+
+    final Builder context(Context context) {
+      this.context = ObjectHelper.checkNotNull(context, "context");
       return this;
     }
 
@@ -415,13 +441,10 @@ final class MockApi implements Api {
     final MockApi build() {
       BuilderChecker.create()
         .addPropertyNameIfMissing("accessTokenStore", ObjectHelper.isNull(this.accessTokenStore))
-        .addPropertyNameIfMissing(
-          "sessionOpeningMethodConfigData",
-          ObjectHelper.isNull(this.sessionOpeningMethodConfigData)
-        )
+        .addPropertyNameIfMissing("context", ObjectHelper.isNull(this.context))
+        .addPropertyNameIfMissing("configData", ObjectHelper.isNull(this.configData))
         .addPropertyNameIfMissing("store", ObjectHelper.isNull(this.store))
         .checkNoMissingProperties();
-
       return new MockApi(this);
     }
   }

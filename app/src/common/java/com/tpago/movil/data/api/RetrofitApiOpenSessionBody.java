@@ -14,17 +14,17 @@ import com.tpago.movil.util.ObjectHelper;
  * @author hecvasro
  */
 @AutoValue
-public abstract class RetrofitApiVerifyAltAuthBody {
+public abstract class RetrofitApiOpenSessionBody {
 
-  public static TypeAdapter<RetrofitApiVerifyAltAuthBody> typeAdapter(Gson gson) {
-    return new AutoValue_RetrofitApiVerifyAltAuthBody.GsonTypeAdapter(gson);
+  public static TypeAdapter<RetrofitApiOpenSessionBody> typeAdapter(Gson gson) {
+    return new AutoValue_RetrofitApiOpenSessionBody.GsonTypeAdapter(gson);
   }
 
   public static Builder builder() {
-    return new AutoValue_RetrofitApiVerifyAltAuthBody.Builder();
+    return new AutoValue_RetrofitApiOpenSessionBody.Builder();
   }
 
-  RetrofitApiVerifyAltAuthBody() {
+  RetrofitApiOpenSessionBody() {
   }
 
   @SerializedName("account-id")
@@ -75,6 +75,6 @@ public abstract class RetrofitApiVerifyAltAuthBody {
       return this.signedData(Base64.encodeToString(signedData, Base64.NO_WRAP));
     }
 
-    public abstract RetrofitApiVerifyAltAuthBody build();
+    public abstract RetrofitApiOpenSessionBody build();
   }
 }

@@ -7,6 +7,7 @@ import com.tpago.movil.Email;
 import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.api.Api;
+import com.tpago.movil.dep.MimeType;
 import com.tpago.movil.payment.Carrier;
 import com.tpago.movil.session.SessionOpeningSignatureData;
 import com.tpago.movil.session.User;
@@ -19,6 +20,9 @@ import java.security.PublicKey;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Response;
 
 /**
@@ -98,26 +102,32 @@ final class RetrofitApiImpl implements Api {
   }
 
   @Override
-  public Result<Placeholder> updateUserName(User user, String firstName, String lastName) {
-    throw new UnsupportedOperationException("not implemented");
+  public Completable updateUserName(User user, String firstName, String lastName) {
+    return this.retrofitApi.updateUserName(RetrofitApiUserNameData.create(user))
+      .concatWith(this.retrofitApi.updateBeneficiary(RetrofitApiBeneficiaryData.create(user)));
   }
 
   @Override
-  public Result<Uri> updateUserPicture(User user, File picture) {
-    throw new UnsupportedOperationException("not implemented");
+  public Single<Uri> updateUserPicture(User user, File picture) {
+    final RequestBody requestPicture = RequestBody
+      .create(MediaType.parse(MimeType.IMAGE), picture);
+    final MultipartBody.Part body = MultipartBody.Part
+      .createFormData("file", picture.getName(), requestPicture);
+    return this.retrofitApi.updateUserPicture(body)
+      .map(User::picture);
   }
 
   @Override
-  public Result<Placeholder> updateUserCarrier(User user, Carrier carrier) {
-    throw new UnsupportedOperationException("not implemented");
+  public Completable updateUserCarrier(User user, Carrier carrier) {
+    return this.retrofitApi.updateBeneficiary(RetrofitApiBeneficiaryData.create(user));
   }
 
   @Override
   public Completable enableSessionOpeningMethod(PublicKey publicKey) {
-    final RetrofitApiEnableAltAuthBody body = RetrofitApiEnableAltAuthBody.builder()
+    final RetrofitApiEnableSessionOpeningBody body = RetrofitApiEnableSessionOpeningBody.builder()
       .publicKey(publicKey)
       .build();
-    return this.retrofitApi.enableAltAuthMethod(body);
+    return this.retrofitApi.enableSessionOpeningMethod(body);
   }
 
   @Override
@@ -125,17 +135,17 @@ final class RetrofitApiImpl implements Api {
     SessionOpeningSignatureData signatureData,
     byte[] signedData
   ) {
-    final RetrofitApiVerifyAltAuthBody body = RetrofitApiVerifyAltAuthBody.builder()
+    final RetrofitApiOpenSessionBody body = RetrofitApiOpenSessionBody.builder()
       .user(signatureData.user())
       .deviceId(signatureData.deviceId())
       .signedData(signedData)
       .build();
-    return this.retrofitApi.verifyAltAuthMethod(body)
+    return this.retrofitApi.openSession(body)
       .map(this.retrofitApiResultMapperBuilder.build());
   }
 
   @Override
   public Completable disableSessionOpeningMethod() {
-    return this.retrofitApi.disableAltAuthMethod();
+    return this.retrofitApi.disableSessionOpeningMethod();
   }
 }

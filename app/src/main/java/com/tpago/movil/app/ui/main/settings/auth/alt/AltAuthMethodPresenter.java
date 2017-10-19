@@ -94,7 +94,7 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
       this.handleCompletion();
     } else {
       this.codeCreator.create(
-        CodeCreator.RequestType.ALT_AUTH,
+        CodeCreator.RequestType.SESSION_OPENING_METHOD,
         (code) -> this.onEnableButtonClicked(this.codeAltAuthMethodKeyGeneratorCreator.create(code))
       );
     }

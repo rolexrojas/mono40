@@ -1,5 +1,8 @@
 package com.tpago.movil.dep;
 
+import android.net.Uri;
+import android.support.annotation.Nullable;
+
 import com.google.auto.value.AutoValue;
 import com.tpago.movil.Email;
 import com.tpago.movil.PhoneNumber;
@@ -27,6 +30,8 @@ public abstract class User {
 
   private Partner carrier;
   private OnCarrierChangedListener onCarrierChangedListener;
+
+  private Uri picture;
 
   User() {
   }
@@ -103,7 +108,14 @@ public abstract class User {
     return this.name;
   }
 
-  public abstract Avatar avatar();
+  @Nullable
+  public final Uri picture() {
+    return this.picture;
+  }
+
+  public final void picture(Uri picture) {
+    this.picture = ObjectHelper.checkNotNull(picture, "picture");
+  }
 
   interface OnIdChangedListener {
 
@@ -126,8 +138,6 @@ public abstract class User {
     public abstract Builder phoneNumber(PhoneNumber phoneNumber);
 
     public abstract Builder email(Email email);
-
-    public abstract Builder avatar(Avatar avatar);
 
     public abstract User build();
   }

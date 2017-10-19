@@ -1,6 +1,7 @@
 package com.tpago.movil.dep.main;
 
-import com.tpago.movil.dep.Avatar;
+import android.net.Uri;
+
 import com.tpago.movil.dep.ConfigManager;
 import com.tpago.movil.dep.Partner;
 import com.tpago.movil.dep.TimeOutManager;
@@ -38,19 +39,26 @@ public final class MainModule {
 
   @Provides
   @ActivityScope
-  com.tpago.movil.dep.User user(Avatar avatar, SessionManager sessionManager) {
+  com.tpago.movil.dep.User user(SessionManager sessionManager) {
     final User user = sessionManager.getUser();
 
     final com.tpago.movil.dep.User depUser = com.tpago.movil.dep.User.createBuilder()
       .phoneNumber(user.phoneNumber())
       .email(user.email())
-      .avatar(avatar)
       .build();
 
     depUser.name(user.firstName(), user.lastName());
 
     user.nameChanges()
       .subscribe((name) -> depUser.name(name.first, name.second));
+
+    final Uri picture = user.picture();
+    if (ObjectHelper.isNotNull(picture)) {
+      depUser.picture(picture);
+    }
+
+    user.pictureChanges()
+      .subscribe(depUser::picture);
 
     final Carrier carrier = user.carrier();
     if (ObjectHelper.isNotNull(carrier)) {

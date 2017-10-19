@@ -2,7 +2,7 @@ package com.tpago.movil.net;
 
 import android.content.Context;
 
-import com.tpago.movil.dep.io.Files;
+import com.tpago.movil.io.FileHelper;
 import com.tpago.movil.session.AccessTokenInterceptor;
 
 import javax.inject.Singleton;
@@ -40,7 +40,7 @@ public final class NetModule {
   @Provides
   @Singleton
   Cache provideCache(Context context) {
-    return new Cache(Files.createInternalCacheDirectory(context), Integer.MAX_VALUE);
+    return new Cache(FileHelper.createInternalCacheDirectory(context), Integer.MAX_VALUE);
   }
 
   @Provides

@@ -4,6 +4,7 @@
   <!-- Words -->
   <string name="accounts">Cuentas</string>
   <string name="code">Código</string>
+  <string name="edit">Editar</string>
   <string name="email">Correo electrónico</string>
   <string name="enableAsVerb">Habilitar</string>
   <string name="fingerprint">Huella digital</string>
@@ -14,7 +15,9 @@
   <string name="phoneNumber">Número de teléfono</string>
   <string name="profile">Perfil</string>
   <string name="security">Seguridad</string>
+  <string name="set">Establecer</string>
   <string name="settings">Ajustes</string>
+  <string name="update">Actualizar</string>
 
   <!-- Phrases -->
   <string name="altUnlockMethod">Desbloquear rápido</string>
@@ -38,6 +41,9 @@
   <string name="usePassword">Usar contraseña</string>
   <string name="weAreSorry">¡Lo sentimos!</string>
   <string name="welcomeUser">¡Bienvenido, %1$s!</string>
+
+  <!-- Formattable phrases -->
+  <string name="pictureCreatorTitleFormat">%1$s foto de perfil</string>
 
   <!-- Fonts -->
   <string name="font_gothamRounded_light">fonts/GothamRounded/Light.otf</string>
@@ -92,11 +98,8 @@
   <string name="debit">Débito</string>
   <string name="debit_card">Tarjeta de débito</string>
   <string name="delete">Eliminar</string>
-  <string name="dialog_avatar_creation_editor_title">@string/edit</string>
   <string name="dialog_avatar_creation_label_action_choose_from_gallery">Seleccionar de la galería</string>
   <string name="dialog_avatar_creation_label_action_use_the_camera">Usar la cámara</string>
-  <string name="dialog_avatar_creation_label_title_create">Establecer foto de perfil</string>
-  <string name="dialog_avatar_creation_label_title_replace">Actualizar foto de perfil</string>
   <string name="dialog_message_already_associated_device">Solo puedes vincular un celular a la vez. ¿Deseas usar este y no el último?</string>
   <string name="dialog_message_feature_not_available">Tu selección no está disponible en esta versión.</string>
   <string name="dialog_negative_text_already_associated_device">Cancelar</string>
@@ -117,7 +120,6 @@
   <string name="done_with_exclamation_mark">¡Listo!</string>
   <string name="dot">Punto</string>
   <string name="due_date">Fecha de vencimiento</string>
-  <string name="edit">Editar</string>
   <string name="edit_text_content_font">@string/gothamRoundedBookFont</string>
   <string name="error_generic">En estos momentos no podemos procesar esta solicitud. Favor intentar nuevamente.</string>
   <string name="error_generic_title">¡Lo sentimos!</string>

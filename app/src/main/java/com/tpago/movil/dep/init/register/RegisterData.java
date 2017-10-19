@@ -1,11 +1,16 @@
 package com.tpago.movil.dep.init.register;
 
+import android.support.annotation.Nullable;
+
 import com.tpago.movil.Email;
 import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.dep.init.InitData;
+import com.tpago.movil.io.FileHelper;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
+
+import java.io.File;
 
 /**
  * @author hecvasro
@@ -18,6 +23,10 @@ final class RegisterData {
   private String lastName;
   private Email email;
   private String password;
+
+  private File picture;
+
+  private boolean submitted = false;
 
   RegisterData(InitData initData) {
     this.initData = ObjectHelper.checkNotNull(initData, "initData");
@@ -71,5 +80,24 @@ final class RegisterData {
       throw new IllegalArgumentException("!Password.isValid(password)");
     }
     this.password = password;
+  }
+
+  @Nullable
+  final File getPicture() {
+    return this.picture;
+  }
+
+  final void setPicture(File picture) {
+    this.picture = ObjectHelper.checkNotNull(picture, "picture");
+  }
+
+  public final void setSubmitted(boolean submitted) {
+    this.submitted = submitted;
+  }
+
+  final void onDestroy() {
+    if (ObjectHelper.isNotNull(this.picture) && !this.submitted) {
+      FileHelper.deleteFile(this.picture);
+    }
   }
 }

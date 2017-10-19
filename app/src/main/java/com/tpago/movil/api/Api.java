@@ -44,15 +44,18 @@ public interface Api {
     boolean shouldDeactivatePreviousDevice
   );
 
-  Result<Placeholder> updateUserName(User user, String firstName, String lastName);
+  Completable updateUserName(User user, String firstName, String lastName);
 
-  Result<Uri> updateUserPicture(User user, File picture);
+  Single<Uri> updateUserPicture(User user, File picture);
 
-  Result<Placeholder> updateUserCarrier(User user, Carrier carrier);
+  Completable updateUserCarrier(User user, Carrier carrier);
 
   Completable enableSessionOpeningMethod(PublicKey key);
 
-  Single<Result<Placeholder>> openSession(SessionOpeningSignatureData signatureData, byte[] signedData);
+  Single<Result<Placeholder>> openSession(
+    SessionOpeningSignatureData signatureData,
+    byte[] signedData
+  );
 
   Completable disableSessionOpeningMethod();
 
