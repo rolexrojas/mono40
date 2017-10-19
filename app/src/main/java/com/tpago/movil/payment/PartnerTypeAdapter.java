@@ -1,4 +1,4 @@
-package com.tpago.movil.gson;
+package com.tpago.movil.payment;
 
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
@@ -6,8 +6,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.tpago.movil.company.LogoCatalogMapper;
-import com.tpago.movil.payment.Partner;
-import com.tpago.movil.payment.PartnerBuilderFactory;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.io.IOException;
@@ -37,7 +35,7 @@ final class PartnerTypeAdapter extends TypeAdapter<Partner> {
   private static final String PROPERTY_NAME = "partner-name";
   private static final String PROPERTY_LOGO_TEMPLATE = "image-url";
 
-  public static PartnerTypeAdapter create(LogoCatalogMapper logoCatalogMapper, Gson gson) {
+  static PartnerTypeAdapter create(LogoCatalogMapper logoCatalogMapper, Gson gson) {
     return new PartnerTypeAdapter(logoCatalogMapper, gson);
   }
 

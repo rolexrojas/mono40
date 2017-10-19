@@ -1,14 +1,13 @@
 package com.tpago.movil.dep.main;
 
-import com.tpago.movil.company.LogoCatalogMapper;
 import com.tpago.movil.dep.Avatar;
 import com.tpago.movil.dep.ConfigManager;
 import com.tpago.movil.dep.Partner;
 import com.tpago.movil.dep.TimeOutManager;
 import com.tpago.movil.app.ui.ActivityScope;
 import com.tpago.movil.payment.Carrier;
-import com.tpago.movil.user.User;
-import com.tpago.movil.user.UserManager;
+import com.tpago.movil.session.SessionManager;
+import com.tpago.movil.session.User;
 import com.tpago.movil.util.ObjectHelper;
 
 import dagger.Module;
@@ -39,8 +38,8 @@ public final class MainModule {
 
   @Provides
   @ActivityScope
-  com.tpago.movil.dep.User user(Avatar avatar, UserManager userManager) {
-    final User user = userManager.get();
+  com.tpago.movil.dep.User user(Avatar avatar, SessionManager sessionManager) {
+    final User user = sessionManager.getUser();
 
     final com.tpago.movil.dep.User depUser = com.tpago.movil.dep.User.createBuilder()
       .phoneNumber(user.phoneNumber())
@@ -50,14 +49,17 @@ public final class MainModule {
 
     depUser.name(user.firstName(), user.lastName());
 
-    user.addNameConsumer(depUser::name);
+    user.nameChanges()
+      .subscribe((name) -> depUser.name(name.first, name.second));
 
     final Carrier carrier = user.carrier();
     if (ObjectHelper.isNotNull(carrier)) {
       depUser.carrier(this.mapPartner(carrier));
     }
 
-    user.addCarrierConsumer(this::mapPartner);
+    user.carrierChanges()
+      .map(this::mapPartner)
+      .subscribe(depUser::carrier);
 
     return depUser;
   }

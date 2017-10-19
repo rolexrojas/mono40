@@ -1,16 +1,20 @@
 package com.tpago.movil.data.api;
 
+import android.net.Uri;
+
 import com.tpago.movil.Code;
 import com.tpago.movil.Email;
 import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.api.Api;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodVerifyData;
-import com.tpago.movil.user.User;
+import com.tpago.movil.payment.Carrier;
+import com.tpago.movil.session.User;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.Placeholder;
 import com.tpago.movil.util.Result;
 
+import java.io.File;
 import java.security.PublicKey;
 
 import io.reactivex.Completable;
@@ -91,6 +95,21 @@ final class RetrofitApiImpl implements Api {
       single = this.retrofitApi.signIn(body);
     }
     return single.map(this.retrofitApiResultMapperBuilder.build());
+  }
+
+  @Override
+  public Result<Placeholder> updateUserName(User user, String firstName, String lastName) {
+    throw new UnsupportedOperationException("not implemented");
+  }
+
+  @Override
+  public Result<Uri> updateUserPicture(User user, File picture) {
+    throw new UnsupportedOperationException("not implemented");
+  }
+
+  @Override
+  public Result<Placeholder> updateUserCarrier(User user, Carrier carrier) {
+    throw new UnsupportedOperationException("not implemented");
   }
 
   @Override

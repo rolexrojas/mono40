@@ -20,7 +20,7 @@ import com.tpago.movil.dep.init.InitFragment;
 import com.tpago.movil.dep.init.LogoAnimator;
 import com.tpago.movil.reactivex.DisposableHelper;
 import com.tpago.movil.session.SessionManager;
-import com.tpago.movil.user.User;
+import com.tpago.movil.session.User;
 import com.tpago.movil.util.FailureData;
 import com.tpago.movil.util.Result;
 

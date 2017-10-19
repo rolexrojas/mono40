@@ -86,7 +86,7 @@ public final class AltAuthMethodManager {
     } else {
       final Completable completable = ObjectHelper.checkNotNull(generator, "generator")
         .generate()
-        .flatMapCompletable(this.api::enableAltAuthMethod)
+        .flatMapCompletable(this.api::enableAltOpenSessionMethod)
         .doOnComplete(() -> this.store.set(KEY, method.name()))
         .doOnError((throwable) -> this.executeRollback());
 
@@ -121,7 +121,7 @@ public final class AltAuthMethodManager {
   }
 
   public final Single<Result<Placeholder>> verify(
-    AltAuthMethodVerifyData data,
+    AltOpenSessionSignatureData data,
     Signature signature
   ) {
     ObjectHelper.checkNotNull(data, "data");
@@ -130,27 +130,27 @@ public final class AltAuthMethodManager {
     this.checkEnabled();
 
     return Single.defer(() -> Single.just(this.createSignedData(signature, data.toByteArray())))
-      .flatMap((signedData) -> this.api.verifyAltAuthMethod(data, signedData));
+      .flatMap((signedData) -> this.api.openSession(data, signedData));
   }
 
   /**
    * @throws IllegalStateException
    *   If it isn't {@link #isEnabled() enabled}.
    */
-  public final Single<Result<Placeholder>> verify(AltAuthMethodVerifyData data, PrivateKey key) {
+  public final Single<Result<Placeholder>> verify(AltOpenSessionSignatureData data, PrivateKey key) {
     ObjectHelper.checkNotNull(data, "data");
     ObjectHelper.checkNotNull(key, "key");
 
     this.checkEnabled();
 
     return Single.defer(() -> Single.just(this.createSignedData(key, data.toByteArray())))
-      .flatMap((signedData) -> this.api.verifyAltAuthMethod(data, signedData));
+      .flatMap((signedData) -> this.api.openSession(data, signedData));
   }
 
   public final Completable disable() {
     this.checkEnabled();
 
-    return this.api.disableAltAuthMethod()
+    return this.api.disableAltOpenSessionMethod()
       .doOnComplete(this::executeRollback);
   }
 

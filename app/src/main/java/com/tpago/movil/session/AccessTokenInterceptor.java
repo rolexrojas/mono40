@@ -1,6 +1,5 @@
-package com.tpago.movil.net;
+package com.tpago.movil.session;
 
-import com.tpago.movil.session.AccessTokenManager;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
 
@@ -18,16 +17,16 @@ import okhttp3.Response;
  *
  * @author hecvasro
  */
-final class AuthInterceptor implements Interceptor {
+public final class AccessTokenInterceptor implements Interceptor {
 
-  static AuthInterceptor create(AccessTokenManager accessTokenManager) {
-    return new AuthInterceptor(accessTokenManager);
+  public static AccessTokenInterceptor create(AccessTokenStore accessTokenStore) {
+    return new AccessTokenInterceptor(accessTokenStore);
   }
 
-  private final AccessTokenManager accessTokenManager;
+  private final AccessTokenStore accessTokenStore;
 
-  private AuthInterceptor(AccessTokenManager accessTokenManager) {
-    this.accessTokenManager = ObjectHelper.checkNotNull(accessTokenManager, "accessTokenManager");
+  private AccessTokenInterceptor(AccessTokenStore accessTokenStore) {
+    this.accessTokenStore = ObjectHelper.checkNotNull(accessTokenStore, "accessTokenStore");
   }
 
   @Override
@@ -36,9 +35,8 @@ final class AuthInterceptor implements Interceptor {
       .newBuilder();
 
     // Adds the current access token as a header, if any.
-    final String currentAccessToken = this.accessTokenManager.get();
-    if (!StringHelper.isNullOrEmpty(currentAccessToken)) {
-      requestBuilder.header("Authorization", String.format("Bearer %1$s", currentAccessToken));
+    if (this.accessTokenStore.isSet()) {
+      requestBuilder.header("Authorization", String.format("Bearer %1$s", accessTokenStore.get()));
     }
 
     final Response response = chain.proceed(requestBuilder.build());
@@ -46,7 +44,7 @@ final class AuthInterceptor implements Interceptor {
     // Saves the new access token token, if any.
     final String newAccessToken = response.header("token");
     if (!StringHelper.isNullOrEmpty(newAccessToken)) {
-      this.accessTokenManager.set(newAccessToken);
+      this.accessTokenStore.set(newAccessToken);
     }
 
     return response;

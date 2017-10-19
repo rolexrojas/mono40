@@ -1,8 +1,8 @@
 package com.tpago.movil.session;
 
+import com.birbit.android.jobqueue.JobManager;
 import com.tpago.movil.api.Api;
-import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
-import com.tpago.movil.user.UserManager;
+import com.tpago.movil.store.Store;
 
 import javax.inject.Singleton;
 
@@ -17,30 +17,29 @@ public final class SessionModule {
 
   @Provides
   @Singleton
-  AccessTokenManager sessionTokenStore() {
-    return AccessTokenManager.create();
+  AccessTokenStore accessTokenStore() {
+    return AccessTokenStore.create();
+  }
+
+  @Provides
+  @Singleton
+  AccessTokenInterceptor accessTokenInterceptor(AccessTokenStore accessTokenStore) {
+    return AccessTokenInterceptor.create(accessTokenStore);
   }
 
   @Provides
   @Singleton
   SessionManager sessionManager(
-    AccessTokenManager accessTokenManager,
+    AccessTokenStore accessTokenStore,
     Api api,
-    UserManager userManager,
-    AltAuthMethodManager altAuthMethodManager
+    JobManager jobManager,
+    Store store
   ) {
     return SessionManager.builder()
-      .accessTokenStore(accessTokenManager)
+      .accessTokenStore(accessTokenStore)
       .api(api)
-      .userManager(userManager)
-      .addClearAction(
-        () -> {
-          if (altAuthMethodManager.isEnabled()) {
-            altAuthMethodManager.disable()
-              .blockingAwait();
-          }
-        }
-      )
+      .jobManager(jobManager)
+      .store(store)
       .build();
   }
 }

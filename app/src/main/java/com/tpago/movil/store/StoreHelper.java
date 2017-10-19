@@ -8,8 +8,10 @@ import java.util.Arrays;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class StoreHelper {
 
+  @Deprecated
   public static String createKey(Class<?> containerType, String name) {
     ObjectHelper.checkNotNull(containerType, "containerType");
     ObjectHelper.checkNotNull(name, "updateName");

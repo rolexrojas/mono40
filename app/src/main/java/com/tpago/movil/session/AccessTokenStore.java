@@ -9,24 +9,23 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * @author hecvasro
  */
-public class AccessTokenManager {
+public final class AccessTokenStore {
 
-  static AccessTokenManager create() {
-    return new AccessTokenManager();
+  public static AccessTokenStore create() {
+    return new AccessTokenStore();
   }
 
-  private final AtomicReference<String> reference;
+  private final AtomicReference<String> reference = new AtomicReference<>();
 
-  private AccessTokenManager() {
-    this.reference = new AtomicReference<>();
+  private AccessTokenStore() {
   }
 
   public final boolean isSet() {
-    return !StringHelper.isNullOrEmpty(this.reference.get());
+    return !StringHelper.isNullOrEmpty(reference.get());
   }
 
   public final void set(String accessToken) {
-    this.reference.set(StringHelper.nullIfEmpty(accessToken));
+    this.reference.set(StringHelper.checkIsNotNullNorEmpty(accessToken, "accessToken"));
   }
 
   @Nullable

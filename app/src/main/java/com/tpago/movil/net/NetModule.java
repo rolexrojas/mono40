@@ -3,7 +3,7 @@ package com.tpago.movil.net;
 import android.content.Context;
 
 import com.tpago.movil.dep.io.Files;
-import com.tpago.movil.session.AccessTokenManager;
+import com.tpago.movil.session.AccessTokenInterceptor;
 
 import javax.inject.Singleton;
 
@@ -45,9 +45,9 @@ public final class NetModule {
 
   @Provides
   @Singleton
-  OkHttpClient okHttpClient(Cache cache, AccessTokenManager accessTokenManager) {
+  OkHttpClient okHttpClient(Cache cache, AccessTokenInterceptor accessTokenInterceptor) {
     return new OkHttpClient.Builder()
-      .addInterceptor(AuthInterceptor.create(accessTokenManager))
+      .addInterceptor(accessTokenInterceptor)
       .addInterceptor(createLoggingInterceptor())
       .addInterceptor(createUserAgentInterceptor())
       .cache(cache)

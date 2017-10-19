@@ -1,16 +1,19 @@
 package com.tpago.movil.api;
 
+import android.net.Uri;
 import android.support.annotation.IntDef;
 
 import com.tpago.movil.Code;
 import com.tpago.movil.Email;
 import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
-import com.tpago.movil.domain.auth.alt.AltAuthMethodVerifyData;
-import com.tpago.movil.user.User;
+import com.tpago.movil.domain.auth.alt.AltOpenSessionSignatureData;
+import com.tpago.movil.payment.Carrier;
+import com.tpago.movil.session.User;
 import com.tpago.movil.util.Placeholder;
 import com.tpago.movil.util.Result;
 
+import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.security.PublicKey;
@@ -23,7 +26,7 @@ import io.reactivex.Single;
  */
 public interface Api {
 
-  Single<Result<User>> signUp(
+  Single<Result<User>> createSession(
     PhoneNumber phoneNumber,
     Email email,
     String firstName,
@@ -33,7 +36,7 @@ public interface Api {
     String deviceId
   );
 
-  Single<Result<User>> signIn(
+  Single<Result<User>> createSession(
     PhoneNumber phoneNumber,
     Email email,
     Password password,
@@ -41,11 +44,17 @@ public interface Api {
     boolean shouldDeactivatePreviousDevice
   );
 
-  Completable enableAltAuthMethod(PublicKey publicKey);
+  Result<Placeholder> updateUserName(User user, String firstName, String lastName);
 
-  Single<Result<Placeholder>> verifyAltAuthMethod(AltAuthMethodVerifyData data, byte[] signedData);
+  Result<Uri> updateUserPicture(User user, File picture);
 
-  Completable disableAltAuthMethod();
+  Result<Placeholder> updateUserCarrier(User user, Carrier carrier);
+
+  Completable enableAltOpenSessionMethod(PublicKey publicKey);
+
+  Single<Result<Placeholder>> openSession(AltOpenSessionSignatureData signatureData, byte[] signedData);
+
+  Completable disableAltOpenSessionMethod();
 
   @IntDef({
     FailureCode.ALREADY_ASSOCIATED_DEVICE,
@@ -81,5 +90,8 @@ public interface Api {
     int UNAVAILABLE_SERVICE = 14;
 
     int INCORRECT_CODE = 7000;
+
+    int UNAUTHORIZED = 10401;
+    int UNEXPECTED = 10500;
   }
 }

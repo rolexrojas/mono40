@@ -44,7 +44,7 @@ import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.tpago.movil.payment.Carrier;
 import com.tpago.movil.payment.PartnerBuilderFactory;
-import com.tpago.movil.user.UserManager;
+import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.util.ObjectHelper;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
@@ -81,7 +81,7 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
   private Subscription subscription = Subscriptions.unsubscribed();
   private Subscription rechargeSubscription = Subscriptions.unsubscribed();
 
-  @Inject UserManager userManager;
+  @Inject SessionManager sessionManager;
   @Inject LogoCatalogMapper logoCatalogMapper;
 
   @Inject
@@ -308,14 +308,15 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
 
         final String logoTemplate = p.getImageUriTemplate();
         final LogoCatalog logoCatalog = logoCatalogMapper.apply(logoTemplate);
-        final Carrier carrier = (Carrier) PartnerBuilderFactory.make(com.tpago.movil.payment.Partner.Type.CARRIER)
+        final Carrier carrier
+          = (Carrier) PartnerBuilderFactory.make(com.tpago.movil.payment.Partner.Type.CARRIER)
           .code(p.getCode())
           .id(p.getId())
           .name(p.getName())
           .logoTemplate(logoTemplate)
           .logoCatalog(logoCatalog)
           .build();
-        userManager.updateCarrier(carrier);
+        sessionManager.updateCarrier(carrier);
 
         phoneNumber = r.phoneNumber()
           .formattedValued();

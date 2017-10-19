@@ -129,14 +129,14 @@ public final class ProductManager {
     editor.putStringSet(KEY_INDEX_SET, indexSet);
 
     //  if [not remote.default] then
-    //    clear local.default
-    //    clear local.temporary
+    //    destroySession local.default
+    //    destroySession local.temporary
     //  else if [not local.temporary] then
     //    set local.default remote.default
     //  else if [remote.default equals to local.temporary] then
     //    set local.default local.temporary
     //    set remote.default local.temporary
-    //    clear local.temporary
+    //    destroySession local.temporary
     if (ObjectHelper.isNull(rdpo)) {
       defaultPaymentOption = null;
       editor.remove(KEY_DEFAULT_PAYMENT_OPTION_ID);

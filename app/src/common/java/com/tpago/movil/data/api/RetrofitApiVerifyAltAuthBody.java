@@ -7,7 +7,7 @@ import com.google.auto.value.extension.memoized.Memoized;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.tpago.movil.user.User;
+import com.tpago.movil.session.User;
 import com.tpago.movil.util.ObjectHelper;
 
 /**

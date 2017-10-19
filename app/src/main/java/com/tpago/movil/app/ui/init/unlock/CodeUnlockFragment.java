@@ -11,7 +11,7 @@ import com.tpago.movil.app.ui.NumPad;
 import com.tpago.movil.data.auth.alt.CodeAltAuthMethodKeySupplier;
 import com.tpago.movil.dep.init.InitActivity;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
-import com.tpago.movil.domain.auth.alt.AltAuthMethodVerifyData;
+import com.tpago.movil.domain.auth.alt.AltOpenSessionSignatureData;
 import com.tpago.movil.function.Action;
 import com.tpago.movil.function.Consumer;
 import com.tpago.movil.util.Digit;
@@ -56,7 +56,7 @@ public final class CodeUnlockFragment extends BaseUnlockFragment {
     this.updateValueTextView();
 
     if (this.codeCreator.canCreate()) {
-      final AltAuthMethodVerifyData data = AltAuthMethodVerifyData.builder()
+      final AltOpenSessionSignatureData data = AltOpenSessionSignatureData.builder()
         .user(this.sessionManager.getUser())
         .deviceId(this.deviceIdSupplier.get())
         .build();

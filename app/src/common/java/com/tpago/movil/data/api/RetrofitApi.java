@@ -1,6 +1,6 @@
 package com.tpago.movil.data.api;
 
-import com.tpago.movil.user.User;
+import com.tpago.movil.session.User;
 import com.tpago.movil.util.Placeholder;
 
 import io.reactivex.Completable;

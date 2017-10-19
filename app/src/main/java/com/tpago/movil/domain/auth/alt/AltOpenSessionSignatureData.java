@@ -2,10 +2,9 @@ package com.tpago.movil.domain.auth.alt;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
-import com.tpago.movil.user.User;
+import com.tpago.movil.session.User;
 import com.tpago.movil.util.StringHelper;
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,24 +12,18 @@ import java.util.List;
  * @author hecvasro
  */
 @AutoValue
-public abstract class AltAuthMethodVerifyData {
+public abstract class AltOpenSessionSignatureData {
 
   public static Builder builder() {
-    return new AutoValue_AltAuthMethodVerifyData.Builder();
+    return new AutoValue_AltOpenSessionSignatureData.Builder();
   }
 
-  AltAuthMethodVerifyData() {
+  AltOpenSessionSignatureData() {
   }
 
   public abstract User user();
 
   public abstract String deviceId();
-
-  @Memoized
-  public long nonce() {
-    return new SecureRandom()
-      .nextLong();
-  }
 
   @Memoized
   public byte[] toByteArray() throws Exception {
@@ -67,6 +60,6 @@ public abstract class AltAuthMethodVerifyData {
 
     public abstract Builder deviceId(String deviceId);
 
-    public abstract AltAuthMethodVerifyData build();
+    public abstract AltOpenSessionSignatureData build();
   }
 }

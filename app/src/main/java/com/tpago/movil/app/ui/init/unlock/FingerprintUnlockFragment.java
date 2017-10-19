@@ -14,7 +14,7 @@ import com.tpago.movil.data.auth.alt.AltAuthMethodConfigData;
 import com.tpago.movil.data.auth.alt.FingerprintAltAuthMethodKeySupplier;
 import com.tpago.movil.dep.init.InitActivity;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
-import com.tpago.movil.domain.auth.alt.AltAuthMethodVerifyData;
+import com.tpago.movil.domain.auth.alt.AltOpenSessionSignatureData;
 import com.tpago.movil.util.Result;
 
 import java.security.PrivateKey;
@@ -103,7 +103,7 @@ public final class FingerprintUnlockFragment extends BaseUnlockFragment {
           public void onAuthenticationSucceeded(FingerprintManagerCompat.AuthenticationResult result) {
             Timber.i("onAuthenticationSucceeded(%1$s)", result);
 
-            final AltAuthMethodVerifyData data = AltAuthMethodVerifyData.builder()
+            final AltOpenSessionSignatureData data = AltOpenSessionSignatureData.builder()
               .user(sessionManager.getUser())
               .deviceId(deviceIdSupplier.get())
               .build();

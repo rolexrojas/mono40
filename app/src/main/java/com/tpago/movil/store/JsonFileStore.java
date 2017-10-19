@@ -10,16 +10,16 @@ import com.tpago.movil.util.StringHelper;
 /**
  * @author hecvasro
  */
-final class GsonSharedPreferencesStore implements Store {
+final class JsonFileStore implements Store {
 
-  static GsonSharedPreferencesStore create(Gson gson, SharedPreferences sharedPreferences) {
-    return new GsonSharedPreferencesStore(gson, sharedPreferences);
+  static JsonFileStore create(Gson gson, SharedPreferences sharedPreferences) {
+    return new JsonFileStore(gson, sharedPreferences);
   }
 
   private final Gson gson;
   private final SharedPreferences sharedPreferences;
 
-  private GsonSharedPreferencesStore(Gson gson, SharedPreferences sharedPreferences) {
+  private JsonFileStore(Gson gson, SharedPreferences sharedPreferences) {
     this.gson = ObjectHelper.checkNotNull(gson, "gson");
     this.sharedPreferences = ObjectHelper.checkNotNull(sharedPreferences, "sharedPreferences");
   }

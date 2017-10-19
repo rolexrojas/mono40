@@ -1,9 +1,9 @@
 package com.tpago.movil.data.api;
 
 import com.tpago.movil.data.auth.alt.AltAuthMethodConfigData;
+import com.tpago.movil.session.AccessTokenStore;
 import com.tpago.movil.store.Store;
 import com.tpago.movil.api.Api;
-import com.tpago.movil.session.AccessTokenManager;
 
 import javax.inject.Singleton;
 
@@ -19,14 +19,14 @@ public final class FlavorDataApiModule {
   @Provides
   @Singleton
   Api api(
-    AccessTokenManager accessTokenManager,
-    Store store,
-    AltAuthMethodConfigData altAuthMethodConfigData
+    AccessTokenStore accessTokenStore,
+    AltAuthMethodConfigData altAuthMethodConfigData,
+    Store store
   ) {
     return MockApi.builder()
-      .accessTokenStore(accessTokenManager)
-      .keyValueStore(store)
+      .accessTokenStore(accessTokenStore)
       .altAuthMethodConfigData(altAuthMethodConfigData)
+      .store(store)
       .build();
   }
 }

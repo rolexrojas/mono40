@@ -1,4 +1,4 @@
-package com.tpago.movil.user;
+package com.tpago.movil.session;
 
 import com.birbit.android.jobqueue.Params;
 import com.tpago.movil.api.Api;
@@ -11,14 +11,13 @@ import javax.inject.Inject;
 /**
  * @author hecvasro
  */
-abstract class UserManagerJob extends BaseJob {
+abstract class SessionJob extends BaseJob {
 
-  static final String TAG = "UserManagerJob";
+  static final String TAG = "SessionJob";
 
   private static Params createConfiguration(String groupId) {
-    if (!StringHelper.isNullOrEmpty(groupId)) {
-      throw new IllegalArgumentException("StringHelper.isNullOrEmpty(groupId)");
-    }
+    StringHelper.checkIsNotNullNorEmpty(groupId, "groupId");
+
     return new Params(JobPriority.NORMAL)
       .groupBy(groupId)
       .addTags(TAG)
@@ -27,8 +26,9 @@ abstract class UserManagerJob extends BaseJob {
   }
 
   @Inject Api api;
+  @Inject SessionManager sessionManager;
 
-  UserManagerJob(String groupId) {
+  SessionJob(String groupId) {
     super(createConfiguration(groupId));
   }
 }

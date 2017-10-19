@@ -9,10 +9,22 @@ import com.google.gson.reflect.TypeToken;
 import com.tpago.movil.Email;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.company.LogoCatalogMapper;
-import com.tpago.movil.payment.Partner;
-import com.tpago.movil.user.User;
+import com.tpago.movil.payment.Carrier;
+import com.tpago.movil.payment.CarrierTypeAdapter;
+import com.tpago.movil.payment.Provider;
+import com.tpago.movil.payment.ProviderTypeAdapter;
+import com.tpago.movil.session.UpdateUserCarrierJob;
+import com.tpago.movil.session.UpdateUserCarrierJobTypeAdapter;
+import com.tpago.movil.session.UpdateUserNameJob;
+import com.tpago.movil.session.UpdateUserNameJobTypeAdapter;
+import com.tpago.movil.session.UpdateUserPictureJob;
+import com.tpago.movil.session.UpdateUserPictureJobTypeAdapter;
+import com.tpago.movil.session.User;
+import com.tpago.movil.session.UserTypeAdapter;
 import com.tpago.movil.util.FailureData;
 import com.tpago.movil.util.ObjectHelper;
+
+import java.io.File;
 
 /**
  * @author hecvasro
@@ -23,9 +35,9 @@ final class DecoratedAutoValueTypeAdapterFactory implements TypeAdapterFactory {
     return new DecoratedAutoValueTypeAdapterFactory(logoCatalogMapper);
   }
 
-  private final TypeAdapterFactory typeAdapterFactory;
-
   private final LogoCatalogMapper logoCatalogMapper;
+
+  private final TypeAdapterFactory typeAdapterFactory;
 
   private DecoratedAutoValueTypeAdapterFactory(LogoCatalogMapper logoCatalogMapper) {
     this.logoCatalogMapper = ObjectHelper.checkNotNull(logoCatalogMapper, "logoCatalogMapper");
@@ -39,16 +51,26 @@ final class DecoratedAutoValueTypeAdapterFactory implements TypeAdapterFactory {
     final Class<T> rawType = (Class<T>) type.getRawType();
     if (Uri.class.isAssignableFrom(rawType)) {
       return (TypeAdapter<T>) UriTypeAdapter.create(gson);
+    } else if (File.class.isAssignableFrom(rawType)) {
+      return (TypeAdapter<T>) FileTypeAdapter.create(gson);
     } else if (PhoneNumber.class.isAssignableFrom(rawType)) {
       return (TypeAdapter<T>) PhoneNumberTypeAdapter.create(gson);
     } else if (Email.class.isAssignableFrom(rawType)) {
       return (TypeAdapter<T>) EmailTypeAdapter.create(gson);
-    } else if (User.class.isAssignableFrom(rawType)) {
-      return (TypeAdapter<T>) UserTypeAdapter.create(gson);
     } else if (FailureData.class.isAssignableFrom(rawType)) {
       return (TypeAdapter<T>) FailureDataTypeAdapter.create(gson);
-    } else if (Partner.class.isAssignableFrom(rawType)) {
-      return (TypeAdapter<T>) PartnerTypeAdapter.create(this.logoCatalogMapper, gson);
+    } else if (Carrier.class.isAssignableFrom(rawType)) {
+      return (TypeAdapter<T>) CarrierTypeAdapter.create(this.logoCatalogMapper, gson);
+    } else if (Provider.class.isAssignableFrom(rawType)) {
+      return (TypeAdapter<T>) ProviderTypeAdapter.create(this.logoCatalogMapper, gson);
+    } else if (User.class.isAssignableFrom(rawType)) {
+      return (TypeAdapter<T>) UserTypeAdapter.create(gson);
+    } else if (UpdateUserNameJob.class.isAssignableFrom(rawType)) {
+      return (TypeAdapter<T>) UpdateUserNameJobTypeAdapter.create(gson);
+    } else if (UpdateUserPictureJob.class.isAssignableFrom(rawType)) {
+      return (TypeAdapter<T>) UpdateUserPictureJobTypeAdapter.create(gson);
+    } else if (UpdateUserCarrierJob.class.isAssignableFrom(rawType)) {
+      return (TypeAdapter<T>) UpdateUserCarrierJobTypeAdapter.create(gson);
     } else {
       return this.typeAdapterFactory.create(gson, type);
     }

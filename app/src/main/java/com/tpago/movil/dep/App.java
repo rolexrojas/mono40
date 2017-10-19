@@ -13,9 +13,9 @@ import com.tpago.movil.app.di.ComponentBuilderSupplier;
 import com.tpago.movil.app.di.ComponentBuilderSupplierContainer;
 import com.tpago.movil.d.DepAppModule;
 import com.tpago.movil.job.JobModule;
-import com.tpago.movil.user.UpdateCarrierManagerJob;
-import com.tpago.movil.user.UpdateNameUserManagerJob;
-import com.tpago.movil.user.UpdatePictureUserManagerJob;
+import com.tpago.movil.session.UpdateUserNameJob;
+import com.tpago.movil.session.UpdateUserCarrierJob;
+import com.tpago.movil.session.UpdateUserPictureJob;
 import com.tpago.movil.util.ObjectHelper;
 
 import javax.inject.Inject;
@@ -95,12 +95,12 @@ public abstract class App extends Application implements ComponentBuilderSupplie
 
   @Override
   public void inject(Job job) {
-    if (job instanceof UpdateNameUserManagerJob) {
-      this.component.inject((UpdateNameUserManagerJob) job);
-    } else if (job instanceof UpdatePictureUserManagerJob) {
-      this.component.inject((UpdatePictureUserManagerJob) job);
-    } else if (job instanceof UpdateCarrierManagerJob) {
-      this.component.inject((UpdateCarrierManagerJob) job);
+    if (job instanceof UpdateUserNameJob) {
+      this.component.inject((UpdateUserNameJob) job);
+    } else if (job instanceof UpdateUserPictureJob) {
+      this.component.inject((UpdateUserPictureJob) job);
+    } else if (job instanceof UpdateUserCarrierJob) {
+      this.component.inject((UpdateUserCarrierJob) job);
     }
   }
 }

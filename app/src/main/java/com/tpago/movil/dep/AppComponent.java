@@ -2,7 +2,6 @@ package com.tpago.movil.dep;
 
 import android.content.Context;
 
-import com.tpago.movil.app.ui.*;
 import com.tpago.movil.company.LogoCatalogMapper;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.data.StringHelper;
@@ -24,7 +23,6 @@ import com.tpago.movil.dep.init.InitModule;
 import com.tpago.movil.dep.net.NetworkService;
 import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
 import com.tpago.movil.session.SessionManager;
-import com.tpago.movil.user.UserManager;
 
 /**
  * @author hecvasro
@@ -33,8 +31,6 @@ import com.tpago.movil.user.UserManager;
 public interface AppComponent {
 
   LogoCatalogMapper logoCatalogMapper();
-
-  UserManager userManager();
 
   SessionManager sessionManager();
 

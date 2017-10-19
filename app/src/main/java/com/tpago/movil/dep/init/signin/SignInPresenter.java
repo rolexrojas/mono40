@@ -15,7 +15,7 @@ import com.tpago.movil.dep.init.InitComponent;
 import com.tpago.movil.dep.init.InitData;
 import com.tpago.movil.reactivex.DisposableHelper;
 import com.tpago.movil.session.SessionManager;
-import com.tpago.movil.user.User;
+import com.tpago.movil.session.User;
 import com.tpago.movil.util.ObjectHelper;
 
 import javax.inject.Inject;
@@ -142,7 +142,7 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
       final Password password = Password.create(this.passwordTextInputContent);
       final String deviceId = this.deviceIdSupplier.get();
 
-      this.disposable = this.sessionManager.init(
+      this.disposable = this.sessionManager.createSession(
         phoneNumber,
         email,
         password,

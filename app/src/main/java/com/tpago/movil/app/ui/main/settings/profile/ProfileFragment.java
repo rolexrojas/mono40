@@ -133,7 +133,7 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
         .subscribeOn(Schedulers.io())
         .doOnSuccess((result) -> {
           if (result.isSuccessful()) {
-            this.sessionManager.clear()
+            this.sessionManager.destroySession()
               .blockingAwait();
           }
         })

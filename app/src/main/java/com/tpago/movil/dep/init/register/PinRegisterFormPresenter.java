@@ -11,7 +11,7 @@ import com.tpago.movil.data.DeviceIdSupplier;
 import com.tpago.movil.data.StringMapper;
 import com.tpago.movil.reactivex.DisposableHelper;
 import com.tpago.movil.session.SessionManager;
-import com.tpago.movil.user.User;
+import com.tpago.movil.session.User;
 import com.tpago.movil.util.Digit;
 import com.tpago.movil.dep.Presenter;
 import com.tpago.movil.dep.reactivex.Disposables;
@@ -80,7 +80,7 @@ public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPre
       final Code pin = this.pinCreator.create();
       final String deviceId = this.deviceIdSupplier.get();
 
-      this.disposable = this.sessionManager.init(
+      this.disposable = this.sessionManager.createSession(
         phoneNumber,
         email,
         firstName,
@@ -90,11 +90,6 @@ public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPre
         deviceId
       )
         .subscribeOn(Schedulers.io())
-        .doOnSuccess((result) -> {
-          if (result.isSuccessful()) {
-            // TODO: Set and upload picture.
-          }
-        })
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe((d) -> this.takeoverLoader.show())
         .doFinally(this.takeoverLoader::hide)

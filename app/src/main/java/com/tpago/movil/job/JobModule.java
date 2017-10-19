@@ -5,6 +5,11 @@ import android.content.Context;
 import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.config.Configuration;
 import com.birbit.android.jobqueue.di.DependencyInjector;
+import com.birbit.android.jobqueue.persistentQueue.sqlite.SqliteJobQueue;
+import com.google.gson.Gson;
+import com.tpago.movil.session.UpdateUserCarrierJob;
+import com.tpago.movil.session.UpdateUserNameJob;
+import com.tpago.movil.session.UpdateUserPictureJob;
 import com.tpago.movil.util.ObjectHelper;
 
 import javax.inject.Singleton;
@@ -30,10 +35,22 @@ public final class JobModule {
 
   @Provides
   @Singleton
-  JobManager jobManager(Context context) {
+  SqliteJobQueue.JobSerializer jobSerializer(Gson gson) {
+    return JsonJobSerializer.builder()
+      .gson(gson)
+      .addJob(UpdateUserNameJob.class, UpdateUserNameJob.TYPE)
+      .addJob(UpdateUserCarrierJob.class, UpdateUserCarrierJob.TYPE)
+      .addJob(UpdateUserPictureJob.class, UpdateUserPictureJob.TYPE)
+      .build();
+  }
+
+  @Provides
+  @Singleton
+  JobManager jobManager(Context context, SqliteJobQueue.JobSerializer jobSerializer) {
     final Configuration configuration = new Configuration.Builder(context)
       .customLogger(JobLogger.create())
       .injector(this.dependencyInjector)
+      .jobSerializer(jobSerializer)
       .build();
     return new JobManager(configuration);
   }

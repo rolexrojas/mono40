@@ -19,7 +19,7 @@ public final class StoreModule {
   @Provides
   @Singleton
   Store store(Gson gson, SharedPreferences sharedPreferences) {
-    Store store = GsonSharedPreferencesStore.create(gson, sharedPreferences);
+    Store store = JsonFileStore.create(gson, sharedPreferences);
     if (BuildConfig.DEBUG) {
       store = DebugStore.create(store);
     }
