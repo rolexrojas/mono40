@@ -21,7 +21,6 @@ import com.tpago.movil.d.domain.BankProvider;
 import com.tpago.movil.dep.init.InitComponent;
 import com.tpago.movil.dep.init.InitModule;
 import com.tpago.movil.dep.net.NetworkService;
-import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
 import com.tpago.movil.session.SessionManager;
 
 /**
@@ -33,8 +32,6 @@ public interface AppComponent {
   LogoCatalogMapper logoCatalogMapper();
 
   SessionManager sessionManager();
-
-  AltAuthMethodManager altAuthManager();
 
   @Deprecated
   BalanceManager provideBalanceManager();

@@ -10,22 +10,17 @@ import android.view.View;
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.AlertData;
 import com.tpago.movil.app.ui.FragmentReplacer;
-import com.tpago.movil.data.auth.alt.AltAuthMethodConfigData;
-import com.tpago.movil.data.auth.alt.FingerprintAltAuthMethodKeySupplier;
+import com.tpago.movil.session.FingerprintSessionOpeningMethodSignatureSupplier;
 import com.tpago.movil.dep.init.InitActivity;
-import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
-import com.tpago.movil.domain.auth.alt.AltOpenSessionSignatureData;
+import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.util.Result;
-
-import java.security.PrivateKey;
-import java.security.Signature;
 
 import javax.inject.Inject;
 
 import butterknife.OnClick;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import timber.log.Timber;
 
 /**
  * @author hecvasro
@@ -38,10 +33,9 @@ public final class FingerprintUnlockFragment extends BaseUnlockFragment {
 
   private CancellationSignal cancellationSignal;
 
-  @Inject AltAuthMethodConfigData altAuthMethodConfigData;
-  @Inject AltAuthMethodManager altAuthMethodManager;
+  @Inject SessionManager sessionManager;
   @Inject FingerprintManagerCompat fingerprintManager;
-  @Inject @Nullable FingerprintAltAuthMethodKeySupplier fingerprintAltAuthMethodKeySupplier;
+  @Inject @Nullable FingerprintSessionOpeningMethodSignatureSupplier.Creator fingerprintSignatureSupplierCreator;
 
   @Override
   protected int layoutResId() {
@@ -65,94 +59,44 @@ public final class FingerprintUnlockFragment extends BaseUnlockFragment {
   }
 
   @Override
+  protected void handleError(Throwable throwable) {
+    if (!(throwable instanceof KeyPermanentlyInvalidatedException)) {
+      super.handleError(throwable);
+    } else {
+      final AlertData alertData = AlertData.builder(this.stringMapper)
+        .message("Como la seguridad del dispositivo fue desactivada o una nueva huella fue enrolada es requerido volver a configurar el desbloqueo rápido con huellas digitales, pero primero debe desbloquear la aplicación usando su contraseña.")
+        .positiveButtonAction(this::onUserPasswordTextViewClicked)
+        .build();
+      this.alertManager.show(alertData);
+    }
+  }
+
+  @Override
   public void onResume() {
     super.onResume();
 
     this.logoAnimator.moveTopAndScaleDown();
 
     this.cancellationSignal = new CancellationSignal();
-
-    try {
-      final PrivateKey privateKey = this.fingerprintAltAuthMethodKeySupplier.get()
-        .map(Result::successData)
-        .blockingGet();
-
-      final Signature signature = Signature.getInstance(this.altAuthMethodConfigData.signAlgName());
-      signature.initSign(privateKey);
-
-      this.fingerprintManager.authenticate(
-        new FingerprintManagerCompat.CryptoObject(signature),
-        0,
-        this.cancellationSignal,
-        new FingerprintManagerCompat.AuthenticationCallback() {
-          @Override
-          public void onAuthenticationError(int errMsgId, CharSequence errString) {
-            Timber.i("onAuthenticationError(%1$s, %2$s)", errMsgId, errString);
-
-            alertManager.show(AlertData.createForGenericFailure(stringMapper));
-          }
-
-          @Override
-          public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
-            Timber.i("onAuthenticationHelp(%1$s, %2$s)", helpMsgId, helpString);
-
-            alertManager.show(AlertData.createForGenericFailure(stringMapper));
-          }
-
-          @Override
-          public void onAuthenticationSucceeded(FingerprintManagerCompat.AuthenticationResult result) {
-            Timber.i("onAuthenticationSucceeded(%1$s)", result);
-
-            final AltOpenSessionSignatureData data = AltOpenSessionSignatureData.builder()
-              .user(sessionManager.getUser())
-              .deviceId(deviceIdSupplier.get())
-              .build();
-            disposable = altAuthMethodManager.verify(
-              data,
-              result.getCryptoObject()
-                .getSignature()
-            )
-              .subscribeOn(Schedulers.io())
-              .observeOn(AndroidSchedulers.mainThread())
-              .doOnSubscribe((disposable) -> takeoverLoader.show())
-              .doFinally(takeoverLoader::hide)
-              .subscribe(
-                FingerprintUnlockFragment.this::handleSuccess,
-                FingerprintUnlockFragment.this::handleError
-              );
-          }
-
-          @Override
-          public void onAuthenticationFailed() {
-            Timber.i("onAuthenticationFailed()");
-
-            final AlertData alertData = AlertData.builder(stringMapper)
-              .message("La huella digital no fue reconocida, favor intentar nuevamente.")
-              .build();
-            alertManager.show(alertData);
-          }
-        },
-        null
+    this.disposable = this.fingerprintSignatureSupplierCreator.create(this.cancellationSignal)
+      .get()
+      .flatMap((result) -> {
+        if (result.isSuccessful()) {
+          return this.sessionManager
+            .openSession(result.successData(), this.deviceIdSupplier.get())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe((disposable) -> takeoverLoader.show())
+            .doFinally(takeoverLoader::hide);
+        } else {
+          return Single.just(Result.create(result.failureData()));
+        }
+      })
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread())
+      .subscribe(
+        this::handleSuccess,
+        this::handleError
       );
-    } catch (Exception exception) {
-      Timber.e(exception, "Loading private key for fingerprint authentication");
-
-      String message = null;
-      AlertData.ButtonAction positiveButtonAction = null;
-      if (exception instanceof KeyPermanentlyInvalidatedException) {
-        message
-          = "Como la seguridad del dispositivo fue desactivada o una nueva huella fue enrolada es requerido volver a configurar el desbloqueo rápido con huellas digitales, pero primero debe desbloquear la aplicación usando su contraseña.";
-        positiveButtonAction = this::onUserPasswordTextViewClicked;
-      } else {
-        positiveButtonAction = this.getActivity()::finish;
-      }
-
-      final AlertData alertData = AlertData.builder(this.stringMapper)
-        .message(message)
-        .positiveButtonAction(positiveButtonAction)
-        .build();
-      this.alertManager.show(alertData);
-    }
   }
 
   @Override

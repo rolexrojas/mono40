@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.tpago.movil.app.App;
 import com.tpago.movil.app.di.ComponentBuilderSupplier;
+import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.data.StringMapper;
 
 import javax.inject.Inject;
@@ -28,6 +29,7 @@ public abstract class BaseActivity extends AppCompatActivity {
   @Inject @BackButton protected NavButtonClickHandler backButtonClickHandler;
   @Inject protected AlertManager alertManager;
   @Inject protected StringMapper stringMapper;
+  @Inject protected TakeoverLoader takeoverLoader;
 
   /**
    * Layout resource identifier of the activity

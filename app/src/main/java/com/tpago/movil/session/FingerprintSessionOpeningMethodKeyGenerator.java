@@ -1,58 +1,60 @@
-package com.tpago.movil.data.auth.alt;
+package com.tpago.movil.session;
 
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 
-import com.tpago.movil.domain.auth.alt.AltAuthMethod;
-import com.tpago.movil.domain.auth.alt.AltAuthMethodKeyGenerator;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.KeyStore;
 import java.security.PublicKey;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.X509EncodedKeySpec;
 
 import io.reactivex.Single;
 
-public final class FingerprintAltAuthMethodKeyGenerator implements AltAuthMethodKeyGenerator {
+public final class FingerprintSessionOpeningMethodKeyGenerator
+  implements SessionOpeningMethodKeyGenerator {
 
-  static FingerprintAltAuthMethodKeyGenerator create(AltAuthMethodConfigData altAuthMethodConfigData) {
-    return new FingerprintAltAuthMethodKeyGenerator(altAuthMethodConfigData);
+  static FingerprintSessionOpeningMethodKeyGenerator create(
+    SessionOpeningMethodConfigData configData,
+    KeyStore keyStore
+  ) {
+    return new FingerprintSessionOpeningMethodKeyGenerator(configData, keyStore);
   }
 
-  private final AltAuthMethodConfigData altAuthMethodConfigData;
+  private final SessionOpeningMethodConfigData configData;
+  private final KeyStore keyStore;
 
-  private FingerprintAltAuthMethodKeyGenerator(AltAuthMethodConfigData altAuthMethodConfigData) {
-    this.altAuthMethodConfigData = ObjectHelper
-      .checkNotNull(altAuthMethodConfigData, "altAuhtMethodConfigData");
+  private FingerprintSessionOpeningMethodKeyGenerator(
+    SessionOpeningMethodConfigData configData,
+    KeyStore keyStore
+  ) {
+    this.configData = ObjectHelper.checkNotNull(configData, "configData");
+    this.keyStore = ObjectHelper.checkNotNull(keyStore, "keyStore");
   }
 
   @Override
-  public AltAuthMethod method() {
-    return AltAuthMethod.FINGERPRINT;
+  public SessionOpeningMethod method() {
+    return SessionOpeningMethod.FINGERPRINT;
   }
 
   @TargetApi(Build.VERSION_CODES.M)
   private KeyPair generateKeyPair() throws Exception {
     final AlgorithmParameterSpec paramSpec = new KeyGenParameterSpec
-      .Builder(this.altAuthMethodConfigData.keyAlias(), KeyProperties.PURPOSE_SIGN)
-      .setAlgorithmParameterSpec(this.altAuthMethodConfigData.keyGenAlgParamSpec())
+      .Builder(this.configData.keyAlias(), KeyProperties.PURPOSE_SIGN)
+      .setAlgorithmParameterSpec(this.configData.keyGenAlgParamSpec())
       .setDigests(KeyProperties.DIGEST_SHA256, KeyProperties.DIGEST_SHA1)
       .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
       .setUserAuthenticationRequired(true)
       .build();
-
     final KeyPairGenerator generator = KeyPairGenerator
-      .getInstance(
-        this.altAuthMethodConfigData.keyGenAlgName(),
-        this.altAuthMethodConfigData.providerName()
-      );
+      .getInstance(this.configData.keyGenAlgName(), this.configData.providerName());
     generator.initialize(paramSpec);
-
     return generator.generateKeyPair();
   }
 
@@ -74,5 +76,12 @@ public final class FingerprintAltAuthMethodKeyGenerator implements AltAuthMethod
     return Single.defer(() -> Single.just(this.generateKeyPair()))
       .map(KeyPair::getPublic)
       .map(this::generatePublicKey);
+  }
+
+  @Override
+  public void rollback() throws Exception {
+    if (this.keyStore.containsAlias(this.configData.keyAlias())) {
+      this.keyStore.deleteEntry(this.configData.keyAlias());
+    }
   }
 }

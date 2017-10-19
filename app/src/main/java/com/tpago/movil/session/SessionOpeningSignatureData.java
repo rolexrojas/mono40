@@ -1,10 +1,11 @@
-package com.tpago.movil.domain.auth.alt;
+package com.tpago.movil.session;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
-import com.tpago.movil.session.User;
+import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
 
+import java.security.Signature;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,13 +13,13 @@ import java.util.List;
  * @author hecvasro
  */
 @AutoValue
-public abstract class AltOpenSessionSignatureData {
+public abstract class SessionOpeningSignatureData {
 
   public static Builder builder() {
-    return new AutoValue_AltOpenSessionSignatureData.Builder();
+    return new AutoValue_SessionOpeningSignatureData.Builder();
   }
 
-  AltOpenSessionSignatureData() {
+  SessionOpeningSignatureData() {
   }
 
   public abstract User user();
@@ -26,7 +27,7 @@ public abstract class AltOpenSessionSignatureData {
   public abstract String deviceId();
 
   @Memoized
-  public byte[] toByteArray() throws Exception {
+  byte[] toByteArray() throws Exception {
     final List<Object> tokenList = new ArrayList<>();
 
     final User user = this.user();
@@ -40,6 +41,21 @@ public abstract class AltOpenSessionSignatureData {
 
     return StringHelper.join(":", tokenList)
       .getBytes("UTF-8");
+  }
+
+  public final byte[] sign(Signature signature) throws Exception {
+    ObjectHelper.checkNotNull(signature, "signature");
+
+    signature.update(this.toByteArray());
+    return signature.sign();
+  }
+
+  public final boolean verify(Signature signature, byte[] signedData) throws Exception {
+    ObjectHelper.checkNotNull(signature, "signature");
+    ObjectHelper.checkNotNull(signedData, "signedData");
+
+    signature.update(this.toByteArray());
+    return signature.verify(signedData);
   }
 
   @Memoized
@@ -60,6 +76,6 @@ public abstract class AltOpenSessionSignatureData {
 
     public abstract Builder deviceId(String deviceId);
 
-    public abstract AltOpenSessionSignatureData build();
+    public abstract SessionOpeningSignatureData build();
   }
 }

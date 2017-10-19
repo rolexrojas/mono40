@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 
 import com.tpago.movil.app.di.ComponentBuilderSupplier;
 import com.tpago.movil.app.ui.ActivityModule;
+import com.tpago.movil.app.ui.AlertData;
 import com.tpago.movil.app.ui.main.MainComponent;
 import com.tpago.movil.d.ui.DepActivityModule;
 import com.tpago.movil.dep.TimeOutManager;
@@ -45,6 +46,7 @@ import com.tpago.movil.d.ui.view.widget.SlidingPaneLayout;
 import com.tpago.movil.dep.init.InitActivity;
 import com.tpago.movil.dep.main.MainModule;
 import com.tpago.movil.dep.main.purchase.NonNfcPurchaseFragment;
+import com.tpago.movil.reactivex.DisposableHelper;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.util.ObjectHelper;
 
@@ -54,6 +56,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
+import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * @author hecvasro
@@ -76,8 +83,6 @@ public class DepMainActivity
   public final Toolbar toolbar() {
     return this.toolbar;
   }
-
-  private static final String KEY_SESSION = "session";
 
   private Unbinder unbinder;
   private DepMainComponent component;
@@ -118,6 +123,8 @@ public class DepMainActivity
   ImageButton cancelImageButton;
   @BindView(R.id.image_button_delete)
   ImageButton deleteImageButton;
+
+  private Disposable closeSessionDisposable = Disposables.disposed();
 
   @NonNull
   public static Intent getLaunchIntent(Context context) {
@@ -198,8 +205,11 @@ public class DepMainActivity
 
   @Override
   protected void onStop() {
-    super.onStop();
+    DisposableHelper.dispose(this.closeSessionDisposable);
+
     presenter.stop();
+
+    super.onStop();
   }
 
   @Override
@@ -281,11 +291,23 @@ public class DepMainActivity
           .commit();
         break;
       case R.id.main_menuItem_exit:
-        this.sessionManager.closeSession()
-          .blockingAwait();
-
-        this.startActivity(InitActivity.getLaunchIntent(this));
-        this.finish();
+        this.closeSessionDisposable = this.sessionManager.closeSession()
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .doOnSubscribe((d) -> this.takeoverLoader.show())
+          .doFinally(this.takeoverLoader::hide)
+          .subscribe(
+            () -> {
+              this.startActivity(InitActivity.getLaunchIntent(this));
+              this.finish();
+            },
+            (throwable) -> {
+              Timber.e(throwable, "Closing session");
+              final AlertData alertData = AlertData.builder(this.stringMapper)
+                .build();
+              this.alertManager.show(alertData);
+            }
+          );
         break;
     }
   }

@@ -7,6 +7,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
 import com.tpago.movil.Email;
+import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.company.LogoCatalogMapper;
 import com.tpago.movil.payment.Carrier;
@@ -57,6 +58,8 @@ final class DecoratedAutoValueTypeAdapterFactory implements TypeAdapterFactory {
       return (TypeAdapter<T>) PhoneNumberTypeAdapter.create(gson);
     } else if (Email.class.isAssignableFrom(rawType)) {
       return (TypeAdapter<T>) EmailTypeAdapter.create(gson);
+    } else if (Password.class.isAssignableFrom(rawType)) {
+      return (TypeAdapter<T>) PasswordTypeAdapter.create(gson);
     } else if (FailureData.class.isAssignableFrom(rawType)) {
       return (TypeAdapter<T>) FailureDataTypeAdapter.create(gson);
     } else if (Carrier.class.isAssignableFrom(rawType)) {

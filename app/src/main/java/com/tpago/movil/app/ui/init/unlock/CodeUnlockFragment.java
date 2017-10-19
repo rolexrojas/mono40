@@ -8,10 +8,9 @@ import com.tpago.movil.Code;
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.FragmentReplacer;
 import com.tpago.movil.app.ui.NumPad;
-import com.tpago.movil.data.auth.alt.CodeAltAuthMethodKeySupplier;
+import com.tpago.movil.session.CodeSessionOpeningMethodSignatureSupplier;
 import com.tpago.movil.dep.init.InitActivity;
-import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
-import com.tpago.movil.domain.auth.alt.AltOpenSessionSignatureData;
+import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.function.Action;
 import com.tpago.movil.function.Consumer;
 import com.tpago.movil.util.Digit;
@@ -43,8 +42,8 @@ public final class CodeUnlockFragment extends BaseUnlockFragment {
   private Consumer<Integer> numPadDigitConsumer;
   private Action numPadDeleteAction;
 
-  @Inject AltAuthMethodManager altAuthMethodManager;
-  @Inject CodeAltAuthMethodKeySupplier.Creator codeAltAuthMethodKeySupplierCreator;
+  @Inject SessionManager sessionManager;
+  @Inject CodeSessionOpeningMethodSignatureSupplier.Creator codeSignatureSupplierCreator;
 
   private void updateValueTextView() {
     this.valueTextView.setText(this.codeCreator.toString());
@@ -56,16 +55,13 @@ public final class CodeUnlockFragment extends BaseUnlockFragment {
     this.updateValueTextView();
 
     if (this.codeCreator.canCreate()) {
-      final AltOpenSessionSignatureData data = AltOpenSessionSignatureData.builder()
-        .user(this.sessionManager.getUser())
-        .deviceId(this.deviceIdSupplier.get())
-        .build();
-
-      this.disposable = this.codeAltAuthMethodKeySupplierCreator.create(this.codeCreator.create())
+      this.disposable = this.codeSignatureSupplierCreator
+        .create(this.codeCreator.create())
         .get()
         .flatMap((result) -> {
           if (result.isSuccessful()) {
-            return this.altAuthMethodManager.verify(data, result.successData());
+            return this.sessionManager
+              .openSession(result.successData(), this.deviceIdSupplier.get());
           } else {
             return Single.just(Result.create(result.failureData()));
           }

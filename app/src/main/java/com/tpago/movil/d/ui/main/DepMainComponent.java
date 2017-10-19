@@ -18,7 +18,7 @@ import com.tpago.movil.d.ui.ActivityComponent;
 import com.tpago.movil.d.ui.main.recipient.index.disburse.DisbursementFragment;
 import com.tpago.movil.data.StringMapper;
 import com.tpago.movil.dep.net.NetworkService;
-import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
+import com.tpago.movil.session.SessionManager;
 
 /**
  * @author hecvasro
@@ -33,7 +33,7 @@ public interface DepMainComponent extends ActivityComponent {
 
   AlertManager alertManager();
 
-  AltAuthMethodManager altAuthManager();
+  SessionManager sessionManager();
 
   ProfileComponent create(ProfileModule module);
 

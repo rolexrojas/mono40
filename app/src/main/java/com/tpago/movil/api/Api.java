@@ -7,7 +7,7 @@ import com.tpago.movil.Code;
 import com.tpago.movil.Email;
 import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
-import com.tpago.movil.domain.auth.alt.AltOpenSessionSignatureData;
+import com.tpago.movil.session.SessionOpeningSignatureData;
 import com.tpago.movil.payment.Carrier;
 import com.tpago.movil.session.User;
 import com.tpago.movil.util.Placeholder;
@@ -50,11 +50,11 @@ public interface Api {
 
   Result<Placeholder> updateUserCarrier(User user, Carrier carrier);
 
-  Completable enableAltOpenSessionMethod(PublicKey publicKey);
+  Completable enableSessionOpeningMethod(PublicKey key);
 
-  Single<Result<Placeholder>> openSession(AltOpenSessionSignatureData signatureData, byte[] signedData);
+  Single<Result<Placeholder>> openSession(SessionOpeningSignatureData signatureData, byte[] signedData);
 
-  Completable disableAltOpenSessionMethod();
+  Completable disableSessionOpeningMethod();
 
   @IntDef({
     FailureCode.ALREADY_ASSOCIATED_DEVICE,

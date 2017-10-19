@@ -16,6 +16,7 @@ import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.Placeholder;
 import com.tpago.movil.util.Result;
+import com.tpago.movil.util.StringHelper;
 
 import java.io.File;
 import java.security.Signature;
@@ -25,7 +26,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
 import io.reactivex.functions.Action;
@@ -36,7 +36,14 @@ import io.reactivex.schedulers.Schedulers;
  */
 public final class SessionManager {
 
-  private static final String STORE_KEY_USER = "SessionManager.User";
+  private static String createSessionManagerStoreKey(String s) {
+    return String.format("SessionManager.%1$s", s);
+  }
+
+  private static final String STORE_KEY_USER
+    = createSessionManagerStoreKey("User");
+  private static final String STORE_KEY_SESSION_OPENING_METHOD
+    = createSessionManagerStoreKey("SessionOpeningMethod");
 
   static Builder builder() {
     return new Builder();
@@ -47,19 +54,31 @@ public final class SessionManager {
   private final JobManager jobManager;
   private final Store store;
 
-  private final AtomicReference<User> userReference = new AtomicReference<>();
+  private final AtomicReference<User> userReference;
   private Disposable userDisposable = Disposables.disposed();
 
-  private final List<Action> closeActions;
-  private final List<Action> destroyActions;
+  private final AtomicReference<SessionOpeningMethod> sessionOpeningMethodReference;
 
-  private CompositeDisposable compositeDisposable;
+  private final List<Action> closeActions;
+  private final List<DestroySessionAction> destroyActions;
 
   private SessionManager(Builder builder) {
     this.accessTokenStore = builder.accessTokenStore;
     this.api = builder.api;
     this.jobManager = builder.jobManager;
     this.store = builder.store;
+
+    this.userReference = new AtomicReference<>();
+    if (this.isUserSet()) {
+      this.userReference.set(this.store.get(STORE_KEY_USER, User.class));
+      this.openSession();
+    }
+
+    this.sessionOpeningMethodReference = new AtomicReference<>();
+    if (this.isSessionOpeningMethodEnabled()) {
+      this.sessionOpeningMethodReference
+        .set(this.store.get(STORE_KEY_SESSION_OPENING_METHOD, SessionOpeningMethod.class));
+    }
 
     this.closeActions = builder.closeActions;
     this.destroyActions = builder.destroyActions;
@@ -103,9 +122,8 @@ public final class SessionManager {
       this.openSession();
 
       if (signedUp) {
-        this.jobManager.addJobInBackground(
-          UpdateUserNameJob.create(user.firstName(), user.lastName())
-        );
+        this.jobManager
+          .addJobInBackground(UpdateUserNameJob.create(user.firstName(), user.lastName()));
       } else {
         // TODO: Fetch carrier.
       }
@@ -166,7 +184,13 @@ public final class SessionManager {
   ) {
     this.checkUserIsNotSet();
 
-    return this.api.createSession(phoneNumber, email, password, deviceId, shouldDeactivatePreviousDevice)
+    return this.api.createSession(
+      phoneNumber,
+      email,
+      password,
+      deviceId,
+      shouldDeactivatePreviousDevice
+    )
       .doOnSuccess(this::handleCreateSessionSuccess);
   }
 
@@ -218,11 +242,29 @@ public final class SessionManager {
       .doOnSuccess(this::handleOpenSessionResult);
   }
 
+  private Single<Result<Placeholder>> openSession(
+    SessionOpeningSignatureData signatureData,
+    Signature signature
+  ) throws Exception {
+    return Single.just(signatureData.sign(signature))
+      .flatMap((signedData) -> this.api.openSession(signatureData, signedData));
+  }
+
   public final Single<Result<Placeholder>> openSession(Signature signature, String deviceId) {
     this.checkUserIsSet();
+    this.checkSessionOpeningMethodIsSet();
     this.checkSessionIsNotOpen();
 
-    return Single.error(new UnsupportedOperationException("not implemented"));
+    ObjectHelper.checkNotNull(signature, "signature");
+    StringHelper.checkIsNotNullNorEmpty(deviceId, "deviceId");
+
+    final SessionOpeningSignatureData signatureData = SessionOpeningSignatureData.builder()
+      .user(this.getUser())
+      .deviceId(deviceId)
+      .build();
+
+    return Single.defer(() -> this.openSession(signatureData, signature))
+      .doOnSuccess(this::handleOpenSessionResult);
   }
 
   public final void updateName(String firstName, String lastName) {
@@ -246,10 +288,67 @@ public final class SessionManager {
     this.jobManager.addJobInBackground(UpdateUserCarrierJob.create(carrier));
   }
 
-  private void closeSession_() {
-    // TODO: Suspend all jobs instead of cancelling them.
-//    this.jobManager.cancelJobs(TagConstraint.ANY, SessionJob.TAG);
+  public final boolean isSessionOpeningMethodEnabled() {
+    return this.store.isSet(STORE_KEY_SESSION_OPENING_METHOD);
+  }
 
+  public final boolean isSessionOpeningMethodEnabled(SessionOpeningMethod method) {
+    ObjectHelper.checkNotNull(method, "method");
+    return this.isSessionOpeningMethodEnabled() && method.equals(this.getSessionOpeningMethod());
+  }
+
+  private void checkSessionOpeningMethodIsSet() {
+    if (!this.isSessionOpeningMethodEnabled()) {
+      throw new IllegalStateException("!this.isSessionOpeningMethodEnabled()");
+    }
+  }
+
+  private void checkSessionOpeningMethodIsNotSet() {
+    if (this.isSessionOpeningMethodEnabled()) {
+      throw new IllegalStateException("this.isSessionOpeningMethodEnabled()");
+    }
+  }
+
+  private void enableSessionOpeningMethod(SessionOpeningMethod method) {
+    this.sessionOpeningMethodReference.set(method);
+    this.store.set(STORE_KEY_SESSION_OPENING_METHOD, method);
+  }
+
+  public final Completable enableSessionOpeningMethod(SessionOpeningMethodKeyGenerator generator) {
+    this.checkUserIsSet();
+    this.checkSessionOpeningMethodIsNotSet();
+    this.checkSessionIsOpen();
+
+    ObjectHelper.checkNotNull(generator, "generator");
+
+    return generator.generate()
+      .flatMapCompletable(this.api::enableSessionOpeningMethod)
+      .doOnComplete(() -> this.enableSessionOpeningMethod(generator.method()))
+      .doOnError((throwable) -> generator.rollback());
+  }
+
+  public final SessionOpeningMethod getSessionOpeningMethod() {
+    this.checkUserIsSet();
+    this.checkSessionOpeningMethodIsSet();
+
+    return this.sessionOpeningMethodReference.get();
+  }
+
+  private void disableSessionOpeningMethod_() {
+    this.sessionOpeningMethodReference.set(null);
+    this.store.remove(STORE_KEY_SESSION_OPENING_METHOD);
+  }
+
+  public final Completable disableSessionOpeningMethod() {
+    this.checkUserIsSet();
+    this.checkSessionOpeningMethodIsSet();
+    this.checkSessionIsOpen();
+
+    return this.api.disableSessionOpeningMethod()
+      .doOnComplete(this::disableSessionOpeningMethod_);
+  }
+
+  private void closeSession_() {
     DisposableHelper.dispose(this.userDisposable);
 
     this.accessTokenStore.clear();
@@ -259,33 +358,33 @@ public final class SessionManager {
     this.checkUserIsSet();
     this.checkSessionIsOpen();
 
-    Completable completable = Completable.fromAction(this::closeSession_);
+    Completable completable = Completable
+      .fromAction(() -> this.jobManager.cancelJobs(TagConstraint.ANY, SessionJob.TAG)); // TODO: Suspend jobs instead of cancelling them.
     for (Action action : this.closeActions) {
-      completable = completable.doOnComplete(action);
+      completable = completable.concatWith(Completable.fromAction(action));
     }
-    return completable;
+    return completable.doOnComplete(this::closeSession_);
   }
 
   private void destroySession_() {
-    this.jobManager.cancelJobs(TagConstraint.ANY, SessionJob.TAG);
-
-    this.compositeDisposable.dispose();
-    this.compositeDisposable = null;
-
-    this.store.remove(STORE_KEY_USER);
     this.userReference.set(null);
+    this.store.remove(STORE_KEY_USER);
   }
 
   public final Completable destroySession() {
     this.checkUserIsSet();
     this.checkSessionIsOpen();
 
-    Completable completable = this.closeSession()
-      .concatWith(Completable.fromAction(this::destroySession_));
-    for (Action action : this.destroyActions) {
-      completable = completable.doOnComplete(action);
+    Completable completable = Completable
+      .fromAction(() -> this.jobManager.cancelJobs(TagConstraint.ANY, SessionJob.TAG));
+    if (this.isSessionOpeningMethodEnabled()) {
+      completable = completable.concatWith(this.disableSessionOpeningMethod());
     }
-    return completable;
+    final User user = this.getUser();
+    for (DestroySessionAction action : this.destroyActions) {
+      completable = completable.concatWith(Completable.fromAction(() -> action.run(user)));
+    }
+    return completable.doOnComplete(this::destroySession_);
   }
 
   static final class Builder {
@@ -296,7 +395,7 @@ public final class SessionManager {
     private Store store;
 
     private final List<Action> closeActions;
-    private final List<Action> destroyActions;
+    private final List<DestroySessionAction> destroyActions;
 
     private Builder() {
       this.closeActions = new ArrayList<>();
@@ -331,7 +430,7 @@ public final class SessionManager {
       return this;
     }
 
-    final Builder addDestroyAction(Action action) {
+    final Builder addDestroyAction(DestroySessionAction action) {
       ObjectHelper.checkNotNull(action, "action");
       if (!this.destroyActions.contains(action)) {
         this.destroyActions.add(action);

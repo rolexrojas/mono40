@@ -1,21 +1,21 @@
-package com.tpago.movil.domain.auth.alt;
+package com.tpago.movil.session;
 
 import android.support.annotation.StringRes;
 
 import com.tpago.movil.R;
 
 /**
- * Alternative authentication method enumeration
+ * Enumeration of all the alternatives method that can be used to open sessions.
  *
  * @author hecvasro
  */
-public enum AltAuthMethod {
+public enum SessionOpeningMethod {
   CODE(R.string.code),
   FINGERPRINT(R.string.fingerprint);
 
   @StringRes public final int stringId;
 
-  AltAuthMethod(@StringRes int stringId) {
+  SessionOpeningMethod(@StringRes int stringId) {
     this.stringId = stringId;
   }
 }

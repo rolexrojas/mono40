@@ -9,8 +9,8 @@ import com.tpago.movil.R;
 import com.tpago.movil.app.ui.BaseFragment;
 import com.tpago.movil.app.ui.FragmentReplacer;
 import com.tpago.movil.dep.init.InitActivity;
-import com.tpago.movil.domain.auth.alt.AltAuthMethod;
-import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
+import com.tpago.movil.session.SessionManager;
+import com.tpago.movil.session.SessionOpeningMethod;
 
 import javax.inject.Inject;
 
@@ -25,7 +25,7 @@ public final class UnlockFragment extends BaseFragment {
 
   private FragmentReplacer fragmentReplacer;
 
-  @Inject AltAuthMethodManager altAuthMethodManager;
+  @Inject SessionManager sessionManager;
 
   @Override
   protected int layoutResId() {
@@ -49,10 +49,9 @@ public final class UnlockFragment extends BaseFragment {
       .inject(this);
 
     final Fragment fragment;
-    final AltAuthMethod altAuthMethod = this.altAuthMethodManager.getActiveMethod();
-    if (altAuthMethod == AltAuthMethod.CODE) {
+    if (this.sessionManager.isSessionOpeningMethodEnabled(SessionOpeningMethod.CODE)) {
       fragment = CodeUnlockFragment.create();
-    } else if (altAuthMethod == AltAuthMethod.FINGERPRINT) {
+    } else if (this.sessionManager.isSessionOpeningMethodEnabled(SessionOpeningMethod.FINGERPRINT)) {
       fragment = FingerprintUnlockFragment.create();
     } else {
       fragment = PasswordUnlockFragment.create();

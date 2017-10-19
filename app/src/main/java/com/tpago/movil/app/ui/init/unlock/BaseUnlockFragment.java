@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.R;
-import com.tpago.movil.api.Api;
 import com.tpago.movil.app.ui.ActivityQualifier;
 import com.tpago.movil.app.ui.AlertData;
 import com.tpago.movil.app.ui.AlertManager;
@@ -20,6 +19,7 @@ import com.tpago.movil.dep.init.InitFragment;
 import com.tpago.movil.dep.init.LogoAnimator;
 import com.tpago.movil.reactivex.DisposableHelper;
 import com.tpago.movil.session.SessionManager;
+import com.tpago.movil.session.SessionOpeningMethodSignatureSupplier;
 import com.tpago.movil.session.User;
 import com.tpago.movil.util.FailureData;
 import com.tpago.movil.util.Result;
@@ -63,7 +63,7 @@ public abstract class BaseUnlockFragment extends BaseFragment {
       String message = failureData.description();
 
       final int code = failureData.code();
-      if (code == Api.FailureCode.INCORRECT_CODE) {
+      if (code == SessionOpeningMethodSignatureSupplier.FailureCode.UNAUTHORIZED) {
         title = "Código incorrecto";
         message
           = "El código introducido no coincide con el código utilizado durante la configuración del desbloqueo rápido.";
@@ -78,7 +78,7 @@ public abstract class BaseUnlockFragment extends BaseFragment {
     }
   }
 
-  protected final void handleError(Throwable throwable) {
+  protected void handleError(Throwable throwable) {
     Timber.e(throwable, "Opening a session");
     this.alertManager.show(AlertData.createForGenericFailure(this.stringMapper));
   }

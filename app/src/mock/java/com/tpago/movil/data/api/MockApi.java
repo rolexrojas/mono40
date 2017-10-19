@@ -8,13 +8,13 @@ import com.tpago.movil.Code;
 import com.tpago.movil.Email;
 import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
-import com.tpago.movil.data.auth.alt.AltAuthMethodConfigData;
+import com.tpago.movil.session.SessionOpeningMethodConfigData;
 import com.tpago.movil.payment.Carrier;
 import com.tpago.movil.session.AccessTokenStore;
+import com.tpago.movil.session.SessionOpeningSignatureData;
 import com.tpago.movil.session.User;
 import com.tpago.movil.store.Store;
 import com.tpago.movil.api.Api;
-import com.tpago.movil.domain.auth.alt.AltOpenSessionSignatureData;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.FailureData;
 import com.tpago.movil.util.ObjectHelper;
@@ -78,7 +78,7 @@ final class MockApi implements Api {
   }
 
   private final AccessTokenStore accessTokenStore;
-  private final AltAuthMethodConfigData altAuthMethodConfigData;
+  private final SessionOpeningMethodConfigData sessionOpeningMethodConfigData;
   private final Store store;
 
   private final AtomicInteger userId;
@@ -86,7 +86,7 @@ final class MockApi implements Api {
 
   private MockApi(Builder builder) {
     this.accessTokenStore = builder.accessTokenStore;
-    this.altAuthMethodConfigData = builder.altAuthMethodConfigData;
+    this.sessionOpeningMethodConfigData = builder.sessionOpeningMethodConfigData;
     this.store = builder.store;
 
     if (this.store.isSet(STORE_KEY_USER_ID)) {
@@ -307,13 +307,13 @@ final class MockApi implements Api {
   }
 
   @Override
-  public Completable enableAltOpenSessionMethod(PublicKey publicKey) {
-    return Completable.fromAction(() -> this.enableAltOpenSessionMethod_(publicKey))
+  public Completable enableSessionOpeningMethod(PublicKey key) {
+    return Completable.fromAction(() -> this.enableAltOpenSessionMethod_(key))
       .compose(completableDelayTransformer());
   }
 
   private Single<Result<Placeholder>> openSession_(
-    AltOpenSessionSignatureData signatureData,
+    SessionOpeningSignatureData signatureData,
     byte[] signedData
   ) throws Exception {
     final Result<Placeholder> result;
@@ -335,12 +335,11 @@ final class MockApi implements Api {
     } else {
       final String publicKeyBase64 = this.store.get(userPublicKeyStoreKey, String.class);
       final PublicKey publicKey = KeyFactory
-        .getInstance(this.altAuthMethodConfigData.keyGenAlgName())
+        .getInstance(this.sessionOpeningMethodConfigData.keyGenAlgName())
         .generatePublic(new X509EncodedKeySpec(Base64.decode(publicKeyBase64, Base64.NO_WRAP)));
-      final Signature signature = Signature.getInstance(this.altAuthMethodConfigData.signAlgName());
+      final Signature signature = Signature.getInstance(this.sessionOpeningMethodConfigData.signAlgName());
       signature.initVerify(publicKey);
-      signature.update(signatureData.toByteArray());
-      if (!signature.verify(signedData)) {
+      if (!signatureData.verify(signature, signedData)) {
         final FailureData failureData = FailureData.builder()
           .code(FailureCode.UNEXPECTED)
           .build();
@@ -355,7 +354,7 @@ final class MockApi implements Api {
 
   @Override
   public Single<Result<Placeholder>> openSession(
-    AltOpenSessionSignatureData signatureData,
+    SessionOpeningSignatureData signatureData,
     byte[] signedData
   ) {
     return Single.defer(() -> this.openSession_(signatureData, signedData))
@@ -380,7 +379,7 @@ final class MockApi implements Api {
   }
 
   @Override
-  public Completable disableAltOpenSessionMethod() {
+  public Completable disableSessionOpeningMethod() {
     return Completable.fromAction(this::disableAltOpenSessionMethod_)
       .compose(completableDelayTransformer());
   }
@@ -390,7 +389,7 @@ final class MockApi implements Api {
     private AccessTokenStore accessTokenStore;
     private Store store;
 
-    private AltAuthMethodConfigData altAuthMethodConfigData;
+    private SessionOpeningMethodConfigData sessionOpeningMethodConfigData;
 
     private Builder() {
     }
@@ -400,10 +399,10 @@ final class MockApi implements Api {
       return this;
     }
 
-    final Builder altAuthMethodConfigData(AltAuthMethodConfigData altAuthMethodConfigData) {
-      this.altAuthMethodConfigData = ObjectHelper.checkNotNull(
-        altAuthMethodConfigData,
-        "altAuthMethodConfigData"
+    final Builder altAuthMethodConfigData(SessionOpeningMethodConfigData sessionOpeningMethodConfigData) {
+      this.sessionOpeningMethodConfigData = ObjectHelper.checkNotNull(
+        sessionOpeningMethodConfigData,
+        "sessionOpeningMethodConfigData"
       );
       return this;
     }
@@ -417,8 +416,8 @@ final class MockApi implements Api {
       BuilderChecker.create()
         .addPropertyNameIfMissing("accessTokenStore", ObjectHelper.isNull(this.accessTokenStore))
         .addPropertyNameIfMissing(
-          "altAuthMethodConfigData",
-          ObjectHelper.isNull(this.altAuthMethodConfigData)
+          "sessionOpeningMethodConfigData",
+          ObjectHelper.isNull(this.sessionOpeningMethodConfigData)
         )
         .addPropertyNameIfMissing("store", ObjectHelper.isNull(this.store))
         .checkNoMissingProperties();

@@ -14,26 +14,21 @@ import com.tpago.movil.app.ui.AlertManager;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.app.ui.main.BaseMainFragment;
 import com.tpago.movil.data.picasso.CircleTransformation;
-import com.tpago.movil.d.domain.ProductManager;
-import com.tpago.movil.d.domain.RecipientManager;
-import com.tpago.movil.d.domain.pos.PosBridge;
-import com.tpago.movil.d.domain.pos.PosResult;
 import com.tpago.movil.d.ui.main.DepMainActivity;
 import com.tpago.movil.data.StringMapper;
-import com.tpago.movil.dep.User;
 import com.tpago.movil.dep.init.InitActivity;
 import com.tpago.movil.dep.widget.TextInput;
-import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
+import com.tpago.movil.reactivex.DisposableHelper;
 import com.tpago.movil.session.SessionManager;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.Subscriptions;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 /**
@@ -45,7 +40,7 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
     return new ProfileFragment();
   }
 
-  private Subscription signOutSubscription = Subscriptions.unsubscribed();
+  private Disposable destroySessionDisposable = Disposables.disposed();
 
   @BindView(R.id.pictureImageView) ImageView pictureImageView;
   @BindView(R.id.firstNameTextInput) TextInput firstNameTextInput;
@@ -54,15 +49,10 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
   @BindView(R.id.emailTextInput) TextInput emailTextInput;
 
   @Inject AlertManager alertManager;
-  @Inject AltAuthMethodManager altAuthMethodManager;
-  @Inject PosBridge posBridge;
-  @Inject ProductManager productManager;
   @Inject ProfilePresenter presenter;
-  @Inject RecipientManager recipientManager;
   @Inject SessionManager sessionManager;
   @Inject StringMapper stringMapper;
   @Inject TakeoverLoader takeoverLoader;
-  @Inject User user;
 
   @StringRes
   @Override
@@ -96,52 +86,32 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
 
   @Override
   public void onPause() {
-    if (!this.signOutSubscription.isUnsubscribed()) {
-      this.signOutSubscription.unsubscribe();
-    }
+    DisposableHelper.dispose(this.destroySessionDisposable);
 
     this.presenter.onPresentationPaused();
 
     super.onPause();
   }
 
-  private void handleSignOutSuccess(PosResult result) {
-    if (result.isSuccessful()) {
-      this.recipientManager.clear();
-      this.productManager.clear();
-
-      final Activity activity = this.getActivity();
-      activity.startActivity(InitActivity.getLaunchIntent(activity));
-      activity.finish();
-    } else {
-      this.alertManager.show(AlertData.createForGenericFailure(this.stringMapper));
-    }
+  private void handleSignOutSuccess() {
+    final Activity activity = this.getActivity();
+    activity.startActivity(InitActivity.getLaunchIntent(activity));
+    activity.finish();
   }
 
   private void handleSignOutFailure(Throwable throwable) {
     Timber.e(throwable, "Signing out");
-
     this.alertManager.show(AlertData.createForGenericFailure(this.stringMapper));
   }
 
   @OnClick(R.id.signOutSettingsOption)
   final void onSignOutSettingsOptionClicked() {
-    if (this.signOutSubscription.isUnsubscribed()) {
-      final String phoneNumber = this.user.phoneNumber()
-        .value();
-      this.signOutSubscription = this.posBridge.unregister(phoneNumber)
-        .subscribeOn(Schedulers.io())
-        .doOnSuccess((result) -> {
-          if (result.isSuccessful()) {
-            this.sessionManager.destroySession()
-              .blockingAwait();
-          }
-        })
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe(this.takeoverLoader::show)
-        .doOnUnsubscribe(this.takeoverLoader::hide)
-        .subscribe(this::handleSignOutSuccess, this::handleSignOutFailure);
-    }
+    this.destroySessionDisposable = this.sessionManager.destroySession()
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread())
+      .doOnSubscribe((d) -> this.takeoverLoader.show())
+      .doFinally(this.takeoverLoader::hide)
+      .subscribe(this::handleSignOutSuccess, this::handleSignOutFailure);
   }
 
   @Override

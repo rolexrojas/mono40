@@ -6,16 +6,15 @@ import com.tpago.movil.app.ui.Presenter;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.app.ui.main.code.CodeCreator;
 import com.tpago.movil.data.StringMapper;
-import com.tpago.movil.data.auth.alt.FingerprintAltAuthMethodKeyGenerator;
-import com.tpago.movil.domain.auth.alt.AltAuthMethodKeyGenerator;
-import com.tpago.movil.data.auth.alt.CodeAltAuthMethodKeyGenerator;
-import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
-import com.tpago.movil.domain.auth.alt.AltAuthMethod;
+import com.tpago.movil.session.CodeSessionOpeningMethodKeyGenerator;
+import com.tpago.movil.session.FingerprintSessionOpeningMethodKeyGenerator;
+import com.tpago.movil.session.SessionManager;
+import com.tpago.movil.session.SessionOpeningMethodKeyGenerator;
+import com.tpago.movil.session.SessionOpeningMethod;
 import com.tpago.movil.reactivex.DisposableHelper;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.ObjectHelper;
 
-import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
@@ -31,10 +30,10 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
     return new Builder();
   }
 
-  private final AltAuthMethodManager altAuthMethodManager;
+  private final SessionManager sessionManager;
 
-  private final CodeAltAuthMethodKeyGenerator.Creator codeAltAuthMethodKeyGeneratorCreator;
-  private final FingerprintAltAuthMethodKeyGenerator fingerprintAltAuthMethodKeyGenerator;
+  private final CodeSessionOpeningMethodKeyGenerator.Creator codeAltAuthMethodKeyGeneratorCreator;
+  private final FingerprintSessionOpeningMethodKeyGenerator fingerprintAltAuthMethodKeyGenerator;
 
   private final StringMapper stringMapper;
   private final AlertManager alertManager;
@@ -46,7 +45,7 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
   private AltAuthMethodPresenter(Builder builder) {
     super(builder.presentation);
 
-    this.altAuthMethodManager = builder.altAuthMethodManager;
+    this.sessionManager = builder.sessionManager;
 
     this.codeAltAuthMethodKeyGeneratorCreator = builder.codeAltAuthMethodKeyGeneratorCreator;
     this.fingerprintAltAuthMethodKeyGenerator = builder.fingerprintAltAuthMethodKeyGenerator;
@@ -66,8 +65,8 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
     this.alertManager.show(AlertData.createForGenericFailure(this.stringMapper));
   }
 
-  private void onEnableButtonClicked(AltAuthMethodKeyGenerator generator) {
-    this.disposable = this.altAuthMethodManager.enable(generator)
+  private void onEnableButtonClicked(SessionOpeningMethodKeyGenerator generator) {
+    this.disposable = this.sessionManager.enableSessionOpeningMethod(generator)
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
       .doOnSubscribe((d) -> this.takeoverLoader.show())
@@ -83,7 +82,7 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
   }
 
   final void onEnableFingerprintButtonClicked() {
-    if (this.altAuthMethodManager.getActiveMethod() == AltAuthMethod.FINGERPRINT) {
+    if (this.sessionManager.isSessionOpeningMethodEnabled(SessionOpeningMethod.FINGERPRINT)) {
       this.handleCompletion();
     } else {
       this.onEnableButtonClicked(this.fingerprintAltAuthMethodKeyGenerator);
@@ -91,7 +90,7 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
   }
 
   final void onEnableCodeButtonClicked() {
-    if (this.altAuthMethodManager.getActiveMethod() == AltAuthMethod.CODE) {
+    if (this.sessionManager.isSessionOpeningMethodEnabled(SessionOpeningMethod.CODE)) {
       this.handleCompletion();
     } else {
       this.codeCreator.create(
@@ -102,10 +101,10 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
   }
 
   final void onDisableButtonClicked() {
-    if (!this.altAuthMethodManager.isEnabled()) {
+    if (!this.sessionManager.isSessionOpeningMethodEnabled()) {
       this.handleCompletion();
     } else {
-      this.disposable = this.altAuthMethodManager.disable()
+      this.disposable = this.sessionManager.disableSessionOpeningMethod()
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe((d) -> this.takeoverLoader.show())
@@ -118,16 +117,10 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
   }
 
   private void updateSelection() {
-    final AltAuthMethod method = this.altAuthMethodManager.getActiveMethod();
-
-    boolean isFingerprintSelected = false;
-    boolean isCodeSelected = false;
-
-    if (method == AltAuthMethod.FINGERPRINT) {
-      isFingerprintSelected = true;
-    } else if (method == AltAuthMethod.CODE) {
-      isCodeSelected = true;
-    }
+    final boolean isFingerprintSelected = this.sessionManager
+      .isSessionOpeningMethodEnabled(SessionOpeningMethod.FINGERPRINT);
+    boolean isCodeSelected = this.sessionManager
+      .isSessionOpeningMethodEnabled(SessionOpeningMethod.CODE);
 
     this.presentation.setFingerprintOptionSelection(isFingerprintSelected);
     this.presentation.setCodeOptionSelection(isCodeSelected);
@@ -150,9 +143,10 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
 
   static final class Builder {
 
-    private AltAuthMethodManager altAuthMethodManager;
-    private CodeAltAuthMethodKeyGenerator.Creator codeAltAuthMethodKeyGeneratorCreator;
-    private FingerprintAltAuthMethodKeyGenerator fingerprintAltAuthMethodKeyGenerator;
+    private SessionManager sessionManager;
+
+    private CodeSessionOpeningMethodKeyGenerator.Creator codeAltAuthMethodKeyGeneratorCreator;
+    private FingerprintSessionOpeningMethodKeyGenerator fingerprintAltAuthMethodKeyGenerator;
 
     private StringMapper stringMapper;
     private AlertManager alertManager;
@@ -164,17 +158,17 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
     private Builder() {
     }
 
-    final Builder altAuthMethodManager(AltAuthMethodManager manager) {
-      this.altAuthMethodManager = ObjectHelper.checkNotNull(manager, "manager");
+    final Builder sessionManager(SessionManager sessionManager) {
+      this.sessionManager = ObjectHelper.checkNotNull(sessionManager, "sessionManager");
       return this;
     }
 
-    final Builder codeAltAuthMethodKeyGeneratorCreator(CodeAltAuthMethodKeyGenerator.Creator creator) {
+    final Builder codeAltAuthMethodKeyGeneratorCreator(CodeSessionOpeningMethodKeyGenerator.Creator creator) {
       this.codeAltAuthMethodKeyGeneratorCreator = ObjectHelper.checkNotNull(creator, "creator");
       return this;
     }
 
-    final Builder fingerprintAltAuthMethodKeyGenerator(FingerprintAltAuthMethodKeyGenerator generator) {
+    final Builder fingerprintAltAuthMethodKeyGenerator(FingerprintSessionOpeningMethodKeyGenerator generator) {
       this.fingerprintAltAuthMethodKeyGenerator = ObjectHelper.checkNotNull(generator, "generator");
       return this;
     }
@@ -206,10 +200,7 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
 
     final AltAuthMethodPresenter build() {
       BuilderChecker.create()
-        .addPropertyNameIfMissing(
-          "altAuthMethodManager",
-          ObjectHelper.isNull(this.altAuthMethodManager)
-        )
+        .addPropertyNameIfMissing("sessionManager", ObjectHelper.isNull(this.sessionManager))
         .addPropertyNameIfMissing(
           "codeAltAuthMethodKeyGeneratorCreator",
           ObjectHelper.isNull(this.codeAltAuthMethodKeyGeneratorCreator)

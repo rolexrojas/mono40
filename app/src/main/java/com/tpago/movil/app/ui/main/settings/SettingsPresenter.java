@@ -6,8 +6,7 @@ import com.tpago.movil.dep.User;
 import com.tpago.movil.app.ui.Presenter;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.data.StringMapper;
-import com.tpago.movil.domain.auth.alt.AltAuthMethodManager;
-import com.tpago.movil.domain.auth.alt.AltAuthMethod;
+import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.ObjectHelper;
 
@@ -20,8 +19,8 @@ final class SettingsPresenter extends Presenter<SettingsPresentation> {
     return new Builder();
   }
 
+  private final SessionManager sessionManager;
   private final StringMapper stringMapper;
-  private final AltAuthMethodManager altAuthMethodManager;
 
   private final User user;
   private final ProductManager productManager;
@@ -30,8 +29,8 @@ final class SettingsPresenter extends Presenter<SettingsPresentation> {
   private SettingsPresenter(Builder builder) {
     super(builder.presentation);
 
+    this.sessionManager = builder.sessionManager;
     this.stringMapper = builder.stringMapper;
-    this.altAuthMethodManager = builder.altAuthMethodManager;
 
     this.user = builder.user;
     this.productManager = builder.productManager;
@@ -46,20 +45,21 @@ final class SettingsPresenter extends Presenter<SettingsPresentation> {
     this.presentation.setProfileSettingsOptionSecondaryText(user.name());
 
     // Initializes the alternative authentication method option.
-    final AltAuthMethod method = this.altAuthMethodManager.getActiveMethod();
-    final int altAuthMethodStringId;
-    if (ObjectHelper.isNull(method)) {
-      altAuthMethodStringId = R.string.noneUsePassword;
+    final int sessionOpeningMethodStringId;
+    if (this.sessionManager.isSessionOpeningMethodEnabled()) {
+      sessionOpeningMethodStringId = this.sessionManager.getSessionOpeningMethod()
+        .stringId;
     } else {
-      altAuthMethodStringId = method.stringId;
+      sessionOpeningMethodStringId = R.string.noneUsePassword;
     }
-    this.presentation.setAltAuthMethodOption(this.stringMapper.apply(altAuthMethodStringId));
+    this.presentation.setAltAuthMethodOption(this.stringMapper.apply(sessionOpeningMethodStringId));
   }
 
   static final class Builder {
 
+    private SessionManager sessionManager;
     private StringMapper stringMapper;
-    private AltAuthMethodManager altAuthMethodManager;
+
     private SettingsPresentation presentation;
 
     private User user;
@@ -69,16 +69,13 @@ final class SettingsPresenter extends Presenter<SettingsPresentation> {
     private Builder() {
     }
 
-    final Builder stringMapper(StringMapper stringMapper) {
-      this.stringMapper = ObjectHelper.checkNotNull(stringMapper, "stringMapper");
+    final Builder sessionManager(SessionManager sessionManager) {
+      this.sessionManager = ObjectHelper.checkNotNull(sessionManager, "sessionManager");
       return this;
     }
 
-    final Builder altAuthManager(AltAuthMethodManager altAuthMethodManager) {
-      this.altAuthMethodManager = ObjectHelper.checkNotNull(
-        altAuthMethodManager,
-        "altAuthMethodManager"
-      );
+    final Builder stringMapper(StringMapper stringMapper) {
+      this.stringMapper = ObjectHelper.checkNotNull(stringMapper, "stringMapper");
       return this;
     }
 
@@ -104,11 +101,8 @@ final class SettingsPresenter extends Presenter<SettingsPresentation> {
 
     final SettingsPresenter build() {
       BuilderChecker.create()
+        .addPropertyNameIfMissing("sessionManager", ObjectHelper.isNull(this.sessionManager))
         .addPropertyNameIfMissing("stringMapper", ObjectHelper.isNull(this.stringMapper))
-        .addPropertyNameIfMissing(
-          "altAuthMethodManager",
-          ObjectHelper.isNull(this.altAuthMethodManager)
-        )
         .addPropertyNameIfMissing("presentation", ObjectHelper.isNull(this.presentation))
         .addPropertyNameIfMissing("user", ObjectHelper.isNull(this.user))
         .addPropertyNameIfMissing("productManager", ObjectHelper.isNull(this.productManager))

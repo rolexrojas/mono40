@@ -1,4 +1,4 @@
-package com.tpago.movil.data.auth.alt;
+package com.tpago.movil.session;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
@@ -13,13 +13,13 @@ import javax.security.auth.x500.X500Principal;
  * @author hecvasro
  */
 @AutoValue
-public abstract class AltAuthMethodConfigData {
+public abstract class SessionOpeningMethodConfigData {
 
   static Builder builder() {
-    return new AutoValue_AltAuthMethodConfigData.Builder();
+    return new AutoValue_SessionOpeningMethodConfigData.Builder();
   }
 
-  AltAuthMethodConfigData() {
+  SessionOpeningMethodConfigData() {
   }
 
   public abstract String providerName();
@@ -76,6 +76,6 @@ public abstract class AltAuthMethodConfigData {
 
     abstract Builder codeCipherTransformation(String codeCipherTransformation);
 
-    abstract AltAuthMethodConfigData build();
+    abstract SessionOpeningMethodConfigData build();
   }
 }

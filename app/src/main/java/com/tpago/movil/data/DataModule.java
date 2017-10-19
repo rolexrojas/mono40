@@ -3,7 +3,6 @@ package com.tpago.movil.data;
 import android.content.Context;
 
 import com.tpago.movil.data.api.DataApiModule;
-import com.tpago.movil.data.auth.DataAuthModule;
 import com.tpago.movil.net.NetModule;
 
 import javax.inject.Singleton;
@@ -20,7 +19,6 @@ import dagger.Provides;
   includes = {
     DataFlavorModule.class,
     DataApiModule.class,
-    DataAuthModule.class,
     NetModule.class
   }
 )
