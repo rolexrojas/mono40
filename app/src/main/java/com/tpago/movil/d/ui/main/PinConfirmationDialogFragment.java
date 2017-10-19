@@ -77,9 +77,9 @@ public class PinConfirmationDialogFragment
     if (ObjectHelper.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
       final PinConfirmationDialogFragment dialogFragment = (PinConfirmationDialogFragment) fragment;
       dialogFragment.loadIndicator.stop();
-      if (succedded) {
+//      if (succedded) {
         dialogFragment.finish();
-      }
+//      }
     }
   }
 

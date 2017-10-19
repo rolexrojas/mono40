@@ -245,9 +245,10 @@ public class PhoneNumberTransactionCreationFragment
 
   @Override
   public void setPaymentResult(boolean succeeded, String transactionId) {
-    PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), succeeded);
+    PinConfirmationDialogFragment.dismiss(this.getChildFragmentManager(), succeeded);
     if (succeeded) {
-      getContainer().finish(true, transactionId);
+      this.getContainer()
+        .finish(true, transactionId);
     }
   }
 
@@ -265,15 +266,27 @@ public class PhoneNumberTransactionCreationFragment
       if (Texts.checkIfEmpty(label)) {
         label = recipient.getIdentifier();
       }
-      final String description = getString(
-        R.string.format_transfer_to,
-        Formatter.amount(currency, value.get()),
-        label,
-        Formatter.amount(
-          currency,
-          Bank.calculateTransferCost(value.get())
-        )
-      );
+      final String description;
+      if (transactionCategory == TRANSFER) {
+        description = getString(
+          R.string.format_transfer_to,
+          Formatter.amount(currency, value.get()),
+          label,
+          Formatter.amount(
+            currency,
+            Bank.calculateTransferCost(value.get())
+          )
+        );
+      } else {
+        description = String.format(
+          "Recargar %1$s a %2$s",
+          Formatter.amount(
+            currency,
+            value.get()
+          ),
+          label
+        );
+      }
       PinConfirmationDialogFragment.show(
         getChildFragmentManager(),
         description,

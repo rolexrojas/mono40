@@ -265,8 +265,11 @@ class PhoneNumberTransactionCreationPresenter
           if (result.isSuccessful()) {
             screen.setPaymentResult(true, result.getData());
           } else {
-            screen.showGenericErrorDialog(result.getError()
-              .getDescription());
+            screen.setPaymentResult(false, null);
+            screen.showGenericErrorDialog(
+              result.getError()
+                .getDescription()
+            );
           }
         }
       }, new Action1<Throwable>() {

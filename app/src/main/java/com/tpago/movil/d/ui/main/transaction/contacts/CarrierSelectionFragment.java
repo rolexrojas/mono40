@@ -141,9 +141,14 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
           } else {
             Dialogs.builder(getContext())
               .setTitle(R.string.error_generic_title)
-              .setMessage(result.getError()
-                .getDescription())
-              .setPositiveButton(R.string.error_positive_button_text, null)
+              .setMessage(
+                result.getError()
+                  .getDescription()
+              )
+              .setPositiveButton(
+                R.string.error_positive_button_text,
+                null
+              )
               .create()
               .show();
           }
