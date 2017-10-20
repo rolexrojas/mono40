@@ -2,8 +2,8 @@ package com.tpago.movil.data.api;
 
 import android.content.Context;
 
-import com.tpago.movil.session.SessionOpeningMethodConfigData;
 import com.tpago.movil.session.AccessTokenStore;
+import com.tpago.movil.session.UnlockMethodConfigData;
 import com.tpago.movil.store.Store;
 import com.tpago.movil.api.Api;
 
@@ -22,7 +22,7 @@ public final class FlavorDataApiModule {
   @Singleton
   Api api(
     AccessTokenStore accessTokenStore,
-    SessionOpeningMethodConfigData configData,
+    UnlockMethodConfigData configData,
     Context context,
     Store store
   ) {

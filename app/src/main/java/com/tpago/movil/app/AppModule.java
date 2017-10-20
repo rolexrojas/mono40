@@ -9,6 +9,7 @@ import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import com.tpago.movil.DisplayDensity;
 import com.tpago.movil.app.di.ComponentBuilder;
 import com.tpago.movil.app.di.ComponentBuilderSupplier;
+import com.tpago.movil.app.upgrade.AppUpgradeModule;
 
 import java.util.Map;
 
@@ -17,7 +18,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-@Module
+@Module(includes = AppUpgradeModule.class)
 public final class AppModule {
 
   @Provides

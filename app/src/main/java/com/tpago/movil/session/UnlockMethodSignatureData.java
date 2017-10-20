@@ -13,13 +13,13 @@ import java.util.List;
  * @author hecvasro
  */
 @AutoValue
-public abstract class SessionOpeningSignatureData {
+public abstract class UnlockMethodSignatureData {
 
   public static Builder builder() {
-    return new AutoValue_SessionOpeningSignatureData.Builder();
+    return new AutoValue_UnlockMethodSignatureData.Builder();
   }
 
-  SessionOpeningSignatureData() {
+  UnlockMethodSignatureData() {
   }
 
   public abstract User user();
@@ -76,6 +76,6 @@ public abstract class SessionOpeningSignatureData {
 
     public abstract Builder deviceId(String deviceId);
 
-    public abstract SessionOpeningSignatureData build();
+    public abstract UnlockMethodSignatureData build();
   }
 }

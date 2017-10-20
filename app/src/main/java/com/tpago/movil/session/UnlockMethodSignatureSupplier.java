@@ -14,7 +14,7 @@ import io.reactivex.Single;
 /**
  * @author hecvasro
  */
-public interface SessionOpeningMethodSignatureSupplier extends Supplier<Single<Result<Signature>>> {
+public interface UnlockMethodSignatureSupplier extends Supplier<Single<Result<Signature>>> {
 
   @IntDef({
     FailureCode.UNAUTHORIZED

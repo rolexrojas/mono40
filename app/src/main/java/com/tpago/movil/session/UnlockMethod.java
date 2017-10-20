@@ -9,13 +9,13 @@ import com.tpago.movil.R;
  *
  * @author hecvasro
  */
-public enum SessionOpeningMethod {
+public enum UnlockMethod {
   CODE(R.string.code),
   FINGERPRINT(R.string.fingerprint);
 
   @StringRes public final int stringId;
 
-  SessionOpeningMethod(@StringRes int stringId) {
+  UnlockMethod(@StringRes int stringId) {
     this.stringId = stringId;
   }
 }

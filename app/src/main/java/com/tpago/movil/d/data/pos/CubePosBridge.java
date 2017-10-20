@@ -13,6 +13,7 @@ import com.cube.sdk.storage.operation.CubeError;
 import com.cube.sdk.storage.operation.ListCards;
 import com.cube.sdk.storage.operation.PaymentInfo;
 import com.cube.sdk.storage.operation.SelectCardParams;
+import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.pos.PosCode;
 import com.tpago.movil.d.domain.pos.PosResult;
@@ -322,13 +323,13 @@ class CubePosBridge implements PosBridge {
   }
 
   @Override
-  public Single<PosResult> unregister(final String phoneNumber) {
+  public Single<PosResult> unregister(final PhoneNumber phoneNumber) {
     if (sharedPreferences.getInt(KEY_COUNT, 0) > 0) {
       return Single.create(new Single.OnSubscribe<PosResult>() {
         @Override
         public void call(final SingleSubscriber<? super PosResult> subscriber) {
           try {
-            getCubeSdk().Unregister(phoneNumber, new CubeSdkCallback<String, CubeError>() {
+            getCubeSdk().Unregister(phoneNumber.value(), new CubeSdkCallback<String, CubeError>() {
               @Override
               public void success(String message) {
                 sharedPreferences.edit()

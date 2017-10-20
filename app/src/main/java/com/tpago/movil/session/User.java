@@ -2,16 +2,15 @@ package com.tpago.movil.session;
 
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.support.v4.util.Pair;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.tpago.movil.Email;
+import com.tpago.movil.Name;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.payment.Carrier;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.ObjectHelper;
-import com.tpago.movil.util.StringHelper;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;
@@ -26,9 +25,11 @@ public abstract class User {
     return new AutoValue_User.Builder();
   }
 
-  private String firstName;
-  private String lastName;
-  private final BehaviorSubject<Pair<String, String>> nameSubject = BehaviorSubject.create();
+  private Name name;
+  private final BehaviorSubject<Name> nameSubject = BehaviorSubject.create();
+
+  private Integer id;
+  private final BehaviorSubject<Integer> idSubject = BehaviorSubject.create();
 
   private Uri picture;
   private final BehaviorSubject<Uri> pictureSubject = BehaviorSubject.create();
@@ -40,8 +41,6 @@ public abstract class User {
 
   User() {
   }
-
-  public abstract int id();
 
   public abstract PhoneNumber phoneNumber();
 
@@ -56,26 +55,38 @@ public abstract class User {
   }
 
   public final String firstName() {
-    return this.firstName;
+    return this.name.first();
   }
 
   public final String lastName() {
-    return this.lastName;
+    return this.name.last();
   }
 
-  public final String name() {
-    return this.firstName + " " + this.lastName;
+  public final Name name() {
+    return this.name;
   }
 
-  public final Observable<Pair<String, String>> nameChanges() {
+  public final Observable<Name> nameChanges() {
     return this.nameSubject;
   }
 
-  final void updateName(String firstName, String lastName) {
-    this.firstName = StringHelper.checkIsNotNullNorEmpty(firstName, "firstName");
-    this.lastName = StringHelper.checkIsNotNullNorEmpty(lastName, "lastName");
-    this.nameSubject.onNext(Pair.create(this.firstName, this.lastName));
+  final void updateName(Name name) {
+    this.name = ObjectHelper.checkNotNull(name, "name");
+    this.nameSubject.onNext(this.name);
+    this.dispatchChanges();
+  }
 
+  @Nullable
+  public final Integer id() {
+    return this.id;
+  }
+
+  public final Observable<Integer> idObservable() {
+    return this.idSubject;
+  }
+
+  final void updateId(Integer id) {
+    this.id = ObjectHelper.checkNotNull(id, "id");
     this.dispatchChanges();
   }
 
@@ -115,16 +126,14 @@ public abstract class User {
   public String toString() {
     return new StringBuilder("User")
       .append("{")
-      .append("id=")
-      .append(this.id())
-      .append(",phoneNumber=")
+      .append("phoneNumber=")
       .append(this.phoneNumber())
       .append(",email=")
       .append(this.email())
-      .append(",firstName=")
-      .append(this.firstName)
-      .append(",lastName=")
-      .append(this.lastName)
+      .append(",name=")
+      .append(this.name)
+      .append(",id=")
+      .append(this.id())
       .append(",picture=")
       .append(this.picture)
       .append(",carrier=")
@@ -139,24 +148,14 @@ public abstract class User {
 
   public static final class Builder {
 
-    private Integer id;
-
     private PhoneNumber phoneNumber;
     private Email email;
-
-    private String firstName;
-    private String lastName;
-
+    private Name name;
+    private Integer id;
     private Uri picture;
-
     private Carrier carrier;
 
     private Builder() {
-    }
-
-    public final Builder id(Integer id) {
-      this.id = ObjectHelper.checkNotNull(id, "id");
-      return this;
     }
 
     public final Builder phoneNumber(PhoneNumber phoneNumber) {
@@ -169,13 +168,13 @@ public abstract class User {
       return this;
     }
 
-    public final Builder firstName(String firstName) {
-      this.firstName = ObjectHelper.checkNotNull(firstName, "firstName");
+    public final Builder name(Name name) {
+      this.name = ObjectHelper.checkNotNull(name, "name");
       return this;
     }
 
-    public final Builder lastName(String lastName) {
-      this.lastName = ObjectHelper.checkNotNull(lastName, "lastName");
+    public final Builder id(@Nullable Integer id) {
+      this.id = ObjectHelper.checkNotNull(id, "id");
       return this;
     }
 
@@ -191,16 +190,13 @@ public abstract class User {
 
     public final User build() {
       BuilderChecker.create()
-        .addPropertyNameIfMissing("id", ObjectHelper.isNull(this.id))
         .addPropertyNameIfMissing("phoneNumber", ObjectHelper.isNull(this.phoneNumber))
         .addPropertyNameIfMissing("email", ObjectHelper.isNull(this.email))
-        .addPropertyNameIfMissing("firstName", StringHelper.isNullOrEmpty(this.firstName))
-        .addPropertyNameIfMissing("lastName", StringHelper.isNullOrEmpty(this.lastName))
+        .addPropertyNameIfMissing("name", ObjectHelper.isNull(this.name))
         .checkNoMissingProperties();
-
-      final User user = new AutoValue_User(this.id, this.phoneNumber, this.email);
-      user.firstName = this.firstName;
-      user.lastName = this.lastName;
+      final User user = new AutoValue_User(this.phoneNumber, this.email);
+      user.name = this.name;
+      user.id = this.id;
       user.picture = this.picture;
       user.carrier = this.carrier;
       return user;

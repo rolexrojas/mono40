@@ -3,7 +3,7 @@ package com.tpago.movil.session;
 /**
  * @author hecvasro
  */
-public interface DestroySessionAction {
+interface SessionDestroyAction {
 
   void run(User user) throws Exception;
 }

@@ -4,15 +4,15 @@ import android.net.Uri;
 
 import com.tpago.movil.Code;
 import com.tpago.movil.Email;
+import com.tpago.movil.Name;
 import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.api.Api;
 import com.tpago.movil.dep.MimeType;
 import com.tpago.movil.payment.Carrier;
-import com.tpago.movil.session.SessionOpeningSignatureData;
+import com.tpago.movil.session.UnlockMethodSignatureData;
 import com.tpago.movil.session.User;
 import com.tpago.movil.util.ObjectHelper;
-import com.tpago.movil.util.Placeholder;
 import com.tpago.movil.util.Result;
 
 import java.io.File;
@@ -102,13 +102,17 @@ final class RetrofitApiImpl implements Api {
   }
 
   @Override
-  public Completable updateUserName(User user, String firstName, String lastName) {
-    return this.retrofitApi.updateUserName(RetrofitApiUserNameData.create(user))
-      .concatWith(this.retrofitApi.updateBeneficiary(RetrofitApiBeneficiaryData.create(user)));
+  public Completable updateUserName(User user, Name name) {
+    ObjectHelper.checkNotNull(user, "user");
+    ObjectHelper.checkNotNull(name, "name");
+    return this.retrofitApi.updateUserName(ApiName.create(name))
+      .concatWith(this.retrofitApi.updateBeneficiary(ApiBeneficiary.create(user, name)));
   }
 
   @Override
   public Single<Uri> updateUserPicture(User user, File picture) {
+    ObjectHelper.checkNotNull(user, "user");
+    ObjectHelper.checkNotNull(picture, "picture");
     final RequestBody requestPicture = RequestBody
       .create(MediaType.parse(MimeType.IMAGE), picture);
     final MultipartBody.Part body = MultipartBody.Part
@@ -119,11 +123,13 @@ final class RetrofitApiImpl implements Api {
 
   @Override
   public Completable updateUserCarrier(User user, Carrier carrier) {
-    return this.retrofitApi.updateBeneficiary(RetrofitApiBeneficiaryData.create(user));
+    ObjectHelper.checkNotNull(user, "user");
+    ObjectHelper.checkNotNull(carrier, "carrier");
+    return this.retrofitApi.updateBeneficiary(ApiBeneficiary.create(user, carrier));
   }
 
   @Override
-  public Completable enableSessionOpeningMethod(PublicKey publicKey) {
+  public Completable enableUnlockMethod(PublicKey publicKey) {
     final RetrofitApiEnableSessionOpeningBody body = RetrofitApiEnableSessionOpeningBody.builder()
       .publicKey(publicKey)
       .build();
@@ -131,8 +137,8 @@ final class RetrofitApiImpl implements Api {
   }
 
   @Override
-  public Single<Result<Placeholder>> openSession(
-    SessionOpeningSignatureData signatureData,
+  public Single<Result<User>> openSession(
+    UnlockMethodSignatureData signatureData,
     byte[] signedData
   ) {
     final RetrofitApiOpenSessionBody body = RetrofitApiOpenSessionBody.builder()
@@ -145,7 +151,7 @@ final class RetrofitApiImpl implements Api {
   }
 
   @Override
-  public Completable disableSessionOpeningMethod() {
+  public Completable disableUnlockMethod() {
     return this.retrofitApi.disableSessionOpeningMethod();
   }
 }

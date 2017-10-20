@@ -8,7 +8,7 @@ import com.tpago.movil.Code;
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.FragmentReplacer;
 import com.tpago.movil.app.ui.NumPad;
-import com.tpago.movil.session.CodeSessionOpeningMethodSignatureSupplier;
+import com.tpago.movil.session.CodeMethodSignatureSupplier;
 import com.tpago.movil.dep.init.InitActivity;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.function.Action;
@@ -43,7 +43,7 @@ public final class CodeUnlockFragment extends BaseUnlockFragment {
   private Action numPadDeleteAction;
 
   @Inject SessionManager sessionManager;
-  @Inject CodeSessionOpeningMethodSignatureSupplier.Creator codeSignatureSupplierCreator;
+  @Inject CodeMethodSignatureSupplier.Creator codeSignatureSupplierCreator;
 
   private void updateValueTextView() {
     this.valueTextView.setText(this.codeCreator.toString());

@@ -110,7 +110,7 @@ public final class PictureCreatorDialogFragment extends DialogFragment {
     }
 
     // Creates the output file.
-    this.outputFile = FileHelper.createInternalPictureFile(this.getContext());
+    this.outputFile = FileHelper.createIntPicFile(this.getContext());
   }
 
   @NonNull
@@ -164,7 +164,7 @@ public final class PictureCreatorDialogFragment extends DialogFragment {
     final Context context = getContext();
     if (ObjectHelper.isNull(this.temporaryFile)) {
       try {
-        this.temporaryFile = FileHelper.createExternalPictureFile(context);
+        this.temporaryFile = FileHelper.createExtPicFile(context);
       } catch (IllegalStateException exception) {
         Timber.w(exception, "Creating a temporary image file for camera output");
       }

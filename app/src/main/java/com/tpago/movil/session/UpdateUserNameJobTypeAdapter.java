@@ -5,6 +5,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
+import com.tpago.movil.Name;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.io.IOException;
@@ -37,7 +38,6 @@ public final class UpdateUserNameJobTypeAdapter extends TypeAdapter<UpdateUserNa
     } else {
       String firstName = null;
       String lastName = null;
-
       reader.beginObject();
       while (reader.hasNext()) {
         final String propertyName = reader.nextName();
@@ -54,8 +54,7 @@ public final class UpdateUserNameJobTypeAdapter extends TypeAdapter<UpdateUserNa
         }
       }
       reader.endObject();
-
-      job = UpdateUserNameJob.create(firstName, lastName);
+      job = UpdateUserNameJob.create(Name.create(firstName, lastName));
     }
     return job;
   }
@@ -67,9 +66,9 @@ public final class UpdateUserNameJobTypeAdapter extends TypeAdapter<UpdateUserNa
     } else {
       writer.beginObject();
       writer.name(PROPERTY_FIRST_NAME);
-      this.stringTypeAdapter.write(writer, job.firstName);
+      this.stringTypeAdapter.write(writer, job.name.first());
       writer.name(PROPERTY_LAST_NAME);
-      this.stringTypeAdapter.write(writer, job.lastName);
+      this.stringTypeAdapter.write(writer, job.name.last());
       writer.endObject();
     }
   }

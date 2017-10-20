@@ -60,7 +60,7 @@ public abstract class User {
     this.onIdChangedListener = listener;
   }
 
-  final void id(int id) {
+  public final void id(int id) {
     this.id = id;
 
     if (ObjectHelper.isNotNull(this.onIdChangedListener)) {
@@ -68,7 +68,7 @@ public abstract class User {
     }
   }
 
-  final int id() {
+  public final int id() {
     return this.id;
   }
 

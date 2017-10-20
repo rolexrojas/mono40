@@ -50,7 +50,15 @@ public final class MainModule {
     depUser.name(user.firstName(), user.lastName());
 
     user.nameChanges()
-      .subscribe((name) -> depUser.name(name.first, name.second));
+      .subscribe((name) -> depUser.name(name.first(), name.last()));
+
+    final Integer id = user.id();
+    if (ObjectHelper.isNotNull(id)) {
+      depUser.id(id);
+    }
+
+    user.idObservable()
+      .subscribe(depUser::id);
 
     final Uri picture = user.picture();
     if (ObjectHelper.isNotNull(picture)) {

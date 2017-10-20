@@ -46,8 +46,8 @@ final class SettingsPresenter extends Presenter<SettingsPresentation> {
 
     // Initializes the alternative authentication method option.
     final int sessionOpeningMethodStringId;
-    if (this.sessionManager.isSessionOpeningMethodEnabled()) {
-      sessionOpeningMethodStringId = this.sessionManager.getSessionOpeningMethod()
+    if (this.sessionManager.isUnlockMethodEnabled()) {
+      sessionOpeningMethodStringId = this.sessionManager.getUnlockMethod()
         .stringId;
     } else {
       sessionOpeningMethodStringId = R.string.noneUsePassword;

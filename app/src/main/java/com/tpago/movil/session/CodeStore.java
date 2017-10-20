@@ -19,25 +19,22 @@ import javax.crypto.CipherOutputStream;
 /**
  * @author hecvasro
  */
-final class CodeSessionOpeningMethodStore {
+final class CodeStore {
 
   private static final String CHAR_SET = "UTF-8";
 
-  private static final String STORE_KEY_CODE = "CodeSessionOpeningMethodStore.Code";
+  private static final String STORE_KEY_CODE = "CodeStore.Code";
 
-  static CodeSessionOpeningMethodStore create(
-    Store store,
-    SessionOpeningMethodConfigData configData
-  ) {
-    return new CodeSessionOpeningMethodStore(store, configData);
+  static CodeStore create(UnlockMethodConfigData configData, Store store) {
+    return new CodeStore(configData, store);
   }
 
+  private final UnlockMethodConfigData configData;
   private final Store store;
-  private final SessionOpeningMethodConfigData configData;
 
-  private CodeSessionOpeningMethodStore(Store store, SessionOpeningMethodConfigData configData) {
-    this.store = ObjectHelper.checkNotNull(store, "store");
+  private CodeStore(UnlockMethodConfigData configData, Store store) {
     this.configData = ObjectHelper.checkNotNull(configData, "configData");
+    this.store = ObjectHelper.checkNotNull(store, "store");
   }
 
   final void set(PublicKey key, Code code) throws Exception {

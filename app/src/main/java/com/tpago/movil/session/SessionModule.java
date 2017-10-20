@@ -5,8 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 
 import com.birbit.android.jobqueue.JobManager;
-import com.tpago.movil.BuildConfig;
 import com.tpago.movil.api.Api;
+import com.tpago.movil.d.domain.BalanceManager;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.domain.pos.PosBridge;
@@ -15,7 +15,9 @@ import com.tpago.movil.store.Store;
 import java.math.BigInteger;
 import java.security.KeyStore;
 import java.security.spec.RSAKeyGenParameterSpec;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.inject.Singleton;
 import javax.security.auth.x500.X500Principal;
@@ -43,44 +45,18 @@ public final class SessionModule {
 
   @Provides
   @Singleton
-  SessionManager sessionManager(
-    AccessTokenStore accessTokenStore,
-    Api api,
-    JobManager jobManager,
-    Store store,
-    RecipientManager recipientManager,
-    ProductManager productManager,
-    PosBridge posBridge
-  ) {
-    return SessionManager.builder()
-      .accessTokenStore(accessTokenStore)
-      .api(api)
-      .jobManager(jobManager)
-      .store(store)
-      .addDestroyAction((user) -> productManager.clear())
-      .addDestroyAction((user) -> recipientManager.clear())
-      .addDestroyAction(
-        (user) -> posBridge.unregister(
-          user.phoneNumber()
-            .value()
-        )
-      )
-      .build();
-  }
-
-  @Provides
-  @Singleton
-  SessionOpeningMethodConfigData configData() {
+  UnlockMethodConfigData unlockMethodConfigData() {
     final Calendar startCalendar = Calendar.getInstance();
     final Calendar endCalendar = Calendar.getInstance();
     endCalendar.add(Calendar.YEAR, 50);
-    return SessionOpeningMethodConfigData.builder()
+
+    return UnlockMethodConfigData.builder()
       .providerName("AndroidKeyStore")
-      .keyAlias("AltAuth.Key")
+      .keyAlias("UnlockMethodKey")
       .keyGenAlgName("RSA")
       .keyGenAlgParamSpec(new RSAKeyGenParameterSpec(2048, RSAKeyGenParameterSpec.F4))
       .signAlgName("SHA256withRSA")
-      .codeMethodSubject(new X500Principal(BuildConfig.AUTH_METHOD_CODE_SUBJECT))
+      .codeMethodSubject(new X500Principal("CN=tPago,OU=IT,O=GCS Systems,C=DO"))
       .codeMethodSerialNumber(BigInteger.ONE)
       .codeMethodStartDate(startCalendar.getTime())
       .codeMethodEndDate(endCalendar.getTime())
@@ -90,9 +66,9 @@ public final class SessionModule {
 
   @Provides
   @Singleton
-  KeyStore keyStore(SessionOpeningMethodConfigData data) {
+  KeyStore keyStore(UnlockMethodConfigData configData) {
     try {
-      final KeyStore keyStore = KeyStore.getInstance(data.providerName());
+      final KeyStore keyStore = KeyStore.getInstance(configData.providerName());
       keyStore.load(null);
       return keyStore;
     } catch (Exception exception) {
@@ -102,50 +78,69 @@ public final class SessionModule {
 
   @Provides
   @Singleton
-  CodeSessionOpeningMethodStore codeStore(Store store, SessionOpeningMethodConfigData configData) {
-    return CodeSessionOpeningMethodStore.create(store, configData);
+  KeyStoreDisableAction keyStoreDisableAction(
+    UnlockMethodConfigData configData,
+    KeyStore keyStore
+  ) {
+    return KeyStoreDisableAction.create(configData, keyStore);
   }
 
   @Provides
   @Singleton
-  CodeSessionOpeningMethodKeyGenerator.Creator codeKeyGeneratorCreator(
-    CodeSessionOpeningMethodStore codeStore,
-    SessionOpeningMethodConfigData configData,
-    Context context,
-    KeyStore keyStore
+  CodeStore codeStore(UnlockMethodConfigData configData, Store store) {
+    return CodeStore.create(configData, store);
+  }
+
+  @Provides
+  @Singleton
+  CodeMethodDisableAction codeMethodDisableAction(CodeStore codeStore) {
+    return CodeMethodDisableAction.create(codeStore);
+  }
+
+  @Provides
+  @Singleton
+  CodeMethodKeyGenerator.Creator codeKeyGeneratorCreator(
+    CodeStore codeStore,
+    UnlockMethodConfigData configData,
+    Context context
   ) {
-    return CodeSessionOpeningMethodKeyGenerator.Creator.builder()
+    return CodeMethodKeyGenerator.Creator.builder()
       .codeStore(codeStore)
       .configData(configData)
       .context(context)
+      .build();
+  }
+
+  @Provides
+  @Singleton
+  CodeMethodSignatureSupplier.Creator codeSignatureSupplierCreator(
+    CodeStore codeStore,
+    UnlockMethodConfigData configData,
+    KeyStore keyStore
+  ) {
+    return CodeMethodSignatureSupplier.Creator
+      .builder()
+      .codeStore(codeStore)
+      .configData(configData)
       .keyStore(keyStore)
       .build();
   }
 
   @Provides
   @Singleton
-  CodeSessionOpeningMethodSignatureSupplier.Creator codeSignatureSupplierCreator(
-    CodeSessionOpeningMethodStore codeStore,
-    SessionOpeningMethodConfigData configData,
-    KeyStore keyStore
-  ) {
-    return CodeSessionOpeningMethodSignatureSupplier.Creator.builder()
-      .codeStore(codeStore)
-      .configData(configData)
-      .keyStore(keyStore)
-      .build();
+  FingerprintMethodDisableAction fingerprintMethodDisableAction() {
+    return FingerprintMethodDisableAction.create();
   }
 
   @Provides
   @Singleton
   @Nullable
-  FingerprintSessionOpeningMethodKeyGenerator fingerprintKeyGenerator(
+  FingerprintMethodKeyGenerator fingerprintKeyGenerator(
     FingerprintManagerCompat fingerprintManager,
-    SessionOpeningMethodConfigData configData,
-    KeyStore keyStore
+    UnlockMethodConfigData configData
   ) {
     if (fingerprintManager.isHardwareDetected()) {
-      return FingerprintSessionOpeningMethodKeyGenerator.create(configData, keyStore);
+      return FingerprintMethodKeyGenerator.create(configData);
     } else {
       return null;
     }
@@ -154,13 +149,14 @@ public final class SessionModule {
   @Provides
   @Singleton
   @Nullable
-  FingerprintSessionOpeningMethodSignatureSupplier.Creator fingerprintSignatureSupplierCreator(
-    SessionOpeningMethodConfigData configData,
+  FingerprintMethodSignatureSupplier.Creator fingerprintSignatureSupplierCreator(
+    UnlockMethodConfigData configData,
     FingerprintManagerCompat fingerprintManager,
     KeyStore keyStore
   ) {
     if (fingerprintManager.isHardwareDetected()) {
-      return FingerprintSessionOpeningMethodSignatureSupplier.Creator.builder()
+      return FingerprintMethodSignatureSupplier.Creator
+        .builder()
         .configData(configData)
         .fingerprintManager(fingerprintManager)
         .keyStore(keyStore)
@@ -168,5 +164,66 @@ public final class SessionModule {
     } else {
       return null;
     }
+  }
+
+  @Provides
+  @Singleton
+  UnlockMethodDisableActionFactory unlockMethodDisableActionFactory(
+    KeyStoreDisableAction keyStoreDisableAction,
+    CodeMethodDisableAction codeMethodDisableAction,
+    FingerprintMethodDisableAction fingerprintMethodDisableAction
+  ) {
+    final DecoratedMethodDisableAction decoratedCodeMethodDisableAction
+      = DecoratedMethodDisableAction.create(keyStoreDisableAction, codeMethodDisableAction);
+    final DecoratedMethodDisableAction decoratedFingerprintMethodDisableAction
+      = DecoratedMethodDisableAction.create(keyStoreDisableAction, fingerprintMethodDisableAction);
+    return UnlockMethodDisableActionFactory.builder()
+      .addAction(UnlockMethod.CODE, decoratedCodeMethodDisableAction)
+      .addAction(UnlockMethod.FINGERPRINT, decoratedFingerprintMethodDisableAction)
+      .build();
+  }
+
+  @Provides
+  @Singleton
+  List<SessionCloseAction> closeActions(BalanceManager balanceManager) {
+    final List<SessionCloseAction> actions = new ArrayList<>();
+    actions.add(balanceManager::reset);
+    return actions;
+  }
+
+  @Provides
+  @Singleton
+  List<SessionDestroyAction> destroyActions(
+    ProductManager productManager,
+    PosBridge posBridge,
+    RecipientManager recipientManager
+  ) {
+    final List<SessionDestroyAction> actions = new ArrayList<>();
+    actions.add((user) -> productManager.clear());
+    actions.add((user) -> posBridge.unregister(user.phoneNumber()));
+    actions.add((user) -> recipientManager.clear());
+    return actions;
+  }
+
+  @Provides
+  @Singleton
+  SessionManager sessionManager(
+    AccessTokenStore accessTokenStore,
+    Api api,
+    JobManager jobManager,
+    Store store,
+    UnlockMethodDisableActionFactory unlockMethodDisableActionFactory,
+    List<SessionCloseAction> closeActions,
+    List<SessionDestroyAction> destroyActions
+  ) {
+    return SessionManager.builder()
+      .accessTokenStore(accessTokenStore)
+      .api(api)
+      .jobManager(jobManager)
+      .store(store)
+      .unlockMethodDisableActionFactory(unlockMethodDisableActionFactory)
+      .closeActions(closeActions)
+      .destroyActions(destroyActions)
+      .build();
   }
 }

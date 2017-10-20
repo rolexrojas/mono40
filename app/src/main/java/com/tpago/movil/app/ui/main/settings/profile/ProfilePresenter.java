@@ -1,8 +1,8 @@
 package com.tpago.movil.app.ui.main.settings.profile;
 
 import android.net.Uri;
-import android.support.v4.util.Pair;
 
+import com.tpago.movil.Name;
 import com.tpago.movil.app.ui.Presenter;
 import com.tpago.movil.app.ui.picture.PictureCreator;
 import com.tpago.movil.session.SessionManager;
@@ -45,9 +45,9 @@ final class ProfilePresenter extends Presenter<ProfilePresentation> {
     this.presentation.setUserPicture(picture);
   }
 
-  private void updateUserName(Pair<String, String> name) {
-    this.presentation.setUserFirstName(name.first);
-    this.presentation.setUserLastName(name.second);
+  private void updateUserName(Name name) {
+    this.presentation.setUserFirstName(name.first());
+    this.presentation.setUserLastName(name.last());
   }
 
   @Override
@@ -65,7 +65,7 @@ final class ProfilePresenter extends Presenter<ProfilePresentation> {
       .subscribe(this::updateUserPicture);
     this.compositeDisposable.add(disposable);
 
-    this.updateUserName(Pair.create(user.firstName(), user.lastName()));
+    this.updateUserName(user.name());
     disposable = user.nameChanges()
       .observeOn(AndroidSchedulers.mainThread())
       .subscribe(this::updateUserName);

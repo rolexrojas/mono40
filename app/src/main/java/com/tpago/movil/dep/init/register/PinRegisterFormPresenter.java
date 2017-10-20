@@ -18,6 +18,8 @@ import com.tpago.movil.dep.reactivex.Disposables;
 import com.tpago.movil.util.DigitValueCreator;
 import com.tpago.movil.util.ObjectHelper;
 
+import java.io.File;
+
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -80,6 +82,7 @@ public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPre
       final Email email = this.registerData.getEmail();
       final String firstName = this.registerData.getFirstName();
       final String lastName = this.registerData.getLastName();
+      final File picture = this.registerData.getPicture();
       final Password password = Password.create(this.registerData.getPassword());
       final Code pin = this.pinCreator.create();
       final String deviceId = this.deviceIdSupplier.get();
@@ -89,6 +92,7 @@ public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPre
         email,
         firstName,
         lastName,
+        picture,
         password,
         pin,
         deviceId

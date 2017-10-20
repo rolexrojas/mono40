@@ -13,13 +13,13 @@ import javax.security.auth.x500.X500Principal;
  * @author hecvasro
  */
 @AutoValue
-public abstract class SessionOpeningMethodConfigData {
+public abstract class UnlockMethodConfigData {
 
   static Builder builder() {
-    return new AutoValue_SessionOpeningMethodConfigData.Builder();
+    return new AutoValue_UnlockMethodConfigData.Builder();
   }
 
-  SessionOpeningMethodConfigData() {
+  UnlockMethodConfigData() {
   }
 
   public abstract String providerName();
@@ -76,6 +76,6 @@ public abstract class SessionOpeningMethodConfigData {
 
     abstract Builder codeCipherTransformation(String codeCipherTransformation);
 
-    abstract SessionOpeningMethodConfigData build();
+    abstract UnlockMethodConfigData build();
   }
 }

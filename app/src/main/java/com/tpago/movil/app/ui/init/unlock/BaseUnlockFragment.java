@@ -19,7 +19,7 @@ import com.tpago.movil.dep.init.InitFragment;
 import com.tpago.movil.dep.init.LogoAnimator;
 import com.tpago.movil.reactivex.DisposableHelper;
 import com.tpago.movil.session.SessionManager;
-import com.tpago.movil.session.SessionOpeningMethodSignatureSupplier;
+import com.tpago.movil.session.UnlockMethodSignatureSupplier;
 import com.tpago.movil.session.User;
 import com.tpago.movil.util.FailureData;
 import com.tpago.movil.util.Result;
@@ -63,7 +63,7 @@ public abstract class BaseUnlockFragment extends BaseFragment {
       String message = failureData.description();
 
       final int code = failureData.code();
-      if (code == SessionOpeningMethodSignatureSupplier.FailureCode.UNAUTHORIZED) {
+      if (code == UnlockMethodSignatureSupplier.FailureCode.UNAUTHORIZED) {
         title = "Código incorrecto";
         message
           = "El código introducido no coincide con el código utilizado durante la configuración del desbloqueo rápido.";

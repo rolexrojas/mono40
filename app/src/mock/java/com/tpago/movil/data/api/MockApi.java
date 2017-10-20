@@ -10,17 +10,16 @@ import com.tpago.movil.Email;
 import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.io.FileHelper;
-import com.tpago.movil.session.SessionOpeningMethodConfigData;
 import com.tpago.movil.payment.Carrier;
 import com.tpago.movil.session.AccessTokenStore;
-import com.tpago.movil.session.SessionOpeningSignatureData;
+import com.tpago.movil.session.UnlockMethodConfigData;
+import com.tpago.movil.session.UnlockMethodSignatureData;
 import com.tpago.movil.session.User;
 import com.tpago.movil.store.Store;
 import com.tpago.movil.api.Api;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.FailureData;
 import com.tpago.movil.util.ObjectHelper;
-import com.tpago.movil.util.Placeholder;
 import com.tpago.movil.util.Result;
 
 import java.io.File;
@@ -81,7 +80,7 @@ final class MockApi implements Api {
 
   private final AccessTokenStore accessTokenStore;
   private final Context context;
-  private final SessionOpeningMethodConfigData configData;
+  private final UnlockMethodConfigData configData;
   private final Store store;
 
   private final AtomicInteger userId;
@@ -243,79 +242,87 @@ final class MockApi implements Api {
       .compose(singleDelayTransformer());
   }
 
-  @Override
-  public Result<Placeholder> updateUserName(User user, String firstName, String lastName)
-    throws Exception {
-    final Result<Placeholder> result;
-
+  private void updateUserName_(String firstName, String lastName) throws Exception {
     final String userStoreKey = createUserStoreKey(this.getAccessToken());
     if (!this.store.isSet(userStoreKey)) {
-      final FailureData failureData = FailureData.builder()
-        .code(FailureCode.UNAUTHORIZED)
-        .build();
-      result = Result.create(failureData);
+      throw new RuntimeException("Unauthorized");
     } else {
-      this.store.set(userStoreKey, user);
-      result = Result.create(Placeholder.get());
-    }
-
-    return result;
-  }
-
-  @Override
-  public Result<Uri> updateUserPicture(User user, File picture) throws Exception {
-    final Result<Uri> result;
-
-    final String userStoreKey = createUserStoreKey(this.getAccessToken());
-    if (!this.store.isSet(userStoreKey)) {
-      final FailureData failureData = FailureData.builder()
-        .code(FailureCode.UNAUTHORIZED)
-        .build();
-      result = Result.create(failureData);
-    } else {
-      final User storedUser = this.store.get(userStoreKey, User.class);
-      final Uri storedUserPicture = storedUser.picture();
-      if (ObjectHelper.isNotNull(storedUserPicture)) {
-        FileHelper.deleteFile(new File(storedUserPicture.getPath()));
-      }
-      final File newUserPictureFile = FileHelper
-        .createInternalPictureFileCopy(this.context, picture);
-      final Uri newUserPictureUri = Uri.fromFile(newUserPictureFile);
+      final User currentUser = this.store.get(userStoreKey, User.class);
       final User newUser = User.builder()
-        .id(storedUser.id())
-        .phoneNumber(storedUser.phoneNumber())
-        .email(storedUser.email())
-        .firstName(storedUser.firstName())
-        .lastName(storedUser.lastName())
-        .picture(newUserPictureUri)
-        .carrier(storedUser.carrier())
+        .phoneNumber(currentUser.phoneNumber())
+        .email(currentUser.email())
+        .firstName(firstName)
+        .lastName(lastName)
+        .id(currentUser.id())
+        .picture(currentUser.picture())
+        .carrier(currentUser.carrier())
         .build();
       this.store.set(userStoreKey, newUser);
-      result = Result.create(newUserPictureUri);
     }
-
-    return result;
   }
 
   @Override
-  public Result<Placeholder> updateUserCarrier(User user, Carrier carrier) throws Exception {
-    final Result<Placeholder> result;
-
-    final String userStoreKey = createUserStoreKey(this.getAccessToken());
-    if (!this.store.isSet(userStoreKey)) {
-      final FailureData failureData = FailureData.builder()
-        .code(FailureCode.UNAUTHORIZED)
-        .build();
-      result = Result.create(failureData);
-    } else {
-      this.store.set(userStoreKey, user);
-      result = Result.create(Placeholder.get());
-    }
-
-    return result;
+  public Completable updateUserName(String firstName, String lastName) {
+    return Completable.fromAction(() -> this.updateUserName_(firstName, lastName));
   }
 
-  private void enableAltOpenSessionMethod_(PublicKey publicKey) throws Exception {
+  private Uri updateUserPicture_(File picture) throws Exception {
+    final String userStoreKey = createUserStoreKey(this.getAccessToken());
+    if (!this.store.isSet(userStoreKey)) {
+      throw new RuntimeException("Unauthorized");
+    } else {
+      final User currentUser = this.store.get(userStoreKey, User.class);
+      final Uri currentUserPicture = currentUser.picture();
+      if (ObjectHelper.isNotNull(currentUserPicture)) {
+        FileHelper.deleteFile(new File(currentUserPicture.getPath()));
+      }
+      final File newUserPictureFile = FileHelper
+        .createIntPicFileCopy(this.context, picture);
+      final Uri newUserPictureUri = Uri.fromFile(newUserPictureFile);
+      final User newUser = User.builder()
+        .phoneNumber(currentUser.phoneNumber())
+        .email(currentUser.email())
+        .firstName(currentUser.firstName())
+        .lastName(currentUser.lastName())
+        .id(currentUser.id())
+        .picture(newUserPictureUri)
+        .carrier(currentUser.carrier())
+        .build();
+      this.store.set(userStoreKey, newUser);
+      return newUserPictureUri;
+    }
+  }
+
+  @Override
+  public Single<Uri> updateUserPicture(File picture) {
+    return Single.defer(() -> Single.just(this.updateUserPicture_(picture)));
+  }
+
+  private void updateUserCarrier_(Carrier carrier) {
+    final String userStoreKey = createUserStoreKey(this.getAccessToken());
+    if (!this.store.isSet(userStoreKey)) {
+      throw new RuntimeException("Unauthorized");
+    } else {
+      final User currentUser = this.store.get(userStoreKey, User.class);
+      final User newUser = User.builder()
+        .phoneNumber(currentUser.phoneNumber())
+        .email(currentUser.email())
+        .firstName(currentUser.firstName())
+        .lastName(currentUser.lastName())
+        .id(currentUser.id())
+        .picture(currentUser.picture())
+        .carrier(carrier)
+        .build();
+      this.store.set(userStoreKey, newUser);
+    }
+  }
+
+  @Override
+  public Completable updateUserCarrier(User user, Carrier carrier) {
+    return Completable.fromAction(() -> this.updateUserCarrier_(carrier));
+  }
+
+  private void enableUnlockMethod_(PublicKey publicKey) throws Exception {
     final PhoneNumber userPhoneNumber = this.getAccessToken();
     final String userStoreKey = createUserStoreKey(userPhoneNumber);
     if (!this.store.isSet(userStoreKey)) {
@@ -329,17 +336,16 @@ final class MockApi implements Api {
   }
 
   @Override
-  public Completable enableSessionOpeningMethod(PublicKey key) {
-    return Completable.fromAction(() -> this.enableAltOpenSessionMethod_(key))
+  public Completable enableUnlockMethod(PublicKey key) {
+    return Completable.fromAction(() -> this.enableUnlockMethod_(key))
       .compose(completableDelayTransformer());
   }
 
-  private Single<Result<Placeholder>> openSession_(
-    SessionOpeningSignatureData signatureData,
+  private Single<Result<User>> openSession_(
+    UnlockMethodSignatureData signatureData,
     byte[] signedData
   ) throws Exception {
-    final Result<Placeholder> result;
-
+    final Result<User> result;
     final User user = signatureData.user();
     final PhoneNumber userPhoneNumber = user.phoneNumber();
     final String userStoreKey = createUserStoreKey(userPhoneNumber);
@@ -368,16 +374,15 @@ final class MockApi implements Api {
           .build();
         result = Result.create(failureData);
       } else {
-        result = Result.create(Placeholder.get());
+        result = Result.create(user);
       }
     }
-
     return Single.just(result);
   }
 
   @Override
-  public Single<Result<Placeholder>> openSession(
-    SessionOpeningSignatureData signatureData,
+  public Single<Result<User>> openSession(
+    UnlockMethodSignatureData signatureData,
     byte[] signedData
   ) {
     return Single.defer(() -> this.openSession_(signatureData, signedData))
@@ -391,7 +396,7 @@ final class MockApi implements Api {
       .compose(singleDelayTransformer());
   }
 
-  private void disableAltOpenSessionMethod_() throws Exception {
+  private void disableUnlockMethod_() throws Exception {
     final PhoneNumber userPhoneNumber = this.getAccessToken();
     final String userStoreKey = createUserStoreKey(userPhoneNumber);
     if (!this.store.isSet(userStoreKey)) {
@@ -402,8 +407,8 @@ final class MockApi implements Api {
   }
 
   @Override
-  public Completable disableSessionOpeningMethod() {
-    return Completable.fromAction(this::disableAltOpenSessionMethod_)
+  public Completable disableUnlockMethod() {
+    return Completable.fromAction(this::disableUnlockMethod_)
       .compose(completableDelayTransformer());
   }
 
@@ -413,7 +418,7 @@ final class MockApi implements Api {
     private Store store;
     private Context context;
 
-    private SessionOpeningMethodConfigData configData;
+    private UnlockMethodConfigData configData;
 
     private Builder() {
     }
@@ -423,7 +428,7 @@ final class MockApi implements Api {
       return this;
     }
 
-    final Builder configData(SessionOpeningMethodConfigData configData) {
+    final Builder configData(UnlockMethodConfigData configData) {
       this.configData = ObjectHelper.checkNotNull(configData, "configData");
       return this;
     }

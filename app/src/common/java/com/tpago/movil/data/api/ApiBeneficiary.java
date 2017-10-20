@@ -7,6 +7,7 @@ import com.google.auto.value.extension.memoized.Memoized;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
+import com.tpago.movil.Name;
 import com.tpago.movil.payment.Carrier;
 import com.tpago.movil.session.User;
 import com.tpago.movil.util.ObjectHelper;
@@ -15,31 +16,46 @@ import com.tpago.movil.util.ObjectHelper;
  * @author hecvasro
  */
 @AutoValue
-public abstract class RetrofitApiBeneficiaryData {
+public abstract class ApiBeneficiary {
 
-  public static TypeAdapter<RetrofitApiBeneficiaryData> typeAdapter(Gson gson) {
-    return new AutoValue_RetrofitApiBeneficiaryData.GsonTypeAdapter(gson);
+  public static TypeAdapter<ApiBeneficiary> typeAdapter(Gson gson) {
+    return new AutoValue_ApiBeneficiary.GsonTypeAdapter(gson);
   }
 
-  public static Builder builder() {
-    return new AutoValue_RetrofitApiBeneficiaryData.Builder();
+  private static Builder builder() {
+    return new AutoValue_ApiBeneficiary.Builder();
   }
 
-  public static RetrofitApiBeneficiaryData create(User user) {
+  private static Builder builder(User user) {
     ObjectHelper.checkNotNull(user, "user");
     final String entityDetail = user.phoneNumber()
       .value();
     final Carrier carrier = user.carrier();
     final Integer entityId = ObjectHelper.isNotNull(carrier) ? carrier.code() : null;
+    final String name = user.name()
+      .toString();
     return builder()
       .entityDetail(entityDetail)
       .entityId(entityId)
       .isEntityPhoneNumber(true)
-      .name(user.name())
+      .name(name);
+  }
+
+  public static ApiBeneficiary create(User user, Name name) {
+    ObjectHelper.checkNotNull(name, "name");
+    return builder(user)
+      .name(name.toString())
       .build();
   }
 
-  RetrofitApiBeneficiaryData() {
+  public static ApiBeneficiary create(User user, Carrier carrier) {
+    ObjectHelper.checkNotNull(carrier, "carrier");
+    return builder(user)
+      .entityId(carrier.code())
+      .build();
+  }
+
+  ApiBeneficiary() {
   }
 
   @SerializedName("entityDetail")
@@ -77,6 +93,6 @@ public abstract class RetrofitApiBeneficiaryData {
 
     public abstract Builder name(String name);
 
-    public abstract RetrofitApiBeneficiaryData build();
+    public abstract ApiBeneficiary build();
   }
 }

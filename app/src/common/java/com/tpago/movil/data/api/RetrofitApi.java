@@ -1,7 +1,6 @@
 package com.tpago.movil.data.api;
 
 import com.tpago.movil.session.User;
-import com.tpago.movil.util.Placeholder;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
@@ -32,18 +31,18 @@ public interface RetrofitApi {
   Completable enableSessionOpeningMethod(@Body RetrofitApiEnableSessionOpeningBody body);
 
   @POST("signin/fingerprint")
-  Single<Response<Placeholder>> openSession(@Body RetrofitApiOpenSessionBody body);
+  Single<Response<User>> openSession(@Body RetrofitApiOpenSessionBody body);
 
   @DELETE("account/public-key/account")
   Completable disableSessionOpeningMethod();
 
   @PUT("account")
-  Completable updateUserName(@Body RetrofitApiUserNameData body);
+  Completable updateUserName(@Body ApiName body);
 
   @Multipart
   @POST("account/upload/profile-pic")
   Single<User> updateUserPicture(@Part MultipartBody.Part body);
 
   @PUT("beneficiary")
-  Completable updateBeneficiary(@Body RetrofitApiBeneficiaryData body);
+  Completable updateBeneficiary(@Body ApiBeneficiary body);
 }

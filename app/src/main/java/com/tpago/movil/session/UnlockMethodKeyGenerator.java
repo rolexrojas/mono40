@@ -7,11 +7,9 @@ import io.reactivex.Single;
 /**
  * @author hecvasro
  */
-public interface SessionOpeningMethodKeyGenerator {
+public interface UnlockMethodKeyGenerator {
 
-  SessionOpeningMethod method();
+  UnlockMethod method();
 
   Single<PublicKey> generate();
-
-  void rollback() throws Exception;
 }

@@ -10,7 +10,7 @@ import android.view.View;
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.AlertData;
 import com.tpago.movil.app.ui.FragmentReplacer;
-import com.tpago.movil.session.FingerprintSessionOpeningMethodSignatureSupplier;
+import com.tpago.movil.session.FingerprintMethodSignatureSupplier;
 import com.tpago.movil.dep.init.InitActivity;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.util.Result;
@@ -35,7 +35,7 @@ public final class FingerprintUnlockFragment extends BaseUnlockFragment {
 
   @Inject SessionManager sessionManager;
   @Inject FingerprintManagerCompat fingerprintManager;
-  @Inject @Nullable FingerprintSessionOpeningMethodSignatureSupplier.Creator fingerprintSignatureSupplierCreator;
+  @Inject @Nullable FingerprintMethodSignatureSupplier.Creator fingerprintSignatureSupplierCreator;
 
   @Override
   protected int layoutResId() {

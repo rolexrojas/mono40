@@ -10,37 +10,27 @@ import com.tpago.movil.util.ObjectHelper;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.KeyStore;
 import java.security.PublicKey;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.X509EncodedKeySpec;
 
 import io.reactivex.Single;
 
-public final class FingerprintSessionOpeningMethodKeyGenerator
-  implements SessionOpeningMethodKeyGenerator {
+public final class FingerprintMethodKeyGenerator implements UnlockMethodKeyGenerator {
 
-  static FingerprintSessionOpeningMethodKeyGenerator create(
-    SessionOpeningMethodConfigData configData,
-    KeyStore keyStore
-  ) {
-    return new FingerprintSessionOpeningMethodKeyGenerator(configData, keyStore);
+  static FingerprintMethodKeyGenerator create(UnlockMethodConfigData configData) {
+    return new FingerprintMethodKeyGenerator(configData);
   }
 
-  private final SessionOpeningMethodConfigData configData;
-  private final KeyStore keyStore;
+  private final UnlockMethodConfigData configData;
 
-  private FingerprintSessionOpeningMethodKeyGenerator(
-    SessionOpeningMethodConfigData configData,
-    KeyStore keyStore
-  ) {
-    this.configData = ObjectHelper.checkNotNull(configData, "configData");
-    this.keyStore = ObjectHelper.checkNotNull(keyStore, "keyStore");
+  private FingerprintMethodKeyGenerator(UnlockMethodConfigData configData) {
+    this.configData = ObjectHelper.checkNotNull(configData, "unlockMethodConfigData");
   }
 
   @Override
-  public SessionOpeningMethod method() {
-    return SessionOpeningMethod.FINGERPRINT;
+  public UnlockMethod method() {
+    return UnlockMethod.FINGERPRINT;
   }
 
   @TargetApi(Build.VERSION_CODES.M)
@@ -76,12 +66,5 @@ public final class FingerprintSessionOpeningMethodKeyGenerator
     return Single.defer(() -> Single.just(this.generateKeyPair()))
       .map(KeyPair::getPublic)
       .map(this::generatePublicKey);
-  }
-
-  @Override
-  public void rollback() throws Exception {
-    if (this.keyStore.containsAlias(this.configData.keyAlias())) {
-      this.keyStore.deleteEntry(this.configData.keyAlias());
-    }
   }
 }

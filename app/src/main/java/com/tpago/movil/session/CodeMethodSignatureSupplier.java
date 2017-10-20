@@ -15,16 +15,16 @@ import io.reactivex.Single;
 /**
  * @author hecvasro
  */
-public final class CodeSessionOpeningMethodSignatureSupplier
-  implements SessionOpeningMethodSignatureSupplier {
+public final class CodeMethodSignatureSupplier
+  implements UnlockMethodSignatureSupplier {
 
-  private final CodeSessionOpeningMethodStore codeStore;
-  private final SessionOpeningMethodConfigData configData;
+  private final CodeStore codeStore;
+  private final UnlockMethodConfigData configData;
   private final KeyStore keyStore;
 
   private final Code code;
 
-  private CodeSessionOpeningMethodSignatureSupplier(Creator creator, Code code) {
+  private CodeMethodSignatureSupplier(Creator creator, Code code) {
     this.codeStore = creator.codeStore;
     this.configData = creator.configData;
     this.keyStore = creator.keyStore;
@@ -69,9 +69,9 @@ public final class CodeSessionOpeningMethodSignatureSupplier
       return new Builder();
     }
 
-    private final SessionOpeningMethodConfigData configData;
+    private final UnlockMethodConfigData configData;
     private final KeyStore keyStore;
-    private final CodeSessionOpeningMethodStore codeStore;
+    private final CodeStore codeStore;
 
     private Creator(Builder builder) {
       this.codeStore = builder.codeStore;
@@ -79,26 +79,26 @@ public final class CodeSessionOpeningMethodSignatureSupplier
       this.keyStore = builder.keyStore;
     }
 
-    public final CodeSessionOpeningMethodSignatureSupplier create(Code code) {
-      return new CodeSessionOpeningMethodSignatureSupplier(this, code);
+    public final CodeMethodSignatureSupplier create(Code code) {
+      return new CodeMethodSignatureSupplier(this, code);
     }
 
     static final class Builder {
 
-      private CodeSessionOpeningMethodStore codeStore;
-      private SessionOpeningMethodConfigData configData;
+      private CodeStore codeStore;
+      private UnlockMethodConfigData configData;
       private KeyStore keyStore;
 
       private Builder() {
       }
 
-      final Builder codeStore(CodeSessionOpeningMethodStore codeStore) {
+      final Builder codeStore(CodeStore codeStore) {
         this.codeStore = ObjectHelper.checkNotNull(codeStore, "codeStore");
         return this;
       }
 
-      final Builder configData(SessionOpeningMethodConfigData configData) {
-        this.configData = ObjectHelper.checkNotNull(configData, "configData");
+      final Builder configData(UnlockMethodConfigData configData) {
+        this.configData = ObjectHelper.checkNotNull(configData, "unlockMethodConfigData");
         return this;
       }
 
@@ -110,7 +110,7 @@ public final class CodeSessionOpeningMethodSignatureSupplier
       final Creator build() {
         BuilderChecker.create()
           .addPropertyNameIfMissing("codeStore", ObjectHelper.isNull(this.codeStore))
-          .addPropertyNameIfMissing("configData", ObjectHelper.isNull(this.configData))
+          .addPropertyNameIfMissing("unlockMethodConfigData", ObjectHelper.isNull(this.configData))
           .addPropertyNameIfMissing("keyStore", ObjectHelper.isNull(this.keyStore))
           .checkNoMissingProperties();
         return new Creator(this);

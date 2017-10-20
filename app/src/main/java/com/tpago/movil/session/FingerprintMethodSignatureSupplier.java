@@ -22,18 +22,14 @@ import io.reactivex.Single;
 /**
  * @author hecvasro
  */
-public final class FingerprintSessionOpeningMethodSignatureSupplier
-  implements SessionOpeningMethodSignatureSupplier {
+public final class FingerprintMethodSignatureSupplier implements UnlockMethodSignatureSupplier {
 
-  private final SessionOpeningMethodConfigData configData;
+  private final UnlockMethodConfigData configData;
   private final KeyStore keyStore;
   private final FingerprintManagerCompat fingerprintManager;
   private final CancellationSignal cancellationSignal;
 
-  private FingerprintSessionOpeningMethodSignatureSupplier(
-    Creator creator,
-    CancellationSignal cancellationSignal
-  ) {
+  private FingerprintMethodSignatureSupplier(Creator creator, CancellationSignal cancellationSignal) {
     this.configData = creator.configData;
     this.keyStore = creator.keyStore;
     this.fingerprintManager = creator.fingerprintManager;
@@ -60,14 +56,10 @@ public final class FingerprintSessionOpeningMethodSignatureSupplier
   private Single<Result<Signature>> authenticateSignature(Result<Signature> result)
     throws Exception {
     if (result.isSuccessful()) {
-      final FingerprintManagerCompat.CryptoObject cryptoObject
-        = new FingerprintManagerCompat.CryptoObject(result.successData());
+      final FingerprintManagerCompat.CryptoObject cryptoObject = new FingerprintManagerCompat
+        .CryptoObject(result.successData());
       return Single.fromPublisher(
-        SignaturePublisher.create(
-          this.fingerprintManager,
-          cryptoObject,
-          this.cancellationSignal
-        )
+        SignaturePublisher.create(this.fingerprintManager, cryptoObject, this.cancellationSignal)
       );
     } else {
       return Single.just(Result.create(result.failureData()));
@@ -164,7 +156,7 @@ public final class FingerprintSessionOpeningMethodSignatureSupplier
       return new Builder();
     }
 
-    private final SessionOpeningMethodConfigData configData;
+    private final UnlockMethodConfigData configData;
     private final KeyStore keyStore;
     private final FingerprintManagerCompat fingerprintManager;
 
@@ -174,21 +166,21 @@ public final class FingerprintSessionOpeningMethodSignatureSupplier
       this.fingerprintManager = builder.fingerprintManager;
     }
 
-    public final FingerprintSessionOpeningMethodSignatureSupplier create(CancellationSignal cancellationSignal) {
-      return new FingerprintSessionOpeningMethodSignatureSupplier(this, cancellationSignal);
+    public final FingerprintMethodSignatureSupplier create(CancellationSignal cancellationSignal) {
+      return new FingerprintMethodSignatureSupplier(this, cancellationSignal);
     }
 
     static final class Builder {
 
-      private SessionOpeningMethodConfigData configData;
+      private UnlockMethodConfigData configData;
       private KeyStore keyStore;
       private FingerprintManagerCompat fingerprintManager;
 
       private Builder() {
       }
 
-      final Builder configData(SessionOpeningMethodConfigData configData) {
-        this.configData = ObjectHelper.checkNotNull(configData, "configData");
+      final Builder configData(UnlockMethodConfigData configData) {
+        this.configData = ObjectHelper.checkNotNull(configData, "unlockMethodConfigData");
         return this;
       }
 
@@ -205,14 +197,10 @@ public final class FingerprintSessionOpeningMethodSignatureSupplier
 
       final Creator build() {
         BuilderChecker.create()
-          .addPropertyNameIfMissing("configData", ObjectHelper.isNull(this.configData))
+          .addPropertyNameIfMissing("unlockMethodConfigData", ObjectHelper.isNull(this.configData))
           .addPropertyNameIfMissing("keyStore", ObjectHelper.isNull(this.keyStore))
-          .addPropertyNameIfMissing(
-            "fingerprintManager",
-            ObjectHelper.isNull(this.fingerprintManager)
-          )
+          .addPropertyNameIfMissing("fingerprintManager", ObjectHelper.isNull(this.fingerprintManager))
           .checkNoMissingProperties();
-        ;
         return new Creator(this);
       }
     }

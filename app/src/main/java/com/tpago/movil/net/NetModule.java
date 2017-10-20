@@ -40,7 +40,7 @@ public final class NetModule {
   @Provides
   @Singleton
   Cache provideCache(Context context) {
-    return new Cache(FileHelper.createInternalCacheDirectory(context), Integer.MAX_VALUE);
+    return new Cache(FileHelper.createIntCacheDir(context), Integer.MAX_VALUE);
   }
 
   @Provides

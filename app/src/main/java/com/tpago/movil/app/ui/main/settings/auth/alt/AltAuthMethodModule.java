@@ -7,8 +7,8 @@ import com.tpago.movil.app.ui.FragmentScope;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.app.ui.main.code.CodeCreator;
 import com.tpago.movil.data.StringMapper;
-import com.tpago.movil.session.CodeSessionOpeningMethodKeyGenerator;
-import com.tpago.movil.session.FingerprintSessionOpeningMethodKeyGenerator;
+import com.tpago.movil.session.CodeMethodKeyGenerator;
+import com.tpago.movil.session.FingerprintMethodKeyGenerator;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.util.ObjectHelper;
 
@@ -35,8 +35,8 @@ public final class AltAuthMethodModule {
   @FragmentScope
   AltAuthMethodPresenter presenter(
     SessionManager sessionManager,
-    CodeSessionOpeningMethodKeyGenerator.Creator codeAltAuthMethodKeyGeneratorCreator,
-    @Nullable FingerprintSessionOpeningMethodKeyGenerator fingerprintAltAuthMethodKeyGenerator,
+    CodeMethodKeyGenerator.Creator codeAltAuthMethodKeyGeneratorCreator,
+    @Nullable FingerprintMethodKeyGenerator fingerprintAltAuthMethodKeyGenerator,
     StringMapper stringMapper,
     AlertManager alertManager,
     TakeoverLoader takeoverLoader,

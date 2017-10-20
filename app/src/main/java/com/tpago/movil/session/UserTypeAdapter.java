@@ -8,6 +8,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.tpago.movil.Email;
+import com.tpago.movil.Name;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.payment.Carrier;
 import com.tpago.movil.util.ObjectHelper;
@@ -20,11 +21,11 @@ import java.io.IOException;
  */
 public final class UserTypeAdapter extends TypeAdapter<User> {
 
-  private static final String PROPERTY_ID = "id";
   private static final String PROPERTY_PHONE_NUMBER = "msisdn";
   private static final String PROPERTY_EMAIL = "email";
   private static final String PROPERTY_FIRST_NAME = "name";
   private static final String PROPERTY_LAST_NAME = "last-name";
+  private static final String PROPERTY_ID = "id";
   private static final String PROPERTY_PICTURE = "profilePicUrl";
   private static final String PROPERTY_CARRIER = "carrier";
 
@@ -60,13 +61,11 @@ public final class UserTypeAdapter extends TypeAdapter<User> {
       reader.nextNull();
     } else {
       final User.Builder builder = User.builder();
+      final Name.Builder nameBuilder = Name.builder();
       reader.beginObject();
       while (reader.hasNext()) {
         final String propertyName = reader.nextName();
         switch (propertyName) {
-          case PROPERTY_ID:
-            builder.id(this.integerTypeAdapter.read(reader));
-            break;
           case PROPERTY_PHONE_NUMBER:
             builder.phoneNumber(this.phoneNumberTypeAdapter.read(reader));
             break;
@@ -78,14 +77,17 @@ public final class UserTypeAdapter extends TypeAdapter<User> {
             if (StringHelper.isNullOrEmpty(firstName)) {
               firstName = PROPERTY_DEFAULT_FIRST_NAME;
             }
-            builder.firstName(firstName);
+            nameBuilder.first(firstName);
             break;
           case PROPERTY_LAST_NAME:
             String lastName = this.stringTypeAdapter.read(reader);
             if (StringHelper.isNullOrEmpty(lastName)) {
               lastName = PROPERTY_DEFAULT_LAST_NAME;
             }
-            builder.lastName(lastName);
+            nameBuilder.last(lastName);
+            break;
+          case PROPERTY_ID:
+            builder.id(this.integerTypeAdapter.read(reader));
             break;
           case PROPERTY_PICTURE:
             builder.picture(this.uriTypeAdapter.read(reader));
@@ -99,7 +101,9 @@ public final class UserTypeAdapter extends TypeAdapter<User> {
         }
       }
       reader.endObject();
-      user = builder.build();
+      user = builder
+        .name(nameBuilder.build())
+        .build();
     }
     return user;
   }
@@ -110,8 +114,6 @@ public final class UserTypeAdapter extends TypeAdapter<User> {
       writer.nullValue();
     } else {
       writer.beginObject();
-      writer.name(PROPERTY_ID);
-      this.integerTypeAdapter.write(writer, user.id());
       writer.name(PROPERTY_PHONE_NUMBER);
       this.phoneNumberTypeAdapter.write(writer, user.phoneNumber());
       writer.name(PROPERTY_EMAIL);
@@ -120,6 +122,8 @@ public final class UserTypeAdapter extends TypeAdapter<User> {
       this.stringTypeAdapter.write(writer, user.firstName());
       writer.name(PROPERTY_LAST_NAME);
       this.stringTypeAdapter.write(writer, user.lastName());
+      writer.name(PROPERTY_ID);
+      this.integerTypeAdapter.write(writer, user.id());
       writer.name(PROPERTY_PICTURE);
       this.uriTypeAdapter.write(writer, user.picture());
       writer.name(PROPERTY_CARRIER);

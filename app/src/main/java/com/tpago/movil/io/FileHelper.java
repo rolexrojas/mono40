@@ -23,61 +23,55 @@ import timber.log.Timber;
  */
 public final class FileHelper {
 
-  private static final String DIRECTORY_NAME_PICTURES = Environment.DIRECTORY_PICTURES;
-  private static final String FILE_NAME_FORMAT_PICTURE = "%1$s.png";
+  private static final String DIR_NAME_PICS = Environment.DIRECTORY_PICTURES;
+
+  private static final String FILE_NAME_FORMAT_PIC = "%1$s.png";
 
   private static final String PROVIDER_NAME_FILE = BuildConfig.APPLICATION_ID + ".provider";
 
-  public static File createInternalCacheDirectory(Context context) {
+  public static File createIntCacheDir(Context context) {
     return ObjectHelper.checkNotNull(context, "context")
       .getCacheDir();
   }
 
-  private static String generateRandomFileNamePrefix() {
+  private static String createRandomFileName() {
     return UUID.randomUUID()
       .toString();
   }
 
-  private static String generateRandomPictureFileName() {
-    return String.format(FILE_NAME_FORMAT_PICTURE, generateRandomFileNamePrefix());
+  private static String createRandPicFileName() {
+    return String.format(FILE_NAME_FORMAT_PIC, createRandomFileName());
   }
 
-  public static File createExternalPictureFile(Context context) throws IllegalStateException {
-    ObjectHelper.checkNotNull(context, "context");
-
-    final File directory = context.getExternalFilesDir(DIRECTORY_NAME_PICTURES);
-    if (ObjectHelper.isNull(directory)) {
-      throw new IllegalStateException(
-        String.format(
-          "ObjectHelper.isNull(context.getExternalFilesDir(\"%1$s\"))",
-          DIRECTORY_NAME_PICTURES
-        )
-      );
-    }
+  private static File createDir(File directory) {
+    ObjectHelper.checkNotNull(directory, "directory");
     if (!directory.exists()) {
-      directory.mkdirs();
-    }
-    return new File(directory, generateRandomPictureFileName());
-  }
-
-  private static File createInternalPictureDirectory(Context context) {
-    ObjectHelper.checkNotNull(context, "context");
-    final File directory = new File(context.getFilesDir(), DIRECTORY_NAME_PICTURES);
-    if (!directory.exists()) {
-      Timber.d("\"%1$s\".mkdirs()=%2$s", directory.getAbsolutePath(), directory.mkdirs());
+      Timber.d("createDir(\"%1$s\")=%2$s", directory.getAbsolutePath(), directory.mkdirs());
     }
     return directory;
   }
 
-  public static File createInternalPictureFile(Context context) {
-    return new File(createInternalPictureDirectory(context), generateRandomPictureFileName());
+  public static File createExtPicDir(Context context) {
+    return createDir(context.getExternalFilesDir(DIR_NAME_PICS));
   }
 
-  public static File createInternalPictureFileCopy(Context context, File input) throws IOException {
+  public static File createExtPicFile(Context context) {
+    return new File(createExtPicDir(context), createRandPicFileName());
+  }
+
+  public static File createIntPicDir(Context context) {
+    return createDir(new File(context.getFilesDir(), DIR_NAME_PICS));
+  }
+
+  public static File createIntPicFile(Context context) {
+    return new File(createIntPicDir(context), createRandPicFileName());
+  }
+
+  public static File createIntPicFileCopy(Context context, File input) throws IOException {
     ObjectHelper.checkNotNull(context, "context");
     ObjectHelper.checkNotNull(input, "input");
     final InputStream inputStream = new FileInputStream(input);
-    final File output = createInternalPictureFile(context);
+    final File output = createIntPicFile(context);
     final OutputStream outputStream = new FileOutputStream(output);
     final byte[] buffer = new byte[1024]; // TODO: Learn why is 1024 used.
     int length;
@@ -89,16 +83,9 @@ public final class FileHelper {
     return output;
   }
 
-  public static Uri getFileUri(File file) {
-    return Uri.fromFile(ObjectHelper.checkNotNull(file, "file"));
-  }
-
   public static Uri getFileUri(Context context, File file) {
-    return FileProvider.getUriForFile(
-      ObjectHelper.checkNotNull(context, "context"),
-      PROVIDER_NAME_FILE,
-      ObjectHelper.checkNotNull(file, "file")
-    );
+    return FileProvider
+      .getUriForFile(context, PROVIDER_NAME_FILE, file);
   }
 
   public static void deleteFile(File file) {
@@ -106,6 +93,21 @@ public final class FileHelper {
     if (file.exists()) {
       Timber.d("deleteFile(\"%1$s\")=%2$s", file.getAbsoluteFile(), file.delete());
     }
+  }
+
+  public static void deleteDir(File dir) {
+    ObjectHelper.checkNotNull(dir, "dir");
+    if (!dir.isDirectory()) {
+      throw new IllegalArgumentException("!directory.isDirectory()");
+    }
+    for (File file : dir.listFiles()) {
+      if (file.isDirectory()) {
+        deleteDir(file);
+      } else {
+        deleteFile(file);
+      }
+    }
+    deleteFile(dir);
   }
 
   private FileHelper() {

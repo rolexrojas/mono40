@@ -10,7 +10,6 @@ import com.tpago.movil.util.ObjectHelper;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.KeyStore;
 import java.security.PublicKey;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -20,28 +19,25 @@ import io.reactivex.Single;
 /**
  * @author hecvasro
  */
-public final class CodeSessionOpeningMethodKeyGenerator
-  implements SessionOpeningMethodKeyGenerator {
+public final class CodeMethodKeyGenerator implements UnlockMethodKeyGenerator {
 
-  private final CodeSessionOpeningMethodStore codeStore;
-  private final SessionOpeningMethodConfigData configData;
+  private final CodeStore codeStore;
+  private final UnlockMethodConfigData configData;
   private final Context context;
-  private final KeyStore keyStore;
 
   private final Code code;
 
-  private CodeSessionOpeningMethodKeyGenerator(Creator creator, Code code) {
+  private CodeMethodKeyGenerator(Creator creator, Code code) {
     this.codeStore = creator.codeStore;
     this.configData = creator.configData;
     this.context = creator.context;
-    this.keyStore = creator.keyStore;
 
     this.code = ObjectHelper.checkNotNull(code, "code");
   }
 
   @Override
-  public SessionOpeningMethod method() {
-    return SessionOpeningMethod.CODE;
+  public UnlockMethod method() {
+    return UnlockMethod.CODE;
   }
 
   private KeyPair generateKeyPair() throws Exception {
@@ -81,52 +77,41 @@ public final class CodeSessionOpeningMethodKeyGenerator
       .doOnSuccess((publicKey) -> this.codeStore.set(publicKey, this.code));
   }
 
-  @Override
-  public void rollback() throws Exception {
-    this.codeStore.clear();
-    if (this.keyStore.containsAlias(this.configData.keyAlias())) {
-      this.keyStore.deleteEntry(this.configData.keyAlias());
-    }
-  }
-
   public static final class Creator {
 
     static Builder builder() {
       return new Builder();
     }
 
-    private final CodeSessionOpeningMethodStore codeStore;
-    private final SessionOpeningMethodConfigData configData;
+    private final CodeStore codeStore;
+    private final UnlockMethodConfigData configData;
     private final Context context;
-    private final KeyStore keyStore;
 
     private Creator(Builder builder) {
       this.codeStore = builder.codeStore;
       this.configData = builder.configData;
       this.context = builder.context;
-      this.keyStore = builder.keyStore;
     }
 
-    public final CodeSessionOpeningMethodKeyGenerator create(Code code) {
-      return new CodeSessionOpeningMethodKeyGenerator(this, code);
+    public final CodeMethodKeyGenerator create(Code code) {
+      return new CodeMethodKeyGenerator(this, code);
     }
 
     static final class Builder {
 
-      private CodeSessionOpeningMethodStore codeStore;
-      private SessionOpeningMethodConfigData configData;
+      private CodeStore codeStore;
+      private UnlockMethodConfigData configData;
       private Context context;
-      private KeyStore keyStore;
 
       private Builder() {
       }
 
-      final Builder codeStore(CodeSessionOpeningMethodStore codeStore) {
+      final Builder codeStore(CodeStore codeStore) {
         this.codeStore = ObjectHelper.checkNotNull(codeStore, "codeStore");
         return this;
       }
 
-      final Builder configData(SessionOpeningMethodConfigData configData) {
+      final Builder configData(UnlockMethodConfigData configData) {
         this.configData = ObjectHelper.checkNotNull(configData, "configData");
         return this;
       }
@@ -136,17 +121,11 @@ public final class CodeSessionOpeningMethodKeyGenerator
         return this;
       }
 
-      final Builder keyStore(KeyStore keyStore) {
-        this.keyStore = ObjectHelper.checkNotNull(keyStore, "keyStore");
-        return this;
-      }
-
       final Creator build() {
         BuilderChecker.create()
           .addPropertyNameIfMissing("codeStore", ObjectHelper.isNull(this.codeStore))
           .addPropertyNameIfMissing("configData", ObjectHelper.isNull(this.configData))
           .addPropertyNameIfMissing("context", ObjectHelper.isNull(this.context))
-          .addPropertyNameIfMissing("keyStore", ObjectHelper.isNull(this.keyStore))
           .checkNoMissingProperties();
         return new Creator(this);
       }

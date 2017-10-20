@@ -5,9 +5,10 @@ import android.support.annotation.IntDef;
 
 import com.tpago.movil.Code;
 import com.tpago.movil.Email;
+import com.tpago.movil.Name;
 import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
-import com.tpago.movil.session.SessionOpeningSignatureData;
+import com.tpago.movil.session.UnlockMethodSignatureData;
 import com.tpago.movil.payment.Carrier;
 import com.tpago.movil.session.User;
 import com.tpago.movil.util.Placeholder;
@@ -44,20 +45,20 @@ public interface Api {
     boolean shouldDeactivatePreviousDevice
   );
 
-  Completable updateUserName(User user, String firstName, String lastName);
+  Completable updateUserName(User user, Name name);
 
   Single<Uri> updateUserPicture(User user, File picture);
 
   Completable updateUserCarrier(User user, Carrier carrier);
 
-  Completable enableSessionOpeningMethod(PublicKey key);
+  Completable enableUnlockMethod(PublicKey key);
 
-  Single<Result<Placeholder>> openSession(
-    SessionOpeningSignatureData signatureData,
+  Single<Result<User>> openSession(
+    UnlockMethodSignatureData signatureData,
     byte[] signedData
   );
 
-  Completable disableSessionOpeningMethod();
+  Completable disableUnlockMethod();
 
   @IntDef({
     FailureCode.ALREADY_ASSOCIATED_DEVICE,

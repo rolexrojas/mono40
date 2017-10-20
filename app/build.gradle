@@ -15,7 +15,7 @@ android {
   defaultConfig {
     applicationId 'com.tpago.movil'
 
-    def (major, minor, patch) = [2, 2, 22]
+    def (major, minor, patch) = [2, 2, 23]
     versionName "${major}.${minor}.${patch}"
     versionCode ((major * 10_000_000) + (minor * 100_000) + (patch * 1_000))
 
@@ -34,8 +34,6 @@ android {
         ]
       }
     }
-
-    buildConfigField 'String', 'AUTH_METHOD_CODE_SUBJECT', "\"CN=${appName},OU=IT,O=GCS Systems,C=DO\""
   }
 
   flavorDimensions 'deviceType', 'environment'

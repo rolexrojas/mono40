@@ -1,5 +1,6 @@
 package com.tpago.movil.d.data.pos;
 
+import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.pos.PosCode;
 import com.tpago.movil.d.domain.pos.PosResult;
@@ -59,11 +60,11 @@ final class MockPosBridge implements PosBridge {
   }
 
   @Override
-  public Single<PosResult> unregister(String phoneNumber) {
+  public Single<PosResult> unregister(PhoneNumber phoneNumber) {
     synchronized (this) {
       this.identifierSet.clear();
     }
-    return Single.just(new PosResult(PosCode.OK, phoneNumber))
+    return Single.just(new PosResult(PosCode.OK, phoneNumber.value()))
       .delay(1L, TimeUnit.SECONDS);
   }
 }

@@ -10,7 +10,7 @@ import com.tpago.movil.app.ui.BaseFragment;
 import com.tpago.movil.app.ui.FragmentReplacer;
 import com.tpago.movil.dep.init.InitActivity;
 import com.tpago.movil.session.SessionManager;
-import com.tpago.movil.session.SessionOpeningMethod;
+import com.tpago.movil.session.UnlockMethod;
 
 import javax.inject.Inject;
 
@@ -49,9 +49,9 @@ public final class UnlockFragment extends BaseFragment {
       .inject(this);
 
     final Fragment fragment;
-    if (this.sessionManager.isSessionOpeningMethodEnabled(SessionOpeningMethod.CODE)) {
+    if (this.sessionManager.isUnlockMethodEnabled(UnlockMethod.CODE)) {
       fragment = CodeUnlockFragment.create();
-    } else if (this.sessionManager.isSessionOpeningMethodEnabled(SessionOpeningMethod.FINGERPRINT)) {
+    } else if (this.sessionManager.isUnlockMethodEnabled(UnlockMethod.FINGERPRINT)) {
       fragment = FingerprintUnlockFragment.create();
     } else {
       fragment = PasswordUnlockFragment.create();
