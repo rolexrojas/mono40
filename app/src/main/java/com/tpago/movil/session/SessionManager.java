@@ -356,11 +356,9 @@ public final class SessionManager {
     this.checkUserIsSet();
     this.checkSessionIsOpen();
 
+    // TODO: Suspend jobs instead of cancelling them.
     Completable completable = Completable
-      .fromAction(() -> this.jobManager.cancelJobs(
-        TagConstraint.ANY,
-        SessionJob.TAG
-      )); // TODO: Suspend jobs instead of cancelling them.
+      .fromAction(() -> this.jobManager.cancelJobs(TagConstraint.ANY, SessionJob.TAG));
     for (Action action : this.closeActions) {
       completable = completable.concatWith(Completable.fromAction(action));
     }
