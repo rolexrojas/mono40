@@ -84,6 +84,7 @@ public final class FingerprintUnlockFragment extends BaseUnlockFragment {
         if (result.isSuccessful()) {
           return this.sessionManager
             .openSession(result.successData(), this.deviceIdSupplier.get())
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe((disposable) -> takeoverLoader.show())
             .doFinally(takeoverLoader::hide);

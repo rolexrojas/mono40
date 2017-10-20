@@ -252,7 +252,7 @@ public final class SessionManager {
 
   public final Single<Result<Placeholder>> openSession(Signature signature, String deviceId) {
     this.checkUserIsSet();
-    this.checkSessionOpeningMethodIsSet();
+    this.checkSessionOpeningMethodIsEnabled();
     this.checkSessionIsNotOpen();
 
     ObjectHelper.checkNotNull(signature, "signature");
@@ -297,15 +297,9 @@ public final class SessionManager {
     return this.isSessionOpeningMethodEnabled() && method.equals(this.getSessionOpeningMethod());
   }
 
-  private void checkSessionOpeningMethodIsSet() {
+  private void checkSessionOpeningMethodIsEnabled() {
     if (!this.isSessionOpeningMethodEnabled()) {
       throw new IllegalStateException("!this.isSessionOpeningMethodEnabled()");
-    }
-  }
-
-  private void checkSessionOpeningMethodIsNotSet() {
-    if (this.isSessionOpeningMethodEnabled()) {
-      throw new IllegalStateException("this.isSessionOpeningMethodEnabled()");
     }
   }
 
@@ -316,20 +310,24 @@ public final class SessionManager {
 
   public final Completable enableSessionOpeningMethod(SessionOpeningMethodKeyGenerator generator) {
     this.checkUserIsSet();
-    this.checkSessionOpeningMethodIsNotSet();
     this.checkSessionIsOpen();
 
     ObjectHelper.checkNotNull(generator, "generator");
 
-    return generator.generate()
+    Completable completable = generator.generate()
       .flatMapCompletable(this.api::enableSessionOpeningMethod)
       .doOnComplete(() -> this.enableSessionOpeningMethod(generator.method()))
       .doOnError((throwable) -> generator.rollback());
+    if (this.isSessionOpeningMethodEnabled()) {
+      completable = this.disableSessionOpeningMethod()
+        .concatWith(completable);
+    }
+    return completable;
   }
 
   public final SessionOpeningMethod getSessionOpeningMethod() {
     this.checkUserIsSet();
-    this.checkSessionOpeningMethodIsSet();
+    this.checkSessionOpeningMethodIsEnabled();
 
     return this.sessionOpeningMethodReference.get();
   }
@@ -341,7 +339,7 @@ public final class SessionManager {
 
   public final Completable disableSessionOpeningMethod() {
     this.checkUserIsSet();
-    this.checkSessionOpeningMethodIsSet();
+    this.checkSessionOpeningMethodIsEnabled();
     this.checkSessionIsOpen();
 
     return this.api.disableSessionOpeningMethod()
@@ -359,7 +357,10 @@ public final class SessionManager {
     this.checkSessionIsOpen();
 
     Completable completable = Completable
-      .fromAction(() -> this.jobManager.cancelJobs(TagConstraint.ANY, SessionJob.TAG)); // TODO: Suspend jobs instead of cancelling them.
+      .fromAction(() -> this.jobManager.cancelJobs(
+        TagConstraint.ANY,
+        SessionJob.TAG
+      )); // TODO: Suspend jobs instead of cancelling them.
     for (Action action : this.closeActions) {
       completable = completable.concatWith(Completable.fromAction(action));
     }
