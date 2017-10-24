@@ -2,8 +2,8 @@ package com.tpago.movil.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
-import static java.lang.Character.forDigit;
 import static java.lang.String.format;
 
 /**
@@ -12,6 +12,13 @@ import static java.lang.String.format;
  * @author hecvasro
  */
 public final class DigitHelper {
+
+  private static final Pattern PATTERN_DIGITS = Pattern.compile("\\A\\d+\\z");
+
+  public static boolean containsOnlyDigits(String s) {
+    return PATTERN_DIGITS.matcher(StringHelper.emptyIfNull(s))
+      .matches();
+  }
 
   /**
    * Removes all non-{@link Digit digit} {@link Character characters} from the given {@link String
@@ -87,15 +94,6 @@ public final class DigitHelper {
       digitList.add(toDigit(digitString.charAt(i)));
     }
     return digitList;
-  }
-
-  /**
-   * Transforms the given {@link Digit digit} into its {@link Character character} representation.
-   *
-   * @return {@link Character} representation of the given {@link Digit digit}.
-   */
-  private static char toChar(@Digit int digit) {
-    return forDigit(digit, 10);
   }
 
   private DigitHelper() {

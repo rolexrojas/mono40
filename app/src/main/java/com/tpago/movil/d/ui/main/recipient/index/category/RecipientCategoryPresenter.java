@@ -36,6 +36,7 @@ import com.tpago.movil.d.domain.FailureData;
 import com.tpago.movil.d.domain.Result;
 import com.tpago.movil.dep.net.NetworkService;
 import com.tpago.movil.dep.reactivex.Disposables;
+import com.tpago.movil.util.DigitHelper;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.util.ArrayList;
@@ -168,17 +169,19 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
           if (!deleting && (query != null && !query.isEmpty())) {
             Observable<Object> actions = Observable.empty();
 
-            if (category == TRANSFER) {
-              if (PhoneNumber.isValid(query)) {
+            if (DigitHelper.containsOnlyDigits(query)) {
+              if (category == TRANSFER) {
+                if (PhoneNumber.isValid(query)) {
+                  actions = phoneNumberActions(query);
+                } else if (AccountAction.isProductNumber(query)) {
+                  actions = Observable.just(AccountAction.create(TRANSACTION_WITH_ACCOUNT, query))
+                    .cast(Object.class)
+                    .concatWith(Observable.just(AccountAction.create(ADD_ACCOUNT, query)))
+                    .cast(Object.class);
+                }
+              } else if (category == RECHARGE && PhoneNumber.isValid(query)) {
                 actions = phoneNumberActions(query);
-              } else if (AccountAction.isProductNumber(query)) {
-                actions = Observable.just(AccountAction.create(TRANSACTION_WITH_ACCOUNT, query))
-                  .cast(Object.class)
-                  .concatWith(Observable.just(AccountAction.create(ADD_ACCOUNT, query)))
-                  .cast(Object.class);
               }
-            } else if (category == RECHARGE && PhoneNumber.isValid(query)) {
-              actions = phoneNumberActions(query);
             }
 
             source = source.switchIfEmpty(actions);
