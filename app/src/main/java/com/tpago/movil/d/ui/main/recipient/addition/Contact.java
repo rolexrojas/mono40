@@ -25,6 +25,7 @@ public abstract class Contact implements Matchable {
 
   public abstract String name();
 
+  @Nullable
   public abstract Uri pictureUri();
 
   @Memoized
@@ -52,7 +53,7 @@ public abstract class Contact implements Matchable {
 
     public abstract Builder name(String name);
 
-    public abstract Builder pictureUri(Uri pictureUri);
+    public abstract Builder pictureUri(@Nullable Uri pictureUri);
 
     public abstract Contact build();
   }

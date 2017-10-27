@@ -4,8 +4,6 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.tpago.movil.dep.content.SharedPreferencesCreator;
-import com.tpago.movil.d.domain.api.DepApiBridge;
-import com.tpago.movil.d.domain.api.ApiUtils;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.util.ArrayList;
@@ -13,8 +11,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import rx.Observable;
 
 /**
  * @author hecvasro
@@ -29,20 +25,13 @@ public final class RecipientManager {
 
   private final Set<String> indexSet;
 
-  private final DepApiBridge apiBridge;
-
   private List<Recipient> recipientList;
 
-  public RecipientManager(
-    SharedPreferencesCreator sharedPreferencesCreator,
-    Gson gson,
-    DepApiBridge apiBridge
-  ) {
+  public RecipientManager(SharedPreferencesCreator sharedPreferencesCreator, Gson gson) {
     this.sharedPreferences = sharedPreferencesCreator
       .create(RecipientManager.class.getCanonicalName());
     this.gson = gson;
     this.indexSet = this.sharedPreferences.getStringSet(KEY_INDEX_SET, new HashSet<>());
-    this.apiBridge = apiBridge;
   }
 
   @Deprecated
@@ -102,12 +91,6 @@ public final class RecipientManager {
   @Deprecated
   public final boolean checkIfExists(Recipient recipient) {
     return recipientList.contains(recipient);
-  }
-
-  @Deprecated
-  public final Observable<Boolean> checkIfAffiliated(final String phoneNumber) {
-    return apiBridge.checkIfAffiliated(phoneNumber)
-      .compose(ApiUtils.<Boolean>handleApiResult(true));
   }
 
   @Deprecated

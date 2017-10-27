@@ -74,10 +74,7 @@ public final class DepAppModule {
 
   @Provides
   @Singleton
-  RecipientManager provideRecipientManager(
-    SharedPreferencesCreator sharedPreferencesCreator,
-    Gson gson,
-    DepApiBridge apiBridge) {
-    return new RecipientManager(sharedPreferencesCreator, gson, apiBridge);
+  RecipientManager provideRecipientManager(SharedPreferencesCreator sharedPreferencesCreator, Gson gson) {
+    return new RecipientManager(sharedPreferencesCreator, gson);
   }
 }

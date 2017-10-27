@@ -17,6 +17,7 @@ import com.tpago.movil.d.ui.main.recipient.addition.RecipientCandidateListFragme
  */
 public class ContactListFragment extends RecipientCandidateListFragment<ContactListPresenter>
   implements ContactListScreen {
+
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

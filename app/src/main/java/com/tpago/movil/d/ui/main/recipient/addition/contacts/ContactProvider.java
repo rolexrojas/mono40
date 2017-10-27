@@ -17,12 +17,9 @@ import java.util.List;
 
 import rx.Observable;
 import rx.functions.Func0;
-import rx.functions.Func1;
 import rx.functions.Func2;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 final class ContactProvider {
@@ -43,24 +40,10 @@ final class ContactProvider {
 
   private List<Contact> contactList;
 
-  /**
-   * TODO
-   *
-   * @param contentResolver
-   *   TODO
-   */
   ContactProvider(@NonNull ContentResolver contentResolver) {
     this.contentResolver = contentResolver;
   }
 
-  /**
-   * TODO
-   *
-   * @param query
-   *   TODO
-   *
-   * @return TODO
-   */
   @NonNull
   Observable<List<Contact>> getAll(@Nullable final String query) {
     return Observable.defer(new Func0<Observable<List<Contact>>>() {
@@ -68,7 +51,11 @@ final class ContactProvider {
       public Observable<List<Contact>> call() {
         if (ObjectHelper.isNull(contactList)) {
           contactList = new ArrayList<>();
-          final Cursor cursor = contentResolver.query(QUERY_URI, QUERY_PROJECTION, null, null,
+          final Cursor cursor = contentResolver.query(
+            QUERY_URI,
+            QUERY_PROJECTION,
+            null,
+            null,
             QUERY_ORDER
           );
           if (ObjectHelper.isNotNull(cursor)) {
@@ -96,12 +83,7 @@ final class ContactProvider {
       }
     })
       .compose(RxUtils.fromCollection())
-      .filter(new Func1<Contact, Boolean>() {
-        @Override
-        public Boolean call(Contact contact) {
-          return contact.matches(query);
-        }
-      })
+      .filter((contact) -> contact.matches(query))
       .toSortedList(new Func2<Contact, Contact, Integer>() {
         @Override
         public Integer call(Contact ca, Contact cb) {

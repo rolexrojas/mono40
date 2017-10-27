@@ -12,7 +12,7 @@ import dagger.Provides;
  * @author hecvasro
  */
 @Module
-class AddRecipientModule {
+final class AddRecipientModule {
 
   private final Category category;
 
@@ -29,6 +29,6 @@ class AddRecipientModule {
   @Provides
   @ActivityScope
   AddRecipientPresenter providePresenter(RecipientManager recipientManager) {
-    return new AddRecipientPresenter(recipientManager, this.category);
+    return new AddRecipientPresenter(recipientManager);
   }
 }

@@ -6,6 +6,7 @@ import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.tpago.movil.d.ui.main.recipient.addition.Contact;
 import com.tpago.movil.dep.Partner;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.d.domain.util.StringUtils;
@@ -51,13 +52,16 @@ public class PhoneNumberRecipient extends Recipient {
     this.carrier = carrier;
   }
 
-  public PhoneNumberRecipient(@NonNull PhoneNumber phoneNumber,
-    @Nullable String label) {
+  public PhoneNumberRecipient(@NonNull PhoneNumber phoneNumber, @Nullable String label) {
     this(phoneNumber, null, label);
   }
 
   public PhoneNumberRecipient(@NonNull PhoneNumber phoneNumber) {
     this(phoneNumber, null, null);
+  }
+
+  public PhoneNumberRecipient(Contact contact) {
+    this(contact.phoneNumber(), null, contact.name());
   }
 
   @NonNull
