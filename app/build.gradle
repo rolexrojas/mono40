@@ -102,24 +102,15 @@ android {
     def commonDirName = 'src/common/java'
 
     development {
-      java.srcDirs = [
-        commonDirName,
-        'src/development/java'
-      ]
+      java.srcDirs = [commonDirName, 'src/development/java']
     }
 
     staging {
-      java.srcDirs = [
-        commonDirName,
-        'src/staging/java'
-      ]
+      java.srcDirs = [commonDirName, 'src/staging/java']
     }
 
     production {
-      java.srcDirs = [
-        commonDirName,
-        'src/production/java'
-      ]
+      java.srcDirs = [commonDirName, 'src/production/java']
     }
   }
 
