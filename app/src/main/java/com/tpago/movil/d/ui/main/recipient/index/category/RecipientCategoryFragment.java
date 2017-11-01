@@ -388,7 +388,7 @@ public class RecipientCategoryFragment
   }
 
   @Override
-  public void startTransfer(Recipient recipient) {
+  public void startTransaction(Recipient recipient) {
     startActivityForResult(
       TransactionCreationActivity.getLaunchIntent(
         this.getActivity(),

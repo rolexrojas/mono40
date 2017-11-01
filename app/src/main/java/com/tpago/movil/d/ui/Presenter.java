@@ -5,38 +5,27 @@ import android.support.annotation.NonNull;
 import com.tpago.movil.util.ObjectHelper;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
+@Deprecated
 public abstract class Presenter<S extends Screen> {
 
+  @Deprecated
   protected S screen;
 
-  /**
-   * TODO
-   *
-   * @return TODO
-   */
+  @Deprecated
   private boolean isScreenAttached() {
     return ObjectHelper.isNotNull(screen);
   }
 
-  /**
-   * TODO
-   */
+  @Deprecated
   protected final void assertScreen() {
     if (!isScreenAttached()) {
       throw new NotAttachedException("Screen must be attached");
     }
   }
 
-  /**
-   * TODO
-   *
-   * @param screen
-   *   TODO
-   */
+  @Deprecated
   public final void attachScreen(@NonNull S screen) {
     if (this.isScreenAttached()) {
       this.detachScreen();
@@ -44,9 +33,7 @@ public abstract class Presenter<S extends Screen> {
     this.screen = screen;
   }
 
-  /**
-   * TODO
-   */
+  @Deprecated
   public final void detachScreen() {
     assertScreen();
     this.screen = null;

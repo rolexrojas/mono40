@@ -18,12 +18,10 @@ import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.Customer;
-import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.ProductBillBalance;
 import com.tpago.movil.d.domain.ProductRecipient;
 import com.tpago.movil.d.domain.UserRecipient;
-import com.tpago.movil.d.domain.api.ApiError;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.misc.rx.RxUtils;
@@ -35,7 +33,7 @@ import com.tpago.movil.d.domain.ErrorCode;
 import com.tpago.movil.d.domain.FailureData;
 import com.tpago.movil.d.domain.Result;
 import com.tpago.movil.dep.net.NetworkService;
-import com.tpago.movil.dep.reactivex.Disposables;
+import com.tpago.movil.reactivex.DisposableHelper;
 import com.tpago.movil.util.DigitHelper;
 import com.tpago.movil.util.ObjectHelper;
 
@@ -47,22 +45,23 @@ import java.util.concurrent.Callable;
 
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import rx.Observable;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 /**
  * @author hecvasro
  */
-class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
+final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
 
   private static final long DEFAULT_IME_SPAN_QUERY = 300L; // 0.3 seconds.
 
@@ -88,8 +87,9 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
   private Subscription signOutSubscription = Subscriptions.unsubscribed();
   private Subscription queryBalanceSubscription = Subscriptions.unsubscribed();
 
-  private Disposable recipientAdditionSubscription = Disposables.disposed();
-  private Disposable recipientRemovalSubscription = Disposables.disposed();
+  private Disposable recipientAdditionDisposable = Disposables.disposed();
+  private Disposable recipientTransactionDisposable = Disposables.disposed();
+  private Disposable recipientRemovalDisposable = Disposables.disposed();
 
   RecipientCategoryPresenter(
     User user,
@@ -119,7 +119,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
       .cast(Object.class);
   }
 
-  void start() {
+  final void start() {
     assertScreen();
     querySubscription = screen.onQueryChanged()
       .flatMap(new Func1<String, Observable<String>>() {
@@ -132,7 +132,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
           return o;
         }
       })
-      .observeOn(AndroidSchedulers.mainThread())
+      .observeOn(rx.android.schedulers.AndroidSchedulers.mainThread())
       .subscribe(new Action1<String>() {
         @Override
         public void call(final String query) {
@@ -189,8 +189,8 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
 
           searchSubscription = source
             .switchIfEmpty(Observable.just(new NoResultsListItemItem(query)))
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(rx.schedulers.Schedulers.io())
+            .observeOn(rx.android.schedulers.AndroidSchedulers.mainThread())
             .doOnSubscribe(new Action0() {
               @Override
               public void call() {
@@ -228,112 +228,70 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
       });
   }
 
-  void stop() {
-    assertScreen();
-    Disposables.dispose(recipientAdditionSubscription);
-    Disposables.dispose(recipientRemovalSubscription);
-    RxUtils.unsubscribe(searchSubscription);
-    RxUtils.unsubscribe(querySubscription);
-    RxUtils.unsubscribe(queryBalanceSubscription);
-    RxUtils.unsubscribe(signOutSubscription);
+  final void stop() {
+    DisposableHelper.dispose(this.recipientAdditionDisposable);
+    DisposableHelper.dispose(this.recipientRemovalDisposable);
+
+    RxUtils.unsubscribe(this.searchSubscription);
+    RxUtils.unsubscribe(this.querySubscription);
+    RxUtils.unsubscribe(this.queryBalanceSubscription);
+    RxUtils.unsubscribe(this.signOutSubscription);
   }
 
-  void addRecipient(@NonNull Recipient recipient) {
-    assertScreen();
+  private void showTakeoverLoader(Disposable disposable) {
+    this.screen.showLoadIndicator(true);
+  }
+
+  private void hideTakeoverLoader() {
+    this.screen.hideLoadIndicator();
+  }
+
+  private void handleError(Throwable throwable, String message) {
+    Timber.e(throwable, message);
+    this.screen.showMessage(this.stringHelper.cannotProcessYourRequestAtTheMoment());
+  }
+
+  private String handleCustomerResult(ApiResult<Customer> result) {
+    String customerName = null;
+    if (result.isSuccessful()) {
+      customerName = result.getData()
+        .getName();
+    }
+    return customerName;
+  }
+
+  private void handleAddPhoneNumberRecipientError(Throwable throwable) {
+    this.handleError(throwable, "Adding a phone number recipient");
+  }
+
+  private void handleAddPhoneNumberRecipientResult(PhoneNumber phoneNumber, ApiResult<Customer> result) {
+    this.addRecipient(new PhoneNumberRecipient(phoneNumber, this.handleCustomerResult(result)));
+  }
+
+  final void addRecipient(@NonNull Recipient recipient) {
     if (!(recipient instanceof UserRecipient)) {
-      recipientManager.add(recipient);
-      screen.clearQuery();
-      screen.showRecipientAdditionDialog(recipient);
+      this.recipientManager.add(recipient);
+      this.screen.clearQuery();
+      this.screen.showRecipientAdditionDialog(recipient);
     }
   }
 
-  void addRecipient(@NonNull final PhoneNumber phoneNumber) {
-    assertScreen();
-    if (recipientAdditionSubscription.isDisposed()) {
-      recipientAdditionSubscription = Single
-        .defer(new Callable<SingleSource<Result<Customer, ErrorCode>>>() {
-          @Override
-          public SingleSource<Result<Customer, ErrorCode>> call() throws Exception {
-            final Result<Customer, ErrorCode> result;
-            if (networkService.checkIfAvailable()) {
-              final ApiResult<Customer.State> customerStateResult = depApiBridge
-                .fetchCustomerState(phoneNumber.value());
-              if (customerStateResult.isSuccessful()) {
-                if (Customer.checkIfCanBeFetched(customerStateResult.getData())) {
-                  final ApiResult<Customer> customerResult = depApiBridge
-                    .fetchCustomer(phoneNumber.value());
-                  if (customerResult.isSuccessful()) {
-                    result = Result.create(customerResult.getData());
-                  } else {
-                    final ApiError apiError = customerResult.getError();
-                    result = Result.create(
-                      FailureData.create(
-                        ErrorCode.UNEXPECTED,
-                        apiError.getDescription()
-                      ));
-                  }
-                } else {
-                  result = Result.create(FailureData.create(ErrorCode.NOT_AFFILIATED_CUSTOMER));
-                }
-              } else {
-                final ApiError apiError = customerStateResult.getError();
-                result = Result.create(
-                  FailureData.create(
-                    ErrorCode.UNEXPECTED,
-                    apiError.getDescription()
-                  ));
-              }
-            } else {
-              result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
-            }
-            return Single.just(result);
-          }
-        })
-        .subscribeOn(io.reactivex.schedulers.Schedulers.io())
-        .observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
-        .doOnSubscribe(new Consumer<Disposable>() {
-          @Override
-          public void accept(Disposable disposable) throws Exception {
-            screen.showLoadIndicator(true);
-          }
-        })
-        .subscribe(new Consumer<Result<Customer, ErrorCode>>() {
-          @Override
-          public void accept(Result<Customer, ErrorCode> result) throws Exception {
-            screen.hideLoadIndicator();
-            if (result.isSuccessful()) {
-              addRecipient(new PhoneNumberRecipient(
-                phoneNumber,
-                result.getSuccessData()
-                  .getName()
-              ));
-            } else {
-              final FailureData<ErrorCode> failureData = result.getFailureData();
-              switch (failureData.getCode()) {
-                case NOT_AFFILIATED_CUSTOMER:
-                  addRecipient(new NonAffiliatedPhoneNumberRecipient(phoneNumber));
-                  break;
-                case UNAVAILABLE_NETWORK:
-                  screen.showUnavailableNetworkError();
-                  break;
-                default:
-                  screen.showGenericErrorDialog(failureData.getDescription());
-                  break;
-              }
-            }
-          }
-        }, new Consumer<Throwable>() {
-          @Override
-          public void accept(Throwable throwable) throws Exception {
-            Timber.e(throwable, "Adding a phone number recipient");
-            screen.hideLoadIndicator();
-            screen.showMessage(stringHelper.cannotProcessYourRequestAtTheMoment());
-          }
-        });
+  final void addRecipient(@NonNull final PhoneNumber phoneNumber) {
+    if (!this.recipientAdditionDisposable.isDisposed()) {
+      this.recipientAdditionDisposable = Single
+        .defer(() -> Single.just(this.depApiBridge.fetchCustomer(phoneNumber.value())))
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnSubscribe(this::showTakeoverLoader)
+        .doFinally(this::hideTakeoverLoader)
+        .subscribe(
+          (result) -> this.handleAddPhoneNumberRecipientResult(phoneNumber, result),
+          this::handleAddPhoneNumberRecipientError
+        );
     }
   }
 
-  void updateRecipient(@NonNull Recipient recipient, @Nullable String label) {
+  final void updateRecipient(@NonNull Recipient recipient, @Nullable String label) {
     assertScreen();
     if (!(recipient instanceof UserRecipient)) {
       recipient.setLabel(label);
@@ -342,105 +300,38 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
     }
   }
 
-  void startTransfer(@NonNull final PhoneNumber phoneNumber) {
-    assertScreen();
-    if (recipientAdditionSubscription.isDisposed()) {
-      recipientAdditionSubscription = Single
-        .defer(new Callable<SingleSource<Result<String, ErrorCode>>>() {
-          @Override
-          public SingleSource<Result<String, ErrorCode>> call() throws Exception {
-            final Result<String, ErrorCode> result;
-            if (networkService.checkIfAvailable()) {
-              final ApiResult<Customer.State> customerStateResult = depApiBridge
-                .fetchCustomerState(phoneNumber.value());
-              if (customerStateResult.isSuccessful()) {
-                if (Customer.checkIfCanBeFetched(customerStateResult.getData())) {
-                  final ApiResult<Customer> customerResult = depApiBridge
-                    .fetchCustomer(phoneNumber.value());
-                  if (customerResult.isSuccessful()) {
-                    result = Result.create(
-                      customerResult.getData()
-                        .getName()
-                    );
-                  } else {
-                    final ApiError apiError = customerResult.getError();
-                    result = Result.create(
-                      FailureData.create(
-                        ErrorCode.UNEXPECTED,
-                        apiError.getDescription()
-                      )
-                    );
-                  }
-                } else {
-                  result = Result.create("");
-                }
-              } else {
-                final ApiError apiError = customerStateResult.getError();
-                result = Result.create(
-                  FailureData.create(
-                    ErrorCode.UNEXPECTED,
-                    apiError.getDescription()
-                  ));
-              }
-            } else {
-              result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
-            }
-            return Single.just(result);
-          }
-        })
-        .subscribeOn(io.reactivex.schedulers.Schedulers.io())
-        .observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
-        .doOnSubscribe(new Consumer<Disposable>() {
-          @Override
-          public void accept(Disposable disposable) throws Exception {
-            screen.showLoadIndicator(true);
-          }
-        })
-        .subscribe(new Consumer<Result<String, ErrorCode>>() {
-          @Override
-          public void accept(Result<String, ErrorCode> result) throws Exception {
-            screen.hideLoadIndicator();
-            if (result.isSuccessful()) {
-              final Recipient recipient;
-              final String successData = result.getSuccessData();
-              if (com.tpago.movil.util.StringHelper.isNullOrEmpty(successData)) {
-                recipient = new NonAffiliatedPhoneNumberRecipient(phoneNumber);
-              } else {
-                recipient = new PhoneNumberRecipient(phoneNumber, successData);
-              }
-              screen.startTransfer(recipient);
-            } else {
-              final FailureData<ErrorCode> failureData = result.getFailureData();
-              switch (failureData.getCode()) {
-                case UNAVAILABLE_NETWORK:
-                  screen.showUnavailableNetworkError();
-                  break;
-                default:
-                  screen.showGenericErrorDialog(failureData.getDescription());
-                  break;
-              }
-            }
-          }
-        }, new Consumer<Throwable>() {
-          @Override
-          public void accept(Throwable throwable) throws Exception {
-            Timber.e(throwable);
-            screen.hideLoadIndicator();
-            screen.showMessage(stringHelper.cannotProcessYourRequestAtTheMoment());
-          }
-        });
+  private void handleStartTransactionError(Throwable throwable) {
+    this.handleError(throwable, "Starting a phone number transaction");
+  }
+
+  private void handleStartPhoneNumberTransactionResult(PhoneNumber phoneNumber, ApiResult<Customer> result) {
+    this.screen.startTransaction(new PhoneNumberRecipient(phoneNumber, this.handleCustomerResult(result)));
+  }
+
+  final void startTransfer(@NonNull final PhoneNumber phoneNumber) {
+    if (this.recipientTransactionDisposable.isDisposed()) {
+      this.recipientTransactionDisposable = Single
+        .defer(() -> Single.just(this.depApiBridge.fetchCustomer(phoneNumber.value())))
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnSubscribe(this::showTakeoverLoader)
+        .doFinally(this::hideTakeoverLoader)
+        .subscribe(
+          (result) -> this.handleStartPhoneNumberTransactionResult(phoneNumber, result),
+          this::handleStartTransactionError
+        );
     }
   }
 
   final void startTransfer(String accountNumber) {
-    this.screen.startTransfer(
+    this.screen.startTransaction(
       AccountRecipient.builder()
         .number(accountNumber)
         .build()
     );
   }
 
-  void showTransactionSummary(final Recipient recipient, final String transactionId) {
+  final void showTransactionSummary(final Recipient recipient, final String transactionId) {
     assertScreen();
 
     final boolean isUser = recipient instanceof UserRecipient;
@@ -528,8 +419,8 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
               screen.showLoadIndicator(true);
             }
           })
-          .subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread())
+          .subscribeOn(rx.schedulers.Schedulers.io())
+          .observeOn(rx.android.schedulers.AndroidSchedulers.mainThread())
           .subscribe(new Action1<Result<BillBalance, ErrorCode>>() {
             @Override
             public void call(Result<BillBalance, ErrorCode> result) {
@@ -562,7 +453,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
             }
           });
       } else {
-        screen.startTransfer(billRecipient);
+        screen.startTransaction(billRecipient);
       }
     } else if (recipient instanceof ProductRecipient) {
       final ProductRecipient productRecipient = (ProductRecipient) recipient;
@@ -597,8 +488,8 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
               screen.showLoadIndicator(true);
             }
           })
-          .subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread())
+          .subscribeOn(rx.schedulers.Schedulers.io())
+          .observeOn(rx.android.schedulers.AndroidSchedulers.mainThread())
           .subscribe(new Action1<Result<ProductBillBalance, ErrorCode>>() {
             @Override
             public void call(Result<ProductBillBalance, ErrorCode> result) {
@@ -631,16 +522,16 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
             }
           });
       } else {
-        screen.startTransfer(productRecipient);
+        screen.startTransaction(productRecipient);
       }
     } else {
-      screen.startTransfer(recipient);
+      screen.startTransaction(recipient);
     }
   }
 
   final void onPinRequestFinished(final String pin) {
     if (deleting) {
-      recipientRemovalSubscription = Single
+      recipientRemovalDisposable = Single
         .defer(new Callable<SingleSource<Result<Map<Recipient, Boolean>, ErrorCode>>>() {
           @Override
           public SingleSource<Result<Map<Recipient, Boolean>, ErrorCode>> call() throws Exception {
@@ -680,8 +571,8 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
             return Single.just(result);
           }
         })
-        .subscribeOn(io.reactivex.schedulers.Schedulers.io())
-        .observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Consumer<Result<Map<Recipient, Boolean>, ErrorCode>>() {
           @Override
           public void accept(
@@ -746,5 +637,4 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
       screen.requestPin();
     }
   }
-
 }

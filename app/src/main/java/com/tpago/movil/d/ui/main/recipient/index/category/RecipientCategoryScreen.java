@@ -42,7 +42,7 @@ interface RecipientCategoryScreen extends Screen {
 
   void update(@NonNull Object item);
 
-  void startTransfer(Recipient recipient);
+  void startTransaction(Recipient recipient);
 
   void setDeleting(boolean deleting);
   void showMessage(String message);
