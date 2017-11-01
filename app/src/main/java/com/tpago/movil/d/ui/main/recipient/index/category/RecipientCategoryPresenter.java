@@ -277,7 +277,7 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
   }
 
   final void addRecipient(@NonNull final PhoneNumber phoneNumber) {
-    if (!this.recipientAdditionDisposable.isDisposed()) {
+    if (this.recipientAdditionDisposable.isDisposed()) {
       this.recipientAdditionDisposable = Single
         .defer(() -> Single.just(this.depApiBridge.fetchCustomer(phoneNumber.value())))
         .subscribeOn(Schedulers.io())
