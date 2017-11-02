@@ -9,6 +9,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.dep.Partner;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
@@ -238,8 +239,12 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
     RxUtils.unsubscribe(this.signOutSubscription);
   }
 
-  private void showTakeoverLoader(Disposable disposable) {
+  private void showTakeoverLoader() {
     this.screen.showLoadIndicator(true);
+  }
+
+  private void showTakeoverLoader(Disposable disposable) {
+    this.showTakeoverLoader();
   }
 
   private void hideTakeoverLoader() {
@@ -251,13 +256,17 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
     this.screen.showMessage(this.stringHelper.cannotProcessYourRequestAtTheMoment());
   }
 
-  private String handleCustomerResult(ApiResult<Customer> result) {
+  private Recipient handleCustomerResult(PhoneNumber phoneNumber, ApiResult<Customer> result) {
     String customerName = null;
     if (result.isSuccessful()) {
       customerName = result.getData()
         .getName();
     }
-    return customerName;
+    if (com.tpago.movil.util.StringHelper.isNullOrEmpty(customerName)) {
+      return new NonAffiliatedPhoneNumberRecipient(phoneNumber, customerName);
+    } else {
+      return new PhoneNumberRecipient(phoneNumber, customerName);
+    }
   }
 
   private void handleAddPhoneNumberRecipientError(Throwable throwable) {
@@ -265,7 +274,7 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
   }
 
   private void handleAddPhoneNumberRecipientResult(PhoneNumber phoneNumber, ApiResult<Customer> result) {
-    this.addRecipient(new PhoneNumberRecipient(phoneNumber, this.handleCustomerResult(result)));
+    this.addRecipient(this.handleCustomerResult(phoneNumber, result));
   }
 
   final void addRecipient(@NonNull Recipient recipient) {
@@ -292,11 +301,10 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
   }
 
   final void updateRecipient(@NonNull Recipient recipient, @Nullable String label) {
-    assertScreen();
     if (!(recipient instanceof UserRecipient)) {
       recipient.setLabel(label);
-      recipientManager.update(recipient);
-      screen.update(recipient);
+      this.recipientManager.update(recipient);
+      this.screen.update(recipient);
     }
   }
 
@@ -305,7 +313,7 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
   }
 
   private void handleStartPhoneNumberTransactionResult(PhoneNumber phoneNumber, ApiResult<Customer> result) {
-    this.screen.startTransaction(new PhoneNumberRecipient(phoneNumber, this.handleCustomerResult(result)));
+    this.screen.startTransaction(this.handleCustomerResult(phoneNumber, result));
   }
 
   final void startTransfer(@NonNull final PhoneNumber phoneNumber) {
@@ -332,23 +340,21 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
   }
 
   final void showTransactionSummary(final Recipient recipient, final String transactionId) {
-    assertScreen();
-
     final boolean isUser = recipient instanceof UserRecipient;
     if (isUser) {
       final UserRecipient userRecipient = (UserRecipient) recipient;
 
-      final Partner carrierA = user.carrier();
+      final Partner carrierA = this.user.carrier();
       final Partner carrierB = userRecipient.getCarrier();
       if (ObjectHelper.isNotNull(carrierB) && !carrierB.equals(carrierA)) {
-        user.carrier(carrierB);
+        this.user.carrier(carrierB);
       }
     }
 
-    screen.clearQuery();
-    screen.showTransactionSummary(
+    this.screen.clearQuery();
+    this.screen.showTransactionSummary(
       recipient,
-      isUser || recipientManager.checkIfExists(recipient),
+      isUser || this.recipientManager.checkIfExists(recipient),
       transactionId
     );
   }
@@ -376,20 +382,20 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
   }
 
   final void resolve(final Recipient recipient) {
-    if (deleting) {
-      if (!selectedRecipientList.contains(recipient)) {
+    if (this.deleting) {
+      if (!this.selectedRecipientList.contains(recipient)) {
         recipient.setSelected(true);
-        selectedRecipientList.add(recipient);
+        this.selectedRecipientList.add(recipient);
       } else {
         recipient.setSelected(false);
-        selectedRecipientList.remove(recipient);
+        this.selectedRecipientList.remove(recipient);
       }
-      screen.update(recipient);
-      screen.setDeleteButtonEnabled(!selectedRecipientList.isEmpty());
+      this.screen.update(recipient);
+      this.screen.setDeleteButtonEnabled(!selectedRecipientList.isEmpty());
     } else if (recipient instanceof BillRecipient) {
       final BillRecipient billRecipient = (BillRecipient) recipient;
       if (ObjectHelper.isNull(billRecipient.getBalance())) {
-        queryBalanceSubscription = rx.Single
+        this.queryBalanceSubscription = rx.Single
           .defer(new Callable<rx.Single<Result<BillBalance, ErrorCode>>>() {
             @Override
             public rx.Single<Result<BillBalance, ErrorCode>> call() throws Exception {
@@ -413,12 +419,7 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
               return rx.Single.just(result);
             }
           })
-          .doOnSubscribe(new Action0() {
-            @Override
-            public void call() {
-              screen.showLoadIndicator(true);
-            }
-          })
+          .doOnSubscribe(this::showTakeoverLoader)
           .subscribeOn(rx.schedulers.Schedulers.io())
           .observeOn(rx.android.schedulers.AndroidSchedulers.mainThread())
           .subscribe(new Action1<Result<BillBalance, ErrorCode>>() {
@@ -453,7 +454,7 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
             }
           });
       } else {
-        screen.startTransaction(billRecipient);
+        this.screen.startTransaction(billRecipient);
       }
     } else if (recipient instanceof ProductRecipient) {
       final ProductRecipient productRecipient = (ProductRecipient) recipient;
