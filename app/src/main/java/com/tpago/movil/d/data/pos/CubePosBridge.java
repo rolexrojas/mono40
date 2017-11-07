@@ -20,8 +20,6 @@ import com.tpago.movil.d.domain.pos.PosResult;
 import com.tpago.movil.util.ObjectHelper;
 
 import rx.Observable;
-import rx.Single;
-import rx.SingleSubscriber;
 import rx.Subscriber;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -323,34 +321,28 @@ class CubePosBridge implements PosBridge {
   }
 
   @Override
-  public Single<PosResult> unregister(final PhoneNumber phoneNumber) {
-    if (sharedPreferences.getInt(KEY_COUNT, 0) > 0) {
-      return Single.create(new Single.OnSubscribe<PosResult>() {
-        @Override
-        public void call(final SingleSubscriber<? super PosResult> subscriber) {
-          try {
-            getCubeSdk().Unregister(phoneNumber.value(), new CubeSdkCallback<String, CubeError>() {
-              @Override
-              public void success(String message) {
-                sharedPreferences.edit()
-                  .clear()
-                  .apply();
-                subscriber.onSuccess(createResult(message));
-              }
+  public void unregister(final PhoneNumber phoneNumber) throws Exception {
+    if (this.sharedPreferences.getInt(KEY_COUNT, 0) > 0) {
+      io.reactivex.Single.fromPublisher((subscriber) ->
+        this.getCubeSdk()
+          .Unregister(phoneNumber.value(), new CubeSdkCallback<String, CubeError>() {
+            @Override
+            public void success(String message) {
+              sharedPreferences.edit()
+                .clear()
+                .apply();
+              subscriber.onNext(message);
+              subscriber.onComplete();
+            }
 
-              @Override
-              public void failure(CubeError error) {
-                subscriber.onSuccess(createResult(error));
-              }
-            });
-          } catch (Exception exception) {
-            subscriber.onError(exception);
-          }
-        }
-      })
-        .doOnSuccess(new LogAction1("unregister", phoneNumber));
-    } else {
-      return Single.just(createResult("No need to unregister"));
+            @Override
+            public void failure(CubeError error) {
+              subscriber.onError(new Exception(error.getErrorMessage()));
+            }
+          })
+      )
+        .toCompletable()
+        .blockingAwait();
     }
   }
 

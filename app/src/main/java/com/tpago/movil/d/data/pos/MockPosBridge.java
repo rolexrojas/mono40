@@ -4,6 +4,7 @@ import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.pos.PosCode;
 import com.tpago.movil.d.domain.pos.PosResult;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -60,11 +61,16 @@ final class MockPosBridge implements PosBridge {
   }
 
   @Override
-  public Single<PosResult> unregister(PhoneNumber phoneNumber) {
+  public void unregister(PhoneNumber phoneNumber) throws Exception {
     synchronized (this) {
       this.identifierSet.clear();
     }
-    return Single.just(new PosResult(PosCode.OK, phoneNumber.value()))
-      .delay(1L, TimeUnit.SECONDS);
+    final Throwable throwable = Single.just(new PosResult(PosCode.OK, phoneNumber.value()))
+      .delay(1L, TimeUnit.SECONDS)
+      .toCompletable()
+      .get();
+    if (ObjectHelper.isNotNull(throwable)) {
+      throw new Exception(throwable);
+    }
   }
 }

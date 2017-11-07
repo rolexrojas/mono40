@@ -8,6 +8,7 @@ import com.tpago.movil.Name;
 import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.api.Api;
+import com.tpago.movil.bank.Bank;
 import com.tpago.movil.dep.MimeType;
 import com.tpago.movil.payment.Carrier;
 import com.tpago.movil.session.UnlockMethodSignatureData;
@@ -17,6 +18,7 @@ import com.tpago.movil.util.Result;
 
 import java.io.File;
 import java.security.PublicKey;
+import java.util.List;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
@@ -47,6 +49,11 @@ final class RetrofitApiImpl implements Api {
     this.retrofitApi = ObjectHelper.checkNotNull(retrofitApi, "retrofitApi");
     this.retrofitApiResultMapperBuilder = ObjectHelper
       .checkNotNull(retrofitApiResultMapperBuilder, "retrofitApiResultMapperBuilder");
+  }
+
+  @Override
+  public Single<List<Bank>> getBanks() {
+    return Single.error(new UnsupportedOperationException("not implemented"));
   }
 
   @Override

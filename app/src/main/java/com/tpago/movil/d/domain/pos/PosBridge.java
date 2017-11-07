@@ -3,7 +3,6 @@ package com.tpago.movil.d.domain.pos;
 import com.tpago.movil.PhoneNumber;
 
 import rx.Observable;
-import rx.Single;
 
 /**
  * @author hecvasro
@@ -21,5 +20,5 @@ public interface PosBridge {
 
   PosResult removeCard(String identifier);
 
-  Single<PosResult> unregister(PhoneNumber phoneNumber);
+  void unregister(PhoneNumber phoneNumber) throws Exception;
 }

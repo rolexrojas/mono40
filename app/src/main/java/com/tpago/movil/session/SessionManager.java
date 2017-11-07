@@ -299,9 +299,13 @@ public final class SessionManager {
     this.checkUserIsSet();
     this.checkSessionIsOpen();
 
-    Completable completable = Completable.complete();
+    Completable completable = null;
     for (SessionCloseAction action : this.closeActions) {
-      completable = completable.concatWith(Completable.fromAction(action));
+      if (ObjectHelper.isNull(completable)) {
+        completable = Completable.fromAction(action);
+      } else {
+        completable = completable.concatWith(Completable.fromAction(action));
+      }
     }
     // TODO: Suspend jobs instead of cancelling them.
     completable = completable.concatWith(
@@ -319,10 +323,14 @@ public final class SessionManager {
   public final Completable destroySession() {
     this.checkUserIsSet();
     this.checkSessionIsOpen();
-    Completable completable = Completable.complete();
     final User user = this.getUser();
+    Completable completable = null;
     for (SessionDestroyAction action : this.destroyActions) {
-      completable = completable.concatWith(Completable.fromAction(() -> action.run(user)));
+      if (ObjectHelper.isNull(completable)) {
+        completable = Completable.fromAction(() -> action.run(user));
+      } else {
+        completable = completable.concatWith(Completable.fromAction(() -> action.run(user)));
+      }
     }
     completable = completable.concatWith(
       Completable.fromAction(() -> this.jobManager.cancelJobs(TagConstraint.ANY, SessionJob.TAG))

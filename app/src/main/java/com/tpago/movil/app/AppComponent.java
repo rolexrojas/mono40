@@ -1,5 +1,6 @@
 package com.tpago.movil.app;
 
+import com.tpago.movil.bank.BankModule;
 import com.tpago.movil.company.CompanyModule;
 import com.tpago.movil.data.DataModule;
 import com.tpago.movil.gson.GsonModule;
@@ -10,6 +11,7 @@ import com.tpago.movil.session.UpdateUserCarrierJob;
 import com.tpago.movil.session.UpdateUserNameJob;
 import com.tpago.movil.session.UpdateUserPictureJob;
 import com.tpago.movil.store.StoreModule;
+import com.tpago.movil.time.TimeModule;
 
 import javax.inject.Singleton;
 
@@ -20,6 +22,7 @@ import dagger.Component;
   modules = {
     AppComponentBuilderModule.class,
     AppModule.class,
+    BankModule.class,
     CompanyModule.class,
     DataModule.class,
     GsonModule.class,
@@ -27,6 +30,7 @@ import dagger.Component;
     NetModule.class,
     SessionModule.class,
     StoreModule.class,
+    TimeModule.class,
     com.tpago.movil.dep.AppModule.class
   }
 )
