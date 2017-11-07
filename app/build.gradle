@@ -15,7 +15,7 @@ android {
   defaultConfig {
     applicationId 'com.tpago.movil'
 
-    def (major, minor, patch) = [2, 2, 30]
+    def (major, minor, patch) = [2, 2, 31]
     versionName "${major}.${minor}.${patch}"
     versionCode ((major * 10_000_000) + (minor * 100_000) + (patch * 1_000))
 
