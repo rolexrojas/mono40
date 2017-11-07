@@ -16,7 +16,7 @@ import java.io.IOException;
  * @author hecvasro
  */
 @Deprecated
-final class BankTypeAdapter extends TypeAdapter<Bank> {
+final class DepBankTypeAdapter extends TypeAdapter<Bank> {
 
   private static final String PROPERTY_CODE = "bank-code";
   private static final String PROPERTY_ID = "bank-id";
@@ -25,7 +25,7 @@ final class BankTypeAdapter extends TypeAdapter<Bank> {
 
   private final AssetUriBuilder assetUriBuilder;
 
-  BankTypeAdapter(AssetUriBuilder assetUriBuilder) {
+  DepBankTypeAdapter(AssetUriBuilder assetUriBuilder) {
     this.assetUriBuilder = ObjectHelper.checkNotNull(assetUriBuilder, "assetUriBuilder");
   }
 

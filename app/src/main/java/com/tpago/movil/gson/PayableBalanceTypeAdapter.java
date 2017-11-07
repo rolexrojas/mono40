@@ -3,7 +3,7 @@ package com.tpago.movil.gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.tpago.movil.domain.balance.PayableBalance;
+import com.tpago.movil.balance.PayableBalance;
 
 import java.io.IOException;
 

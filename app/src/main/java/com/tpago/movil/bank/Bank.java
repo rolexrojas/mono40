@@ -1,4 +1,4 @@
-package com.tpago.movil.domain.product;
+package com.tpago.movil.bank;
 
 import android.support.annotation.NonNull;
 

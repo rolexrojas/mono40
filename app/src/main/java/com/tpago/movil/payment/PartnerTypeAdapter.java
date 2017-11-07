@@ -45,7 +45,8 @@ final class PartnerTypeAdapter extends TypeAdapter<Partner> {
   private final TypeAdapter<String> stringTypeAdapter;
 
   private PartnerTypeAdapter(LogoCatalogMapper logoCatalogMapper, Gson gson) {
-    this.logoCatalogMapper = ObjectHelper.checkNotNull(logoCatalogMapper, "logoCatalogMapper");
+    this.logoCatalogMapper = ObjectHelper
+      .checkNotNull(logoCatalogMapper, "logoCatalogMapper");
 
     ObjectHelper.checkNotNull(gson, "gson");
     this.integerTypeAdapter = gson.getAdapter(Integer.class);

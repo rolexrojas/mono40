@@ -1,4 +1,4 @@
-package com.tpago.movil.domain.balance;
+package com.tpago.movil.balance;
 
 /**
  * Balance representation

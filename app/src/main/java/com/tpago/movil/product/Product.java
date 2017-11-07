@@ -1,4 +1,4 @@
-package com.tpago.movil.domain.product;
+package com.tpago.movil.product;
 
 import android.net.Uri;
 import android.support.annotation.Nullable;
@@ -6,9 +6,10 @@ import android.support.annotation.Nullable;
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.tpago.movil.Currency;
-import com.tpago.movil.domain.balance.AvailableBalance;
-import com.tpago.movil.domain.balance.BalanceStore;
-import com.tpago.movil.domain.balance.PayableBalance;
+import com.tpago.movil.balance.AvailableBalance;
+import com.tpago.movil.balance.BalanceStore;
+import com.tpago.movil.balance.PayableBalance;
+import com.tpago.movil.bank.Bank;
 
 import java.math.BigDecimal;
 

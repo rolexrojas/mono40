@@ -38,7 +38,7 @@ public final class GsonModule {
   @Provides
   @Singleton
   Gson gson(LogoCatalogMapper logoCatalogMapper, AssetUriBuilder assetUriBuilder) {
-    final TypeAdapter<Bank> bankTypeAdapter = new BankTypeAdapter(assetUriBuilder);
+    final TypeAdapter<Bank> bankTypeAdapter = new DepBankTypeAdapter(assetUriBuilder);
 
     return new GsonBuilder()
       .setDateFormat("dd/MM/yyyy")

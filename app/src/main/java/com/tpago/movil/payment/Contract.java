@@ -2,8 +2,8 @@ package com.tpago.movil.payment;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
-import com.tpago.movil.domain.balance.BalanceStore;
-import com.tpago.movil.domain.balance.PayableBalance;
+import com.tpago.movil.balance.BalanceStore;
+import com.tpago.movil.balance.PayableBalance;
 import com.tpago.movil.session.User;
 
 /**
