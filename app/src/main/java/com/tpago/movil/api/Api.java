@@ -12,7 +12,6 @@ import com.tpago.movil.bank.Bank;
 import com.tpago.movil.session.UnlockMethodSignatureData;
 import com.tpago.movil.payment.Carrier;
 import com.tpago.movil.session.User;
-import com.tpago.movil.util.Placeholder;
 import com.tpago.movil.util.Result;
 
 import java.io.File;
@@ -20,7 +19,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.security.PublicKey;
 import java.util.List;
-import java.util.SortedSet;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;

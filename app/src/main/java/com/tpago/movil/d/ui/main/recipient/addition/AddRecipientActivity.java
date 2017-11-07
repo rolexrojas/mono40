@@ -145,6 +145,12 @@ public class AddRecipientActivity extends
   }
 
   @Override
+  protected void onStop() {
+    this.presenter.onStop();
+    super.onStop();
+  }
+
+  @Override
   protected void onDestroy() {
     super.onDestroy();
     // Detaches the presenter for the fragment.

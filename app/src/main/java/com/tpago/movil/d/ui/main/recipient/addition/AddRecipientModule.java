@@ -1,9 +1,13 @@
 package com.tpago.movil.d.ui.main.recipient.addition;
 
 import com.tpago.movil.app.ui.ActivityScope;
+import com.tpago.movil.app.ui.AlertManager;
+import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.d.domain.RecipientManager;
 
+import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.ui.main.recipient.index.category.Category;
+import com.tpago.movil.data.StringMapper;
 
 import dagger.Module;
 import dagger.Provides;
@@ -28,7 +32,19 @@ final class AddRecipientModule {
 
   @Provides
   @ActivityScope
-  AddRecipientPresenter providePresenter(RecipientManager recipientManager) {
-    return new AddRecipientPresenter(recipientManager);
+  AddRecipientPresenter providePresenter(
+    RecipientManager recipientManager,
+    DepApiBridge apiBridge,
+    AlertManager alertManager,
+    StringMapper stringMapper,
+    TakeoverLoader takeoverLoader
+  ) {
+    return new AddRecipientPresenter(
+      recipientManager,
+      apiBridge,
+      alertManager,
+      stringMapper,
+      takeoverLoader
+    );
   }
 }
