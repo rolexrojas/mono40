@@ -155,8 +155,7 @@ public class PurchasePaymentDialogFragment
   public void animateAndTerminate() {
     purchasePaymentIndicatorConfirmationImageView.animate()
       .alpha(1F)
-//      .setDuration(terminateDuration)
-      .setDuration(1000L)
+      .setDuration(5000L)
       .setListener(new BaseAnimatorListener() {
         @Override
         public void onAnimationEnd(Animator animator) {
