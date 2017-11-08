@@ -10,7 +10,7 @@ import com.tpago.movil.Name;
 import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.api.Api;
-import com.tpago.movil.payment.Carrier;
+import com.tpago.movil.partner.Carrier;
 import com.tpago.movil.reactivex.DisposableHelper;
 import com.tpago.movil.store.Store;
 import com.tpago.movil.util.BuilderChecker;

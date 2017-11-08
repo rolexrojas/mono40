@@ -6,7 +6,7 @@ import com.tpago.movil.dep.ConfigManager;
 import com.tpago.movil.dep.Partner;
 import com.tpago.movil.dep.TimeOutManager;
 import com.tpago.movil.app.ui.ActivityScope;
-import com.tpago.movil.payment.Carrier;
+import com.tpago.movil.partner.Carrier;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.session.User;
 import com.tpago.movil.util.ObjectHelper;

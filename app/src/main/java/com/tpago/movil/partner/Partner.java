@@ -1,8 +1,9 @@
-package com.tpago.movil.payment;
+package com.tpago.movil.partner;
 
 import android.support.annotation.NonNull;
 
 import com.tpago.movil.company.Company;
+import com.tpago.movil.util.ComparisonChain;
 
 /**
  * Partner representation
@@ -18,7 +19,10 @@ public abstract class Partner extends Company implements Comparable<Partner> {
 
   @Override
   public int compareTo(@NonNull Partner that) {
-    throw new UnsupportedOperationException("not implemented");
+    return ComparisonChain.create()
+      .compare(this.type(), that.type())
+      .compare(this.name(), that.name())
+      .result();
   }
 
   /**

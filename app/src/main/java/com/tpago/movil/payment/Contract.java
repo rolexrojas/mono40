@@ -4,6 +4,7 @@ import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.tpago.movil.balance.BalanceStore;
 import com.tpago.movil.balance.PayableBalance;
+import com.tpago.movil.partner.Partner;
 import com.tpago.movil.session.User;
 
 /**

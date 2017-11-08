@@ -6,6 +6,7 @@ import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.tpago.movil.company.Company;
 import com.tpago.movil.company.LogoCatalog;
+import com.tpago.movil.util.ComparisonChain;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.math.BigDecimal;
@@ -42,7 +43,9 @@ public abstract class Bank extends Company implements Comparable<Bank> {
 
   @Override
   public int compareTo(@NonNull Bank that) {
-    throw new UnsupportedOperationException("not implemented");
+    return ComparisonChain.create()
+      .compare(this.name(), that.name())
+      .result();
   }
 
   @AutoValue.Builder

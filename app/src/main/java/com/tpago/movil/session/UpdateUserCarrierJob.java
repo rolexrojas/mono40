@@ -1,6 +1,6 @@
 package com.tpago.movil.session;
 
-import com.tpago.movil.payment.Carrier;
+import com.tpago.movil.partner.Carrier;
 import com.tpago.movil.util.ObjectHelper;
 
 /**

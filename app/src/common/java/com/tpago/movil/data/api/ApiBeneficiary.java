@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.tpago.movil.Name;
-import com.tpago.movil.payment.Carrier;
+import com.tpago.movil.partner.Carrier;
 import com.tpago.movil.session.User;
 import com.tpago.movil.util.ObjectHelper;
 

@@ -10,7 +10,7 @@ import com.google.gson.stream.JsonWriter;
 import com.tpago.movil.Email;
 import com.tpago.movil.Name;
 import com.tpago.movil.PhoneNumber;
-import com.tpago.movil.payment.Carrier;
+import com.tpago.movil.partner.Carrier;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
 

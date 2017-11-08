@@ -1,4 +1,4 @@
-package com.tpago.movil.payment;
+package com.tpago.movil.partner;
 
 import com.tpago.movil.company.LogoCatalog;
 

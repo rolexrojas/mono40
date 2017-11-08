@@ -42,8 +42,8 @@ import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
-import com.tpago.movil.payment.Carrier;
-import com.tpago.movil.payment.PartnerBuilderFactory;
+import com.tpago.movil.partner.Carrier;
+import com.tpago.movil.partner.PartnerBuilderFactory;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.util.ObjectHelper;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -314,7 +314,7 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
         final String logoTemplate = p.getImageUriTemplate();
         final LogoCatalog logoCatalog = logoCatalogMapper.apply(logoTemplate);
         final Carrier carrier
-          = (Carrier) PartnerBuilderFactory.make(com.tpago.movil.payment.Partner.Type.CARRIER)
+          = (Carrier) PartnerBuilderFactory.make(com.tpago.movil.partner.Partner.Type.CARRIER)
           .code(p.getCode())
           .id(p.getId())
           .name(p.getName())
