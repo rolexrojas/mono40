@@ -19,7 +19,7 @@ public final class TimeModule {
 
   @Provides
   @Singleton
-  OneOrMoreDaysTimePredicate oneOrMoreDaysDiff(Clock clock) {
-    return OneOrMoreDaysTimePredicate.create(clock);
+  OneOrMoreDaysPredicate oneOrMoreDaysDiff(Clock clock) {
+    return OneOrMoreDaysPredicate.create(clock);
   }
 }
