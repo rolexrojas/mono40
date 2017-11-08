@@ -19,7 +19,7 @@ import java.util.Date;
 public abstract class PayableBalance extends Balance {
 
   public static Builder builder() {
-    throw new UnsupportedOperationException("not implemented");
+    return new AutoValue_PayableBalance.Builder();
   }
 
   PayableBalance() {
@@ -56,6 +56,8 @@ public abstract class PayableBalance extends Balance {
 
     Builder() {
     }
+
+    public abstract Builder queryTime(long queryTime);
 
     public abstract Builder dueDate(Date dueDate);
 

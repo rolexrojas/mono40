@@ -6,9 +6,6 @@ import android.support.annotation.Nullable;
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.tpago.movil.currency.Currency;
-import com.tpago.movil.balance.AvailableBalance;
-import com.tpago.movil.balance.BalanceStore;
-import com.tpago.movil.balance.PayableBalance;
 import com.tpago.movil.bank.Bank;
 
 import java.math.BigDecimal;
@@ -25,8 +22,8 @@ public abstract class Product {
     throw new UnsupportedOperationException("not implemented");
   }
 
-  private final BalanceStore<AvailableBalance> availableBalance;
-  private final BalanceStore<PayableBalance> payableBalance;
+//  private final BalanceStore<AvailableBalance> availableBalance;
+//  private final BalanceStore<PayableBalance> payableBalance;
 
   Product() {
     throw new UnsupportedOperationException("not implemented");
@@ -52,19 +49,19 @@ public abstract class Product {
    */
   public abstract BigDecimal balanceQueryCost();
 
-  /**
-   * {@link AvailableBalance Balance} that holds the amount that it has available.
-   */
-  public final BalanceStore<AvailableBalance> availableBalance() {
-    throw new UnsupportedOperationException("not implemented");
-  }
+//  /**
+//   * {@link AvailableBalance Balance} that holds the amount that it has available.
+//   */
+//  public final BalanceStore<AvailableBalance> availableBalance() {
+//    throw new UnsupportedOperationException("not implemented");
+//  }
 
-  /**
-   * {@link PayableBalance Balance} that holds the amount that it has pending for payment.
-   */
-  public final BalanceStore<PayableBalance> payableBalance() {
-    throw new UnsupportedOperationException("not implemented");
-  }
+//  /**
+//   * {@link PayableBalance Balance} that holds the amount that it has pending for payment.
+//   */
+//  public final BalanceStore<PayableBalance> payableBalance() {
+//    throw new UnsupportedOperationException("not implemented");
+//  }
 
   @Nullable
   public abstract String imageUriTemplate();

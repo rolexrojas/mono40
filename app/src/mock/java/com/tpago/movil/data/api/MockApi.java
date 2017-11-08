@@ -10,7 +10,7 @@ import com.tpago.movil.Email;
 import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.io.FileHelper;
-import com.tpago.movil.payment.Carrier;
+import com.tpago.movil.contract.Carrier;
 import com.tpago.movil.session.AccessTokenStore;
 import com.tpago.movil.session.UnlockMethodConfigData;
 import com.tpago.movil.session.UnlockMethodSignatureData;

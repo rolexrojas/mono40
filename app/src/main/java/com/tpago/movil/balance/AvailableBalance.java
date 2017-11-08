@@ -15,8 +15,8 @@ import java.math.BigDecimal;
 @AutoValue
 public abstract class AvailableBalance extends Balance {
 
-  public static AvailableBalance create(BigDecimal amount) {
-    throw new UnsupportedOperationException("not implemented");
+  public static Builder builder() {
+    return new AutoValue_AvailableBalance.Builder();
   }
 
   AvailableBalance() {
@@ -31,4 +31,17 @@ public abstract class AvailableBalance extends Balance {
   @Memoized
   @Override
   public abstract int hashCode();
+
+  @AutoValue.Builder
+  public static abstract class Builder {
+
+    Builder() {
+    }
+
+    public abstract Builder queryTime(long queryTime);
+
+    public abstract Builder amount(BigDecimal amount);
+
+    public abstract AvailableBalance build();
+  }
 }
