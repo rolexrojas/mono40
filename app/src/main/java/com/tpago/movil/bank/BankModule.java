@@ -3,7 +3,7 @@ package com.tpago.movil.bank;
 import com.tpago.movil.api.Api;
 import com.tpago.movil.store.Store;
 import com.tpago.movil.time.Clock;
-import com.tpago.movil.time.OneOrMoreDaysExpirationPredicate;
+import com.tpago.movil.time.OneOrMoreDaysTimePredicate;
 
 import javax.inject.Singleton;
 
@@ -21,15 +21,15 @@ public final class BankModule {
   BankListSupplier bankListSupplier(
     Api api,
     Clock clock,
-    OneOrMoreDaysExpirationPredicate expirationPredicate,
-    Store store
+    Store store,
+    OneOrMoreDaysTimePredicate timePredicate
   ) {
     final BankListSupplier supplier = ApiBankListSupplier.create(api);
     return StoreBankListSupplier.builder()
       .clock(clock)
-      .expirationPredicate(expirationPredicate)
       .store(store)
       .supplier(supplier)
+      .timePredicate(timePredicate)
       .build();
   }
 

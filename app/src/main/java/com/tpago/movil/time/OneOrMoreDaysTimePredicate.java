@@ -5,15 +5,15 @@ import com.tpago.movil.util.ObjectHelper;
 /**
  * @author hecvasro
  */
-public final class OneOrMoreDaysExpirationPredicate implements ExpirationPredicate {
+public final class OneOrMoreDaysTimePredicate implements TimePredicate {
 
-  static OneOrMoreDaysExpirationPredicate create(Clock clock) {
-    return new OneOrMoreDaysExpirationPredicate(clock);
+  static OneOrMoreDaysTimePredicate create(Clock clock) {
+    return new OneOrMoreDaysTimePredicate(clock);
   }
 
   private final Clock clock;
 
-  private OneOrMoreDaysExpirationPredicate(Clock clock) {
+  private OneOrMoreDaysTimePredicate(Clock clock) {
     this.clock = ObjectHelper.checkNotNull(clock, "clock");
   }
 

@@ -5,5 +5,5 @@ import com.tpago.movil.function.Predicate;
 /**
  * @author hecvasro
  */
-public interface ExpirationPredicate extends Predicate<Long> {
+public interface TimePredicate extends Predicate<Long> {
 }

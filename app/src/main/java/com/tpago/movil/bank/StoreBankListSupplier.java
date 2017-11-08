@@ -2,7 +2,7 @@ package com.tpago.movil.bank;
 
 import com.tpago.movil.store.Store;
 import com.tpago.movil.time.Clock;
-import com.tpago.movil.time.ExpirationPredicate;
+import com.tpago.movil.time.TimePredicate;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.ObjectHelper;
 
@@ -26,15 +26,15 @@ final class StoreBankListSupplier implements BankListSupplier {
   }
 
   private final Clock clock;
-  private final ExpirationPredicate expirationPredicate;
   private final Store store;
   private final BankListSupplier supplier;
+  private final TimePredicate timePredicate;
 
   private StoreBankListSupplier(Builder builder) {
     this.clock = builder.clock;
-    this.expirationPredicate = builder.expirationPredicate;
     this.store = builder.store;
     this.supplier = builder.supplier;
+    this.timePredicate = builder.timePredicate;
   }
 
   private void saveData(List<Bank> value) {
@@ -47,7 +47,7 @@ final class StoreBankListSupplier implements BankListSupplier {
 
   private Single<List<Bank>> getData() {
     BankList data = this.store.get(STORE_KEY_DATA, BankList.class);
-    if (ObjectHelper.isNull(data) || this.expirationPredicate.test(data.queryTime())) {
+    if (ObjectHelper.isNull(data) || this.timePredicate.test(data.queryTime())) {
       return this.supplier.get()
         .doOnSuccess(this::saveData);
     } else {
@@ -63,7 +63,7 @@ final class StoreBankListSupplier implements BankListSupplier {
   static final class Builder {
 
     private Clock clock;
-    private ExpirationPredicate expirationPredicate;
+    private TimePredicate timePredicate;
     private Store store;
     private BankListSupplier supplier;
 
@@ -72,12 +72,6 @@ final class StoreBankListSupplier implements BankListSupplier {
 
     final Builder clock(Clock clock) {
       this.clock = ObjectHelper.checkNotNull(clock, "clock");
-      return this;
-    }
-
-    final Builder expirationPredicate(ExpirationPredicate expirationPredicate) {
-      this.expirationPredicate = ObjectHelper
-        .checkNotNull(expirationPredicate, "expirationPredicate");
       return this;
     }
 
@@ -91,15 +85,17 @@ final class StoreBankListSupplier implements BankListSupplier {
       return this;
     }
 
+    final Builder timePredicate(TimePredicate timePredicate) {
+      this.timePredicate = ObjectHelper.checkNotNull(timePredicate, "timePredicate");
+      return this;
+    }
+
     final StoreBankListSupplier build() {
       BuilderChecker.create()
         .addPropertyNameIfMissing("clock", ObjectHelper.isNull(this.clock))
-        .addPropertyNameIfMissing(
-          "expirationPredicate",
-          ObjectHelper.isNull(this.expirationPredicate)
-        )
         .addPropertyNameIfMissing("store", ObjectHelper.isNull(this.store))
         .addPropertyNameIfMissing("supplier", ObjectHelper.isNull(this.supplier))
+        .addPropertyNameIfMissing("timePredicate", ObjectHelper.isNull(this.timePredicate))
         .checkNoMissingProperties();
       return new StoreBankListSupplier(this);
     }
