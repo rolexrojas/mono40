@@ -1,4 +1,4 @@
-package com.tpago.movil;
+package com.tpago.movil.currency;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
@@ -11,8 +11,8 @@ import com.google.auto.value.extension.memoized.Memoized;
 @AutoValue
 public abstract class Currency {
 
-  public static Currency create(String value) {
-    throw new UnsupportedOperationException("not implemented");
+  static Currency create(String value) {
+    return new AutoValue_Currency(value);
   }
 
   Currency() {

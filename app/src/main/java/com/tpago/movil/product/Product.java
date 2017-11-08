@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
-import com.tpago.movil.Currency;
+import com.tpago.movil.currency.Currency;
 import com.tpago.movil.balance.AvailableBalance;
 import com.tpago.movil.balance.BalanceStore;
 import com.tpago.movil.balance.PayableBalance;

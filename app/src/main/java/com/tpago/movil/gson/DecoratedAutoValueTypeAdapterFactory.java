@@ -11,6 +11,8 @@ import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.bank.*;
 import com.tpago.movil.company.LogoCatalogMapper;
+import com.tpago.movil.currency.Currency;
+import com.tpago.movil.currency.CurrencyTypeAdapter;
 import com.tpago.movil.partner.Carrier;
 import com.tpago.movil.partner.CarrierTypeAdapter;
 import com.tpago.movil.partner.Provider;
@@ -61,6 +63,8 @@ final class DecoratedAutoValueTypeAdapterFactory implements TypeAdapterFactory {
       return (TypeAdapter<T>) EmailTypeAdapter.create(gson);
     } else if (Password.class.isAssignableFrom(rawType)) {
       return (TypeAdapter<T>) PasswordTypeAdapter.create(gson);
+    } else if (Currency.class.isAssignableFrom(rawType)) {
+      return (TypeAdapter<T>) CurrencyTypeAdapter.create(gson);
     } else if (FailureData.class.isAssignableFrom(rawType)) {
       return (TypeAdapter<T>) FailureDataTypeAdapter.create(gson);
     } else if (Bank.class.isAssignableFrom(rawType)) {
