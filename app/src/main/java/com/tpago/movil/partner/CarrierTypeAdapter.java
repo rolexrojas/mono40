@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.tpago.movil.company.LogoCatalogMapper;
+import com.tpago.movil.company.TemplateToLogoCatalogMapper;
 
 import java.io.IOException;
 
@@ -13,14 +13,14 @@ import java.io.IOException;
  */
 public final class CarrierTypeAdapter extends TypeAdapter<Carrier> {
 
-  public static CarrierTypeAdapter create(LogoCatalogMapper logoCatalogMapper, Gson gson) {
-    return new CarrierTypeAdapter(logoCatalogMapper, gson);
+  public static CarrierTypeAdapter create(TemplateToLogoCatalogMapper templateToLogoCatalogMapper, Gson gson) {
+    return new CarrierTypeAdapter(templateToLogoCatalogMapper, gson);
   }
 
   private final TypeAdapter<Partner> partnerTypeAdapter;
 
-  private CarrierTypeAdapter(LogoCatalogMapper logoCatalogMapper, Gson gson) {
-    this.partnerTypeAdapter = PartnerTypeAdapter.create(logoCatalogMapper, gson);
+  private CarrierTypeAdapter(TemplateToLogoCatalogMapper templateToLogoCatalogMapper, Gson gson) {
+    this.partnerTypeAdapter = PartnerTypeAdapter.create(templateToLogoCatalogMapper, gson);
   }
 
   @Override

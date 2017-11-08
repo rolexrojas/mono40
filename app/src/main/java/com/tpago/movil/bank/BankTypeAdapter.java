@@ -5,7 +5,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
-import com.tpago.movil.company.LogoCatalogMapper;
+import com.tpago.movil.company.TemplateToLogoCatalogMapper;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.io.IOException;
@@ -23,18 +23,18 @@ public final class BankTypeAdapter extends TypeAdapter<Bank> {
 
   private static final BigDecimal PROPERTY_DEFAULT_TRANSFER_COST_RATE = BigDecimal.valueOf(0.015);
 
-  public static BankTypeAdapter create(LogoCatalogMapper logoCatalogMapper, Gson gson) {
-    return new BankTypeAdapter(logoCatalogMapper, gson);
+  public static BankTypeAdapter create(TemplateToLogoCatalogMapper templateToLogoCatalogMapper, Gson gson) {
+    return new BankTypeAdapter(templateToLogoCatalogMapper, gson);
   }
 
-  private final LogoCatalogMapper logoCatalogMapper;
+  private final TemplateToLogoCatalogMapper templateToLogoCatalogMapper;
 
   private final TypeAdapter<Integer> integerTypeAdapter;
   private final TypeAdapter<String> stringTypeAdapter;
 
-  private BankTypeAdapter(LogoCatalogMapper logoCatalogMapper, Gson gson) {
-    this.logoCatalogMapper = ObjectHelper
-      .checkNotNull(logoCatalogMapper, "logoCatalogMapper");
+  private BankTypeAdapter(TemplateToLogoCatalogMapper templateToLogoCatalogMapper, Gson gson) {
+    this.templateToLogoCatalogMapper = ObjectHelper
+      .checkNotNull(templateToLogoCatalogMapper, "templateToLogoCatalogMapper");
 
     ObjectHelper.checkNotNull(gson, "gson");
     this.integerTypeAdapter = gson.getAdapter(Integer.class);
@@ -65,7 +65,7 @@ public final class BankTypeAdapter extends TypeAdapter<Bank> {
             final String logoTemplate = this.stringTypeAdapter.read(reader);
             builder
               .logoTemplate(logoTemplate)
-              .logoCatalog(this.logoCatalogMapper.apply(logoTemplate));
+              .logoCatalog(this.templateToLogoCatalogMapper.apply(logoTemplate));
             break;
         }
       }

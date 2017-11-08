@@ -5,7 +5,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
-import com.tpago.movil.company.LogoCatalogMapper;
+import com.tpago.movil.company.TemplateToLogoCatalogMapper;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.io.IOException;
@@ -35,18 +35,18 @@ final class PartnerTypeAdapter extends TypeAdapter<Partner> {
   private static final String PROPERTY_NAME = "partner-name";
   private static final String PROPERTY_LOGO_TEMPLATE = "image-url";
 
-  static PartnerTypeAdapter create(LogoCatalogMapper logoCatalogMapper, Gson gson) {
-    return new PartnerTypeAdapter(logoCatalogMapper, gson);
+  static PartnerTypeAdapter create(TemplateToLogoCatalogMapper templateToLogoCatalogMapper, Gson gson) {
+    return new PartnerTypeAdapter(templateToLogoCatalogMapper, gson);
   }
 
-  private final LogoCatalogMapper logoCatalogMapper;
+  private final TemplateToLogoCatalogMapper templateToLogoCatalogMapper;
 
   private final TypeAdapter<Integer> integerTypeAdapter;
   private final TypeAdapter<String> stringTypeAdapter;
 
-  private PartnerTypeAdapter(LogoCatalogMapper logoCatalogMapper, Gson gson) {
-    this.logoCatalogMapper = ObjectHelper
-      .checkNotNull(logoCatalogMapper, "logoCatalogMapper");
+  private PartnerTypeAdapter(TemplateToLogoCatalogMapper templateToLogoCatalogMapper, Gson gson) {
+    this.templateToLogoCatalogMapper = ObjectHelper
+      .checkNotNull(templateToLogoCatalogMapper, "templateToLogoCatalogMapper");
 
     ObjectHelper.checkNotNull(gson, "gson");
     this.integerTypeAdapter = gson.getAdapter(Integer.class);
@@ -96,7 +96,7 @@ final class PartnerTypeAdapter extends TypeAdapter<Partner> {
         .id(id)
         .name(name)
         .logoTemplate(logoTemplate)
-        .logoCatalog(this.logoCatalogMapper.apply(logoTemplate))
+        .logoCatalog(this.templateToLogoCatalogMapper.apply(logoTemplate))
         .build();
     }
     return partner;

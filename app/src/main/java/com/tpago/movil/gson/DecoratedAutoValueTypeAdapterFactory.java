@@ -10,7 +10,7 @@ import com.tpago.movil.Email;
 import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.bank.*;
-import com.tpago.movil.company.LogoCatalogMapper;
+import com.tpago.movil.company.TemplateToLogoCatalogMapper;
 import com.tpago.movil.currency.Currency;
 import com.tpago.movil.currency.CurrencyTypeAdapter;
 import com.tpago.movil.partner.Carrier;
@@ -35,16 +35,16 @@ import java.io.File;
  */
 final class DecoratedAutoValueTypeAdapterFactory implements TypeAdapterFactory {
 
-  static DecoratedAutoValueTypeAdapterFactory create(LogoCatalogMapper logoCatalogMapper) {
-    return new DecoratedAutoValueTypeAdapterFactory(logoCatalogMapper);
+  static DecoratedAutoValueTypeAdapterFactory create(TemplateToLogoCatalogMapper templateToLogoCatalogMapper) {
+    return new DecoratedAutoValueTypeAdapterFactory(templateToLogoCatalogMapper);
   }
 
-  private final LogoCatalogMapper logoCatalogMapper;
+  private final TemplateToLogoCatalogMapper templateToLogoCatalogMapper;
 
   private final TypeAdapterFactory typeAdapterFactory;
 
-  private DecoratedAutoValueTypeAdapterFactory(LogoCatalogMapper logoCatalogMapper) {
-    this.logoCatalogMapper = ObjectHelper.checkNotNull(logoCatalogMapper, "logoCatalogMapper");
+  private DecoratedAutoValueTypeAdapterFactory(TemplateToLogoCatalogMapper templateToLogoCatalogMapper) {
+    this.templateToLogoCatalogMapper = ObjectHelper.checkNotNull(templateToLogoCatalogMapper, "templateToLogoCatalogMapper");
 
     this.typeAdapterFactory = AutoValueTypeAdapterFactory.create();
   }
@@ -68,11 +68,11 @@ final class DecoratedAutoValueTypeAdapterFactory implements TypeAdapterFactory {
     } else if (FailureData.class.isAssignableFrom(rawType)) {
       return (TypeAdapter<T>) FailureDataTypeAdapter.create(gson);
     } else if (Bank.class.isAssignableFrom(rawType)) {
-      return (TypeAdapter<T>) BankTypeAdapter.create(this.logoCatalogMapper, gson);
+      return (TypeAdapter<T>) BankTypeAdapter.create(this.templateToLogoCatalogMapper, gson);
     } else if (Carrier.class.isAssignableFrom(rawType)) {
-      return (TypeAdapter<T>) CarrierTypeAdapter.create(this.logoCatalogMapper, gson);
+      return (TypeAdapter<T>) CarrierTypeAdapter.create(this.templateToLogoCatalogMapper, gson);
     } else if (Provider.class.isAssignableFrom(rawType)) {
-      return (TypeAdapter<T>) ProviderTypeAdapter.create(this.logoCatalogMapper, gson);
+      return (TypeAdapter<T>) ProviderTypeAdapter.create(this.templateToLogoCatalogMapper, gson);
     } else if (User.class.isAssignableFrom(rawType)) {
       return (TypeAdapter<T>) UserTypeAdapter.create(gson);
     } else if (UpdateUserNameJob.class.isAssignableFrom(rawType)) {

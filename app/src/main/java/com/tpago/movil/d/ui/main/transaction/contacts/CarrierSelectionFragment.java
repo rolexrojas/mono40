@@ -19,7 +19,7 @@ import butterknife.Unbinder;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.company.LogoCatalog;
-import com.tpago.movil.company.LogoCatalogMapper;
+import com.tpago.movil.company.TemplateToLogoCatalogMapper;
 import com.tpago.movil.dep.Partner;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
@@ -82,7 +82,7 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
   private Subscription rechargeSubscription = Subscriptions.unsubscribed();
 
   @Inject SessionManager sessionManager;
-  @Inject LogoCatalogMapper logoCatalogMapper;
+  @Inject TemplateToLogoCatalogMapper templateToLogoCatalogMapper;
 
   @Inject
   RecipientManager recipientManager;
@@ -312,7 +312,7 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
         r.setCarrier(p);
 
         final String logoTemplate = p.getImageUriTemplate();
-        final LogoCatalog logoCatalog = logoCatalogMapper.apply(logoTemplate);
+        final LogoCatalog logoCatalog = templateToLogoCatalogMapper.apply(logoTemplate);
         final Carrier carrier
           = (Carrier) PartnerBuilderFactory.make(com.tpago.movil.partner.Partner.Type.CARRIER)
           .code(p.getCode())

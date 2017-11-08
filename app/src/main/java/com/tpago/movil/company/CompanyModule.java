@@ -17,7 +17,7 @@ public final class CompanyModule {
 
   @Provides
   @Singleton
-  final LogoCatalogMapper logoCatalogMapper(DisplayDensity displayDensity) {
-    return LogoCatalogMapper.create(displayDensity);
+  final TemplateToLogoCatalogMapper logoCatalogMapper(DisplayDensity displayDensity) {
+    return TemplateToLogoCatalogMapper.create(displayDensity);
   }
 }

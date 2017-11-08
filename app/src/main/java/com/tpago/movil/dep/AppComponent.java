@@ -2,7 +2,7 @@ package com.tpago.movil.dep;
 
 import android.content.Context;
 
-import com.tpago.movil.company.LogoCatalogMapper;
+import com.tpago.movil.company.TemplateToLogoCatalogMapper;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.BalanceManager;
@@ -29,7 +29,7 @@ import com.tpago.movil.session.SessionManager;
 @Deprecated
 public interface AppComponent {
 
-  LogoCatalogMapper logoCatalogMapper();
+  TemplateToLogoCatalogMapper logoCatalogMapper();
 
   SessionManager sessionManager();
 

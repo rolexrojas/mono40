@@ -3,27 +3,29 @@ package com.tpago.movil.company;
 import android.net.Uri;
 
 import com.tpago.movil.DisplayDensity;
+import com.tpago.movil.function.Function;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.UriBuilder;
 
 /**
  * @author hecvasro
  */
-public final class LogoCatalogMapper {
+public final class TemplateToLogoCatalogMapper implements Function<String, LogoCatalog> {
 
   private static final String STYLE_PLACEHOLDER = "style";
 
-  static LogoCatalogMapper create(DisplayDensity displayDensity) {
-    return new LogoCatalogMapper(displayDensity);
+  static TemplateToLogoCatalogMapper create(DisplayDensity displayDensity) {
+    return new TemplateToLogoCatalogMapper(displayDensity);
   }
 
   private final DisplayDensity displayDensity;
 
-  private LogoCatalogMapper(DisplayDensity displayDensity) {
+  private TemplateToLogoCatalogMapper(DisplayDensity displayDensity) {
     this.displayDensity = ObjectHelper.checkNotNull(displayDensity, "displayDensity");
   }
 
-  public final LogoCatalog apply(String template) {
+  @Override
+  public LogoCatalog apply(String template) {
     final UriBuilder uriBuilder = UriBuilder.create(template)
       .replacement(this.displayDensity);
     final Uri colored24 = uriBuilder
