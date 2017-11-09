@@ -22,9 +22,6 @@ public abstract class Product {
     throw new UnsupportedOperationException("not implemented");
   }
 
-//  private final BalanceStore<AvailableBalance> availableBalance;
-//  private final BalanceStore<PayableBalance> payableBalance;
-
   Product() {
     throw new UnsupportedOperationException("not implemented");
   }
@@ -48,20 +45,6 @@ public abstract class Product {
    * Cost of querying its balance.
    */
   public abstract BigDecimal balanceQueryCost();
-
-//  /**
-//   * {@link AvailableBalance Balance} that holds the amount that it has available.
-//   */
-//  public final BalanceStore<AvailableBalance> availableBalance() {
-//    throw new UnsupportedOperationException("not implemented");
-//  }
-
-//  /**
-//   * {@link PayableBalance Balance} that holds the amount that it has pending for payment.
-//   */
-//  public final BalanceStore<PayableBalance> payableBalance() {
-//    throw new UnsupportedOperationException("not implemented");
-//  }
 
   @Nullable
   public abstract String imageUriTemplate();
