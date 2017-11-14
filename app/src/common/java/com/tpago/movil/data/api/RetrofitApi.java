@@ -21,7 +21,7 @@ public interface RetrofitApi {
   @POST("signup")
   Single<Response<User>> signUp(@Body RetrofitApiSignUpBody body);
 
-  @POST("signin")
+  @POST("associate")
   Single<Response<User>> associateDevice(@Body RetrofitApiAssociateDeviceBody body);
 
   @POST("signin")
