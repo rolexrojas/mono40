@@ -108,15 +108,22 @@ final class PurchasePresenter extends Presenter<PurchaseScreen> {
   }
 
   final void resume() {
-    screen.clearPaymentOptions();
-    for (Product paymentOption : productManager.getPaymentOptionList()) {
-      if (posBridge.isRegistered(paymentOption.getSanitizedNumber())) {
-        screen.addPaymentOption(paymentOption);
+    boolean isListEmpty = true;
+    this.screen.clearPaymentOptions();
+    for (Product paymentOption : this.productManager.getPaymentOptionList()) {
+      if (this.posBridge.isRegistered(paymentOption.getSanitizedNumber())) {
+        this.screen.addPaymentOption(paymentOption);
+        if (isListEmpty) {
+          isListEmpty = false;
+        }
       }
     }
-    selectedProduct = productManager.getDefaultPaymentOption();
-    if (ObjectHelper.isNotNull(selectedProduct)) {
-      screen.markAsSelected(selectedProduct);
+    this.selectedProduct = this.productManager.getDefaultPaymentOption();
+    if (ObjectHelper.isNotNull(this.selectedProduct)) {
+      this.screen.markAsSelected(this.selectedProduct);
+    }
+    if (isListEmpty) {
+      this.screen.requestPin();
     }
   }
 
