@@ -20,6 +20,10 @@ public final class RecipientManager {
 
   private static final String KEY_INDEX_SET = "indexSet";
 
+  private static boolean isProductRecipient(Recipient recipient) {
+    return recipient instanceof ProductRecipient;
+  }
+
   private final SharedPreferences sharedPreferences;
   private final Gson gson;
 
@@ -43,9 +47,9 @@ public final class RecipientManager {
     }
 
     for (String id : this.indexSet) {
-      this.recipientList.add(
-        this.gson.fromJson(this.sharedPreferences.getString(id, null), Recipient.class)
-      );
+      final Recipient recipient = this.gson
+        .fromJson(this.sharedPreferences.getString(id, null), Recipient.class);
+      this.recipientList.add(recipient);
     }
 
     final List<Recipient> recipientToAddList = new ArrayList<>(remoteRecipientList);
@@ -53,32 +57,36 @@ public final class RecipientManager {
     for (Recipient recipient : this.recipientList) {
       if (recipient instanceof BillRecipient && !remoteRecipientList.contains(recipient)) {
         recipientToRemoveList.add(recipient);
+      } else if (isProductRecipient(recipient)) {
+        recipientToRemoveList.add(recipient);
       }
     }
 
-    final SharedPreferences.Editor editor = sharedPreferences.edit();
+    final SharedPreferences.Editor editor = this.sharedPreferences.edit();
 
     for (Recipient recipient : recipientToAddList) {
-      recipientList.add(recipient);
-      indexSet.add(recipient.getId());
-      editor.putString(recipient.getId(), gson.toJson(recipient, Recipient.class));
+      this.recipientList.add(recipient);
+      if (!isProductRecipient(recipient)) {
+        this.indexSet.add(recipient.getId());
+        editor.putString(recipient.getId(), this.gson.toJson(recipient, Recipient.class));
+      }
     }
     for (Recipient recipient : recipientToRemoveList) {
-      indexSet.remove(recipient.getId());
+      this.indexSet.remove(recipient.getId());
       editor.remove(recipient.getId());
     }
 
     editor
-      .putStringSet(KEY_INDEX_SET, indexSet)
+      .putStringSet(KEY_INDEX_SET, this.indexSet)
       .apply();
 
-    Collections.sort(recipientList, Recipient.comparator());
+    Collections.sort(this.recipientList, Recipient.comparator());
   }
 
   public final void clear() {
-    recipientList.clear();
-    indexSet.clear();
-    sharedPreferences.edit()
+    this.recipientList.clear();
+    this.indexSet.clear();
+    this.sharedPreferences.edit()
       .clear()
       .apply();
   }
@@ -90,19 +98,21 @@ public final class RecipientManager {
 
   @Deprecated
   public final boolean checkIfExists(Recipient recipient) {
-    return recipientList.contains(recipient);
+    return this.recipientList.contains(recipient);
   }
 
   @Deprecated
   public final void add(Recipient recipient) {
     if (!checkIfExists(recipient)) {
-      recipientList.add(recipient);
-      indexSet.add(recipient.getId());
-      sharedPreferences.edit()
-        .putStringSet(KEY_INDEX_SET, indexSet)
-        .putString(recipient.getId(), gson.toJson(recipient, Recipient.class))
-        .apply();
-      Collections.sort(recipientList, Recipient.comparator());
+      this.recipientList.add(recipient);
+      if (!isProductRecipient(recipient)) {
+        this.indexSet.add(recipient.getId());
+        this.sharedPreferences.edit()
+          .putStringSet(KEY_INDEX_SET, this.indexSet)
+          .putString(recipient.getId(), this.gson.toJson(recipient, Recipient.class))
+          .apply();
+      }
+      Collections.sort(this.recipientList, Recipient.comparator());
     }
   }
 
@@ -112,25 +122,29 @@ public final class RecipientManager {
       this.recipientList.set(this.recipientList.indexOf(recipient), recipient);
     } else {
       this.recipientList.add(recipient);
-      this.indexSet.add(recipient.getId());
     }
 
-    this.sharedPreferences.edit()
-      .putStringSet(KEY_INDEX_SET, this.indexSet)
-      .putString(recipient.getId(), this.gson.toJson(recipient, Recipient.class))
-      .apply();
+    if (!isProductRecipient(recipient)) {
+      this.indexSet.add(recipient.getId());
+      this.sharedPreferences.edit()
+        .putStringSet(KEY_INDEX_SET, this.indexSet)
+        .putString(recipient.getId(), this.gson.toJson(recipient, Recipient.class))
+        .apply();
+    }
 
     Collections.sort(this.recipientList, Recipient.comparator());
   }
 
   public final void remove(Recipient recipient) {
-    final String id = recipient.getId();
-    indexSet.remove(id);
-    sharedPreferences.edit()
-      .putStringSet(KEY_INDEX_SET, indexSet)
-      .remove(id)
-      .apply();
-    recipientList.remove(recipient);
-    Collections.sort(recipientList, Recipient.comparator());
+    if (!isProductRecipient(recipient)) {
+      final String id = recipient.getId();
+      this.indexSet.remove(id);
+      this.sharedPreferences.edit()
+        .putStringSet(KEY_INDEX_SET, this.indexSet)
+        .remove(id)
+        .apply();
+    }
+    this.recipientList.remove(recipient);
+    Collections.sort(this.recipientList, Recipient.comparator());
   }
 }
