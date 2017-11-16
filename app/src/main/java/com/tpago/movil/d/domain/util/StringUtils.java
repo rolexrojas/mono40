@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.tpago.movil.d.domain.text.TextHelper;
-import com.tpago.movil.d.misc.Utils;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * TODO
@@ -15,6 +15,7 @@ import com.tpago.movil.d.misc.Utils;
  */
 @Deprecated
 public final class StringUtils {
+
   private StringUtils() {
   }
 
@@ -27,7 +28,8 @@ public final class StringUtils {
    * @return TODO
    */
   public static String sanitize(@NonNull String s) {
-    return s.toUpperCase().replaceAll("[^0-9A-z]", "");
+    return s.toUpperCase()
+      .replaceAll("[^0-9A-z]", "");
   }
 
   /**
@@ -41,6 +43,6 @@ public final class StringUtils {
    * @return TODO
    */
   public static boolean matches(@NonNull String a, @Nullable String b) {
-    return Utils.isNull(b) || sanitize(a).contains(sanitize(b));
+    return ObjectHelper.isNull(b) || sanitize(a).contains(sanitize(b));
   }
 }

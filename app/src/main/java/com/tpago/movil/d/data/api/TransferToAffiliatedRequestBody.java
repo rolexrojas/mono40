@@ -6,7 +6,7 @@ import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.Product;
 
@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class TransferToAffiliatedRequestBody {
   static TransferToAffiliatedRequestBody create(
@@ -32,7 +33,7 @@ public abstract class TransferToAffiliatedRequestBody {
       pin,
       amount,
       recipient.getPhoneNumber()
-        .getValue(),
+        .value(),
       name);
   }
 
@@ -48,5 +49,5 @@ public abstract class TransferToAffiliatedRequestBody {
   @SerializedName("pin") abstract String getPin();
   @SerializedName("amount") abstract BigDecimal getAmount();
   @SerializedName("recipient-msisdn") abstract String getRecipientMsisdn();
-  @Nullable @SerializedName("recipient-name") abstract String getRecipientName();
+  @Nullable @SerializedName("recipient-updateName") abstract String getRecipientName();
 }

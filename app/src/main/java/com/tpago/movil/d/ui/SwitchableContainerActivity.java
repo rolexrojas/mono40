@@ -27,7 +27,7 @@ public abstract class SwitchableContainerActivity<C> extends ContainerActivity<C
       );
     }
 
-    ft.replace(R.id.container, f, TAG_CHILD_FRAGMENT);
+    ft.replace(R.id.containerFrameLayout, f, TAG_CHILD_FRAGMENT);
 
     if (bs) {
       ft.addToBackStack(null);

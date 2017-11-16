@@ -12,6 +12,7 @@ import java.lang.reflect.Type;
 /**
  * @author hecvasro
  */
+@Deprecated
 public class ApiErrorTypeAdapter implements JsonDeserializer<ApiError> {
   private static final String PROPERTY_ERROR = "error";
   private static final String PROPERTY_CODE = "code";

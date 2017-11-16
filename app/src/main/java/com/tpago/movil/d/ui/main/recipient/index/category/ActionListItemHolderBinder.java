@@ -23,13 +23,23 @@ class ActionListItemHolderBinder implements ListItemHolderBinder<Action, ActionL
     String actionText = "";
     switch (item.type()) {
       case ADD_PHONE_NUMBER:
-        actionText = stringHelper.add(((PhoneNumberAction) item).phoneNumber().formattedValued());
+        actionText = stringHelper.add(
+          ((PhoneNumberAction) item).phoneNumber()
+            .formattedValued()
+        );
         break;
       case TRANSACTION_WITH_PHONE_NUMBER:
         actionText = stringHelper.transactionWith(
           category,
-          ((PhoneNumberAction) item).phoneNumber().formattedValued()
+          ((PhoneNumberAction) item).phoneNumber()
+            .formattedValued()
         );
+        break;
+      case ADD_ACCOUNT:
+        actionText = stringHelper.add(((AccountAction) item).number());
+        break;
+      case TRANSACTION_WITH_ACCOUNT:
+        actionText = stringHelper.transactionWith(category, ((AccountAction) item).number());
         break;
     }
     holder.actionTextView.setText(actionText);

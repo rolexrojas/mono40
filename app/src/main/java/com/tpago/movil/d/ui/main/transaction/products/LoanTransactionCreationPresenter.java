@@ -1,8 +1,11 @@
 package com.tpago.movil.d.ui.main.transaction.products;
 
 import com.tpago.movil.R;
-import com.tpago.movil.api.DCurrencies;
-import com.tpago.movil.app.Presenter;
+import com.tpago.movil.app.ui.AlertData;
+import com.tpago.movil.app.ui.AlertManager;
+import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.dep.api.DCurrencies;
+import com.tpago.movil.dep.Presenter;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.LoanBillBalance;
@@ -14,15 +17,13 @@ import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
-import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
-import com.tpago.movil.domain.ErrorCode;
-import com.tpago.movil.domain.FailureData;
-import com.tpago.movil.domain.Result;
-import com.tpago.movil.net.NetworkService;
-import com.tpago.movil.reactivex.Disposables;
-import com.tpago.movil.util.Objects;
-import com.tpago.movil.util.Preconditions;
+import com.tpago.movil.d.domain.ErrorCode;
+import com.tpago.movil.d.domain.FailureData;
+import com.tpago.movil.d.domain.Result;
+import com.tpago.movil.dep.net.NetworkService;
+import com.tpago.movil.dep.reactivex.Disposables;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -37,43 +38,49 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import timber.log.Timber;
 
+import static java.math.BigDecimal.ZERO;
+
 /**
  * @author hecvasro
  */
 
 public class LoanTransactionCreationPresenter
   extends Presenter<LoanTransactionCreationPresenter.View> {
-  private static BigDecimal amountToPay(LoanBillBalance b, LoanBillBalance.Option o) {
+
+  private static BigDecimal amountToPay(
+    LoanBillBalance b,
+    LoanBillBalance.Option o,
+    BigDecimal a
+  ) {
     switch (o) {
-      case PERIOD: return b.periodAmount();
-      case CURRENT: return b.currentAmount();
-      default: return BigDecimal.ZERO;
+      case PERIOD:
+        return b.periodAmount();
+      case CURRENT:
+        return b.currentAmount();
+      default:
+        return a;
     }
   }
 
-  @Inject
-  Recipient recipient;
-  @Inject
-  ProductManager productManager;
-  @Inject
-  DepApiBridge apiBridge;
-  @Inject
-  SessionManager sessionManager;
-  @Inject
-  NetworkService networkService;
-  @Inject
-  StringHelper stringHelper;
-  @Inject
-  RecipientManager recipientManager;
+  @Inject DepApiBridge apiBridge;
+  @Inject NetworkService networkService;
+  @Inject ProductManager productManager;
+  @Inject Recipient recipient;
+  @Inject RecipientManager recipientManager;
+  @Inject StringHelper stringHelper;
 
-  private LoanBillBalance.Option option = LoanBillBalance.Option.CURRENT;
+  @Inject StringMapper stringMapper;
+  @Inject AlertManager alertManager;
 
+  private LoanBillBalance.Option option;
   private Disposable paymentSubscription = Disposables.disposed();
+
+  private BigDecimal otherAmount = BigDecimal.ZERO;
 
   LoanTransactionCreationPresenter(View view, TransactionCreationComponent component) {
     super(view);
     // Injects all the annotated dependencies.
-    Preconditions.assertNotNull(component, "component == null")
+    ObjectHelper.checkNotNull(component, "component")
       .inject(this);
   }
 
@@ -82,31 +89,48 @@ public class LoanTransactionCreationPresenter
     this.view.setOptionChecked(this.option);
   }
 
+  final void onOtherAmountChanged(BigDecimal otherAmount) {
+    this.otherAmount = ObjectHelper.firstNonNull(otherAmount, BigDecimal.ZERO);
+  }
+
   final void onPayButtonClicked() {
     final ProductRecipient r = (ProductRecipient) recipient;
     final LoanBillBalance b = (LoanBillBalance) r.getBalance();
-    view.requestPin(recipient.getLabel(), Formatter.amount(amountToPay(b, option)));
+    final String c = DCurrencies.map(
+      ((ProductRecipient) recipient).getProduct()
+        .getCurrency()
+    );
+    final BigDecimal a = amountToPay(b, option, otherAmount);
+    final String fa = Formatter.amount(c, a);
+    if (a.compareTo(ZERO) <= 0) {
+      final AlertData alertData = AlertData.builder(this.stringMapper)
+        .message("No es posible realizar pagos de " + fa + ". Favor seleccionar otra opción.")
+        .build();
+      this.alertManager.show(alertData);
+    } else {
+      view.requestPin(recipient.getLabel(), fa);
+    }
   }
 
   final void onPinRequestFinished(final Product product, final String pin) {
-    paymentSubscription = Single.defer(new Callable<SingleSource<Result<PaymentResult, ErrorCode>>>() {
+    paymentSubscription
+      = Single.defer(new Callable<SingleSource<Result<PaymentResult, ErrorCode>>>() {
       @Override
       public SingleSource<Result<PaymentResult, ErrorCode>> call() throws Exception {
         final Result<PaymentResult, ErrorCode> result;
         if (networkService.checkIfAvailable()) {
-          final String authToken = sessionManager.getSession().getAuthToken();
-          final ApiResult<Boolean> pinValidationResult = apiBridge.validatePin(authToken, pin);
+          final ApiResult<Boolean> pinValidationResult = apiBridge.validatePin(pin);
           if (pinValidationResult.isSuccessful()) {
             if (pinValidationResult.getData()) {
               final ProductRecipient r = (ProductRecipient) recipient;
               final LoanBillBalance b = (LoanBillBalance) r.getBalance();
               final ApiResult<PaymentResult> transactionResult = apiBridge.payLoanBill(
-                authToken,
-                amountToPay(b, option),
+                amountToPay(b, option, otherAmount),
                 option,
                 pin,
                 product,
-                r.getProduct())
+                r.getProduct()
+              )
                 .toBlocking()
                 .single();
               if (transactionResult.isSuccessful()) {
@@ -115,7 +139,9 @@ public class LoanTransactionCreationPresenter
                 result = Result.create(
                   FailureData.create(
                     ErrorCode.UNEXPECTED,
-                    transactionResult.getError().getDescription()));
+                    transactionResult.getError()
+                      .getDescription()
+                  ));
               }
             } else {
               result = Result.create(FailureData.create(ErrorCode.INCORRECT_PIN));
@@ -124,7 +150,9 @@ public class LoanTransactionCreationPresenter
             result = Result.create(
               FailureData.create(
                 ErrorCode.UNEXPECTED,
-                pinValidationResult.getError().getDescription()));
+                pinValidationResult.getError()
+                  .getDescription()
+              ));
           }
         } else {
           result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
@@ -178,21 +206,37 @@ public class LoanTransactionCreationPresenter
   public void onViewStarted() {
     super.onViewStarted();
     final ProductRecipient r = (ProductRecipient) recipient;
-    view.setCurrencyValue(DCurrencies.map(r.getProduct().getCurrency()));
+    view.setCurrencyValue(DCurrencies.map(r.getProduct()
+      .getCurrency()));
     String dueDate = null;
-    BigDecimal totalValue = BigDecimal.ZERO;
-    BigDecimal periodValue = BigDecimal.ZERO;
+    BigDecimal totalValue = ZERO;
+    BigDecimal periodValue = ZERO;
     final LoanBillBalance b = (LoanBillBalance) r.getBalance();
-    if (Objects.checkIfNotNull(b)) {
+    if (ObjectHelper.isNotNull(b)) {
       dueDate = b.dueDate();
       totalValue = b.currentAmount();
       periodValue = b.periodAmount();
     }
-    view.setOptionChecked(option);
-    view.setDueDateValue(dueDate);
-    view.setTotalValue(Formatter.amount(totalValue));
-    view.setPeriodValue(Formatter.amount(periodValue));
-    view.setPayButtonEnabled(totalValue.compareTo(BigDecimal.ZERO) > 0);
+
+    this.view.setDueDateValue(dueDate);
+
+    this.view.setTotalValue(Formatter.amount(totalValue));
+    final boolean isTotalValueEnabled = totalValue.compareTo(ZERO) > 0;
+    this.view.setTotalValueEnabled(isTotalValueEnabled);
+
+    this.view.setPeriodValue(Formatter.amount(periodValue));
+    final boolean isPeriodValueEnabled = periodValue.compareTo(ZERO) > 0;
+    this.view.setPeriodValueEnabled(isPeriodValueEnabled);
+
+    if (isTotalValueEnabled) {
+      this.option = LoanBillBalance.Option.CURRENT;
+    } else if (isPeriodValueEnabled) {
+      this.option = LoanBillBalance.Option.PERIOD;
+    } else {
+      this.option = LoanBillBalance.Option.OTHER;
+    }
+    this.view.setOptionChecked(this.option);
+    this.view.setPayButtonEnabled(isTotalValueEnabled || isPeriodValueEnabled);
 
     final List<Product> paymentOptions = new ArrayList<>();
     for (Product paymentOption : productManager.getPaymentOptionList()) {
@@ -210,13 +254,18 @@ public class LoanTransactionCreationPresenter
   }
 
   public interface View extends Presenter.View {
+
     void setCurrencyValue(String value);
 
     void setDueDateValue(String value);
 
     void setTotalValue(String value);
 
+    void setTotalValueEnabled(boolean enabled);
+
     void setPeriodValue(String value);
+
+    void setPeriodValueEnabled(boolean enabled);
 
     void setPaymentOptions(List<Product> paymentOptions);
 

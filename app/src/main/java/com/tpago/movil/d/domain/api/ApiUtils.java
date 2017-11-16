@@ -3,7 +3,7 @@ package com.tpago.movil.d.domain.api;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.tpago.movil.d.misc.Utils;
+import com.tpago.movil.util.ObjectHelper;
 
 import rx.Observable;
 import rx.functions.Func1;
@@ -13,7 +13,9 @@ import rx.functions.Func1;
  *
  * @author hecvasro
  */
+@Deprecated
 public final class ApiUtils {
+
   private ApiUtils() {
   }
 
@@ -29,7 +31,8 @@ public final class ApiUtils {
    */
   @NonNull
   public static <T> Observable.Transformer<ApiResult<T>, T> handleApiResult(
-    final boolean assertData, @Nullable final Func1<ApiCode, Observable<T>> doOnFailure) {
+    final boolean assertData, @Nullable final Func1<ApiCode, Observable<T>> doOnFailure
+  ) {
     return new Observable.Transformer<ApiResult<T>, T>() {
       @Override
       public Observable<T> call(Observable<ApiResult<T>> observable) {
@@ -39,12 +42,12 @@ public final class ApiUtils {
             public Observable<T> call(ApiResult<T> result) {
               if (result.isSuccessful()) {
                 final T data = result.getData();
-                if (!assertData || Utils.isNotNull(data)) {
+                if (!assertData || ObjectHelper.isNotNull(data)) {
                   return Observable.just(data);
                 } else {
-                  return Observable.error(new NullPointerException("Result's data is missing"));
+                  return Observable.error(new NullPointerException("Result's value is missing"));
                 }
-              } else if (Utils.isNotNull(doOnFailure)) {
+              } else if (ObjectHelper.isNotNull(doOnFailure)) {
                 return doOnFailure.call(result.getCode());
               } else {
                 // TODO: Create a generic exception for these cases.
@@ -66,7 +69,8 @@ public final class ApiUtils {
    */
   @NonNull
   public static <T> Observable.Transformer<ApiResult<T>, T> handleApiResult(
-    final boolean assertData) {
+    final boolean assertData
+  ) {
     return handleApiResult(assertData, null);
   }
 }

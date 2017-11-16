@@ -1,15 +1,14 @@
 package com.tpago.movil.d.ui.main.recipient.addition.partners;
 
-import static com.tpago.movil.Partner.TYPE_PROVIDER;
+import static com.tpago.movil.dep.Partner.TYPE_PROVIDER;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.tpago.movil.Partner;
+import com.tpago.movil.dep.Partner;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
-import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.ui.main.recipient.addition.RecipientCandidateListPresenter;
 
@@ -27,16 +26,13 @@ import rx.functions.Func2;
  */
 final class PartnerListPresenter extends RecipientCandidateListPresenter {
 
-  private final SessionManager sessionManager;
   private final DepApiBridge apiBridge;
 
   PartnerListPresenter(
     @NonNull SchedulerProvider schedulerProvider,
-    @NonNull SessionManager sessionManager,
     @NonNull DepApiBridge apiBridge
   ) {
     super(schedulerProvider);
-    this.sessionManager = sessionManager;
     this.apiBridge = apiBridge;
   }
 
@@ -54,10 +50,7 @@ final class PartnerListPresenter extends RecipientCandidateListPresenter {
   @NonNull
   @Override
   protected Observable<Object> search(@Nullable final String query) {
-    return this.apiBridge.partners(
-      this.sessionManager.getSession()
-        .getAuthToken()
-    )
+    return this.apiBridge.partners()
       .map(new Func1<ApiResult<List<Partner>>, List<Partner>>() {
         @Override
         public List<Partner> call(ApiResult<List<Partner>> result) {

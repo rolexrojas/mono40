@@ -17,8 +17,8 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.tpago.movil.R;
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.domain.Recipient;
+import com.tpago.movil.util.ObjectHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,6 +30,7 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 public class ConfirmationDialogFragment extends DialogFragment {
+
   private static final String FORMAT_ARGUMENT_MISSING = "Argument '%1$s' is missing";
 
   private static final String EXTRA_RECIPIENT = "recipient";
@@ -58,8 +59,10 @@ public class ConfirmationDialogFragment extends DialogFragment {
    * @return TODO
    */
   @NonNull
-  public static ConfirmationDialogFragment newInstance(@NonNull Recipient recipient,
-    @NonNull String title, @Nullable String message) {
+  public static ConfirmationDialogFragment newInstance(
+    @NonNull Recipient recipient,
+    @NonNull String title, @Nullable String message
+  ) {
     final Bundle bundle = new Bundle();
     bundle.putParcelable(EXTRA_RECIPIENT, recipient);
     if (!TextUtils.isEmpty(title)) {
@@ -78,16 +81,18 @@ public class ConfirmationDialogFragment extends DialogFragment {
     super.onAttach(context);
     // Attaches the parent to the fragment.
     final Fragment fragment = getParentFragment();
-    if (Utils.isNotNull(fragment)) {
+    if (ObjectHelper.isNotNull(fragment)) {
       if (!(fragment instanceof OnSaveButtonClickedListener)) {
-        throw new ClassCastException("Parent must implement the 'OnSaveButtonClickedListener' interface");
+        throw new ClassCastException(
+          "Parent must implement the 'OnSaveButtonClickedListener' interface");
       } else {
         parent = (OnSaveButtonClickedListener) fragment;
       }
     } else {
       final Activity activity = getActivity();
       if (!(activity instanceof OnSaveButtonClickedListener)) {
-        throw new ClassCastException("Parent must implement the 'OnSaveButtonClickedListener' interface");
+        throw new ClassCastException(
+          "Parent must implement the 'OnSaveButtonClickedListener' interface");
       } else {
         parent = (OnSaveButtonClickedListener) activity;
       }
@@ -97,11 +102,13 @@ public class ConfirmationDialogFragment extends DialogFragment {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    final Bundle bundle = Utils.isNotNull(savedInstanceState) ? savedInstanceState : getArguments();
-    if (Utils.isNull(bundle)) {
+    final Bundle bundle
+      = ObjectHelper.isNotNull(savedInstanceState) ? savedInstanceState : getArguments();
+    if (ObjectHelper.isNull(bundle)) {
       throw new NullPointerException(String.format(
         "Arguments '%1$s', '%2$s' and '%3$s' are missing", EXTRA_RECIPIENT, EXTRA_TITLE,
-        EXTRA_MESSAGE));
+        EXTRA_MESSAGE
+      ));
     } else if (!bundle.containsKey(EXTRA_RECIPIENT)) {
       throw new NullPointerException(String.format(FORMAT_ARGUMENT_MISSING, EXTRA_RECIPIENT));
     } else if (!bundle.containsKey(EXTRA_TITLE)) {
@@ -124,7 +131,12 @@ public class ConfirmationDialogFragment extends DialogFragment {
       .setPositiveButton(R.string.action_save, new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-          parent.onSaveButtonClicked(recipient, identifierEditText.getText().toString().trim());
+          parent.onSaveButtonClicked(
+            recipient,
+            identifierEditText.getText()
+              .toString()
+              .trim()
+          );
         }
       });
     final View view = LayoutInflater.from(activity)
@@ -141,7 +153,7 @@ public class ConfirmationDialogFragment extends DialogFragment {
   public void onDestroy() {
     super.onDestroy();
     // Unbinds all the annotated views and methods.
-    if (Utils.isNotNull(unbinder)) {
+    if (ObjectHelper.isNotNull(unbinder)) {
       unbinder.unbind();
     }
   }
@@ -157,6 +169,7 @@ public class ConfirmationDialogFragment extends DialogFragment {
    * TODO
    */
   public interface OnSaveButtonClickedListener {
+
     /**
      * TODO
      *

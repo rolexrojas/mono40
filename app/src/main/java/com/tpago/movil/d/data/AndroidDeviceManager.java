@@ -15,6 +15,7 @@ import javax.inject.Singleton;
  *
  * @author hecvasro
  */
+@Deprecated
 @Singleton
 final class AndroidDeviceManager implements DepDeviceManager {
   private final TelephonyManager telephonyManager;

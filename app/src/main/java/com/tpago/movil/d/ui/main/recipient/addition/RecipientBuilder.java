@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.tpago.movil.d.domain.Recipient;
-import com.tpago.movil.util.Objects;
+import com.tpago.movil.util.ObjectHelper;
 
 import rx.Observable;
 
@@ -12,12 +12,17 @@ import rx.Observable;
  * @author hecvasro
  */
 abstract class RecipientBuilder {
+
   public abstract Uri getImageUri(Context context);
+
   public abstract String getTitle();
+
+  public abstract String getCategoryName();
 
   public abstract Observable<Result> build(String number, String pin);
 
   static final class Result {
+
     private final Recipient recipient;
     private final String error;
 
@@ -32,7 +37,7 @@ abstract class RecipientBuilder {
     }
 
     public final boolean isSuccessful() {
-      return Objects.checkIfNotNull(recipient);
+      return ObjectHelper.isNotNull(recipient);
     }
 
     public final Recipient getData() {

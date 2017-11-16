@@ -2,7 +2,6 @@ package com.tpago.movil.d.ui.main.recipient.index.category;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.ui.Screen;
 
@@ -43,17 +42,14 @@ interface RecipientCategoryScreen extends Screen {
 
   void update(@NonNull Object item);
 
-  void startTransfer(Recipient recipient);
+  void startTransaction(Recipient recipient);
 
-  void openInitScreen();
-  void finish();
   void setDeleting(boolean deleting);
   void showMessage(String message);
   void remove(Object item);
   void setDeleteButtonEnabled(boolean enabled);
 
   void showRecipientAdditionDialog(Recipient recipient);
-  void startNonAffiliatedPhoneNumberRecipientAddition(PhoneNumber phoneNumber);
   void showTransactionSummary(Recipient recipient, boolean alreadyExists, String transactionId);
 
   void requestPin();

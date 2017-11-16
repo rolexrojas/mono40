@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.tpago.movil.d.misc.Utils;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * TODO
@@ -17,6 +17,7 @@ import com.tpago.movil.d.misc.Utils;
  * @author hecvasro
  */
 class SelectedItemDecoration extends RecyclerView.ItemDecoration {
+
   /**
    * TODO
    */
@@ -45,8 +46,10 @@ class SelectedItemDecoration extends RecyclerView.ItemDecoration {
    * @param borderRadius
    *   TODO
    */
-  SelectedItemDecoration(@NonNull Provider provider, @Dimension int borderWidth,
-    @ColorInt int borderColor, @Dimension int borderRadius) {
+  SelectedItemDecoration(
+    @NonNull Provider provider, @Dimension int borderWidth,
+    @ColorInt int borderColor, @Dimension int borderRadius
+  ) {
     this.provider = provider;
     this.borderPaint = new Paint();
     this.borderPaint.setStyle(Paint.Style.STROKE);
@@ -61,17 +64,19 @@ class SelectedItemDecoration extends RecyclerView.ItemDecoration {
     final RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
     final int selectedPosition = provider.getSelectedItemPosition();
     final View child = layoutManager.findViewByPosition(selectedPosition);
-    if (Utils.isNotNull(child)) {
+    if (ObjectHelper.isNotNull(child)) {
       final RectF childRect = new RectF(child.getLeft(), child.getTop(), child.getRight(),
-        child.getBottom());
+        child.getBottom()
+      );
       canvas.drawRoundRect(childRect, borderRadius, borderRadius, borderPaint);
     }
   }
 
   /**
-   * TODO: Find a better name for this interface.
+   * TODO: Find a better updateName for this interface.
    */
   interface Provider {
+
     /**
      * TODO
      *

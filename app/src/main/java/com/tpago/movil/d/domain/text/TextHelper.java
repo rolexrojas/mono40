@@ -8,6 +8,7 @@ import android.text.TextUtils;
  *
  * @author hecvasro
  */
+@Deprecated
 public final class TextHelper {
   private TextHelper() {
   }

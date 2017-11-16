@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list
+  xmlns:android="http://schemas.android.com/apk/res/android">
+  <item>
+    <shape android:shape="oval">
+      <solid android:color="@color/whiteAlpha10"/>
+      <size
+        android:width="@dimen/normalImageSize"
+        android:height="@dimen/normalImageSize"/>
+    </shape>
+  </item>
+  <item
+    android:bottom="@dimen/smallVerticalSpace"
+    android:drawable="@drawable/icon_fingerprint_dark"
+    android:left="@dimen/smallHorizontalSpace"
+    android:right="@dimen/smallHorizontalSpace"
+    android:top="@dimen/smallVerticalSpace"/>
+</layer-list>

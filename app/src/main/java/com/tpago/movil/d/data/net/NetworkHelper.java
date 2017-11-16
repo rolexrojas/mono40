@@ -5,6 +5,7 @@ package com.tpago.movil.d.data.net;
  *
  * @author hecvasro
  */
+@Deprecated
 public interface NetworkHelper {
   /**
    * Indicates whether there is network available or not.

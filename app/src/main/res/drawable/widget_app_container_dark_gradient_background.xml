@@ -3,10 +3,10 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:shape="rectangle">
   <gradient
-    android:centerX="@fraction/widget_app_container_gradient_centerX"
-    android:centerY="@fraction/widget_app_container_gradient_centerY"
+    android:centerX="@fraction/gradientBackgroundCenterX"
+    android:centerY="@fraction/gradientBackgroundCenterY"
     android:endColor="@color/primary"
-    android:gradientRadius="@fraction/widget_app_container_gradient_radius"
+    android:gradientRadius="@fraction/gradientBackgroundRadius"
     android:startColor="#691060"
     android:type="radial" />
 </shape>

@@ -3,6 +3,7 @@ package com.tpago.movil.d.domain.api;
 /**
  * @author hecvasro
  */
+@Deprecated
 public final class ApiError {
   private final Code code;
   private final String description;

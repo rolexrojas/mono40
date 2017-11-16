@@ -1,9 +1,9 @@
 package com.tpago.movil.data;
 
-import com.google.gson.Gson;
-import com.tpago.movil.app.DisplayDensity;
-import com.tpago.movil.content.SharedPreferencesCreator;
-import com.tpago.movil.domain.BankRepo;
+import android.content.Context;
+
+import com.tpago.movil.data.api.DataApiModule;
+import com.tpago.movil.net.NetModule;
 
 import javax.inject.Singleton;
 
@@ -11,19 +11,22 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
+ * {@link Module} that contains providers for objects that belong to the value layer.
+ *
  * @author hecvasro
  */
-@Module
-public final class DataModule {
-  @Provides
-  @Singleton
-  AssetUriBuilder provideAssetUriBuilder(DisplayDensity displayDensity) {
-    return new AssetUriBuilder(displayDensity);
+@Module(
+  includes = {
+    DataFlavorModule.class,
+    DataApiModule.class,
+    NetModule.class
   }
+)
+public final class DataModule {
 
   @Provides
   @Singleton
-  BankRepo provideBankRepo(Gson gson, SharedPreferencesCreator sharedPreferencesCreator) {
-    return new SharedPreferencesBankRepo(gson, sharedPreferencesCreator);
+  StringMapper stringMapper(Context context) {
+    return context::getString;
   }
 }

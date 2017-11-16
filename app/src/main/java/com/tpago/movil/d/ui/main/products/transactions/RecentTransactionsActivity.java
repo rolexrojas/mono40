@@ -13,15 +13,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tpago.movil.app.App;
+import com.tpago.movil.app.ui.ActivityModule;
+import com.tpago.movil.dep.App;
 import com.tpago.movil.R;
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Transaction;
-import com.tpago.movil.d.ui.BaseActivity;
+import com.tpago.movil.d.ui.DepBaseActivity;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
+import com.tpago.movil.util.ObjectHelper;
 import com.yqritc.recyclerviewflexibledivider.FlexibleDividerDecoration;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
@@ -39,9 +40,10 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 public class RecentTransactionsActivity
-  extends BaseActivity
+  extends DepBaseActivity
   implements RecentTransactionsScreen,
   SwipeRefreshLayout.OnRefreshListener {
+
   private Unbinder unbinder;
   private Adapter adapter;
   private LoadIndicator loadIndicator;
@@ -85,7 +87,8 @@ public class RecentTransactionsActivity
     recyclerView.setHasFixedSize(true);
     recyclerView.setItemAnimator(null);
     recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,
-      false));
+      false
+    ));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(this)
       .drawable(R.drawable.d_divider)
       .marginResId(R.dimen.space_horizontal_normal)
@@ -99,7 +102,8 @@ public class RecentTransactionsActivity
     recyclerView.addItemDecoration(divider);
     // Injects all the dependencies.
     final RecentTransactionsComponent component = DaggerRecentTransactionsComponent.builder()
-      .appComponent(((App) getApplication()).getComponent())
+      .appComponent(((App) getApplication()).component())
+      .activityModule(ActivityModule.create(this))
       .build();
     component.inject(this);
     // Attaches the screen to the presenter.
@@ -126,14 +130,14 @@ public class RecentTransactionsActivity
     // Detaches the screen from the presenter.
     presenter.detachScreen();
     // Removes the listener that gets notified every time the content must be refreshed.
-    swipeRefreshLayout.setOnRefreshListener(null);
+//    swipeRefreshLayout.setOnRefreshListener(null);
     // Unbinds all the annotated views and methods.
     unbinder.unbind();
   }
 
   @Nullable
   public LoadIndicator getRefreshIndicator() {
-    if (Utils.isNull(loadIndicator) && Utils.isNotNull(swipeRefreshLayout)) {
+    if (ObjectHelper.isNull(loadIndicator) && ObjectHelper.isNotNull(swipeRefreshLayout)) {
       loadIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
     }
     return loadIndicator;
@@ -141,21 +145,21 @@ public class RecentTransactionsActivity
 
   @Override
   public void clear() {
-    if (Utils.isNotNull(adapter)) {
+    if (ObjectHelper.isNotNull(adapter)) {
       adapter.clear();
     }
   }
 
   @Override
   public void add(@NonNull Date date) {
-    if (Utils.isNotNull(adapter)) {
+    if (ObjectHelper.isNotNull(adapter)) {
       adapter.add(date);
     }
   }
 
   @Override
   public void add(@NonNull Transaction transaction) {
-    if (Utils.isNotNull(adapter)) {
+    if (ObjectHelper.isNotNull(adapter)) {
       adapter.add(transaction);
     }
   }
@@ -166,7 +170,7 @@ public class RecentTransactionsActivity
   }
 
   @Override
-  protected int layoutResourceIdentifier() {
+  protected int layoutResId() {
     return R.layout.d_activity_recent_transactions;
   }
 
@@ -174,6 +178,7 @@ public class RecentTransactionsActivity
    * TODO
    */
   private class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
     private static final int TYPE_GROUP_TITLE = 0;
     private static final int TYPE_TRANSACTION = 1;
 
@@ -231,7 +236,8 @@ public class RecentTransactionsActivity
       final Object item = items.get(position);
       final int type = getItemViewType(position);
       if (type == TYPE_GROUP_TITLE) {
-        ((GroupItemViewHolder) holder).getTextView().setText(Formatter.date((Date) item));
+        ((GroupItemViewHolder) holder).getTextView()
+          .setText(Formatter.date((Date) item));
       } else {
         final Transaction transaction = (Transaction) item;
         final TransactionItemViewHolder transactionHolder = (TransactionItemViewHolder) holder;

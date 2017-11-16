@@ -2,7 +2,9 @@ package com.tpago.movil.d.ui.main.list;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.d.misc.Utils;
+import com.tpago.movil.util.ObjectHelper;
+
+import java.util.Arrays;
 
 /**
  * TODO
@@ -10,6 +12,7 @@ import com.tpago.movil.d.misc.Utils;
  * @author hecvasro
  */
 public class NoResultsListItemItem {
+
   /**
    * TODO
    */
@@ -37,13 +40,16 @@ public class NoResultsListItemItem {
 
   @Override
   public boolean equals(Object object) {
-    return super.equals(object) || (Utils.isNotNull(object) && object instanceof NoResultsListItemItem
+    return super.equals(object) || (ObjectHelper.isNotNull(object) && object instanceof NoResultsListItemItem
       && ((NoResultsListItemItem) object).query.equals(query));
   }
 
   @Override
   public int hashCode() {
-    return Utils.hashCode(NoResultsListItemItem.class.hashCode(), query);
+    return Arrays.hashCode(
+      Arrays.asList(NoResultsListItemItem.class.hashCode(), query)
+        .toArray()
+    );
   }
 
   @Override

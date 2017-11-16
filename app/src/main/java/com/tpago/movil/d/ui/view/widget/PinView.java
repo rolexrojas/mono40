@@ -13,8 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.tpago.movil.R;
-import com.tpago.movil.d.misc.Utils;
-import com.tpago.movil.util.Objects;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +25,7 @@ import butterknife.ButterKnife;
  * @author hecvasro
  */
 public class PinView extends LinearLayout {
+
   private static final int DEFAULT_MAX_LENGTH = 4;
 
   private static final String ANIMATION_PROPERTY_ALPHA = "alpha";
@@ -34,7 +34,7 @@ public class PinView extends LinearLayout {
 
   private final List<Integer> digits = new ArrayList<>();
 
-//  private AnimatorSet failureResolveAnimator;
+  //  private AnimatorSet failureResolveAnimator;
 //  private AnimatorSet loadAnimator;
 //  private AnimatorSet resolveAnimator;
 //  private AnimatorSet successResolveAnimator;
@@ -60,7 +60,8 @@ public class PinView extends LinearLayout {
   public PinView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     setOrientation(VERTICAL);
-    LayoutInflater.from(context).inflate(R.layout.d_pin_view, this);
+    LayoutInflater.from(context)
+      .inflate(R.layout.d_pin_view, this);
   }
 
   private boolean isCursorVisible() {
@@ -69,7 +70,7 @@ public class PinView extends LinearLayout {
 
   private void showCursor() {
     if (!isCursorVisible()) {
-      if (Utils.isNull(cursorAnimator)) {
+      if (ObjectHelper.isNull(cursorAnimator)) {
         cursorAnimator = ObjectAnimator.ofFloat(cursor, ANIMATION_PROPERTY_ALPHA, 1F, 0F);
         cursorAnimator.setDuration(500L);
         cursorAnimator.setRepeatMode(ValueAnimator.REVERSE);
@@ -83,7 +84,7 @@ public class PinView extends LinearLayout {
   private void hideCursor() {
     if (isCursorVisible()) {
       cursor.setVisibility(View.GONE);
-      if (Utils.isNotNull(cursorAnimator)) {
+      if (ObjectHelper.isNotNull(cursorAnimator)) {
         cursorAnimator.cancel();
       }
     }
@@ -309,7 +310,7 @@ public class PinView extends LinearLayout {
       setDotVisibility(dots[size - 1], true);
       if (size == DEFAULT_MAX_LENGTH) {
         hideCursor();
-        if (Objects.checkIfNotNull(listener)) {
+        if (ObjectHelper.isNotNull(listener)) {
           listener.onConfirmationStarted(TextUtils.join("", digits));
         }
       }
@@ -362,6 +363,7 @@ public class PinView extends LinearLayout {
 //  }
 
   public interface Listener {
+
     void onConfirmationStarted(@NonNull String pin);
 
 //    void onConfirmationFinished(boolean succeeded);

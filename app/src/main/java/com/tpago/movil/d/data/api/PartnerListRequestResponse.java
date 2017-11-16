@@ -3,7 +3,7 @@ package com.tpago.movil.d.data.api;
 import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
-import com.tpago.movil.Partner;
+import com.tpago.movil.dep.Partner;
 
 import java.util.List;
 
@@ -12,6 +12,7 @@ import rx.functions.Func1;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class PartnerListRequestResponse {
   public static TypeAdapter<PartnerListRequestResponse> typeAdapter(Gson gson) {

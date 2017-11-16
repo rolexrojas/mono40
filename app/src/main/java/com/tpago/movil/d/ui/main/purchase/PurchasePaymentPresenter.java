@@ -2,7 +2,6 @@ package com.tpago.movil.d.ui.main.purchase;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.Session;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
@@ -10,7 +9,6 @@ import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.pos.PosResult;
 import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.ui.Presenter;
-import com.tpago.movil.util.Preconditions;
 
 import dagger.Lazy;
 import rx.Observable;
@@ -28,12 +26,11 @@ import timber.log.Timber;
  * @author hecvasro
  */
 class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
+
   private final StringHelper stringHelper;
   private final Product paymentOption;
   private final ProductManager productManager;
   private final Lazy<PosBridge> posBridge;
-
-  private final Session session;
 
   private Subscription subscription = Subscriptions.unsubscribed();
 
@@ -41,14 +38,12 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
     @NonNull StringHelper stringHelper,
     @NonNull Product paymentOption,
     @NonNull ProductManager productManager,
-    @NonNull Lazy<PosBridge> posBridge,
-    Session session) {
+    @NonNull Lazy<PosBridge> posBridge
+  ) {
     this.stringHelper = stringHelper;
     this.paymentOption = paymentOption;
     this.productManager = productManager;
     this.posBridge = posBridge;
-
-    this.session = Preconditions.assertNotNull(session, "session == null");
   }
 
   void start() {
@@ -56,8 +51,7 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
     subscription = Observable.defer(new Func0<Observable<Boolean>>() {
       @Override
       public Observable<Boolean> call() {
-        final boolean result = productManager
-          .setDefaultPaymentOption(session.getToken(), paymentOption);
+        final boolean result = productManager.setDefaultPaymentOption(paymentOption);
         return Observable.just(result);
       }
     })

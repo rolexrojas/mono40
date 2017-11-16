@@ -5,14 +5,14 @@ import android.support.v4.util.Pair;
 import com.google.auto.value.AutoValue;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Balance;
-
-import static com.tpago.movil.util.Objects.checkIfNotNull;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * @author hecvasro
  */
 @AutoValue
 abstract class ProductItem {
+
   static ProductItem create(Product product) {
     return new AutoValue_ProductItem(product);
   }
@@ -34,7 +34,7 @@ abstract class ProductItem {
   }
 
   final void setBalance(Pair<Long, Balance> pair) {
-    if (checkIfNotNull(pair)) {
+    if (ObjectHelper.isNotNull(pair)) {
       queryTime = pair.first;
       balance = pair.second;
     }

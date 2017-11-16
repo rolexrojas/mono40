@@ -9,6 +9,7 @@ import java.util.HashMap;
  *
  * @author hecvasro
  */
+@Deprecated
 public final class ApiRequestBody extends HashMap<String, String> {
   private ApiRequestBody() {
   }

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@drawable/d_container_background_dark"
+  tools:ignore="MissingPrefix">
+
+  <TextView
+    android:id="@+id/userNameTextView"
+    fontPath="@string/gothamRoundedBookFont"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginStart="8dp"
+    android:gravity="center"
+    android:textColor="@color/white"
+    android:textSize="15sp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.2"/>
+
+  <ImageView
+    android:id="@+id/userPictureImageView"
+    android:layout_width="80dp"
+    android:layout_height="80dp"
+    android:layout_marginBottom="20dp"
+    app:layout_constraintBottom_toTopOf="@+id/userNameTextView"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"/>
+
+  <!-- [START] Deprecated -->
+  <com.tpago.movil.dep.widget.LabelFitterLayout
+    android:id="@+id/labelFitterLayout"
+    style="@style/Widget.LabelFitterLayout"
+    android:layout_width="0dp"
+    android:layout_height="80dp"
+    android:layout_marginEnd="60dp"
+    android:layout_marginLeft="60dp"
+    android:layout_marginRight="60dp"
+    android:layout_marginStart="60dp"
+    android:layout_marginTop="20dp"
+    app:layout_constraintHorizontal_bias="0.0"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/userNameTextView"
+    app:maxTextSize="50sp">
+
+    <com.tpago.movil.dep.widget.EditableLabel
+      android:id="@+id/valueTextView"
+      style="@style/Widget.EditableLabel.Dark"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"/>
+
+  </com.tpago.movil.dep.widget.LabelFitterLayout>
+  <!-- [END] Deprecated -->
+
+  <TextView
+    android:id="@+id/usePasswordTextView"
+    fontPath="@string/gothamRoundedBoldFont"
+    android:layout_width="368dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="60dp"
+    android:layout_marginLeft="60dp"
+    android:layout_marginRight="60dp"
+    android:layout_marginStart="60dp"
+    android:layout_marginTop="15dp"
+    android:clickable="true"
+    android:gravity="center"
+    android:text="@string/forgotMyCode"
+    android:textAllCaps="true"
+    android:textColor="@color/white"
+    android:textSize="10sp"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/labelFitterLayout"/>
+
+  <com.tpago.movil.app.ui.NumPad
+    android:id="@+id/numPad"
+    style="@style/NumPad.Dark"
+    android:layout_width="368dp"
+    android:layout_height="296dp"
+    android:layout_marginBottom="0dp"
+    android:layout_marginLeft="0dp"
+    android:layout_marginRight="0dp"
+    android:layout_marginTop="8dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/usePasswordTextView"
+    app:layout_constraintVertical_bias="0.5"
+    app:layout_constraintHorizontal_bias="0.5"/>
+
+</android.support.constraint.ConstraintLayout>

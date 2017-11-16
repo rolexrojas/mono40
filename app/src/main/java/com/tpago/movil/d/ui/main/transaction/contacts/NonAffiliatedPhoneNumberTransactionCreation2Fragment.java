@@ -13,9 +13,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.tpago.Banks;
-import com.tpago.movil.api.DCurrencies;
-import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.Banks;
+import com.tpago.movil.dep.api.DCurrencies;
+import com.tpago.movil.d.domain.AccountRecipient;
+import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.R;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
@@ -23,19 +24,19 @@ import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
-import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
-import com.tpago.movil.domain.LogoStyle;
-import com.tpago.movil.text.Texts;
-import com.tpago.movil.util.Objects;
-import com.tpago.movil.widget.FullSizeLoadIndicator;
-import com.tpago.movil.widget.Keyboard;
-import com.tpago.movil.widget.LoadIndicator;
-import com.tpago.movil.widget.TextInput;
+import com.tpago.movil.d.domain.LogoStyle;
+import com.tpago.movil.dep.text.Texts;
+import com.tpago.movil.dep.widget.FullSizeLoadIndicator;
+import com.tpago.movil.dep.widget.Keyboard;
+import com.tpago.movil.dep.widget.LoadIndicator;
+import com.tpago.movil.dep.widget.TextInput;
+import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.util.StringHelper;
 
 import java.math.BigDecimal;
 import java.util.concurrent.atomic.AtomicReference;
@@ -48,7 +49,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
@@ -70,8 +70,6 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
   @Inject
   DepApiBridge apiBridge;
   @Inject
-  SessionManager sessionManager;
-  @Inject
   Recipient recipient;
   @Inject
   AtomicReference<Product> fundingAccount;
@@ -89,11 +87,11 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
 
   private void transferTo(String pin) {
     transferSubscription = apiBridge.transferTo(
-      sessionManager.getSession().getAuthToken(),
       fundingAccount.get(),
       recipient,
       value.get(),
-      pin)
+      pin
+    )
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
       .subscribe(new Action1<ApiResult<String>>() {
@@ -105,7 +103,8 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
           } else {
             Dialogs.builder(getContext())
               .setTitle(R.string.error_generic_title)
-              .setMessage(result.getError().getDescription())
+              .setMessage(result.getError()
+                .getDescription())
               .setPositiveButton(R.string.error_positive_button_text, null)
               .create()
               .show();
@@ -127,8 +126,10 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
   }
 
   @OnClick(R.id.button)
-  void onButtonClicked() {
-    final String content = textInput.getText().toString().trim();
+  final void onButtonClicked() {
+    final String content = textInput.getText()
+      .toString()
+      .trim();
     if (Texts.checkIfEmpty(content)) {
       Dialogs.builder(getContext())
         .setTitle("Número de cuenta incorrecto")
@@ -138,28 +139,34 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
         .show();
       textInput.setErraticStateEnabled(true);
     } else {
-      final String authToken = sessionManager.getSession().getAuthToken();
-      checkSubscription = apiBridge.checkAccountNumber(
-        authToken,
-        ((NonAffiliatedPhoneNumberRecipient) recipient).getBank(),
-        content)
+      final Bank bank;
+      if (recipient instanceof AccountRecipient) {
+        bank = ((AccountRecipient) recipient).bank();
+      } else {
+        bank = ((NonAffiliatedPhoneNumberRecipient) recipient).getBank();
+      }
+      checkSubscription = apiBridge.checkAccountNumber(bank, content)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe(new Action0() {
-          @Override
-          public void call() {
-            loadIndicator.start();
-          }
-        })
+        .doOnSubscribe(this.loadIndicator::start)
         .subscribe(new Action1<ApiResult<Pair<String, Product>>>() {
           @Override
           public void call(ApiResult<Pair<String, Product>> result) {
             loadIndicator.stop();
             if (result.isSuccessful()) {
               final Pair<String, Product> data = result.getData();
-              ((NonAffiliatedPhoneNumberRecipient) recipient).setLabel(data.first);
-              ((NonAffiliatedPhoneNumberRecipient) recipient).setProduct(data.second);
-              ((NonAffiliatedPhoneNumberRecipient) recipient).setAccountNumber(content);
+              if (recipient instanceof AccountRecipient) {
+                final AccountRecipient r = (AccountRecipient) recipient;
+                r.setLabel(data.first);
+                r.product(data.second);
+                r.number(content);
+              } else {
+                final NonAffiliatedPhoneNumberRecipient r
+                  = (NonAffiliatedPhoneNumberRecipient) recipient;
+                r.setLabel(data.first);
+                r.setProduct(data.second);
+                r.setAccountNumber(content);
+              }
               final int x = Math.round((button.getRight() - button.getLeft()) / 2);
               final int y = Math.round((button.getBottom() - button.getTop()) / 2);
               PinConfirmationDialogFragment.show(
@@ -167,11 +174,15 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
                 getString(
                   R.string.format_transfer_to,
                   Formatter
-                    .amount(DCurrencies.map(fundingAccount.get().getCurrency()), value.get()),
-                  data.first,
+                    .amount(DCurrencies.map(fundingAccount.get()
+                      .getCurrency()), value.get()),
+                  StringHelper.isNullOrEmpty(data.first) ? content : data.first,
                   Formatter.amount(
-                    DCurrencies.map(fundingAccount.get().getCurrency()),
-                    Bank.calculateTransferCost(value.get()))),
+                    DCurrencies.map(fundingAccount.get()
+                      .getCurrency()),
+                    Bank.calculateTransferCost(value.get())
+                  )
+                ),
                 new PinConfirmationDialogFragment.Callback() {
                   @Override
                   public void confirm(String pin) {
@@ -179,11 +190,13 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
                   }
                 },
                 x,
-                y);
+                y
+              );
             } else {
               Dialogs.builder(getContext())
                 .setTitle(R.string.error_generic_title)
-                .setMessage(result.getError().getDescription())
+                .setMessage(result.getError()
+                  .getDescription())
                 .setPositiveButton(R.string.error_positive_button_text, null)
                 .create()
                 .show();
@@ -209,7 +222,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final TransactionCreationComponent c = getContainer().getComponent();
-    if (Objects.checkIfNotNull(c)) {
+    if (ObjectHelper.isNotNull(c)) {
       c.inject(this);
     }
   }
@@ -219,11 +232,13 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
   public View onCreateView(
     LayoutInflater inflater,
     @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(
       R.layout.d_fragment_non_affiliated_phone_number_transaction_creation_2,
       container,
-      false);
+      false
+    );
   }
 
   @Override
@@ -236,15 +251,37 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
   @Override
   public void onResume() {
     super.onResume();
-    final Bank bank = ((NonAffiliatedPhoneNumberRecipient) recipient).getBank();
+    final Bank bank;
+    final String number;
+    if (recipient instanceof AccountRecipient) {
+      final AccountRecipient r = (AccountRecipient) recipient;
+
+      bank = r.bank();
+      number = r.number();
+    } else {
+      final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) recipient;
+
+      bank = r.getBank();
+      number = r.getAccountNumber();
+    }
+
     Picasso.with(getContext())
       .load(bank.getLogoUri(LogoStyle.PRIMARY_24))
       .noFade()
       .into(imageView);
-    textView.setText(String.format(getString(R.string.transaction), Banks.getName(bank)));
-    Keyboard.show(textInput);
-    textInput.setText(((NonAffiliatedPhoneNumberRecipient) recipient).getAccountNumber());
-    textInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+    this.textView.setText(
+      this.getString(
+        R.string.accountNumberConfirmationMessage,
+        this.getString(StringHelper.isNullOrEmpty(number) ? R.string.input : R.string.confirm),
+        Banks.getName(bank)
+      )
+    );
+
+    Keyboard.show(this.textInput);
+
+    this.textInput.setText(number);
+    this.textInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
       @Override
       public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_DONE) {

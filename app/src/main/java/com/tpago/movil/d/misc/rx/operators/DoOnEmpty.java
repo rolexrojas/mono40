@@ -11,6 +11,7 @@ import rx.functions.Action0;
  *
  * @author hecvasro
  */
+@Deprecated
 public class DoOnEmpty<T> implements Observable.Operator<T, T> {
   private final Action0 action;
 

@@ -20,7 +20,7 @@ import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
 import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
-import com.tpago.movil.main.transactions.PaymentMethodChooser;
+import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
 
 import java.util.List;
 
@@ -35,31 +35,25 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 
-public class BillTransactionCreationFragment extends ChildFragment<TransactionCreationContainer> implements BillTransactionCreationPresenter.View {
+public class BillTransactionCreationFragment extends ChildFragment<TransactionCreationContainer>
+  implements BillTransactionCreationPresenter.View {
+
   private BillTransactionCreationPresenter presenter;
 
   private Unbinder unbinder;
 
-  @Inject
-  StringHelper stringHelper;
+  @Inject StringHelper stringHelper;
 
-  @BindView(R.id.button)
-  Button button;
-  @BindView(R.id.prefixable_text_view_total_owed)
-  PrefixableTextView totalOwedPrefixableTextView;
-  @BindView(R.id.text_view_due_date)
-  TextView dueDateTextView;
-  @BindView(R.id.prefixable_text_view_total)
-  PrefixableTextView totalPrefixableTextView;
-  @BindView(R.id.prefixable_text_view_minimum)
-  PrefixableTextView minimumPrefixableTextView;
-  @BindView(R.id.radio_button_pay_total)
-  RadioButton totalRadioButton;
-  @BindView(R.id.radio_button_pay_minimum)
-  RadioButton minimumRadioButton;
-
-  @BindView(R.id.payment_method_chooser)
-  PaymentMethodChooser paymentMethodChooser;
+  @BindView(R.id.button) Button button;
+  @BindView(R.id.payment_method_chooser) PaymentMethodChooser paymentMethodChooser;
+  @BindView(R.id.prefixable_text_view_minimum) PrefixableTextView minimumPrefixableTextView;
+  @BindView(R.id.prefixable_text_view_total) PrefixableTextView totalPrefixableTextView;
+  @BindView(R.id.prefixable_text_view_total_owed) PrefixableTextView totalOwedPrefixableTextView;
+  @BindView(R.id.radio_button_pay_minimum) RadioButton minimumRadioButton;
+  @BindView(R.id.radio_button_pay_total) RadioButton totalRadioButton;
+  @BindView(R.id.text_view_due_date) TextView dueDateTextView;
+  @BindView(R.id.view_minimum) View minimumView;
+  @BindView(R.id.view_total) View totalView;
 
   public static BillTransactionCreationFragment create() {
     return new BillTransactionCreationFragment();
@@ -94,7 +88,8 @@ public class BillTransactionCreationFragment extends ChildFragment<TransactionCr
   public View onCreateView(
     LayoutInflater inflater,
     @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(R.layout.d_fragment_transaction_creation_bill, container, false);
   }
 
@@ -147,8 +142,20 @@ public class BillTransactionCreationFragment extends ChildFragment<TransactionCr
   }
 
   @Override
+  public void setTotalValueEnabled(boolean enabled) {
+    this.totalRadioButton.setEnabled(enabled);
+    this.totalView.setEnabled(enabled);
+  }
+
+  @Override
   public void setMinimumValue(String value) {
     minimumPrefixableTextView.setContent(value);
+  }
+
+  @Override
+  public void setMinimumValueEnabled(boolean enabled) {
+    this.minimumRadioButton.setEnabled(enabled);
+    this.minimumView.setEnabled(enabled);
   }
 
   @Override
@@ -189,7 +196,8 @@ public class BillTransactionCreationFragment extends ChildFragment<TransactionCr
         }
       },
       x,
-      y);
+      y
+    );
   }
 
   @Override
@@ -216,6 +224,7 @@ public class BillTransactionCreationFragment extends ChildFragment<TransactionCr
 
   @Override
   public void showUnavailableNetworkError() {
-    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG).show();
+    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG)
+      .show();
   }
 }

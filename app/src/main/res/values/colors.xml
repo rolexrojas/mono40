@@ -2,8 +2,8 @@
 <resources>
   <color name="accent">#9C188F</color>
   <color name="black">#000</color>
+  <color name="blackAlpha20">#33000000</color>
   <color name="black_10">#20000000</color>
-  <color name="black_20">#33000000</color>
   <color name="black_27">#45000000</color>
   <color name="black_40">#66000000</color>
   <color name="black_54">#89000000</color>
@@ -12,15 +12,25 @@
   <color name="erraticState_dark">#F8E81C</color>
   <color name="erraticState_dark_50">#7FF8E81C</color>
   <color name="primary">#9C188F</color>
+  <color name="primaryAlpha94">#F29C188F</color>
   <color name="primaryDark">#6D1764</color>
   <color name="primary_05">#0D9C188F</color>
   <color name="primary_20">#339C188F</color>
   <color name="primary_50">#7F9C188F</color>
   <color name="transparent">@android:color/transparent</color>
   <color name="white">#FFF</color>
+  <color name="whiteAlpha10">#20FFFFFF</color>
+  <color name="whiteAlpha50">#7FFFFFFF</color>
   <color name="white_20">#33FFFFFF</color>
-  <color name="white_50">#7FFFFFFF</color>
   <color name="white_90">#E5FFFFFF</color>
+
+  <!-- Num pad -->
+  <color name="numPadDark">@color/white</color>
+  <color name="numPadLight">#333</color>
+
+  <!-- Settings -->
+  <color name="normalSettingsText">#333</color>
+  <color name="dangerousSettingsText">#D0021B</color>
 
   <!-- TODO: Remove every color from this point downwards -->
   <color name="common_accent">#9C188F</color>

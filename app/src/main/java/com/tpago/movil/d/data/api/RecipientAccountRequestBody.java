@@ -5,13 +5,14 @@ import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.tpago.movil.d.domain.Product;
-import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.Bank;
 
 import java.math.BigDecimal;
 
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class RecipientAccountRequestBody {
   public static RecipientAccountRequestBody create(Product product, String name) {
@@ -39,5 +40,5 @@ public abstract class RecipientAccountRequestBody {
   @SerializedName("query-fee") abstract BigDecimal queryFee();
   @SerializedName("default-account") abstract boolean isDefaultPaymentMethod();
   @SerializedName("payable") abstract boolean isPaymentMethod();
-  @SerializedName("recipient-name") abstract String name();
+  @SerializedName("recipient-updateName") abstract String name();
 }

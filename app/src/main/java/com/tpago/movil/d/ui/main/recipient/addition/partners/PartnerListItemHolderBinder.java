@@ -3,8 +3,8 @@ package com.tpago.movil.d.ui.main.recipient.addition.partners;
 import android.support.annotation.NonNull;
 
 import com.squareup.picasso.Picasso;
-import com.tpago.movil.Partner;
-import com.tpago.movil.api.ApiImageUriBuilder;
+import com.tpago.movil.dep.Partner;
+import com.tpago.movil.dep.api.ApiImageUriBuilder;
 import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
 
 /**

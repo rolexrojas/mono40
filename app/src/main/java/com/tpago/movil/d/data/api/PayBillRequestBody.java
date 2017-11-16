@@ -12,6 +12,7 @@ import com.tpago.movil.d.domain.ProductInfo;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class PayBillRequestBody {
   public static PayBillRequestBody create(

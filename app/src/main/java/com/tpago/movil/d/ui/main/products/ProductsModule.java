@@ -1,14 +1,13 @@
 package com.tpago.movil.d.ui.main.products;
 
-import com.tpago.movil.Session;
-import com.tpago.movil.app.FragmentScope;
+import com.tpago.movil.app.ui.FragmentScope;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.BalanceManager;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.util.EventBus;
-import com.tpago.movil.net.NetworkService;
+import com.tpago.movil.dep.net.NetworkService;
 
 import dagger.Module;
 import dagger.Provides;
@@ -18,6 +17,7 @@ import dagger.Provides;
  */
 @Module
 class ProductsModule {
+
   ProductsModule() {
   }
 
@@ -30,8 +30,8 @@ class ProductsModule {
     BalanceManager balanceManager,
     NetworkService networkService,
     DepApiBridge depApiBridge,
-    Session session,
-    StringHelper stringHelper) {
+    StringHelper stringHelper
+  ) {
     return new ProductsPresenter(
       schedulerProvider,
       eventBus,
@@ -39,7 +39,7 @@ class ProductsModule {
       balanceManager,
       networkService,
       depApiBridge,
-      session.getToken(),
-      stringHelper);
+      stringHelper
+    );
   }
 }

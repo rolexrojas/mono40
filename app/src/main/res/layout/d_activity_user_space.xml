@@ -8,7 +8,7 @@
   <FrameLayout style="@style/Dep.App.Widget.AppBar">
     <android.support.v7.widget.Toolbar
       android:id="@+id/toolbar"
-      style="@style/Dep.App.Widget.Toolbar"
+      style="@style/Toolbar"
       android:layout_gravity="center_vertical" />
   </FrameLayout>
   <android.support.v7.widget.RecyclerView

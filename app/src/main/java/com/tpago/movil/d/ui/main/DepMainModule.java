@@ -1,6 +1,6 @@
 package com.tpago.movil.d.ui.main;
 
-import com.tpago.movil.app.ActivityScope;
+import com.tpago.movil.app.ui.ActivityScope;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.BalanceManager;
 import com.tpago.movil.d.domain.pos.PosBridge;
@@ -8,15 +8,16 @@ import com.tpago.movil.d.domain.util.EventBus;
 import com.tpago.movil.d.ui.AppDialog;
 
 import com.tpago.movil.d.ui.main.recipient.index.category.RecipientDrawableStore;
+
 import dagger.Module;
 import dagger.Provides;
 
 /**
  * @author hecvasro
  */
-@Module
 @Deprecated
-class DepMainModule {
+@Module
+public class DepMainModule {
 
   @Provides
   @ActivityScope

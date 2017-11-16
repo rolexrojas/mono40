@@ -11,9 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tpago.movil.Partner;
+import com.tpago.movil.dep.Partner;
 import com.tpago.movil.R;
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.main.list.ListItemHolder;
@@ -25,6 +24,8 @@ import com.tpago.movil.d.ui.main.list.NoResultsListItemHolderCreator;
 import com.tpago.movil.d.ui.main.list.NoResultsListItemItem;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
+import com.tpago.movil.d.domain.Bank;
+import com.tpago.movil.util.ObjectHelper;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import javax.inject.Inject;
@@ -43,6 +44,7 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
   extends ChildFragment<SearchOrChooseRecipientContainer>
   implements RecipientCandidateListScreen,
   ListItemHolder.OnClickListener {
+
   private Unbinder unbinder;
   private LoadIndicator loadIndicator;
   private ListItemAdapter adapter;
@@ -73,8 +75,10 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
 
   @Nullable
   @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+  public View onCreateView(
+    LayoutInflater inflater, @Nullable ViewGroup container,
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(R.layout.d_fragment_recipient_candidate_list, container, false);
   }
 
@@ -90,13 +94,15 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
     final Context context = getContext();
     final BinderFactory holderBinderFactory = createHolderBinderFactoryBuilder()
       .addBinder(NoResultsListItemItem.class, NoResultsListItemHolder.class,
-        new NoResultsListItemHolderBinder(context))
+        new NoResultsListItemHolderBinder(context)
+      )
       .build();
     adapter = new ListItemAdapter(holderCreatorFactory, holderBinderFactory);
     recyclerView.setAdapter(adapter);
     recyclerView.setHasFixedSize(true);
     recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL,
-      false));
+      false
+    ));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
       .drawable(R.drawable.d_divider)
       .marginResId(R.dimen.space_horizontal_normal)
@@ -142,7 +148,7 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
 
   @Nullable
   public LoadIndicator getRefreshIndicator() {
-    if (Utils.isNull(loadIndicator) && Utils.isNotNull(swipeRefreshLayout)) {
+    if (ObjectHelper.isNull(loadIndicator) && ObjectHelper.isNotNull(swipeRefreshLayout)) {
       loadIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
     }
     return loadIndicator;
@@ -161,6 +167,8 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
       getContainer().onContactClicked((Contact) item);
     } else if (item instanceof Partner) {
       getContainer().onPartnerClicked(((Partner) item));
+    } else if (item instanceof Bank) {
+      getContainer().onBankClicked((Bank) item);
     }
   }
 }

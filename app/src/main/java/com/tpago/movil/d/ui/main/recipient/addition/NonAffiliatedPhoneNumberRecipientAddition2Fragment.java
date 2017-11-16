@@ -15,22 +15,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.tpago.Banks;
-import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.Banks;
+import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.R;
-import com.tpago.movil.app.App;
+import com.tpago.movil.dep.App;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
-import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.Dialogs;
-import com.tpago.movil.domain.LogoStyle;
-import com.tpago.movil.text.Texts;
-import com.tpago.movil.widget.FullSizeLoadIndicator;
-import com.tpago.movil.widget.Keyboard;
-import com.tpago.movil.widget.LoadIndicator;
-import com.tpago.movil.widget.TextInput;
+import com.tpago.movil.d.domain.LogoStyle;
+import com.tpago.movil.dep.text.Texts;
+import com.tpago.movil.dep.widget.FullSizeLoadIndicator;
+import com.tpago.movil.dep.widget.Keyboard;
+import com.tpago.movil.dep.widget.LoadIndicator;
+import com.tpago.movil.dep.widget.TextInput;
 
 import javax.inject.Inject;
 
@@ -60,8 +59,6 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
 
   @Inject
   DepApiBridge apiBridge;
-  @Inject
-  SessionManager sessionManager;
 
   @BindView(R.id.image_view_background)
   ImageView imageView;
@@ -72,7 +69,9 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
 
   @OnClick(R.id.button)
   void onButtonClicked() {
-    final String content = textInput.getText().toString().trim();
+    final String content = textInput.getText()
+      .toString()
+      .trim();
     if (Texts.checkIfEmpty(content)) {
       Dialogs.builder(getContext())
         .setTitle("Número de cuenta incorrecto")
@@ -83,9 +82,9 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
       textInput.setErraticStateEnabled(true);
     } else {
       subscription = apiBridge.checkAccountNumber(
-        sessionManager.getSession().getAuthToken(),
         recipient.getBank(),
-        content)
+        content
+      )
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(new Action0() {
@@ -106,12 +105,14 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
               final Activity activity = getActivity();
               activity.setResult(
                 Activity.RESULT_OK,
-                NonAffiliatedPhoneNumberRecipientAdditionActivity.serializeResult(recipient));
+                NonAffiliatedPhoneNumberRecipientAdditionActivity.serializeResult(recipient)
+              );
               activity.finish();
             } else {
               Dialogs.builder(getContext())
                 .setTitle(R.string.error_generic_title)
-                .setMessage(result.getError().getDescription())
+                .setMessage(result.getError()
+                  .getDescription())
                 .setPositiveButton(R.string.error_positive_button_text, null)
                 .create()
                 .show();
@@ -142,7 +143,9 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    App.get(getContext()).getComponent().inject(this);
+    App.get(getContext())
+      .component()
+      .inject(this);
   }
 
   @Nullable
@@ -150,11 +153,13 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
   public View onCreateView(
     LayoutInflater inflater,
     @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(
       R.layout.d_fragment_non_affiliated_phone_number_recipient_addition_2,
       container,
-      false);
+      false
+    );
   }
 
   @Override
@@ -172,7 +177,15 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
       .load(bank.getLogoUri(LogoStyle.PRIMARY_24))
       .noFade()
       .into(imageView);
-    textView.setText(String.format(getString(R.string.transaction), Banks.getName(bank)));
+
+    this.textView.setText(
+      this.getString(
+        R.string.accountNumberConfirmationMessage,
+        this.getString(R.string.input),
+        Banks.getName(bank)
+      )
+    );
+
     Keyboard.show(textInput);
     textInput.setText(recipient.getAccountNumber());
     textInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {

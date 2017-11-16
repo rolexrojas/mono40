@@ -3,22 +3,22 @@ package com.tpago.movil.d.domain.api;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
-import com.tpago.movil.Partner;
+import com.tpago.movil.dep.Partner;
 import com.tpago.movil.d.domain.Balance;
 import com.tpago.movil.d.domain.CreditCardBillBalance;
 import com.tpago.movil.d.domain.Customer;
 import com.tpago.movil.d.domain.LoanBillBalance;
 import com.tpago.movil.d.domain.PaymentResult;
-import com.tpago.movil.d.domain.PhoneNumber;
 import com.tpago.movil.d.domain.ProductBillBalance;
 import com.tpago.movil.d.domain.ProductRecipient;
-import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.InitialData;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.Transaction;
+import com.tpago.movil.PhoneNumber;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -26,93 +26,28 @@ import java.util.List;
 import rx.Observable;
 
 /**
- * TODO
- *
  * @author hecvasro
+ * @deprecated Use {@link com.tpago.movil.api.Api} instead.
  */
 @Deprecated
 public interface DepApiBridge {
-  /**
-   * TODO
-   *
-   * @param authToken
-   *   TODO
-   *
-   * @return TODO
-   */
-  @NonNull
-  Observable<ApiResult<InitialData>> initialLoad(@NonNull String authToken);
 
-  /**
-   * Query the {@link Balance balance} of a {@link Product creditCard} from the API.
-   * <p>
-   * <em>Note:</em> By default {@link #queryBalance(String, Product, String)} does not operates on a
-   * particular {@link rx.Scheduler}.
-   *
-   * @param product
-   *   {@link Product} that will be queried.
-   * @param pin
-   *   User's PIN code.
-   *
-   * @return {@link Balance balance} of a {@link Product creditCard} from the API.
-   */
   @NonNull
-  ApiResult<Balance> queryBalance(String authToken, Product product, String pin);
+  Observable<ApiResult<InitialData>> initialLoad();
 
-  /**
-   * Creates an {@link Observable observable} that emits the latest {@link Transaction transactions}
-   * that were made.
-   * <p>
-   * <em>Note:</em> By default {@link #recentTransactions(String)} does not operates on a particular
-   * {@link rx.Scheduler}.
-   *
-   * @return An {@link Observable observable} that emits the latest {@link Transaction transactions}
-   * that were made.
-   */
   @NonNull
-  Observable<ApiResult<List<Transaction>>> recentTransactions(@NonNull String authToken);
+  ApiResult<Balance> queryBalance(Product product, String pin);
 
-  /**
-   * Creates an {@link Observable observable} that emits all the registered {@link Recipient
-   * recipients}.
-   * <p>
-   * <em>Note:</em> By default {@link #recipients(String)} does not operates on a particular {@link
-   * rx.Scheduler}.
-   *
-   * @return An {@link Observable observable} that emits all the registered {@link Recipient
-   * recipients}.
-   */
   @NonNull
-  Observable<ApiResult<List<Recipient>>> recipients(@NonNull String authToken);
+  Observable<ApiResult<List<Transaction>>> recentTransactions();
 
-  /**
-   * TODO
-   *
-   * @param authToken
-   *   TODO
-   * @param phoneNumber
-   *   TODO
-   *
-   * @return TODO
-   */
   @NonNull
-  Observable<ApiResult<Boolean>> checkIfAffiliated(@NonNull String authToken,
-    @NonNull String phoneNumber);
+  Observable<ApiResult<List<Recipient>>> recipients();
 
-  /**
-   * TODO
-   *
-   * @param recipient
-   *   TODO
-   * @param amount
-   *   TODO
-   * @param pin
-   *   TODO
-   *
-   * @return TODO
-   */
+  @NonNull
+  Observable<ApiResult<Boolean>> checkIfAffiliated(@NonNull String phoneNumber);
+
   Observable<ApiResult<String>> transferTo(
-    String authToken,
     Product product,
     Recipient recipient,
     BigDecimal amount,
@@ -120,76 +55,76 @@ public interface DepApiBridge {
   );
 
   Observable<ApiResult<String>> transferTo(
-    String authToken,
     Product fundingProduct,
     Product destinationProduct,
     BigDecimal amount,
     String pin
   );
 
-  ApiResult<Void> setDefaultPaymentOption(String authToken, Product paymentOption);
+  ApiResult<Void> setDefaultPaymentOption(Product paymentOption);
 
   Observable<ApiResult<Pair<String, Product>>> checkAccountNumber(
-    String authToken,
     Bank bank,
-    String accountNumber);
+    String accountNumber
+  );
 
-  Observable<ApiResult<List<Partner>>> partners(String authToken);
+  Observable<ApiResult<List<Bank>>> banks();
+
+  Observable<ApiResult<List<Partner>>> partners();
 
   Observable<ApiResult<Void>> addBill(
-    String authToken,
     Partner partner,
     String contractNumber,
-    String pin);
+    String pin
+  );
 
   ApiResult<Void> removeBill(
-    String authToken,
     BillRecipient bill,
-    String pin);
+    String pin
+  );
 
-  ApiResult<BillBalance> queryBalance(String authToken, BillRecipient recipient);
+  ApiResult<BillBalance> queryBalance(BillRecipient recipient);
 
-  ApiResult<ProductBillBalance> queryBalance(String authToken, ProductRecipient recipient);
+  ApiResult<ProductBillBalance> queryBalance(ProductRecipient recipient);
 
   Observable<ApiResult<String>> payBill(
-    String authToken,
     BillRecipient bill,
     Product fundingAccount,
     BillRecipient.Option option,
-    String pin);
+    String pin
+  );
 
   Observable<ApiResult<PaymentResult>> payCreditCardBill(
-    String authToken,
     BigDecimal amountToPay,
     CreditCardBillBalance.Option option,
     String pin,
     Product fundingAccount,
-    Product creditCard);
+    Product creditCard
+  );
 
   Observable<ApiResult<PaymentResult>> payLoanBill(
-    String authToken,
     BigDecimal amountToPay,
     LoanBillBalance.Option option,
     String pin,
     Product fundingAccount,
-    Product loan);
+    Product loan
+  );
 
-  ApiResult<Boolean> validatePin(String authToken, String pin);
+  ApiResult<Boolean> validatePin(String pin);
 
-  ApiResult<Customer.State> fetchCustomerState(String authToken, String phoneNumber);
-  ApiResult<Customer> fetchCustomer(String authToken, String phoneNumber);
+  ApiResult<Customer.State> fetchCustomerState(String phoneNumber);
+
+  ApiResult<Customer> fetchCustomer(String phoneNumber);
 
   Observable<ApiResult<String>> recharge(
-    String authToken,
     Partner carrier,
-    com.tpago.movil.PhoneNumber phoneNumber,
+    PhoneNumber phoneNumber,
     Product fundingAccount,
     BigDecimal amount,
     String pin
   );
 
   ApiResult<String> advanceCash(
-    String authToken,
     Product fundingAccount,
     Product recipientAccount,
     BigDecimal amount,

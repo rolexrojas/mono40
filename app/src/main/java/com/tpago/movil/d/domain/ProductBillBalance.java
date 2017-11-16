@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 /**
  * @author Hector Vasquez
  */
+@Deprecated
 public abstract class ProductBillBalance implements Parcelable {
   @SerializedName("due-date") public abstract String dueDate();
 

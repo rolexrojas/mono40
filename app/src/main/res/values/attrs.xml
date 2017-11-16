@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+  <declare-styleable name="NumPad">
+    <attr name="buttonTextColor" format="color|reference"/>
+    <attr name="dotButtonEnabled" format="boolean"/>
+    <attr name="deleteButtonDrawable" format="reference"/>
+  </declare-styleable>
+
+  <declare-styleable name="MoneyLabel">
+    <attr name="currency" format="string|reference"/>
+  </declare-styleable>
+
+  <declare-styleable name="SettingsOption">
+    <attr name="primaryText" format="string|reference"/>
+    <attr name="primaryTextColor" format="color|reference"/>
+  </declare-styleable>
+
+  <declare-styleable name="MultiLineSettingsOption">
+    <attr name="secondaryText" format="string|reference"/>
+  </declare-styleable>
+
+  <declare-styleable name="AppTheme">
+    <attr name="dividerStyle" format="reference"/>
+    <attr name="settingsSectionDividerStyle" format="reference"/>
+    <attr name="settingsOptionStyle" format="reference"/>
+  </declare-styleable>
+
+  <!-- TODO: Remove every dimension from this point downwards -->
   <declare-styleable name="ErraticState">
     <attr name="state_erratic" format="boolean"/>
   </declare-styleable>
@@ -27,13 +54,6 @@
     <attr name="textInputStyle" format="reference"/>
     <attr name="amountTextViewStyle" format="reference"/>
     <attr name="amountTextInputStyle" format="reference"/>
-  </declare-styleable>
-
-  <!-- TODO: Remove every dimension from this point downwards -->
-  <declare-styleable name="NumPad">
-    <attr name="color"/>
-    <attr name="dotEnabled" format="boolean"/>
-    <attr name="deleteDrawable" format="reference"/>
   </declare-styleable>
 
   <declare-styleable name="DepPrefixableTextView">
@@ -64,16 +84,6 @@
       name="prefixMinTextSize"
       format="dimension|reference"/>
   </declare-styleable>
-  <declare-styleable name="DepNumPad">
-    <attr
-      name="tintColor"
-      format="color|reference"/>
-    <attr name="dotEnabled"/>
-    <attr
-      name="deleteEnabled"
-      format="boolean"/>
-    <attr name="deleteDrawable"/>
-  </declare-styleable>
 
   <declare-styleable name="DepApp.Theme">
     <attr
@@ -81,9 +91,6 @@
       format="reference"/>
     <attr
       name="autoResizeablePrefixableTextViewStyle"
-      format="reference"/>
-    <attr
-      name="numPadStyle"
       format="reference"/>
     <attr
       name="searchViewStyle"

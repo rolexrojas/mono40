@@ -7,6 +7,7 @@ import rx.functions.Func1;
 /**
  * @author hecvasro
  */
+@Deprecated
 final class FetchCustomerStateResponseBody {
   public static Func1<FetchCustomerStateResponseBody, Customer.State> mapFunc() {
     return new Func1<FetchCustomerStateResponseBody, Customer.State>() {

@@ -3,9 +3,9 @@ package com.tpago.movil.d.ui.main.recipient.index.category;
 import static com.tpago.movil.d.domain.Recipient.acceptsPayments;
 import static com.tpago.movil.d.domain.Recipient.acceptsRecharges;
 import static com.tpago.movil.d.domain.Recipient.acceptsTransfers;
-import static com.tpago.movil.util.Preconditions.assertNotNull;
 
 import com.tpago.movil.d.domain.Recipient;
+
 import rx.functions.Func1;
 
 /**
@@ -20,7 +20,7 @@ final class CategoryFilter implements Func1<Recipient, Boolean> {
   private final Category category;
 
   private CategoryFilter(Category category) {
-    this.category = assertNotNull(category, "category == null");
+    this.category = category;
   }
 
   @Override

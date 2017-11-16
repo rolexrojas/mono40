@@ -1,22 +1,21 @@
 package com.tpago.movil.d.domain;
 
 import static com.tpago.movil.d.domain.RecipientType.NON_AFFILIATED_PHONE_NUMBER;
-import static com.tpago.movil.text.Texts.checkIfNotEmpty;
-import static com.tpago.movil.util.Objects.checkIfNotNull;
 
 import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.tpago.movil.PhoneNumber;
-import com.tpago.movil.Partner;
-import com.tpago.movil.domain.Bank;
-import com.tpago.movil.text.Texts;
-import com.tpago.movil.util.Objects;
+import com.tpago.movil.dep.Partner;
+import com.tpago.movil.dep.text.Texts;
+import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.util.StringHelper;
 
 /**
  * @author hecvasro
  */
+@Deprecated
 public class NonAffiliatedPhoneNumberRecipient extends Recipient {
 
   public static final Creator<NonAffiliatedPhoneNumberRecipient> CREATOR
@@ -66,8 +65,10 @@ public class NonAffiliatedPhoneNumberRecipient extends Recipient {
     this.carrier = carrier;
   }
 
-  public NonAffiliatedPhoneNumberRecipient(@NonNull PhoneNumber phoneNumber,
-    @Nullable String label) {
+  public NonAffiliatedPhoneNumberRecipient(
+    @NonNull PhoneNumber phoneNumber,
+    @Nullable String label
+  ) {
     this(phoneNumber, label, null, null, null, null);
   }
 
@@ -80,11 +81,13 @@ public class NonAffiliatedPhoneNumberRecipient extends Recipient {
   }
 
   public final boolean canAcceptTransfers() {
-    return checkIfNotNull(this.bank) && checkIfNotEmpty(this.accountNumber) && checkIfNotNull(this.product);
+    return ObjectHelper.isNotNull(this.bank)
+      && !StringHelper.isNullOrEmpty(this.accountNumber)
+      && ObjectHelper.isNotNull(this.product);
   }
 
   public final boolean canAcceptRecharges() {
-    return checkIfNotNull(carrier);
+    return ObjectHelper.isNotNull(carrier);
   }
 
   public Bank getBank() {
@@ -132,7 +135,7 @@ public class NonAffiliatedPhoneNumberRecipient extends Recipient {
 
   @Override
   public String getId() {
-    return Texts.join("-", this.getType(), this.phoneNumber.getValue());
+    return Texts.join("-", this.getType(), this.phoneNumber.value());
   }
 
   @NonNull

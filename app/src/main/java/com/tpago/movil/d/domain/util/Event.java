@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
  *
  * @author hecvasro
  */
+@Deprecated
 public abstract class Event {
   /**
    * Event's {@link EventType type}.

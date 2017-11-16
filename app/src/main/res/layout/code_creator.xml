@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  style="@style/CodeCreatorContainer"
+  android:orientation="vertical">
+
+  <FrameLayout style="@style/LogoContainer">
+
+    <ImageView
+      style="@style/Logo"
+      android:layout_gravity="center"/>
+  </FrameLayout>
+
+  <Space style="@style/VerticalDivider.Space.Small"/>
+
+  <TextView
+    android:id="@+id/titleTextView"
+    style="@style/CodeCreatorTitle"/>
+
+  <Space style="@style/VerticalDivider.Space.Small"/>
+
+  <TextView
+    android:id="@+id/subtitleTextView"
+    style="@style/CodeCreatorSubtitle"/>
+
+  <Space style="@style/VerticalDivider.Space.Normal"/>
+
+  <!-- [START] Deprecated -->
+  <com.tpago.movil.dep.widget.LabelFitterLayout
+    style="@style/Widget.LabelFitterLayout"
+    android:layout_marginEnd="@dimen/hugeHorizontalSpace"
+    android:layout_marginStart="@dimen/hugeHorizontalSpace"
+    app:maxTextSize="50sp">
+
+    <com.tpago.movil.dep.widget.EditableLabel
+      android:id="@+id/valueTextView"
+      style="@style/Widget.EditableLabel.Dark"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"/>
+  </com.tpago.movil.dep.widget.LabelFitterLayout>
+  <!-- [END] Deprecated -->
+
+  <com.tpago.movil.app.ui.NumPad
+    android:id="@+id/numPad"
+    style="@style/NumPad.Dark"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"/>
+</LinearLayout>

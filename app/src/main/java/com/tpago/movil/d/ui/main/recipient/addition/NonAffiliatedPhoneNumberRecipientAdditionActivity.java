@@ -12,8 +12,8 @@ import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.Recipient;
-import com.tpago.movil.d.ui.BaseActivity;
-import com.tpago.movil.util.Objects;
+import com.tpago.movil.d.ui.DepBaseActivity;
+import com.tpago.movil.util.ObjectHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,7 +22,8 @@ import butterknife.Unbinder;
 /**
  * @author hecvasro
  */
-public class NonAffiliatedPhoneNumberRecipientAdditionActivity extends BaseActivity {
+public class NonAffiliatedPhoneNumberRecipientAdditionActivity extends DepBaseActivity {
+
   private static final String KEY_RECIPIENT = "recipient";
 
   private Unbinder unbinder;
@@ -39,7 +40,8 @@ public class NonAffiliatedPhoneNumberRecipientAdditionActivity extends BaseActiv
 
   public static Intent getLaunchIntent(
     Context context,
-    NonAffiliatedPhoneNumberRecipient recipient) {
+    NonAffiliatedPhoneNumberRecipient recipient
+  ) {
     final Intent i = new Intent(context, NonAffiliatedPhoneNumberRecipientAdditionActivity.class);
     i.putExtra(KEY_RECIPIENT, recipient);
     return i;
@@ -53,7 +55,7 @@ public class NonAffiliatedPhoneNumberRecipientAdditionActivity extends BaseActiv
   }
 
   public static Recipient deserializeResult(Intent data) {
-    if (Objects.checkIfNull(data)) {
+    if (ObjectHelper.isNull(data)) {
       return null;
     } else {
       return data.getParcelableExtra(KEY_RECIPIENT);
@@ -61,7 +63,7 @@ public class NonAffiliatedPhoneNumberRecipientAdditionActivity extends BaseActiv
   }
 
   @Override
-  protected int layoutResourceIdentifier() {
+  protected int layoutResId() {
     return R.layout.d_activity_non_affiliated_phone_number_recipient_addition;
   }
 
@@ -71,7 +73,7 @@ public class NonAffiliatedPhoneNumberRecipientAdditionActivity extends BaseActiv
     unbinder = ButterKnife.bind(this);
     setSupportActionBar(toolbar);
     final ActionBar actionBar = getSupportActionBar();
-    if (Objects.checkIfNotNull(actionBar)) {
+    if (ObjectHelper.isNotNull(actionBar)) {
       actionBar.setDisplayHomeAsUpEnabled(true);
       actionBar.setTitle(R.string.add_recipient_title);
     }

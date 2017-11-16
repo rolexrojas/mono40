@@ -1,9 +1,11 @@
 package com.tpago.movil.d.ui.main;
 
+import static com.tpago.movil.d.domain.Product.checkIfCreditCard;
 import static com.tpago.movil.d.ui.main.recipient.index.category.Category.PAY;
 import static com.tpago.movil.d.ui.main.recipient.index.category.Category.RECHARGE;
 import static com.tpago.movil.d.ui.main.recipient.index.category.Category.TRANSFER;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,17 +18,23 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-import com.tpago.movil.Session;
-import com.tpago.movil.TimeOutManager;
-import com.tpago.movil.app.App;
+import com.tpago.movil.app.di.ComponentBuilderSupplier;
+import com.tpago.movil.app.ui.ActivityModule;
+import com.tpago.movil.app.ui.AlertData;
+import com.tpago.movil.app.ui.main.MainComponent;
+import com.tpago.movil.d.ui.DepActivityModule;
+import com.tpago.movil.dep.TimeOutManager;
+import com.tpago.movil.app.ui.ActivityQualifier;
+import com.tpago.movil.dep.App;
 import com.tpago.movil.R;
+import com.tpago.movil.app.ui.FragmentReplacer;
+import com.tpago.movil.app.ui.main.settings.SettingsFragment;
+import com.tpago.movil.d.domain.Product;
+import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.ResetEvent;
 import com.tpago.movil.d.domain.pos.PosBridge;
-import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.domain.util.EventBus;
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.StringHelper;
-import com.tpago.movil.d.ui.DepActivityModule;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.SwitchableContainerActivity;
@@ -35,10 +43,12 @@ import com.tpago.movil.d.ui.main.products.ProductsFragment;
 import com.tpago.movil.d.ui.main.recipient.index.category.RecipientCategoryFragment;
 import com.tpago.movil.d.ui.main.recipient.index.disburse.DisbursementFragment;
 import com.tpago.movil.d.ui.view.widget.SlidingPaneLayout;
-import com.tpago.movil.init.InitActivity;
-import com.tpago.movil.main.MainModule;
-import com.tpago.movil.main.purchase.NonNfcPurchaseFragment;
-import com.tpago.movil.util.Objects;
+import com.tpago.movil.dep.init.InitActivity;
+import com.tpago.movil.dep.main.MainModule;
+import com.tpago.movil.dep.main.purchase.NonNfcPurchaseFragment;
+import com.tpago.movil.reactivex.DisposableHelper;
+import com.tpago.movil.session.SessionManager;
+import com.tpago.movil.util.ObjectHelper;
 
 import javax.inject.Inject;
 
@@ -46,6 +56,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
+import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * @author hecvasro
@@ -57,7 +72,17 @@ public class DepMainActivity
   MainScreen,
   TimeOutManager.TimeOutHandler {
 
-  private static final String KEY_SESSION = "session";
+  public static DepMainActivity get(Activity activity) {
+    ObjectHelper.checkNotNull(activity, "activity");
+    if (!(activity instanceof DepMainActivity)) {
+      throw new ClassCastException("!(activity instanceof DepMainActivity)");
+    }
+    return (DepMainActivity) activity;
+  }
+
+  public final Toolbar toolbar() {
+    return this.toolbar;
+  }
 
   private Unbinder unbinder;
   private DepMainComponent component;
@@ -66,18 +91,27 @@ public class DepMainActivity
   private boolean shouldRequestAuthentication = false;
 
   @Inject
-  TimeOutManager timeOutManager;
+  @ActivityQualifier
+  ComponentBuilderSupplier componentBuilderSupplier;
+
+  @Inject SessionManager sessionManager;
+
+  @Inject
+  @ActivityQualifier
+  FragmentReplacer fragmentReplacer;
+
+  @Inject TimeOutManager timeOutManager;
 
   @Inject
   StringHelper stringHelper;
   @Inject
   MainPresenter presenter;
   @Inject
-  SessionManager sessionManager;
-  @Inject
   EventBus eventBus;
   @Inject
   PosBridge posBridge;
+  @Inject
+  ProductManager productManager;
 
   @BindView(R.id.sliding_pane_layout)
   SlidingPaneLayout slidingPaneLayout;
@@ -90,14 +124,15 @@ public class DepMainActivity
   @BindView(R.id.image_button_delete)
   ImageButton deleteImageButton;
 
+  private Disposable closeSessionDisposable = Disposables.disposed();
+
   @NonNull
-  public static Intent getLaunchIntent(
-    Context context,
-    Session session
-  ) {
-    final Intent i = new Intent(context, DepMainActivity.class);
-    i.putExtra(KEY_SESSION, session);
-    return i;
+  public static Intent getLaunchIntent(Context context) {
+    return new Intent(context, DepMainActivity.class);
+  }
+
+  public final ComponentBuilderSupplier componentBuilderSupplier() {
+    return this.componentBuilderSupplier;
   }
 
   @Override
@@ -107,7 +142,7 @@ public class DepMainActivity
   }
 
   @Override
-  protected int layoutResourceIdentifier() {
+  protected int layoutResId() {
     return R.layout.d_activity_main;
   }
 
@@ -116,16 +151,18 @@ public class DepMainActivity
     super.onCreate(savedInstanceState);
     unbinder = ButterKnife.bind(this);
     // Injects all the annotated dependencies.
-    component = DaggerDepMainComponent.builder()
-      .appComponent(((App) getApplication()).getComponent())
-      .mainModule(new MainModule(((Session) getIntent().getParcelableExtra(KEY_SESSION)), this))
+    this.component = App.get(this)
+      .componentBuilderSupplier()
+      .get(DepMainActivity.class, MainComponent.Builder.class)
+      .activityModule(ActivityModule.create(this))
       .depActivityModule(new DepActivityModule(this))
+      .mainModule(new MainModule(this))
       .build();
     component.inject(this);
     // Prepares the action bar.
     setSupportActionBar(toolbar);
     final ActionBar actionBar = getSupportActionBar();
-    if (Utils.isNotNull(actionBar)) {
+    if (ObjectHelper.isNotNull(actionBar)) {
       actionBar.setDisplayShowTitleEnabled(true);
     }
     // Prepares the toolbar.
@@ -168,8 +205,11 @@ public class DepMainActivity
 
   @Override
   protected void onStop() {
-    super.onStop();
+    DisposableHelper.dispose(this.closeSessionDisposable);
+
     presenter.stop();
+
+    super.onStop();
   }
 
   @Override
@@ -222,20 +262,52 @@ public class DepMainActivity
         this.setChildFragment(RecipientCategoryFragment.create(RECHARGE));
         break;
       case R.id.main_menuItem_disburse:
-        this.setChildFragment(DisbursementFragment.create());
+        boolean hasCreditCards = false;
+        for (Product product : this.productManager.getProductList()) {
+          if (checkIfCreditCard(product)) {
+            hasCreditCards = true;
+            break;
+          }
+        }
+        if (hasCreditCards) {
+          this.setChildFragment(DisbursementFragment.create());
+        } else {
+          Dialogs.builder(this)
+            .setTitle(R.string.weAreSorry)
+            .setMessage(
+              "No tiene tarjetas de crédito afiliadas para realizar esta transacción. Favor enrole sus tarjetas e intente de nuevo."
+            )
+            .setPositiveButton(R.string.ok, null)
+            .show();
+        }
         break;
       case R.id.main_menuItem_wallet:
         this.setChildFragment(ProductsFragment.newInstance());
         break;
       case R.id.main_menuItem_settings:
-        Dialogs.featureNotAvailable(this)
-          .show();
+        this.fragmentReplacer.begin(SettingsFragment.create())
+          .transition(FragmentReplacer.Transition.FIFO)
+          .addToBackStack()
+          .commit();
         break;
       case R.id.main_menuItem_exit:
-        this.sessionManager.deactivate();
-
-        this.startActivity(InitActivity.getLaunchIntent(this));
-        this.finish();
+        this.closeSessionDisposable = this.sessionManager.closeSession()
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .doOnSubscribe((d) -> this.takeoverLoader.show())
+          .doFinally(this.takeoverLoader::hide)
+          .subscribe(
+            () -> {
+              this.startActivity(InitActivity.getLaunchIntent(this));
+              this.finish();
+            },
+            (throwable) -> {
+              Timber.e(throwable, "Closing session");
+              final AlertData alertData = AlertData.builder(this.stringMapper)
+                .build();
+              this.alertManager.show(alertData);
+            }
+          );
         break;
     }
   }
@@ -244,8 +316,7 @@ public class DepMainActivity
   public void onBackPressed() {
     if (slidingPaneLayout.isOpen()) {
       slidingPaneLayout.closePane();
-    } else if (Objects.checkIfNull(onBackPressedListener) || !onBackPressedListener
-      .onBackPressed()) {
+    } else if (ObjectHelper.isNull(onBackPressedListener) || !onBackPressedListener.onBackPressed()) {
       super.onBackPressed();
     }
   }
@@ -259,7 +330,7 @@ public class DepMainActivity
   @Override
   public void setTitle(@Nullable String title) {
     final ActionBar actionBar = getSupportActionBar();
-    if (Utils.isNotNull(actionBar)) {
+    if (ObjectHelper.isNotNull(actionBar)) {
       actionBar.setTitle(title);
     }
   }
@@ -312,7 +383,8 @@ public class DepMainActivity
 
   @Override
   public void handleTimeOut() {
-    if (App.get(this).isVisible()) {
+    if (App.get(this)
+      .isVisible()) {
       startActivity(InitActivity.getLaunchIntent(this));
       finish();
     } else {

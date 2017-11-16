@@ -35,7 +35,7 @@
           android:layout_marginStart="25dp"
           android:gravity="bottom|end"/>
         <TextView
-          fontPath="@string/font_gotham_round_medium"
+          fontPath="@string/gothamRoundedMediumFont"
           android:layout_width="wrap_content"
           android:layout_height="match_parent"
           android:layout_alignParentStart="true"
@@ -71,7 +71,7 @@
       </RelativeLayout>
     </LinearLayout>
     <include layout="@layout/d_reusable_divider"/>
-    <com.tpago.movil.main.transactions.PaymentMethodChooser
+    <com.tpago.movil.dep.main.transactions.PaymentMethodChooser
       android:id="@+id/payment_method_chooser"
       style="@style/D.Transactions.Widget.PaymentMethodChooser"
       android:layout_marginEnd="32dp"
@@ -94,7 +94,7 @@
           android:gravity="center_vertical|end"/>
         <RadioButton
           android:id="@+id/radio_button_pay_total"
-          fontPath="@string/font_gotham_round_book"
+          fontPath="@string/gothamRoundedBookFont"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_alignParentStart="true"
@@ -122,7 +122,7 @@
           android:gravity="center_vertical|end"/>
         <RadioButton
           android:id="@+id/radio_button_pay_minimum"
-          fontPath="@string/font_gotham_round_book"
+          fontPath="@string/gothamRoundedBookFont"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_alignParentStart="true"

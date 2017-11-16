@@ -1,10 +1,14 @@
 package com.tpago.movil.d.ui.main.recipient.addition;
 
-import com.tpago.movil.app.ActivityScope;
+import com.tpago.movil.app.ui.ActivityScope;
+import com.tpago.movil.app.ui.AlertManager;
+import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.d.domain.RecipientManager;
-import com.tpago.movil.d.domain.session.SessionManager;
 
+import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.ui.main.recipient.index.category.Category;
+import com.tpago.movil.data.StringMapper;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -12,7 +16,7 @@ import dagger.Provides;
  * @author hecvasro
  */
 @Module
-class AddRecipientModule {
+final class AddRecipientModule {
 
   private final Category category;
 
@@ -29,14 +33,18 @@ class AddRecipientModule {
   @Provides
   @ActivityScope
   AddRecipientPresenter providePresenter(
-    SessionManager sessionManager,
-    RecipientManager recipientManager
+    RecipientManager recipientManager,
+    DepApiBridge apiBridge,
+    AlertManager alertManager,
+    StringMapper stringMapper,
+    TakeoverLoader takeoverLoader
   ) {
     return new AddRecipientPresenter(
-      sessionManager.getSession()
-        .getAuthToken(),
       recipientManager,
-      this.category
+      apiBridge,
+      alertManager,
+      stringMapper,
+      takeoverLoader
     );
   }
 }

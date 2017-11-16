@@ -6,11 +6,12 @@ import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.tpago.movil.Partner;
+import com.tpago.movil.dep.Partner;
 
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class BillRequestBody {
   public static BillRequestBody create(Partner partner, String contractNumber, String pin) {

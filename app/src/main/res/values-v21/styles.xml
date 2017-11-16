@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+  <style name="SettingsText.Title" parent="Base.SettingsText.Title">
+    <!-- TODO: Add letterSpacing of 0.8sp -->
+  </style>
+
+  <style name="SettingsText.Secondary" parent="Base.SettingsText.Secondary">
+    <!-- TODO: Add letterSpacing of 0.8sp -->
+  </style>
+
+  <!-- Toolbar styles -->
+  <style name="ToolbarText.Subtitle" parent="ToolbarText.Subtitle">
+    <item name="android:letterSpacing">0.05</item>
+  </style>
+
+  <!-- TODO: Remove every style from this point downwards -->
+
+
   <!-- [START] App styles -->
   <style name="D.Widget.Button.Dark.Gradient" parent="D.Base.Widget.Button.Dark.Gradient">
     <item name="android:background">@drawable/d_widget_button_dark_gradient</item>
@@ -53,18 +70,11 @@
     </style>
 
     <style
-      name="Dep.App.Text.Widget.Toolbar.Subtitle"
-      parent="Dep.Base.Text.Widget.Toolbar.Subtitle">
-      <item name="android:letterSpacing">@dimen/text.letter_spacing.small</item>
-    </style>
-
-    <style
       name="Dep.App.Widget.Button.Blurred"
       parent="Dep.Base.Widget.Button.Blurred">
       <item name="android:background">@drawable/d_app_widget_button_blurred</item>
     </style>
 
-    <!-- TODO -->
     <style name="Dep.AppTabText"
       parent="Dep.BaseDep.AppTabText">
       <item name="android:letterSpacing">@dimen/text.letter_spacing.small</item>

@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class Customer {
   public static boolean checkIfCanBeFetched(State state) {
@@ -16,6 +17,10 @@ public abstract class Customer {
 
   public static TypeAdapter<Customer> typeAdapter(Gson gson) {
     return new AutoValue_Customer.GsonTypeAdapter(gson);
+  }
+
+  public static Customer create(String name) {
+    return new AutoValue_Customer(name);
   }
 
   @SerializedName("Beneficiario") public abstract String getName();

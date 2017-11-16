@@ -10,6 +10,7 @@ import rx.functions.Func1;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class RecipientInfoResponseBody {
   static Func1<RecipientInfoResponseBody, String> mapFunc() {

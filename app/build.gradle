@@ -3,21 +3,6 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'io.fabric'
 
 def appName = 'tPago'
-def version = [
-  name: { major, minor, patch, build, suffix = null ->
-    def name = "${major}.${minor}.${patch}"
-    if (suffix) {
-      name <<= "-${suffix}"
-      if (build > 0) {
-        name <<= build.toString()
-      }
-    }
-    return name.toString()
-  },
-  code: { major, minor, patch, build ->
-    return (major * 10_000_000) + (minor * 100_000) + (patch * 1_000) + build
-  }
-]
 
 android {
   packagingOptions {
@@ -25,24 +10,27 @@ android {
   }
 
   compileSdkVersion 25
-  buildToolsVersion '25.0.3'
+  buildToolsVersion '26.0.2'
 
   defaultConfig {
     applicationId 'com.tpago.movil'
 
-    def (major, minor, patch, build) = [2, 2, 0, 1]
-    versionName version.name(major, minor, patch, build, 'beta')
-    versionCode version.code(major, minor, patch, build)
+    def (major, minor, patch) = [2, 2, 35]
+    versionName "${major}.${minor}.${patch}"
+    versionCode ((major * 10_000_000) + (minor * 100_000) + (patch * 1_000))
 
     minSdkVersion 19
     targetSdkVersion 25
+
+    multiDexEnabled true
 
     vectorDrawables.useSupportLibrary = true
 
     javaCompileOptions {
       annotationProcessorOptions {
+        includeCompileClasspath false
+
         arguments = [
-          'eventBusIndex': 'com.tpago.movil.bus.BusIndex',
           'autovaluegson.defaultCollectionsToEmpty': 'true',
           'autovaluegson.mutableAdaptersWithDefaultSetters': 'true'
         ]
@@ -50,8 +38,25 @@ android {
     }
   }
 
+  flavorDimensions 'deviceType', 'environment'
+
   productFlavors {
+    mock {
+      dimension 'environment'
+
+      def flavorName = 'mock'
+
+      applicationIdSuffix ".${flavorName}"
+
+      resValue 'string', 'app_name', "${appName}-${flavorName}"
+
+      buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'true'
+      buildConfigField 'String', 'API_URL', 'null'
+    }
+
     development {
+      dimension 'environment'
+
       def flavorName = 'dev'
 
       applicationIdSuffix ".${flavorName}"
@@ -59,9 +64,12 @@ android {
       resValue 'string', 'app_name', "${appName}-${flavorName}"
 
       buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'false'
+      buildConfigField 'String', 'API_URL', '"http://172.19.1.103:8081/api/neo/"'
     }
 
     staging {
+      dimension 'environment'
+
       def flavorName = 'stag'
 
       applicationIdSuffix ".${flavorName}"
@@ -69,12 +77,40 @@ android {
       resValue 'string', 'app_name', "${appName}-${flavorName}"
 
       buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'true'
+      buildConfigField 'String', 'API_URL', '"https://tpagonet-dev.gcs-systems.com/api/neo/"'
     }
 
     production {
+      dimension 'environment'
+
       resValue 'string', 'app_name', appName
 
       buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'true'
+      buildConfigField 'String', 'API_URL', '"https://tpagonet.gcs-systems.com/api/neo/"'
+    }
+
+    emulatedDevice {
+      dimension 'deviceType'
+    }
+
+    notEmulatedDevice {
+      dimension 'deviceType'
+    }
+  }
+
+  sourceSets {
+    def commonDirName = 'src/common/java'
+
+    development {
+      java.srcDirs = [commonDirName, 'src/development/java']
+    }
+
+    staging {
+      java.srcDirs = [commonDirName, 'src/staging/java']
+    }
+
+    production {
+      java.srcDirs = [commonDirName, 'src/production/java']
     }
   }
 
@@ -95,12 +131,13 @@ android {
     }
   }
 
+  dexOptions {
+    javaMaxHeapSize '4g'
+  }
+
   applicationVariants.all { variant ->
-    variant.outputs.each { output ->
-      output.outputFile = new File(
-        output.outputFile.parent,
-        "${appName}-v${variant.versionName}-${variant.name}.apk"
-      )
+    variant.outputs.all {
+      outputFileName = "${appName}-v${variant.versionName}-${variant.name}.apk"
     }
   }
 
@@ -124,6 +161,10 @@ repositories {
   jcenter()
 
   maven {
+    url 'https://maven.google.com'
+  }
+
+  maven {
     url 'https://maven.fabric.io/public'
   }
 
@@ -136,12 +177,17 @@ dependencies {
   // Local dependencies
   compile fileTree(include: ['*.jar'], dir: 'libs')
 
-  def cubeSdkName = { env -> "Cub3AltPanSDK-v1.4-$env" }
-  developmentCompile(name: cubeSdkName('dev'), ext: 'aar')
-  stagingCompile(name: cubeSdkName('stag'), ext: 'aar')
-  productionCompile(name: cubeSdkName('prod'), ext: 'aar')
+  def cubeSdkName = { version, environment -> "Cub3AltPanSDK-v${version}-${environment}" }
+  mockCompile(name: cubeSdkName('1.4.1', 'dev'), ext: 'aar')
+  developmentCompile(name: cubeSdkName('1.4.1', 'dev'), ext: 'aar')
+  stagingCompile(name: cubeSdkName('1.4.1', 'stag'), ext: 'aar')
+  productionCompile(name: cubeSdkName('1.4.0', 'prod'), ext: 'aar')
 
   // Remote dependencies
+  def rxJavaGroupId = 'io.reactivex.rxjava2'
+  compile "${rxJavaGroupId}:rxjava:2.1.4"
+  compile "${rxJavaGroupId}:rxandroid:2.0.1"
+
   def okHttpGroupId = 'com.squareup.okhttp3'
   def okHttpVersion = '3.9.0'
   compile "${okHttpGroupId}:okhttp:${okHttpVersion}"
@@ -153,6 +199,9 @@ dependencies {
   def retrofitVersion = '2.3.0'
   compile "${retrofitGroupId}:retrofit:${retrofitVersion}"
   compile "${retrofitGroupId}:converter-gson:${retrofitVersion}"
+  compile "${retrofitGroupId}:adapter-rxjava2:${retrofitVersion}"
+
+  compile 'com.birbit:android-priority-jobqueue:2.0.1' // TODO: Find a replacement. Code it?
 
   def autoValueVersion = '1.5'
   annotationProcessor "com.google.auto.value:auto-value:${autoValueVersion}"
@@ -169,17 +218,11 @@ dependencies {
   annotationProcessor "${daggerGroupId}:dagger-compiler:${daggerVersion}"
   compile "${daggerGroupId}:dagger:${daggerVersion}"
 
-  compile 'com.google.guava:guava:23.0-android'
-
   compile 'com.jakewharton.timber:timber:4.5.1'
 
   compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
     transitive = true
   }
-
-  def eventBusGroupId = 'org.greenrobot'
-  annotationProcessor "${eventBusGroupId}:eventbus-annotation-processor:3.0.1"
-  compile "${eventBusGroupId}:eventbus:3.0.0"
 
   compile 'com.theartofdev.edmodo:android-image-cropper:2.4.7'
 
@@ -200,20 +243,22 @@ dependencies {
   compile "${supportLibraryGroupId}:percent:${supportLibraryVersion}"
   compile "${supportLibraryGroupId}:recyclerview-v7:${supportLibraryVersion}"
 
+  compile "${supportLibraryGroupId}.constraint:constraint-layout:1.0.2"
+
   compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
 
+  testCompile 'junit:junit:4.12'
+
+  testCompile 'org.mockito:mockito-core:2.9.0'
+
   // Deprecated dependencies
-  compile "${retrofitGroupId}:adapter-rxjava2:${retrofitVersion}"
   compile "${retrofitGroupId}:adapter-rxjava:${retrofitVersion}"
   compile "com.github.ozodrukh:CircularReveal:2.0.1"
-  compile "com.googlecode.libphonenumber:libphonenumber:8.0.1"
   compile "com.jakewharton.rxbinding:rxbinding:0.4.0"
   compile "com.tbruyelle.rxpermissions:rxpermissions:0.9.0"
   compile "de.hdodenhof:circleimageview:2.1.0"
   compile "io.reactivex:rxandroid:1.2.1"
   compile "io.reactivex:rxjava:1.2.2"
-  compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-  compile 'io.reactivex.rxjava2:rxjava:2.0.5'
   compile 'javax.annotation:jsr250-api:1.0'
   compile 'jp.wasabeef:picasso-transformations:2.1.0'
 }

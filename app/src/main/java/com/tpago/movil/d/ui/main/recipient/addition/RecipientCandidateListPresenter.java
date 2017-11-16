@@ -23,6 +23,7 @@ import timber.log.Timber;
  */
 public abstract class RecipientCandidateListPresenter
   extends Presenter<RecipientCandidateListScreen> {
+
   private static final long DEFAULT_TIME_SPAN_QUERY = 300L; // 0.3 seconds.
 
   protected final SchedulerProvider schedulerProvider;

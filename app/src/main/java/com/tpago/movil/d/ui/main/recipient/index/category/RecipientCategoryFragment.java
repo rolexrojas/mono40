@@ -1,5 +1,6 @@
 package com.tpago.movil.d.ui.main.recipient.index.category;
 
+import static com.tpago.movil.d.ui.main.recipient.index.category.Category.PAY;
 import static com.tpago.movil.d.ui.main.recipient.index.category.Category.TRANSFER;
 
 import android.app.Activity;
@@ -20,10 +21,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
+import com.tpago.movil.app.ui.AlertData;
+import com.tpago.movil.app.ui.AlertManager;
+import com.tpago.movil.d.domain.AccountRecipient;
+import com.tpago.movil.d.domain.Product;
+import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.UserRecipient;
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.domain.Recipient;
@@ -39,7 +43,6 @@ import com.tpago.movil.d.ui.main.list.NoResultsListItemHolder;
 import com.tpago.movil.d.ui.main.list.NoResultsListItemHolderBinder;
 import com.tpago.movil.d.ui.main.list.NoResultsListItemHolderCreator;
 import com.tpago.movil.d.ui.main.recipient.addition.AddRecipientActivity;
-import com.tpago.movil.d.ui.main.recipient.addition.NonAffiliatedPhoneNumberRecipientAdditionActivity;
 import com.tpago.movil.d.ui.main.transaction.TransactionCategory;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivity;
 import com.tpago.movil.d.ui.main.transaction.own.OwnTransactionCreationActivity;
@@ -48,8 +51,8 @@ import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.view.widget.SearchView;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
-import com.tpago.movil.init.InitActivity;
-import com.tpago.movil.util.Objects;
+import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.util.ObjectHelper;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import javax.inject.Inject;
@@ -73,7 +76,6 @@ public class RecipientCategoryFragment
 
   private static final int REQUEST_CODE_RECIPIENT_ADDITION = 0;
   private static final int REQUEST_CODE_TRANSACTION_CREATION = 1;
-  private static final int REQUEST_CODE_NON_AFFILIATED_RECIPIENT_ADDITION = 2;
   private static final int REQUEST_CODE_OWN_TRANSACTION_CREATION = 3;
 
   private static final String KEY_CATEGORY = "category";
@@ -103,6 +105,10 @@ public class RecipientCategoryFragment
   @Inject
   RecipientCategoryPresenter presenter;
 
+  @Inject StringMapper stringMapper;
+  @Inject AlertManager alertManager;
+  @Inject ProductManager productManager;
+
   @NonNull
   public static RecipientCategoryFragment create(Category category) {
     final Bundle bundle = new Bundle();
@@ -130,8 +136,10 @@ public class RecipientCategoryFragment
 
   @Nullable
   @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+  public View onCreateView(
+    LayoutInflater inflater, @Nullable ViewGroup container,
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(R.layout.d_fragment_payments, container, false);
   }
 
@@ -153,15 +161,18 @@ public class RecipientCategoryFragment
       .addBinder(
         Recipient.class,
         RecipientListItemHolder.class,
-        recipientBinder)
+        recipientBinder
+      )
       .addBinder(
         Action.class,
         ActionListItemHolder.class,
-        new ActionListItemHolderBinder(stringHelper, category))
+        new ActionListItemHolderBinder(stringHelper, category)
+      )
       .addBinder(
         NoResultsListItemItem.class,
         NoResultsListItemHolder.class,
-        new NoResultsListItemHolderBinder(context))
+        new NoResultsListItemHolderBinder(context)
+      )
       .build();
     adapter = new ListItemAdapter(holderCreatorFactory, binderFactory);
     recyclerView.setAdapter(adapter);
@@ -184,6 +195,16 @@ public class RecipientCategoryFragment
     // Sets the title.
     this.getContainer()
       .setTitle(this.getString(this.category.stringId));
+    // Sets the hint of the search box.
+    final int hintId;
+    if (this.category == PAY) {
+      hintId = R.string.pay_screen_search_hint_pay;
+    } else if (this.category == TRANSFER) {
+      hintId = R.string.pay_screen_search_hint_transfer;
+    } else {
+      hintId = R.string.pay_screen_search_hint_recharge;
+    }
+    this.searchView.setHint(this.getString(hintId));
     // Starts the presenter.
     presenter.start();
   }
@@ -191,18 +212,13 @@ public class RecipientCategoryFragment
   @Override
   public void onResume() {
     super.onResume();
-    if (Utils.isNotNull(requestResult)) {
-      final int code = requestResult.first;
+    if (ObjectHelper.isNotNull(requestResult)) {
       final Recipient recipient = requestResult.second.first;
-      if (code == REQUEST_CODE_RECIPIENT_ADDITION) {
-        presenter.addRecipient(recipient);
-      } else if (code == REQUEST_CODE_TRANSACTION_CREATION) {
-        final String transactionId = requestResult.second.second;
-        presenter.showTransactionSummary(recipient, transactionId);
-      } else if (code == REQUEST_CODE_NON_AFFILIATED_RECIPIENT_ADDITION) {
-        presenter.addRecipient(recipient);
-      } else if (code == REQUEST_CODE_OWN_TRANSACTION_CREATION) {
+      final int code = requestResult.first;
+      if (code == REQUEST_CODE_TRANSACTION_CREATION || code == REQUEST_CODE_OWN_TRANSACTION_CREATION) {
         presenter.showTransactionSummary(recipient, requestResult.second.second);
+      } else if (code == REQUEST_CODE_RECIPIENT_ADDITION) {
+        presenter.addRecipient(recipient);
       }
       requestResult = null;
     }
@@ -263,29 +279,21 @@ public class RecipientCategoryFragment
     if (requestCode == REQUEST_CODE_RECIPIENT_ADDITION) {
       if (resultCode == Activity.RESULT_OK) {
         final Recipient recipient = AddRecipientActivity.deserializeResult(data);
-        if (Utils.isNotNull(recipient)) {
+        if (ObjectHelper.isNotNull(recipient)) {
           requestResult = Pair.create(requestCode, Pair.create(recipient, (String) null));
         }
       }
     } else if (requestCode == REQUEST_CODE_TRANSACTION_CREATION) {
       if (resultCode == Activity.RESULT_OK) {
         final Pair<Recipient, String> result = TransactionCreationActivity.deserializeResult(data);
-        if (Utils.isNotNull(result)) {
+        if (ObjectHelper.isNotNull(result)) {
           requestResult = Pair.create(requestCode, result);
-        }
-      }
-    } else if (requestCode == REQUEST_CODE_NON_AFFILIATED_RECIPIENT_ADDITION) {
-      if (resultCode == Activity.RESULT_OK) {
-        final Recipient recipient = NonAffiliatedPhoneNumberRecipientAdditionActivity
-          .deserializeResult(data);
-        if (Objects.checkIfNotNull(recipient)) {
-          requestResult = Pair.create(requestCode, Pair.create(recipient, (String) null));
         }
       }
     } else if (requestCode == REQUEST_CODE_OWN_TRANSACTION_CREATION) {
       if (resultCode == Activity.RESULT_OK) {
         final String transactionId = OwnTransactionCreationActivity.deserializeResult(data);
-        if (Objects.checkIfNotNull(transactionId)) {
+        if (ObjectHelper.isNotNull(transactionId)) {
           requestResult = Pair.create(requestCode, Pair.create((Recipient) null, transactionId));
         }
       }
@@ -306,12 +314,12 @@ public class RecipientCategoryFragment
   @Override
   public void showLoadIndicator(boolean fullscreen) {
     if (fullscreen) {
-      if (Utils.isNull(fullScreenLoadIndicator)) {
+      if (ObjectHelper.isNull(fullScreenLoadIndicator)) {
         fullScreenLoadIndicator = new FullScreenLoadIndicator(getChildFragmentManager());
       }
       currentLoadIndicator = fullScreenLoadIndicator;
     } else {
-      if (Utils.isNull(loadIndicator)) {
+      if (ObjectHelper.isNull(loadIndicator)) {
         loadIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
       }
       currentLoadIndicator = loadIndicator;
@@ -321,7 +329,7 @@ public class RecipientCategoryFragment
 
   @Override
   public void hideLoadIndicator() {
-    if (Utils.isNotNull(currentLoadIndicator)) {
+    if (ObjectHelper.isNotNull(currentLoadIndicator)) {
       currentLoadIndicator.hide();
       currentLoadIndicator = null;
     }
@@ -340,16 +348,6 @@ public class RecipientCategoryFragment
   @Override
   public void update(@NonNull Object item) {
     adapter.updateOrAdd(item);
-  }
-
-  @Override
-  public void openInitScreen() {
-    startActivity(InitActivity.getLaunchIntent(getContext()));
-  }
-
-  @Override
-  public void finish() {
-    getActivity().finish();
   }
 
   @Override
@@ -390,7 +388,7 @@ public class RecipientCategoryFragment
   }
 
   @Override
-  public void startTransfer(Recipient recipient) {
+  public void startTransaction(Recipient recipient) {
     startActivityForResult(
       TransactionCreationActivity.getLaunchIntent(
         this.getActivity(),
@@ -403,7 +401,8 @@ public class RecipientCategoryFragment
 
   @Override
   public void showMessage(String message) {
-    Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+    Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT)
+      .show();
   }
 
   @Override
@@ -423,21 +422,11 @@ public class RecipientCategoryFragment
   }
 
   @Override
-  public void startNonAffiliatedPhoneNumberRecipientAddition(PhoneNumber phoneNumber) {
-    this.startActivityForResult(
-      NonAffiliatedPhoneNumberRecipientAdditionActivity.getLaunchIntent(
-        this.getContext(),
-        phoneNumber
-      ),
-      REQUEST_CODE_NON_AFFILIATED_RECIPIENT_ADDITION
-    );
-  }
-
-  @Override
   public void showTransactionSummary(
     Recipient recipient,
     boolean alreadyExists,
-    String transactionId) {
+    String transactionId
+  ) {
     TransactionSummaryDialogFragment.create(recipient, alreadyExists, transactionId)
       .show(getChildFragmentManager(), null);
   }
@@ -457,7 +446,8 @@ public class RecipientCategoryFragment
         }
       },
       x,
-      y);
+      y
+    );
   }
 
   @Override
@@ -476,7 +466,8 @@ public class RecipientCategoryFragment
 
   @Override
   public void showUnavailableNetworkError() {
-    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG).show();
+    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG)
+      .show();
   }
 
   @Override
@@ -491,10 +482,24 @@ public class RecipientCategoryFragment
       if (item instanceof UserRecipient) {
         final Context context = this.getContext();
         if (category == TRANSFER) {
-          this.startActivityForResult(
-            OwnTransactionCreationActivity.createLaunchIntent(context),
-            REQUEST_CODE_TRANSACTION_CREATION
-          );
+          boolean hasAccounts = false;
+          for (Product product : this.productManager.getProductList()) {
+            if (Product.checkIfAccount(product)) {
+              hasAccounts = true;
+              break;
+            }
+          }
+          if (hasAccounts) {
+            this.startActivityForResult(
+              OwnTransactionCreationActivity.createLaunchIntent(context),
+              REQUEST_CODE_TRANSACTION_CREATION
+            );
+          } else {
+            final AlertData alertData = AlertData.builder(this.stringMapper)
+              .message("No hay cuentas activas asociadas a este teléfono.")
+              .build();
+            this.alertManager.show(alertData);
+          }
         } else {
           this.startActivityForResult(
             TransactionCreationActivity.getLaunchIntent(
@@ -515,6 +520,16 @@ public class RecipientCategoryFragment
           break;
         case TRANSACTION_WITH_PHONE_NUMBER:
           presenter.startTransfer(((PhoneNumberAction) item).phoneNumber());
+          break;
+        case ADD_ACCOUNT:
+          presenter.addRecipient(
+            AccountRecipient.builder()
+              .number(((AccountAction) item).number())
+              .build()
+          );
+          break;
+        case TRANSACTION_WITH_ACCOUNT:
+          this.presenter.startTransfer(((AccountAction) item).number());
           break;
       }
     }

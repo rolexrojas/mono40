@@ -11,7 +11,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 
 import com.tpago.movil.R;
-import com.tpago.movil.d.misc.Utils;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * TODO
@@ -21,6 +21,7 @@ import com.tpago.movil.d.misc.Utils;
  * @see <a href="https://github.com/grantland/android-autofittextview">https://github.com/grantland/android-autofittextview</a>
  */
 public class AutoResizeablePrefixableTextView extends PrefixableTextView {
+
   /**
    * TODO
    */
@@ -57,7 +58,8 @@ public class AutoResizeablePrefixableTextView extends PrefixableTextView {
     super(context, attrs, defStyleAttr);
     final TypedArray array = context.obtainStyledAttributes(attrs,
       R.styleable.DepAutoResizeablePrefixableTextView, defStyleAttr,
-      R.style.Dep_App_Widget_AutoResizeablePrefixableTextView);
+      R.style.Dep_App_Widget_AutoResizeablePrefixableTextView
+    );
     try {
       final Resources resources = context.getResources();
       final int defaultMaxTextSize = resources.getDimensionPixelSize(
@@ -85,8 +87,10 @@ public class AutoResizeablePrefixableTextView extends PrefixableTextView {
    *
    * @return TODO
    */
-  private static float getTextWidth(@NonNull final CharSequence text,
-    @NonNull final TextPaint paint, final float targetTextSize) {
+  private static float getTextWidth(
+    @NonNull final CharSequence text,
+    @NonNull final TextPaint paint, final float targetTextSize
+  ) {
     final TextPaint copy = new TextPaint(paint);
     copy.setTextSize(targetTextSize);
     return copy.measureText(text, 0, text.length());
@@ -103,7 +107,7 @@ public class AutoResizeablePrefixableTextView extends PrefixableTextView {
       if (!TextUtils.isEmpty(text) && targetWidth > 0) {
         final CharSequence targetText;
         final TransformationMethod transformationMethod = getTransformationMethod();
-        if (Utils.isNotNull(transformationMethod)) {
+        if (ObjectHelper.isNotNull(transformationMethod)) {
           targetText = transformationMethod.getTransformation(text, this);
         } else {
           targetText = text;

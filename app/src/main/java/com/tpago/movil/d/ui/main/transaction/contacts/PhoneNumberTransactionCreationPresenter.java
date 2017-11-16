@@ -3,15 +3,15 @@ package com.tpago.movil.d.ui.main.transaction.contacts;
 import static com.tpago.movil.d.domain.Product.checkIfCreditCard;
 import static com.tpago.movil.d.ui.main.transaction.TransactionCategory.RECHARGE;
 import static com.tpago.movil.d.ui.main.transaction.TransactionCategory.TRANSFER;
-import static com.tpago.movil.util.Objects.checkIfNull;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.Partner;
+import com.tpago.movil.dep.Partner;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
-import com.tpago.movil.api.DCurrencies;
+import com.tpago.movil.dep.api.DCurrencies;
 import com.tpago.movil.d.data.StringHelper;
+import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.UserRecipient;
@@ -22,11 +22,12 @@ import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.ui.Presenter;
 import com.tpago.movil.d.ui.main.transaction.TransactionCategory;
-import com.tpago.movil.domain.ErrorCode;
-import com.tpago.movil.domain.FailureData;
-import com.tpago.movil.domain.Result;
-import com.tpago.movil.net.NetworkService;
-import com.tpago.movil.reactivex.Disposables;
+import com.tpago.movil.d.domain.ErrorCode;
+import com.tpago.movil.d.domain.FailureData;
+import com.tpago.movil.d.domain.Result;
+import com.tpago.movil.dep.net.NetworkService;
+import com.tpago.movil.dep.reactivex.Disposables;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -55,7 +56,6 @@ class PhoneNumberTransactionCreationPresenter
 
   private final NetworkService networkService;
   private final DepApiBridge depApiBridge;
-  private final String authToken;
   private final StringHelper stringHelper;
 
   private final TransactionCategory transactionCategory;
@@ -70,7 +70,6 @@ class PhoneNumberTransactionCreationPresenter
     @NonNull Recipient recipient,
     NetworkService networkService,
     DepApiBridge depApiBridge,
-    String authToken,
     StringHelper stringHelper,
     TransactionCategory transactionCategory
   ) {
@@ -79,7 +78,6 @@ class PhoneNumberTransactionCreationPresenter
 
     this.networkService = networkService;
     this.depApiBridge = depApiBridge;
-    this.authToken = authToken;
     this.stringHelper = stringHelper;
 
     this.transactionCategory = transactionCategory;
@@ -114,7 +112,15 @@ class PhoneNumberTransactionCreationPresenter
 
   final void onTransferButtonClicked() {
     if (this.recipient instanceof NonAffiliatedPhoneNumberRecipient) {
-      final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) this.recipient;
+      final NonAffiliatedPhoneNumberRecipient r
+        = (NonAffiliatedPhoneNumberRecipient) this.recipient;
+      if (r.canAcceptTransfers()) {
+        this.screen.requestPin();
+      } else {
+        this.screen.requestBankAndAccountNumber();
+      }
+    } else if (this.recipient instanceof AccountRecipient) {
+      final AccountRecipient r = (AccountRecipient) this.recipient;
       if (r.canAcceptTransfers()) {
         this.screen.requestPin();
       } else {
@@ -131,14 +137,15 @@ class PhoneNumberTransactionCreationPresenter
       final UserRecipient r = (UserRecipient) this.recipient;
       carrier = r.getCarrier();
     } else if (this.recipient instanceof NonAffiliatedPhoneNumberRecipient) {
-      final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) this.recipient;
+      final NonAffiliatedPhoneNumberRecipient r
+        = (NonAffiliatedPhoneNumberRecipient) this.recipient;
       carrier = r.getCarrier();
     } else {
       final PhoneNumberRecipient r = (PhoneNumberRecipient) this.recipient;
       carrier = r.getCarrier();
     }
 
-    if (checkIfNull(carrier)) {
+    if (ObjectHelper.isNull(carrier)) {
       this.screen.requestCarrier();
     } else {
       this.screen.requestPin();
@@ -151,15 +158,15 @@ class PhoneNumberTransactionCreationPresenter
       public SingleSource<Result<String, ErrorCode>> call() throws Exception {
         final Result<String, ErrorCode> result;
         if (networkService.checkIfAvailable()) {
-          final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(authToken, pin);
+          final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(pin);
           if (pinValidationResult.isSuccessful()) {
             if (pinValidationResult.getData()) {
               final ApiResult<String> transactionResult = depApiBridge.transferTo(
-                authToken,
                 paymentOption,
                 recipient,
                 value,
-                pin)
+                pin
+              )
                 .toBlocking()
                 .single();
               if (transactionResult.isSuccessful()) {
@@ -168,7 +175,9 @@ class PhoneNumberTransactionCreationPresenter
                 result = Result.create(
                   FailureData.create(
                     ErrorCode.UNEXPECTED,
-                    transactionResult.getError().getDescription()));
+                    transactionResult.getError()
+                      .getDescription()
+                  ));
               }
             } else {
               result = Result.create(FailureData.create(ErrorCode.INCORRECT_PIN));
@@ -177,7 +186,9 @@ class PhoneNumberTransactionCreationPresenter
             result = Result.create(
               FailureData.create(
                 ErrorCode.UNEXPECTED,
-                pinValidationResult.getError().getDescription()));
+                pinValidationResult.getError()
+                  .getDescription()
+              ));
           }
         } else {
           result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
@@ -227,7 +238,8 @@ class PhoneNumberTransactionCreationPresenter
       carrier = r.getCarrier();
       phoneNumber = r.phoneNumber();
     } else if (this.recipient instanceof NonAffiliatedPhoneNumberRecipient) {
-      final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) this.recipient;
+      final NonAffiliatedPhoneNumberRecipient r
+        = (NonAffiliatedPhoneNumberRecipient) this.recipient;
 
       carrier = r.getCarrier();
       phoneNumber = r.getPhoneNumber();
@@ -239,7 +251,6 @@ class PhoneNumberTransactionCreationPresenter
     }
 
     rechargeSubscription = depApiBridge.recharge(
-      authToken,
       carrier,
       phoneNumber,
       paymentOption,
@@ -254,7 +265,11 @@ class PhoneNumberTransactionCreationPresenter
           if (result.isSuccessful()) {
             screen.setPaymentResult(true, result.getData());
           } else {
-            screen.showGenericErrorDialog(result.getError().getDescription());
+            screen.setPaymentResult(false, null);
+            screen.showGenericErrorDialog(
+              result.getError()
+                .getDescription()
+            );
           }
         }
       }, new Action1<Throwable>() {

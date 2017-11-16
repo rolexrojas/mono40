@@ -7,6 +7,7 @@ import rx.Observable;
 /**
  * @author hecvasro
  */
+@Deprecated
 public interface ProductRepo extends ProductProvider {
   @NonNull Observable<Product> save(@NonNull Product product);
   @NonNull Observable<Product> remove(@NonNull Product product);

@@ -3,7 +3,7 @@ package com.tpago.movil.d.data.util;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.tpago.movil.d.misc.Utils;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +13,9 @@ import java.util.Map;
  *
  * @author hecvasro
  */
+@Deprecated
 public final class BinderFactory {
+
   /**
    * TODO
    */
@@ -40,7 +42,10 @@ public final class BinderFactory {
    * @return TODO
    */
   @Nullable
-  private static Binder<?, ? extends Holder> getBinder(@NonNull Class<? extends Holder> holderType, @NonNull Map<Class<? extends Holder>, Binder<?, ? extends Holder>> binderSubMap) {
+  private static Binder<?, ? extends Holder> getBinder(
+    @NonNull Class<? extends Holder> holderType,
+    @NonNull Map<Class<? extends Holder>, Binder<?, ? extends Holder>> binderSubMap
+  ) {
     Binder<?, ? extends Holder> binder = null;
     if (binderSubMap.containsKey(holderType)) {
       binder = binderSubMap.get(holderType);
@@ -50,15 +55,15 @@ public final class BinderFactory {
         for (Class<?> holderTypeInterface : holderTypeInterfaces) {
           if (Holder.class.isAssignableFrom(holderTypeInterface)) {
             binder = getBinder(holderTypeInterface.asSubclass(Holder.class), binderSubMap);
-            if (Utils.isNotNull(binder)) {
+            if (ObjectHelper.isNotNull(binder)) {
               break;
             }
           }
         }
       }
-      if (Utils.isNull(binder)) {
+      if (ObjectHelper.isNull(binder)) {
         final Class<?> holderSuperType = holderType.getSuperclass();
-        if (Utils.isNotNull(holderSuperType) && Holder.class.isAssignableFrom(holderSuperType)) {
+        if (ObjectHelper.isNotNull(holderSuperType) && Holder.class.isAssignableFrom(holderSuperType)) {
           binder = getBinder(holderSuperType.asSubclass(Holder.class), binderSubMap);
         }
       }
@@ -78,12 +83,13 @@ public final class BinderFactory {
    */
   @Nullable
   public final Binder<?, ? extends Holder> getBinder(
-    @NonNull Class<?> itemType, @NonNull Class<? extends Holder> holderType) {
+    @NonNull Class<?> itemType, @NonNull Class<? extends Holder> holderType
+  ) {
     if (binderMap.containsKey(itemType)) {
       return getBinder(holderType, binderMap.get(itemType));
     } else {
       final Class<?> itemSuperType = itemType.getSuperclass();
-      if (Utils.isNotNull(itemSuperType)) {
+      if (ObjectHelper.isNotNull(itemSuperType)) {
         return getBinder(itemSuperType, holderType);
       } else {
         return null;
@@ -95,10 +101,12 @@ public final class BinderFactory {
    * TODO
    */
   public static class Builder {
+
     /**
      * TODO
      */
-    private final Map<Class<?>, Map<Class<? extends Holder>, Binder<?, ? extends Holder>>> binderMap;
+    private final Map<Class<?>, Map<Class<? extends Holder>, Binder<?, ? extends Holder>>>
+      binderMap;
 
     /**
      * TODO
@@ -120,7 +128,11 @@ public final class BinderFactory {
      * @return TODO
      */
     @NonNull
-    public final Builder addBinder(@NonNull Class<?> itemType, @NonNull Class<? extends Holder> holderType, @NonNull Binder<?, ? extends Holder> binder) {
+    public final Builder addBinder(
+      @NonNull Class<?> itemType,
+      @NonNull Class<? extends Holder> holderType,
+      @NonNull Binder<?, ? extends Holder> binder
+    ) {
       final Map<Class<? extends Holder>, Binder<?, ? extends Holder>> map;
       if (binderMap.containsKey(itemType)) {
         map = binderMap.get(itemType);

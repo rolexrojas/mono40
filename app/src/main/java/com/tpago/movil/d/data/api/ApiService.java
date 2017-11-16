@@ -19,7 +19,6 @@ import java.util.Map;
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -32,135 +31,90 @@ import rx.Observable;
 interface ApiService {
 
   @GET("initial-load")
-  Observable<Response<InitialData>> initialLoad(@Header(Api.Header.AUTHORIZATION) String authToken);
+  Observable<Response<InitialData>> initialLoad();
 
   @POST("query/accounts/balance")
-  Observable<Response<AccountBalance>> accountBalance(
-    @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body BalanceQueryRequestBody body);
+  Observable<Response<AccountBalance>> accountBalance(@Body BalanceQueryRequestBody body);
 
   @POST("query/credit-cards/balance")
-  Observable<Response<CreditCardBalance>> creditCardBalance(
-    @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body BalanceQueryRequestBody body);
+  Observable<Response<CreditCardBalance>> creditCardBalance(@Body BalanceQueryRequestBody body);
 
   @POST("query/loans/balance")
-  Observable<Response<LoanBalance>> loanBalance(
-    @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body BalanceQueryRequestBody body);
+  Observable<Response<LoanBalance>> loanBalance(@Body BalanceQueryRequestBody body);
 
   @GET("transaction-history")
-  Observable<Response<List<Transaction>>> recentTransactions(
-    @Header(Api.Header.AUTHORIZATION) String authToken);
+  Observable<Response<List<Transaction>>> recentTransactions();
 
   @GET("transfer/recipient-info")
-  Observable<Response<Void>> checkIfAssociated(
-    @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Query("recipient-msisdn") String phoneNumber);
+  Observable<Response<Void>> checkIfAssociated(@Query("recipient-msisdn") String phoneNumber);
 
   @GET("customer/{phoneNumber}/status")
   Observable<Response<FetchCustomerStateResponseBody>> fetchCustomerStatus(
-    @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Path("phoneNumber") String phoneNumber);
+    @Path("phoneNumber") String phoneNumber
+  );
 
   @GET("transfer/recipient-info")
-  Observable<Response<Customer>> fetchCustomer(
-    @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Query("recipient-msisdn") String phoneNumber);
+  Observable<Response<Customer>> fetchCustomer(@Query("recipient-msisdn") String phoneNumber);
 
 
   @POST("transfer/gcs-gcs")
   Observable<Response<TransferResponseBody>> transferToAffiliated(
-    @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body TransferToAffiliatedRequestBody body);
+    @Body TransferToAffiliatedRequestBody body
+  );
 
   @POST("transfer/gcs-non")
   Observable<Response<TransferResponseBody>> transferToNonAffiliated(
-    @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body TransferToNonAffiliatedRequestBody body);
+    @Body TransferToNonAffiliatedRequestBody body
+  );
 
   @POST("transfer/gcs-own")
-  Observable<Response<TransferResponseBody>> transferTo(
-    @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body TransferToOwnRequestBody body
-  );
+  Observable<Response<TransferResponseBody>> transferTo(@Body TransferToOwnRequestBody body);
 
   @POST("payments/change-default-account")
-  Observable<Response<Void>> setDefaultPaymentOption(
-    @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body Map<String, String> body);
+  Observable<Response<Void>> setDefaultPaymentOption(@Body Map<String, String> body);
 
   @GET("banks")
-  Observable<Response<BankListRequestResponse>> banks(
-    @Header(Api.Header.AUTHORIZATION) String authToken);
+  Observable<Response<BankListRequestResponse>> banks();
 
   @POST("transfer/recipient-account-info")
-  Observable<Response<ProductInfo>> fetchProductInfo(
-    @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body RecipientAccountInfoRequestBody body);
+  Observable<Response<ProductInfo>> fetchProductInfo(@Body RecipientAccountInfoRequestBody body);
 
   @GET("payments/partners")
-  Observable<Response<PartnerListRequestResponse>> partners(
-    @Header(Api.Header.AUTHORIZATION) String authToken);
+  Observable<Response<PartnerListRequestResponse>> partners();
 
   @POST("payments/invoices")
-  Observable<Response<Void>> addBill(
-    @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body BillRequestBody body);
+  Observable<Response<Void>> addBill(@Body BillRequestBody body);
 
   @POST("payments/invoices/balance")
-  Observable<Response<BillBalance>> queryBalance(
-    @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body BillRequestBody body);
+  Observable<Response<BillBalance>> queryBalance(@Body BillRequestBody body);
 
   @POST("payments/credit-cards/balance")
-  Observable<Response<CreditCardBillBalance>> queryCreditCardBillBalance(
-    @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body Product body);
+  Observable<Response<CreditCardBillBalance>> queryCreditCardBillBalance(@Body Product body);
 
   @POST("payments/loans/balance")
-  Observable<Response<LoanBillBalance>> queryLoanBalance(
-    @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body Product body);
+  Observable<Response<LoanBillBalance>> queryLoanBalance(@Body Product body);
 
   @GET("payments/invoices")
-  Observable<Response<List<BillResponseBody>>> getBills(
-    @Header(Api.Header.AUTHORIZATION) String authToken);
+  Observable<Response<List<BillResponseBody>>> getBills();
 
   @POST("payments/invoices/pay")
-  Observable<Response<Void>> payBill(
-    @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body PayBillRequestBody body);
+  Observable<Response<Void>> payBill(@Body PayBillRequestBody body);
 
   @POST("payments/credit-cards/pay")
-  Observable<Response<PaymentResult>> payCreditCardBill(
-    @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body PayCreditCardBillRequestBody body);
+  Observable<Response<PaymentResult>> payCreditCardBill(@Body PayCreditCardBillRequestBody body);
 
   @POST("payments/loans/pay")
-  Observable<Response<PaymentResult>> payLoanBill(
-    @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body PayLoanBillRequestBody body);
+  Observable<Response<PaymentResult>> payLoanBill(@Body PayLoanBillRequestBody body);
 
   @POST("payments/remove-invoice")
-  Observable<Response<Void>> removeBill(
-    @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body BillRequestBody body);
+  Observable<Response<Void>> removeBill(@Body BillRequestBody body);
 
   @POST("payments/validate-pin")
-  Observable<Response<Boolean>> validatePin(
-    @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body ValidatePinRequestBody body);
+  Observable<Response<Boolean>> validatePin(@Body ValidatePinRequestBody body);
 
   @POST("recharge/direct")
-  Observable<Response<TransferResponseBody>> recharge(
-    @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body RechargeRequestBody body
-  );
+  Observable<Response<TransferResponseBody>> recharge(@Body RechargeRequestBody body);
 
   @POST("cash-advance")
-  Observable<Response<TransferResponseBody>> advanceCash(
-    @Header(Api.Header.AUTHORIZATION) String authToken,
-    @Body CashAdvanceRequestBody body
-  );
+  Observable<Response<TransferResponseBody>> advanceCash(@Body CashAdvanceRequestBody body);
 }

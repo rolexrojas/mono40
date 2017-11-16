@@ -1577,7 +1577,7 @@ public class SlidingPaneLayout extends ViewGroup {
           Log.e(TAG, "Error refreshing display list state", e);
         }
       } else {
-        // Slow path. REALLY slow path. Let's hope we don't get here.
+        // Slow path. REALLY slow path. Let's hope we don't generate here.
         child.invalidate();
         return;
       }

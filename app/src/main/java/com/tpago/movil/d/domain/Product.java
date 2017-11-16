@@ -4,10 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import com.tpago.Banks;
-import com.tpago.movil.domain.Bank;
-import com.tpago.movil.d.misc.Utils;
-import com.tpago.movil.text.Texts;
+import com.tpago.movil.dep.text.Texts;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
@@ -65,20 +63,27 @@ public class Product implements Parcelable {
   }
 
   public static boolean checkIfCreditCard(Product product) {
-    return product.getType().equals(ProductType.CC) || product.getType().equals(ProductType.AMEX);
+    return product.getType()
+      .equals(ProductType.CC) || product.getType()
+      .equals(ProductType.AMEX);
   }
 
   public static boolean checkIfLoan(Product product) {
-    return product.getType().equals(ProductType.LOAN);
+    return product.getType()
+      .equals(ProductType.LOAN);
   }
 
   public static Comparator<Product> comparator() {
     return new Comparator<Product>() {
       @Override
       public int compare(Product pa, Product pb) {
-        final int r = pa.getBank().getName().compareTo(pb.getBank().getName());
+        final int r = pa.getBank()
+          .getName()
+          .compareTo(pb.getBank()
+            .getName());
         if (r == 0) {
-          return pa.getAlias().compareTo(pb.getAlias());
+          return pa.getAlias()
+            .compareTo(pb.getAlias());
         } else {
           return r;
         }
@@ -125,13 +130,20 @@ public class Product implements Parcelable {
   /**
    * Constructs a new account.
    *
-   * @param type Product's {@link ProductType type}.
-   * @param alias Product's type.
-   * @param number Product's number.
-   * @param currency Product's amount.
-   * @param bank Product's {@link Bank holder}.
-   * @param queryFee Cost of querying the balance.
-   * @param paymentOption Indicates whether can be used as a payment option or not.
+   * @param type
+   *   Product's {@link ProductType type}.
+   * @param alias
+   *   Product's type.
+   * @param number
+   *   Product's number.
+   * @param currency
+   *   Product's amount.
+   * @param bank
+   *   Product's {@link Bank holder}.
+   * @param queryFee
+   *   Cost of querying the balance.
+   * @param paymentOption
+   *   Indicates whether can be used as a payment option or not.
    */
   Product(
     @NonNull ProductType type,
@@ -141,7 +153,8 @@ public class Product implements Parcelable {
     @NonNull String currency,
     @NonNull BigDecimal queryFee,
     boolean paymentOption,
-    boolean isDefault) {
+    boolean isDefault
+  ) {
     this.type = type;
     this.alias = alias;
     this.number = number;
@@ -155,7 +168,9 @@ public class Product implements Parcelable {
   /**
    * Checks if the given {@link Product creditCard} can be used as a payment option.
    *
-   * @param product {@link Product} that will be checked.
+   * @param product
+   *   {@link Product} that will be checked.
+   *
    * @return True if it can be used as a payment option, false otherwise.
    */
   public static boolean isPaymentOption(@NonNull Product product) {
@@ -165,7 +180,9 @@ public class Product implements Parcelable {
   /**
    * TODO
    *
-   * @param product TODO
+   * @param product
+   *   TODO
+   *
    * @return TODO
    */
   public static boolean isDefaultPaymentOption(@NonNull Product product) {
@@ -256,7 +273,8 @@ public class Product implements Parcelable {
   /**
    * Sets the cost of querying the balance of the creditCard.
    *
-   * @param queryFee Cost of querying the balance.
+   * @param queryFee
+   *   Cost of querying the balance.
    */
   public void setQueryFee(@NonNull BigDecimal queryFee) {
     if (queryFee.compareTo(BigDecimal.ZERO) < 0) {
@@ -275,7 +293,7 @@ public class Product implements Parcelable {
 
   @Override
   public boolean equals(Object object) {
-    return super.equals(object) || (Utils.isNotNull(object) && object instanceof Product
+    return super.equals(object) || (ObjectHelper.isNotNull(object) && object instanceof Product
       && ((Product) object).type.equals(type) && ((Product) object).alias.equals(alias))
       && ((Product) object).bank.equals(bank);
   }

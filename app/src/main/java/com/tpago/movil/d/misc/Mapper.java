@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
  *
  * @author hecvasro
  */
+@Deprecated
 public interface Mapper<A, B> {
   /**
    * TODO

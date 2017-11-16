@@ -19,16 +19,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tpago.movil.R;
-import com.tpago.movil.d.misc.Utils;
+import com.tpago.movil.app.ui.NumPad;
 import com.tpago.movil.d.ui.FullScreenDialogFragment;
 import com.tpago.movil.d.ui.view.BaseAnimatorListener;
-import com.tpago.movil.d.ui.view.widget.pad.Digit;
-import com.tpago.movil.d.ui.view.widget.pad.DepNumPad;
 import com.tpago.movil.d.ui.view.widget.PinView;
-import com.tpago.movil.util.Objects;
-import com.tpago.movil.util.Preconditions;
-import com.tpago.movil.widget.FullSizeLoadIndicator;
-import com.tpago.movil.widget.LoadIndicator;
+import com.tpago.movil.dep.widget.FullSizeLoadIndicator;
+import com.tpago.movil.dep.widget.LoadIndicator;
+import com.tpago.movil.function.Action;
+import com.tpago.movil.function.Consumer;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.io.Serializable;
 
@@ -45,9 +44,8 @@ import io.codetail.animation.ViewAnimationUtils;
 public class PinConfirmationDialogFragment
   extends FullScreenDialogFragment
   implements DialogInterface.OnShowListener,
-  PinView.Listener,
-  DepNumPad.OnDigitClickedListener,
-  DepNumPad.OnDeleteClickedListener {
+  PinView.Listener {
+
   private static final String TAG = PinConfirmationDialogFragment.class.getSimpleName();
 
   private static final String KEY_ACTION_DESCRIPTION = "actionDescription";
@@ -59,9 +57,10 @@ public class PinConfirmationDialogFragment
     String actionDescription,
     Callback callback,
     int originX,
-    int originY) {
-    Preconditions.assertNotNull(fragmentManager, "fragmentManager == null");
-    Preconditions.assertNotNull(callback, "callback == null");
+    int originY
+  ) {
+    ObjectHelper.checkNotNull(fragmentManager, "fragmentManager");
+    ObjectHelper.checkNotNull(callback, "callback");
     final Bundle argumentBundle = new Bundle();
     argumentBundle.putString(KEY_ACTION_DESCRIPTION, actionDescription);
     argumentBundle.putInt(KEY_ORIGIN_X, originX);
@@ -73,14 +72,14 @@ public class PinConfirmationDialogFragment
   }
 
   public static void dismiss(FragmentManager fragmentManager, boolean succedded) {
-    Preconditions.assertNotNull(fragmentManager, "fragmentManager == null");
+    ObjectHelper.checkNotNull(fragmentManager, "fragmentManager");
     final Fragment fragment = fragmentManager.findFragmentByTag(TAG);
-    if (Objects.checkIfNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
+    if (ObjectHelper.isNotNull(fragment) && fragment instanceof PinConfirmationDialogFragment) {
       final PinConfirmationDialogFragment dialogFragment = (PinConfirmationDialogFragment) fragment;
       dialogFragment.loadIndicator.stop();
-      if (succedded) {
+//      if (succedded) {
         dialogFragment.finish();
-      }
+//      }
     }
   }
 
@@ -108,13 +107,18 @@ public class PinConfirmationDialogFragment
   @BindView(R.id.pin_view)
   PinView pinView;
   @BindView(R.id.num_pad)
-  DepNumPad numPad;
+  NumPad numPad;
+
+  private Consumer<Integer> numPadDigitConsumer;
+  private Action numPadDeleteAction;
 
   private void finish() {
-    if (Utils.isNotNull(containerFrameLayout)) {
+    if (ObjectHelper.isNotNull(containerFrameLayout)) {
       // Prepares the background animator.
-      final int radius = (int) Math.hypot(containerFrameLayout.getWidth(),
-        containerLinearLayout.getHeight());
+      final int radius = (int) Math.hypot(
+        containerFrameLayout.getWidth(),
+        containerLinearLayout.getHeight()
+      );
       final Animator animator = ViewAnimationUtils
         .createCircularReveal(containerFrameLayout, originX, originY, radius, 0)
         .setDuration(exitDuration);
@@ -137,8 +141,9 @@ public class PinConfirmationDialogFragment
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    final Bundle bundle = Utils.isNotNull(savedInstanceState) ? savedInstanceState : getArguments();
-    if (Utils.isNotNull(bundle)) {
+    final Bundle bundle
+      = ObjectHelper.isNotNull(savedInstanceState) ? savedInstanceState : getArguments();
+    if (ObjectHelper.isNotNull(bundle)) {
       if (!bundle.containsKey(KEY_ORIGIN_X)) {
         throw new NullPointerException("Center X must be specified as an argument");
       } else if (!bundle.containsKey(KEY_ORIGIN_Y)) {
@@ -170,8 +175,10 @@ public class PinConfirmationDialogFragment
 
   @Nullable
   @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+  public View onCreateView(
+    LayoutInflater inflater, @Nullable ViewGroup container,
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(R.layout.d_fragment_pin_confirmation, container, false);
   }
 
@@ -185,16 +192,20 @@ public class PinConfirmationDialogFragment
     // Adds a listener that gets notified every time the pin view starts or finishes loading.
     pinView.setListener(this);
     // Adds a listener that gets notified every time a button of the num pad is clicked.
-    numPad.setOnDigitClickedListener(this);
-    numPad.setOnDeleteClickedListener(this);
+    this.numPadDigitConsumer = (digit) -> this.pinView.push(digit);
+    this.numPad.addDigitConsumer(this.numPadDigitConsumer);
+    this.numPadDeleteAction = this.pinView::pop;
+    this.numPad.addDeleteAction(this.numPadDeleteAction);
   }
 
   @Override
   public void onDestroyView() {
     super.onDestroyView();
     // Removes the listener that gets notified every time a button of the num pad is clicked.
-    numPad.setOnDeleteClickedListener(null);
-    numPad.setOnDigitClickedListener(null);
+    this.numPad.removeDeleteAction(this.numPadDeleteAction);
+    this.numPadDeleteAction = null;
+    this.numPad.removeDigitConsumer(this.numPadDigitConsumer);
+    this.numPadDigitConsumer = null;
     // Removes the listener that gets notified every time the pin view starts or finishes loading.
     pinView.setListener(this);
     // Unbinds all the annotated views and methods.
@@ -223,31 +234,24 @@ public class PinConfirmationDialogFragment
       .with(ObjectAnimator.ofFloat(containerLinearLayout, "scaleY", 1.0F))
       .after(enterDuration / 2);
     // Prepares the background animator.
-    final int radius = (int) Math.hypot(containerFrameLayout.getWidth(),
-      containerLinearLayout.getHeight());
+    final int radius = (int) Math.hypot(
+      containerFrameLayout.getWidth(),
+      containerLinearLayout.getHeight()
+    );
     final Animator backgroundAnimator = ViewAnimationUtils
       .createCircularReveal(containerFrameLayout, originX, originY, 0, radius)
       .setDuration(enterDuration);
     // Prepares the combined animator.
     final AnimatorSet animator = new AnimatorSet();
-    animator.play(foregroundAnimator).with(backgroundAnimator);
+    animator.play(foregroundAnimator)
+      .with(backgroundAnimator);
     // Starts the combined animator.
     animator.start();
   }
 
   @Override
-  public void onDigitClicked(@NonNull Digit digit) {
-    pinView.push(digit.getValue());
-  }
-
-  @Override
-  public void onDeleteClicked() {
-    pinView.pop();
-  }
-
-  @Override
   public void onConfirmationStarted(@NonNull String pin) {
-    if (Objects.checkIfNull(loadIndicator)) {
+    if (ObjectHelper.isNull(loadIndicator)) {
       loadIndicator = new FullSizeLoadIndicator(getChildFragmentManager());
     }
     loadIndicator.start();
@@ -255,6 +259,7 @@ public class PinConfirmationDialogFragment
   }
 
   public interface Callback extends Serializable {
+
     void confirm(String pin);
   }
 }

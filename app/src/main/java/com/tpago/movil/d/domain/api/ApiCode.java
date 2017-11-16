@@ -2,13 +2,14 @@ package com.tpago.movil.d.domain.api;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.net.HttpCode;
+import com.tpago.movil.dep.net.HttpCode;
 
 /**
  * {@link DepApiBridge API}'s code enumeration.
  *
  * @author hecvasro
  */
+@Deprecated
 public enum ApiCode {
   OK(HttpCode.OK.getValue()),
   MULTIPLE_CHOICES(HttpCode.MULTIPLE_CHOICES.getValue()),

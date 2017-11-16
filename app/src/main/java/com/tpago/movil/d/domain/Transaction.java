@@ -17,12 +17,17 @@ import java.util.UUID;
 /**
  * @author Hector Vasquez
  */
+@Deprecated
 @AutoValue
 public abstract class Transaction {
   private static final DateFormat FORMAT = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
   public static TypeAdapter<Transaction> typeAdapter(Gson gson) {
     return new AutoValue_Transaction.GsonTypeAdapter(gson);
+  }
+
+  public static Builder builder() {
+    return new AutoValue_Transaction.Builder();
   }
 
   private final String id = UUID.randomUUID()
@@ -62,5 +67,14 @@ public abstract class Transaction {
   @Override
   public int hashCode() {
     return this.id.hashCode();
+  }
+
+  @AutoValue.Builder
+  public static abstract class Builder {
+    public abstract Builder dateString(String dateString);
+    public abstract Builder type(String type);
+    public abstract Builder detail(String detail);
+    public abstract Builder amount(BigDecimal amount);
+    public abstract Transaction build();
   }
 }

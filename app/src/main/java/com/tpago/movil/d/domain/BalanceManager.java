@@ -9,7 +9,7 @@ import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.util.EventBus;
 import com.tpago.movil.d.misc.rx.RxUtils;
-import com.tpago.movil.util.Resettable;
+import com.tpago.movil.dep.Resettable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +32,7 @@ import timber.log.Timber;
  */
 @Deprecated
 public final class BalanceManager implements Resettable {
+
   /**
    * Amount of time (milliseconds) that every balance will be kept alive.
    */
@@ -122,11 +123,8 @@ public final class BalanceManager implements Resettable {
   }
 
   @NonNull
-  public final ApiResult<Pair<Long, Balance>> queryBalance(
-    String authToken,
-    Product product,
-    String pin) {
-    final ApiResult<Balance> apiResult = apiBridge.queryBalance(authToken, product, pin);
+  public final ApiResult<Pair<Long, Balance>> queryBalance(Product product, String pin) {
+    final ApiResult<Balance> apiResult = apiBridge.queryBalance(product, pin);
     if (apiResult.isSuccessful()) {
       balances.put(product, Pair.create(System.currentTimeMillis(), apiResult.getData()));
       return new ApiResult<>(ApiCode.OK, getBalance(product), null);

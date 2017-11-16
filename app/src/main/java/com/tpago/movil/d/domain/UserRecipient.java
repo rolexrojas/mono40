@@ -5,15 +5,16 @@ import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.tpago.movil.Partner;
+import com.tpago.movil.dep.Partner;
 import com.tpago.movil.PhoneNumber;
-import com.tpago.movil.User;
+import com.tpago.movil.dep.User;
 import com.tpago.movil.d.domain.util.StringUtils;
-import com.tpago.movil.text.Texts;
+import com.tpago.movil.dep.text.Texts;
 
 /**
  * @author Hector Vasquez
  */
+@Deprecated
 public final class UserRecipient extends Recipient {
 
   public static final Creator<UserRecipient> CREATOR = new Creator<UserRecipient>() {
@@ -50,10 +51,11 @@ public final class UserRecipient extends Recipient {
     super(RecipientType.USER);
 
     this.id = user.phoneNumber()
-      .getValue();
+      .value();
     this.phoneNumber = user.phoneNumber();
     this.name = user.name();
-    this.pictureUri = user.avatar().exists() ? Uri.fromFile(user.avatar().getFile()) : Uri.EMPTY;
+    this.pictureUri = user.picture();
+    this.carrier = user.carrier();
   }
 
   public final PhoneNumber phoneNumber() {
@@ -86,7 +88,7 @@ public final class UserRecipient extends Recipient {
   @Override
   public boolean matches(@Nullable String query) {
     return super.matches(query)
-      || StringUtils.matches(this.phoneNumber.getValue(), query)
+      || StringUtils.matches(this.phoneNumber.value(), query)
       || StringUtils.matches(this.name, query);
   }
 

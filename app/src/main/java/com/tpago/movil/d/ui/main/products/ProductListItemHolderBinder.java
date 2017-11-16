@@ -6,28 +6,28 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.squareup.picasso.Picasso;
-import com.tpago.movil.api.DCurrencies;
+import com.tpago.movil.dep.api.DCurrencies;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Balance;
-import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductType;
 import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
-import com.tpago.movil.domain.LogoStyle;
-import com.tpago.movil.util.Dates;
-
-import static com.tpago.movil.util.Objects.checkIfNull;
-import static com.tpago.movil.util.Preconditions.assertNotNull;
+import com.tpago.movil.d.domain.LogoStyle;
+import com.tpago.movil.dep.Dates;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * @author hecvasro
  */
-class ProductListItemHolderBinder implements ListItemHolderBinder<ProductItem, ProductListItemHolder> {
+class ProductListItemHolderBinder
+  implements ListItemHolderBinder<ProductItem, ProductListItemHolder> {
+
   private final StringHelper stringHelper;
 
   ProductListItemHolderBinder(StringHelper stringHelper) {
-    this.stringHelper = assertNotNull(stringHelper, "stringHelper == null");
+    this.stringHelper = stringHelper;
   }
 
   @Override
@@ -49,11 +49,11 @@ class ProductListItemHolderBinder implements ListItemHolderBinder<ProductItem, P
     final Balance balance = item.getBalance();
     final int productTypeAnchorId;
     final RelativeLayout.LayoutParams productTypeLayoutParams
-       = (RelativeLayout.LayoutParams) holder.productTypeTextView.getLayoutParams();
+      = (RelativeLayout.LayoutParams) holder.productTypeTextView.getLayoutParams();
     final int productIdentifierAnchorId;
     final RelativeLayout.LayoutParams productIdentifierLayoutParams
       = (RelativeLayout.LayoutParams) holder.productIdentifierTextView.getLayoutParams();
-    if (checkIfNull(balance)) {
+    if (ObjectHelper.isNull(balance)) {
       holder.productBalanceTextView.setVisibility(View.GONE);
       holder.queryTimeTextView.setVisibility(View.GONE);
       holder.queryBalanceButton.setVisibility(View.VISIBLE);

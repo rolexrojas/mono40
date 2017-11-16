@@ -1,71 +1,53 @@
 package com.tpago.movil.app;
 
+import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 
-import com.tpago.movil.Avatar;
-import com.tpago.movil.ConfigManager;
-import com.tpago.movil.content.SharedPreferencesCreator;
-import com.tpago.movil.UserStore;
-import com.tpago.movil.content.StringResolver;
-import com.tpago.movil.io.Files;
-import com.tpago.movil.util.Preconditions;
+import com.tpago.movil.DisplayDensity;
+import com.tpago.movil.app.di.ComponentBuilder;
+import com.tpago.movil.app.di.ComponentBuilderSupplier;
+import com.tpago.movil.app.upgrade.AppUpgradeModule;
+
+import java.util.Map;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 
-/**
- * @author hecvasro
- */
-@Module
-final class AppModule {
-  private final App app;
-
-  AppModule(App app) {
-    this.app = Preconditions.assertNotNull(app, "app == null");
-  }
+@Module(includes = AppUpgradeModule.class)
+public final class AppModule {
 
   @Provides
   @Singleton
-  Context provideContext() {
-    return app;
+  ComponentBuilderSupplier componentBuilderSupplier(Map<Class<?>, ComponentBuilder> map) {
+    return ComponentBuilderSupplier.create(map);
   }
 
   @Provides
   @Singleton
   DisplayDensity provideDisplayDensity(Context context) {
-    return DisplayDensity.find(context);
-  }
-
-  // Deprecated providers.
-  @Provides
-  @Singleton
-  DeviceManager provideDeviceManager(Context context) {
-    return new DeviceManager(context);
+    return DisplayDensity.get(context);
   }
 
   @Provides
   @Singleton
-  Avatar provideAvatar(Context context) {
-    return Avatar.create(Files.createInternalPictureFile(context, Avatar.class.getSimpleName()));
+  SharedPreferences sharedPreferences(Context context) {
+    return PreferenceManager.getDefaultSharedPreferences(context);
   }
 
   @Provides
   @Singleton
-  ConfigManager provideConfigManager(SharedPreferencesCreator sharedPreferencesCreator) {
-    return new ConfigManager(sharedPreferencesCreator);
+  KeyguardManager keyguardManager(Context context) {
+    return (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
   }
 
   @Provides
   @Singleton
-  UserStore provideUserStore(SharedPreferencesCreator sharedPreferencesCreator, Avatar avatar) {
-    return new UserStore(sharedPreferencesCreator, avatar);
-  }
-
-  @Provides
-  @Singleton
-  StringResolver provideStringResolver(Context context) {
-    return new StringResolver(context);
+  FingerprintManagerCompat fingerprintManager(Context context) {
+    return FingerprintManagerCompat.from(context);
   }
 }

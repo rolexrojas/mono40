@@ -4,14 +4,17 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical">
+
   <FrameLayout style="@style/Dep.App.Widget.AppBar">
+
     <android.support.v7.widget.Toolbar
       android:id="@+id/toolbar"
-      style="@style/Dep.App.Widget.Toolbar"
-      android:layout_gravity="center_vertical" />
+      style="@style/Toolbar"
+      android:layout_gravity="center_vertical"/>
   </FrameLayout>
+
   <FrameLayout
-    android:id="@+id/container"
+    android:id="@+id/containerFrameLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"/>
 </LinearLayout>

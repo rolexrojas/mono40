@@ -1,22 +1,16 @@
 package com.tpago.movil.d.domain;
 
-import static com.tpago.movil.util.Objects.checkIfNull;
-import static com.tpago.movil.util.Preconditions.assertNotNull;
-
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
-import com.tpago.movil.content.SharedPreferencesCreator;
-import com.tpago.movil.d.domain.api.DepApiBridge;
-import com.tpago.movil.d.domain.api.ApiUtils;
+import com.tpago.movil.dep.content.SharedPreferencesCreator;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import rx.Observable;
 
 /**
  * @author hecvasro
@@ -26,43 +20,36 @@ public final class RecipientManager {
 
   private static final String KEY_INDEX_SET = "indexSet";
 
+  private static boolean isProductRecipient(Recipient recipient) {
+    return recipient instanceof ProductRecipient;
+  }
+
   private final SharedPreferences sharedPreferences;
   private final Gson gson;
 
   private final Set<String> indexSet;
 
-  private final DepApiBridge apiBridge;
-
   private List<Recipient> recipientList;
 
-  public RecipientManager(
-    SharedPreferencesCreator sharedPreferencesCreator,
-    Gson gson,
-    DepApiBridge apiBridge
-  ) {
-    this.sharedPreferences =
-      assertNotNull(sharedPreferencesCreator, "sharedPreferencesCreator == null")
-        .create(RecipientManager.class.getCanonicalName());
-    this.gson =
-      assertNotNull(gson, "gson == null");
-
-    this.indexSet = this.sharedPreferences.getStringSet(KEY_INDEX_SET, new HashSet<String>());
-
-    this.apiBridge = assertNotNull(apiBridge, "apiBridge == null");
+  public RecipientManager(SharedPreferencesCreator sharedPreferencesCreator, Gson gson) {
+    this.sharedPreferences = sharedPreferencesCreator
+      .create(RecipientManager.class.getCanonicalName());
+    this.gson = gson;
+    this.indexSet = this.sharedPreferences.getStringSet(KEY_INDEX_SET, new HashSet<>());
   }
 
   @Deprecated
   final void syncRecipients(final List<Recipient> remoteRecipientList) {
-    if (checkIfNull(this.recipientList)) {
+    if (ObjectHelper.isNull(this.recipientList)) {
       this.recipientList = new ArrayList<>();
     } else {
       this.recipientList.clear();
     }
 
     for (String id : this.indexSet) {
-      this.recipientList.add(
-        this.gson.fromJson(this.sharedPreferences.getString(id, null), Recipient.class)
-      );
+      final Recipient recipient = this.gson
+        .fromJson(this.sharedPreferences.getString(id, null), Recipient.class);
+      this.recipientList.add(recipient);
     }
 
     final List<Recipient> recipientToAddList = new ArrayList<>(remoteRecipientList);
@@ -70,33 +57,36 @@ public final class RecipientManager {
     for (Recipient recipient : this.recipientList) {
       if (recipient instanceof BillRecipient && !remoteRecipientList.contains(recipient)) {
         recipientToRemoveList.add(recipient);
+      } else if (isProductRecipient(recipient)) {
+        recipientToRemoveList.add(recipient);
       }
     }
 
-    final SharedPreferences.Editor editor = sharedPreferences.edit();
+    final SharedPreferences.Editor editor = this.sharedPreferences.edit();
 
     for (Recipient recipient : recipientToAddList) {
-      recipientList.add(recipient);
-      indexSet.add(recipient.getId());
-      editor.putString(recipient.getId(), gson.toJson(recipient, Recipient.class));
+      this.recipientList.add(recipient);
+      if (!isProductRecipient(recipient)) {
+        this.indexSet.add(recipient.getId());
+        editor.putString(recipient.getId(), this.gson.toJson(recipient, Recipient.class));
+      }
     }
     for (Recipient recipient : recipientToRemoveList) {
-      indexSet.remove(recipient.getId());
+      this.indexSet.remove(recipient.getId());
       editor.remove(recipient.getId());
     }
 
     editor
-      .putStringSet(KEY_INDEX_SET, indexSet)
+      .putStringSet(KEY_INDEX_SET, this.indexSet)
       .apply();
 
-    Collections.sort(recipientList, Recipient.comparator());
+    Collections.sort(this.recipientList, Recipient.comparator());
   }
 
-  @Deprecated
   public final void clear() {
-    recipientList.clear();
-    indexSet.clear();
-    sharedPreferences.edit()
+    this.recipientList.clear();
+    this.indexSet.clear();
+    this.sharedPreferences.edit()
       .clear()
       .apply();
   }
@@ -108,27 +98,21 @@ public final class RecipientManager {
 
   @Deprecated
   public final boolean checkIfExists(Recipient recipient) {
-    return recipientList.contains(recipient);
-  }
-
-  @Deprecated
-  public final Observable<Boolean> checkIfAffiliated(
-    final String authToken,
-    final String phoneNumber) {
-    return apiBridge.checkIfAffiliated(authToken, phoneNumber)
-      .compose(ApiUtils.<Boolean>handleApiResult(true));
+    return this.recipientList.contains(recipient);
   }
 
   @Deprecated
   public final void add(Recipient recipient) {
     if (!checkIfExists(recipient)) {
-      recipientList.add(recipient);
-      indexSet.add(recipient.getId());
-      sharedPreferences.edit()
-        .putStringSet(KEY_INDEX_SET, indexSet)
-        .putString(recipient.getId(), gson.toJson(recipient, Recipient.class))
-        .apply();
-      Collections.sort(recipientList, Recipient.comparator());
+      this.recipientList.add(recipient);
+      if (!isProductRecipient(recipient)) {
+        this.indexSet.add(recipient.getId());
+        this.sharedPreferences.edit()
+          .putStringSet(KEY_INDEX_SET, this.indexSet)
+          .putString(recipient.getId(), this.gson.toJson(recipient, Recipient.class))
+          .apply();
+      }
+      Collections.sort(this.recipientList, Recipient.comparator());
     }
   }
 
@@ -138,25 +122,29 @@ public final class RecipientManager {
       this.recipientList.set(this.recipientList.indexOf(recipient), recipient);
     } else {
       this.recipientList.add(recipient);
-      this.indexSet.add(recipient.getId());
     }
 
-    this.sharedPreferences.edit()
-      .putStringSet(KEY_INDEX_SET, this.indexSet)
-      .putString(recipient.getId(), this.gson.toJson(recipient, Recipient.class))
-      .apply();
+    if (!isProductRecipient(recipient)) {
+      this.indexSet.add(recipient.getId());
+      this.sharedPreferences.edit()
+        .putStringSet(KEY_INDEX_SET, this.indexSet)
+        .putString(recipient.getId(), this.gson.toJson(recipient, Recipient.class))
+        .apply();
+    }
 
     Collections.sort(this.recipientList, Recipient.comparator());
   }
 
   public final void remove(Recipient recipient) {
-    final String id = recipient.getId();
-    indexSet.remove(id);
-    sharedPreferences.edit()
-      .putStringSet(KEY_INDEX_SET, indexSet)
-      .remove(id)
-      .apply();
-    recipientList.remove(recipient);
-    Collections.sort(recipientList, Recipient.comparator());
+    if (!isProductRecipient(recipient)) {
+      final String id = recipient.getId();
+      this.indexSet.remove(id);
+      this.sharedPreferences.edit()
+        .putStringSet(KEY_INDEX_SET, this.indexSet)
+        .remove(id)
+        .apply();
+    }
+    this.recipientList.remove(recipient);
+    Collections.sort(this.recipientList, Recipient.comparator());
   }
 }

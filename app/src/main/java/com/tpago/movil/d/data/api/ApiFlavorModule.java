@@ -1,8 +1,12 @@
 package com.tpago.movil.d.data.api;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.Gson;
+import com.tpago.movil.BuildConfig;
 import com.tpago.movil.d.domain.api.ApiError;
 import com.tpago.movil.d.domain.api.DepApiBridge;
+import com.tpago.movil.util.StringHelper;
 
 import java.lang.annotation.Annotation;
 
@@ -22,20 +26,27 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 @Deprecated
 public class ApiFlavorModule {
+
   @Provides
   @Singleton
   DepApiBridge provideApiBridge(
     Gson gson,
     HttpUrl baseUrl,
-    OkHttpClient httpClient) {
-    final Retrofit retrofit = new Retrofit.Builder()
-      .baseUrl(baseUrl)
-      .client(httpClient)
-      .addConverterFactory(GsonConverterFactory.create(gson))
-      .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-      .build();
-    return new RetrofitApiBridge(
-      retrofit.create(ApiService.class),
-      retrofit.<ApiError>responseBodyConverter(ApiError.class, new Annotation[0]));
+    OkHttpClient httpClient
+  ) {
+    if (StringHelper.isNullOrEmpty(BuildConfig.API_URL)) {
+      return MockDepApiBridge.create();
+    } else {
+      final Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .client(httpClient)
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+        .build();
+      return new RetrofitApiBridge(
+        retrofit.create(ApiService.class),
+        retrofit.responseBodyConverter(ApiError.class, new Annotation[0])
+      );
+    }
   }
 }

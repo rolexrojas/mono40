@@ -10,20 +10,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
-import com.tpago.movil.Partner;
-import com.tpago.movil.app.App;
+import com.tpago.movil.app.ui.ActivityModule;
+import com.tpago.movil.dep.Partner;
+import com.tpago.movil.dep.App;
 import com.tpago.movil.R;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.api.DepApiBridge;
-import com.tpago.movil.d.domain.session.SessionManager;
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.ui.DepActivityModule;
 import com.tpago.movil.d.ui.SwitchableContainerActivity;
 import com.tpago.movil.d.ui.main.recipient.index.category.Category;
 import com.tpago.movil.d.ui.view.widget.FullScreenLoadIndicator;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
-import com.tpago.movil.util.Objects;
+import com.tpago.movil.d.domain.Bank;
+import com.tpago.movil.util.ObjectHelper;
 
 import javax.inject.Inject;
 
@@ -49,8 +49,6 @@ public class AddRecipientActivity extends
   private LoadIndicator loadIndicator;
 
   @Inject
-  SessionManager sessionManager;
-  @Inject
   DepApiBridge apiBridge;
   @Inject
   AddRecipientPresenter presenter;
@@ -59,7 +57,7 @@ public class AddRecipientActivity extends
 
   @BindView(R.id.toolbar)
   Toolbar toolbar;
-  @BindView(R.id.container)
+  @BindView(R.id.containerFrameLayout)
   FrameLayout containerFrameLayout;
 
   private Recipient requestResult = null;
@@ -67,7 +65,7 @@ public class AddRecipientActivity extends
   @NonNull
   protected static Intent serializeResult(Recipient recipient) {
     final Intent intent = new Intent();
-    if (Utils.isNotNull(recipient)) {
+    if (ObjectHelper.isNotNull(recipient)) {
       intent.putExtra(EXTRA_RECIPIENT, recipient);
     }
     return intent;
@@ -82,7 +80,7 @@ public class AddRecipientActivity extends
 
   @Nullable
   public static Recipient deserializeResult(@Nullable Intent intent) {
-    if (Objects.checkIfNull(intent)) {
+    if (ObjectHelper.isNull(intent)) {
       return null;
     } else {
       return (Recipient) intent.getParcelableExtra(EXTRA_RECIPIENT);
@@ -98,7 +96,7 @@ public class AddRecipientActivity extends
   }
 
   @Override
-  protected int layoutResourceIdentifier() {
+  protected int layoutResId() {
     return R.layout.d_activity_add_recipient;
   }
 
@@ -112,7 +110,8 @@ public class AddRecipientActivity extends
       .getString(KEY_CATEGORY);
     final Category category = Category.valueOf(categoryName);
     component = DaggerAddRecipientComponent.builder()
-      .appComponent(((App) getApplication()).getComponent())
+      .appComponent(((App) getApplication()).component())
+      .activityModule(ActivityModule.create(this))
       .depActivityModule(new DepActivityModule(this))
       .addRecipientModule(new AddRecipientModule(category))
       .build();
@@ -120,7 +119,7 @@ public class AddRecipientActivity extends
     // Prepares the action bar.
     setSupportActionBar(toolbar);
     final ActionBar actionBar = getSupportActionBar();
-    if (Utils.isNotNull(actionBar)) {
+    if (ObjectHelper.isNotNull(actionBar)) {
       actionBar.setDisplayHomeAsUpEnabled(true);
       actionBar.setDisplayShowTitleEnabled(true);
       actionBar.setTitle(
@@ -139,7 +138,7 @@ public class AddRecipientActivity extends
   @Override
   protected void onStart() {
     super.onStart();
-    if (Objects.checkIfNotNull(requestResult)) {
+    if (ObjectHelper.isNotNull(requestResult)) {
       finish(requestResult);
       requestResult = null;
     }
@@ -147,9 +146,8 @@ public class AddRecipientActivity extends
 
   @Override
   protected void onStop() {
+    this.presenter.onStop();
     super.onStop();
-    // Stops the presenter.
-    presenter.stop();
   }
 
   @Override
@@ -186,17 +184,36 @@ public class AddRecipientActivity extends
     getSupportFragmentManager().beginTransaction()
       .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
       .replace(
-        R.id.container,
+        R.id.containerFrameLayout,
         RecipientBuilderFragment.create(
-          getString(R.string.contract).toLowerCase(),
-          partner))
+          getString(R.string.contract)
+            .toLowerCase(),
+          partner
+        )
+      )
+      .addToBackStack(null)
+      .commit();
+  }
+
+  @Override
+  public void onBankClicked(Bank bank) {
+    getSupportFragmentManager().beginTransaction()
+      .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+      .replace(
+        R.id.containerFrameLayout,
+        RecipientBuilderFragment.create(
+          getString(R.string.account)
+            .toLowerCase(),
+          bank
+        )
+      )
       .addToBackStack(null)
       .commit();
   }
 
   @Nullable
   public LoadIndicator getRefreshIndicator() {
-    if (Utils.isNull(loadIndicator)) {
+    if (ObjectHelper.isNull(loadIndicator)) {
       loadIndicator = new FullScreenLoadIndicator(getSupportFragmentManager());
     }
     return loadIndicator;
@@ -206,12 +223,16 @@ public class AddRecipientActivity extends
   public void startNonAffiliatedProcess(NonAffiliatedPhoneNumberRecipient recipient) {
     startActivityForResult(
       NonAffiliatedPhoneNumberRecipientAdditionActivity.getLaunchIntent(this, recipient),
-      REQUEST_CODE);
+      REQUEST_CODE
+    );
   }
 
   @Override
   public void finish(Recipient recipient) {
-    setResult(Utils.isNotNull(recipient) ? RESULT_OK : RESULT_CANCELED, serializeResult(recipient));
+    setResult(
+      ObjectHelper.isNotNull(recipient) ? RESULT_OK : RESULT_CANCELED,
+      serializeResult(recipient)
+    );
     finish();
   }
 }

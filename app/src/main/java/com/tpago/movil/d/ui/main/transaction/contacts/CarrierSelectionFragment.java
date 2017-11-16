@@ -12,14 +12,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
 import com.squareup.picasso.Picasso;
-import com.tpago.movil.Partner;
+import com.tpago.movil.company.LogoCatalog;
+import com.tpago.movil.company.TemplateToLogoCatalogMapper;
+import com.tpago.movil.dep.Partner;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
-import com.tpago.movil.api.ApiImageUriBuilder;
+import com.tpago.movil.dep.api.ApiImageUriBuilder;
+import com.tpago.movil.dep.api.DCurrencies;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
@@ -29,7 +34,6 @@ import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.domain.UserRecipient;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
-import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
@@ -38,13 +42,19 @@ import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
-import com.tpago.movil.util.Objects;
+import com.tpago.movil.partner.Carrier;
+import com.tpago.movil.partner.PartnerBuilderFactory;
+import com.tpago.movil.session.SessionManager;
+import com.tpago.movil.util.ObjectHelper;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+
 import javax.inject.Inject;
+
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
@@ -71,8 +81,9 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
   private Subscription subscription = Subscriptions.unsubscribed();
   private Subscription rechargeSubscription = Subscriptions.unsubscribed();
 
-  @Inject
-  SessionManager sessionManager;
+  @Inject SessionManager sessionManager;
+  @Inject TemplateToLogoCatalogMapper templateToLogoCatalogMapper;
+
   @Inject
   RecipientManager recipientManager;
   @Inject
@@ -98,7 +109,8 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
       carrier = r.getCarrier();
       phoneNumber = r.phoneNumber();
     } else if (this.recipient instanceof NonAffiliatedPhoneNumberRecipient) {
-      final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) this.recipient;
+      final NonAffiliatedPhoneNumberRecipient r
+        = (NonAffiliatedPhoneNumberRecipient) this.recipient;
 
       carrier = r.getCarrier();
       phoneNumber = r.getPhoneNumber();
@@ -110,8 +122,6 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
     }
 
     rechargeSubscription = this.apiBridge.recharge(
-      this.sessionManager.getSession()
-        .getAuthToken(),
       carrier,
       phoneNumber,
       this.fundingAccount.get(),
@@ -126,12 +136,19 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
           PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), result.isSuccessful());
 
           if (result.isSuccessful()) {
-            getContainer().finish(true, result.getData());
+            getContainer()
+              .finish(true, result.getData());
           } else {
             Dialogs.builder(getContext())
               .setTitle(R.string.error_generic_title)
-              .setMessage(result.getError().getDescription())
-              .setPositiveButton(R.string.error_positive_button_text, null)
+              .setMessage(
+                result.getError()
+                  .getDescription()
+              )
+              .setPositiveButton(
+                R.string.error_positive_button_text,
+                null
+              )
               .create()
               .show();
           }
@@ -157,7 +174,7 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final TransactionCreationComponent c = getContainer().getComponent();
-    if (Objects.checkIfNotNull(c)) {
+    if (ObjectHelper.isNotNull(c)) {
       c.inject(this);
     }
   }
@@ -167,11 +184,13 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
   public View onCreateView(
     LayoutInflater inflater,
     @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(
       R.layout.carrier_selection_fragment,
       container,
-      false);
+      false
+    );
   }
 
 
@@ -187,7 +206,8 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
     recyclerView.setLayoutManager(new LinearLayoutManager(
       context,
       LinearLayoutManager.VERTICAL,
-      false));
+      false
+    ));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
       .drawable(R.drawable.d_divider)
       .marginResId(R.dimen.space_horizontal_normal)
@@ -199,7 +219,7 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
   @Override
   public void onResume() {
     super.onResume();
-    subscription = apiBridge.partners(sessionManager.getSession().getAuthToken())
+    subscription = apiBridge.partners()
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
       .doOnSubscribe(new Action0() {
@@ -212,7 +232,7 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
         @Override
         public void call(ApiResult<List<Partner>> result) {
           if (result.isSuccessful()) {
-            if (Objects.checkIfNull(carrierList)) {
+            if (ObjectHelper.isNull(carrierList)) {
               carrierList = new ArrayList<>();
             } else {
               adapter.notifyItemRangeRemoved(0, carrierList.size());
@@ -220,7 +240,8 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
             }
 
             for (Partner partner : result.getData()) {
-              if (partner.getType().equals(Partner.TYPE_CARRIER)) {
+              if (partner.getType()
+                .equals(Partner.TYPE_CARRIER)) {
                 carrierList.add(partner);
               }
             }
@@ -228,7 +249,8 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
           } else {
             Dialogs.builder(getContext())
               .setTitle(R.string.error_generic_title)
-              .setMessage(result.getError().getDescription())
+              .setMessage(result.getError()
+                .getDescription())
               .setPositiveButton(R.string.ok, null)
               .show();
           }
@@ -283,25 +305,39 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
     @Override
     public void onClick(View v) {
       final String phoneNumber;
+      final Partner p = carrierList.get(this.getAdapterPosition());
+
       if (recipient instanceof UserRecipient) {
         final UserRecipient r = (UserRecipient) recipient;
-        r.setCarrier(carrierList.get(this.getAdapterPosition()));
+        r.setCarrier(p);
+
+        final String logoTemplate = p.getImageUriTemplate();
+        final LogoCatalog logoCatalog = templateToLogoCatalogMapper.apply(logoTemplate);
+        final Carrier carrier
+          = (Carrier) PartnerBuilderFactory.make(com.tpago.movil.partner.Partner.Type.CARRIER)
+          .code(p.getCode())
+          .id(p.getId())
+          .name(p.getName())
+          .logoTemplate(logoTemplate)
+          .logoCatalog(logoCatalog)
+          .build();
+        sessionManager.updateCarrier(carrier);
 
         phoneNumber = r.phoneNumber()
           .formattedValued();
       } else if (recipient instanceof NonAffiliatedPhoneNumberRecipient) {
         final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) recipient;
-        r.setCarrier(carrierList.get(this.getAdapterPosition()));
+        r.setCarrier(p);
 
-        recipientManager.update(recipient);
+//        recipientManager.update(recipient);
 
         phoneNumber = r.getPhoneNumber()
           .formattedValued();
       } else {
         final PhoneNumberRecipient r = (PhoneNumberRecipient) recipient;
-        r.setCarrier(carrierList.get(this.getAdapterPosition()));
+        r.setCarrier(p);
 
-        recipientManager.update(recipient);
+//        recipientManager.update(recipient);
 
         phoneNumber = r.getPhoneNumber()
           .formattedValued();
@@ -310,8 +346,10 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
       final String description = String.format(
         "Recargar %1$s a %2$s",
         Formatter.amount(
-          fundingAccount.get()
-            .getCurrency(),
+          DCurrencies.map(
+            fundingAccount.get()
+              .getCurrency()
+          ),
           value.get()
         ),
         phoneNumber

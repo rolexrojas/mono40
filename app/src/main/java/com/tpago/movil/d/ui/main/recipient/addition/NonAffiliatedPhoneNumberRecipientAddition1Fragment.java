@@ -16,20 +16,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
-import com.tpago.Banks;
-import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.Banks;
+import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.R;
-import com.tpago.movil.app.App;
+import com.tpago.movil.dep.App;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
-import com.tpago.movil.domain.BankProvider;
-import com.tpago.movil.domain.FailureData;
-import com.tpago.movil.domain.LogoStyle;
-import com.tpago.movil.domain.ErrorCode;
-import com.tpago.movil.domain.Result;
-import com.tpago.movil.reactivex.Disposables;
+import com.tpago.movil.d.domain.BankProvider;
+import com.tpago.movil.d.domain.FailureData;
+import com.tpago.movil.d.domain.LogoStyle;
+import com.tpago.movil.d.domain.ErrorCode;
+import com.tpago.movil.d.domain.Result;
+import com.tpago.movil.dep.reactivex.Disposables;
+import com.tpago.movil.util.ObjectHelper;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.ArrayList;
@@ -48,12 +49,11 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-import static com.tpago.movil.util.Objects.checkIfNull;
-
 /**
  * @author hecvasro
  */
 public class NonAffiliatedPhoneNumberRecipientAddition1Fragment extends Fragment {
+
   private Unbinder unbinder;
   private NonAffiliatedPhoneNumberRecipient recipient;
 
@@ -78,7 +78,9 @@ public class NonAffiliatedPhoneNumberRecipientAddition1Fragment extends Fragment
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    App.get(getContext()).getComponent().inject(this);
+    App.get(getContext())
+      .component()
+      .inject(this);
   }
 
   @Nullable
@@ -86,11 +88,13 @@ public class NonAffiliatedPhoneNumberRecipientAddition1Fragment extends Fragment
   public View onCreateView(
     LayoutInflater inflater,
     @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(
       R.layout.d_fragment_non_affiliated_phone_number_recipient_addition_1,
       container,
-      false);
+      false
+    );
   }
 
   @Override
@@ -105,7 +109,8 @@ public class NonAffiliatedPhoneNumberRecipientAddition1Fragment extends Fragment
     recyclerView.setLayoutManager(new LinearLayoutManager(
       context,
       LinearLayoutManager.VERTICAL,
-      false));
+      false
+    ));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
       .drawable(R.drawable.d_divider)
       .marginResId(R.dimen.space_horizontal_normal)
@@ -130,7 +135,7 @@ public class NonAffiliatedPhoneNumberRecipientAddition1Fragment extends Fragment
         @Override
         public void accept(Result<Set<Bank>, ErrorCode> result) throws Exception {
           if (result.isSuccessful()) {
-            if (checkIfNull(bankList)) {
+            if (ObjectHelper.isNotNull(bankList)) {
               bankList = new ArrayList<>();
             } else {
               adapter.notifyItemRangeRemoved(0, bankList.size());
@@ -195,6 +200,7 @@ public class NonAffiliatedPhoneNumberRecipientAddition1Fragment extends Fragment
   }
 
   class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
     private ImageView imageView;
     private TextView textView;
 
@@ -209,12 +215,14 @@ public class NonAffiliatedPhoneNumberRecipientAddition1Fragment extends Fragment
     public void onClick(View v) {
       recipient.setBank(bankList.get(getAdapterPosition()));
       final AppCompatActivity activity = (AppCompatActivity) getActivity();
-      activity.getSupportFragmentManager().beginTransaction()
+      activity.getSupportFragmentManager()
+        .beginTransaction()
         .setCustomAnimations(
           R.anim.fragment_transition_enter_sibling,
           R.anim.fragment_transition_exit_sibling,
           R.anim.fragment_transition_enter_sibling,
-          R.anim.fragment_transition_exit_sibling)
+          R.anim.fragment_transition_exit_sibling
+        )
         .addToBackStack(null)
         .replace(R.id.container, new NonAffiliatedPhoneNumberRecipientAddition2Fragment())
         .commit();
@@ -222,6 +230,7 @@ public class NonAffiliatedPhoneNumberRecipientAddition1Fragment extends Fragment
   }
 
   class Adapter extends RecyclerView.Adapter<ViewHolder> {
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
       return new ViewHolder(

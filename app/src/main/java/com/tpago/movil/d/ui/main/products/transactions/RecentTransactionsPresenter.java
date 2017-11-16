@@ -3,12 +3,12 @@ package com.tpago.movil.d.ui.main.products.transactions;
 import android.support.annotation.NonNull;
 
 import com.tpago.movil.d.misc.rx.RxUtils;
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.domain.Transaction;
 import com.tpago.movil.d.domain.TransactionProvider;
 import com.tpago.movil.d.ui.Presenter;
 import com.tpago.movil.d.ui.misc.UiUtils;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,13 +28,16 @@ import timber.log.Timber;
  * @author hecvasro
  */
 class RecentTransactionsPresenter extends Presenter<RecentTransactionsScreen> {
+
   private final SchedulerProvider schedulerProvider;
   private final TransactionProvider transactionProvider;
 
   private Subscription subscription = Subscriptions.unsubscribed();
 
-  RecentTransactionsPresenter(@NonNull SchedulerProvider schedulerProvider,
-    @NonNull TransactionProvider transactionProvider) {
+  RecentTransactionsPresenter(
+    @NonNull SchedulerProvider schedulerProvider,
+    @NonNull TransactionProvider transactionProvider
+  ) {
     this.schedulerProvider = schedulerProvider;
     this.transactionProvider = transactionProvider;
   }
@@ -70,7 +73,7 @@ class RecentTransactionsPresenter extends Presenter<RecentTransactionsScreen> {
         .subscribe(new Action1<List<Transaction>>() {
           @Override
           public void call(List<Transaction> transactions) {
-            if (Utils.isNotNull(transactions)) {
+            if (ObjectHelper.isNotNull(transactions)) {
               screen.clear();
               Date key;
               List<Transaction> items;

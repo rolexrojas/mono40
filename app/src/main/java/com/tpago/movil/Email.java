@@ -1,42 +1,67 @@
 package com.tpago.movil;
 
-import android.util.Patterns;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.google.auto.value.AutoValue;
-import com.tpago.movil.text.Texts;
-import com.tpago.movil.util.Preconditions;
+import com.google.auto.value.extension.memoized.Memoized;
+import com.tpago.movil.util.StringHelper;
 
-import java.util.regex.Pattern;
+import static android.util.Patterns.EMAIL_ADDRESS;
 
 /**
+ * Email representation
+ *
  * @author hecvasro
  */
 @AutoValue
-public abstract class Email {
-  private static final Pattern SANITIZER = Pattern.compile("[\\s]");
+public abstract class Email implements Comparable<Email>, Parcelable {
 
-  private static final Pattern PATTERN = Patterns.EMAIL_ADDRESS;
-
-  private static String sanitize(String value) {
-    return SANITIZER.matcher(value).replaceAll("");
-  }
-
-  private static boolean checkIfValid(String email, boolean sanitize) {
-    return PATTERN.matcher(sanitize ? sanitize(email) : email).matches();
-  }
-
-  public static boolean checkIfValid(String email) {
-    return Texts.checkIfNotEmpty(email) && checkIfValid(email, true);
-  }
-
-  public static Email create(String value) {
-    Preconditions.assertNotNull(value, "value == null");
-    final String sanitizedValue = sanitize(value);
-    if (!checkIfValid(sanitizedValue, false)) {
-      throw new IllegalArgumentException("checkIfValid(sanitizedValue, false) == false");
+  /**
+   * Checks whether the given {@link String string} is a valid email address or not.
+   *
+   * @return True if the given {@link String string} is a valid email address, or otherwise false.
+   */
+  public static boolean isValid(String s) {
+    if (StringHelper.isNullOrEmpty(s)) {
+      return false;
+    } else {
+      return EMAIL_ADDRESS.matcher(s)
+        .matches();
     }
-    return new AutoValue_Email(sanitizedValue);
   }
 
-  public abstract String getValue();
+  /**
+   * Creates an email from the given {@link String string}.
+   *
+   * @return An email created from the given {@link String string}.
+   *
+   * @throws IllegalArgumentException
+   *   If {@code s} is not a {@link #isValid(String) valid} email address.
+   */
+  public static Email create(String s) {
+    if (!isValid(s)) {
+      throw new IllegalArgumentException(String.format("!isValid(%1$s)", s));
+    }
+    return new AutoValue_Email(s);
+  }
+
+  Email() {
+  }
+
+  public abstract String value();
+
+  @Memoized
+  @Override
+  public abstract String toString();
+
+  @Memoized
+  @Override
+  public abstract int hashCode();
+
+  @Override
+  public int compareTo(@NonNull Email that) {
+    return this.value()
+      .compareTo(that.value());
+  }
 }

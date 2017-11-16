@@ -2,10 +2,13 @@ package com.tpago.movil.d.ui.main.transaction.products;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,8 +23,11 @@ import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
 import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
-import com.tpago.movil.main.transactions.PaymentMethodChooser;
+import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
+import com.tpago.movil.dep.text.BaseTextWatcher;
+import com.tpago.movil.dep.widget.Keyboard;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -34,49 +40,54 @@ import butterknife.Unbinder;
 /**
  * @author hecvasro
  */
+public class LoanTransactionCreationFragment extends ChildFragment<TransactionCreationContainer>
+  implements LoanTransactionCreationPresenter.View {
 
-public class LoanTransactionCreationFragment extends ChildFragment<TransactionCreationContainer> implements LoanTransactionCreationPresenter.View {
   private LoanTransactionCreationPresenter presenter;
 
   private Unbinder unbinder;
 
-  @Inject
-  StringHelper stringHelper;
+  @Inject StringHelper stringHelper;
 
-  @BindView(R.id.button)
-  Button button;
-  @BindView(R.id.prefixable_text_view_total_owed)
-  PrefixableTextView totalOwedPrefixableTextView;
-  @BindView(R.id.text_view_due_date)
-  TextView dueDateTextView;
-  @BindView(R.id.prefixable_text_view_period)
-  PrefixableTextView periodPrefixableTextView;
-  @BindView(R.id.prefixable_text_view_total)
-  PrefixableTextView totalPrefixableTextView;
-  @BindView(R.id.radio_button_pay_period)
-  RadioButton periodRadioButton;
-  @BindView(R.id.radio_button_pay_total)
-  RadioButton totalRadioButton;
+  @BindView(R.id.button) Button button;
+  @BindView(R.id.payment_method_chooser) PaymentMethodChooser paymentMethodChooser;
+  @BindView(R.id.prefixable_text_view_period) PrefixableTextView periodPrefixableTextView;
+  @BindView(R.id.prefixable_text_view_total) PrefixableTextView totalPrefixableTextView;
+  @BindView(R.id.prefixable_text_view_total_owed) PrefixableTextView totalOwedPrefixableTextView;
+  @BindView(R.id.radio_button_pay_period) RadioButton periodRadioButton;
+  @BindView(R.id.radio_button_pay_total) RadioButton totalRadioButton;
+  @BindView(R.id.text_view_due_date) TextView dueDateTextView;
+  @BindView(R.id.view_period) View periodView;
+  @BindView(R.id.view_total) View totalView;
 
-  @BindView(R.id.payment_method_chooser)
-  PaymentMethodChooser paymentMethodChooser;
+  @BindView(R.id.containerLinearLayout) LinearLayout containerLinearLayout;
+
+  @BindView(R.id.otherAmountCurrencyTextView) TextView otherAmountCurrencyTextView;
+  @BindView(R.id.otherAmountEditText) TextView otherAmountEditText;
+  @BindView(R.id.otherAmountRadioButton) RadioButton otherAmountRadioButton;
+  private TextWatcher otherAmountTextWatcher;
 
   public static LoanTransactionCreationFragment create() {
     return new LoanTransactionCreationFragment();
   }
 
   @OnClick(R.id.view_total)
-  void onPayTotalButtonClicked() {
+  final void onPayTotalButtonClicked() {
     presenter.onOptionSelectionChanged(LoanBillBalance.Option.CURRENT);
   }
 
   @OnClick(R.id.view_period)
-  void onPayPeriodButtonClicked() {
+  final void onPayPeriodButtonClicked() {
     presenter.onOptionSelectionChanged(LoanBillBalance.Option.PERIOD);
   }
 
+  @OnClick(R.id.otherAmountView)
+  final void onOtherAmountClicked() {
+    this.presenter.onOptionSelectionChanged(LoanBillBalance.Option.OTHER);
+  }
+
   @OnClick(R.id.button)
-  void onPayButtonClicked() {
+  final void onPayButtonClicked() {
     presenter.onPayButtonClicked();
   }
 
@@ -94,7 +105,8 @@ public class LoanTransactionCreationFragment extends ChildFragment<TransactionCr
   public View onCreateView(
     LayoutInflater inflater,
     @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(R.layout.d_fragment_transaction_creation_loan, container, false);
   }
 
@@ -108,6 +120,25 @@ public class LoanTransactionCreationFragment extends ChildFragment<TransactionCr
   public void onStart() {
     super.onStart();
     presenter.onViewStarted();
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    this.otherAmountTextWatcher = new BaseTextWatcher() {
+      @Override
+      public void afterTextChanged(Editable s) {
+        presenter.onOtherAmountChanged(new BigDecimal(s.toString()));
+      }
+    };
+    this.otherAmountEditText.addTextChangedListener(this.otherAmountTextWatcher);
+  }
+
+  @Override
+  public void onPause() {
+    this.otherAmountEditText.removeTextChangedListener(this.otherAmountTextWatcher);
+    this.otherAmountTextWatcher = null;
+    super.onPause();
   }
 
   @Override
@@ -133,6 +164,7 @@ public class LoanTransactionCreationFragment extends ChildFragment<TransactionCr
     totalOwedPrefixableTextView.setPrefix(value);
     periodPrefixableTextView.setPrefix(value);
     totalPrefixableTextView.setPrefix(value);
+    otherAmountCurrencyTextView.setText(value);
   }
 
   @Override
@@ -147,8 +179,20 @@ public class LoanTransactionCreationFragment extends ChildFragment<TransactionCr
   }
 
   @Override
+  public void setTotalValueEnabled(boolean enabled) {
+    this.totalRadioButton.setEnabled(enabled);
+    this.totalView.setEnabled(enabled);
+  }
+
+  @Override
   public void setPeriodValue(String value) {
     periodPrefixableTextView.setContent(value);
+  }
+
+  @Override
+  public void setPeriodValueEnabled(boolean enabled) {
+    this.periodRadioButton.setEnabled(enabled);
+    this.periodView.setEnabled(enabled);
   }
 
   @Override
@@ -158,15 +202,35 @@ public class LoanTransactionCreationFragment extends ChildFragment<TransactionCr
 
   @Override
   public void setOptionChecked(LoanBillBalance.Option option) {
-    if (option.equals(LoanBillBalance.Option.PERIOD)) {
-      periodRadioButton.setChecked(true);
-      totalRadioButton.setChecked(false);
-      button.setText("Pagar cuota");
+    boolean isPeriodOption = false;
+    boolean isCurrentOption = false;
+    boolean isOtherOption = false;
+
+    final String buttonText;
+
+    if (option == LoanBillBalance.Option.PERIOD) {
+      isPeriodOption = true;
+      buttonText = "Pagar cuota";
+    } else if (option == LoanBillBalance.Option.CURRENT) {
+      isCurrentOption = true;
+      buttonText = "Pagar a la fecha";
     } else {
-      periodRadioButton.setChecked(false);
-      totalRadioButton.setChecked(true);
-      button.setText("Pagar a la fecha");
+      isOtherOption = true;
+      buttonText = "Pagar otro monto";
     }
+
+    this.periodRadioButton.setChecked(isPeriodOption);
+    this.totalRadioButton.setChecked(isCurrentOption);
+
+    this.otherAmountEditText.setEnabled(isOtherOption);
+    this.otherAmountRadioButton.setChecked(isOtherOption);
+    if (isOtherOption) {
+      Keyboard.show(this.otherAmountEditText);
+    } else {
+      Keyboard.hide(this);
+    }
+
+    button.setText(buttonText);
   }
 
   @Override
@@ -189,7 +253,8 @@ public class LoanTransactionCreationFragment extends ChildFragment<TransactionCr
         }
       },
       x,
-      y);
+      y
+    );
   }
 
   @Override
@@ -216,6 +281,7 @@ public class LoanTransactionCreationFragment extends ChildFragment<TransactionCr
 
   @Override
   public void showUnavailableNetworkError() {
-    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG).show();
+    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG)
+      .show();
   }
 }

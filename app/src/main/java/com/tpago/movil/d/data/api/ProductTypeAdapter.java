@@ -10,9 +10,9 @@ import com.google.gson.JsonSerializer;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductCreator;
 import com.tpago.movil.d.domain.ProductType;
-import com.tpago.movil.domain.Bank;
-import com.tpago.movil.text.Texts;
-import com.tpago.movil.util.Objects;
+import com.tpago.movil.d.domain.Bank;
+import com.tpago.movil.dep.text.Texts;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -22,6 +22,7 @@ import java.math.BigDecimal;
  */
 @Deprecated
 public class ProductTypeAdapter implements JsonDeserializer<Product>, JsonSerializer<Product> {
+
   private static final String PROPERTY_TYPE = "account-type";
   private static final String PROPERTY_ALIAS = "account-alias";
   private static final String PROPERTY_NUMBER = "account-number";
@@ -36,7 +37,8 @@ public class ProductTypeAdapter implements JsonDeserializer<Product>, JsonSerial
   public Product deserialize(
     JsonElement json,
     Type typeOfT,
-    JsonDeserializationContext context) throws JsonParseException {
+    JsonDeserializationContext context
+  ) throws JsonParseException {
     final JsonObject jsonObject = json.getAsJsonObject();
     if (!jsonObject.has(PROPERTY_TYPE)) {
       throw new JsonParseException("Property '" + PROPERTY_TYPE + "' is missing");
@@ -51,32 +53,43 @@ public class ProductTypeAdapter implements JsonDeserializer<Product>, JsonSerial
     } else {
       JsonElement je;
       je = jsonObject.get(PROPERTY_QUERY_FEE);
-      final BigDecimal queryFee = Objects.checkIfNull(je) || je.isJsonNull() ? BigDecimal.ZERO : BigDecimal.valueOf(je.getAsDouble());
+      final BigDecimal queryFee
+        = ObjectHelper.isNull(je) || je.isJsonNull() ? BigDecimal.ZERO : BigDecimal.valueOf(je.getAsDouble());
       je = jsonObject.get(PROPERTY_PAYMENT_OPTION);
       final boolean paymentOption = !json.isJsonNull() && je.getAsBoolean();
       je = jsonObject.get(PROPERTY_IS_DEFAULT);
       final boolean isDefault = !je.isJsonNull() && je.getAsBoolean();
       String imageUrl = null;
-      if (jsonObject.has(PROPERTY_IMAGE_URL) && !jsonObject.get(PROPERTY_IMAGE_URL).isJsonNull()) {
-        imageUrl = jsonObject.get(PROPERTY_IMAGE_URL).getAsString();
+      if (jsonObject.has(PROPERTY_IMAGE_URL) && !jsonObject.get(PROPERTY_IMAGE_URL)
+        .isJsonNull()) {
+        imageUrl = jsonObject.get(PROPERTY_IMAGE_URL)
+          .getAsString();
       }
       return ProductCreator.create(
-        ProductType.valueOf(jsonObject.get(PROPERTY_TYPE).getAsString()),
-        jsonObject.get(PROPERTY_ALIAS).getAsString(),
-        jsonObject.get(PROPERTY_NUMBER).getAsString(),
+        ProductType.valueOf(jsonObject.get(PROPERTY_TYPE)
+          .getAsString()),
+        jsonObject.get(PROPERTY_ALIAS)
+          .getAsString(),
+        jsonObject.get(PROPERTY_NUMBER)
+          .getAsString(),
         (Bank) context.deserialize(jsonObject.get(PROPERTY_BANK), Bank.class),
-        jsonObject.get(PROPERTY_CURRENCY).getAsString(),
+        jsonObject.get(PROPERTY_CURRENCY)
+          .getAsString(),
         queryFee,
         paymentOption,
         isDefault,
-        imageUrl);
+        imageUrl
+      );
     }
   }
 
   @Override
   public JsonElement serialize(Product src, Type typeOfSrc, JsonSerializationContext context) {
     final JsonObject jsonObject = new JsonObject();
-    jsonObject.addProperty(PROPERTY_TYPE, src.getType().name());
+    jsonObject.addProperty(PROPERTY_TYPE,
+      src.getType()
+        .name()
+    );
     jsonObject.addProperty(PROPERTY_ALIAS, src.getAlias());
     jsonObject.addProperty(PROPERTY_NUMBER, src.getNumber());
     jsonObject.add(PROPERTY_BANK, context.serialize(src.getBank(), Bank.class));

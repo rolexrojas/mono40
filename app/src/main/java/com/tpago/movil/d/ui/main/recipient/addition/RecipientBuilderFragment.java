@@ -2,6 +2,7 @@ package com.tpago.movil.d.ui.main.recipient.addition;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,22 +17,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
-import com.tpago.movil.Partner;
+import com.tpago.movil.dep.Partner;
 import com.tpago.movil.R;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
-import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
-import com.tpago.movil.domain.ErrorCode;
-import com.tpago.movil.domain.FailureData;
-import com.tpago.movil.domain.Result;
-import com.tpago.movil.net.NetworkService;
-import com.tpago.movil.reactivex.Disposables;
-import com.tpago.movil.text.Texts;
-import com.tpago.movil.util.Preconditions;
-import com.tpago.movil.widget.TextInput;
+import com.tpago.movil.d.domain.Bank;
+import com.tpago.movil.d.domain.ErrorCode;
+import com.tpago.movil.d.domain.FailureData;
+import com.tpago.movil.d.domain.Result;
+import com.tpago.movil.dep.net.NetworkService;
+import com.tpago.movil.dep.reactivex.Disposables;
+import com.tpago.movil.dep.text.Texts;
+import com.tpago.movil.dep.widget.TextInput;
 
 import java.util.concurrent.Callable;
 
@@ -51,11 +51,12 @@ import timber.log.Timber;
  * @author hecvasro
  */
 public class RecipientBuilderFragment extends Fragment {
+
   private static final String KEY_KEYWORD = "keyword";
-  private static final String KEY_PARTNER = "partner";
+  private static final String KEY_DATA = "value";
 
   private String keyword;
-  private Partner partner;
+  private Parcelable data;
   private RecipientBuilder builder;
 
   private Unbinder unbinder;
@@ -63,19 +64,25 @@ public class RecipientBuilderFragment extends Fragment {
   private Disposable subscription = Disposables.disposed();
 
   @Inject
-  SessionManager sessionManager;
-  @Inject
   DepApiBridge apiBridge;
   @Inject
   NetworkService networkService;
 
-  public static RecipientBuilderFragment create(String keyword, Partner partner) {
+  private static RecipientBuilderFragment internalCreate(String keyword, Parcelable data) {
     final Bundle bundle = new Bundle();
     bundle.putString(KEY_KEYWORD, keyword);
-    bundle.putParcelable(KEY_PARTNER, partner);
+    bundle.putParcelable(KEY_DATA, data);
     final RecipientBuilderFragment fragment = new RecipientBuilderFragment();
     fragment.setArguments(bundle);
     return fragment;
+  }
+
+  public static RecipientBuilderFragment create(String keyword, Bank data) {
+    return internalCreate(keyword, data);
+  }
+
+  public static RecipientBuilderFragment create(String keyword, Partner data) {
+    return internalCreate(keyword, data);
   }
 
   @BindView(R.id.image_view_background)
@@ -89,18 +96,26 @@ public class RecipientBuilderFragment extends Fragment {
 
   @OnClick(R.id.button)
   void onButtonClicked() {
-    final String content = textInput.getText().toString().trim();
+    final String content = textInput.getText()
+      .toString()
+      .trim();
     if (Texts.checkIfEmpty(content)) {
       showGenericErrorDialog(
         "Número de " + keyword + " incorrecto",
-        "El número de " + keyword + " es requerido para adicionar el destinatario.");
+        "El número de " + keyword + " es requerido para adicionar el destinatario."
+      );
       textInput.setErraticStateEnabled(true);
     } else {
       final int x = Math.round((button.getRight() - button.getLeft()) / 2);
       final int y = Math.round((button.getBottom() - button.getTop()) / 2);
       PinConfirmationDialogFragment.show(
         getChildFragmentManager(),
-        getString(R.string.recipient_addition_confirmation, content, builder.getTitle()),
+        getString(
+          R.string.recipient_addition_confirmation,
+          builder.getCategoryName(),
+          content,
+          builder.getTitle()
+        ),
         new PinConfirmationDialogFragment.Callback() {
           @Override
           public void confirm(final String pin) {
@@ -109,10 +124,7 @@ public class RecipientBuilderFragment extends Fragment {
               public SingleSource<Result<Recipient, ErrorCode>> call() throws Exception {
                 final Result<Recipient, ErrorCode> result;
                 if (networkService.checkIfAvailable()) {
-                  final String authToken = sessionManager.getSession().getAuthToken();
-                  final ApiResult<Boolean> pinValidationResult = apiBridge.validatePin(
-                    authToken,
-                    pin);
+                  final ApiResult<Boolean> pinValidationResult = apiBridge.validatePin(pin);
                   if (pinValidationResult.isSuccessful()) {
                     if (pinValidationResult.getData()) {
                       final RecipientBuilder.Result builderResult = builder.build(content, pin)
@@ -124,7 +136,8 @@ public class RecipientBuilderFragment extends Fragment {
                         result = Result.create(
                           FailureData.create(
                             ErrorCode.UNEXPECTED,
-                            builderResult.getError()));
+                            builderResult.getError()
+                          ));
                       }
                     } else {
                       result = Result.create(FailureData.create(ErrorCode.INCORRECT_PIN));
@@ -133,7 +146,9 @@ public class RecipientBuilderFragment extends Fragment {
                     result = Result.create(
                       FailureData.create(
                         ErrorCode.UNEXPECTED,
-                        pinValidationResult.getError().getDescription()));
+                        pinValidationResult.getError()
+                          .getDescription()
+                      ));
                   }
                 } else {
                   result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
@@ -152,7 +167,8 @@ public class RecipientBuilderFragment extends Fragment {
                     final Activity activity = getActivity();
                     activity.setResult(
                       Activity.RESULT_OK,
-                      AddRecipientActivity.serializeResult(result.getSuccessData()));
+                      AddRecipientActivity.serializeResult(result.getSuccessData())
+                    );
                     activity.finish();
                   } else {
                     PinConfirmationDialogFragment.dismiss(fragmentManager, false);
@@ -203,20 +219,29 @@ public class RecipientBuilderFragment extends Fragment {
   }
 
   public void showUnavailableNetworkError() {
-    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG).show();
+    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG)
+      .show();
   }
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    ((AddRecipientActivity) getActivity()).getComponent().inject(this);
-    final Bundle bundle = Preconditions.assertNotNull(getArguments(), "getArguments() == null");
+    ((AddRecipientActivity) getActivity()).getComponent()
+      .inject(this);
+    final Bundle bundle = this.getArguments();
     keyword = bundle.getString(KEY_KEYWORD);
-    partner = bundle.getParcelable(KEY_PARTNER);
-    builder = new BillRecipientBuilder(
-      sessionManager.getSession().getAuthToken(),
-      apiBridge,
-      partner);
+    data = bundle.getParcelable(KEY_DATA);
+    if (data instanceof Partner) {
+      builder = new BillRecipientBuilder(
+        apiBridge,
+        (Partner) data
+      );
+    } else {
+      builder = new ProductRecipientBuilder(
+        apiBridge,
+        (Bank) data
+      );
+    }
   }
 
   @Nullable
@@ -224,11 +249,13 @@ public class RecipientBuilderFragment extends Fragment {
   public View onCreateView(
     LayoutInflater inflater,
     @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(
       R.layout.d_fragment_non_affiliated_phone_number_recipient_addition_2,
       container,
-      false);
+      false
+    );
   }
 
   @Override
@@ -247,7 +274,8 @@ public class RecipientBuilderFragment extends Fragment {
       String.format(
         getString(R.string.recipient_addition_message_builder),
         keyword,
-        builder.getTitle()));
+        builder.getTitle()
+      ));
     textInput.requestFocus();
     textInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
       @Override

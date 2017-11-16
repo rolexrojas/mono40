@@ -8,8 +8,6 @@ import com.tpago.movil.d.ui.Screen;
 import java.util.List;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 interface PhoneNumberTransactionCreationScreen extends Screen {
@@ -33,6 +31,4 @@ interface PhoneNumberTransactionCreationScreen extends Screen {
   void requestCarrier();
 
   void finish();
-
-  void showTransferButtonAsEnabled(boolean showAsEnabled);
 }

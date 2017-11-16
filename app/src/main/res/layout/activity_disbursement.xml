@@ -6,46 +6,49 @@
   android:layout_height="match_parent"
   android:background="@drawable/container_light"
   android:orientation="vertical">
+
   <FrameLayout style="@style/Dep.App.Widget.AppBar">
+
     <android.support.v7.widget.Toolbar
       android:id="@+id/toolbar"
-      style="@style/Dep.App.Widget.Toolbar"
-      android:layout_gravity="center_vertical" />
+      style="@style/Toolbar"
+      android:layout_gravity="center_vertical"/>
   </FrameLayout>
-  <com.tpago.movil.main.transactions.PaymentMethodChooser
+
+  <com.tpago.movil.dep.main.transactions.PaymentMethodChooser
     android:id="@+id/payment_method_chooser"
     style="@style/D.Transactions.Widget.PaymentMethodChooser"
-    android:layout_marginStart="32dp"
-    android:layout_marginEnd="32dp" />
+    android:layout_marginEnd="32dp"
+    android:layout_marginStart="32dp"/>
+
   <com.tpago.movil.d.ui.view.widget.AutoResizeablePrefixableTextView
     android:id="@+id/transaction_creation.amount"
     style="@style/TransactionCreation.Widget.Amount"
     android:layout_width="match_parent"
-    android:layout_marginTop="16dp"
+    android:layout_marginEnd="20dp"
     android:layout_marginStart="20dp"
-    android:layout_marginEnd="20dp" />
+    android:layout_marginTop="16dp"/>
+
   <View
     android:layout_width="match_parent"
     android:layout_height="2dp"
-    android:layout_marginStart="32dp"
     android:layout_marginEnd="32dp"
+    android:layout_marginStart="32dp"
     android:alpha="0.1"
-    android:background="@color/common_black" />
-  <com.tpago.movil.d.ui.view.widget.pad.DepNumPad
+    android:background="@color/common_black"/>
+
+  <com.tpago.movil.app.ui.NumPad
     android:id="@+id/transaction_creation.num_pad"
+    style="@style/NumPad.Light"
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"
-    android:layout_marginTop="16dp"
-    android:layout_marginBottom="16dp"
-    android:layout_marginStart="32dp"
-    android:layout_marginEnd="32dp"
-    app:deleteEnabled="true"
-    app:dotEnabled="true" />
+    app:dotButtonEnabled="true"/>
+
   <Button
     android:id="@+id/action.transfer"
     style="@style/Dep.App.Widget.Button.Blurred"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:text="@string/forward" />
+    android:text="@string/forward"/>
 </LinearLayout>

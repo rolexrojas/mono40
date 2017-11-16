@@ -1,12 +1,9 @@
 package com.tpago.movil.net;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
 
-import com.tpago.movil.BuildConfig;
-import com.tpago.movil.io.Files;
-
-import java.io.IOException;
+import com.tpago.movil.io.FileHelper;
+import com.tpago.movil.session.AccessTokenInterceptor;
 
 import javax.inject.Singleton;
 
@@ -16,50 +13,44 @@ import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * @author hecvasro
  */
 @Module
 public final class NetModule {
-  @Provides
-  @Singleton
-  ConnectivityManager provideConnectivityManager(Context context) {
-    return (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+  private static Interceptor createLoggingInterceptor() {
+    return new HttpLoggingInterceptor()
+      .setLevel(HttpLoggingInterceptor.Level.BODY);
+  }
+
+  private static Interceptor createUserAgentInterceptor() {
+    return (chain) -> {
+      final Request request = chain.request()
+        .newBuilder()
+        .addHeader("User-Agent", System.getProperty("http.agent"))
+        .build();
+
+      return chain.proceed(request);
+    };
   }
 
   @Provides
   @Singleton
-  NetworkService provideNetworkService(ConnectivityManager connectivityManager) {
-    return new ConnectivityManagerNetworkService(connectivityManager);
+  Cache provideCache(Context context) {
+    return new Cache(FileHelper.createIntCacheDir(context), Integer.MAX_VALUE);
   }
 
   @Provides
   @Singleton
-  OkHttpClient provideOkHttpClient(Context context) {
-    final OkHttpClient.Builder builder = new OkHttpClient.Builder()
-      .cache(new Cache(Files.createInternalCacheDirectory(context), Integer.MAX_VALUE))
-      .addInterceptor(new Interceptor() {
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-          final Request.Builder builder = chain.request()
-            .newBuilder()
-            .addHeader("User-Agent", System.getProperty("http.agent"));
-          return chain.proceed(builder.build());
-        }
-      })
-      .connectTimeout(30L, SECONDS)
-      .readTimeout(30L, SECONDS)
-      .writeTimeout(30L, SECONDS);
-    if (BuildConfig.DEBUG) {
-      final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-      interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-      builder.addInterceptor(interceptor);
-    }
-    return builder.build();
+  OkHttpClient okHttpClient(Cache cache, AccessTokenInterceptor accessTokenInterceptor) {
+    return new OkHttpClient.Builder()
+      .addInterceptor(accessTokenInterceptor)
+      .addInterceptor(createLoggingInterceptor())
+      .addInterceptor(createUserAgentInterceptor())
+      .cache(cache)
+      .build();
   }
 }

@@ -14,9 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
-import com.tpago.Banks;
+import com.tpago.movil.d.domain.Banks;
+import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.ui.Dialogs;
-import com.tpago.movil.domain.Bank;
+import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.R;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.Recipient;
@@ -25,13 +26,13 @@ import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
-import com.tpago.movil.domain.BankProvider;
-import com.tpago.movil.domain.FailureData;
-import com.tpago.movil.domain.LogoStyle;
-import com.tpago.movil.domain.ErrorCode;
-import com.tpago.movil.domain.Result;
-import com.tpago.movil.reactivex.Disposables;
-import com.tpago.movil.util.Objects;
+import com.tpago.movil.d.domain.BankProvider;
+import com.tpago.movil.d.domain.FailureData;
+import com.tpago.movil.d.domain.LogoStyle;
+import com.tpago.movil.d.domain.ErrorCode;
+import com.tpago.movil.d.domain.Result;
+import com.tpago.movil.dep.reactivex.Disposables;
+import com.tpago.movil.util.ObjectHelper;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.ArrayList;
@@ -49,8 +50,6 @@ import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
-
-import static com.tpago.movil.util.Objects.checkIfNull;
 
 /**
  * @author hecvasro
@@ -80,7 +79,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment extends
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final TransactionCreationComponent c = getContainer().getComponent();
-    if (Objects.checkIfNotNull(c)) {
+    if (ObjectHelper.isNotNull(c)) {
       c.inject(this);
     }
   }
@@ -90,11 +89,13 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment extends
   public View onCreateView(
     LayoutInflater inflater,
     @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(
       R.layout.d_fragment_non_affiliated_phone_number_recipient_addition_1,
       container,
-      false);
+      false
+    );
   }
 
   @Override
@@ -109,7 +110,8 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment extends
     recyclerView.setLayoutManager(new LinearLayoutManager(
       context,
       LinearLayoutManager.VERTICAL,
-      false));
+      false
+    ));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
       .drawable(R.drawable.d_divider)
       .marginResId(R.dimen.space_horizontal_normal)
@@ -134,7 +136,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment extends
         @Override
         public void accept(Result<Set<Bank>, ErrorCode> result) throws Exception {
           if (result.isSuccessful()) {
-            if (checkIfNull(bankList)) {
+            if (ObjectHelper.isNull(bankList)) {
               bankList = new ArrayList<>();
             } else {
               adapter.notifyItemRangeRemoved(0, bankList.size());
@@ -206,7 +208,12 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment extends
 
     @Override
     public void onClick(View v) {
-      ((NonAffiliatedPhoneNumberRecipient) recipient).setBank(bankList.get(getAdapterPosition()));
+      final Bank bank = bankList.get(getAdapterPosition());
+      if (recipient instanceof AccountRecipient) {
+        ((AccountRecipient) recipient).bank(bank);
+      } else {
+        ((NonAffiliatedPhoneNumberRecipient) recipient).setBank(bank);
+      }
       getContainer().setChildFragment(new NonAffiliatedPhoneNumberTransactionCreation2Fragment());
     }
   }

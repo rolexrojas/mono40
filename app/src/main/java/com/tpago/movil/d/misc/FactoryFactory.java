@@ -11,6 +11,7 @@ import java.util.Map;
  *
  * @author hecvasro
  */
+@Deprecated
 public class FactoryFactory<A, B, C> {
   /**
    * TODO

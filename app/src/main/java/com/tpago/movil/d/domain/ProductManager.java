@@ -6,15 +6,14 @@ import android.support.v4.util.Pair;
 
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
-import com.tpago.movil.api.ApiImageUriBuilder;
-import com.tpago.movil.content.SharedPreferencesCreator;
+import com.tpago.movil.dep.api.ApiImageUriBuilder;
+import com.tpago.movil.dep.content.SharedPreferencesCreator;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.pos.PosResult;
 import com.tpago.movil.d.domain.util.EventBus;
-import com.tpago.movil.util.Objects;
-import com.tpago.movil.util.Preconditions;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,6 +29,7 @@ import timber.log.Timber;
  */
 @Deprecated
 public final class ProductManager {
+
   private static final String KEY_INDEX_SET = "indexSet";
   private static final String KEY_DEFAULT_PAYMENT_OPTION_ID = "defaultPaymentOption";
 
@@ -54,15 +54,14 @@ public final class ProductManager {
     Context context,
     EventBus eventBus,
     DepApiBridge apiBridge,
-    Lazy<PosBridge> posBridge) {
+    Lazy<PosBridge> posBridge
+  ) {
 
-    this.sharedPreferences = Preconditions
-      .assertNotNull(sharedPreferencesCreator, "sharedPreferencesCreator == null")
+    this.sharedPreferences = sharedPreferencesCreator
       .create(ProductManager.class.getCanonicalName());
-    this.gson = Preconditions
-      .assertNotNull(gson, "gson == null");
+    this.gson = gson;
 
-    this.indexSet = this.sharedPreferences.getStringSet(KEY_INDEX_SET, new HashSet<String>());
+    this.indexSet = this.sharedPreferences.getStringSet(KEY_INDEX_SET, new HashSet<>());
 
     this.context = context;
     this.eventBus = eventBus;
@@ -72,7 +71,7 @@ public final class ProductManager {
 
   @Deprecated
   final void syncProducts(final List<Product> remoteProductList) {
-    if (Objects.checkIfNull(productList)) {
+    if (ObjectHelper.isNull(productList)) {
       productList = new ArrayList<>();
     }
     productList.clear();
@@ -130,15 +129,15 @@ public final class ProductManager {
     editor.putStringSet(KEY_INDEX_SET, indexSet);
 
     //  if [not remote.default] then
-    //    clear local.default
-    //    clear local.temporary
+    //    destroySession local.default
+    //    destroySession local.temporary
     //  else if [not local.temporary] then
     //    set local.default remote.default
     //  else if [remote.default equals to local.temporary] then
     //    set local.default local.temporary
     //    set remote.default local.temporary
-    //    clear local.temporary
-    if (Objects.checkIfNull(rdpo)) {
+    //    destroySession local.temporary
+    if (ObjectHelper.isNull(rdpo)) {
       defaultPaymentOption = null;
       editor.remove(KEY_DEFAULT_PAYMENT_OPTION_ID);
     } else {
@@ -156,16 +155,18 @@ public final class ProductManager {
     }
 
     Collections.sort(productList, Product.comparator());
-    if (Objects.checkIfNull(paymentOptionList)) {
+    if (ObjectHelper.isNull(paymentOptionList)) {
       paymentOptionList = new ArrayList<>();
     }
     paymentOptionList.clear();
-    if (Objects.checkIfNotNull(defaultPaymentOption)) {
+    if (ObjectHelper.isNotNull(defaultPaymentOption)) {
       paymentOptionList.add(defaultPaymentOption);
     }
     for (Product p : productList) {
       if (Product.checkIfCreditCard(p)) {
-        Picasso.with(context).load(ApiImageUriBuilder.build(context, p)).fetch();
+        Picasso.with(context)
+          .load(ApiImageUriBuilder.build(context, p))
+          .fetch();
       }
       if (Product.isPaymentOption(p) && !paymentOptionList.contains(p)) {
         paymentOptionList.add(p);
@@ -173,7 +174,7 @@ public final class ProductManager {
     }
   }
 
-  @Deprecated public final void clear() {
+  public final void clear() {
     productList.clear();
     defaultPaymentOption = null;
     paymentOptionList.clear();
@@ -197,7 +198,8 @@ public final class ProductManager {
 
   public final List<Pair<Product, PosResult>> registerPaymentOptionList(
     final String phoneNumber,
-    final String pin) {
+    final String pin
+  ) {
     final PosBridge b = posBridge.get();
     final List<Pair<Product, PosResult>> resultList = new ArrayList<>();
     for (Product po : paymentOptionList) {
@@ -206,11 +208,11 @@ public final class ProductManager {
     return resultList;
   }
 
-  public final boolean setDefaultPaymentOption(final String authToken, final Product paymentOption) {
+  public final boolean setDefaultPaymentOption(final Product paymentOption) {
     if (paymentOption.equals(defaultPaymentOption)) {
       return true;
     } else {
-      final ApiResult<Void> result = apiBridge.setDefaultPaymentOption(authToken, paymentOption);
+      final ApiResult<Void> result = apiBridge.setDefaultPaymentOption(paymentOption);
       if (result.isSuccessful()) {
         defaultPaymentOption = paymentOption;
         sharedPreferences.edit()

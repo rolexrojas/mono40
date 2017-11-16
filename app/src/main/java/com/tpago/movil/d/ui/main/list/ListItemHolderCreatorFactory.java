@@ -3,7 +3,7 @@ package com.tpago.movil.d.ui.main.list;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.tpago.movil.d.misc.Utils;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +16,7 @@ import java.util.Map;
  * @author hecvasro
  */
 public final class ListItemHolderCreatorFactory {
+
   /**
    * TODO
    */
@@ -51,7 +52,7 @@ public final class ListItemHolderCreatorFactory {
       return identifier;
     } else {
       final Class<?> superType = type.getSuperclass();
-      if (Utils.isNotNull(superType)) {
+      if (ObjectHelper.isNotNull(superType)) {
         return getIdentifier(superType);
       } else {
         return -1;
@@ -80,6 +81,7 @@ public final class ListItemHolderCreatorFactory {
    * TODO
    */
   public static class Builder {
+
     /**
      * TODO
      */
@@ -103,7 +105,10 @@ public final class ListItemHolderCreatorFactory {
      * @return TODO
      */
     @NonNull
-    public final Builder addCreator(@NonNull Class<?> type, @NonNull ListItemHolderCreator<? extends ListItemHolder> creator) {
+    public final Builder addCreator(
+      @NonNull Class<?> type,
+      @NonNull ListItemHolderCreator<? extends ListItemHolder> creator
+    ) {
       creators.put(type, creator);
       return this;
     }

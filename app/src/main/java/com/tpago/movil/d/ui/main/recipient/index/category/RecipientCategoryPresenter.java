@@ -1,45 +1,42 @@
 package com.tpago.movil.d.ui.main.recipient.index.category;
 
+import static com.tpago.movil.d.ui.main.recipient.index.category.Action.Type.ADD_ACCOUNT;
+import static com.tpago.movil.d.ui.main.recipient.index.category.Action.Type.TRANSACTION_WITH_ACCOUNT;
 import static com.tpago.movil.d.ui.main.recipient.index.category.Category.RECHARGE;
 import static com.tpago.movil.d.ui.main.recipient.index.category.Category.TRANSFER;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.util.Pair;
 
+import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
+import com.tpago.movil.dep.Partner;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
-import com.tpago.movil.UserStore;
+import com.tpago.movil.dep.User;
 import com.tpago.movil.d.data.StringHelper;
+import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.Customer;
-import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.ProductBillBalance;
-import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.ProductRecipient;
 import com.tpago.movil.d.domain.UserRecipient;
-import com.tpago.movil.d.domain.api.ApiError;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
-import com.tpago.movil.d.domain.pos.PosBridge;
-import com.tpago.movil.d.domain.pos.PosResult;
-import com.tpago.movil.d.domain.session.SessionManager;
 import com.tpago.movil.d.misc.rx.RxUtils;
-import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.ui.Presenter;
 import com.tpago.movil.d.ui.main.list.NoResultsListItemItem;
-import com.tpago.movil.domain.ErrorCode;
-import com.tpago.movil.domain.FailureData;
-import com.tpago.movil.domain.Result;
-import com.tpago.movil.net.NetworkService;
-import com.tpago.movil.reactivex.Disposables;
-import com.tpago.movil.text.Texts;
-import com.tpago.movil.util.Objects;
+import com.tpago.movil.d.domain.ErrorCode;
+import com.tpago.movil.d.domain.FailureData;
+import com.tpago.movil.d.domain.Result;
+import com.tpago.movil.dep.net.NetworkService;
+import com.tpago.movil.reactivex.DisposableHelper;
+import com.tpago.movil.util.DigitHelper;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,48 +46,41 @@ import java.util.concurrent.Callable;
 
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import rx.Observable;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
-import rx.functions.Func0;
 import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 /**
  * @author hecvasro
  */
-class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
+final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
+
   private static final long DEFAULT_IME_SPAN_QUERY = 300L; // 0.3 seconds.
 
-  private final StringHelper stringHelper;
-  private final SchedulerProvider schedulerProvider;
-  private final RecipientManager recipientManager;
-  private final SessionManager sessionManager;
-  private final ProductManager productManager;
-  private final PosBridge posBridge;
-  private final UserStore userStore;
+  private final User user;
 
+  private final StringHelper stringHelper;
+  private final RecipientManager recipientManager;
   private final NetworkService networkService;
   private final DepApiBridge depApiBridge;
-  private final String authToken;
-
   private final Category category;
   private final CategoryFilter categoryFilter;
-
-  private final UserRecipient userRecipient;
   private final String userRecipientLabelForTransfers;
   private final String userRecipientLabelForRecharges;
-
   private final RecipientComparator recipientComparator;
 
   private boolean deleting = false;
-  private RecipientDeletionFilter recipientDeletableFilter = RecipientDeletionFilter.create(this.deleting);
+  private RecipientDeletionFilter recipientDeletableFilter = RecipientDeletionFilter
+    .create(this.deleting);
   private List<Recipient> selectedRecipientList = new ArrayList<>();
 
   private Subscription querySubscription = Subscriptions.unsubscribed();
@@ -98,45 +88,39 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
   private Subscription signOutSubscription = Subscriptions.unsubscribed();
   private Subscription queryBalanceSubscription = Subscriptions.unsubscribed();
 
-  private Disposable recipientAdditionSubscription = Disposables.disposed();
-  private Disposable recipientRemovalSubscription = Disposables.disposed();
+  private Disposable recipientAdditionDisposable = Disposables.disposed();
+  private Disposable recipientTransactionDisposable = Disposables.disposed();
+  private Disposable recipientRemovalDisposable = Disposables.disposed();
 
   RecipientCategoryPresenter(
+    User user,
     @NonNull StringHelper stringHelper,
-    @NonNull SchedulerProvider schedulerProvider,
     @NonNull RecipientManager recipientManager,
-    @NonNull SessionManager sessionManager,
-    @NonNull ProductManager productManager,
-    PosBridge posBridge,
-    UserStore userStore,
     NetworkService networkService,
     DepApiBridge depApiBridge,
-    String authToken,
     Category category
   ) {
+    this.user = user;
     this.stringHelper = stringHelper;
-    this.schedulerProvider = schedulerProvider;
     this.recipientManager = recipientManager;
-    this.sessionManager = sessionManager;
-    this.productManager = productManager;
-    this.posBridge = posBridge;
-    this.userStore = userStore;
-
     this.networkService = networkService;
     this.depApiBridge = depApiBridge;
-    this.authToken = authToken;
-
     this.category = category;
     this.categoryFilter = CategoryFilter.create(this.category);
-
-    this.userRecipient = new UserRecipient(this.userStore.get());
     this.userRecipientLabelForTransfers = "Entre mis cuentas";
     this.userRecipientLabelForRecharges = "Mi teléfono";
-
     this.recipientComparator = RecipientComparator.create();
   }
 
-  void start() {
+  private Observable<Object> phoneNumberActions(String s) {
+    final PhoneNumber phoneNumber = PhoneNumber.create(s);
+    return Observable.just(TransactionWithPhoneNumberAction.create(phoneNumber))
+      .cast(Object.class)
+      .concatWith(Observable.just(AddPhoneNumberAction.create(phoneNumber)))
+      .cast(Object.class);
+  }
+
+  final void start() {
     assertScreen();
     querySubscription = screen.onQueryChanged()
       .flatMap(new Func1<String, Observable<String>>() {
@@ -149,7 +133,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
           return o;
         }
       })
-      .observeOn(AndroidSchedulers.mainThread())
+      .observeOn(rx.android.schedulers.AndroidSchedulers.mainThread())
       .subscribe(new Action1<String>() {
         @Override
         public void call(final String query) {
@@ -165,6 +149,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
             } else {
               label = userRecipientLabelForRecharges;
             }
+            final UserRecipient userRecipient = new UserRecipient(user);
             userRecipient.setLabel(label);
 
             userRecipientSource = Observable.just(userRecipient)
@@ -179,30 +164,34 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
             .filter(matchableFilter)
             .filter(recipientDeletableFilter)
             .toSortedList(recipientComparator)
-            .compose(RxUtils.<Recipient>fromCollection())
+            .compose(RxUtils.fromCollection())
             .cast(Object.class);
 
           if (!deleting && (query != null && !query.isEmpty())) {
-            // TODO: Add support for actions related to invoices.
-            final Observable<Object> actionSource;
+            Observable<Object> actions = Observable.empty();
 
-            if ((category == TRANSFER || category == RECHARGE) && PhoneNumber.checkIfValid(query)) {
-              final PhoneNumber phoneNumber = PhoneNumber.create(query);
-              actionSource = Observable.just(TransactionWithPhoneNumberAction.create(phoneNumber))
-                .cast(Object.class)
-                .concatWith(Observable.just(AddPhoneNumberAction.create(phoneNumber)))
-                .cast(Object.class);
-            } else {
-              actionSource = Observable.empty();
+            if (DigitHelper.containsOnlyDigits(query)) {
+              if (category == TRANSFER) {
+                if (PhoneNumber.isValid(query)) {
+                  actions = phoneNumberActions(query);
+                } else if (AccountAction.isProductNumber(query)) {
+                  actions = Observable.just(AccountAction.create(TRANSACTION_WITH_ACCOUNT, query))
+                    .cast(Object.class)
+                    .concatWith(Observable.just(AccountAction.create(ADD_ACCOUNT, query)))
+                    .cast(Object.class);
+                }
+              } else if (category == RECHARGE && PhoneNumber.isValid(query)) {
+                actions = phoneNumberActions(query);
+              }
             }
 
-            source = source.switchIfEmpty(actionSource);
+            source = source.switchIfEmpty(actions);
           }
 
           searchSubscription = source
             .switchIfEmpty(Observable.just(new NoResultsListItemItem(query)))
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(rx.schedulers.Schedulers.io())
+            .observeOn(rx.android.schedulers.AndroidSchedulers.mainThread())
             .doOnSubscribe(new Action0() {
               @Override
               public void call() {
@@ -240,244 +229,134 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
       });
   }
 
-  void stop() {
-    assertScreen();
-    Disposables.dispose(recipientAdditionSubscription);
-    Disposables.dispose(recipientRemovalSubscription);
-    RxUtils.unsubscribe(searchSubscription);
-    RxUtils.unsubscribe(querySubscription);
-    RxUtils.unsubscribe(queryBalanceSubscription);
-    RxUtils.unsubscribe(signOutSubscription);
+  final void stop() {
+    DisposableHelper.dispose(this.recipientAdditionDisposable);
+    DisposableHelper.dispose(this.recipientRemovalDisposable);
+
+    RxUtils.unsubscribe(this.searchSubscription);
+    RxUtils.unsubscribe(this.querySubscription);
+    RxUtils.unsubscribe(this.queryBalanceSubscription);
+    RxUtils.unsubscribe(this.signOutSubscription);
   }
 
-  void addRecipient(@NonNull Recipient recipient) {
-    assertScreen();
+  private void showTakeoverLoader() {
+    this.screen.showLoadIndicator(true);
+  }
+
+  private void showTakeoverLoader(Disposable disposable) {
+    this.showTakeoverLoader();
+  }
+
+  private void hideTakeoverLoader() {
+    this.screen.hideLoadIndicator();
+  }
+
+  private void handleError(Throwable throwable, String message) {
+    Timber.e(throwable, message);
+    this.screen.showMessage(this.stringHelper.cannotProcessYourRequestAtTheMoment());
+  }
+
+  private Recipient handleCustomerResult(PhoneNumber phoneNumber, ApiResult<Customer> result) {
+    String customerName = null;
+    if (result.isSuccessful()) {
+      customerName = result.getData()
+        .getName();
+    }
+    if (com.tpago.movil.util.StringHelper.isNullOrEmpty(customerName)) {
+      return new NonAffiliatedPhoneNumberRecipient(phoneNumber, customerName);
+    } else {
+      return new PhoneNumberRecipient(phoneNumber, customerName);
+    }
+  }
+
+  private void handleAddPhoneNumberRecipientError(Throwable throwable) {
+    this.handleError(throwable, "Adding a phone number recipient");
+  }
+
+  private void handleAddPhoneNumberRecipientResult(PhoneNumber phoneNumber, ApiResult<Customer> result) {
+    this.addRecipient(this.handleCustomerResult(phoneNumber, result));
+  }
+
+  final void addRecipient(@NonNull Recipient recipient) {
     if (!(recipient instanceof UserRecipient)) {
-      recipientManager.add(recipient);
-      screen.clearQuery();
-      screen.showRecipientAdditionDialog(recipient);
+      this.recipientManager.add(recipient);
+      this.screen.clearQuery();
+      this.screen.showRecipientAdditionDialog(recipient);
     }
   }
 
-  void addRecipient(@NonNull final PhoneNumber phoneNumber) {
-    assertScreen();
-    if (recipientAdditionSubscription.isDisposed()) {
-      recipientAdditionSubscription = Single
-        .defer(new Callable<SingleSource<Result<Customer, ErrorCode>>>() {
-          @Override
-          public SingleSource<Result<Customer, ErrorCode>> call() throws Exception {
-            final Result<Customer, ErrorCode> result;
-            if (networkService.checkIfAvailable()) {
-              final ApiResult<Customer.State> customerStateResult = depApiBridge
-                .fetchCustomerState(authToken, phoneNumber.getValue());
-              if (customerStateResult.isSuccessful()) {
-                if (Customer.checkIfCanBeFetched(customerStateResult.getData())) {
-                  final ApiResult<Customer> customerResult = depApiBridge
-                    .fetchCustomer(authToken, phoneNumber.getValue());
-                  if (customerResult.isSuccessful()) {
-                    result = Result.create(customerResult.getData());
-                  } else {
-                    final ApiError apiError = customerResult.getError();
-                    result = Result.create(
-                      FailureData.create(
-                        ErrorCode.UNEXPECTED,
-                        apiError.getDescription()));
-                  }
-                } else {
-                  result = Result.create(FailureData.create(ErrorCode.NOT_AFFILIATED_CUSTOMER));
-                }
-              } else {
-                final ApiError apiError = customerStateResult.getError();
-                result = Result.create(
-                  FailureData.create(
-                    ErrorCode.UNEXPECTED,
-                    apiError.getDescription()));
-              }
-            } else {
-              result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
-            }
-            return Single.just(result);
-          }
-        })
-        .subscribeOn(io.reactivex.schedulers.Schedulers.io())
-        .observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
-        .doOnSubscribe(new Consumer<Disposable>() {
-          @Override
-          public void accept(Disposable disposable) throws Exception {
-            screen.showLoadIndicator(true);
-          }
-        })
-        .subscribe(new Consumer<Result<Customer, ErrorCode>>() {
-          @Override
-          public void accept(Result<Customer, ErrorCode> result) throws Exception {
-            screen.hideLoadIndicator();
-            if (result.isSuccessful()) {
-              addRecipient(new PhoneNumberRecipient(phoneNumber, result.getSuccessData().getName()));
-            } else {
-              final FailureData<ErrorCode> failureData = result.getFailureData();
-              switch (failureData.getCode()) {
-                case NOT_AFFILIATED_CUSTOMER:
-                  addRecipient(new NonAffiliatedPhoneNumberRecipient(phoneNumber));
-                  break;
-                case UNAVAILABLE_NETWORK:
-                  screen.showUnavailableNetworkError();
-                  break;
-                default:
-                  screen.showGenericErrorDialog(failureData.getDescription());
-                  break;
-              }
-            }
-          }
-        }, new Consumer<Throwable>() {
-          @Override
-          public void accept(Throwable throwable) throws Exception {
-            Timber.e(throwable, "Adding a phone number recipient");
-            screen.hideLoadIndicator();
-            screen.showMessage(stringHelper.cannotProcessYourRequestAtTheMoment());
-          }
-        });
-    }
-  }
-
-  void updateRecipient(@NonNull Recipient recipient, @Nullable String label) {
-    assertScreen();
-    if (!(recipient instanceof UserRecipient)) {
-      recipient.setLabel(label);
-      recipientManager.update(recipient);
-      screen.update(recipient);
-    }
-  }
-
-  void startTransfer(@NonNull final PhoneNumber phoneNumber) {
-    assertScreen();
-    if (recipientAdditionSubscription.isDisposed()) {
-      recipientAdditionSubscription = Single
-        .defer(new Callable<SingleSource<Result<Pair<Boolean, String>, ErrorCode>>>() {
-          @Override
-          public SingleSource<Result<Pair<Boolean, String>, ErrorCode>> call() throws Exception {
-            final Result<Pair<Boolean, String>, ErrorCode> result;
-            if (networkService.checkIfAvailable()) {
-              final ApiResult<Customer.State> customerStateResult = depApiBridge
-                .fetchCustomerState(authToken, phoneNumber.getValue());
-              if (customerStateResult.isSuccessful()) {
-                if (Customer.checkIfCanBeFetched(customerStateResult.getData())) {
-                  final ApiResult<Customer> customerResult = depApiBridge
-                    .fetchCustomer(authToken, phoneNumber.getValue());
-                  if (customerResult.isSuccessful()) {
-                    result = Result.create(Pair.create(true, customerResult.getData().getName()));
-                  } else {
-                    final ApiError apiError = customerStateResult.getError();
-                    result = Result.create(
-                      FailureData.create(
-                        ErrorCode.UNEXPECTED,
-                        apiError.getDescription()));
-                  }
-                } else {
-                  result = Result.create(Pair.<Boolean, String>create(false, null));
-                }
-              } else {
-                final ApiError apiError = customerStateResult.getError();
-                result = Result.create(
-                  FailureData.create(
-                    ErrorCode.UNEXPECTED,
-                    apiError.getDescription()));
-              }
-            } else {
-              result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
-            }
-            return Single.just(result);
-          }
-        })
-        .subscribeOn(io.reactivex.schedulers.Schedulers.io())
-        .observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
-        .doOnSubscribe(new Consumer<Disposable>() {
-          @Override
-          public void accept(Disposable disposable) throws Exception {
-            screen.showLoadIndicator(true);
-          }
-        })
-        .subscribe(new Consumer<Result<Pair<Boolean, String>, ErrorCode>>() {
-          @Override
-          public void accept(Result<Pair<Boolean, String>, ErrorCode> result) throws Exception {
-            screen.hideLoadIndicator();
-            if (result.isSuccessful()) {
-              final Pair<Boolean, String> successData = result.getSuccessData();
-              final Recipient recipient;
-              if (successData.first) {
-                recipient = new PhoneNumberRecipient(phoneNumber, successData.second);
-              } else {
-                recipient = new NonAffiliatedPhoneNumberRecipient(phoneNumber);
-              }
-              screen.startTransfer(recipient);
-            } else {
-              final FailureData<ErrorCode> failureData = result.getFailureData();
-              switch (failureData.getCode()) {
-                case UNAVAILABLE_NETWORK:
-                  screen.showUnavailableNetworkError();
-                  break;
-                default:
-                  screen.showGenericErrorDialog(failureData.getDescription());
-                  break;
-              }
-            }
-          }
-        }, new Consumer<Throwable>() {
-          @Override
-          public void accept(Throwable throwable) throws Exception {
-            Timber.e(throwable);
-            screen.hideLoadIndicator();
-            screen.showMessage(stringHelper.cannotProcessYourRequestAtTheMoment());
-          }
-        });
-    }
-  }
-
-  void showTransactionSummary(
-    final Recipient recipient,
-    final String transactionId) {
-    assertScreen();
-    screen.clearQuery();
-    screen.showTransactionSummary(
-      recipient,
-      recipientManager.checkIfExists(recipient),
-      transactionId);
-  }
-
-  final void signOut() {
-    if (signOutSubscription.isUnsubscribed()) {
-      posBridge.unregister(sessionManager.getSession().getPhoneNumber())
+  final void addRecipient(@NonNull final PhoneNumber phoneNumber) {
+    if (this.recipientAdditionDisposable.isDisposed()) {
+      this.recipientAdditionDisposable = Single
+        .defer(() -> Single.just(this.depApiBridge.fetchCustomer(phoneNumber.value())))
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe(new Action0() {
-          @Override
-          public void call() {
-            screen.showLoadIndicator(true);
-          }
-        })
-        .subscribe(new Action1<PosResult>() {
-          @Override
-          public void call(PosResult result) {
-            screen.showLoadIndicator(false);
-            if (result.isSuccessful()) {
-              recipientManager.clear();
-              productManager.clear();
-              sessionManager.deactivate();
-              userStore.clear();
-              screen.openInitScreen();
-              screen.finish();
-            } else {
-              screen.showGenericErrorDialog();
-            }
-          }
-        }, new Action1<Throwable>() {
-          @Override
-          public void call(Throwable throwable) {
-            Timber.e(throwable);
-            screen.showLoadIndicator(false);
-            screen.showGenericErrorDialog();
-          }
-        });
+        .doOnSubscribe(this::showTakeoverLoader)
+        .doFinally(this::hideTakeoverLoader)
+        .subscribe(
+          (result) -> this.handleAddPhoneNumberRecipientResult(phoneNumber, result),
+          this::handleAddPhoneNumberRecipientError
+        );
     }
+  }
+
+  final void updateRecipient(@NonNull Recipient recipient, @Nullable String label) {
+    if (!(recipient instanceof UserRecipient)) {
+      recipient.setLabel(label);
+      this.recipientManager.update(recipient);
+      this.screen.update(recipient);
+    }
+  }
+
+  private void handleStartTransactionError(Throwable throwable) {
+    this.handleError(throwable, "Starting a phone number transaction");
+  }
+
+  private void handleStartPhoneNumberTransactionResult(PhoneNumber phoneNumber, ApiResult<Customer> result) {
+    this.screen.startTransaction(this.handleCustomerResult(phoneNumber, result));
+  }
+
+  final void startTransfer(@NonNull final PhoneNumber phoneNumber) {
+    if (this.recipientTransactionDisposable.isDisposed()) {
+      this.recipientTransactionDisposable = Single
+        .defer(() -> Single.just(this.depApiBridge.fetchCustomer(phoneNumber.value())))
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnSubscribe(this::showTakeoverLoader)
+        .doFinally(this::hideTakeoverLoader)
+        .subscribe(
+          (result) -> this.handleStartPhoneNumberTransactionResult(phoneNumber, result),
+          this::handleStartTransactionError
+        );
+    }
+  }
+
+  final void startTransfer(String accountNumber) {
+    this.screen.startTransaction(
+      AccountRecipient.builder()
+        .number(accountNumber)
+        .build()
+    );
+  }
+
+  final void showTransactionSummary(final Recipient recipient, final String transactionId) {
+    final boolean isUser = recipient instanceof UserRecipient;
+    if (isUser) {
+      final UserRecipient userRecipient = (UserRecipient) recipient;
+
+      final Partner carrierA = this.user.carrier();
+      final Partner carrierB = userRecipient.getCarrier();
+      if (ObjectHelper.isNotNull(carrierB) && !carrierB.equals(carrierA)) {
+        this.user.carrier(carrierB);
+      }
+    }
+
+    this.screen.clearQuery();
+    this.screen.showTransactionSummary(
+      recipient,
+      isUser || this.recipientManager.checkIfExists(recipient),
+      transactionId
+    );
   }
 
   final void startDeleting() {
@@ -503,34 +382,36 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
   }
 
   final void resolve(final Recipient recipient) {
-    if (deleting) {
-      if (!selectedRecipientList.contains(recipient)) {
+    if (this.deleting) {
+      if (!this.selectedRecipientList.contains(recipient)) {
         recipient.setSelected(true);
-        selectedRecipientList.add(recipient);
+        this.selectedRecipientList.add(recipient);
       } else {
         recipient.setSelected(false);
-        selectedRecipientList.remove(recipient);
+        this.selectedRecipientList.remove(recipient);
       }
-      screen.update(recipient);
-      screen.setDeleteButtonEnabled(!selectedRecipientList.isEmpty());
+      this.screen.update(recipient);
+      this.screen.setDeleteButtonEnabled(!selectedRecipientList.isEmpty());
     } else if (recipient instanceof BillRecipient) {
       final BillRecipient billRecipient = (BillRecipient) recipient;
-      if (Objects.checkIfNull(billRecipient.getBalance())) {
-        queryBalanceSubscription = rx.Single
+      if (ObjectHelper.isNull(billRecipient.getBalance())) {
+        this.queryBalanceSubscription = rx.Single
           .defer(new Callable<rx.Single<Result<BillBalance, ErrorCode>>>() {
             @Override
             public rx.Single<Result<BillBalance, ErrorCode>> call() throws Exception {
               final Result<BillBalance, ErrorCode> result;
               if (networkService.checkIfAvailable()) {
                 final ApiResult<BillBalance> queryBalanceResult = depApiBridge
-                  .queryBalance(authToken, billRecipient);
+                  .queryBalance(billRecipient);
                 if (queryBalanceResult.isSuccessful()) {
                   result = Result.create(queryBalanceResult.getData());
                 } else {
                   result = Result.create(
                     FailureData.create(
                       ErrorCode.UNEXPECTED,
-                      queryBalanceResult.getError().getDescription()));
+                      queryBalanceResult.getError()
+                        .getDescription()
+                    ));
                 }
               } else {
                 result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
@@ -538,14 +419,9 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
               return rx.Single.just(result);
             }
           })
-          .doOnSubscribe(new Action0() {
-            @Override
-            public void call() {
-              screen.showLoadIndicator(true);
-            }
-          })
-          .subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread())
+          .doOnSubscribe(this::showTakeoverLoader)
+          .subscribeOn(rx.schedulers.Schedulers.io())
+          .observeOn(rx.android.schedulers.AndroidSchedulers.mainThread())
           .subscribe(new Action1<Result<BillBalance, ErrorCode>>() {
             @Override
             public void call(Result<BillBalance, ErrorCode> result) {
@@ -578,11 +454,11 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
             }
           });
       } else {
-        screen.startTransfer(billRecipient);
+        this.screen.startTransaction(billRecipient);
       }
     } else if (recipient instanceof ProductRecipient) {
       final ProductRecipient productRecipient = (ProductRecipient) recipient;
-      if (Objects.checkIfNull(productRecipient.getBalance())) {
+      if (ObjectHelper.isNull(productRecipient.getBalance())) {
         queryBalanceSubscription = rx.Single
           .defer(new Callable<rx.Single<Result<ProductBillBalance, ErrorCode>>>() {
             @Override
@@ -590,14 +466,16 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
               final Result<ProductBillBalance, ErrorCode> result;
               if (networkService.checkIfAvailable()) {
                 final ApiResult<ProductBillBalance> queryBalanceResult = depApiBridge
-                  .queryBalance(authToken, productRecipient);
+                  .queryBalance(productRecipient);
                 if (queryBalanceResult.isSuccessful()) {
                   result = Result.create(queryBalanceResult.getData());
                 } else {
                   result = Result.create(
                     FailureData.create(
                       ErrorCode.UNEXPECTED,
-                      queryBalanceResult.getError().getDescription()));
+                      queryBalanceResult.getError()
+                        .getDescription()
+                    ));
                 }
               } else {
                 result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
@@ -611,8 +489,8 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
               screen.showLoadIndicator(true);
             }
           })
-          .subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread())
+          .subscribeOn(rx.schedulers.Schedulers.io())
+          .observeOn(rx.android.schedulers.AndroidSchedulers.mainThread())
           .subscribe(new Action1<Result<ProductBillBalance, ErrorCode>>() {
             @Override
             public void call(Result<ProductBillBalance, ErrorCode> result) {
@@ -645,22 +523,22 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
             }
           });
       } else {
-        screen.startTransfer(productRecipient);
+        screen.startTransaction(productRecipient);
       }
     } else {
-      screen.startTransfer(recipient);
+      screen.startTransaction(recipient);
     }
   }
 
   final void onPinRequestFinished(final String pin) {
     if (deleting) {
-      recipientRemovalSubscription = Single
+      recipientRemovalDisposable = Single
         .defer(new Callable<SingleSource<Result<Map<Recipient, Boolean>, ErrorCode>>>() {
           @Override
           public SingleSource<Result<Map<Recipient, Boolean>, ErrorCode>> call() throws Exception {
             final Result<Map<Recipient, Boolean>, ErrorCode> result;
             if (networkService.checkIfAvailable()) {
-              final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(authToken, pin);
+              final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(pin);
               if (pinValidationResult.isSuccessful()) {
                 if (pinValidationResult.getData()) {
                   final Map<Recipient, Boolean> resultMap = new HashMap<>();
@@ -668,7 +546,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
                     boolean resultFlag = true;
                     if (Recipient.checkIfBill(recipient)) {
                       final ApiResult<Void> recipientRemovalResult = depApiBridge
-                        .removeBill(authToken, (BillRecipient) recipient, pin);
+                        .removeBill((BillRecipient) recipient, pin);
                       resultFlag = recipientRemovalResult.isSuccessful();
                     }
                     if (resultFlag) {
@@ -684,7 +562,9 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
                 result = Result.create(
                   FailureData.create(
                     ErrorCode.UNEXPECTED,
-                    pinValidationResult.getError().getDescription()));
+                    pinValidationResult.getError()
+                      .getDescription()
+                  ));
               }
             } else {
               result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
@@ -692,12 +572,13 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
             return Single.just(result);
           }
         })
-        .subscribeOn(io.reactivex.schedulers.Schedulers.io())
-        .observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Consumer<Result<Map<Recipient, Boolean>, ErrorCode>>() {
           @Override
           public void accept(
-            Result<Map<Recipient, Boolean>, ErrorCode> result) throws Exception {
+            Result<Map<Recipient, Boolean>, ErrorCode> result
+          ) throws Exception {
             screen.setDeletingResult(result.isSuccessful());
             if (result.isSuccessful()) {
               stopDeleting();
@@ -708,10 +589,10 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
                   screen.remove(recipient);
                 } else {
                   String label = recipient.getLabel();
-                  if (Texts.checkIfEmpty(label)) {
+                  if (com.tpago.movil.util.StringHelper.isNullOrEmpty(label)) {
                     label = recipient.getIdentifier();
                   }
-                  if (Texts.checkIfEmpty(resultMessageContentBuilder)) {
+                  if (com.tpago.movil.util.StringHelper.isNullOrEmpty(resultMessageContentBuilder)) {
                     resultMessageContentBuilder.append("\n");
                   }
                   resultMessageContentBuilder
@@ -719,7 +600,7 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
                     .append(label);
                 }
               }
-              if (Texts.checkIfNotEmpty(resultMessageContentBuilder)) {
+              if (!com.tpago.movil.util.StringHelper.isNullOrEmpty(resultMessageContentBuilder)) {
                 final String resultMessage = new StringBuilder("Error al eliminar:")
                   .append("\n")
                   .append(resultMessageContentBuilder.toString())
@@ -757,5 +638,4 @@ class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
       screen.requestPin();
     }
   }
-
 }

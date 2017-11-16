@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 /**
  * @author hecvasro
  */
+@Deprecated
 @AutoValue
 public abstract class PayLoanBillRequestBody {
   public static TypeAdapter<PayLoanBillRequestBody> typeAdapter(Gson gson) {

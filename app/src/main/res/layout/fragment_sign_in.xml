@@ -23,7 +23,7 @@
       android:layout_marginStart="60dp"
       android:layout_marginTop="10dp"
       android:text="@string/sign_in_label_description"/>
-    <com.tpago.movil.widget.TextInput
+    <com.tpago.movil.dep.widget.TextInput
       android:id="@+id/text_input_email"
       style="@style/D.Widget.TextInput.Dark"
       android:layout_width="match_parent"
@@ -35,7 +35,7 @@
       android:inputType="text|textEmailAddress"
       android:maxLines="1"
       android:nextFocusDown="@+id/text_input_password"/>
-    <com.tpago.movil.widget.TextInput
+    <com.tpago.movil.dep.widget.TextInput
       android:id="@+id/text_input_password"
       style="@style/D.Widget.TextInput.Dark"
       android:layout_width="match_parent"

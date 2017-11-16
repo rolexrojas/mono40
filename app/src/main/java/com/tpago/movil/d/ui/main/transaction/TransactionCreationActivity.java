@@ -1,8 +1,5 @@
 package com.tpago.movil.d.ui.main.transaction;
 
-import static com.tpago.movil.d.misc.Utils.isNotNull;
-import static com.tpago.movil.util.Objects.checkIfNull;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,19 +10,19 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.tpago.movil.app.App;
+import com.tpago.movil.app.ui.ActivityModule;
+import com.tpago.movil.dep.App;
 import com.tpago.movil.R;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductRecipient;
-import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.d.domain.Recipient;
-import com.tpago.movil.d.domain.RecipientType;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.SwitchableContainerActivity;
 import com.tpago.movil.d.ui.main.transaction.bills.BillTransactionCreationFragment;
 import com.tpago.movil.d.ui.main.transaction.contacts.PhoneNumberTransactionCreationFragment;
 import com.tpago.movil.d.ui.main.transaction.products.CreditCardTransactionCreationFragment;
 import com.tpago.movil.d.ui.main.transaction.products.LoanTransactionCreationFragment;
+import com.tpago.movil.util.ObjectHelper;
 
 import javax.inject.Inject;
 
@@ -76,7 +73,7 @@ public class TransactionCreationActivity
 
 
   public static Pair<Recipient, String> deserializeResult(Intent intent) {
-    if (checkIfNull(intent)) {
+    if (ObjectHelper.isNull(intent)) {
       return null;
     } else {
       final Recipient recipient = intent.getParcelableExtra(KEY_RECIPIENT);
@@ -86,7 +83,7 @@ public class TransactionCreationActivity
   }
 
   @Override
-  protected int layoutResourceIdentifier() {
+  protected int layoutResId() {
     return R.layout.d_activity_transaction_creation;
   }
 
@@ -95,9 +92,12 @@ public class TransactionCreationActivity
     super.onCreate(savedInstanceState);
     unbinder = ButterKnife.bind(this);
     // Asserts all the required arguments.
-    final Bundle bundle = isNotNull(savedInstanceState) ? savedInstanceState : getIntent()
-      .getExtras();
-    if (Utils.isNull(bundle)) {
+    final Bundle bundle = ObjectHelper.firstNonNull(
+      savedInstanceState,
+      this.getIntent()
+        .getExtras()
+    );
+    if (ObjectHelper.isNull(bundle)) {
       throw new NullPointerException("bundle == null");
     } else if (!bundle.containsKey(KEY_TRANSACTION_CATEGORY)) {
       throw new NullPointerException(
@@ -110,21 +110,21 @@ public class TransactionCreationActivity
       final Recipient recipient = bundle.getParcelable(KEY_RECIPIENT);
       // Injects all the annotated dependencies.
       component = DaggerTransactionCreationComponent.builder()
-        .appComponent(((App) getApplication()).getComponent())
+        .appComponent(((App) getApplication()).component())
+        .activityModule(ActivityModule.create(this))
         .transactionCreationModule(new TransactionCreationModule(transactionCategory, recipient))
         .build();
       component.inject(this);
       // Prepares the app bar.
       setSupportActionBar(toolbar);
       final ActionBar actionBar = getSupportActionBar();
-      if (isNotNull(actionBar)) {
+      if (ObjectHelper.isNotNull(actionBar)) {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
       }
       // Resolves the initial sub-screen.
-      final RecipientType type = recipient.getType();
-      final ChildFragment<TransactionCreationContainer> fragment;
-      switch (type) {
+      ChildFragment<TransactionCreationContainer> fragment = null;
+      switch (recipient.getType()) {
         case PHONE_NUMBER:
           fragment = PhoneNumberTransactionCreationFragment.newInstance();
           break;
@@ -142,18 +142,14 @@ public class TransactionCreationActivity
             fragment = LoanTransactionCreationFragment.create();
           }
           break;
+        case ACCOUNT:
+          fragment = PhoneNumberTransactionCreationFragment.newInstance();
+          break;
         case USER:
           fragment = PhoneNumberTransactionCreationFragment.newInstance();
           break;
-        default:
-          fragment = null;
-          break;
       }
-      if (checkIfNull(fragment)) {
-        finish();
-      } else {
-        setChildFragment(fragment, false, false);
-      }
+      this.setChildFragment(fragment, false, false);
     }
   }
 
@@ -164,7 +160,7 @@ public class TransactionCreationActivity
     final String title;
     final String subtitle;
     final String label = recipient.getLabel();
-    if (isNotNull(label)) {
+    if (ObjectHelper.isNotNull(label)) {
       title = label;
       subtitle = recipient.getIdentifier();
     } else {

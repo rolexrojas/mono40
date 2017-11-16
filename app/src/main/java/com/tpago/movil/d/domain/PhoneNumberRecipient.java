@@ -6,16 +6,18 @@ import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.tpago.movil.Partner;
+import com.tpago.movil.d.ui.main.recipient.addition.Contact;
+import com.tpago.movil.dep.Partner;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.d.domain.util.StringUtils;
-import com.tpago.movil.text.Texts;
+import com.tpago.movil.dep.text.Texts;
 
 /**
  * Phone number recipient representation.
  *
  * @author hecvasro
  */
+@Deprecated
 public class PhoneNumberRecipient extends Recipient {
 
   public static final Creator<PhoneNumberRecipient> CREATOR = new Creator<PhoneNumberRecipient>() {
@@ -50,13 +52,16 @@ public class PhoneNumberRecipient extends Recipient {
     this.carrier = carrier;
   }
 
-  public PhoneNumberRecipient(@NonNull PhoneNumber phoneNumber,
-    @Nullable String label) {
+  public PhoneNumberRecipient(@NonNull PhoneNumber phoneNumber, @Nullable String label) {
     this(phoneNumber, null, label);
   }
 
   public PhoneNumberRecipient(@NonNull PhoneNumber phoneNumber) {
     this(phoneNumber, null, null);
+  }
+
+  public PhoneNumberRecipient(Contact contact) {
+    this(contact.phoneNumber(), null, contact.name());
   }
 
   @NonNull
@@ -74,7 +79,7 @@ public class PhoneNumberRecipient extends Recipient {
 
   @Override
   public String getId() {
-    return Texts.join("-", this.getType(), this.phoneNumber.getValue());
+    return Texts.join("-", this.getType(), this.phoneNumber.value());
   }
 
   @NonNull
@@ -94,7 +99,7 @@ public class PhoneNumberRecipient extends Recipient {
    */
   @Override
   public boolean matches(@Nullable String query) {
-    return super.matches(query) || StringUtils.matches(this.phoneNumber.getValue(), query);
+    return super.matches(query) || StringUtils.matches(this.phoneNumber.value(), query);
   }
 
   @Override

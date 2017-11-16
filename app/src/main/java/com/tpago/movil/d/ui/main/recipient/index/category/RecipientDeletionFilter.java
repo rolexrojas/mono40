@@ -1,5 +1,6 @@
 package com.tpago.movil.d.ui.main.recipient.index.category;
 
+import static com.tpago.movil.d.domain.RecipientType.ACCOUNT;
 import static com.tpago.movil.d.domain.RecipientType.BILL;
 import static com.tpago.movil.d.domain.RecipientType.NON_AFFILIATED_PHONE_NUMBER;
 import static com.tpago.movil.d.domain.RecipientType.PHONE_NUMBER;
@@ -19,9 +20,10 @@ final class RecipientDeletionFilter implements Func1<Recipient, Boolean> {
 
   static {
     DELETABLE = new HashSet<>();
+    DELETABLE.add(ACCOUNT);
     DELETABLE.add(BILL);
-    DELETABLE.add(PHONE_NUMBER);
     DELETABLE.add(NON_AFFILIATED_PHONE_NUMBER);
+    DELETABLE.add(PHONE_NUMBER);
   }
 
   static RecipientDeletionFilter create(boolean deleting) {
