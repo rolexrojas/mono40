@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  style="@style/ListItemTransaction"
+  android:layout_width="match_parent"
+  tools:ignore="MissingPrefix">
+
+  <com.tpago.movil.d.ui.view.widget.PrefixableTextView
+    android:id="@+id/view_amount"
+    style="@style/D.Screen.Products.Text.Widget.Amount.Content"
+    fontPath="@string/gothamRoundedMediumFont"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentEnd="true"
+    android:layout_centerVertical="true"
+    android:layout_marginStart="25dp"
+    android:textColor="@color/common_black"
+    android:textSize="16sp"
+    app:content="0.00"
+    app:prefix="RD$"
+    app:prefixTextColor="@color/common_black"/>
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_toStartOf="@+id/view_amount"
+    android:orientation="vertical">
+
+    <TextView
+      android:id="@+id/text_view_transaction_name"
+      style="@style/ListItemTransactionName"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"/>
+
+    <TextView
+      android:id="@+id/text_view_transaction_type"
+      style="@style/ListItemTransactionType"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"/>
+  </LinearLayout>
+</RelativeLayout>

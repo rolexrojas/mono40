@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  tools:ignore="MissingPrefix">
+
+  <Button
+    android:id="@+id/button"
+    style="@style/D.Widget.Button.Light.Solid"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_alignParentBottom="true"/>
+
+  <LinearLayout
+    android:id="@+id/containerLinearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:paddingEnd="20dp"
+    android:paddingStart="20dp">
+
+    <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="58dp"
+      android:orientation="vertical">
+
+      <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.tpago.movil.d.ui.view.widget.PrefixableTextView
+          android:id="@+id/prefixable_text_view_total_owed"
+          style="@style/D.Screen.Products.Text.Widget.Amount.Content"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_alignParentEnd="true"
+          android:layout_marginStart="25dp"
+          android:gravity="bottom|end"/>
+
+        <TextView
+          fontPath="@string/gothamRoundedMediumFont"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_alignParentStart="true"
+          android:layout_toStartOf="@+id/prefixable_text_view_total_owed"
+          android:ellipsize="end"
+          android:gravity="bottom|start"
+          android:text="Balance a la fecha"
+          android:textColor="#333"
+          android:textSize="16sp"/>
+      </RelativeLayout>
+
+      <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingTop="4dp">
+
+        <TextView
+          android:id="@+id/text_view_due_date"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_alignParentEnd="true"
+          android:layout_marginStart="25dp"
+          android:gravity="top|end"
+          android:textAppearance="@style/Text.Contact.PhoneNumber"/>
+
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_alignParentStart="true"
+          android:layout_toStartOf="@+id/text_view_due_date"
+          android:gravity="top|start"
+          android:text="@string/due_date"
+          android:textAllCaps="true"
+          android:textAppearance="@style/Text.Contact.PhoneNumber"/>
+      </RelativeLayout>
+    </LinearLayout>
+
+    <include layout="@layout/d_reusable_divider"/>
+
+    <com.tpago.movil.dep.main.transactions.PaymentMethodChooser
+      android:id="@+id/payment_method_chooser"
+      style="@style/D.Transactions.Widget.PaymentMethodChooser"
+      android:layout_marginEnd="32dp"
+      android:layout_marginStart="32dp"
+      android:layout_marginTop="57dp"/>
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="57dp"
+      android:orientation="vertical">
+
+      <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <com.tpago.movil.d.ui.view.widget.PrefixableTextView
+          android:id="@+id/prefixable_text_view_period"
+          style="@style/D.Screen.Products.Text.Widget.Amount.Content"
+          fontPath="@string/gothamRoundedBookFont"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_alignParentEnd="true"
+          android:gravity="center_vertical|end"/>
+
+        <RadioButton
+          android:id="@+id/radio_button_pay_period"
+          fontPath="@string/gothamRoundedBookFont"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentStart="true"
+          android:layout_centerVertical="true"
+          android:ellipsize="end"
+          android:text="Cuota"
+          android:textColor="#333"
+          android:textSize="16sp"/>
+
+        <View
+          android:id="@+id/view_period"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:clickable="true"/>
+      </RelativeLayout>
+
+      <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp">
+
+        <com.tpago.movil.d.ui.view.widget.PrefixableTextView
+          android:id="@+id/prefixable_text_view_total"
+          style="@style/D.Screen.Products.Text.Widget.Amount.Content"
+          fontPath="@string/gothamRoundedBookFont"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_alignParentEnd="true"
+          android:gravity="center_vertical|end"/>
+
+        <RadioButton
+          android:id="@+id/radio_button_pay_total"
+          fontPath="@string/gothamRoundedBookFont"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentStart="true"
+          android:layout_centerVertical="true"
+          android:ellipsize="end"
+          android:text="A la fecha"
+          android:textColor="#333"
+          android:textSize="16sp"/>
+
+        <View
+          android:id="@+id/view_total"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:clickable="true"/>
+      </RelativeLayout>
+
+      <include layout="@layout/transaction_creation_option_other_amount"/>
+    </LinearLayout>
+  </LinearLayout>
+</RelativeLayout>

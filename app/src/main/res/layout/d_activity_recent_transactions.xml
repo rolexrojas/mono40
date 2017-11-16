@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <FrameLayout style="@style/Dep.App.Widget.AppBar">
+
+    <android.support.v7.widget.Toolbar
+      android:id="@+id/toolbar"
+      style="@style/Toolbar"
+      android:layout_gravity="center_vertical"/>
+  </FrameLayout>
+
+  <android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/swipe_refresh_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/recycler_view"
+      style="@style/List.Vertical"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"/>
+  </android.support.v4.widget.SwipeRefreshLayout>
+</LinearLayout>

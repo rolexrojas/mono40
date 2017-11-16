@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <fraction name="gradientBackgroundCenterX">50%</fraction>
+  <fraction name="gradientBackgroundCenterY">97%</fraction>
+  <fraction name="gradientBackgroundRadius">200%p</fraction>
+</resources>

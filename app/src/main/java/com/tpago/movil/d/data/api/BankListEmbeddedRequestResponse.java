@@ -1,0 +1,21 @@
+package com.tpago.movil.d.data.api;
+
+import com.google.auto.value.AutoValue;
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
+import com.tpago.movil.d.domain.Bank;
+
+import java.util.List;
+
+/**
+ * @author hecvasro
+ */
+@Deprecated
+@AutoValue
+public abstract class BankListEmbeddedRequestResponse {
+  public static TypeAdapter<BankListEmbeddedRequestResponse> typeAdapter(Gson gson) {
+    return new AutoValue_BankListEmbeddedRequestResponse.GsonTypeAdapter(gson);
+  }
+
+  public abstract List<Bank> getBanks();
+}
