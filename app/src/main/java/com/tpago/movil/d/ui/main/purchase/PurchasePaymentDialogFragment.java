@@ -117,19 +117,19 @@ public class PurchasePaymentDialogFragment
   }
 
   @Override
-  public void onStart() {
-    super.onStart();
+  public void onResume() {
+    super.onResume();
     final Window window = getDialog().getWindow();
     if (ObjectHelper.isNotNull(window)) {
       window.setWindowAnimations(R.style.PurchasePaymentAnimation);
     }
-    presenter.start();
+    this.presenter.resume();
   }
 
   @Override
-  public void onStop() {
-    super.onStop();
-    presenter.stop();
+  public void onPause() {
+    this.presenter.pause();
+    super.onPause();
   }
 
   @Override

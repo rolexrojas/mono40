@@ -108,36 +108,38 @@ final class PurchasePresenter extends Presenter<PurchaseScreen> {
   }
 
   final void resume() {
-    boolean isListEmpty = true;
-    this.screen.clearPaymentOptions();
-    for (Product paymentOption : this.productManager.getPaymentOptionList()) {
-      if (this.posBridge.isRegistered(paymentOption.getSanitizedNumber())) {
-        this.screen.addPaymentOption(paymentOption);
-        if (isListEmpty) {
-          isListEmpty = false;
+    if (ObjectHelper.isNotNull(this.screen)) {
+      boolean isListEmpty = true;
+      this.screen.clearPaymentOptions();
+      for (Product paymentOption : this.productManager.getPaymentOptionList()) {
+        if (this.posBridge.isRegistered(paymentOption.getSanitizedNumber())) {
+          this.screen.addPaymentOption(paymentOption);
+          if (isListEmpty) {
+            isListEmpty = false;
+          }
         }
       }
-    }
-    this.selectedProduct = this.productManager.getDefaultPaymentOption();
-    if (ObjectHelper.isNotNull(this.selectedProduct)) {
-      this.screen.markAsSelected(this.selectedProduct);
-    }
-    if (isListEmpty) {
-      this.screen.requestPin();
+      this.selectedProduct = this.productManager.getDefaultPaymentOption();
+      if (ObjectHelper.isNotNull(this.selectedProduct)) {
+        this.screen.markAsSelected(this.selectedProduct);
+      }
+      if (isListEmpty) {
+        this.screen.requestPin();
+      }
     }
   }
 
   final void stop() {
-    assertScreen();
-    RxUtils.unsubscribe(productAdditionEventSubscription);
+    RxUtils.unsubscribe(this.productAdditionEventSubscription);
+    RxUtils.unsubscribe(this.activationSubscription);
   }
 
   @NonNull
-  Product getSelectedPaymentOption() {
+  final Product getSelectedPaymentOption() {
     return selectedProduct;
   }
 
-  void onPaymentOptionSelected(@NonNull Product product) {
+  final void onPaymentOptionSelected(@NonNull Product product) {
     assertScreen();
     if (ObjectHelper.isNotNull(selectedProduct) && selectedProduct.equals(product)) {
       screen.openPaymentScreen(selectedProduct);
@@ -148,9 +150,8 @@ final class PurchasePresenter extends Presenter<PurchaseScreen> {
   }
 
   final void activateCards(final String pin) {
-    assertScreen();
-    if (activationSubscription.isUnsubscribed()) {
-      activationSubscription = Single
+    if (this.activationSubscription.isUnsubscribed()) {
+      this.activationSubscription = Single
         .defer(new Callable<Single<Result<Boolean, ErrorCode>>>() {
           @Override
           public Single<Result<Boolean, ErrorCode>> call() throws Exception {
@@ -162,8 +163,7 @@ final class PurchasePresenter extends Presenter<PurchaseScreen> {
                   boolean flag = false;
                   final StringBuilder builder = new StringBuilder();
                   final List<Pair<Product, PosResult>> productRegistrationResultList
-                    = productManager
-                    .registerPaymentOptionList(phoneNumber, pin);
+                    = productManager.registerPaymentOptionList(phoneNumber, pin);
                   for (Pair<Product, PosResult> pair : productRegistrationResultList) {
                     flag |= pair.second.isSuccessful();
                     builder.append(pair.second.getData());
