@@ -329,7 +329,7 @@ public class DepMainActivity
   public void openPurchaseScreen() {
     final ChildFragment<MainContainer> childFragment;
     if (posBridge.checkIfUsable()) {
-      childFragment = PurchaseFragment.newInstance(true);
+      childFragment = PurchaseFragment.newInstance();
     } else {
       childFragment = NonNfcPurchaseFragment.create();
     }
