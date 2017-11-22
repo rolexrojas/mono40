@@ -27,7 +27,6 @@ import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.main.list.ListItemAdapter;
 import com.tpago.movil.d.ui.main.list.ListItemHolder;
 import com.tpago.movil.d.ui.main.list.ListItemHolderCreatorFactory;
-import com.tpago.movil.util.ObjectHelper;
 
 import javax.inject.Inject;
 
@@ -50,13 +49,10 @@ public class PurchaseFragment
 
   private static final String TAG_PAYMENT_SCREEN = "paymentScreen";
 
-  private static final String KEY_ACTIVATE_AUTOMATICALLY = "activeAutomatically";
-
   PurchaseComponent component;
 
   private Unbinder unbinder;
   private ListItemAdapter adapter;
-  private boolean activateAutomatically;
 
   @Inject StringHelper stringHelper;
   @Inject PurchasePaymentOptionBinder paymentOptionBinder;
@@ -67,17 +63,8 @@ public class PurchaseFragment
   @BindView(R.id.recycler_view) RecyclerView recyclerView;
 
   @NonNull
-  public static PurchaseFragment newInstance(boolean activeAutomatically) {
-    final Bundle bundle = new Bundle();
-    bundle.putBoolean(KEY_ACTIVATE_AUTOMATICALLY, activeAutomatically);
-    final PurchaseFragment fragment = new PurchaseFragment();
-    fragment.setArguments(bundle);
-    return fragment;
-  }
-
-  @NonNull
   public static PurchaseFragment newInstance() {
-    return newInstance(false);
+    return new PurchaseFragment();
   }
 
   @Override
@@ -88,12 +75,6 @@ public class PurchaseFragment
       .depMainComponent(getContainer().getComponent())
       .build();
     component.inject(this);
-    final Bundle bundle
-      = ObjectHelper.isNotNull(savedInstanceState) ? savedInstanceState : getArguments();
-    activateAutomatically = ObjectHelper.isNotNull(bundle) && bundle.getBoolean(
-      KEY_ACTIVATE_AUTOMATICALLY,
-      false
-    );
   }
 
   @Nullable
@@ -155,23 +136,18 @@ public class PurchaseFragment
     getContainer().setTitle(getString(R.string.screen_payments_commerce_title));
     // Starts the presenter.
     presenter.start();
-    if (activateAutomatically) {
-      requestPin();
-      activateAutomatically = false;
-    }
   }
 
   @Override
   public void onResume() {
     super.onResume();
-    presenter.resume();
+    this.presenter.resume();
   }
 
   @Override
   public void onStop() {
+    this.presenter.stop();
     super.onStop();
-    // Stops the presenter.
-    presenter.stop();
   }
 
   @Override

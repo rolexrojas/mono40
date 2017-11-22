@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import com.tpago.movil.app.di.ComponentBuilderSupplier;
 import com.tpago.movil.app.ui.ActivityModule;
 import com.tpago.movil.app.ui.AlertData;
+import com.tpago.movil.app.ui.AlertManager;
 import com.tpago.movil.app.ui.main.MainComponent;
 import com.tpago.movil.d.ui.DepActivityModule;
 import com.tpago.movil.dep.TimeOutManager;
@@ -72,6 +73,11 @@ public class DepMainActivity
   MainScreen,
   TimeOutManager.TimeOutHandler {
 
+  @NonNull
+  public static Intent getLaunchIntent(Context context) {
+    return new Intent(context, DepMainActivity.class);
+  }
+
   public static DepMainActivity get(Activity activity) {
     ObjectHelper.checkNotNull(activity, "activity");
     if (!(activity instanceof DepMainActivity)) {
@@ -90,28 +96,17 @@ public class DepMainActivity
 
   private boolean shouldRequestAuthentication = false;
 
-  @Inject
-  @ActivityQualifier
-  ComponentBuilderSupplier componentBuilderSupplier;
+  @Inject @ActivityQualifier ComponentBuilderSupplier componentBuilderSupplier;
+  @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
+  @Inject AlertManager alertManager;
 
+  @Inject EventBus eventBus;
+  @Inject MainPresenter presenter;
+  @Inject PosBridge posBridge;
+  @Inject ProductManager productManager;
   @Inject SessionManager sessionManager;
-
-  @Inject
-  @ActivityQualifier
-  FragmentReplacer fragmentReplacer;
-
+  @Inject StringHelper depStringHelper;
   @Inject TimeOutManager timeOutManager;
-
-  @Inject
-  StringHelper stringHelper;
-  @Inject
-  MainPresenter presenter;
-  @Inject
-  EventBus eventBus;
-  @Inject
-  PosBridge posBridge;
-  @Inject
-  ProductManager productManager;
 
   @BindView(R.id.sliding_pane_layout)
   SlidingPaneLayout slidingPaneLayout;
@@ -126,9 +121,25 @@ public class DepMainActivity
 
   private Disposable closeSessionDisposable = Disposables.disposed();
 
-  @NonNull
-  public static Intent getLaunchIntent(Context context) {
-    return new Intent(context, DepMainActivity.class);
+  private void handleCloseSessionSuccess() {
+    this.startActivity(InitActivity.getLaunchIntent(this));
+    this.finish();
+  }
+
+  private void handleCloseSessionError(Throwable throwable) {
+    Timber.e(throwable, "Closing session");
+    final AlertData alertData = AlertData.builder(this.stringMapper)
+      .build();
+    this.alertManager.show(alertData);
+  }
+
+  private void closeSession() {
+    this.closeSessionDisposable = this.sessionManager.closeSession()
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread())
+      .doOnSubscribe((d) -> this.takeoverLoader.show())
+      .doFinally(this.takeoverLoader::hide)
+      .subscribe(this::handleCloseSessionSuccess, this::handleCloseSessionError);
   }
 
   public final ComponentBuilderSupplier componentBuilderSupplier() {
@@ -196,11 +207,6 @@ public class DepMainActivity
     } else {
       presenter.start();
     }
-  }
-
-  @Override
-  protected void onResume() {
-    super.onResume();
   }
 
   @Override
@@ -291,23 +297,7 @@ public class DepMainActivity
           .commit();
         break;
       case R.id.main_menuItem_exit:
-        this.closeSessionDisposable = this.sessionManager.closeSession()
-          .subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread())
-          .doOnSubscribe((d) -> this.takeoverLoader.show())
-          .doFinally(this.takeoverLoader::hide)
-          .subscribe(
-            () -> {
-              this.startActivity(InitActivity.getLaunchIntent(this));
-              this.finish();
-            },
-            (throwable) -> {
-              Timber.e(throwable, "Closing session");
-              final AlertData alertData = AlertData.builder(this.stringMapper)
-                .build();
-              this.alertManager.show(alertData);
-            }
-          );
+        this.closeSession();
         break;
     }
   }
@@ -339,7 +329,7 @@ public class DepMainActivity
   public void openPurchaseScreen() {
     final ChildFragment<MainContainer> childFragment;
     if (posBridge.checkIfUsable()) {
-      childFragment = PurchaseFragment.newInstance(true);
+      childFragment = PurchaseFragment.newInstance();
     } else {
       childFragment = NonNfcPurchaseFragment.create();
     }
@@ -383,12 +373,10 @@ public class DepMainActivity
 
   @Override
   public void handleTimeOut() {
-    if (App.get(this)
-      .isVisible()) {
-      startActivity(InitActivity.getLaunchIntent(this));
-      finish();
+    if (App.get(this).isVisible()) {
+      this.closeSession();
     } else {
-      shouldRequestAuthentication = true;
+      this.shouldRequestAuthentication = true;
     }
   }
 
