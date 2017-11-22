@@ -164,14 +164,13 @@ public class PurchaseFragment
   @Override
   public void onResume() {
     super.onResume();
-    presenter.resume();
+    this.presenter.resume();
   }
 
   @Override
   public void onStop() {
+    this.presenter.stop();
     super.onStop();
-    // Stops the presenter.
-    presenter.stop();
   }
 
   @Override
