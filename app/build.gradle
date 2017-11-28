@@ -80,6 +80,17 @@ android {
       buildConfigField 'String', 'API_URL', '"https://tpagonet-dev.gcs-systems.com/api/neo/"'
     }
 
+    preproduction {
+      dimension 'environment'
+
+      def flavorName = 'preprod'
+
+      resValue 'string', 'app_name', "${appName}-${flavorName}"
+
+      buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'true'
+      buildConfigField 'String', 'API_URL', '"https://tpagonet.gcs-systems.com/api/neo/"'
+    }
+
     production {
       dimension 'environment'
 
