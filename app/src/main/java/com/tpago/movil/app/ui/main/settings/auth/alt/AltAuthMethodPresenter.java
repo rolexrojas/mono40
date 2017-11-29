@@ -1,5 +1,7 @@
 package com.tpago.movil.app.ui.main.settings.auth.alt;
 
+import android.support.annotation.Nullable;
+
 import com.tpago.movil.app.ui.AlertData;
 import com.tpago.movil.app.ui.AlertManager;
 import com.tpago.movil.app.ui.Presenter;
@@ -168,8 +170,8 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
       return this;
     }
 
-    final Builder fingerprintAltAuthMethodKeyGenerator(FingerprintMethodKeyGenerator generator) {
-      this.fingerprintAltAuthMethodKeyGenerator = ObjectHelper.checkNotNull(generator, "generator");
+    final Builder fingerprintAltAuthMethodKeyGenerator(@Nullable FingerprintMethodKeyGenerator generator) {
+      this.fingerprintAltAuthMethodKeyGenerator = generator;
       return this;
     }
 
