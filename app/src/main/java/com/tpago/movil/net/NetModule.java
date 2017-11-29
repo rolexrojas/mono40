@@ -5,6 +5,8 @@ import android.content.Context;
 import com.tpago.movil.io.FileHelper;
 import com.tpago.movil.session.AccessTokenInterceptor;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -51,6 +53,9 @@ public final class NetModule {
       .addInterceptor(createLoggingInterceptor())
       .addInterceptor(createUserAgentInterceptor())
       .cache(cache)
+      .connectTimeout(30, TimeUnit.SECONDS)
+      .readTimeout(30, TimeUnit.SECONDS)
+      .writeTimeout(30, TimeUnit.SECONDS)
       .build();
   }
 }
