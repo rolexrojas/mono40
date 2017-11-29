@@ -44,7 +44,7 @@ final class UriTypeAdapter extends TypeAdapter<Uri> {
     if (ObjectHelper.isNull(uri) || uri.equals(Uri.EMPTY)) {
       writer.nullValue();
     } else {
-      this.stringTypeAdapter.write(writer, uri.getPath());
+      this.stringTypeAdapter.write(writer, uri.toString());
     }
   }
 }
