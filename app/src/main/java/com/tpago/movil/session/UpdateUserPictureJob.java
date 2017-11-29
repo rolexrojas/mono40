@@ -2,7 +2,7 @@ package com.tpago.movil.session;
 
 import android.net.Uri;
 
-import com.tpago.movil.io.FileHelper;
+//import com.tpago.movil.io.FileHelper;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.io.File;
@@ -34,10 +34,10 @@ public final class UpdateUserPictureJob extends SessionJob {
 
   @Override
   public void onRun() throws Throwable {
-    final User user = this.sessionManager.getUser();
-    final Uri newPicture = this.api.updateUserPicture(user, this.picture)
-      .blockingGet();
-    user.updatePicture(newPicture);
-    FileHelper.deleteFile(this.picture);
+//    final User user = this.sessionManager.getUser();
+//    final Uri newPicture = this.api.updateUserPicture(user, this.picture)
+//      .blockingGet();
+//    user.updatePicture(newPicture);
+//    FileHelper.deleteFile(this.picture);
   }
 }

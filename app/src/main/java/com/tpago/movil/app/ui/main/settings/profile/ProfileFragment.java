@@ -132,6 +132,7 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
       .load(uri)
       .resizeDimen(R.dimen.largeImageSize, R.dimen.largeImageSize)
       .transform(new CircleTransformation())
+      .noFade()
       .into(this.pictureImageView);
   }
 

@@ -15,6 +15,7 @@ import com.tpago.movil.app.ui.FragmentReplacer;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.data.DeviceIdSupplier;
 import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.data.picasso.CircleTransformation;
 import com.tpago.movil.dep.init.InitFragment;
 import com.tpago.movil.dep.init.LogoAnimator;
 import com.tpago.movil.reactivex.DisposableHelper;
@@ -100,6 +101,7 @@ public abstract class BaseUnlockFragment extends BaseFragment {
     Picasso.with(this.getContext())
       .load(user.picture())
       .resizeDimen(R.dimen.normalImageSize, R.dimen.normalImageSize)
+      .transform(new CircleTransformation())
       .noFade()
       .into(this.userPictureImageView);
 
