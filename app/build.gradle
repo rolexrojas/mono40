@@ -15,7 +15,7 @@ android {
   defaultConfig {
     applicationId 'com.tpago.movil'
 
-    def (major, minor, patch) = [2, 2, 41]
+    def (major, minor, patch) = [2, 2, 42]
     versionName "${major}.${minor}.${patch}"
     versionCode ((major * 10_000_000) + (minor * 100_000) + (patch * 1_000))
 
@@ -196,8 +196,8 @@ dependencies {
   mockCompile(name: cubeSdkName('1.4.1', 'dev'), ext: 'aar')
   developmentCompile(name: cubeSdkName('1.4.1', 'dev'), ext: 'aar')
   stagingCompile(name: cubeSdkName('1.4.1', 'stag'), ext: 'aar')
-  preproductionCompile(name: cubeSdkName('1.4.0', 'prod'), ext: 'aar')
-  productionCompile(name: cubeSdkName('1.4.0', 'prod'), ext: 'aar')
+  preproductionCompile(name: cubeSdkName('1.4.1', 'prod'), ext: 'aar')
+  productionCompile(name: cubeSdkName('1.4.1', 'prod'), ext: 'aar')
 
   // Remote dependencies
   def rxJavaGroupId = 'io.reactivex.rxjava2'
