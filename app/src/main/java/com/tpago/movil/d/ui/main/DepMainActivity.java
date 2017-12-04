@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
@@ -201,11 +202,11 @@ public class DepMainActivity
   @Override
   protected void onStart() {
     super.onStart();
-    if (shouldRequestAuthentication) {
-      startActivity(InitActivity.getLaunchIntent(this));
-      finish();
+    if (this.shouldRequestAuthentication) {
+      this.shouldRequestAuthentication = false;
+      this.closeSession();
     } else {
-      presenter.start();
+      this.presenter.start();
     }
   }
 
@@ -213,7 +214,7 @@ public class DepMainActivity
   protected void onStop() {
     DisposableHelper.dispose(this.closeSessionDisposable);
 
-    presenter.stop();
+    this.presenter.stop();
 
     super.onStop();
   }
@@ -304,11 +305,25 @@ public class DepMainActivity
 
   @Override
   public void onBackPressed() {
-    if (slidingPaneLayout.isOpen()) {
-      slidingPaneLayout.closePane();
-    } else if (ObjectHelper.isNull(onBackPressedListener) || !onBackPressedListener.onBackPressed()) {
-      super.onBackPressed();
+    if (this.slidingPaneLayout.isOpen()) {
+      this.slidingPaneLayout.closePane();
+      return;
     }
+
+    if (ObjectHelper.isNotNull(this.onBackPressedListener)) {
+      final boolean flag = this.onBackPressedListener.onBackPressed();
+      if (flag) {
+        return;
+      }
+    }
+
+    final FragmentManager manager = this.fragmentReplacer.manager();
+    if (manager.getBackStackEntryCount() > 0) {
+      super.onBackPressed();
+      return;
+    }
+
+    this.closeSession();
   }
 
   @Nullable
