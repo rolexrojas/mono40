@@ -256,7 +256,7 @@ public class DepMainActivity
         this.setChildFragment(RecipientCategoryFragment.create(PAY));
         break;
       case R.id.main_menuItem_purchase:
-        if (this.posBridge.checkIfUsable()) {
+        if (this.posBridge.isAvailable()) {
           this.setChildFragment(PurchaseFragment.newInstance());
         } else {
           this.setChildFragment(NonNfcPurchaseFragment.create());
@@ -343,7 +343,7 @@ public class DepMainActivity
   @Override
   public void openPurchaseScreen() {
     final ChildFragment<MainContainer> childFragment;
-    if (posBridge.checkIfUsable()) {
+    if (posBridge.isAvailable()) {
       childFragment = PurchaseFragment.newInstance();
     } else {
       childFragment = NonNfcPurchaseFragment.create();

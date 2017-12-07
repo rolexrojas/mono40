@@ -200,7 +200,9 @@ public final class SessionModule {
   ) {
     final List<SessionDestroyAction> actions = new ArrayList<>();
     actions.add((user) -> productManager.clear());
-    actions.add((user) -> posBridge.unregister(user.phoneNumber()));
+    if (posBridge.isAvailable()) {
+      actions.add((user) -> posBridge.unregister(user.phoneNumber()));
+    }
     actions.add((user) -> recipientManager.clear());
     return actions;
   }

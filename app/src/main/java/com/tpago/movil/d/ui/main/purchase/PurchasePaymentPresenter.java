@@ -11,7 +11,7 @@ import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.ui.Presenter;
 
 import dagger.Lazy;
-import rx.Observable;
+import rx.Single;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -47,14 +47,13 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
     this.screen.setPaymentOption(this.paymentOption);
   }
 
-  private Observable<Boolean> flatMap(boolean result) {
-    if (result) {
-      return this.posBridge.get()
-        .selectCard(this.paymentOption.getSanitizedNumber())
-        .map(PosResult::isSuccessful);
-    } else {
-      return Observable.just(false);
+  private Single<Boolean> flatMap(boolean result) {
+    if (!result) {
+      return Single.just(false);
     }
+    return this.posBridge.get()
+      .selectCard(this.paymentOption.getSanitizedNumber())
+      .map(PosResult::isSuccessful);
   }
 
   private void handleResult(boolean result) {
@@ -71,8 +70,8 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
   }
 
   final void resume() {
-    this.subscription = Observable
-      .defer(() -> Observable.just(this.productManager.setDefaultPaymentOption(this.paymentOption)))
+    this.subscription = Single
+      .defer(() -> Single.just(this.productManager.setDefaultPaymentOption(this.paymentOption)))
       .flatMap(this::flatMap)
       .subscribeOn(Schedulers.io())
       .unsubscribeOn(Schedulers.io())
@@ -81,7 +80,7 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
       .subscribe(this::handleResult, this::handleError);
   }
 
-  void pause() {
+  final void pause() {
     RxUtils.unsubscribe(this.subscription);
   }
 }
