@@ -3,13 +3,11 @@ package com.tpago.movil.dep.init;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
-import android.widget.ViewSwitcher;
 
 import com.tpago.movil.R;
 import com.tpago.movil.util.ObjectHelper;
@@ -23,8 +21,6 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
 
 /**
  * @author hecvasro
@@ -66,12 +62,7 @@ public final class Logo extends FrameLayout {
     // Initializes the image switcher.
     final ImageSwitcher imageSwitcher = ButterKnife.findById(this, R.id.image_switcher);
     imageSwitcher.setAnimateFirstView(false);
-    imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
-      @Override
-      public View makeView() {
-        return new ImageView(context);
-      }
-    });
+    imageSwitcher.setFactory(() -> new ImageView(context));
     final Animation inAnimation = new AlphaAnimation(0.0F, 1.0F);
     inAnimation.setDuration(FRAME_DURATION_CROSS);
     imageSwitcher.setInAnimation(inAnimation);
@@ -85,15 +76,15 @@ public final class Logo extends FrameLayout {
       .push(R.drawable.logo_state_2)
       .push(R.drawable.logo_state_3)
       .build();
-    drawableSwitcher = new DrawableSwitcher(imageSwitcher, R.drawable.logo, drawableIterator);
+    this.drawableSwitcher = new DrawableSwitcher(imageSwitcher, R.drawable.logo, drawableIterator);
   }
 
   public final void start() {
-    drawableSwitcher.start();
+    this.drawableSwitcher.start();
   }
 
   public final void stop() {
-    drawableSwitcher.stop();
+    this.drawableSwitcher.stop();
   }
 
   private static final class DrawableIdIterator {
@@ -111,16 +102,16 @@ public final class Logo extends FrameLayout {
     }
 
     final int getCurrent() {
-      return drawableIdArray[current];
+      return this.drawableIdArray[this.current];
     }
 
     final int moveToStart() {
-      current = 0;
-      return getCurrent();
+      this.current = 0;
+      return this.getCurrent();
     }
 
     final int moveToNext() {
-      current = (current + 1) % drawableIdArray.length;
+      this.current = (this.current + 1) % this.drawableIdArray.length;
       return getCurrent();
     }
 
@@ -129,18 +120,18 @@ public final class Logo extends FrameLayout {
       private final List<Integer> drawableIdList;
 
       Builder() {
-        drawableIdList = new ArrayList<>();
+        this.drawableIdList = new ArrayList<>();
       }
 
       final Builder push(int drawableId) {
-        if (!drawableIdList.contains(drawableId)) {
-          drawableIdList.add(drawableId);
+        if (!this.drawableIdList.contains(drawableId)) {
+          this.drawableIdList.add(drawableId);
         }
         return this;
       }
 
       final DrawableIdIterator build() {
-        return new DrawableIdIterator(drawableIdList.toArray(new Integer[drawableIdList.size()]));
+        return new DrawableIdIterator(this.drawableIdList.toArray(new Integer[this.drawableIdList.size()]));
       }
     }
   }
@@ -162,33 +153,25 @@ public final class Logo extends FrameLayout {
     }
 
     final boolean isRunning() {
-      return !disposable.isDisposed();
+      return !this.disposable.isDisposed();
     }
 
     final void start() {
       if (!isRunning()) {
-        disposable = Observable
+        this.disposable = Observable
           .interval(FRAME_DURATION_DELAY, FRAME_DURATION_DELAY, TimeUnit.MILLISECONDS)
           .observeOn(AndroidSchedulers.mainThread())
-          .doOnDispose(new Action() {
-            @Override
-            public void run() throws Exception {
-              iterator.moveToStart();
-              switcher.setImageResource(coverId);
-            }
+          .doOnDispose(() -> {
+            this.iterator.moveToStart();
+            this.switcher.setImageResource(this.coverId);
           })
-          .subscribe(new Consumer<Long>() {
-            @Override
-            public void accept(Long aLong) throws Exception {
-              switcher.setImageResource(iterator.moveToNext());
-            }
-          });
+          .subscribe((value) -> this.switcher.setImageResource(this.iterator.moveToNext()));
       }
     }
 
     final void stop() {
       if (isRunning()) {
-        disposable.dispose();
+        this.disposable.dispose();
       }
     }
   }
