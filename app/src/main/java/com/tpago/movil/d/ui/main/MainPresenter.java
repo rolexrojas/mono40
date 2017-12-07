@@ -55,7 +55,7 @@ final class MainPresenter extends Presenter<MainScreen> {
 
   final void start() {
     assertScreen();
-    if (posBridge.checkIfUsable()) {
+    if (posBridge.isAvailable()) {
       if (!alreadyAskedForActivation) {
         subscription = eventBus.onEventDispatched(EventType.PRODUCT_ADDITION)
           .observeOn(AndroidSchedulers.mainThread())
