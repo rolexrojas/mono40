@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.auto.value.AutoValue;
+import com.tpago.movil.company.LogoCatalog;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.math.BigDecimal;
@@ -20,6 +21,35 @@ public abstract class Bank implements LogoUriProvider, Parcelable, Comparable<Ba
 
   public static Builder builder() {
     return new AutoValue_Bank.Builder();
+  }
+
+  public static Bank create(com.tpago.movil.bank.Bank bank) {
+    return builder()
+      .setCode(bank.code())
+      .setId(bank.id())
+      .setName(bank.name())
+      .setLogoUriTemplate(bank.logoTemplate())
+      .setLogoUriMap(LogoUriMap.create(bank.logoCatalog()))
+      .build();
+  }
+
+  public static com.tpago.movil.bank.Bank create(Bank bank) {
+    ObjectHelper.checkNotNull(bank, "bank");
+    final LogoUriMap map = bank.getLogoUriMap();
+    final LogoCatalog catalog = LogoCatalog.builder()
+      .colored24(map.getUriForPrimary24())
+      .gray20(map.getUriForGray20())
+      .gray36(map.getUriForGray36())
+      .white36(map.getUriForWhite36())
+      .build();
+    return com.tpago.movil.bank.Bank.builder()
+      .code(bank.getCode())
+      .id(bank.getId())
+      .name(bank.getName())
+      .logoTemplate(bank.getLogoUriTemplate())
+      .logoCatalog(catalog)
+      .transferCostRate(TRANSFER_COST_PERCENTAGE)
+      .build();
   }
 
   public static BigDecimal calculateTransferCost(BigDecimal amount) {

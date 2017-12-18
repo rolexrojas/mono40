@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.tpago.movil.function.Action;
 import com.tpago.movil.function.Consumer;
@@ -14,13 +13,9 @@ import com.tpago.movil.util.Digit;
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.ActivityQualifier;
 import com.tpago.movil.app.ui.FragmentReplacer;
-import com.tpago.movil.dep.InformationalDialogFragment;
-import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.dep.init.register.RegisterFragment;
 import com.tpago.movil.dep.init.signin.SignInFragment;
 import com.tpago.movil.dep.widget.EditableLabel;
-import com.tpago.movil.dep.widget.FullSizeLoadIndicator;
-import com.tpago.movil.dep.widget.LoadIndicator;
 import com.tpago.movil.app.ui.NumPad;
 
 import javax.inject.Inject;
@@ -42,17 +37,14 @@ public final class PhoneNumberInitFragment
   }
 
   private Unbinder unbinder;
-  private LoadIndicator loadIndicator;
   private PhoneNumberInitPresenter presenter;
 
   @BindView(R.id.editable_label_phone_number) EditableLabel phoneNumberEditableLabel;
   @BindView(R.id.num_pad) NumPad numPad;
   @BindView(R.id.button_move_to_next_screen) Button nextButton;
 
+  @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
   @Inject LogoAnimator logoAnimator;
-  @Inject
-  @ActivityQualifier
-  FragmentReplacer fragmentReplacer;
 
   private Consumer<Integer> numPadDigitConsumer;
   private Action numPadDeleteAction;
@@ -84,8 +76,6 @@ public final class PhoneNumberInitFragment
     super.onViewCreated(view, savedInstanceState);
     // Binds all annotated views, resources and methods.
     unbinder = ButterKnife.bind(this, view);
-    // Creates the load indicator.
-    loadIndicator = new FullSizeLoadIndicator(getChildFragmentManager());
     // Creates presenter.
     presenter = new PhoneNumberInitPresenter(this, getInitComponent());
   }
@@ -128,21 +118,8 @@ public final class PhoneNumberInitFragment
     super.onDestroyView();
     // Destroys the presenter.
     presenter = null;
-    // Destroys the load indicator.
-    loadIndicator = null;
     // Binds all annotated views, resources and methods.
     unbinder.unbind();
-  }
-
-  @Override
-  public void showDialog(int titleId, String message, int positiveButtonTextId) {
-    InformationalDialogFragment.create(getString(titleId), message, getString(positiveButtonTextId))
-      .show(getChildFragmentManager(), null);
-  }
-
-  @Override
-  public void showDialog(int titleId, int messageId, int positiveButtonTextId) {
-    showDialog(titleId, getString(messageId), positiveButtonTextId);
   }
 
   @Override
@@ -163,16 +140,6 @@ public final class PhoneNumberInitFragment
   @Override
   public void showNextButtonAsEnabled(boolean showAsEnabled) {
     nextButton.setAlpha(showAsEnabled ? 1.0F : 0.5F);
-  }
-
-  @Override
-  public void startLoading() {
-    loadIndicator.start();
-  }
-
-  @Override
-  public void stopLoading() {
-    loadIndicator.stop();
   }
 
   @Override
@@ -197,25 +164,5 @@ public final class PhoneNumberInitFragment
 
   public final void onDeleteClicked() {
     presenter.removeDigit();
-  }
-
-  @Override
-  public void showGenericErrorDialog(String message) {
-    Dialogs.builder(getContext())
-      .setTitle(R.string.error_generic_title)
-      .setMessage(message)
-      .setPositiveButton(R.string.error_positive_button_text, null)
-      .show();
-  }
-
-  @Override
-  public void showGenericErrorDialog() {
-    showGenericErrorDialog(getString(R.string.error_generic));
-  }
-
-  @Override
-  public void showUnavailableNetworkError() {
-    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG)
-      .show();
   }
 }

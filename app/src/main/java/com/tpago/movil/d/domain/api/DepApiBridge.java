@@ -41,12 +41,6 @@ public interface DepApiBridge {
   @NonNull
   Observable<ApiResult<List<Transaction>>> recentTransactions();
 
-  @NonNull
-  Observable<ApiResult<List<Recipient>>> recipients();
-
-  @NonNull
-  Observable<ApiResult<Boolean>> checkIfAffiliated(@NonNull String phoneNumber);
-
   Observable<ApiResult<String>> transferTo(
     Product product,
     Recipient recipient,
@@ -111,8 +105,6 @@ public interface DepApiBridge {
   );
 
   ApiResult<Boolean> validatePin(String pin);
-
-  ApiResult<Customer.State> fetchCustomerState(String phoneNumber);
 
   ApiResult<Customer> fetchCustomer(String phoneNumber);
 

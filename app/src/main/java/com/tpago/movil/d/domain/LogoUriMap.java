@@ -4,6 +4,8 @@ import android.net.Uri;
 import android.os.Parcelable;
 
 import com.google.auto.value.AutoValue;
+import com.tpago.movil.company.LogoCatalog;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
  * @author hecvasro
@@ -14,6 +16,16 @@ public abstract class LogoUriMap implements LogoUriProvider, Parcelable {
 
   public static Builder builder() {
     return new AutoValue_LogoUriMap.Builder();
+  }
+
+  public static LogoUriMap create(LogoCatalog catalog) {
+    ObjectHelper.checkNotNull(catalog, "catalog");
+    return builder()
+      .setUriForGray20(catalog.gray20())
+      .setUriForGray36(catalog.gray36())
+      .setUriForPrimary24(catalog.colored24())
+      .setUriForWhite36(catalog.white36())
+      .build();
   }
 
   abstract Uri getUriForGray20();

@@ -5,6 +5,7 @@ package com.tpago.movil.dep.api;
  */
 @Deprecated
 public final class DCurrencies {
+
   private static final String API = "DOP";
   private static final String APP = "RD$";
 
