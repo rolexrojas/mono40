@@ -8,15 +8,20 @@ import okhttp3.MultipartBody;
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
+import retrofit2.http.Path;
 
 /**
  * @author hecvasro
  */
 public interface RetrofitApi {
+
+  @GET("customer/{phoneNumber}/status")
+  Single<PhoneNumberState> fetchPhoneNumberState(@Path("phoneNumber") String phoneNumber);
 
   @POST("signup")
   Single<Response<User>> signUp(@Body RetrofitApiSignUpBody body);

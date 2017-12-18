@@ -42,18 +42,20 @@ final class RetrofitApiImpl implements Api {
   private final RetrofitApi retrofitApi;
   private final RetrofitApiResultMapper.Builder retrofitApiResultMapperBuilder;
 
-  private RetrofitApiImpl(
-    RetrofitApi retrofitApi,
-    RetrofitApiResultMapper.Builder retrofitApiResultMapperBuilder
-  ) {
-    this.retrofitApi = ObjectHelper.checkNotNull(retrofitApi, "retrofitApi");
-    this.retrofitApiResultMapperBuilder = ObjectHelper
-      .checkNotNull(retrofitApiResultMapperBuilder, "retrofitApiResultMapperBuilder");
+  private RetrofitApiImpl(RetrofitApi api, RetrofitApiResultMapper.Builder builder) {
+    this.retrofitApi = ObjectHelper.checkNotNull(api, "api");
+    this.retrofitApiResultMapperBuilder = ObjectHelper.checkNotNull(builder, "builder");
   }
 
   @Override
   public Single<List<Bank>> getBanks() {
     return Single.error(new UnsupportedOperationException("not implemented"));
+  }
+
+  @Override
+  public Single<Integer> fetchPhoneNumberState(PhoneNumber phoneNumber) {
+    return this.retrofitApi.fetchPhoneNumberState(phoneNumber.value())
+      .map(PhoneNumberState::state);
   }
 
   @Override

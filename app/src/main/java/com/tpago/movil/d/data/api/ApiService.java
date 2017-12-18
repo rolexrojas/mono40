@@ -20,7 +20,6 @@ import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rx.Observable;
 
@@ -44,14 +43,6 @@ interface ApiService {
 
   @GET("transaction-history")
   Observable<Response<List<Transaction>>> recentTransactions();
-
-  @GET("transfer/recipient-info")
-  Observable<Response<Void>> checkIfAssociated(@Query("recipient-msisdn") String phoneNumber);
-
-  @GET("customer/{phoneNumber}/status")
-  Observable<Response<FetchCustomerStateResponseBody>> fetchCustomerStatus(
-    @Path("phoneNumber") String phoneNumber
-  );
 
   @GET("transfer/recipient-info")
   Observable<Response<Customer>> fetchCustomer(@Query("recipient-msisdn") String phoneNumber);

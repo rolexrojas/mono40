@@ -1,5 +1,7 @@
 package com.tpago.movil.dep.api;
 
+import com.tpago.movil.data.api.PhoneNumberState;
+
 import io.reactivex.Single;
 import retrofit2.Response;
 import retrofit2.http.Body;
@@ -14,7 +16,7 @@ import retrofit2.http.Path;
 interface DApiService {
 
   @GET("customer/{phoneNumber}/status")
-  Single<Response<ValidatePhoneNumberResponseData>> validatePhoneNumber(
+  Single<Response<PhoneNumberState>> validatePhoneNumber(
     @Path("phoneNumber") String phoneNumber
   );
 
