@@ -7,10 +7,12 @@ import android.util.Base64;
 
 import com.tpago.movil.Code;
 import com.tpago.movil.Email;
+import com.tpago.movil.Name;
 import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.bank.Bank;
 import com.tpago.movil.io.FileHelper;
-import com.tpago.movil.contract.Carrier;
+import com.tpago.movil.partner.Carrier;
 import com.tpago.movil.session.AccessTokenStore;
 import com.tpago.movil.session.UnlockMethodConfigData;
 import com.tpago.movil.session.UnlockMethodSignatureData;
@@ -27,6 +29,8 @@ import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -151,8 +155,7 @@ final class MockApi implements Api {
         .id(newUserId)
         .phoneNumber(phoneNumber)
         .email(email)
-        .firstName(firstName)
-        .lastName(lastName)
+        .name(Name.create(firstName, lastName))
         .build();
       this.store.set(userStoreKey, user);
 
@@ -165,6 +168,11 @@ final class MockApi implements Api {
       result = Result.create(user);
     }
     return Single.just(result);
+  }
+
+  @Override
+  public Single<List<Bank>> getBanks() {
+    return Single.just(new ArrayList<>());
   }
 
   @Override
@@ -242,7 +250,7 @@ final class MockApi implements Api {
       .compose(singleDelayTransformer());
   }
 
-  private void updateUserName_(String firstName, String lastName) throws Exception {
+  private void updateUserName_(Name name) throws Exception {
     final String userStoreKey = createUserStoreKey(this.getAccessToken());
     if (!this.store.isSet(userStoreKey)) {
       throw new RuntimeException("Unauthorized");
@@ -251,8 +259,7 @@ final class MockApi implements Api {
       final User newUser = User.builder()
         .phoneNumber(currentUser.phoneNumber())
         .email(currentUser.email())
-        .firstName(firstName)
-        .lastName(lastName)
+        .name(name)
         .id(currentUser.id())
         .picture(currentUser.picture())
         .carrier(currentUser.carrier())
@@ -262,8 +269,8 @@ final class MockApi implements Api {
   }
 
   @Override
-  public Completable updateUserName(String firstName, String lastName) {
-    return Completable.fromAction(() -> this.updateUserName_(firstName, lastName));
+  public Completable updateUserName(User user, Name name) {
+    return Completable.fromAction(() -> this.updateUserName_(name));
   }
 
   private Uri updateUserPicture_(File picture) throws Exception {
@@ -282,8 +289,7 @@ final class MockApi implements Api {
       final User newUser = User.builder()
         .phoneNumber(currentUser.phoneNumber())
         .email(currentUser.email())
-        .firstName(currentUser.firstName())
-        .lastName(currentUser.lastName())
+        .name(currentUser.name())
         .id(currentUser.id())
         .picture(newUserPictureUri)
         .carrier(currentUser.carrier())
@@ -294,7 +300,7 @@ final class MockApi implements Api {
   }
 
   @Override
-  public Single<Uri> updateUserPicture(File picture) {
+  public Single<Uri> updateUserPicture(User user, File picture) {
     return Single.defer(() -> Single.just(this.updateUserPicture_(picture)));
   }
 
@@ -307,8 +313,7 @@ final class MockApi implements Api {
       final User newUser = User.builder()
         .phoneNumber(currentUser.phoneNumber())
         .email(currentUser.email())
-        .firstName(currentUser.firstName())
-        .lastName(currentUser.lastName())
+        .name(currentUser.name())
         .id(currentUser.id())
         .picture(currentUser.picture())
         .carrier(carrier)
