@@ -48,7 +48,7 @@ final class RetrofitApiImpl implements Api {
   }
 
   @Override
-  public Single<List<Bank>> getBanks() {
+  public Single<List<Bank>> fetchBanks() {
     return Single.error(new UnsupportedOperationException("not implemented"));
   }
 

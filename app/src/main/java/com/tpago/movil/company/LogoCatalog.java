@@ -11,7 +11,7 @@ import com.google.auto.value.extension.memoized.Memoized;
 @AutoValue
 public abstract class LogoCatalog {
 
-  static Builder builder() {
+  public static Builder builder() {
     return new AutoValue_LogoCatalog.Builder();
   }
 
@@ -35,19 +35,19 @@ public abstract class LogoCatalog {
   public abstract int hashCode();
 
   @AutoValue.Builder
-  static abstract class Builder {
+  public static abstract class Builder {
 
     Builder() {
     }
 
-    abstract Builder colored24(Uri uri);
+    public abstract Builder colored24(Uri uri);
 
-    abstract Builder gray20(Uri uri);
+    public abstract Builder gray20(Uri uri);
 
-    abstract Builder gray36(Uri uri);
+    public abstract Builder gray36(Uri uri);
 
-    abstract Builder white36(Uri uri);
+    public abstract Builder white36(Uri uri);
 
-    abstract LogoCatalog build();
+    public abstract LogoCatalog build();
   }
 }

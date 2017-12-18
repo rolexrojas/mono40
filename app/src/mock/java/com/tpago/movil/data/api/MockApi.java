@@ -11,6 +11,7 @@ import com.tpago.movil.Name;
 import com.tpago.movil.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.bank.Bank;
+import com.tpago.movil.dep.MockData;
 import com.tpago.movil.io.FileHelper;
 import com.tpago.movil.partner.Carrier;
 import com.tpago.movil.session.AccessTokenStore;
@@ -36,6 +37,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import io.reactivex.Completable;
 import io.reactivex.CompletableTransformer;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.SingleTransformer;
 
@@ -111,6 +113,14 @@ final class MockApi implements Api {
     }
   }
 
+  @Override
+  public Single<List<Bank>> fetchBanks() {
+    return Observable.fromIterable(MockData.BANK_SET)
+      .map(com.tpago.movil.d.domain.Bank::create)
+      .toList()
+      .compose(singleDelayTransformer());
+  }
+
   private void setAccessToken(Result<?> result, PhoneNumber phoneNumber) {
     if (result.isSuccessful()) {
       this.accessTokenStore.set(phoneNumber.value());
@@ -168,11 +178,6 @@ final class MockApi implements Api {
       result = Result.create(user);
     }
     return Single.just(result);
-  }
-
-  @Override
-  public Single<List<Bank>> getBanks() {
-    return Single.just(new ArrayList<>());
   }
 
   @Override
