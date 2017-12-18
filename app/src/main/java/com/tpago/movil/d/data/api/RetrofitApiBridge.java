@@ -174,43 +174,6 @@ class RetrofitApiBridge implements DepApiBridge {
       .compose(this.transformToApiResult());
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @NonNull
-  @Override
-  public Observable<ApiResult<List<Recipient>>> recipients() {
-    return apiService.getBills()
-      .flatMap(mapToApiResult(BillResponseBody.mapFunc()));
-  }
-
-  @NonNull
-  @Override
-  public Observable<ApiResult<Boolean>> checkIfAffiliated(@NonNull String phoneNumber) {
-    return apiService.checkIfAssociated(phoneNumber)
-      .flatMap(new Func1<Response<Void>, Observable<ApiResult<Boolean>>>() {
-        @Override
-        public Observable<ApiResult<Boolean>> call(Response<Void> response) {
-          final ApiCode code = ApiCode.fromValue(response.code());
-          if (response.isSuccessful()) {
-            return Observable.just(new ApiResult<>(code, true, null));
-          } else {
-            try {
-              final ApiError error = errorConverter.convert(response.errorBody());
-              if (error.getCode()
-                .equals(ApiError.Code.UNREGISTERED_PHONE_NUMBER)) {
-                return Observable.just(new ApiResult<>(ApiCode.OK, false, null));
-              } else {
-                return Observable.just(new ApiResult<>(code, false, error));
-              }
-            } catch (IOException exception) {
-              return Observable.error(exception);
-            }
-          }
-        }
-      });
-  }
-
   @NonNull
   @Override
   public Observable<ApiResult<String>> transferTo(
@@ -475,14 +438,6 @@ class RetrofitApiBridge implements DepApiBridge {
   public ApiResult<Boolean> validatePin(String pin) {
     return apiService.validatePin(ValidatePinRequestBody.create(pin))
       .flatMap(mapToApiResult(RetrofitApiBridge.<Boolean>identityMapFunc()))
-      .toBlocking()
-      .single();
-  }
-
-  @Override
-  public ApiResult<Customer.State> fetchCustomerState(String phoneNumber) {
-    return apiService.fetchCustomerStatus(phoneNumber)
-      .flatMap(mapToApiResult(FetchCustomerStateResponseBody.mapFunc()))
       .toBlocking()
       .single();
   }

@@ -1,31 +1,26 @@
 package com.tpago.movil.dep.init;
 
+import com.tpago.movil.api.Api;
+import com.tpago.movil.app.ui.AlertData;
+import com.tpago.movil.app.ui.AlertManager;
+import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
+import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.reactivex.DisposableHelper;
 import com.tpago.movil.util.Digit;
 import com.tpago.movil.util.DigitHelper;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
-import com.tpago.movil.dep.api.DApiBridge;
-import com.tpago.movil.dep.api.DApiData;
 import com.tpago.movil.dep.Presenter;
-import com.tpago.movil.d.domain.ErrorCode;
-import com.tpago.movil.d.domain.FailureData;
-import com.tpago.movil.d.domain.Result;
-import com.tpago.movil.dep.net.HttpResult;
-import com.tpago.movil.dep.net.NetworkService;
 import com.tpago.movil.dep.reactivex.Disposables;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
-import io.reactivex.Single;
-import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -34,12 +29,11 @@ import timber.log.Timber;
  */
 public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPresenter.View> {
 
-  @Inject
-  DApiBridge apiBridge;
-  @Inject
-  InitData initData;
-  @Inject
-  NetworkService networkService;
+  @Inject AlertManager alertManager;
+  @Inject Api api;
+  @Inject InitData initData;
+  @Inject StringMapper stringMapper;
+  @Inject TakeoverLoader takeoverLoader;
 
   private boolean isPhoneNumberValid = false;
   private List<Integer> phoneNumberDigits = new ArrayList<>();
@@ -54,27 +48,29 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
   }
 
   private void updateView() {
-    final String phoneNumber = DigitHelper.toDigitString(phoneNumberDigits);
-    isPhoneNumberValid = PhoneNumber.isValid(phoneNumber);
-    if (ObjectHelper.isNotNull(view)) {
-      view.setTextInputContent(PhoneNumber.format(phoneNumber));
-      view.showNextButtonAsEnabled(isPhoneNumberValid);
-      if (isPhoneNumberValid) {
-        view.showTextInputAsErratic(false);
+    final String phoneNumber = DigitHelper.toDigitString(this.phoneNumberDigits);
+    this.isPhoneNumberValid = PhoneNumber.isValid(phoneNumber);
+    if (ObjectHelper.isNotNull(this.view)) {
+      this.view.setTextInputContent(PhoneNumber.format(phoneNumber));
+      this.view.showNextButtonAsEnabled(this.isPhoneNumberValid);
+      if (this.isPhoneNumberValid) {
+        this.view.showTextInputAsErratic(false);
       }
     }
   }
 
-  private void startLoading() {
-    view.setNextButtonEnabled(false);
-    view.showNextButtonAsEnabled(false);
-    view.startLoading();
+  private void showTakeoverLoader(Disposable disposable) {
+    this.view.setNextButtonEnabled(false);
+    this.view.showNextButtonAsEnabled(false);
+
+    this.takeoverLoader.show();
   }
 
-  private void stopLoading() {
-    view.stopLoading();
-    view.setNextButtonEnabled(true);
-    view.showNextButtonAsEnabled(true);
+  private void hideTakeoverLoader() {
+    this.takeoverLoader.hide();
+
+    this.view.setNextButtonEnabled(true);
+    this.view.showNextButtonAsEnabled(true);
   }
 
   final void addDigit(@Digit int digit) {
@@ -91,116 +87,66 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
     }
   }
 
+  private void handleSuccess(PhoneNumber phoneNumber, @PhoneNumber.State int state) {
+    if (state == PhoneNumber.State.NONE) {
+      final AlertData data = AlertData.builder(this.stringMapper)
+        .title(R.string.init_phone_number_error_not_affiliated_title)
+        .message(R.string.init_phone_number_error_not_affiliated_message)
+        .positiveButtonText(R.string.init_phone_number_error_not_affiliated_positive_button_text)
+        .build();
+      this.alertManager.show(data);
+    } else {
+      this.initData.setPhoneNumber(phoneNumber, state);
+      if (state == PhoneNumber.State.AFFILIATED) {
+        this.view.moveToSignUpScreen();
+      } else {
+        this.view.moveToSignInScreen();
+      }
+    }
+  }
+
+  private void handleError(Throwable throwable) {
+    Timber.e(throwable, "Fetching phone number state");
+    this.alertManager.show(AlertData.createForGenericFailure(this.stringMapper));
+  }
+
   final void validate() {
-    if (isPhoneNumberValid) {
-      final PhoneNumber phoneNumber
-        = PhoneNumber.create(DigitHelper.toDigitString(phoneNumberDigits));
-      disposable = Single
-        .defer(new Callable<SingleSource<Result<Integer, ErrorCode>>>() {
-          @Override
-          public SingleSource<Result<Integer, ErrorCode>> call() throws Exception {
-            final Result<Integer, ErrorCode> result;
-            if (networkService.checkIfAvailable()) {
-              final HttpResult<DApiData<Integer>> phoneNumberValidationResult = apiBridge
-                .validatePhoneNumber(phoneNumber)
-                .blockingGet();
-              final DApiData<Integer> resultData = phoneNumberValidationResult.getData();
-              if (phoneNumberValidationResult.isSuccessful()) {
-                result = Result.create(resultData.getValue());
-              } else {
-                result = Result.create(
-                  FailureData.create(
-                    ErrorCode.UNEXPECTED,
-                    resultData.getError()
-                      .getDescription()
-                  ));
-              }
-            } else {
-              result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
-            }
-            return Single.just(result);
-          }
-        })
+    if (this.isPhoneNumberValid) {
+      final PhoneNumber phoneNumber = PhoneNumber
+        .create(DigitHelper.toDigitString(this.phoneNumberDigits));
+      this.disposable = this.api.fetchPhoneNumberState(phoneNumber)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe(new Consumer<Disposable>() {
-          @Override
-          public void accept(Disposable disposable) throws Exception {
-            startLoading();
-          }
-        })
-        .subscribe(new Consumer<Result<Integer, ErrorCode>>() {
-          @Override
-          public void accept(Result<Integer, ErrorCode> result) throws Exception {
-            stopLoading();
-            if (result.isSuccessful()) {
-              @PhoneNumber.State final int state = result.getSuccessData();
-              if (state == PhoneNumber.State.NONE) {
-                view.showDialog(
-                  R.string.init_phone_number_error_not_affiliated_title,
-                  R.string.init_phone_number_error_not_affiliated_message,
-                  R.string.init_phone_number_error_not_affiliated_positive_button_text
-                );
-              } else {
-                initData.setPhoneNumber(phoneNumber, state);
-                if (state == PhoneNumber.State.REGISTERED) {
-                  view.moveToSignInScreen();
-                } else {
-                  view.moveToSignUpScreen();
-                }
-              }
-            } else {
-              final FailureData<ErrorCode> failureData = result.getFailureData();
-              switch (failureData.getCode()) {
-                case UNAVAILABLE_NETWORK:
-                  view.showUnavailableNetworkError();
-                  break;
-                default:
-                  view.showGenericErrorDialog(failureData.getDescription());
-                  break;
-              }
-            }
-          }
-        }, new Consumer<Throwable>() {
-          @Override
-          public void accept(Throwable throwable) throws Exception {
-            Timber.e(throwable);
-            stopLoading();
-            view.showGenericErrorDialog();
-          }
-        });
+        .doOnSubscribe(this::showTakeoverLoader)
+        .doFinally(this::hideTakeoverLoader)
+        .subscribe((s) -> this.handleSuccess(phoneNumber, s), this::handleError);
     } else {
-      view.showDialog(
-        R.string.init_phone_number_error_incorrect_number_title,
-        R.string.init_phone_number_error_incorrect_number_message,
-        R.string.init_phone_number_error_incorrect_number_positive_button_text
-      );
-      view.showTextInputAsErratic(true);
+      final AlertData data = AlertData.builder(this.stringMapper)
+        .title(R.string.init_phone_number_error_incorrect_number_title)
+        .message(R.string.init_phone_number_error_incorrect_number_message)
+        .positiveButtonText(R.string.init_phone_number_error_incorrect_number_positive_button_text)
+        .build();
+      this.alertManager.show(data);
+      this.view.showTextInputAsErratic(true);
     }
   }
 
   @Override
   public void onViewStarted() {
-    super.onViewStarted();
-    final PhoneNumber phoneNumber = initData.getPhoneNumber();
+    final PhoneNumber phoneNumber = this.initData.getPhoneNumber();
     if (ObjectHelper.isNotNull(phoneNumber)) {
-      phoneNumberDigits.clear();
-      phoneNumberDigits.addAll(DigitHelper.toDigitList(phoneNumber.value()));
+      this.phoneNumberDigits.clear();
+      this.phoneNumberDigits.addAll(DigitHelper.toDigitList(phoneNumber.value()));
     }
-    updateView();
+    this.updateView();
   }
 
   @Override
   public void onViewStopped() {
-    super.onViewStopped();
-    Disposables.dispose(disposable);
+    DisposableHelper.dispose(this.disposable);
   }
 
   interface View extends Presenter.View {
-
-    void showDialog(int titleId, String message, int positiveButtonTextId);
-
-    void showDialog(int titleId, int messageId, int positiveButtonTextId);
 
     void setTextInputContent(String text);
 
@@ -210,18 +156,8 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
 
     void showNextButtonAsEnabled(boolean showAsEnabled);
 
-    void startLoading();
-
-    void stopLoading();
-
     void moveToSignInScreen();
 
     void moveToSignUpScreen();
-
-    void showGenericErrorDialog(String message);
-
-    void showGenericErrorDialog();
-
-    void showUnavailableNetworkError();
   }
 }

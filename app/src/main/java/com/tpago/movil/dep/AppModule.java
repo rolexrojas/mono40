@@ -10,7 +10,6 @@ import com.tpago.movil.dep.content.ContentModule;
 import com.tpago.movil.d.DepAppModule;
 import com.tpago.movil.dep.api.ApiModule;
 import com.tpago.movil.d.data.DepDataModule;
-import com.tpago.movil.d.domain.DomainModule;
 import com.tpago.movil.dep.net.NetModule;
 import com.tpago.movil.util.ObjectHelper;
 
@@ -30,7 +29,6 @@ import dagger.Provides;
     ContentModule.class,
     DepAppModule.class,
     DepDataModule.class,
-    DomainModule.class,
     NetModule.class
   }
 )

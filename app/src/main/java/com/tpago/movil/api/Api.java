@@ -28,7 +28,9 @@ import io.reactivex.Single;
  */
 public interface Api {
 
-  Single<List<Bank>> getBanks();
+  Single<List<Bank>> fetchBanks();
+
+  Single<Integer> fetchPhoneNumberState(PhoneNumber phoneNumber);
 
   Single<Result<User>> createSession(
     PhoneNumber phoneNumber,

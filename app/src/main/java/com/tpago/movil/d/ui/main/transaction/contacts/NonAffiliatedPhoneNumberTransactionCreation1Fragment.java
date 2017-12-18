@@ -11,12 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+import com.tpago.movil.api.Api;
+import com.tpago.movil.app.ui.AlertData;
+import com.tpago.movil.app.ui.AlertManager;
 import com.tpago.movil.d.domain.Banks;
 import com.tpago.movil.d.domain.AccountRecipient;
-import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.R;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
@@ -26,28 +27,24 @@ import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
-import com.tpago.movil.d.domain.BankProvider;
-import com.tpago.movil.d.domain.FailureData;
 import com.tpago.movil.d.domain.LogoStyle;
-import com.tpago.movil.d.domain.ErrorCode;
-import com.tpago.movil.d.domain.Result;
-import com.tpago.movil.dep.reactivex.Disposables;
+import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.reactivex.DisposableHelper;
 import com.tpago.movil.util.ObjectHelper;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
+import io.reactivex.disposables.Disposables;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -57,27 +54,28 @@ import timber.log.Timber;
 public class NonAffiliatedPhoneNumberTransactionCreation1Fragment extends
   ChildFragment<TransactionCreationContainer> {
 
+  private AlertManager alertManager;
   private Unbinder unbinder;
+  private LoadIndicator loadIndicator;
 
   private Adapter adapter = new Adapter();
-  private List<Bank> bankList = new ArrayList<>();
+  private List<Bank> banks = new ArrayList<>();
 
-  private LoadIndicator loadIndicator;
   private Disposable disposable = Disposables.disposed();
 
-  @Inject
-  BankProvider bankProvider;
-  @Inject
-  Recipient recipient;
+  @Inject Api api;
+  @Inject Recipient recipient;
+  @Inject StringMapper stringMapper;
 
-  @BindView(R.id.swipe_refresh_layout)
-  SwipeRefreshLayout swipeRefreshLayout;
-  @BindView(R.id.recycler_view)
-  RecyclerView recyclerView;
+  @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
+  @BindView(R.id.recycler_view) RecyclerView recyclerView;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    this.alertManager = AlertManager.create(this.getActivity());
+
     final TransactionCreationComponent c = getContainer().getComponent();
     if (ObjectHelper.isNotNull(c)) {
       c.inject(this);
@@ -120,72 +118,39 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment extends
     recyclerView.addItemDecoration(divider);
   }
 
+  private void handleSuccess(List<Bank> banks) {
+    if (ObjectHelper.isNull(this.banks)) {
+      this.banks = new ArrayList<>();
+    } else {
+      this.banks.clear();
+    }
+    this.banks.addAll(banks);
+    this.adapter.notifyItemRangeInserted(0, this.banks.size());
+  }
+
+  private void handleError(Throwable throwable) {
+    Timber.e(throwable, "Fetching banks");
+    this.alertManager.show(AlertData.createForGenericFailure(this.stringMapper));
+  }
+
   @Override
   public void onResume() {
     super.onResume();
-    disposable = bankProvider.getAll()
+    this.disposable = this.api.fetchBanks()
+      .flatMapObservable(Observable::fromIterable)
+      .map(Bank::create)
+      .toSortedList(Bank::compareTo)
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
-      .doOnSubscribe(new Consumer<Disposable>() {
-        @Override
-        public void accept(Disposable disposable) throws Exception {
-          loadIndicator.show();
-        }
-      })
-      .subscribe(new Consumer<Result<Set<Bank>, ErrorCode>>() {
-        @Override
-        public void accept(Result<Set<Bank>, ErrorCode> result) throws Exception {
-          if (result.isSuccessful()) {
-            if (ObjectHelper.isNull(bankList)) {
-              bankList = new ArrayList<>();
-            } else {
-              adapter.notifyItemRangeRemoved(0, bankList.size());
-              bankList.clear();
-            }
-            bankList.addAll(result.getSuccessData());
-            adapter.notifyItemRangeInserted(0, bankList.size());
-          } else {
-            final FailureData<ErrorCode> failureData = result.getFailureData();
-            final Context context = getContext();
-            switch (failureData.getCode()) {
-              case UNAVAILABLE_NETWORK:
-                Toast.makeText(context, R.string.error_unavailable_network, Toast.LENGTH_LONG)
-                  .show();
-                break;
-              case UNEXPECTED:
-                Dialogs.builder(context)
-                  .setTitle(R.string.error_generic_title)
-                  .setMessage(failureData.getDescription())
-                  .setPositiveButton(R.string.ok, null)
-                  .show();
-                break;
-            }
-          }
-        }
-      }, new Consumer<Throwable>() {
-        @Override
-        public void accept(Throwable throwable) throws Exception {
-          Timber.e(throwable);
-          Dialogs.builder(getContext())
-            .setTitle(R.string.error_generic_title)
-            .setMessage(R.string.error_generic)
-            .setPositiveButton(R.string.error_positive_button_text, null)
-            .show();
-        }
-      }, new Action() {
-        @Override
-        public void run() throws Exception {
-          loadIndicator.hide();
-        }
-      });
+      .doOnSubscribe((d) -> this.loadIndicator.show())
+      .doFinally(this.loadIndicator::hide)
+      .subscribe(this::handleSuccess, this::handleError);
   }
 
   @Override
   public void onPause() {
+    DisposableHelper.dispose(this.disposable);
     super.onPause();
-    if (!disposable.isDisposed()) {
-      disposable.dispose();
-    }
   }
 
   @Override
@@ -208,7 +173,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment extends
 
     @Override
     public void onClick(View v) {
-      final Bank bank = bankList.get(getAdapterPosition());
+      final Bank bank = banks.get(getAdapterPosition());
       if (recipient instanceof AccountRecipient) {
         ((AccountRecipient) recipient).bank(bank);
       } else {
@@ -229,7 +194,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment extends
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-      final Bank bank = bankList.get(position);
+      final Bank bank = banks.get(position);
       Picasso.with(getContext())
         .load(bank.getLogoUri(LogoStyle.PRIMARY_24))
         .into(holder.imageView);
@@ -238,7 +203,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment extends
 
     @Override
     public int getItemCount() {
-      return bankList.size();
+      return banks.size();
     }
   }
 }

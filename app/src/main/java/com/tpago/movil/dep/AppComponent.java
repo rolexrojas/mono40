@@ -2,6 +2,8 @@ package com.tpago.movil.dep;
 
 import android.content.Context;
 
+import com.tpago.movil.api.Api;
+import com.tpago.movil.app.ui.AlertManager;
 import com.tpago.movil.company.TemplateToLogoCatalogMapper;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.data.StringHelper;
@@ -17,7 +19,6 @@ import com.tpago.movil.d.ui.main.recipient.index.disburse.DisbursementActivity;
 import com.tpago.movil.d.ui.main.transaction.own.OwnTransactionCreationActivity;
 import com.tpago.movil.d.ui.main.transaction.own.OwnTransferActivity;
 import com.tpago.movil.data.StringMapper;
-import com.tpago.movil.d.domain.BankProvider;
 import com.tpago.movil.dep.init.InitComponent;
 import com.tpago.movil.dep.init.InitModule;
 import com.tpago.movil.dep.net.NetworkService;
@@ -29,15 +30,14 @@ import com.tpago.movil.session.SessionManager;
 @Deprecated
 public interface AppComponent {
 
+  Api api();
+
   TemplateToLogoCatalogMapper logoCatalogMapper();
 
   SessionManager sessionManager();
 
   @Deprecated
   BalanceManager provideBalanceManager();
-
-  @Deprecated
-  BankProvider provideBankProvider();
 
   @Deprecated
   ConfigManager provideConfigManager();

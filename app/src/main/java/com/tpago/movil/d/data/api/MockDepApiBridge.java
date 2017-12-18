@@ -28,7 +28,6 @@ import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.dep.MockData;
 import com.tpago.movil.dep.Partner;
 import com.tpago.movil.PhoneNumber;
-import com.tpago.movil.util.DigitHelper;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -90,36 +89,6 @@ final class MockDepApiBridge implements DepApiBridge {
       new ApiResult<>(
         ApiCode.OK,
         MockData.TRANSACTION_LIST,
-        null
-      )
-    )
-      .delay(1L, TimeUnit.SECONDS);
-  }
-
-  @NonNull
-  @Override
-  public Observable<ApiResult<List<Recipient>>> recipients() {
-    return Observable.just(
-      new ApiResult<>(
-        ApiCode.OK,
-        new ArrayList<>(),
-        null
-      )
-    );
-  }
-
-  @NonNull
-  @Override
-  public Observable<ApiResult<Boolean>> checkIfAffiliated(
-    @NonNull String phoneNumber
-  ) {
-    final List<Integer> digitList = DigitHelper.toDigitList(phoneNumber);
-    final int digitListSize = digitList.size();
-    final boolean flag = digitList.get(digitListSize - 1) % 2 == 0;
-    return Observable.just(
-      new ApiResult<>(
-        ApiCode.OK,
-        flag,
         null
       )
     )
@@ -313,23 +282,6 @@ final class MockDepApiBridge implements DepApiBridge {
   @Override
   public ApiResult<Boolean> validatePin(String pin) {
     return new ApiResult<>(ApiCode.OK, true, null);
-  }
-
-  @Override
-  public ApiResult<Customer.State> fetchCustomerState(String phoneNumber) {
-    final List<Integer> digitList = DigitHelper.toDigitList(phoneNumber);
-    final int digitListSize = digitList.size();
-    final Customer.State state;
-    if (digitList.get(digitListSize - 1) % 2 == 0) {
-      if (digitList.get(digitListSize - 2) % 2 == 0) {
-        state = Customer.State.REGISTERED;
-      } else {
-        state = Customer.State.AFFILIATED;
-      }
-    } else {
-      state = Customer.State.NONE;
-    }
-    return new ApiResult<>(ApiCode.OK, state, null);
   }
 
   @Override

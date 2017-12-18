@@ -2,6 +2,7 @@ package com.tpago.movil.d.ui.main.transaction;
 
 import com.tpago.movil.app.ui.ActivityModule;
 import com.tpago.movil.app.ui.ActivityScope;
+import com.tpago.movil.app.ui.AlertManager;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Product;

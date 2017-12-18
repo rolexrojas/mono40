@@ -25,7 +25,7 @@ final class ApiBankListSupplier implements BankListSupplier {
 
   @Override
   public Single<List<Bank>> get() {
-    return this.api.getBanks()
+    return this.api.fetchBanks()
       .flatMapObservable(Observable::fromIterable)
       .toSortedList(Bank::compareTo);
   }
