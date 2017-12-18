@@ -44,15 +44,4 @@ public class ApiModule {
       .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
       .build();
   }
-
-  // Deprecated provider methods.
-  @Provides
-  @Singleton
-  DApiBridge provideApiBridge(DeviceManager deviceManager, Retrofit retrofit) {
-    if (StringHelper.isNullOrEmpty(BuildConfig.API_URL)) {
-      return MockDApiBridge.create();
-    } else {
-      return new DRetrofitApiBridge(deviceManager, retrofit);
-    }
-  }
 }

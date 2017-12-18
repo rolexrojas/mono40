@@ -176,6 +176,22 @@ final class MockApi implements Api {
   }
 
   @Override
+  public Single<Integer> fetchPhoneNumberState(PhoneNumber phoneNumber) {
+    ObjectHelper.checkNotNull(phoneNumber, "phoneNumber");
+    return Single.defer(() -> {
+      @PhoneNumber.State final int userState;
+      final String userStoreKey = createUserStoreKey(phoneNumber);
+      if (this.store.isSet(userStoreKey)) {
+        userState = PhoneNumber.State.REGISTERED;
+      } else {
+        userState = PhoneNumber.State.AFFILIATED;
+      }
+      return Single.just(userState);
+    })
+      .compose(singleDelayTransformer());
+  }
+
+  @Override
   public Single<Result<User>> createSession(
     PhoneNumber phoneNumber,
     Email email,

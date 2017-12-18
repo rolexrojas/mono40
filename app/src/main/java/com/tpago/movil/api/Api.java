@@ -30,6 +30,8 @@ public interface Api {
 
   Single<List<Bank>> getBanks();
 
+  Single<Integer> fetchPhoneNumberState(PhoneNumber phoneNumber);
+
   Single<Result<User>> createSession(
     PhoneNumber phoneNumber,
     Email email,
