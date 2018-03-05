@@ -15,7 +15,7 @@ android {
   defaultConfig {
     applicationId 'com.tpago.movil'
 
-    def (major, minor, patch) = [2, 2, 45]
+    def (major, minor, patch) = [2, 2, 46]
     versionName "${major}.${minor}.${patch}"
     versionCode ((major * 10_000_000) + (minor * 100_000) + (patch * 1_000))
 
@@ -57,14 +57,14 @@ android {
     development {
       dimension 'environment'
 
-      def flavorName = 'dev'
+      def flavorName = 'devt'
 
       applicationIdSuffix ".${flavorName}"
 
       resValue 'string', 'app_name', "${appName}-${flavorName}"
 
       buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'false'
-      buildConfigField 'String', 'API_URL', '"http://172.19.1.103:8081/api/neo/"'
+      buildConfigField 'String', 'API_URL', '"http://tpagonet-dev.gcs-systems.com/api/neo/"'
     }
 
     staging {
@@ -78,17 +78,6 @@ android {
 
       buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'true'
       buildConfigField 'String', 'API_URL', '"https://tpagonet-dev.gcs-systems.com/api/neo/"'
-    }
-
-    preproduction {
-      dimension 'environment'
-
-      def flavorName = 'preprod'
-
-      resValue 'string', 'app_name', "${appName}-${flavorName}"
-
-      buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'true'
-      buildConfigField 'String', 'API_URL', '"https://tpagonet.gcs-systems.com/api/neo/"'
     }
 
     production {
@@ -193,9 +182,9 @@ dependencies {
   compile fileTree(include: ['*.jar'], dir: 'libs')
 
   def cubeSdkName = { version, environment -> "Cub3AltPanSDK-v${version}-${environment}" }
-  mockCompile(name: cubeSdkName('1.4.1', 'dev'), ext: 'aar')
-  developmentCompile(name: cubeSdkName('1.4.1', 'dev'), ext: 'aar')
-  stagingCompile(name: cubeSdkName('1.4.1', 'stag'), ext: 'aar')
+  mockCompile(name: cubeSdkName('1.4.1', 'prod'), ext: 'aar')
+  developmentCompile(name: cubeSdkName('1.4.1', 'prod'), ext: 'aar')
+  stagingCompile(name: cubeSdkName('1.4.1', 'prod'), ext: 'aar')
   preproductionCompile(name: cubeSdkName('1.4.1', 'prod'), ext: 'aar')
   productionCompile(name: cubeSdkName('1.4.1', 'prod'), ext: 'aar')
 
