@@ -109,10 +109,6 @@ android {
       java.srcDirs = [commonDirName, 'src/staging/java']
     }
 
-    preproduction {
-      java.srcDirs = [commonDirName, 'src/production/java']
-    }
-
     production {
       java.srcDirs = [commonDirName, 'src/production/java']
     }
@@ -182,10 +178,9 @@ dependencies {
   compile fileTree(include: ['*.jar'], dir: 'libs')
 
   def cubeSdkName = { version, environment -> "Cub3AltPanSDK-v${version}-${environment}" }
-  mockCompile(name: cubeSdkName('1.4.1', 'prod'), ext: 'aar')
-  developmentCompile(name: cubeSdkName('1.4.1', 'prod'), ext: 'aar')
-  stagingCompile(name: cubeSdkName('1.4.1', 'prod'), ext: 'aar')
-  preproductionCompile(name: cubeSdkName('1.4.1', 'prod'), ext: 'aar')
+  mockCompile(name: cubeSdkName('1.4.1', 'stag'), ext: 'aar')
+  developmentCompile(name: cubeSdkName('1.4.1', 'stag'), ext: 'aar')
+  stagingCompile(name: cubeSdkName('1.4.1', 'stag'), ext: 'aar')
   productionCompile(name: cubeSdkName('1.4.1', 'prod'), ext: 'aar')
 
   // Remote dependencies
