@@ -51,6 +51,6 @@ final class MockPosBridge implements PosBridge {
   @Override
   public Single<PosResult> selectCard(String identifier) {
     return Single.defer(() -> Single.just(PosResult.create(DATA)))
-      .delay(3L, TimeUnit.SECONDS);
+      .delay(1L, TimeUnit.SECONDS);
   }
 }
