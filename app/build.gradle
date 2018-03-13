@@ -54,7 +54,7 @@ android {
       buildConfigField 'String', 'API_URL', 'null'
     }
 
-    development {
+    devt {
       dimension 'environment'
 
       def flavorName = 'devt'
@@ -67,7 +67,7 @@ android {
       buildConfigField 'String', 'API_URL', '"http://tpagonet-dev.gcs-systems.com/api/neo/"'
     }
 
-    staging {
+    stag {
       dimension 'environment'
 
       def flavorName = 'stag'
@@ -80,7 +80,7 @@ android {
       buildConfigField 'String', 'API_URL', '"https://tpagonet-dev.gcs-systems.com/api/neo/"'
     }
 
-    preproduction {
+    prep {
       dimension 'environment'
 
       def flavorName = 'prep'
@@ -93,7 +93,7 @@ android {
       buildConfigField 'String', 'API_URL', '"http://tpagonet-dev.gcs-systems.com/api/neo/"'
     }
 
-    production {
+    prod {
       dimension 'environment'
 
       resValue 'string', 'app_name', appName
@@ -114,16 +114,20 @@ android {
   sourceSets {
     def commonDirName = 'src/common/java'
 
-    development {
-      java.srcDirs = [commonDirName, 'src/development/java']
+    devt {
+      java.srcDir commonDirName
     }
 
-    staging {
-      java.srcDirs = [commonDirName, 'src/staging/java']
+    stag {
+      java.srcDir commonDirName
     }
 
-    production {
-      java.srcDirs = [commonDirName, 'src/production/java']
+    prep {
+      java.srcDir commonDirName
+    }
+
+    prod {
+      java.srcDir commonDirName
     }
   }
 
@@ -191,11 +195,11 @@ dependencies {
   compile fileTree(include: ['*.jar'], dir: 'libs')
 
   def cubeSdkName = { version, environment -> "Cub3AltPanSDK-v${version}-${environment}" }
-  mockCompile(name: cubeSdkName('1.4.1', 'stag'), ext: 'aar')
-  developmentCompile(name: cubeSdkName('1.4.1', 'devt'), ext: 'aar')
-  stagingCompile(name: cubeSdkName('1.4.1', 'stag'), ext: 'aar')
-  preproductionCompile(name: cubeSdkName('1.4.1', 'prep'), ext: 'aar')
-  productionCompile(name: cubeSdkName('1.4.1', 'prod'), ext: 'aar')
+  mockCompile(name: cubeSdkName('1.4.1', 'devt'), ext: 'aar')
+  devtCompile(name: cubeSdkName('1.4.1', 'devt'), ext: 'aar')
+  stagCompile(name: cubeSdkName('1.4.1', 'stag'), ext: 'aar')
+  prepCompile(name: cubeSdkName('1.4.1', 'prep'), ext: 'aar')
+  prodCompile(name: cubeSdkName('1.4.1', 'prod'), ext: 'aar')
 
   // Remote dependencies
   def rxJavaGroupId = 'io.reactivex.rxjava2'

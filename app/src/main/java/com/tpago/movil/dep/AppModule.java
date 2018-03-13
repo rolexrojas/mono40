@@ -8,7 +8,6 @@ import com.tpago.movil.data.DeviceIdSupplier;
 import com.tpago.movil.dep.data.DataModule;
 import com.tpago.movil.dep.content.ContentModule;
 import com.tpago.movil.d.DepAppModule;
-import com.tpago.movil.dep.api.ApiModule;
 import com.tpago.movil.d.data.DepDataModule;
 import com.tpago.movil.dep.net.NetModule;
 import com.tpago.movil.util.ObjectHelper;
@@ -24,7 +23,6 @@ import dagger.Provides;
 @Deprecated
 @Module(
   includes = {
-    ApiModule.class,
     DataModule.class,
     ContentModule.class,
     DepAppModule.class,
