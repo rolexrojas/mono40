@@ -80,6 +80,19 @@ android {
       buildConfigField 'String', 'API_URL', '"https://tpagonet-dev.gcs-systems.com/api/neo/"'
     }
 
+    preproduction {
+      dimension 'environment'
+
+      def flavorName = 'prep'
+
+      applicationIdSuffix ".${flavorName}"
+
+      resValue 'string', 'app_name', "${appName}-${flavorName}"
+
+      buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'false'
+      buildConfigField 'String', 'API_URL', '"http://tpagonet-dev.gcs-systems.com/api/neo/"'
+    }
+
     production {
       dimension 'environment'
 
@@ -179,8 +192,9 @@ dependencies {
 
   def cubeSdkName = { version, environment -> "Cub3AltPanSDK-v${version}-${environment}" }
   mockCompile(name: cubeSdkName('1.4.1', 'stag'), ext: 'aar')
-  developmentCompile(name: cubeSdkName('1.4.1', 'stag'), ext: 'aar')
+  developmentCompile(name: cubeSdkName('1.4.1', 'devt'), ext: 'aar')
   stagingCompile(name: cubeSdkName('1.4.1', 'stag'), ext: 'aar')
+  preproductionCompile(name: cubeSdkName('1.4.1', 'prep'), ext: 'aar')
   productionCompile(name: cubeSdkName('1.4.1', 'prod'), ext: 'aar')
 
   // Remote dependencies
