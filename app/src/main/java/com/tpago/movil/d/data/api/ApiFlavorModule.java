@@ -1,7 +1,5 @@
 package com.tpago.movil.d.data.api;
 
-import android.support.annotation.Nullable;
-
 import com.google.gson.Gson;
 import com.tpago.movil.BuildConfig;
 import com.tpago.movil.d.domain.api.ApiError;
@@ -14,7 +12,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -31,10 +28,10 @@ public class ApiFlavorModule {
   @Singleton
   DepApiBridge provideApiBridge(
     Gson gson,
-    HttpUrl baseUrl,
     OkHttpClient httpClient
   ) {
-    if (StringHelper.isNullOrEmpty(BuildConfig.API_URL)) {
+    final String baseUrl = BuildConfig.API_URL;
+    if (StringHelper.isNullOrEmpty(baseUrl)) {
       return MockDepApiBridge.create();
     } else {
       final Retrofit retrofit = new Retrofit.Builder()
