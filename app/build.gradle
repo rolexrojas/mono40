@@ -15,7 +15,7 @@ android {
   defaultConfig {
     applicationId 'com.tpago.movil'
 
-    def (major, minor, patch) = [2, 2, 47]
+    def (major, minor, patch) = [2, 2, 48]
     versionName "${major}.${minor}.${patch}"
     versionCode ((major * 10_000_000) + (minor * 100_000) + (patch * 1_000))
 
@@ -133,7 +133,18 @@ android {
 
   signingConfigs {
     debug {
-      storeFile rootProject.file('keystores/debug.jks')
+      storeFile rootProject.file('./keystores/debug.jks')
+    }
+
+    release {
+      def properties = new Properties()
+      rootProject.file('./keystores/release.properties')
+        .withInputStream { stream -> properties.load(stream) }
+
+      storeFile rootProject.file('./keystores/release.jks')
+      storePassword properties.storePassword
+      keyAlias 'soluciones gbh'
+      keyPassword properties.keyPassword
     }
   }
 
@@ -143,6 +154,7 @@ android {
     }
 
     release {
+      signingConfig signingConfigs.release
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
