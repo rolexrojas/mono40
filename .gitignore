@@ -99,6 +99,9 @@ Temporary Items
 
 # End of https://www.gitignore.io/api/android,crashlytics,java,macos
 
+### Release keystore properties
+keystores/release.properties
+
 ### Flavor generated files
 emulatedDevice*/
 notEmulatedDevice*/
