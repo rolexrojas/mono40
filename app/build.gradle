@@ -15,7 +15,7 @@ android {
   defaultConfig {
     applicationId 'com.tpago.movil'
 
-    def (major, minor, patch) = [2, 2, 48]
+    def (major, minor, patch) = [2, 2, 49]
     versionName "${major}.${minor}.${patch}"
     versionCode ((major * 10_000_000) + (minor * 100_000) + (patch * 1_000))
 
@@ -207,8 +207,8 @@ dependencies {
   compile fileTree(include: ['*.jar'], dir: 'libs')
 
   def cubeSdkName = { version, environment -> "Cub3AltPanSDK-v${version}-${environment}" }
-  mockCompile(name: cubeSdkName('1.4.1', 'devt'), ext: 'aar')
-  devtCompile(name: cubeSdkName('1.4.1', 'devt'), ext: 'aar')
+  mockCompile(name: cubeSdkName('1.4.2', 'devt'), ext: 'aar')
+  devtCompile(name: cubeSdkName('1.4.2', 'devt'), ext: 'aar')
   stagCompile(name: cubeSdkName('1.4.1', 'stag'), ext: 'aar')
   prepCompile(name: cubeSdkName('1.4.1', 'prep'), ext: 'aar')
   prodCompile(name: cubeSdkName('1.4.1', 'prod'), ext: 'aar')
