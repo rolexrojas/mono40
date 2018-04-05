@@ -1,7 +1,7 @@
 package com.tpago.movil.dep.init.signin;
 
 import com.tpago.movil.Email;
-import com.tpago.movil.Password;
+import com.tpago.movil.lib.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.api.Api;

@@ -2,7 +2,7 @@ package com.tpago.movil.dep.init.register;
 
 import com.tpago.movil.Code;
 import com.tpago.movil.Email;
-import com.tpago.movil.Password;
+import com.tpago.movil.lib.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.app.ui.AlertData;
 import com.tpago.movil.app.ui.AlertManager;
