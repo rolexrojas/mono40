@@ -2,7 +2,7 @@ package com.tpago.movil.dep.init.register;
 
 import com.tpago.movil.R;
 import com.tpago.movil.dep.content.StringResolver;
-import com.tpago.movil.d.domain.Password;
+import com.tpago.movil.lib.Password;
 import com.tpago.movil.util.StringHelper;
 
 /**
@@ -30,11 +30,11 @@ final class PasswordRegisterFormPresenter
   }
 
   private boolean checkIfTextInputContentValid() {
-    return Password.checkIfValid(textInputContent);
+    return Password.isValid(textInputContent);
   }
 
   private boolean checkIfConfirmationTextInputContentValid() {
-    return Password.checkIfValid(confirmationTextInputContent)
+    return Password.isValid(confirmationTextInputContent)
       && confirmationTextInputContent.equals(textInputContent);
   }
 
