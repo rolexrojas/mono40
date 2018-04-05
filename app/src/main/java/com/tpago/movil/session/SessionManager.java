@@ -7,7 +7,7 @@ import com.birbit.android.jobqueue.TagConstraint;
 import com.tpago.movil.Code;
 import com.tpago.movil.Email;
 import com.tpago.movil.Name;
-import com.tpago.movil.Password;
+import com.tpago.movil.lib.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.api.Api;
 import com.tpago.movil.partner.Carrier;

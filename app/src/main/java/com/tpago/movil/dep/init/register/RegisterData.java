@@ -3,7 +3,7 @@ package com.tpago.movil.dep.init.register;
 import android.support.annotation.Nullable;
 
 import com.tpago.movil.Email;
-import com.tpago.movil.Password;
+import com.tpago.movil.lib.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.dep.init.InitData;
 import com.tpago.movil.io.FileHelper;

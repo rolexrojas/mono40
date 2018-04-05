@@ -6,7 +6,7 @@ import android.support.annotation.IntDef;
 import com.tpago.movil.Code;
 import com.tpago.movil.Email;
 import com.tpago.movil.Name;
-import com.tpago.movil.Password;
+import com.tpago.movil.lib.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.bank.Bank;
 import com.tpago.movil.session.UnlockMethodSignatureData;

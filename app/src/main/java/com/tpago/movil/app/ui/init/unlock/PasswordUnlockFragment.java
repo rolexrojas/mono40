@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 
-import com.tpago.movil.Password;
+import com.tpago.movil.lib.Password;
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.AlertData;
 import com.tpago.movil.dep.init.InitActivity;
