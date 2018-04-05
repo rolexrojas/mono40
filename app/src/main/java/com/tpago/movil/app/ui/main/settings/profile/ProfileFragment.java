@@ -54,7 +54,9 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
   @BindView(R.id.phoneNumberTextInput) TextInput phoneNumberTextInput;
   @BindView(R.id.emailTextInput) TextInput emailTextInput;
 
-  @Inject @FragmentQualifier ComponentBuilderSupplier componentBuilderSupplier;
+  @Inject
+  @FragmentQualifier
+  ComponentBuilderSupplier componentBuilderSupplier;
   @Inject AlertManager alertManager;
   @Inject ProfilePresenter presenter;
   @Inject SessionManager sessionManager;
@@ -132,6 +134,8 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
       .load(uri)
       .resizeDimen(R.dimen.largeImageSize, R.dimen.largeImageSize)
       .transform(new CircleTransformation())
+      .placeholder(R.drawable.profile_picture_placeholder_light)
+      .error(R.drawable.profile_picture_placeholder_light)
       .noFade()
       .into(this.pictureImageView);
   }
