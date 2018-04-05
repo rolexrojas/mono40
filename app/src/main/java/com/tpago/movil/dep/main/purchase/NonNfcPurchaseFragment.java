@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.tpago.movil.R;
 import com.tpago.movil.d.ui.ChildFragment;
+import com.tpago.movil.d.ui.main.AddAnotherProductFragment;
 import com.tpago.movil.d.ui.main.MainContainer;
 import com.tpago.movil.dep.graphics.Drawables;
 import com.tpago.movil.dep.graphics.RadialGradientDrawable;
@@ -24,6 +25,7 @@ import butterknife.Unbinder;
  * @author hecvasro
  */
 public final class NonNfcPurchaseFragment extends ChildFragment<MainContainer> {
+
   public static NonNfcPurchaseFragment create() {
     return new NonNfcPurchaseFragment();
   }
@@ -42,7 +44,7 @@ public final class NonNfcPurchaseFragment extends ChildFragment<MainContainer> {
 
   @OnClick(R.id.button_learn_more)
   void onLearnMoreButtonClicked() {
-    // TODO: Redirect to the about screen.
+    getContainer().setChildFragment(AddAnotherProductFragment.newInstance(), true, true);
   }
 
   @Nullable
@@ -50,7 +52,8 @@ public final class NonNfcPurchaseFragment extends ChildFragment<MainContainer> {
   public View onCreateView(
     LayoutInflater inflater,
     @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
+    @Nullable Bundle savedInstanceState
+  ) {
     return inflater.inflate(R.layout.d_fragment_purchase_fragment_non_nfc, container, false);
   }
 
@@ -74,7 +77,8 @@ public final class NonNfcPurchaseFragment extends ChildFragment<MainContainer> {
           rootView.setBackground(new RadialGradientDrawable(
             backgroundStartColor,
             backgroundEndColor,
-            rootView.getHeight()));
+            rootView.getHeight()
+          ));
         }
       });
     }
