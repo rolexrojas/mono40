@@ -203,7 +203,7 @@ public final class ProductManager {
     final PosBridge b = posBridge.get();
     final List<Pair<Product, PosResult>> resultList = new ArrayList<>();
     for (Product po : paymentOptionList) {
-      resultList.add(Pair.create(po, b.addCard(phoneNumber, pin, po.getSanitizedNumber())));
+      resultList.add(Pair.create(po, b.addCard(phoneNumber, pin, po.getNumberLast4Digits())));
     }
     return resultList;
   }

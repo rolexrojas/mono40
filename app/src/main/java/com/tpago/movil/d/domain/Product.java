@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.tpago.movil.dep.text.Texts;
+import com.tpago.movil.util.DigitHelper;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.math.BigDecimal;
@@ -224,7 +225,12 @@ public class Product implements Parcelable {
   }
 
   public final String getSanitizedNumber() {
-    return getNumber().replaceAll("[\\D]", "");
+    return this.getNumber()
+      .replaceAll("[\\D]", "");
+  }
+
+  final String getNumberLast4Digits() {
+    return DigitHelper.getLast4Digits(this.getNumber());
   }
 
   /**
