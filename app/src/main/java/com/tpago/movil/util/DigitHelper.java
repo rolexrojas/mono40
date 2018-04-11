@@ -96,6 +96,16 @@ public final class DigitHelper {
     return digitList;
   }
 
+  public static String getLast4Digits(String s) {
+    StringHelper.checkIsNotNullNorEmpty(s, "s");
+    final String digitString = removeNonDigits(s);
+    final int digitStringLength = digitString.length();
+    if (digitStringLength < 4) {
+      throw new IllegalArgumentException("digitStringLength < 4");
+    }
+    return digitString.substring(digitStringLength - 4, digitStringLength);
+  }
+
   private DigitHelper() {
   }
 }
