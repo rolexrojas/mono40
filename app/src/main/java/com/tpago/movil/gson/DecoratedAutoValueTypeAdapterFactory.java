@@ -7,7 +7,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
 import com.tpago.movil.Email;
-import com.tpago.movil.Password;
+import com.tpago.movil.lib.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.bank.*;
 import com.tpago.movil.company.TemplateToLogoCatalogMapper;

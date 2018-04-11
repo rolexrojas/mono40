@@ -1,7 +1,6 @@
-package com.tpago.movil;
+package com.tpago.movil.lib;
 
 import com.google.auto.value.AutoValue;
-import com.google.auto.value.extension.memoized.Memoized;
 import com.tpago.movil.util.StringHelper;
 
 import java.util.regex.Pattern;
@@ -12,7 +11,7 @@ import java.util.regex.Pattern;
 @AutoValue
 public abstract class Password {
 
-  private static final Pattern PATTERN = Pattern.compile("\\A[A-Za-z0-9]{8,}\\z");
+  private static final Pattern PATTERN = Pattern.compile("\\A(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}\\z");
 
   /**
    * Checks whether the given {@link String string} is a valid password or not.
@@ -32,10 +31,9 @@ public abstract class Password {
     }
     if (StringHelper.isNullOrEmpty(sanitizedString)) {
       return false;
-    } else {
-      return PATTERN.matcher(sanitizedString)
-        .matches();
     }
+    return PATTERN.matcher(sanitizedString)
+      .matches();
   }
 
   /**
@@ -68,12 +66,4 @@ public abstract class Password {
   }
 
   public abstract String value();
-
-  @Memoized
-  @Override
-  public abstract String toString();
-
-  @Memoized
-  @Override
-  public abstract int hashCode();
 }
