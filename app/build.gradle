@@ -136,12 +136,12 @@ android {
       storeFile rootProject.file('./keystores/debug.jks')
     }
 
-    release {
+    beta {
       def properties = new Properties()
-      rootProject.file('./keystores/release.properties')
+      rootProject.file('./keystores/beta.properties')
         .withInputStream { stream -> properties.load(stream) }
 
-      storeFile rootProject.file('./keystores/release.jks')
+      storeFile rootProject.file('./keystores/beta.jks')
       storePassword properties.storePassword
       keyAlias 'soluciones gbh'
       keyPassword properties.keyPassword
@@ -153,10 +153,17 @@ android {
       signingConfig signingConfigs.debug
     }
 
-    release {
-      signingConfig signingConfigs.release
+    beta {
+      signingConfig signingConfigs.beta
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+      zipAlignEnabled true
+    }
+
+    store {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+      zipAlignEnabled true
     }
   }
 
