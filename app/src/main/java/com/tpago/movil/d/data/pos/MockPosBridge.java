@@ -1,6 +1,7 @@
 package com.tpago.movil.d.data.pos;
 
 import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.pos.PosResult;
 
@@ -30,17 +31,17 @@ final class MockPosBridge implements PosBridge {
   }
 
   @Override
-  public boolean isRegistered(String identifier) {
+  public boolean isRegistered(Product product) {
     return true;
   }
 
   @Override
-  public PosResult addCard(String phoneNumber, String pin, String identifier) {
+  public PosResult addCard(String phoneNumber, String pin, Product product) {
     return PosResult.create(DATA);
   }
 
   @Override
-  public PosResult removeCard(String identifier) {
+  public PosResult removeCard(Product product) {
     return PosResult.create(DATA);
   }
 
@@ -49,7 +50,7 @@ final class MockPosBridge implements PosBridge {
   }
 
   @Override
-  public Single<PosResult> selectCard(String identifier) {
+  public Single<PosResult> selectCard(Product product) {
     return Single.defer(() -> Single.just(PosResult.create(DATA)))
       .delay(1L, TimeUnit.SECONDS);
   }

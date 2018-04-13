@@ -13,13 +13,12 @@ import com.cube.sdk.storage.operation.ListCards;
 import com.cube.sdk.storage.operation.PaymentInfo;
 import com.cube.sdk.storage.operation.SelectCardParams;
 import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.pos.PosResult;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
 
-import rx.Completable;
-import rx.CompletableSubscriber;
 import rx.Single;
 import rx.SingleSubscriber;
 
@@ -27,7 +26,7 @@ import rx.SingleSubscriber;
  * @author hecvasro
  */
 @Deprecated
-class CubePosBridge implements PosBridge {
+final class CubePosBridge implements PosBridge {
 
   private static final String FILE_NAME = PosBridge.class.getCanonicalName();
   private static final String KEY_COUNT = "count";
@@ -68,19 +67,18 @@ class CubePosBridge implements PosBridge {
   }
 
   private Single<String> getAltPan(final String identifier) {
-    final CubeSdkImpl sdk = this.cubeSdk
-      .toBlocking()
-      .value();
     final String altPan = this.sharedPreferences.getString(identifier, PLACEHOLDER);
     if (!altPan.equals(PLACEHOLDER)) {
       return Single.just(altPan);
     }
-    return Single.<String>create(
-      (subscriber) -> sdk.ListCard(ListCardCallback.create(identifier, subscriber))
+    return this.cubeSdk.flatMap((instance) ->
+      Single.<String>create((subscriber) ->
+        instance.ListCard(ListCardCallback.create(identifier, subscriber))
+      )
     )
-      .doOnSuccess(
-        (s) -> this.sharedPreferences.edit()
-          .putString(identifier, s)
+      .doOnSuccess((value) ->
+        this.sharedPreferences.edit()
+          .putString(identifier, value)
           .apply()
       );
   }
@@ -91,51 +89,75 @@ class CubePosBridge implements PosBridge {
   }
 
   @Override
-  public boolean isRegistered(String identifier) {
-    return this.isAvailable() && this.sharedPreferences.contains(identifier);
+  public boolean isRegistered(Product product) {
+    return this.isAvailable()
+      && (
+      this.sharedPreferences.contains(product.getSanitizedNumber())
+        || this.sharedPreferences.contains(product.getNumberLast4Digits())
+    );
   }
 
   @Override
-  public PosResult addCard(final String phoneNumber, final String pin, final String identifier) {
-    final CubeSdkImpl sdk = this.cubeSdk
-      .toBlocking()
-      .value();
-    PosResult result;
-    if (this.isRegistered(identifier)) {
-      result = PosResult.create(identifier);
-    } else {
-      result = Single.<PosResult>create(
-        (subscriber) -> sdk.AddCard(
-          addCardParams(phoneNumber, pin, identifier),
+  public PosResult addCard(final String phoneNumber, final String pin, final Product product) {
+    final String numberSanitized = product.getSanitizedNumber();
+    final String numberLast4Digits = product.getNumberLast4Digits();
+    if (this.sharedPreferences.contains(numberLast4Digits)) {
+      return PosResult.create(numberLast4Digits);
+    }
+    if (this.sharedPreferences.contains(numberSanitized)) {
+      final String altPan = this.sharedPreferences.getString(numberSanitized, PLACEHOLDER);
+      this.sharedPreferences.edit()
+        .remove(numberSanitized)
+        .putString(numberLast4Digits, altPan)
+        .apply();
+      return PosResult.create(numberLast4Digits);
+    }
+    final PosResult result = this.cubeSdk.<PosResult>flatMap((instance) ->
+      Single.create((subscriber) ->
+        instance.AddCard(
+          addCardParams(phoneNumber, pin, numberLast4Digits),
           AddCardCallback.create(subscriber)
         )
       )
-        .toBlocking()
-        .value();
-      if (result.isSuccessful()) {
-        this.sharedPreferences.edit()
-          .putString(identifier, PLACEHOLDER)
-          .putInt(KEY_COUNT, sharedPreferences.getInt(KEY_COUNT, 0) + 1)
-          .apply();
-      }
+    )
+      .toBlocking()
+      .value();
+    if (result.isSuccessful()) {
+      this.sharedPreferences.edit()
+        .putString(numberLast4Digits, PLACEHOLDER)
+        .putInt(KEY_COUNT, this.sharedPreferences.getInt(KEY_COUNT, 0) + 1)
+        .apply();
     }
     return result;
   }
 
   @Override
-  public PosResult removeCard(final String identifier) {
-    final CubeSdkImpl sdk = this.cubeSdk
-      .toBlocking()
-      .value();
-    if (!this.isRegistered(identifier)) {
-      return PosResult.create(identifier);
+  public PosResult removeCard(final Product product) {
+    final String numberSanitized = product.getSanitizedNumber();
+    final String numberLast4Digits = product.getNumberLast4Digits();
+    if (!this.sharedPreferences.contains(numberSanitized) || !this.sharedPreferences.contains(
+      numberLast4Digits)) {
+      return PosResult.create(numberLast4Digits);
     }
-    return this.getAltPan(identifier)
-      .<PosResult>flatMap(
-        (altPan) -> Single.create(
-          (subscriber) -> sdk.DeleteCard(
-            selectCardParams(identifier, altPan),
-            DeleteCardCallback.create(subscriber)
+    String identifier;
+    Single<String> altPan;
+    if (this.sharedPreferences.contains(numberSanitized)) {
+      identifier = numberSanitized;
+      altPan = Single
+        .defer(() -> Single.just(this.sharedPreferences.getString(numberSanitized, PLACEHOLDER)));
+    } else {
+      identifier = numberLast4Digits;
+      altPan = Single
+        .defer(() -> Single.just(this.sharedPreferences.getString(numberLast4Digits, PLACEHOLDER)));
+    }
+    return altPan.flatMap(this::getAltPan)
+      .flatMap((value) ->
+        this.cubeSdk.flatMap((instance) ->
+          Single.<PosResult>create((subscriber) ->
+            instance.DeleteCard(
+              selectCardParams(value, value),
+              DeleteCardCallback.create(subscriber)
+            )
           )
         )
       )
@@ -153,41 +175,53 @@ class CubePosBridge implements PosBridge {
 
   @Override
   public void unregister(final PhoneNumber phoneNumber) throws Exception {
-    final CubeSdkImpl sdk = this.cubeSdk
-      .toBlocking()
-      .value();
-    if (this.sharedPreferences.getInt(KEY_COUNT, 0) > 0) {
-      Completable.create(
-        (subscriber) -> sdk.Unregister(phoneNumber.value(), UnregisterCallback.create(subscriber))
-      )
-        .doOnCompleted(
-          () -> this.sharedPreferences.edit()
-            .clear()
-            .apply()
-        )
-        .await();
+    if (this.sharedPreferences.getInt(KEY_COUNT, 0) == 0) {
+      return;
     }
+    this.cubeSdk.flatMap((instance) ->
+      Single.<String>create((subscriber) ->
+        instance.Unregister(phoneNumber.value(), UnregisterCallback.create(subscriber))
+      )
+    )
+      .toCompletable()
+      .doOnCompleted(() ->
+        this.sharedPreferences.edit()
+          .clear()
+          .apply()
+      )
+      .await();
   }
 
   @Override
-  public Single<PosResult> selectCard(final String identifier) {
-    final CubeSdkImpl sdk = this.cubeSdk
-      .toBlocking()
-      .value();
-    if (!this.isRegistered(identifier)) {
-      return Single
-        .error(new IllegalStateException(String.format("!this.isRegistered(%1$s)", identifier)));
+  public Single<PosResult> selectCard(final Product product) {
+    final String numberSanitized = product.getSanitizedNumber();
+    final String numberLast4Digits = product.getNumberLast4Digits();
+    if (!this.sharedPreferences.contains(numberSanitized) || !this.sharedPreferences.contains(numberLast4Digits)) {
+      return Single.error(new IllegalStateException("!this.sharedPreferences.contains(numberSanitized) || !this.sharedPreferences.contains(numberLast4Digits)"));
     }
-    return this.getAltPan(identifier)
-      .<PosResult>flatMap(
-        (altPan) -> Single.create(
-          (subscriber) -> sdk.SelectCard(
-            selectCardParams(identifier, altPan),
-            SelectCardCallback.create(subscriber)
+    String identifier;
+    Single<String> altPan;
+    if (this.sharedPreferences.contains(numberSanitized)) {
+      identifier = numberSanitized;
+      altPan = Single
+        .defer(() -> Single.just(this.sharedPreferences.getString(numberSanitized, PLACEHOLDER)));
+    } else {
+      identifier = numberLast4Digits;
+      altPan = Single
+        .defer(() -> Single.just(this.sharedPreferences.getString(numberLast4Digits, PLACEHOLDER)));
+    }
+    return altPan.flatMap(this::getAltPan)
+      .flatMap((value) ->
+        this.cubeSdk.flatMap((instance) ->
+          Single.<PosResult>create((subscriber) ->
+            instance.SelectCard(
+              selectCardParams(identifier, value),
+              SelectCardCallback.create(subscriber)
+            )
           )
+//          .doOnUnsubscribe(instance::CancelPayment)
         )
       );
-//      .doOnUnsubscribe(sdk::CancelPayment);
   }
 
   private static final class ListCardCallback implements CubeSdkCallback<ListCards, CubeError> {
@@ -282,19 +316,19 @@ class CubePosBridge implements PosBridge {
 
   private static final class UnregisterCallback implements CubeSdkCallback<String, CubeError> {
 
-    private static UnregisterCallback create(CompletableSubscriber subscriber) {
+    private static UnregisterCallback create(SingleSubscriber<? super String> subscriber) {
       return new UnregisterCallback(subscriber);
     }
 
-    private final CompletableSubscriber subscriber;
+    private final SingleSubscriber<? super String> subscriber;
 
-    private UnregisterCallback(CompletableSubscriber subscriber) {
+    private UnregisterCallback(SingleSubscriber<? super String> subscriber) {
       this.subscriber = ObjectHelper.checkNotNull(subscriber, "subscriber");
     }
 
     @Override
     public void success(String message) {
-      this.subscriber.onCompleted();
+      this.subscriber.onSuccess(message);
     }
 
     @Override

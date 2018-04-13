@@ -229,7 +229,7 @@ public class Product implements Parcelable {
       .replaceAll("[\\D]", "");
   }
 
-  final String getNumberLast4Digits() {
+  public final String getNumberLast4Digits() {
     return DigitHelper.getLast4Digits(this.getNumber());
   }
 
