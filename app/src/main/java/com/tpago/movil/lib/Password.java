@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 @AutoValue
 public abstract class Password {
 
-  private static final Pattern PATTERN = Pattern.compile("\\A(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}\\z");
+  private static final Pattern PATTERN = Pattern.compile("\\A[A-Za-z\\d]{8,}\\z");
 
   /**
    * Checks whether the given {@link String string} is a valid password or not.
