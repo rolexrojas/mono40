@@ -2,6 +2,8 @@ package com.tpago.movil.app.upgrade.action;
 
 import android.content.Context;
 
+import com.tpago.movil.d.domain.pos.PosBridge;
+import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.store.Store;
 
 import javax.inject.Singleton;
@@ -28,5 +30,12 @@ public final class AppUpgradeActionModule {
   @IntoSet
   AppUpgradeAction appUpgradeAction2(Context context) {
     return AppUpgradeAction2.create(context);
+  }
+
+  @Provides
+  @Singleton
+  @IntoSet
+  AppUpgradeAction appUpgradeAction3(SessionManager sessionManager, PosBridge posBridge) {
+    return AppUpgradeAction3.create(sessionManager, posBridge);
   }
 }
