@@ -173,7 +173,12 @@ android {
 
   applicationVariants.all { variant ->
     variant.outputs.all {
-      outputFileName = "${appName}-v${variant.versionName}-${variant.name}.apk"
+      def name = "${appName}-v${variant.versionName}-${variant.baseName}"
+      if (!variant.signingConfig) {
+        name += '-unsigned'
+      }
+      name += '.apk'
+      outputFileName = name
     }
   }
 
