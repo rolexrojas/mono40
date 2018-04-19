@@ -9,15 +9,15 @@ import com.tpago.movil.util.ObjectHelper;
  * <p>
  * Uses the {@link TelephonyManager#getDeviceId() IMEI} of the device as identifier.
  */
-final class NotEmulatedDeviceIdSupplier implements DeviceIdSupplier {
+final class PhysicalDeviceIdSupplier implements DeviceIdSupplier {
 
-  static NotEmulatedDeviceIdSupplier create(TelephonyManager telephonyManager) {
-    return new NotEmulatedDeviceIdSupplier(telephonyManager);
+  static PhysicalDeviceIdSupplier create(TelephonyManager telephonyManager) {
+    return new PhysicalDeviceIdSupplier(telephonyManager);
   }
 
   private final TelephonyManager telephonyManager;
 
-  private NotEmulatedDeviceIdSupplier(TelephonyManager telephonyManager) {
+  private PhysicalDeviceIdSupplier(TelephonyManager telephonyManager) {
     this.telephonyManager = ObjectHelper.checkNotNull(telephonyManager, "telephonyManager");
   }
 
