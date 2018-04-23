@@ -14,6 +14,7 @@ import com.tpago.movil.dep.init.InitActivity;
 import com.tpago.movil.dep.text.BaseTextWatcher;
 import com.tpago.movil.dep.widget.TextInput;
 import com.tpago.movil.util.Result;
+import com.tpago.movil.util.StringHelper;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -37,7 +38,7 @@ public final class PasswordUnlockFragment extends BaseUnlockFragment {
 
   private void afterUserPasswordTextInputChanged(String s) {
     this.userPassword = s;
-    if (Password.isValid(this.userPassword)) {
+    if (!StringHelper.isNullOrEmpty(this.userPassword)) {
       this.unlockButton.setAlpha(1.00F);
       this.userPasswordTextInput.setErraticStateEnabled(false);
     }
