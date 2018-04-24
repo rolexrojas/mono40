@@ -9,8 +9,7 @@ import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
 
 /**
- * {@link Store} implementation that uses JSON as format and {@link android.content.SharedPreferences}
- * as storage
+ * {@link Store} implementation that uses JSON as format and {@link SharedPreferences} for storage
  * <p>
  * {@link com.google.gson.Gson} is used for serialization and deserialization to and from JSON.
  */
