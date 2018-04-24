@@ -112,22 +112,12 @@ android {
   }
 
   sourceSets {
-    def commonDirName = 'src/common/java'
-
-    devt {
-      java.srcDir commonDirName
+    [ devt, stag, prep, prod ].each {
+      it.java.srcDir 'src/common/java'
     }
 
-    stag {
-      java.srcDir commonDirName
-    }
-
-    prep {
-      java.srcDir commonDirName
-    }
-
-    prod {
-      java.srcDir commonDirName
+    [ testDevt, testStag, testPrep, testProd ].each {
+      it.java.srcDir 'src/testCommon/java'
     }
   }
 
