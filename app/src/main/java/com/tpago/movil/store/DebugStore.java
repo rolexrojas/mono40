@@ -6,6 +6,7 @@ import com.tpago.movil.util.ObjectHelper;
 
 import timber.log.Timber;
 
+@Deprecated
 final class DebugStore implements Store {
 
   static DebugStore create(Store store) {

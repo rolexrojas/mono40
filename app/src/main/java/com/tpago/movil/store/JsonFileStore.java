@@ -7,9 +7,7 @@ import com.google.gson.Gson;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
 
-/**
- * @author hecvasro
- */
+@Deprecated
 final class JsonFileStore implements Store {
 
   static JsonFileStore create(Gson gson, SharedPreferences sharedPreferences) {
