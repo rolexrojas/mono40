@@ -49,10 +49,7 @@ public final class DiskStore implements Store {
     if (!this.isSet(key)) {
       return null;
     }
-    final String valueJson = this.preferences.getString(key, null);
-    final T value = this.gson.fromJson(valueJson, valueType);
-    return value;
-//    return this.gson.fromJson(this.preferences.getString(key, null), valueType);
+    return this.gson.fromJson(this.preferences.getString(key, null), valueType);
   }
 
   @Override
