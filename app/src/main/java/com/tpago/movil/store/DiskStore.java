@@ -27,12 +27,18 @@ public final class DiskStore implements Store {
     this.gson = builder.gson;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public boolean isSet(String key) {
     StringHelper.checkIsNotNullNorEmpty(key, "key");
     return this.preferences.contains(key);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public <T> void set(String key, T value) {
     StringHelper.checkIsNotNullNorEmpty(key, "key");
@@ -41,6 +47,9 @@ public final class DiskStore implements Store {
       .apply();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Nullable
   @Override
   public <T> T get(String key, Class<T> valueType) {
@@ -52,6 +61,9 @@ public final class DiskStore implements Store {
     return this.gson.fromJson(this.preferences.getString(key, null), valueType);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void remove(String key) {
     StringHelper.checkIsNotNullNorEmpty(key, "key");

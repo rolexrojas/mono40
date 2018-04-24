@@ -15,7 +15,7 @@ public interface Store {
    * @return True if the given {@code key} is associated to a value, false otherwise.
    *
    * @throws IllegalArgumentException
-   *   If the given {@code key} is null or empty.
+   *   If {@code key} is {@code null} or empty.
    */
   boolean isSet(String key);
 
@@ -23,9 +23,9 @@ public interface Store {
    * Associates a {@link String key} to a {@link T value}.
    *
    * @throws IllegalArgumentException
-   *   If the given {@code key} is null or empty.
+   *   If {@code key} is {@code null} or empty.
    * @throws NullPointerException
-   *   If the given {@code value} is null.
+   *   If {@code value} is null.
    */
   <T> void set(String key, T value);
 
@@ -35,7 +35,7 @@ public interface Store {
    * @return {@link T Value} associated to the given {@link String key}, or {@code null} otherwise.
    *
    * @throws IllegalArgumentException
-   *   If the given {@code key} is null or empty.
+   *   If {@code key} is {@code null} or empty.
    * @throws NullPointerException
    *   If the given {@code valueType} is null.
    * @throws ClassCastException
@@ -49,7 +49,7 @@ public interface Store {
    * Removes the value associated to a {@link String key}.
    *
    * @throws IllegalArgumentException
-   *   If the given {@code key} is null or empty.
+   *   If {@code key} is {@code null} or empty.
    */
   void remove(String key);
 }
