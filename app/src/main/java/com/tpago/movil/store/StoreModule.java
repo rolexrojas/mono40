@@ -1,5 +1,6 @@
 package com.tpago.movil.store;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
@@ -11,11 +12,12 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * @author hecvasro
+ * Module that provides dependencies associated with {@link Store}
  */
 @Module
 public final class StoreModule {
 
+  @Deprecated
   @Provides
   @Singleton
   Store store(Gson gson, SharedPreferences sharedPreferences) {
@@ -24,5 +26,14 @@ public final class StoreModule {
       store = DebugStore.create(store);
     }
     return store;
+  }
+
+  @Provides
+  @Singleton
+  DiskStoreFactory diskStoreFactory(Context context, Gson gson) {
+    return DiskStoreFactory.builder()
+      .context(context)
+      .gson(gson)
+      .build();
   }
 }
