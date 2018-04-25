@@ -289,7 +289,7 @@ public final class OwnTransferActivity
             "Desde %1$s %2$s",
             fundingProduct.getBank()
               .getName(),
-            fundingProduct.getSanitizedNumber()
+            fundingProduct.getNumberSanitized()
           )
         );
       }

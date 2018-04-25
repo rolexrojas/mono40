@@ -106,7 +106,7 @@ final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePayme
     final TextView productNumberTextView = holder.getProductNumberTextView();
     final String productNumber;
     if (Product.checkIfCreditCard(item)) {
-      productNumber = stringHelper.maskedProductNumber(item);
+      productNumber = item.getNumberMasked();
     } else {
       productNumber = item.getAlias();
     }
