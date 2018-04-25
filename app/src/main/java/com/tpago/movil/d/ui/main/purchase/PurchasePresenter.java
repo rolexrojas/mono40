@@ -112,7 +112,7 @@ final class PurchasePresenter extends Presenter<PurchaseScreen> {
       boolean isListEmpty = true;
       this.screen.clearPaymentOptions();
       for (Product paymentOption : this.productManager.getPaymentOptionList()) {
-        if (this.posBridge.isRegistered(paymentOption)) {
+        if (this.posBridge.isRegistered(paymentOption.posBridgeIdentifier())) {
           this.screen.addPaymentOption(paymentOption);
           if (isListEmpty) {
             isListEmpty = false;

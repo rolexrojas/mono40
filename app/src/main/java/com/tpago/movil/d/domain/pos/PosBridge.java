@@ -13,13 +13,13 @@ public interface PosBridge {
 
   boolean isAvailable();
 
-  boolean isRegistered(Product product);
+  boolean isRegistered(String identifier);
 
-  PosResult addCard(String phoneNumber, String pin, Product product);
+  PosResult addCard(String phoneNumber, String pin, String identifier);
 
-  PosResult removeCard(Product product);
+  PosResult removeCard(String identifier);
 
   void unregister(PhoneNumber phoneNumber) throws Exception;
 
-  Single<PosResult> selectCard(Product product);
+  Single<PosResult> selectCard(String identifier);
 }
