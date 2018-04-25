@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Set;
 
 import dagger.Lazy;
-import timber.log.Timber;
 
 /**
  * @author hecvasro
@@ -117,8 +116,8 @@ public final class ProductManager {
     if (!ptrl.isEmpty()) {
       final PosBridge bridge = posBridge.get();
       for (Product p : ptrl) {
-        if (bridge.isRegistered(p)) {
-          bridge.removeCard(p);
+        if (bridge.isRegistered(p.posBridgeIdentifier())) {
+          bridge.removeCard(p.posBridgeIdentifier());
         }
         indexSet.remove(p.getId());
         editor.remove(p.getId());
@@ -202,7 +201,7 @@ public final class ProductManager {
     final PosBridge b = posBridge.get();
     final List<Pair<Product, PosResult>> resultList = new ArrayList<>();
     for (Product po : paymentOptionList) {
-      resultList.add(Pair.create(po, b.addCard(phoneNumber, pin, po)));
+      resultList.add(Pair.create(po, b.addCard(phoneNumber, pin, po.posBridgeIdentifier())));
     }
     return resultList;
   }
