@@ -13,7 +13,7 @@ import io.reactivex.Single;
  * Responsible for the registration and de-registration of {@link Product products} to enable and
  * disable them for in-commerce purchases through POS devices
  */
-public interface PurchaseService {
+public interface PosService {
 
   /**
    * Unregisters all the registered {@link Product products} of an {@link User user} to disable
