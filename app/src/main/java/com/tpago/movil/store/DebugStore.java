@@ -45,4 +45,9 @@ final class DebugStore implements Store {
     this.store.remove(key);
     Timber.d("remove(%1$s)", key);
   }
+
+  @Override
+  public void clear() {
+    this.store.clear();
+  }
 }

@@ -52,4 +52,9 @@ public interface Store {
    *   If {@code key} is {@code null} or empty.
    */
   void remove(String key);
+
+  /**
+   * Removes all keys and its associated values.
+   */
+  void clear();
 }

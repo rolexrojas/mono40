@@ -47,17 +47,17 @@ public final class DiskStoreTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public final void isSet_nullAsKey_throwsIllegalArgumentException() {
+  public final void givenNullKeyWhenCheckingIfItExistsThenThrowsException() {
     this.store.isSet(null);
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public final void isSet_emptyStringAsKey_throwsIllegalArgumentException() {
+  public final void givenEmptyKeyWhenCheckingIfItExistsThenThrowsException() {
     this.store.isSet("");
   }
 
   @Test
-  public final void isSet_nonExistentKey_returnsFalse() {
+  public final void givenNonExistentKeyWhenCheckingIfItExistsThenReturnsFalse() {
     when(this.preferences.contains(this.key))
       .thenReturn(false);
     assertFalse(this.store.isSet(this.key));
@@ -66,7 +66,7 @@ public final class DiskStoreTest {
   }
 
   @Test
-  public final void isSet_existentKey_returnsTrue() {
+  public final void givenExistentKeyWhenCheckingIfItExistsThenReturnsTrue() {
     when(this.preferences.contains(this.key))
       .thenReturn(true);
     assertTrue(this.store.isSet(this.key));
@@ -75,22 +75,22 @@ public final class DiskStoreTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public final void set_nullAsKey_throwsIllegalArgumentException() {
+  public final void givenNullKeyWhenSettingValueThenThrowsException() {
     this.store.set(null, this.value);
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public final void set_emptyStringAsKey_throwsIllegalArgumentException() {
+  public final void givenEmptyKeyWhenSettingValueThenThrowsException() {
     this.store.set("", this.value);
   }
 
   @Test(expected = NullPointerException.class)
-  public final void set_nullAsValue_throwsNullPointerException() {
+  public final void givenNullValueWhenSettingValueThenThrowsException() {
     this.store.set(this.key, null);
   }
 
   @Test
-  public final void set_keyAndValue_savesValue() {
+  public final void givenKeyAndValueWhenSettingValueThenSetsValue() {
     when(this.preferences.edit())
       .thenReturn(this.editor);
     when(this.editor.putString(this.key, this.value))
@@ -109,22 +109,22 @@ public final class DiskStoreTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public final void get_nullAsKey_throwsIllegalArgumentException() {
+  public final void givenNullKeyWhenGettingValueThenThrowsException() {
     this.store.get(null, this.valueType);
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public final void get_emptyStringAsKey_throwsIllegalArgumentException() {
+  public final void givenEmptyKeyWhenGettingValueThenThrowsException() {
     this.store.get("", this.valueType);
   }
 
   @Test(expected = NullPointerException.class)
-  public final void get_nullAsValueType_throwsNullPointerException() {
+  public final void givenNullValueTypeWhenGettingValueThenThrowsException() {
     this.store.get(this.key, null);
   }
 
   @Test(expected = ClassCastException.class)
-  public final void get_invalidValueType_throwsClassCastException() {
+  public final void givenIncorrectValueTypeWhenGettingValueThenThrowsException() {
     when(this.preferences.contains(this.key))
       .thenReturn(true);
     when(this.preferences.getString(eq(this.key), any()))
@@ -135,7 +135,7 @@ public final class DiskStoreTest {
   }
 
   @Test
-  public final void get_nonExistentKey_returnsNull() {
+  public final void givenNonExistentKeyWhenGettingValueThenReturnsNull() {
     when(this.preferences.contains(this.key))
       .thenReturn(false);
     assertNull(this.store.get(this.key, this.valueType));
@@ -144,7 +144,7 @@ public final class DiskStoreTest {
   }
 
   @Test
-  public final void get_existentKey_returnsValue() {
+  public final void givenExistentKeyWhenGettingValueThenReturnsValue() {
     when(this.preferences.contains(this.key))
       .thenReturn(true);
     when(this.preferences.getString(eq(this.key), any()))
@@ -161,17 +161,17 @@ public final class DiskStoreTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public final void remove_nullAsKey_throwsIllegalArgumentException() {
+  public final void givenNullKeyWhenRemovingValueThenThrowsException() {
     this.store.remove(null);
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public final void remove_emptyStringAsKey_throwsIllegalArgumentException() {
+  public final void givenEmptyKeyWhenRemovingValueThenThrowsException() {
     this.store.remove("");
   }
 
   @Test
-  public final void remove_nonExistentKey_removesNothing() {
+  public final void givenNonExistentKeyWhenRemovingValueThenRemovesNothing() {
     when(this.preferences.contains(this.key))
       .thenReturn(false);
     this.store.remove(this.key);
@@ -180,7 +180,7 @@ public final class DiskStoreTest {
   }
 
   @Test
-  public final void remove_existentKey_removesValue() {
+  public final void givenExistentKeyWhenRemovingValueThenRemovesValue() {
     when(this.preferences.contains(this.key))
       .thenReturn(true);
     when(this.preferences.edit())
@@ -194,6 +194,21 @@ public final class DiskStoreTest {
       .edit();
     verify(this.editor)
       .remove(this.key);
+    verify(this.editor)
+      .apply();
+  }
+
+  @Test
+  public final void givenStoreWhenClearingThenEveryKeyAndValueIsRemoved() {
+    when(this.preferences.edit())
+      .thenReturn(this.editor);
+    when(this.editor.clear())
+      .thenReturn(this.editor);
+    this.store.clear();
+    verify(this.preferences)
+      .edit();
+    verify(this.editor)
+      .clear();
     verify(this.editor)
       .apply();
   }

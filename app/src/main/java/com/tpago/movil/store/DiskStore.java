@@ -74,6 +74,16 @@ public final class DiskStore implements Store {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void clear() {
+    this.preferences.edit()
+      .clear()
+      .apply();
+  }
+
   static final class Builder {
 
     private SharedPreferences preferences;

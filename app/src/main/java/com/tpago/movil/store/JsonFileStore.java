@@ -57,4 +57,11 @@ final class JsonFileStore implements Store {
       .remove(StringHelper.checkIsNotNullNorEmpty(key, "key"))
       .apply();
   }
+
+  @Override
+  public void clear() {
+    this.sharedPreferences.edit()
+      .clear()
+      .apply();
+  }
 }
