@@ -8,9 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 import rx.Single;
 
-/**
- * @author hecvasro
- */
+@Deprecated
 final class MockPosBridge implements PosBridge {
 
   static MockPosBridge create() {

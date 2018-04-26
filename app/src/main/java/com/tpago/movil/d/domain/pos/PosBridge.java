@@ -1,13 +1,9 @@
 package com.tpago.movil.d.domain.pos;
 
 import com.tpago.movil.PhoneNumber;
-import com.tpago.movil.d.domain.Product;
 
 import rx.Single;
 
-/**
- * @author hecvasro
- */
 @Deprecated
 public interface PosBridge {
 
