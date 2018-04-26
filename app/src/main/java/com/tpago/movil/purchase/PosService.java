@@ -16,17 +16,10 @@ import io.reactivex.Single;
 public interface PosService {
 
   /**
-   * Unregisters all the registered {@link Product products} of an {@link User user} to disable
-   * in-commerce purchases through POS devices.
-   *
-   * @throws NullPointerException
-   *   If {@code user} is {@code null}.
-   */
-  Completable unregisterAllProducts(User user);
-
-  /**
    * Registers a {@link Product product} of an {@link User user} to enable in-commerce purchases
    * through POS devices.
+   *
+   * @return {@link Result} of the process.
    *
    * @throws NullPointerException
    *   If {@code user} is {@code null}.
@@ -38,7 +31,29 @@ public interface PosService {
   Single<Result<Placeholder>> registerProduct(User user, Product product, Code pin);
 
   /**
-   * Starts an in-commerce purchase through a POS device using a registered {@link Product product}.
+   * Unregisters a {@link Product product} of an {@link User user} to disable in-commerce purchases
+   * through POS devices.
+   *
+   * @throws NullPointerException
+   *   If {@code user} is {@code null}.
+   * @throws NullPointerException
+   *   If {@code product} is {@code null}.
+   * @throws NullPointerException
+   *   If {@code pin} is {@code null}.
+   */
+  Completable unregisterProduct(Product product);
+
+  /**
+   * Unregisters all the registered {@link Product products} of an {@link User user} to disable
+   * in-commerce purchases through POS devices.
+   *
+   * @throws NullPointerException
+   *   If {@code user} is {@code null}.
+   */
+  Completable unregisterAllProducts(User user);
+
+  /**
+   * Starts an in-commerce purchase through POS devices using a registered {@link Product product}.
    *
    * @throws NullPointerException
    *   If {@code product} is {@code null}.
