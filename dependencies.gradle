@@ -3,8 +3,6 @@ ext {
   androidSupportVersion = '25.3.1'
   androidSupportGroupIdConstraint = "${androidSupportGroupId}.constraint"
   androidSupportVersionConstraint = '1.0.2'
-  crashlyticsGroupId = 'com.crashlytics.sdk.android'
-  crashlyticsVersion = '2.6.8@aar'
   googleGroupId = 'com.google'
   googleGroupIdAutoValue ="${googleGroupId}.auto.value"
   googleVersionAutoValue = '1.5'
@@ -54,7 +52,7 @@ ext {
     annotationProcessor: [
       googleAutoValue: "${googleGroupIdAutoValue}:auto-value:${googleVersionAutoValue}",
       googleDagger: "${googleGroupIdDagger}:dagger-compiler:${googleVersionDagger}",
-      jakeWhartonButterKnife: "${jakeWhartonGroupIdButterKnife}:butterknife-compile:${jakeWhartonVersionButterKnife}",
+      jakeWhartonButterKnife: "${jakeWhartonGroupIdButterKnife}:butterknife-compiler:${jakeWhartonVersionButterKnife}",
       ryanHarterAutoValueGson: "${ryanHarterGroupIdAutoValue}:auto-value-gson:${ryanHarterVersionAutoValueGson}",
       ryanHarterAutoValueParcel: "${ryanHarterGroupIdAutoValue}:auto-value-parcel:${ryanHarterVersionAutoValueParcel}"
     ],
@@ -67,7 +65,6 @@ ext {
       androidSupportConstraint: "${androidSupportGroupIdConstraint}:constraint-layout:${androidSupportVersionConstraint}",
       androidSupportDesign: "${androidSupportGroupId}:design:${androidSupportVersion}",
       androidSupportRecyclerView: "${androidSupportGroupId}:recyclerview-v7:${androidSupportVersion}",
-      crashlytics: "${crashlyticsGroupId}:crashlytics:${crashlyticsVersion}",
       googleDagger: "${googleGroupIdDagger}:dagger:${googleVersionDagger}",
       googleGson: "${googleGroupIdGson}:gson:${googleVersionGson}",
       googleGuava: "${googleGroupIdGuava}:guava:${googleVersionGuava}",

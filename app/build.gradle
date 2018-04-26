@@ -212,4 +212,9 @@ dependencies {
 
   applyDependencies(rootProject.ext.dependencies)
   applyDependencies(rootProject.ext.dependenciesDeprecated)
+
+  // TODO: Find a way of moving all the dependencies into the 'dependencies.gradle' file.
+  implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+    transitive = true
+  }
 }
