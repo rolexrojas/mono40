@@ -202,92 +202,14 @@ repositories {
 }
 
 dependencies {
-  // Local dependencies
-  compile fileTree(include: ['*.jar'], dir: 'libs')
-
-  def cubeSdkName = { version, environment -> "Cub3AltPanSDK-v${version}-${environment}" }
-  mockCompile(name: cubeSdkName('1.4.2', 'devt'), ext: 'aar')
-  devtCompile(name: cubeSdkName('1.4.2', 'devt'), ext: 'aar')
-  stagCompile(name: cubeSdkName('1.4.1', 'stag'), ext: 'aar')
-  prepCompile(name: cubeSdkName('1.4.1', 'prep'), ext: 'aar')
-  prodCompile(name: cubeSdkName('1.4.1', 'prod'), ext: 'aar')
-
-  // Remote dependencies
-  def rxJavaGroupId = 'io.reactivex.rxjava2'
-  compile "${rxJavaGroupId}:rxjava:2.1.4"
-  compile "${rxJavaGroupId}:rxandroid:2.0.1"
-
-  def okHttpGroupId = 'com.squareup.okhttp3'
-  def okHttpVersion = '3.9.0'
-  compile "${okHttpGroupId}:okhttp:${okHttpVersion}"
-  compile "${okHttpGroupId}:logging-interceptor:${okHttpVersion}"
-
-  compile 'com.google.code.gson:gson:2.8.1'
-
-  def retrofitGroupId = 'com.squareup.retrofit2'
-  def retrofitVersion = '2.3.0'
-  compile "${retrofitGroupId}:retrofit:${retrofitVersion}"
-  compile "${retrofitGroupId}:converter-gson:${retrofitVersion}"
-  compile "${retrofitGroupId}:adapter-rxjava2:${retrofitVersion}"
-
-  compile 'com.birbit:android-priority-jobqueue:2.0.1' // TODO: Find a replacement. Code it?
-
-  def autoValueVersion = '1.5'
-  annotationProcessor "com.google.auto.value:auto-value:${autoValueVersion}"
-  provided "com.jakewharton.auto.value:auto-value-annotations:${autoValueVersion}"
-  def autoValueExtensionGroupId = 'com.ryanharter.auto.value'
-  def autoValueGsonExtensionVersion = '0.5.0'
-  annotationProcessor "${autoValueExtensionGroupId}:auto-value-gson:${autoValueGsonExtensionVersion}"
-  provided "${autoValueExtensionGroupId}:auto-value-gson:${autoValueGsonExtensionVersion}"
-  def autoValueParcelExtensionVersion = '0.2.5'
-  annotationProcessor "${autoValueExtensionGroupId}:auto-value-parcel:${autoValueParcelExtensionVersion}"
-
-  def daggerGroupId = 'com.google.dagger'
-  def daggerVersion = '2.11'
-  annotationProcessor "${daggerGroupId}:dagger-compiler:${daggerVersion}"
-  compile "${daggerGroupId}:dagger:${daggerVersion}"
-
-  compile 'com.jakewharton.timber:timber:4.5.1'
-
-  compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-    transitive = true
+  def applyDependencies = { context ->
+    context.each { method, deps ->
+      deps.each { identifier, value ->
+        "${method}"(value)
+      }
+    }
   }
 
-  compile 'com.theartofdev.edmodo:android-image-cropper:2.4.7'
-
-  compile 'uk.co.chrisjenx:calligraphy:2.3.0'
-
-  def butterKnifeGroupId = 'com.jakewharton'
-  def butterKnifeVersion = '8.8.1'
-  annotationProcessor "${butterKnifeGroupId}:butterknife-compiler:${butterKnifeVersion}"
-  compile "${butterKnifeGroupId}:butterknife:${butterKnifeVersion}"
-
-  compile 'com.squareup.picasso:picasso:2.5.2'
-  compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
-
-  def supportLibraryGroupId = 'com.android.support'
-  def supportLibraryVersion = '25.3.1'
-  compile "${supportLibraryGroupId}:appcompat-v7:${supportLibraryVersion}"
-  compile "${supportLibraryGroupId}:design:${supportLibraryVersion}"
-  compile "${supportLibraryGroupId}:percent:${supportLibraryVersion}"
-  compile "${supportLibraryGroupId}:recyclerview-v7:${supportLibraryVersion}"
-
-  compile "${supportLibraryGroupId}.constraint:constraint-layout:1.0.2"
-
-  compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
-
-  testCompile 'junit:junit:4.12'
-
-  testCompile 'org.mockito:mockito-core:2.9.0'
-
-  // Deprecated dependencies
-  compile "${retrofitGroupId}:adapter-rxjava:${retrofitVersion}"
-  compile "com.github.ozodrukh:CircularReveal:2.0.1"
-  compile "com.jakewharton.rxbinding:rxbinding:0.4.0"
-  compile "com.tbruyelle.rxpermissions:rxpermissions:0.9.0"
-  compile "de.hdodenhof:circleimageview:2.1.0"
-  compile "io.reactivex:rxandroid:1.2.1"
-  compile "io.reactivex:rxjava:1.2.2"
-  compile 'javax.annotation:jsr250-api:1.0'
-  compile 'jp.wasabeef:picasso-transformations:2.1.0'
+  applyDependencies(rootProject.ext.dependencies)
+  applyDependencies(rootProject.ext.dependenciesDeprecated)
 }

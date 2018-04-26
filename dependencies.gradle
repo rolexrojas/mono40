@@ -1,0 +1,124 @@
+ext {
+  androidSupportGroupId = 'com.android.support'
+  androidSupportVersion = '25.3.1'
+  androidSupportGroupIdConstraint = "${androidSupportGroupId}.constraint"
+  androidSupportVersionConstraint = '1.0.2'
+  crashlyticsGroupId = 'com.crashlytics.sdk.android'
+  crashlyticsVersion = '2.6.8@aar'
+  googleGroupId = 'com.google'
+  googleGroupIdAutoValue ="${googleGroupId}.auto.value"
+  googleVersionAutoValue = '1.5'
+  googleGroupIdDagger = "${googleGroupId}.dagger"
+  googleVersionDagger = '2.11'
+  googleGroupIdGson = "${googleGroupId}.code.gson"
+  googleVersionGson = '2.8.2'
+  googleGroupIdGuava = "${googleGroupId}.guava"
+  googleVersionGuava = '25.0-android'
+  imageCropperGroupId = 'com.theartofdev.edmodo'
+  imageCropperVersion = '2.4.7'
+  jakeWhartonGroupId = 'com.jakewharton'
+  jakeWhartonGroupIdAutoValue = "${jakeWhartonGroupId}.auto.value"
+  jakeWhartonVersionAutoValue = '1.5'
+  jakeWhartonGroupIdButterKnife = "${jakeWhartonGroupId}"
+  jakeWhartonVersionButterKnife = '8.8.1'
+  jakeWhartonGroupIdPicasso = "${jakeWhartonGroupId}.picasso"
+  jakeWhartonVersionPicasso = '1.1.0'
+  jakeWhartonGroupIdTimber = "${jakeWhartonGroupId}.timber"
+  jakeWhartonVersionTimber = '4.5.1'
+  jUnitGroupId = 'junit'
+  jUnitVersion = '4.12'
+  mockitoGroupId = 'org.mockito'
+  mockitoVersion = '2.9.0'
+  squareUpGroupId = 'com.squareup'
+  squareUpGroupIdOkHttp = "${squareUpGroupId}.okhttp3"
+  squareUpVersionOkHttp = '3.9.0'
+  squareUpGroupIdPicasso = "${squareUpGroupId}.picasso"
+  squareUpVersionPicasso = '2.5.2'
+  squareUpGroupIdRetrofit = "${squareUpGroupId}.retrofit2"
+  squareUpVersionRetrofit = '2.3.0'
+  rxJavaGroupId = 'io.reactivex.rxjava2'
+  rxJavaVersion = '2.1.4'
+  rxJavaVersionAndroid = '2.0.1'
+  ryanHarterGroupIdAutoValue = 'com.ryanharter.auto.value'
+  ryanHarterVersionAutoValueGson = '0.5.0'
+  ryanHarterVersionAutoValueParcel = '0.2.5'
+
+  posService = { ver, env ->
+    return [
+      name: "Cub3AltPanSDK-v${ver}-${env}",
+      ext: 'aar'
+    ]
+  }
+
+  dependencies = [
+    annotationProcessor: [
+      googleAutoValue: "${googleGroupIdAutoValue}:auto-value:${googleVersionAutoValue}",
+      googleDagger: "${googleGroupIdDagger}:dagger-compiler:${googleVersionDagger}",
+      jakeWhartonButterKnife: "${jakeWhartonGroupIdButterKnife}:butterknife-compile:${jakeWhartonVersionButterKnife}",
+      ryanHarterAutoValueGson: "${ryanHarterGroupIdAutoValue}:auto-value-gson:${ryanHarterVersionAutoValueGson}",
+      ryanHarterAutoValueParcel: "${ryanHarterGroupIdAutoValue}:auto-value-parcel:${ryanHarterVersionAutoValueParcel}"
+    ],
+    compileOnly: [
+      jakeWhartonAutoValue: "${jakeWhartonGroupIdAutoValue}:auto-value-annotations:${jakeWhartonVersionAutoValue}",
+      ryanHarterAutoValueGson: "${ryanHarterGroupIdAutoValue}:auto-value-gson:${ryanHarterVersionAutoValueGson}"
+    ],
+    implementation: [
+      androidSupportAppCompat: "${androidSupportGroupId}:appcompat-v7:${androidSupportVersion}",
+      androidSupportConstraint: "${androidSupportGroupIdConstraint}:constraint-layout:${androidSupportVersionConstraint}",
+      androidSupportDesign: "${androidSupportGroupId}:design:${androidSupportVersion}",
+      androidSupportRecyclerView: "${androidSupportGroupId}:recyclerview-v7:${androidSupportVersion}",
+      crashlytics: "${crashlyticsGroupId}:crashlytics:${crashlyticsVersion}",
+      googleDagger: "${googleGroupIdDagger}:dagger:${googleVersionDagger}",
+      googleGson: "${googleGroupIdGson}:gson:${googleVersionGson}",
+      googleGuava: "${googleGroupIdGuava}:guava:${googleVersionGuava}",
+      imageCropper: "${imageCropperGroupId}:android-image-cropper:${imageCropperVersion}",
+      jakeWhartonButterKnife: "${jakeWhartonGroupIdButterKnife}:butterknife:${jakeWhartonVersionButterKnife}",
+      jakeWhartonTimber: "${jakeWhartonGroupIdTimber}:timber:${jakeWhartonVersionTimber}",
+      squareUpOkhttp: "${squareUpGroupIdOkHttp}:okhttp:${squareUpVersionOkHttp}",
+      squareUpOkHttpInterceptorLogging: "${squareUpGroupIdOkHttp}:logging-interceptor:${squareUpVersionOkHttp}",
+      squareUpPicasso: "${squareUpGroupIdPicasso}:picasso:${squareUpVersionPicasso}",
+      squareUpRetrofit: "${squareUpGroupIdRetrofit}:retrofit:${squareUpVersionRetrofit}",
+      squareUpRetrofitAdapterRxJava2: "${squareUpGroupIdRetrofit}:adapter-rxjava2:${squareUpVersionRetrofit}",
+      squareUpRetrofitConverterGson: "${squareUpGroupIdRetrofit}:converter-gson:${squareUpVersionRetrofit}",
+      jakeWhartonPicasso: "${jakeWhartonGroupIdPicasso}:picasso2-okhttp3-downloader:${jakeWhartonVersionPicasso}",
+      rxJava: "${rxJavaGroupId}:rxjava:${rxJavaVersion}",
+      rxJavaAndroid: "${rxJavaGroupId}:rxandroid:${rxJavaVersionAndroid}"
+    ],
+    mockImplementation: [
+      posService: posService('1.4.2', 'devt')
+    ],
+    devtImplementation: [
+      posService: posService('1.4.2', 'devt')
+    ],
+    stagImplementation: [
+      posService: posService('1.4.1', 'stag')
+    ],
+    prepImplementation: [
+      posService: posService('1.4.1', 'prep')
+    ],
+    prodImplementation: [
+      posService: posService('1.4.1', 'prod')
+    ],
+    testImplementation: [
+      jUnit: "${jUnitGroupId}:junit:${jUnitVersion}",
+      mockitoCore: "${mockitoGroupId}:mockito-core:${mockitoVersion}"
+    ]
+  ]
+
+  dependenciesDeprecated = [
+    implementation: [
+      androidPriorityJobQueue: 'com.birbit:android-priority-jobqueue:2.0.1',
+      calligraphy: 'uk.co.chrisjenx:calligraphy:2.3.0',
+      circularReveal: 'com.github.ozodrukh:CircularReveal:2.0.1',
+      jsr250Api: 'javax.annotation:jsr250-api:1.0',
+      percentSupportLibrary: "${androidSupportGroupId}:percent:${androidSupportVersion}",
+      picassoTransformations: 'jp.wasabeef:picasso-transformations:2.1.0',
+      recyclerViewFlexibleDivider: 'com.yqritc:recyclerview-flexibledivider:1.4.0',
+      retrofitRxjavaAdapter: "${squareUpGroupIdRetrofit}:adapter-rxjava:${squareUpVersionRetrofit}",
+      rxAndroid: 'io.reactivex:rxandroid:1.2.1',
+      rxBinding: "${jakeWhartonGroupId}.rxbinding:rxbinding:0.4.0",
+      rxJava: 'io.reactivex:rxjava:1.2.2',
+      rxPermissions: 'com.tbruyelle.rxpermissions:rxpermissions:0.9.0'
+    ]
+  ]
+}
