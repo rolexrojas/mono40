@@ -35,7 +35,7 @@ class OwnProductListItemHolderBinder
     holder.productTypeTextView.setText(c.getString(ProductType.findStringId(item)));
     final String productIdentifier;
     if (Product.checkIfCreditCard(item)) {
-      productIdentifier = stringHelper.maskedProductNumber(item);
+      productIdentifier = item.getNumberMasked();
     } else {
       productIdentifier = item.getAlias();
     }

@@ -290,7 +290,7 @@ public final class DisbursementActivity
             "Desde %1$s Crédito %2$s",
             fundingProduct.getBank()
               .getName(),
-            fundingProduct.getSanitizedNumber()
+            fundingProduct.getNumberSanitized()
           )
         );
       }

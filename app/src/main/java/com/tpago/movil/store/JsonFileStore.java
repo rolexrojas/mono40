@@ -7,9 +7,7 @@ import com.google.gson.Gson;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
 
-/**
- * @author hecvasro
- */
+@Deprecated
 final class JsonFileStore implements Store {
 
   static JsonFileStore create(Gson gson, SharedPreferences sharedPreferences) {
@@ -57,6 +55,13 @@ final class JsonFileStore implements Store {
   public void remove(String key) {
     this.sharedPreferences.edit()
       .remove(StringHelper.checkIsNotNullNorEmpty(key, "key"))
+      .apply();
+  }
+
+  @Override
+  public void clear() {
+    this.sharedPreferences.edit()
+      .clear()
       .apply();
   }
 }

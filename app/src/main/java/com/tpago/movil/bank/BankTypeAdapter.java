@@ -23,7 +23,10 @@ public final class BankTypeAdapter extends TypeAdapter<Bank> {
 
   private static final BigDecimal PROPERTY_DEFAULT_TRANSFER_COST_RATE = BigDecimal.valueOf(0.015);
 
-  public static BankTypeAdapter create(TemplateToLogoCatalogMapper templateToLogoCatalogMapper, Gson gson) {
+  public static BankTypeAdapter create(
+    TemplateToLogoCatalogMapper templateToLogoCatalogMapper,
+    Gson gson
+  ) {
     return new BankTypeAdapter(templateToLogoCatalogMapper, gson);
   }
 
@@ -66,6 +69,9 @@ public final class BankTypeAdapter extends TypeAdapter<Bank> {
             builder
               .logoTemplate(logoTemplate)
               .logoCatalog(this.templateToLogoCatalogMapper.apply(logoTemplate));
+            break;
+          default:
+            reader.skipValue();
             break;
         }
       }

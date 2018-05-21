@@ -26,6 +26,6 @@ public final class DataFlavorModule {
   @Provides
   @Singleton
   DeviceIdSupplier deviceIdSupplier(TelephonyManager telephonyManager) {
-    return NotEmulatedDeviceIdSupplier.create(telephonyManager);
+    return PhysicalDeviceIdSupplier.create(telephonyManager);
   }
 }

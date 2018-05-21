@@ -21,23 +21,22 @@ public final class PasswordTest {
   }
 
   @Test
-  public final void isValid_onlyDigits_shouldReturnFalse() {
-    assertFalse(Password.isValid("012345678"));
-  }
-
-  @Test
-  public final void isValid_onlyLetters_shouldReturnFalse() {
-    assertFalse(Password.isValid("abcdefghi"));
-  }
-
-  @Test
   public final void isValid_lessThanEightCharacters_shouldReturnFalse() {
     assertFalse(Password.isValid("01234ab"));
   }
 
   @Test
-  public final void isValid_validArgument_shouldReturnTrue() {
-    assertTrue(Password.isValid("a01234567"));
-    assertTrue(Password.isValid("abcdefgh0"));
+  public final void isValid_onlyDigits_shouldReturnTrue() {
+    assertTrue(Password.isValid("012345678"));
+  }
+
+  @Test
+  public final void isValid_onlyLetters_shouldReturnTrue() {
+    assertTrue(Password.isValid("abcdefghi"));
+  }
+
+  @Test
+  public final void isValid_digitsAndLetters_shouldReturnTrue() {
+    assertTrue(Password.isValid("a0123456b"));
   }
 }

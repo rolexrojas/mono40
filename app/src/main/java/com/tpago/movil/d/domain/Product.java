@@ -7,9 +7,12 @@ import android.support.annotation.NonNull;
 import com.tpago.movil.dep.text.Texts;
 import com.tpago.movil.util.DigitHelper;
 import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.util.StringHelper;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
+
+import io.reactivex.Observable;
 
 /**
  * Abstract creditCard representation.
@@ -18,6 +21,15 @@ import java.util.Comparator;
  */
 @Deprecated
 public class Product implements Parcelable {
+
+  static String numberMasked(String number, int count) {
+    return Observable.range(1, count)
+      .map((index) -> "••••")
+      .concatWith(Observable.just(number))
+      .toList()
+      .map((list) -> StringHelper.join(" ", list))
+      .blockingGet();
+  }
 
   protected Product(Parcel in) {
     type = ProductType.valueOf(in.readString());
@@ -224,13 +236,12 @@ public class Product implements Parcelable {
     return number;
   }
 
-  public final String getSanitizedNumber() {
-    return this.getNumber()
-      .replaceAll("[\\D]", "");
+  public final String getNumberSanitized() {
+    return DigitHelper.getLast4Digits(this.getNumber());
   }
 
-  final String getNumberLast4Digits() {
-    return DigitHelper.getLast4Digits(this.getNumber());
+  public final String getNumberMasked() {
+    return numberMasked(this.getNumberSanitized(), checkIfCreditCard(this) ? 3 : 2);
   }
 
   /**

@@ -26,7 +26,7 @@ abstract class BasePaymentMethodHolderBinder<H extends BasePaymentMethodHolder>
   }
 
   protected String formatIdentifier(Product product) {
-    return getString(ProductType.findStringId(product)) + " " + product.getSanitizedNumber();
+    return getString(ProductType.findStringId(product)) + " " + product.getNumberSanitized();
   }
 
   @Override

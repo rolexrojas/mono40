@@ -4,22 +4,16 @@ import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.pos.PosResult;
 
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import rx.Single;
 
-/**
- * @author hecvasro
- */
+@Deprecated
 final class MockPosBridge implements PosBridge {
 
   static MockPosBridge create() {
     return new MockPosBridge();
   }
-
-  private static final String DATA = UUID.randomUUID()
-    .toString();
 
   private MockPosBridge() {
   }
@@ -36,12 +30,12 @@ final class MockPosBridge implements PosBridge {
 
   @Override
   public PosResult addCard(String phoneNumber, String pin, String identifier) {
-    return PosResult.create(DATA);
+    return PosResult.create(identifier);
   }
 
   @Override
   public PosResult removeCard(String identifier) {
-    return PosResult.create(DATA);
+    return PosResult.create(identifier);
   }
 
   @Override
@@ -50,7 +44,7 @@ final class MockPosBridge implements PosBridge {
 
   @Override
   public Single<PosResult> selectCard(String identifier) {
-    return Single.defer(() -> Single.just(PosResult.create(DATA)))
-      .delay(1L, TimeUnit.SECONDS);
+    return Single.defer(() -> Single.just(PosResult.create(identifier)))
+      .delay(2L, TimeUnit.SECONDS);
   }
 }

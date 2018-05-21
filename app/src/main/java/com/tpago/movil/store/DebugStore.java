@@ -6,6 +6,7 @@ import com.tpago.movil.util.ObjectHelper;
 
 import timber.log.Timber;
 
+@Deprecated
 final class DebugStore implements Store {
 
   static DebugStore create(Store store) {
@@ -43,5 +44,10 @@ final class DebugStore implements Store {
   public void remove(String key) {
     this.store.remove(key);
     Timber.d("remove(%1$s)", key);
+  }
+
+  @Override
+  public void clear() {
+    this.store.clear();
   }
 }

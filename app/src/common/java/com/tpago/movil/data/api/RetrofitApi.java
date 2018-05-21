@@ -20,6 +20,9 @@ import retrofit2.http.Path;
  */
 public interface RetrofitApi {
 
+  @GET("banks")
+  Single<ApiBankList> fetchBanks();
+
   @GET("customer/{phoneNumber}/status")
   Single<PhoneNumberState> fetchPhoneNumberState(@Path("phoneNumber") String phoneNumber);
 

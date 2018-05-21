@@ -17,6 +17,7 @@ import com.tpago.movil.reactivex.DisposableHelper;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.session.User;
 import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.util.StringHelper;
 
 import javax.inject.Inject;
 
@@ -102,7 +103,7 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
     final String sanitizedContent = sanitize(content);
     if (!sanitizedContent.equals(this.passwordTextInputContent)) {
       this.passwordTextInputContent = sanitizedContent;
-      this.isPasswordTextInputContentValid = Password.isValid(this.passwordTextInputContent);
+      this.isPasswordTextInputContentValid = !StringHelper.isNullOrEmpty(this.passwordTextInputContent);
 
       this.updateView();
     }

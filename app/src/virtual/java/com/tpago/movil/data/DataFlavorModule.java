@@ -15,6 +15,6 @@ public final class DataFlavorModule {
   @Provides
   @Singleton
   DeviceIdSupplier deviceIdSupplier() {
-    return EmulatedDeviceIdSupplier.create();
+    return VirtualDeviceIdSupplier.create();
   }
 }
