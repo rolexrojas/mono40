@@ -2,7 +2,7 @@
 TODO
 
 
-## Postman
+# Postman
 
 * https://www.getpostman.com/collections/84c05c80cebdcd71f2da
 * https://www.getpostman.com/collections/aee176d802818c1b7f5c
@@ -17,3 +17,59 @@ userEmail:r.amarante@gbh.com.do
 userPassword:qwerty123
 Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0MjQ6ODA5OTUyMTgxODozNTI2MzcwNzA2MDYwNjkiLCJleHAiOjE1Mjk1OTA5NTd9.3JajDBRcYt5lwcAIiv6Sb-rmM6X0WYEyJd9PsPz6tjY
 
+
+# Generating Releases
+
+Para hacer las distribuciones de la aplicación hay 2 formas.
+
+> 1- Beta (por Crashlytics)
+
+> 2- Store (por Google Play)
+
+Todo el proceso de build está automatizado con Gradle. Si quieres ver todos los task existentes de gradle usa: `./gradlew task --all`
+
+Para generar el APK y distribuirlo por Beta de Crashlytics sólo hay que correr el siguiente comando:
+`./gradlew app:assembleNotEmulatedDeviceDevtBeta app:crashlyticsUploadDistributionNotEmulatedDeviceDevtBeta`
+
+Si te fijas son dos tasks que se corren, la primera: app:assembleNotEmulatedDeviceDevtBeta genera el APK del variant Devt para dispositivos no emulados (físicos) usando la configuración Beta de build.
+
+Y la segunda `app:crashlyticsUploadDistributionNotEmulatedDeviceDevtBeta` sube ese APK que generaste a Crashlytics.
+
+Existe una variación de cada task por cada combinación de flavor/build type que exista en el build.gradle
+
+
+# Errors
+- `Error: Could not find or load main class org.gradle.wrapper.GradleWrapperMain` :
+
+Verifica que tienes gradle instalado y luego corre 
+> rm -rf gradle/ .gradle/ gradlew gradlew.bat
+
+- `ERROR - Crashlytics Developer Tools error.
+java.lang.IllegalArgumentException: Your fabric.properties file is missing your build secret.
+Check the Crashlytics plugin to make sure that the application has been added successfully!
+Contact support@fabric.io for assistance.`
+
+En el proyecto, bajo app: 
+> crea un archivo llamado `fabric.properties`
+
+> busca las credenciales en fabric y agregalas como: 
+
+```
+apiSecret=changeMeToYourRealApiSecret
+apiKey=changeMeToYourRealApiKey
+```
+*  build secret = api secret
+
+tldr: Crea un release apuntando a development con distribución para el equipo de tpago:
+> ./gradlew app:assembleNotEmulatedDeviceDevtBeta app:crashlyticsUploadDistributionNotEmulatedDeviceDevtBeta
+
+
+`Nota: cada vez que realices un release, debes invitar al equipo de tpago o quien va a testear o no podrán descargar la nueva versión`
+
+
+Para generar los releases para que el equipo de tpago suba al Store, solo corres
+> `./gradlew app:assembleNotEmulatedDeviceProdStore`
+
+Y le mandas el apk a la persona encargada de firmar(preguntar al equipo de tpago).
+
+# Code Structure
