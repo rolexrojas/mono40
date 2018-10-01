@@ -3,7 +3,22 @@ TODO
 
 # Jira
 > QA: https://jira.gcs-systems.com:8080/secure/IssueNavigator.jspa?reset=true&jqlQuery=project+%3D+APTPII+AND+resolution+%3D+Unresolved+AND+assignee+%3D+tpagogbh+ORDER+BY+priority+DESC&mode=hide
+
 > DEV: https://jira.gcs-systems.com:8080/secure/IssueNavigator.jspa?reset=true&jqlQuery=project+%3D+TPAPPPRD+AND+resolution+%3D+Unresolved+AND+assignee+%3D+tpagogbh+ORDER+BY+priority+DESC&mode=hide
+
+> GBH: https://gbhapps.atlassian.net/secure/RapidBoard.jspa?rapidView=32&projectKey=TP&selectedIssue=TP-62
+
+
+# Zeplin
+
+Link:
+> https://app.zeplin.io/profile/account
+
+User:
+> r.amarante@gbh.com.do
+
+Password:
+> qwerty123
 
 # Apiary
 
