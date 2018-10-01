@@ -1,6 +1,17 @@
 # tPago Android App
 TODO
 
+# Jira
+> QA: https://jira.gcs-systems.com:8080/secure/IssueNavigator.jspa?reset=true&jqlQuery=project+%3D+APTPII+AND+resolution+%3D+Unresolved+AND+assignee+%3D+tpagogbh+ORDER+BY+priority+DESC&mode=hide
+> DEV: https://jira.gcs-systems.com:8080/secure/IssueNavigator.jspa?reset=true&jqlQuery=project+%3D+TPAPPPRD+AND+resolution+%3D+Unresolved+AND+assignee+%3D+tpagogbh+ORDER+BY+priority+DESC&mode=hide
+
+# Apiary
+
+> https://mobileappws.docs.apiary.io/#reference/0/initial-load/list-of-all-the-transactions
+
+# Slack
+
+> tpago.slack.com
 
 # Postman
 
