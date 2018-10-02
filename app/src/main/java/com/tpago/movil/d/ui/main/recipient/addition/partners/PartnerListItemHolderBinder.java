@@ -3,22 +3,33 @@ package com.tpago.movil.d.ui.main.recipient.addition.partners;
 import android.support.annotation.NonNull;
 
 import com.squareup.picasso.Picasso;
-import com.tpago.movil.dep.Partner;
-import com.tpago.movil.dep.api.ApiImageUriBuilder;
+import com.tpago.movil.company.Company;
+import com.tpago.movil.company.CompanyHelper;
+import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
+import com.tpago.movil.util.ObjectHelper;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
-class PartnerListItemHolderBinder implements ListItemHolderBinder<Partner, PartnerListItemHolder> {
+final class PartnerListItemHolderBinder
+  implements ListItemHolderBinder<Partner, PartnerListItemHolder> {
+
+  static PartnerListItemHolderBinder create(CompanyHelper companyHelper) {
+    return new PartnerListItemHolderBinder(companyHelper);
+  }
+
+  private final CompanyHelper companyHelper;
+
+  private PartnerListItemHolderBinder(CompanyHelper companyHelper) {
+    this.companyHelper = ObjectHelper.checkNotNull(companyHelper, "companyHelper");
+  }
 
   @Override
   public void bind(@NonNull Partner item, @NonNull PartnerListItemHolder holder) {
     Picasso.with(holder.getContext())
-      .load(ApiImageUriBuilder.build(holder.getContext(), item, ApiImageUriBuilder.Style.PRIMARY_24))
+      .load(this.companyHelper.getLogoUri(item, Company.LogoStyle.COLORED_24))
       .into(holder.imageView);
-    holder.textView.setText(item.getName());
+    holder.textView.setText(item.name());
   }
 }

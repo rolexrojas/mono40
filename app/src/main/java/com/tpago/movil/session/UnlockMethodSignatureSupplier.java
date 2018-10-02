@@ -3,7 +3,7 @@ package com.tpago.movil.session;
 import android.support.annotation.IntDef;
 
 import com.tpago.movil.util.Result;
-import com.tpago.movil.function.Supplier;
+import com.tpago.movil.util.function.Supplier;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

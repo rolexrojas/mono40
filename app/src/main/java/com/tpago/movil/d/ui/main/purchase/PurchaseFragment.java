@@ -1,8 +1,14 @@
 package com.tpago.movil.d.ui.main.purchase;
 
+import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Point;
+import android.nfc.NfcAdapter;
+import android.nfc.cardemulation.CardEmulation;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +16,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +29,7 @@ import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.Dialogs;
+import com.tpago.movil.d.ui.main.DepMainActivityBase;
 import com.tpago.movil.d.ui.main.MainContainer;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.main.list.ListItemAdapter;
@@ -48,11 +56,14 @@ public class PurchaseFragment
   PurchasePaymentDialogFragment.OnDismissedListener {
 
   private static final String TAG_PAYMENT_SCREEN = "paymentScreen";
+  private final String NFC_SERVICE = "com.cube.sdk.hce.TorreHostApduService";  // TODO: Change to PosBridge
 
   PurchaseComponent component;
 
   private Unbinder unbinder;
   private ListItemAdapter adapter;
+  private boolean hasCards;
+  private boolean hasRequestedToMakeAppAsDefaultForNFC;
 
   @Inject StringHelper stringHelper;
   @Inject PurchasePaymentOptionBinder paymentOptionBinder;
@@ -75,6 +86,7 @@ public class PurchaseFragment
       .depMainComponent(getContainer().getComponent())
       .build();
     component.inject(this);
+
   }
 
   @Nullable
@@ -104,6 +116,7 @@ public class PurchaseFragment
       .addBinder(Product.class, PurchasePaymentOptionHolder.class, paymentOptionBinder)
       .addBinder(String.class, TextListItemHolder.class, new TextListItemBinder())
       .build();
+
     adapter = new ListItemAdapter(holderCreatorFactory, holderBinderFactory);
     recyclerView.setAdapter(adapter);
     recyclerView.setHasFixedSize(true);
@@ -142,6 +155,35 @@ public class PurchaseFragment
   public void onResume() {
     super.onResume();
     this.presenter.resume();
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      final DepMainActivityBase activity = (DepMainActivityBase) getActivity();
+
+      if (activity != null) {
+        final Context applicationContext = activity.getApplicationContext();
+        final CardEmulation cardEmulation = CardEmulation.getInstance(NfcAdapter.getDefaultAdapter(applicationContext));
+        final ComponentName paymentServiceComponent = new ComponentName(activity, this.NFC_SERVICE);
+
+        if(!cardEmulation.isDefaultServiceForCategory(paymentServiceComponent, CardEmulation.CATEGORY_PAYMENT)) {
+          this.requestNFCPermissions();
+        }
+
+        if (cardEmulation.categoryAllowsForegroundPreference(CardEmulation.CATEGORY_PAYMENT)) {
+          Log.e("setPreferredService", String.valueOf(cardEmulation.setPreferredService(activity, paymentServiceComponent)));
+        }
+      }
+    }
+  }
+
+  @Override
+  public void onPause() {
+      super.onPause();
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+          final Activity activity = getActivity();
+          if (activity != null) {
+              final CardEmulation cardEmulation = CardEmulation.getInstance(NfcAdapter.getDefaultAdapter(activity.getApplicationContext()));
+              cardEmulation.unsetPreferredService(activity);
+          }
+      }
   }
 
   @Override
@@ -247,6 +289,28 @@ public class PurchaseFragment
   }
 
   @Override
+  public void requestNFCPermissions() {
+    if(!this.hasCards) {
+      return;
+    }
+    if(hasRequestedToMakeAppAsDefaultForNFC) {
+      return;
+    }
+    this.hasRequestedToMakeAppAsDefaultForNFC = true;
+    Intent intent = new Intent();
+    intent.setAction(CardEmulation.ACTION_CHANGE_DEFAULT);
+    intent.putExtra(CardEmulation.EXTRA_SERVICE_COMPONENT,
+            new ComponentName(getActivity(), this.NFC_SERVICE));
+    intent.putExtra(CardEmulation.EXTRA_CATEGORY, CardEmulation.CATEGORY_PAYMENT);
+    getContext().startActivity(intent);
+  }
+
+  @Override
+  public void setHasCards(boolean hasCards) {
+    this.hasCards = hasCards;
+  }
+
+  @Override
   public void onClick(int position) {
     final Object item = adapter.get(position);
     if (item instanceof Product) {
@@ -263,4 +327,5 @@ public class PurchaseFragment
   public void onDismissed() {
     presenter.resume();
   }
+
 }

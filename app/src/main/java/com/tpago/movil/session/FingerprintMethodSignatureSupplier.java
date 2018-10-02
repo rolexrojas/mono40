@@ -122,6 +122,7 @@ public final class FingerprintMethodSignatureSupplier implements UnlockMethodSig
             @Override
             public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
               final FailureData failureData = FailureData.builder()
+                .description("No se pudo leer la huella digital introducida o la misma no está registrada en el dispositivo.")
                 .code(FailureCode.UNEXPECTED)
                 .build();
               subscriber.onNext(Result.<Signature>create(failureData));

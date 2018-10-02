@@ -4,10 +4,12 @@ import android.content.Context;
 
 import com.tpago.movil.app.di.ComponentBuilderSupplier;
 import com.tpago.movil.app.di.ComponentBuilderSupplierContainer;
+import com.tpago.movil.app.ui.fragment.base.BaseDialogFragment;
 
 /**
  * @author hecvasro
  */
+@Deprecated
 public abstract class InjectableDialogFragment extends BaseDialogFragment {
 
   protected ComponentBuilderSupplier parentComponentBuilderSupplier;

@@ -22,8 +22,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.AlertData;
-import com.tpago.movil.app.ui.AlertManager;
+import com.tpago.movil.app.ui.activity.toolbar.ActivityToolbar;
+import com.tpago.movil.app.ui.alert.AlertManager;
+import com.tpago.movil.app.ui.main.transaction.paypal.PayPalTransactionArgument;
+import com.tpago.movil.app.ui.main.transaction.summary.TransactionSummaryUtil;
+import com.tpago.movil.company.CompanyHelper;
+import com.tpago.movil.company.partner.PartnerStore;
 import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
@@ -32,7 +36,7 @@ import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.ui.Dialogs;
-import com.tpago.movil.d.ui.main.DepMainActivity;
+import com.tpago.movil.d.ui.main.DepMainActivityBase;
 import com.tpago.movil.d.ui.main.MainContainer;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.main.list.ListItemAdapter;
@@ -42,16 +46,17 @@ import com.tpago.movil.d.ui.main.list.NoResultsListItemItem;
 import com.tpago.movil.d.ui.main.list.NoResultsListItemHolder;
 import com.tpago.movil.d.ui.main.list.NoResultsListItemHolderBinder;
 import com.tpago.movil.d.ui.main.list.NoResultsListItemHolderCreator;
-import com.tpago.movil.d.ui.main.recipient.addition.AddRecipientActivity;
+import com.tpago.movil.d.ui.main.recipient.addition.AddRecipientActivityBase;
 import com.tpago.movil.d.ui.main.transaction.TransactionCategory;
-import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivity;
+import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase;
 import com.tpago.movil.d.ui.main.transaction.own.OwnTransactionCreationActivity;
 import com.tpago.movil.d.ui.view.widget.FullScreenLoadIndicator;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.view.widget.SearchView;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
-import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.app.StringMapper;
+import com.tpago.movil.paypal.PayPalAccount;
 import com.tpago.movil.util.ObjectHelper;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
@@ -60,7 +65,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * {@link RecipientCategoryScreen Screen} implementation that uses a {@link ChildFragment fragment}
@@ -77,6 +82,8 @@ public class RecipientCategoryFragment
   private static final int REQUEST_CODE_RECIPIENT_ADDITION = 0;
   private static final int REQUEST_CODE_TRANSACTION_CREATION = 1;
   private static final int REQUEST_CODE_OWN_TRANSACTION_CREATION = 3;
+
+  private static final int REQUEST_CODE_TRANSACTION = 42;
 
   private static final String KEY_CATEGORY = "category";
 
@@ -100,8 +107,12 @@ public class RecipientCategoryFragment
 
   @Inject
   StringHelper stringHelper;
+
+  @Inject PartnerStore partnerStore;
   @Inject
   Category category;
+  @Inject
+  CompanyHelper companyHelper;
   @Inject
   RecipientCategoryPresenter presenter;
 
@@ -156,7 +167,7 @@ public class RecipientCategoryFragment
       .addCreator(NoResultsListItemItem.class, new NoResultsListItemHolderCreator())
       .build();
     final Context context = getContext();
-    recipientBinder = new RecipientListItemHolderBinder(this.category);
+    recipientBinder = new RecipientListItemHolderBinder(this.category, this.companyHelper, this.partnerStore);
     final BinderFactory binderFactory = new BinderFactory.Builder()
       .addBinder(
         Recipient.class,
@@ -180,8 +191,8 @@ public class RecipientCategoryFragment
     recyclerView
       .setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
-      .drawable(R.drawable.d_divider)
-      .marginResId(R.dimen.space_horizontal_normal)
+      .drawable(R.drawable.divider_line_horizontal)
+      .marginResId(R.dimen.space_horizontal_20)
       .showLastDivider()
       .build();
     recyclerView.addItemDecoration(divider);
@@ -245,7 +256,7 @@ public class RecipientCategoryFragment
     switch (item.getItemId()) {
       case R.id.recipientIndexCategory_menuItem_add:
         startActivityForResult(
-          AddRecipientActivity.getLaunchIntent(this.getContext(), this.category),
+          AddRecipientActivityBase.getLaunchIntent(this.getContext(), this.category),
           REQUEST_CODE_RECIPIENT_ADDITION
         );
         return true;
@@ -278,14 +289,15 @@ public class RecipientCategoryFragment
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == REQUEST_CODE_RECIPIENT_ADDITION) {
       if (resultCode == Activity.RESULT_OK) {
-        final Recipient recipient = AddRecipientActivity.deserializeResult(data);
+        final Recipient recipient = AddRecipientActivityBase.deserializeResult(data);
         if (ObjectHelper.isNotNull(recipient)) {
           requestResult = Pair.create(requestCode, Pair.create(recipient, (String) null));
         }
       }
     } else if (requestCode == REQUEST_CODE_TRANSACTION_CREATION) {
       if (resultCode == Activity.RESULT_OK) {
-        final Pair<Recipient, String> result = TransactionCreationActivity.deserializeResult(data);
+        final Pair<Recipient, String> result = TransactionCreationActivityBase.deserializeResult(
+          data);
         if (ObjectHelper.isNotNull(result)) {
           requestResult = Pair.create(requestCode, result);
         }
@@ -296,6 +308,12 @@ public class RecipientCategoryFragment
         if (ObjectHelper.isNotNull(transactionId)) {
           requestResult = Pair.create(requestCode, Pair.create((Recipient) null, transactionId));
         }
+      }
+    } else if (requestCode == REQUEST_CODE_TRANSACTION) {
+      if (resultCode == Activity.RESULT_OK) {
+        com.tpago.movil.app.ui.main.transaction.summary.TransactionSummaryDialogFragment
+          .create(TransactionSummaryUtil.unwrap(data))
+          .show(this.getFragmentManager(), null);
       }
     }
   }
@@ -352,7 +370,7 @@ public class RecipientCategoryFragment
 
   @Override
   public void setDeleting(boolean deleting) {
-    final DepMainActivity activity = (DepMainActivity) getActivity();
+    final DepMainActivityBase activity = (DepMainActivityBase) getActivity();
     if (deleting) {
       recipientBinder.setDeleting(true);
       activity.showDeleteLinearLayout();
@@ -369,7 +387,7 @@ public class RecipientCategoryFragment
           presenter.stopDeleting();
         }
       });
-      activity.setOnBackPressedListener(new DepMainActivity.OnBackPressedListener() {
+      activity.setOnBackPressedListener(new DepMainActivityBase.OnBackPressedListener() {
         @Override
         public boolean onBackPressed() {
           presenter.stopDeleting();
@@ -390,7 +408,7 @@ public class RecipientCategoryFragment
   @Override
   public void startTransaction(Recipient recipient) {
     startActivityForResult(
-      TransactionCreationActivity.getLaunchIntent(
+      TransactionCreationActivityBase.getLaunchIntent(
         this.getActivity(),
         TransactionCategory.transform(this.category),
         recipient
@@ -412,7 +430,7 @@ public class RecipientCategoryFragment
 
   @Override
   public void setDeleteButtonEnabled(boolean enabled) {
-    ((DepMainActivity) getActivity()).setDeleteButtonEnabled(enabled);
+    ((DepMainActivityBase) getActivity()).setDeleteButtonEnabled(enabled);
   }
 
   @Override
@@ -476,6 +494,15 @@ public class RecipientCategoryFragment
   }
 
   @Override
+  public void startPayPalTransaction(PayPalAccount recipient) {
+    final Intent intent = ActivityToolbar.intentBuilder()
+      .context(this.getContext())
+      .argument(PayPalTransactionArgument.create(recipient))
+      .build();
+    this.startActivityForResult(intent, REQUEST_CODE_TRANSACTION);
+  }
+
+  @Override
   public void onClick(int position) {
     final Object item = adapter.get(position);
     if (item instanceof Recipient) {
@@ -495,14 +522,13 @@ public class RecipientCategoryFragment
               REQUEST_CODE_TRANSACTION_CREATION
             );
           } else {
-            final AlertData alertData = AlertData.builder(this.stringMapper)
+            this.alertManager.builder()
               .message("No hay cuentas activas asociadas a este teléfono.")
-              .build();
-            this.alertManager.show(alertData);
+              .show();
           }
         } else {
           this.startActivityForResult(
-            TransactionCreationActivity.getLaunchIntent(
+            TransactionCreationActivityBase.getLaunchIntent(
               context,
               TransactionCategory.transform(this.category),
               (UserRecipient) item

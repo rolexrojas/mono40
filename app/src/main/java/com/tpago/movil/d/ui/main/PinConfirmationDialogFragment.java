@@ -19,14 +19,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.NumPad;
+import com.tpago.movil.app.ui.DNumPad;
 import com.tpago.movil.d.ui.FullScreenDialogFragment;
 import com.tpago.movil.d.ui.view.BaseAnimatorListener;
 import com.tpago.movil.d.ui.view.widget.PinView;
 import com.tpago.movil.dep.widget.FullSizeLoadIndicator;
 import com.tpago.movil.dep.widget.LoadIndicator;
-import com.tpago.movil.function.Action;
-import com.tpago.movil.function.Consumer;
+import com.tpago.movil.util.function.Action;
+import com.tpago.movil.util.function.Consumer;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.io.Serializable;
@@ -51,6 +51,8 @@ public class PinConfirmationDialogFragment
   private static final String KEY_ACTION_DESCRIPTION = "actionDescription";
   private static final String KEY_ORIGIN_X = "originX";
   private static final String KEY_ORIGIN_Y = "originY";
+
+  //TODO: Create automatic show
 
   public static void show(
     FragmentManager fragmentManager,
@@ -107,7 +109,7 @@ public class PinConfirmationDialogFragment
   @BindView(R.id.pin_view)
   PinView pinView;
   @BindView(R.id.num_pad)
-  NumPad numPad;
+  DNumPad DNumPad;
 
   private Consumer<Integer> numPadDigitConsumer;
   private Action numPadDeleteAction;
@@ -193,18 +195,18 @@ public class PinConfirmationDialogFragment
     pinView.setListener(this);
     // Adds a listener that gets notified every time a button of the num pad is clicked.
     this.numPadDigitConsumer = (digit) -> this.pinView.push(digit);
-    this.numPad.addDigitConsumer(this.numPadDigitConsumer);
+    this.DNumPad.addDigitConsumer(this.numPadDigitConsumer);
     this.numPadDeleteAction = this.pinView::pop;
-    this.numPad.addDeleteAction(this.numPadDeleteAction);
+    this.DNumPad.addDeleteAction(this.numPadDeleteAction);
   }
 
   @Override
   public void onDestroyView() {
     super.onDestroyView();
     // Removes the listener that gets notified every time a button of the num pad is clicked.
-    this.numPad.removeDeleteAction(this.numPadDeleteAction);
+    this.DNumPad.removeDeleteAction(this.numPadDeleteAction);
     this.numPadDeleteAction = null;
-    this.numPad.removeDigitConsumer(this.numPadDigitConsumer);
+    this.DNumPad.removeDigitConsumer(this.numPadDigitConsumer);
     this.numPadDigitConsumer = null;
     // Removes the listener that gets notified every time the pin view starts or finishes loading.
     pinView.setListener(this);

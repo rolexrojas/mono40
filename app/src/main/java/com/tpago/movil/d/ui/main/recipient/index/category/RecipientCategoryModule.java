@@ -1,11 +1,12 @@
 package com.tpago.movil.d.ui.main.recipient.index.category;
 
-import com.tpago.movil.app.ui.FragmentScope;
+import com.tpago.movil.app.ui.fragment.FragmentScope;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.dep.User;
 import com.tpago.movil.dep.net.NetworkService;
+import com.tpago.movil.paypal.PayPalAccountStore;
 
 import dagger.Module;
 import dagger.Provides;
@@ -35,15 +36,17 @@ class RecipientCategoryModule {
     RecipientManager recipientManager,
     User user,
     NetworkService networkService,
-    DepApiBridge depApiBridge
+    DepApiBridge depApiBridge,
+    PayPalAccountStore payPalAccountStore
   ) {
     return new RecipientCategoryPresenter(
       user,
-      stringHelper,
       recipientManager,
-      networkService,
       depApiBridge,
-      this.category
+      this.category,
+      stringHelper,
+      networkService,
+      payPalAccountStore
     );
   }
 }

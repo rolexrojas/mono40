@@ -112,10 +112,11 @@ final class PurchasePresenter extends Presenter<PurchaseScreen> {
       boolean isListEmpty = true;
       this.screen.clearPaymentOptions();
       for (Product paymentOption : this.productManager.getPaymentOptionList()) {
-        if (this.posBridge.isRegistered(paymentOption.getNumberSanitized())) {
+        if (this.posBridge.isRegistered(paymentOption.getAltpanKey())) {
           this.screen.addPaymentOption(paymentOption);
           if (isListEmpty) {
             isListEmpty = false;
+            this.screen.setHasCards(true);
           }
         }
       }
@@ -152,76 +153,68 @@ final class PurchasePresenter extends Presenter<PurchaseScreen> {
   final void activateCards(final String pin) {
     if (this.activationSubscription.isUnsubscribed()) {
       this.activationSubscription = Single
-        .defer(new Callable<Single<Result<Boolean, ErrorCode>>>() {
-          @Override
-          public Single<Result<Boolean, ErrorCode>> call() throws Exception {
-            final Result<Boolean, ErrorCode> result;
-            if (networkService.checkIfAvailable()) {
-              final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(pin);
-              if (pinValidationResult.isSuccessful()) {
-                if (pinValidationResult.getData()) {
-                  boolean flag = false;
-                  final StringBuilder builder = new StringBuilder();
-                  final List<Pair<Product, PosResult>> productRegistrationResultList
-                    = productManager.registerPaymentOptionList(phoneNumber, pin);
-                  for (Pair<Product, PosResult> pair : productRegistrationResultList) {
-                    flag |= pair.second.isSuccessful();
-                    builder.append(pair.second.getData());
-                    builder.append("\n");
-                  }
-                  if (flag) {
-                    result = Result.create(true);
-                  } else {
-                    result = Result.create(
-                      FailureData.create(ErrorCode.UNEXPECTED, builder.toString()));
-                  }
+        .defer(() -> {
+          final Result<Boolean, ErrorCode> result;
+          if (networkService.checkIfAvailable()) {
+            final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(pin);
+            if (pinValidationResult.isSuccessful()) {
+              if (pinValidationResult.getData()) {
+                boolean flag = false;
+                final StringBuilder builder = new StringBuilder();
+                final List<Pair<Product, PosResult>> productRegistrationResultList
+                  = productManager.registerPaymentOptionList(phoneNumber, pin);
+                for (Pair<Product, PosResult> pair : productRegistrationResultList) {
+                  flag |= pair.second.isSuccessful();
+                  builder.append(pair.second.getData());
+                  builder.append("\n");
+                }
+                if (flag) {
+                  result = Result.create(Boolean.TRUE);
                 } else {
-                  result = Result.create(FailureData.create(ErrorCode.INCORRECT_PIN));
+                  result = Result.create(
+                    FailureData.create(ErrorCode.UNEXPECTED, builder.toString()));
                 }
               } else {
-                result = Result.create(
-                  FailureData.create(
-                    ErrorCode.UNEXPECTED,
-                    pinValidationResult.getError()
-                      .getDescription()
-                  ));
+                result = Result.create(FailureData.create(ErrorCode.INCORRECT_PIN));
               }
             } else {
-              result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
+              result = Result.create(
+                FailureData.create(
+                  ErrorCode.UNEXPECTED,
+                  pinValidationResult.getError()
+                    .getDescription()
+                ));
             }
-            return Single.just(result);
+          } else {
+            result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
           }
+          return Single.just(result);
         })
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Action1<Result<Boolean, ErrorCode>>() {
-          @Override
-          public void call(Result<Boolean, ErrorCode> result) {
-            screen.onActivationFinished(result.isSuccessful());
-            if (result.isSuccessful()) {
-              resume();
-            } else {
-              final FailureData<ErrorCode> failureData = result.getFailureData();
-              switch (failureData.getCode()) {
-                case INCORRECT_PIN:
-                  screen.showGenericErrorDialog(stringHelper.resolve(R.string.error_incorrect_pin));
-                  break;
-                case UNAVAILABLE_NETWORK:
-                  screen.showUnavailableNetworkError();
-                  break;
-                default:
-                  screen.showGenericErrorDialog(failureData.getDescription());
-                  break;
-              }
+        .subscribe(result -> {
+          screen.onActivationFinished(result.isSuccessful());
+          if (result.isSuccessful()) {
+            resume();
+            screen.requestNFCPermissions();
+          } else {
+            final FailureData<ErrorCode> failureData = result.getFailureData();
+            switch (failureData.getCode()) {
+              case INCORRECT_PIN:
+                screen.showGenericErrorDialog(stringHelper.resolve(R.string.error_incorrect_pin));
+                break;
+              case UNAVAILABLE_NETWORK:
+                screen.showUnavailableNetworkError();
+                break;
+              default:
+                screen.showGenericErrorDialog(failureData.getDescription());
+                break;
             }
           }
-        }, new Action1<Throwable>() {
-          @Override
-          public void call(Throwable throwable) {
-            Timber.e(throwable);
-            screen.onActivationFinished(false);
-            screen.showGenericErrorDialog();
-          }
+        }, throwable -> {
+          Timber.e(throwable);
+          screen.onActivationFinished(false);
+          screen.showGenericErrorDialog();
         });
     }
   }

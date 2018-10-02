@@ -128,7 +128,11 @@ public class LoanTransactionCreationFragment extends ChildFragment<TransactionCr
     this.otherAmountTextWatcher = new BaseTextWatcher() {
       @Override
       public void afterTextChanged(Editable s) {
-        presenter.onOtherAmountChanged(new BigDecimal(s.toString()));
+        if (s.toString().length() > 0){
+          presenter.onOtherAmountChanged(new BigDecimal(s.toString()));
+        }else{
+          presenter.onOtherAmountChanged(new BigDecimal(0));
+        }
       }
     };
     this.otherAmountEditText.addTextChangedListener(this.otherAmountTextWatcher);

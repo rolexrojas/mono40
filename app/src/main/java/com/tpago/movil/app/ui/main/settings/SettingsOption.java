@@ -35,7 +35,7 @@ abstract class SettingsOption extends RelativeLayout {
   SettingsOption(Context context, AttributeSet attributeSet, int defaultStyleAttribute) {
     super(context, attributeSet, defaultStyleAttribute);
 
-    // Extracts the primary text from the given attribute set.
+    // Extracts the primary text from the given attribute sync.
     final TypedArray array = context.obtainStyledAttributes(
       attributeSet,
       R.styleable.SettingsOption,

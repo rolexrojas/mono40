@@ -2,9 +2,7 @@
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:background="@drawable/d_background_colored"
+  style="@style/Container.Light.Primary"
   android:focusable="true"
   android:focusableInTouchMode="true"
   android:orientation="vertical"
@@ -18,7 +16,7 @@
     android:paddingTop="16dp">
 
     <TextView
-      fontPath="@string/gothamRoundedBookFont"
+      fontPath="@string/font_gothamRounded_book"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_gravity="top"
@@ -39,6 +37,6 @@
       android:id="@+id/recycler_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="@color/common_white"/>
+      android:background="@color/white"/>
   </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

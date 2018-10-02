@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.tpago.movil.R;
@@ -13,9 +12,7 @@ import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.main.AddAnotherProductFragment;
 import com.tpago.movil.d.ui.main.MainContainer;
 import com.tpago.movil.dep.graphics.Drawables;
-import com.tpago.movil.dep.graphics.RadialGradientDrawable;
 
-import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -32,19 +29,12 @@ public final class NonNfcPurchaseFragment extends ChildFragment<MainContainer> {
 
   private Unbinder unbinder;
 
-  @BindColor(R.color.common_background_gradient_dark_end)
-  int backgroundEndColor;
-  @BindColor(R.color.common_background_gradient_dark_start)
-  int backgroundStartColor;
-
-  @BindView(R.id.view_root)
-  View rootView;
-  @BindView(R.id.image_view_art)
-  ImageView artImageView;
+  @BindView(R.id.image_view_art) ImageView artImageView;
 
   @OnClick(R.id.button_learn_more)
-  void onLearnMoreButtonClicked() {
-    getContainer().setChildFragment(AddAnotherProductFragment.newInstance(), true, true);
+  final void onLearnMoreButtonClicked() {
+    this.getContainer()
+      .setChildFragment(AddAnotherProductFragment.newInstance(), true, true);
   }
 
   @Nullable
@@ -60,28 +50,9 @@ public final class NonNfcPurchaseFragment extends ChildFragment<MainContainer> {
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+
     // Binds all the annotated resources, views and methods.
     unbinder = ButterKnife.bind(this, view);
-    // Adds a listener that gets notified when the root view has been laid out.
-    final ViewTreeObserver observer = rootView.getViewTreeObserver();
-    if (observer.isAlive()) {
-      observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-        @Override
-        public void onGlobalLayout() {
-          // Removes the listener that gets notified when the root view has been laid out.
-          final ViewTreeObserver observer = rootView.getViewTreeObserver();
-          if (observer.isAlive()) {
-            observer.removeOnGlobalLayoutListener(this);
-          }
-          // Sets the background of the fragment.
-          rootView.setBackground(new RadialGradientDrawable(
-            backgroundStartColor,
-            backgroundEndColor,
-            rootView.getHeight()
-          ));
-        }
-      });
-    }
   }
 
   @Override
@@ -106,6 +77,7 @@ public final class NonNfcPurchaseFragment extends ChildFragment<MainContainer> {
   @Override
   public void onDestroyView() {
     super.onDestroyView();
+
     // Unbinds all the annotated resources, views and methods.
     unbinder.unbind();
   }

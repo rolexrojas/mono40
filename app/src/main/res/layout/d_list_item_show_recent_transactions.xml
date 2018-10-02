@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-  style="@style/ListItem.Normal"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
+  style="@style/ListItem.Normal"
   tools:ignore="MissingPrefix">
+
   <Button
     android:id="@+id/show_recent_transactions.button"
-    style="@style/ListItemButton"
+    style="@style/Button.Light.Secondary"
     android:layout_alignParentEnd="true"
     android:layout_centerVertical="true"
     android:text="@string/see"/>
+
   <TextView
     android:id="@+id/show_recent_transactions.message"
-    fontPath="@string/gothamRoundedBookFont"
+    fontPath="@string/font_gothamRounded_book"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_alignParentStart="true"

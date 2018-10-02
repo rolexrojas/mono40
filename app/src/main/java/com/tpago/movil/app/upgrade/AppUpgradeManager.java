@@ -1,7 +1,7 @@
 package com.tpago.movil.app.upgrade;
 
 import com.tpago.movil.app.upgrade.action.AppUpgradeAction;
-import com.tpago.movil.store.Store;
+import com.tpago.movil.store.DiskStore;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.ObjectHelper;
 
@@ -24,25 +24,26 @@ public final class AppUpgradeManager {
     return new Builder();
   }
 
-  private final Store store;
+  private final DiskStore diskStore;
   private final List<AppUpgradeAction> actions;
 
   private AppUpgradeManager(Builder builder) {
-    this.store = builder.store;
+    this.diskStore = builder.diskStore;
     this.actions = builder.actions;
   }
 
   public final Completable upgrade() {
     Completable completable = Completable.complete();
-    final int lastActionId = ObjectHelper
-      .firstNonNull(this.store.get(STORE_KEY_ACTION_ID, Integer.class), 0);
+    final int lastActionId = this.diskStore.get(STORE_KEY_ACTION_ID, Integer.class)
+      .defaultIfEmpty(0)
+      .blockingGet();
     final int size = this.actions.size();
     if (lastActionId < size) {
       Completable actionCompletable;
       for (int i = lastActionId; i < size; i++) {
         final int actionId = i + 1;
         actionCompletable = Completable.fromAction(this.actions.get(i))
-          .doOnComplete(() -> this.store.set(STORE_KEY_ACTION_ID, actionId))
+          .concatWith(this.diskStore.set(STORE_KEY_ACTION_ID, actionId))
           .doOnComplete(() -> Timber.d("Upgrade action %1$s applied", actionId));
         completable = completable.concatWith(actionCompletable);
       }
@@ -52,15 +53,15 @@ public final class AppUpgradeManager {
 
   public static final class Builder {
 
-    private Store store;
+    private DiskStore diskStore;
     private final List<AppUpgradeAction> actions;
 
     private Builder() {
       this.actions = new ArrayList<>();
     }
 
-    public final Builder store(Store store) {
-      this.store = ObjectHelper.checkNotNull(store, "store");
+    public final Builder store(DiskStore diskStore) {
+      this.diskStore = ObjectHelper.checkNotNull(diskStore, "diskStore");
       return this;
     }
 
@@ -74,7 +75,7 @@ public final class AppUpgradeManager {
 
     public final AppUpgradeManager build() {
       BuilderChecker.create()
-        .addPropertyNameIfMissing("store", ObjectHelper.isNull(this.store))
+        .addPropertyNameIfMissing("diskStore", ObjectHelper.isNull(this.diskStore))
         .checkNoMissingProperties();
       return new AppUpgradeManager(this);
     }

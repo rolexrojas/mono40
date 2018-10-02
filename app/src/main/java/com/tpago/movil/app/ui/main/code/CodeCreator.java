@@ -4,9 +4,9 @@ import android.support.v4.app.FragmentManager;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
-import com.tpago.movil.app.ui.FragmentHelper;
+import com.tpago.movil.app.ui.fragment.FragmentHelper;
 import com.tpago.movil.Code;
-import com.tpago.movil.function.Consumer;
+import com.tpago.movil.util.function.Consumer;
 import com.tpago.movil.util.ObjectHelper;
 
 /**

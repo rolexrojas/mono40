@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.tpago.movil.R;
+import com.tpago.movil.company.CompanyHelper;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.util.ObjectHelper;
 
@@ -27,11 +28,15 @@ final class PaymentMethodChooserRecyclerViewAdapter
 
   PaymentMethodChooserRecyclerViewAdapter(
     Context context,
-    PaymentMethodChooserAdapter paymentMethodChooserAdapter
+    PaymentMethodChooserAdapter paymentMethodChooserAdapter,
+    CompanyHelper companyHelper
   ) {
     ObjectHelper.checkNotNull(context, "context");
-    this.paymentMethodHolderBinder = new PaymentMethodHolderBinder(context);
-    this.selectedPaymentMethodHolderBinder = new SelectedPaymentMethodHolderBinder(context);
+    this.paymentMethodHolderBinder = new PaymentMethodHolderBinder(context, companyHelper);
+    this.selectedPaymentMethodHolderBinder = new SelectedPaymentMethodHolderBinder(
+      context,
+      companyHelper
+    );
     ObjectHelper.checkNotNull(paymentMethodChooserAdapter, "paymentMethodChooserAdapter");
     this.paymentMethodChooserAdapter = paymentMethodChooserAdapter;
     this.paymentMethodChooserAdapter.setObserver(this);

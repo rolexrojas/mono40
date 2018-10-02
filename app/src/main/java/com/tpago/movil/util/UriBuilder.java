@@ -3,8 +3,14 @@ package com.tpago.movil.util;
 import android.net.Uri;
 
 import com.tpago.movil.DisplayDensity;
+import com.tpago.movil.company.Company;
+import com.tpago.movil.company.CompanyHelper;
+import com.tpago.movil.company.partner.Partner;
+import com.tpago.movil.company.partner.PartnerStore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -49,11 +55,34 @@ public final class UriBuilder {
    * @throws IllegalArgumentException
    *   If {@code template} is {@code null} or empty.
    * @throws IllegalArgumentException
-   *   If {@code template} does not contains the {@link #DISPLAY_DENSITY_PLACEHOLDER placeholder}
+   *   If {@code template} does not containsType the {@link #DISPLAY_DENSITY_PLACEHOLDER placeholder}
    *   used for the {@link DisplayDensity display density} of the device.
    */
   public static UriBuilder create(String template) {
     return new UriBuilder(template);
+  }
+
+  /**
+   * Construct a uri depending on the partner
+   * @param partnerStore List where the partners are going to be taken
+   * @param companyHelper Extract the uri of the company
+   * @param partnerId Partner that is going to be used to obtain the uri
+   * @return
+   */
+  public static Uri createFromPartners(PartnerStore partnerStore, CompanyHelper companyHelper, String partnerId) {
+    List<Partner> partners = partnerStore.getProviders()
+            .defaultIfEmpty(new ArrayList<>())
+            .blockingGet();
+
+    Partner currentPartner = null;
+    for (Partner partner: partners) {
+      if(partner.id().equals(partnerId)){
+        currentPartner = partner;
+      }
+    }
+
+    Uri uri = companyHelper.getLogoUri(currentPartner, Company.LogoStyle.GRAY_20);
+    return uri;
   }
 
   private final String template;

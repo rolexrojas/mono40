@@ -2,9 +2,7 @@
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:background="@drawable/container_light"
+  style="@style/Container.Light.Primary"
   android:orientation="vertical">
 
   <FrameLayout style="@style/Dep.App.Widget.AppBar">
@@ -35,11 +33,11 @@
     android:layout_marginEnd="32dp"
     android:layout_marginStart="32dp"
     android:alpha="0.1"
-    android:background="@color/common_black"/>
+    android:background="@color/black"/>
 
-  <com.tpago.movil.app.ui.NumPad
+  <com.tpago.movil.app.ui.DNumPad
     android:id="@+id/transaction_creation.num_pad"
-    style="@style/NumPad.Light"
+    style="@style/DNumPad.Light"
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"
@@ -47,8 +45,6 @@
 
   <Button
     android:id="@+id/action.transfer"
-    style="@style/Dep.App.Widget.Button.Blurred"
-    android:layout_width="match_parent"
-    android:layout_height="50dp"
+    style="@style/Button.Light.Primary"
     android:text="@string/forward"/>
 </LinearLayout>

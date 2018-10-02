@@ -8,12 +8,14 @@ import android.support.v4.os.CancellationSignal;
 import android.view.View;
 
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.AlertData;
-import com.tpago.movil.app.ui.FragmentReplacer;
+import com.tpago.movil.app.ui.fragment.FragmentReplacer;
+import com.tpago.movil.dep.init.InitFragment;
 import com.tpago.movil.session.FingerprintMethodSignatureSupplier;
-import com.tpago.movil.dep.init.InitActivity;
+import com.tpago.movil.dep.init.InitActivityBase;
 import com.tpago.movil.session.SessionManager;
+import com.tpago.movil.util.FailureData;
 import com.tpago.movil.util.Result;
+import com.tpago.movil.util.StringHelper;
 
 import javax.inject.Inject;
 
@@ -53,22 +55,50 @@ public final class FingerprintUnlockFragment extends BaseUnlockFragment {
   public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    InitActivity.get(this.getActivity())
+    InitActivityBase.get(this.getActivity())
       .getInitComponent()
       .inject(this);
   }
 
   @Override
-  protected void handleError(Throwable throwable) {
-    if (!(throwable instanceof KeyPermanentlyInvalidatedException)) {
-      super.handleError(throwable);
-    } else {
-      final AlertData alertData = AlertData.builder(this.stringMapper)
-        .message("Como la seguridad del dispositivo fue desactivada o una nueva huella fue enrolada es requerido volver a configurar el desbloqueo rápido con huellas digitales, pero primero debe desbloquear la aplicación usando su contraseña.")
-        .positiveButtonAction(this::onUserPasswordTextViewClicked)
-        .build();
-      this.alertManager.show(alertData);
+  protected void handleSuccess(Result<?> result) {
+    if (result.isSuccessful()) {
+      this.fragmentReplacer.begin(InitFragment.create())
+          .commit();
+      return;
     }
+    final FailureData failureData = result.failureData();
+    final String errorMessage = StringHelper.isNullOrEmpty(failureData.description()) ?
+            getString(R.string.error_generic) : failureData.description();
+
+    this.cancelFingerprintAfterRead();
+
+    this.alertManager.builder()
+        .message(errorMessage)
+        .positiveButtonAction(this::startToListenFingerprint)
+        .show();
+
+  }
+
+  @Override
+  protected void handleError(Throwable throwable) {
+    if ((throwable instanceof KeyPermanentlyInvalidatedException)) {
+      this.alertManager.builder()
+        .message(getString(R.string.unregisteredfingerprint))
+        .positiveButtonAction(this::onUserPasswordTextViewClicked)
+        .show();
+      return;
+    }
+
+    this.cancelFingerprintAfterRead();
+
+    this.alertManager.builder()
+      .title(R.string.error_generic_title)
+      .message(R.string.error_generic)
+      .positiveButtonAction(this::startToListenFingerprint)
+      .build()
+      .show();
+
   }
 
   @Override
@@ -76,7 +106,14 @@ public final class FingerprintUnlockFragment extends BaseUnlockFragment {
     super.onResume();
 
     this.logoAnimator.moveTopAndScaleDown();
+    this.startToListenFingerprint();
+  }
 
+
+  private void startToListenFingerprint() {
+    if (!this.disposable.isDisposed()) {
+      this.disposable.dispose();
+    }
     this.cancellationSignal = new CancellationSignal();
     this.disposable = this.fingerprintSignatureSupplierCreator.create(this.cancellationSignal)
       .get()
@@ -94,17 +131,36 @@ public final class FingerprintUnlockFragment extends BaseUnlockFragment {
       })
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
+      .doOnDispose(() -> {
+        if(this.cancellationSignal != null) {
+          if (this.cancellationSignal.isCanceled()) {
+            return;
+          }
+          this.cancellationSignal.cancel();
+        }
+      })
       .subscribe(
         this::handleSuccess,
         this::handleError
       );
   }
 
+  private void cancelFingerprintAfterRead() {
+    if (!this.disposable.isDisposed()) {
+      this.disposable.dispose();
+    }
+
+    if(this.cancellationSignal != null) {
+      if (this.cancellationSignal.isCanceled()) {
+        return;
+      }
+      this.cancellationSignal.cancel();
+    }
+  }
   @Override
   public void onPause() {
     this.cancellationSignal.cancel();
     this.cancellationSignal = null;
-
     super.onPause();
   }
 }

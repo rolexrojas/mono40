@@ -17,6 +17,10 @@ public class Result<T> {
     return new Result<>(ObjectHelper.checkNotNull(successData, "successData"), null);
   }
 
+  public static <T> Result<T> createEmptySuccessResult(T successData) {
+    return new Result<>(successData, null);
+  }
+
   /**
    * Creates a new failure result.
    *

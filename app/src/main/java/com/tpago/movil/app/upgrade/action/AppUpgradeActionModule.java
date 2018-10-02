@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.session.SessionManager;
-import com.tpago.movil.store.Store;
+import com.tpago.movil.store.DiskStore;
 
 import javax.inject.Singleton;
 
@@ -21,8 +21,8 @@ public final class AppUpgradeActionModule {
   @Provides
   @Singleton
   @IntoSet
-  AppUpgradeAction appUpgradeAction1(Context context, Store store) {
-    return AppUpgradeAction1.create(context, store);
+  AppUpgradeAction appUpgradeAction1(Context context, DiskStore diskStore) {
+    return AppUpgradeAction1.create(context, diskStore);
   }
 
   @Provides

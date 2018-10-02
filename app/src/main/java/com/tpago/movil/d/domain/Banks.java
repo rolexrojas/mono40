@@ -2,13 +2,14 @@ package com.tpago.movil.d.domain;
 
 import android.graphics.Color;
 
-import com.tpago.movil.d.domain.Bank;
+import com.tpago.movil.company.bank.Bank;
 
 /**
  * @author hecvasro
  */
 @Deprecated
 public final class Banks {
+
   private static final int BANK_ADEMI = 38;
   private static final int BANK_ADOPEM = 44;
   private static final int BANK_ALAVER = 35;
@@ -21,24 +22,11 @@ public final class Banks {
   private static final int BANK_SCOTIA = 49;
 
   /**
-   * Temporary fix for: <a href="https://trello.com/c/09CG3iLy">https://trello.com/c/09CG3iLy</a>
-   */
-  @Deprecated
-  public static String getName(Bank bank) {
-    switch (bank.getCode()) {
-      case BANK_POPULAR:
-        return "Popular";
-      default:
-        return bank.getName();
-    }
-  }
-
-  /**
    * Temporary fix for: TODO
    */
   @Deprecated
   public static int getColor(Bank bank) {
-    switch (bank.getCode()) {
+    switch (bank.code()) {
       case BANK_ADEMI:
         return Color.parseColor("#008286");
       case BANK_ADOPEM:

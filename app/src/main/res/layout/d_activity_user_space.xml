@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:background="@drawable/container_light"
+  style="@style/Container.Light.Primary"
   android:orientation="vertical">
+
   <FrameLayout style="@style/Dep.App.Widget.AppBar">
+
     <android.support.v7.widget.Toolbar
       android:id="@+id/toolbar"
       style="@style/Toolbar"
-      android:layout_gravity="center_vertical" />
+      android:layout_gravity="center_vertical"/>
   </FrameLayout>
+
   <android.support.v7.widget.RecyclerView
     android:id="@+id/recycler_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"/>
 </LinearLayout>

@@ -1,8 +1,8 @@
 package com.tpago.movil.app.ui.main.code;
 
-import com.tpago.movil.app.ui.AlertManager;
-import com.tpago.movil.app.ui.FragmentScope;
-import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.app.ui.alert.AlertManager;
+import com.tpago.movil.app.ui.fragment.FragmentScope;
+import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.util.ObjectHelper;
 
 import dagger.Module;

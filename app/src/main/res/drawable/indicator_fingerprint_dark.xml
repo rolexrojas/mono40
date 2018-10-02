@@ -3,16 +3,16 @@
   xmlns:android="http://schemas.android.com/apk/res/android">
   <item>
     <shape android:shape="oval">
-      <solid android:color="@color/whiteAlpha10"/>
+      <solid android:color="@color/white_10"/>
       <size
         android:width="@dimen/normalImageSize"
         android:height="@dimen/normalImageSize"/>
     </shape>
   </item>
   <item
-    android:bottom="@dimen/smallVerticalSpace"
+    android:bottom="@dimen/space_vertical_16"
     android:drawable="@drawable/icon_fingerprint_dark"
-    android:left="@dimen/smallHorizontalSpace"
-    android:right="@dimen/smallHorizontalSpace"
-    android:top="@dimen/smallVerticalSpace"/>
+    android:left="@dimen/space_horizontal_16"
+    android:right="@dimen/space_horizontal_16"
+    android:top="@dimen/space_vertical_16"/>
 </layer-list>

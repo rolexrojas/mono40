@@ -2,7 +2,7 @@
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
-  style="@style/CodeCreatorContainer"
+  style="@style/Container.Dark.Primary"
   android:orientation="vertical">
 
   <FrameLayout style="@style/LogoContainer">
@@ -29,8 +29,8 @@
   <!-- [START] Deprecated -->
   <com.tpago.movil.dep.widget.LabelFitterLayout
     style="@style/Widget.LabelFitterLayout"
-    android:layout_marginEnd="@dimen/hugeHorizontalSpace"
-    android:layout_marginStart="@dimen/hugeHorizontalSpace"
+    android:layout_marginEnd="@dimen/space_horizontal_64"
+    android:layout_marginStart="@dimen/space_horizontal_64"
     app:maxTextSize="50sp">
 
     <com.tpago.movil.dep.widget.EditableLabel
@@ -41,9 +41,9 @@
   </com.tpago.movil.dep.widget.LabelFitterLayout>
   <!-- [END] Deprecated -->
 
-  <com.tpago.movil.app.ui.NumPad
-    android:id="@+id/numPad"
-    style="@style/NumPad.Dark"
+  <com.tpago.movil.app.ui.DNumPad
+    android:id="@+id/num_pad"
+    style="@style/DNumPad.Dark"
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"/>

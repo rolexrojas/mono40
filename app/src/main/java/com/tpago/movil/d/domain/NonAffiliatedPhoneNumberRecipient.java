@@ -7,7 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.tpago.movil.PhoneNumber;
-import com.tpago.movil.dep.Partner;
+import com.tpago.movil.company.bank.Bank;
+import com.tpago.movil.company.partner.Partner;
+import com.tpago.movil.d.domain.util.StringUtils;
 import com.tpago.movil.dep.text.Texts;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
@@ -124,13 +126,21 @@ public class NonAffiliatedPhoneNumberRecipient extends Recipient {
 
   @Override
   public String toString() {
-    return PhoneNumberRecipient.class.getSimpleName() + ":{super=" + super.toString()
-      + ",phoneNumber='" + this.phoneNumber + "'"
-      + ",bank=" + this.bank.toString()
-      + ",accountNumber='" + this.accountNumber + "'"
-      + ",product=" + this.product.toString()
-      + ",carrier=" + this.carrier.toString()
-      + "}";
+    String asd = NonAffiliatedPhoneNumberRecipient.class.getSimpleName() + ":{super=" + super.toString()
+            + ",phoneNumber='" + (ObjectHelper.isNull(this.phoneNumber) ? "" : this.phoneNumber.value()) + "'"
+            + ",bank=" + (ObjectHelper.isNull(this.bank) ? "" : StringHelper.emptyIfNull(this.bank.toString()))
+            + ",accountNumber='" + StringHelper.emptyIfNull(this.accountNumber) + "'"
+            + ",product=" + (ObjectHelper.isNull(this.product) ? "" : this.product.toString())
+            + ",carrier=" + (ObjectHelper.isNull(this.carrier) ? "" : this.carrier.toString())
+            + "}";
+    return asd;
+  }
+
+  @Override
+  public boolean matches(@Nullable String query) {
+    return super.matches(query)
+            || StringUtils.matches(this.phoneNumber.value(), query)
+            || StringUtils.matches(this.getLabel(), query);
   }
 
   @Override

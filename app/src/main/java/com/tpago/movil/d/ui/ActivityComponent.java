@@ -7,7 +7,7 @@ import com.tbruyelle.rxpermissions.RxPermissions;
  */
 public interface ActivityComponent {
 
-  void inject(DepBaseActivity activity);
+  void inject(DepActivityBase activity);
 
   AppDialog.Creator provideScreenDialogCreator();
 

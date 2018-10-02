@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.FragmentQualifier;
-import com.tpago.movil.app.ui.FragmentReplacer;
+import com.tpago.movil.app.ui.fragment.FragmentQualifier;
+import com.tpago.movil.app.ui.fragment.FragmentReplacer;
 import com.tpago.movil.dep.InformationalDialogFragment;
 
 import javax.inject.Inject;

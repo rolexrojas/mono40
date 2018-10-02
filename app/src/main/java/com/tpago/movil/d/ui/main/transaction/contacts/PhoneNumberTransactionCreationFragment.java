@@ -12,22 +12,21 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.NumPad;
-import com.tpago.movil.d.data.StringHelper;
+import com.tpago.movil.app.ui.DNumPad;
 import com.tpago.movil.d.data.Formatter;
+import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.main.transaction.TransactionCategory;
+import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
 import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
-import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
-import com.tpago.movil.dep.text.Texts;
-import com.tpago.movil.function.Action;
-import com.tpago.movil.function.Consumer;
+import com.tpago.movil.util.function.Action;
+import com.tpago.movil.util.function.Consumer;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -53,6 +52,7 @@ public class PhoneNumberTransactionCreationFragment
   private static final BigDecimal ONE = BigDecimal.ONE;
   private static final BigDecimal TEN = BigDecimal.TEN;
   private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
+  private TransactionCreationActivityBase activity;
 
   @Inject
   StringHelper stringHelper;
@@ -72,7 +72,7 @@ public class PhoneNumberTransactionCreationFragment
   @BindView(R.id.transaction_creation_amount)
   PrefixableTextView amountTextView;
   @BindView(R.id.transaction_creation_num_pad)
-  NumPad numPad;
+  DNumPad DNumPad;
   @BindView(R.id.action_recharge)
   Button rechargeActionButton;
   @BindView(R.id.action_transfer)
@@ -155,6 +155,7 @@ public class PhoneNumberTransactionCreationFragment
       .transactionCreationComponent(getContainer().getComponent())
       .build();
     component.inject(this);
+    activity = (TransactionCreationActivityBase) getActivity();
   }
 
   @Nullable
@@ -176,11 +177,11 @@ public class PhoneNumberTransactionCreationFragment
     paymentMethodChooser.setOnPaymentMethodChosenListener(this);
     // Adds a listener that gets notified every time a num pad button is pressed.
     this.numPadDigitConsumer = this::onDigitClicked;
-    this.numPad.addDigitConsumer(this.numPadDigitConsumer);
+    this.DNumPad.addDigitConsumer(this.numPadDigitConsumer);
     this.numPadDotAction = this::onDotClicked;
-    this.numPad.addDotAction(this.numPadDotAction);
+    this.DNumPad.addDotAction(this.numPadDotAction);
     this.numPadDeleteAction = this::onDeleteClicked;
-    this.numPad.addDeleteAction(this.numPadDeleteAction);
+    this.DNumPad.addDeleteAction(this.numPadDeleteAction);
 
     if (this.transactionCategory == TRANSFER) {
       this.transferActionButton.setVisibility(View.VISIBLE);
@@ -218,11 +219,11 @@ public class PhoneNumberTransactionCreationFragment
   public void onDestroyView() {
     super.onDestroyView();
     // Removes the listener that gets notified every time a num pad button is pressed.
-    this.numPad.removeDeleteAction(this.numPadDeleteAction);
+    this.DNumPad.removeDeleteAction(this.numPadDeleteAction);
     this.numPadDeleteAction = null;
-    this.numPad.removeDotAction(this.numPadDotAction);
+    this.DNumPad.removeDotAction(this.numPadDotAction);
     this.numPadDotAction = null;
-    this.numPad.removeDigitConsumer(this.numPadDigitConsumer);
+    this.DNumPad.removeDigitConsumer(this.numPadDigitConsumer);
     this.numPadDigitConsumer = null;
 
     // Removes the listener that gets notified every time a payment option is chosen.
@@ -252,6 +253,21 @@ public class PhoneNumberTransactionCreationFragment
     }
   }
 
+  private boolean isNullOrEmpty(String s){
+    return s == null || s == "";
+  }
+
+  private String selectLabelToShow(String recipientName, String label, String identifier) {
+    if(!isNullOrEmpty(recipientName)){
+      return recipientName;
+    }
+
+    if(!isNullOrEmpty(label)){
+      return label;
+    }
+
+    return identifier;
+  }
   @Override
   public void requestPin() {
     if (value.get()
@@ -262,10 +278,7 @@ public class PhoneNumberTransactionCreationFragment
       final int y = location[1];
       final String currency = amountTextView.getPrefix()
         .toString();
-      String label = recipient.getLabel();
-      if (Texts.checkIfEmpty(label)) {
-        label = recipient.getIdentifier();
-      }
+      String label = selectLabelToShow(activity.getRecipientName(), recipient.getLabel(), recipient.getIdentifier());
       final String description;
       if (transactionCategory == TRANSFER) {
         description = getString(
@@ -274,7 +287,9 @@ public class PhoneNumberTransactionCreationFragment
           label,
           Formatter.amount(
             currency,
-            Bank.calculateTransferCost(value.get())
+            this.fundingAccount.get()
+              .getBank()
+              .calculateTransferCost(this.value.get())
           )
         );
       } else {
@@ -290,12 +305,7 @@ public class PhoneNumberTransactionCreationFragment
       PinConfirmationDialogFragment.show(
         getChildFragmentManager(),
         description,
-        new PinConfirmationDialogFragment.Callback() {
-          @Override
-          public void confirm(String pin) {
-            presenter.transferTo(value.get(), pin);
-          }
-        },
+          (PinConfirmationDialogFragment.Callback) pin -> presenter.transferTo(value.get(), pin),
         x,
         y
       );

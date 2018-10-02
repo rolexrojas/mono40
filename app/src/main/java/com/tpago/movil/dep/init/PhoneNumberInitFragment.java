@@ -7,16 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.tpago.movil.function.Action;
-import com.tpago.movil.function.Consumer;
-import com.tpago.movil.util.Digit;
+import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.dep.init.capture.CaptureFragment;
+import com.tpago.movil.util.function.Action;
+import com.tpago.movil.util.function.Consumer;
+import com.tpago.movil.util.digit.Digit;
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.ActivityQualifier;
-import com.tpago.movil.app.ui.FragmentReplacer;
-import com.tpago.movil.dep.init.register.RegisterFragment;
-import com.tpago.movil.dep.init.signin.SignInFragment;
+import com.tpago.movil.app.ui.activity.ActivityQualifier;
+import com.tpago.movil.app.ui.fragment.FragmentReplacer;
 import com.tpago.movil.dep.widget.EditableLabel;
-import com.tpago.movil.app.ui.NumPad;
+import com.tpago.movil.app.ui.DNumPad;
 
 import javax.inject.Inject;
 
@@ -40,7 +40,7 @@ public final class PhoneNumberInitFragment
   private PhoneNumberInitPresenter presenter;
 
   @BindView(R.id.editable_label_phone_number) EditableLabel phoneNumberEditableLabel;
-  @BindView(R.id.num_pad) NumPad numPad;
+  @BindView(R.id.num_pad) DNumPad DNumPad;
   @BindView(R.id.button_move_to_next_screen) Button nextButton;
 
   @Inject @ActivityQualifier FragmentReplacer fragmentReplacer;
@@ -89,10 +89,10 @@ public final class PhoneNumberInitFragment
 
     // Adds a listener that gets notified each time a digit button of the num pad is clicked.
     this.numPadDigitConsumer = this::onDigitClicked;
-    this.numPad.addDigitConsumer(this.numPadDigitConsumer);
+    this.DNumPad.addDigitConsumer(this.numPadDigitConsumer);
     // Adds a listener that gets notified each time the delete button of the num pad is clicked.
     this.numPadDeleteAction = this::onDeleteClicked;
-    this.numPad.addDeleteAction(this.numPadDeleteAction);
+    this.DNumPad.addDeleteAction(this.numPadDeleteAction);
 
     // Starts the presenter.
     presenter.onViewStarted();
@@ -104,10 +104,10 @@ public final class PhoneNumberInitFragment
     presenter.onViewStopped();
 
     // Removes the listener that gets notified each time the delete button of the num pad is clicked.
-    this.numPad.removeDeleteAction(this.numPadDeleteAction);
+    this.DNumPad.removeDeleteAction(this.numPadDeleteAction);
     this.numPadDeleteAction = null;
     // Removes the listener that gets notified each time a digit button of the num pad is clicked.
-    this.numPad.removeDigitConsumer(this.numPadDigitConsumer);
+    this.DNumPad.removeDigitConsumer(this.numPadDigitConsumer);
     this.numPadDigitConsumer = null;
 
     super.onPause();
@@ -143,19 +143,35 @@ public final class PhoneNumberInitFragment
   }
 
   @Override
-  public void moveToSignInScreen() {
-    fragmentReplacer.begin(SignInFragment.create())
-      .addToBackStack()
-      .transition(FragmentReplacer.Transition.SRFO)
-      .commit();
+  public void moveToOneTimePasswordScreen(boolean shouldMoveToSignUpScreen) {
+    Bundle bundle = new Bundle();
+    bundle.putBoolean("shouldMoveToSignUpScreen", shouldMoveToSignUpScreen);
+
+    final PhoneNumber phoneNumber = PhoneNumber.create(phoneNumberEditableLabel.getText().toString());
+    bundle.putString("msisdn", phoneNumber.value());
+
+    OneTimePasswordFragment otpFragment = OneTimePasswordFragment.create();
+    otpFragment.setArguments(bundle);
+
+    fragmentReplacer.begin(otpFragment)
+        .addToBackStack()
+        .transition(FragmentReplacer.Transition.SRFO)
+        .commit();
   }
 
   @Override
-  public void moveToSignUpScreen() {
-    fragmentReplacer.begin(RegisterFragment.create())
-      .addToBackStack()
-      .transition(FragmentReplacer.Transition.SRFO)
-      .commit();
+  public void moveToCaptureScreen() {
+    Bundle bundle = new Bundle();
+    final PhoneNumber phoneNumber = PhoneNumber.create(phoneNumberEditableLabel.getText().toString());
+    bundle.putString("msisdn", phoneNumber.value());
+
+    CaptureFragment captureFragment = CaptureFragment.create();
+    captureFragment.setArguments(bundle);
+
+    fragmentReplacer.begin(captureFragment)
+        .addToBackStack()
+        .transition(FragmentReplacer.Transition.SRFO)
+        .commit();
   }
 
   public final void onDigitClicked(@Digit int digit) {

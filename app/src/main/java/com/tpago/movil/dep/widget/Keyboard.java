@@ -32,7 +32,7 @@ public final class Keyboard {
     if (ObjectHelper.isNotNull(view)) {
       final InputMethodManager imm = getInputMethodManager(view);
       if (ObjectHelper.isNotNull(imm)) {
-        imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
       }
     }
   }

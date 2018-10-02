@@ -6,9 +6,9 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.BaseFragment;
-import com.tpago.movil.app.ui.FragmentReplacer;
-import com.tpago.movil.dep.init.InitActivity;
+import com.tpago.movil.app.ui.fragment.base.FragmentBase;
+import com.tpago.movil.app.ui.fragment.FragmentReplacer;
+import com.tpago.movil.dep.init.InitActivityBase;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.session.UnlockMethod;
 
@@ -17,7 +17,7 @@ import javax.inject.Inject;
 /**
  * @author hecvasro
  */
-public final class UnlockFragment extends BaseFragment {
+public final class UnlockFragment extends FragmentBase {
 
   public static UnlockFragment create() {
     return new UnlockFragment();
@@ -44,7 +44,7 @@ public final class UnlockFragment extends BaseFragment {
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    InitActivity.get(this.getActivity())
+    InitActivityBase.get(this.getActivity())
       .getInitComponent()
       .inject(this);
 

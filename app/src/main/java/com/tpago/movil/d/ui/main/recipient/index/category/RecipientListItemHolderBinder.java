@@ -11,7 +11,11 @@ import android.view.View;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.R;
-import com.tpago.movil.dep.api.ApiImageUriBuilder;
+import com.tpago.movil.company.Company;
+import com.tpago.movil.company.CompanyHelper;
+import com.tpago.movil.company.bank.Bank;
+import com.tpago.movil.company.partner.Partner;
+import com.tpago.movil.company.partner.PartnerStore;
 import com.tpago.movil.dep.api.DCurrencies;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.domain.BillBalance;
@@ -25,12 +29,13 @@ import com.tpago.movil.d.domain.RecipientType;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.UserRecipient;
 import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
-import com.tpago.movil.d.domain.Bank;
-import com.tpago.movil.d.domain.LogoStyle;
 import com.tpago.movil.dep.text.Texts;
+import com.tpago.movil.paypal.PayPalAccountRecipient;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author hecvasro
@@ -40,14 +45,23 @@ class RecipientListItemHolderBinder implements
 
   private final Category category;
   private final RecipientDrawableStore recipientDrawableStore = RecipientDrawableStore.create();
+  private final CompanyHelper companyHelper;
+  private final PartnerStore partnerStore;
 
   private boolean deleting = false;
 
-  public RecipientListItemHolderBinder(Category category) {
+//  public RecipientListItemHolderBinder(Category category, CompanyHelper companyHelper) {
+//    this.category = category;
+//    this.companyHelper = ObjectHelper.checkNotNull(companyHelper, "companyHelper");
+//  }
+
+  public RecipientListItemHolderBinder(Category category, CompanyHelper companyHelper, PartnerStore partnerStore) {
     this.category = category;
+    this.companyHelper = ObjectHelper.checkNotNull(companyHelper, "companyHelper");
+    this.partnerStore = ObjectHelper.checkNotNull(partnerStore, "partnerStore");;
   }
 
-  void setDeleting(boolean deleting) {
+  final void setDeleting(boolean deleting) {
     this.deleting = deleting;
   }
 
@@ -67,23 +81,31 @@ class RecipientListItemHolderBinder implements
       final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) item;
       final Bank bank = r.getBank();
       if (ObjectHelper.isNotNull(bank)) {
-        imageUri = bank.getLogoUri(LogoStyle.PRIMARY_24);
+        imageUri = this.companyHelper.getLogoUri(bank, Company.LogoStyle.COLORED_24);
       }
     } else if (type == RecipientType.BILL) {
-      imageUri = ApiImageUriBuilder.build(
-        context,
-        ((BillRecipient) item).getPartner(),
-        ApiImageUriBuilder.Style.PRIMARY_24
-      );
+      Partner partner = ((BillRecipient) item).getPartner();
+      imageUri = this.companyHelper.getLogoUri(partner, Company.LogoStyle.COLORED_24);
     } else if (type == RecipientType.PRODUCT) {
-      imageUri = ((ProductRecipient) item).getProduct()
-        .getBank()
-        .getLogoUri(LogoStyle.PRIMARY_24);
+      final Bank bank = ((ProductRecipient) item).getProduct()
+        .getBank();
+      imageUri = this.companyHelper.getLogoUri(bank, Company.LogoStyle.COLORED_24);
     } else if (type == RecipientType.USER) {
       final UserRecipient r = (UserRecipient) item;
       imageUri = r.pictureUri();
       if (imageUri == null || imageUri.equals(Uri.EMPTY)) {
         imageDrawable = getDrawable(context, this.recipientDrawableStore.get(r));
+      }
+    } else if (type == RecipientType.PAY_PAL_ACCOUNT) {
+      if (ObjectHelper.isNotNull(this.partnerStore)) {
+        List<Partner> partners = this.partnerStore.getProviders().blockingGet();
+        Partner partner = null;
+        for (Partner p: partners) {
+          if (p.id().toUpperCase().equals("PAL")) {
+            partner = p;
+          }
+        }
+        imageUri = this.companyHelper.getLogoUri(partner, Company.LogoStyle.COLORED_24);
       }
     }
     if (ObjectHelper.isNotNull(imageDrawable)) {

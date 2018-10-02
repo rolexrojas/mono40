@@ -23,7 +23,7 @@ final class UnlockMethodDisableActionFactory {
   final UnlockMethodDisableAction make(UnlockMethod method) {
     ObjectHelper.checkNotNull(method, "method");
     if (!this.actions.containsKey(method)) {
-      throw new IllegalArgumentException(String.format("!this.actions.contains(\"%1$s\")", method));
+      throw new IllegalArgumentException(String.format("!this.actions.containsType(\"%1$s\")", method));
     }
     return this.actions.get(method);
   }

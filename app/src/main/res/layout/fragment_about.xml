@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  style="@style/SettingsContainer"
+  android:clickable="false">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+      style="@style/SettingsSectionTitle"
+      android:text="Oficina Central"/>
+
+    <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+      android:id="@+id/setting_option_mail_office"
+      android:clickable="true"
+      style="@style/SettingsOption"
+      app:primaryText="Envíanos correo"
+      app:secondaryText="info\@tpago.com"/>
+
+    <View
+      style="@style/VerticalDivider.Line"
+      android:layout_marginEnd="@dimen/space_horizontal_20"
+      android:layout_marginStart="@dimen/space_horizontal_20"/>
+
+    <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+      android:id="@+id/setting_option_call_office"
+      android:clickable="true"
+      style="@style/SettingsOption"
+      app:primaryText="Llámanos"
+      app:secondaryText="1-809-732-2525"/>
+
+    <android.support.v4.widget.Space style="@style/VerticalDivider.Space.Normal"/>
+
+    <TextView
+      style="@style/SettingsSectionTitle"
+      android:text="En línea"/>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:orientation="vertical">
+
+        <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+            android:id="@+id/setting_option_site"
+            style="@style/SettingsOption"
+            app:primaryText="Página web"
+            app:secondaryText="www.tpago.com"/>
+
+        <View
+            style="@style/VerticalDivider.Line"
+            android:layout_marginEnd="@dimen/space_horizontal_20"
+            android:layout_marginStart="@dimen/space_horizontal_20"/>
+
+        <LinearLayout
+            android:id="@+id/linear_layout_twitter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:paddingEnd="20dp"
+            android:paddingStart="20dp">
+
+          <ImageView
+              android:layout_width="24dp"
+              android:layout_height="24dp"
+              android:layout_gravity="center_vertical"
+              android:layout_marginEnd="20dp"
+              android:src="@drawable/twitter_copy"/>
+
+          <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+              style="@style/SettingsOption"
+              android:background="@null"
+              android:paddingEnd="0dp"
+              android:paddingStart="0dp"
+              app:primaryText="Twitter"
+              app:secondaryText="\@tpago"/>
+        </LinearLayout>
+
+        <View
+            style="@style/VerticalDivider.Line"
+            android:layout_marginEnd="@dimen/space_horizontal_20"
+            android:layout_marginStart="@dimen/space_horizontal_20"/>
+
+        <LinearLayout
+            android:id="@+id/linear_layout_facebook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:paddingEnd="20dp"
+            android:paddingStart="20dp">
+
+          <ImageView
+              android:layout_width="24dp"
+              android:layout_height="24dp"
+              android:layout_gravity="center_vertical"
+              android:layout_marginEnd="20dp"
+              android:src="@drawable/facebook_copy"/>
+
+          <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+              style="@style/SettingsOption"
+              android:background="@null"
+              android:paddingEnd="0dp"
+              android:paddingStart="0dp"
+              app:primaryText="Facebook"
+              app:secondaryText="facebook.com/tpago"/>
+        </LinearLayout>
+
+        <View
+            style="@style/VerticalDivider.Line"
+            android:layout_marginEnd="@dimen/space_horizontal_20"
+            android:layout_marginStart="@dimen/space_horizontal_20"/>
+
+        <LinearLayout
+            android:id="@+id/linear_layout_instagram"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:paddingEnd="20dp"
+            android:paddingStart="20dp">
+
+          <ImageView
+              android:layout_width="24dp"
+              android:layout_height="24dp"
+              android:layout_gravity="center_vertical"
+              android:layout_marginEnd="20dp"
+              android:src="@drawable/instagram_copy"/>
+
+          <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+              style="@style/SettingsOption"
+              android:background="@null"
+              android:paddingEnd="0dp"
+              android:paddingStart="0dp"
+              app:primaryText="Instagram"
+              app:secondaryText="\@tpago"/>
+        </LinearLayout>
+
+        <View
+            style="@style/VerticalDivider.Line"
+            android:layout_marginEnd="@dimen/space_horizontal_20"
+            android:layout_marginStart="@dimen/space_horizontal_20"/>
+
+        <LinearLayout
+            android:id="@+id/linear_layout_snapchat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:paddingEnd="20dp"
+            android:paddingStart="20dp">
+
+          <ImageView
+              android:layout_width="24dp"
+              android:layout_height="24dp"
+              android:layout_gravity="center_vertical"
+              android:layout_marginEnd="20dp"
+              android:src="@drawable/snapchat_copy"/>
+
+          <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+              style="@style/SettingsOption"
+              android:background="@null"
+              android:paddingEnd="0dp"
+              android:paddingStart="0dp"
+              app:primaryText="Snapchat"
+              app:secondaryText="tpagord"/>
+        </LinearLayout>
+
+        <View
+            style="@style/VerticalDivider.Line"
+            android:layout_marginEnd="@dimen/space_horizontal_20"
+            android:layout_marginStart="@dimen/space_horizontal_20"/>
+
+        <LinearLayout
+            android:id="@+id/linear_layout_youtube"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:paddingEnd="20dp"
+            android:paddingStart="20dp">
+
+          <ImageView
+              android:layout_width="24dp"
+              android:layout_height="24dp"
+              android:layout_gravity="center_vertical"
+              android:layout_marginEnd="20dp"
+              android:src="@drawable/youtube_copy"/>
+
+          <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+              style="@style/SettingsOption"
+              android:background="@null"
+              android:paddingEnd="0dp"
+              android:paddingStart="0dp"
+              app:primaryText="YouTube"
+              app:secondaryText="tPagoTV"/>
+        </LinearLayout>
+      </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+  </LinearLayout>
+</ScrollView>

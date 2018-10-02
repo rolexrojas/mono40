@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  style="@style/Container.Dark.Primary.Second"
+  android:orientation="vertical"
+  tools:ignore="MissingPrefix">
+
+  <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="20dp"
+    android:layout_marginStart="20dp"
+    android:paddingTop="16dp">
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical">
+      <TextView
+        fontPath="@string/font_gothamRounded_medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Selecciona tu banco"
+        android:textColor="#FFFFFF"
+        android:textAlignment="center"
+        android:layout_marginBottom="8sp"
+        android:textSize="20sp"/>
+      <TextView
+        fontPath="@string/font_gothamRounded_book"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:textAlignment="center"
+        android:text="tPago trabaja con productos bancarios, para usarlo debes afiliar tus cuentas o tarjetas."
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:layout_marginBottom="32sp"/>
+      <TextView
+        android:id="@+id/continue_capture"
+        fontPath="@string/font_gothamRounded_bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:textAlignment="center"
+        android:text="Continuar con 1 banco"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:layout_marginBottom="30sp"/>
+    </LinearLayout>
+  </FrameLayout>
+
+  <include layout="@layout/d_reusable_divider"/>
+
+  <android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/swipe_refresh_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+      android:id="@+id/recycler_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/white"/>
+  </android.support.v4.widget.SwipeRefreshLayout>
+  <Button
+    android:visibility="gone"
+    android:id="@+id/button_move_to_next_screen"
+    style="@style/Button.Dark.Primary"
+    android:text="@string/init_phone_number_button_move_to_next_screen"/>
+
+</LinearLayout>

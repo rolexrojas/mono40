@@ -8,6 +8,7 @@
   android:paddingEnd="24dp"
   android:paddingStart="24dp"
   tools:ignore="MissingPrefix">
+
   <TextView
     android:id="@+id/text_view"
     fontPath="@string/font_roboto_regular"
@@ -15,8 +16,9 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="12dp"
     android:lineSpacingExtra="8sp"
-    android:textColor="@color/common_black_alpha_54"
+    android:textColor="@color/black_54"
     android:textSize="16sp"/>
+
   <android.support.design.widget.TextInputLayout
     android:id="@+id/text_input_layout"
     fontPath="@string/font_roboto_regular"
@@ -25,15 +27,16 @@
     android:layout_marginTop="16dp"
     android:lineSpacingExtra="8sp"
     android:textSize="16sp">
+
     <EditText
       android:id="@+id/edit_text"
-      fontPath="@string/font_roboto_regular"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      fontPath="@string/font_roboto_regular"
       android:inputType="text|textCapWords|textPersonName"
       android:lineSpacingExtra="8sp"
-      android:textColor="@color/common_black_alpha_87"
-      android:textColorHint="@color/common_primary"
+      android:textColor="@color/black_87"
+      android:textColorHint="@color/primary"
       android:textSize="16sp"/>
   </android.support.design.widget.TextInputLayout>
 </LinearLayout>

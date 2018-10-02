@@ -1,6 +1,6 @@
 package com.tpago.movil.time;
 
-import com.tpago.movil.function.Predicate;
+import com.tpago.movil.util.function.Predicate;
 
 /**
  * @author hecvasro

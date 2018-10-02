@@ -9,7 +9,7 @@
     layout="@layout/d_action_proceed"/>
   <TextView
     android:id="@+id/action.title"
-    fontPath="@string/gothamRoundedBookFont"
+    fontPath="@string/font_gothamRounded_book"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginEnd="12dp"

@@ -4,8 +4,9 @@ import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.tpago.movil.dep.Partner;
+import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.d.domain.ProductInfo;
+
 import java.math.BigDecimal;
 
 /**

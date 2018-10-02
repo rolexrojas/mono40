@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+  xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <LinearLayout style="@style/NumPadRow">
+
+    <Button
+      android:id="@+id/digitOneNumPadButton"
+      style="@style/DTextNumPadButton"
+      android:text="1"/>
+
+    <Button
+      android:id="@+id/digitTwoNumPadButton"
+      style="@style/DTextNumPadButton"
+      android:text="2"/>
+
+    <Button
+      android:id="@+id/digitThreeNumPadButton"
+      style="@style/DTextNumPadButton"
+      android:text="3"/>
+  </LinearLayout>
+
+  <LinearLayout style="@style/NumPadRow">
+
+    <Button
+      android:id="@+id/digitFourNumPadButton"
+      style="@style/DTextNumPadButton"
+      android:text="4"/>
+
+    <Button
+      android:id="@+id/digitFiveNumPadButton"
+      style="@style/DTextNumPadButton"
+      android:text="5"/>
+
+    <Button
+      android:id="@+id/digitSixNumPadButton"
+      style="@style/DTextNumPadButton"
+      android:text="6"/>
+  </LinearLayout>
+
+  <LinearLayout style="@style/NumPadRow">
+
+    <Button
+      android:id="@+id/digitSevenNumPadButton"
+      style="@style/DTextNumPadButton"
+      android:text="7"/>
+
+    <Button
+      android:id="@+id/digitEightNumPadButton"
+      style="@style/DTextNumPadButton"
+      android:text="8"/>
+
+    <Button
+      android:id="@+id/digitNineNumPadButton"
+      style="@style/DTextNumPadButton"
+      android:text="9"/>
+  </LinearLayout>
+
+  <LinearLayout style="@style/NumPadRow">
+
+    <Button
+      android:id="@+id/dotNumPadButton"
+      style="@style/DTextNumPadButton"
+      android:text="."/>
+
+    <Button
+      android:id="@+id/digitZeroNumPadButton"
+      style="@style/DTextNumPadButton"
+      android:text="0"/>
+
+    <ImageButton
+      android:id="@+id/deleteNumPadButton"
+      style="@style/DImageNumPadButton"/>
+  </LinearLayout>
+</merge>

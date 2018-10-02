@@ -1,13 +1,12 @@
 package com.tpago.movil.dep.init;
 
 import com.tpago.movil.api.Api;
-import com.tpago.movil.app.ui.AlertData;
-import com.tpago.movil.app.ui.AlertManager;
+import com.tpago.movil.app.ui.alert.AlertManager;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
-import com.tpago.movil.data.StringMapper;
-import com.tpago.movil.reactivex.DisposableHelper;
-import com.tpago.movil.util.Digit;
-import com.tpago.movil.util.DigitHelper;
+import com.tpago.movil.app.StringMapper;
+import com.tpago.movil.reactivex.DisposableUtil;
+import com.tpago.movil.util.digit.Digit;
+import com.tpago.movil.util.digit.DigitUtil;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.Presenter;
@@ -48,7 +47,7 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
   }
 
   private void updateView() {
-    final String phoneNumber = DigitHelper.toDigitString(this.phoneNumberDigits);
+    final String phoneNumber = DigitUtil.toDigitString(this.phoneNumberDigits);
     this.isPhoneNumberValid = PhoneNumber.isValid(phoneNumber);
     if (ObjectHelper.isNotNull(this.view)) {
       this.view.setTextInputContent(PhoneNumber.format(phoneNumber));
@@ -89,31 +88,28 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
 
   private void handleSuccess(PhoneNumber phoneNumber, @PhoneNumber.State int state) {
     if (state == PhoneNumber.State.NONE) {
-      final AlertData data = AlertData.builder(this.stringMapper)
+      this.alertManager.builder()
         .title(R.string.init_phone_number_error_not_affiliated_title)
         .message(R.string.init_phone_number_error_not_affiliated_message)
         .positiveButtonText(R.string.init_phone_number_error_not_affiliated_positive_button_text)
-        .build();
-      this.alertManager.show(data);
+        .positiveButtonAction(() -> this.view.moveToCaptureScreen())
+        .show();
+
     } else {
       this.initData.setPhoneNumber(phoneNumber, state);
-      if (state == PhoneNumber.State.AFFILIATED) {
-        this.view.moveToSignUpScreen();
-      } else {
-        this.view.moveToSignInScreen();
-      }
+      this.view.moveToOneTimePasswordScreen(state == PhoneNumber.State.AFFILIATED);
     }
   }
 
   private void handleError(Throwable throwable) {
     Timber.e(throwable, "Fetching phone number state");
-    this.alertManager.show(AlertData.createForGenericFailure(this.stringMapper));
+    this.alertManager.showAlertForGenericFailure();
   }
 
   final void validate() {
     if (this.isPhoneNumberValid) {
       final PhoneNumber phoneNumber = PhoneNumber
-        .create(DigitHelper.toDigitString(this.phoneNumberDigits));
+        .create(DigitUtil.toDigitString(this.phoneNumberDigits));
       this.disposable = this.api.fetchPhoneNumberState(phoneNumber)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
@@ -121,12 +117,11 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
         .doFinally(this::hideTakeoverLoader)
         .subscribe((s) -> this.handleSuccess(phoneNumber, s), this::handleError);
     } else {
-      final AlertData data = AlertData.builder(this.stringMapper)
+      this.alertManager.builder()
         .title(R.string.init_phone_number_error_incorrect_number_title)
         .message(R.string.init_phone_number_error_incorrect_number_message)
         .positiveButtonText(R.string.init_phone_number_error_incorrect_number_positive_button_text)
-        .build();
-      this.alertManager.show(data);
+        .show();
       this.view.showTextInputAsErratic(true);
     }
   }
@@ -136,14 +131,14 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
     final PhoneNumber phoneNumber = this.initData.getPhoneNumber();
     if (ObjectHelper.isNotNull(phoneNumber)) {
       this.phoneNumberDigits.clear();
-      this.phoneNumberDigits.addAll(DigitHelper.toDigitList(phoneNumber.value()));
+      this.phoneNumberDigits.addAll(DigitUtil.toDigitList(phoneNumber.value()));
     }
     this.updateView();
   }
 
   @Override
   public void onViewStopped() {
-    DisposableHelper.dispose(this.disposable);
+    DisposableUtil.dispose(this.disposable);
   }
 
   interface View extends Presenter.View {
@@ -156,8 +151,8 @@ public final class PhoneNumberInitPresenter extends Presenter<PhoneNumberInitPre
 
     void showNextButtonAsEnabled(boolean showAsEnabled);
 
-    void moveToSignInScreen();
+    void moveToOneTimePasswordScreen(boolean shouldMoveToSignUpScreen);
 
-    void moveToSignUpScreen();
+    void moveToCaptureScreen();
   }
 }

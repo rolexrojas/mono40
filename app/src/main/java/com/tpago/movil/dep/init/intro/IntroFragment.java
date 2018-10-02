@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.ActivityQualifier;
-import com.tpago.movil.app.ui.FragmentReplacer;
+import com.tpago.movil.app.ui.activity.ActivityQualifier;
+import com.tpago.movil.app.ui.fragment.FragmentReplacer;
 import com.tpago.movil.dep.init.BaseInitFragment;
 import com.tpago.movil.dep.init.LogoAnimator;
 import com.tpago.movil.dep.init.PhoneNumberInitFragment;
@@ -70,7 +70,7 @@ public final class IntroFragment extends BaseInitFragment {
     // Binds all the annotated resources, views and methods.
     unbinder = ButterKnife.bind(this, view);
     // Initializes the view pager and the tab layout.
-    viewPager.setAdapter(new IntroTabFragmentAdapter(getChildFragmentManager()));
+    viewPager.setAdapter(new IntroTabFragmentAdapter(getChildFragmentManager(), getContext()));
     tabLayout.setupWithViewPager(viewPager);
     // Creates the automatic tab switcher.
     autoTabSwitcher = new AutoTabSwitcher(viewPager);

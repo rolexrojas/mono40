@@ -2,10 +2,13 @@ package com.tpago.movil.d.data;
 
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import com.tpago.movil.R;
 
+import com.tpago.movil.d.domain.Product;
+import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.ui.main.recipient.index.category.Category;
 
 import java.math.BigDecimal;
@@ -66,6 +69,48 @@ public final class StringHelper {
   @NonNull
   public final String cannotProcessYourRequestAtTheMoment() {
     return getString(R.string.cannot_process_your_request_at_the_moment);
+  }
+
+  @Nullable
+  public final String recipientAdditionConfirmationMessage(@NonNull Recipient recipient) {
+    return format(R.string.format_recipient_addition_message_contact, recipient.getIdentifier());
+  }
+
+  @NonNull
+  public final String transactionCreationConfirmationTitle() {
+    return getString(R.string.transactionSucceeded);
+  }
+
+  @Nullable
+  public final String transactionCreationConfirmationMessage(@NonNull Recipient recipient) {
+    switch (recipient.getType()) {
+      case PHONE_NUMBER:
+        return format(R.string.format_transaction_confirmation_message_phone_number,
+          recipient.getIdentifier());
+      default:
+        return null;
+    }
+  }
+
+  @NonNull
+  public final String productNumber(@NonNull Product product) {
+    return product.getNumber().replaceAll("[^\\d]", "");
+  }
+
+  @NonNull
+  public final String maskedProductNumber(@NonNull Product product) {
+    final String format;
+    if (Product.checkIfCreditCard(product)) {
+      format = getString(R.string.format_productNumber_masked_creditCard);
+    } else {
+      format = getString(R.string.format_productNumber_masked);
+    }
+    return String.format(format, productNumber(product));
+  }
+
+  @NonNull
+  public final String noResults(@NonNull String query) {
+    return String.format(getString(R.string.list_no_results), query);
   }
 
   @NonNull

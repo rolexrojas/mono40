@@ -1,6 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+  <!-- [button] -->
+  <!-- [button/dark] -->
+  <!-- [button/dark/primary] -->
+  <style name="Button.Dark.Primary" parent="Base.Button.Dark.Primary">
+    <item name="android:background">@drawable/button_dark_primary</item>
+  </style>
+  <!-- [button/dark/secondary] -->
+  <style name="Button.Dark.Secondary" parent="Base.Button.Dark.Secondary">
+    <item name="android:background">@drawable/button_dark_secondary</item>
+  </style>
+  <!-- [button/dark/tertiary] -->
+  <style name="Button.Dark.Tertiary" parent="Base.Button.Dark.Tertiary">
+    <item name="android:background">@drawable/button_dark_tertiary</item>
+  </style>
+  <!-- [button/light] -->
+  <!-- [button/light/primary] -->
+  <style name="Button.Light.Primary" parent="Base.Button.Light.Primary">
+    <item name="android:background">@drawable/button_light_primary</item>
+  </style>
+  <!-- [button/light/secondary] -->
+  <style name="Button.Light.Secondary" parent="Base.Button.Light.Secondary">
+    <item name="android:background">@drawable/button_light_secondary</item>
+  </style>
+  <!-- [button/light/tertiary] -->
+  <style name="Button.Light.Tertiary" parent="Base.Button.Light.Tertiary">
+    <item name="android:background">@drawable/button_light_tertiary</item>
+  </style>
+
+  <!-- TODO: Remove every style from this point downwards -->
   <style name="SettingsText.Title" parent="Base.SettingsText.Title">
     <!-- TODO: Add letterSpacing of 0.8sp -->
   </style>
@@ -14,137 +43,106 @@
     <item name="android:letterSpacing">0.05</item>
   </style>
 
-  <!-- TODO: Remove every style from this point downwards -->
-
-
-  <!-- [START] App styles -->
-  <style name="D.Widget.Button.Dark.Gradient" parent="D.Base.Widget.Button.Dark.Gradient">
-    <item name="android:background">@drawable/d_widget_button_dark_gradient</item>
+  <style
+    name="Dep.App.Widget.CommercePaymentOptionProductNumber"
+    parent="Dep.Base.Widget.CommercePaymentOptionProductNumber">
+    <item name="android:letterSpacing">
+      @dimen/commerce_payment_option_product_number_default_text_letter_spacing
+    </item>
   </style>
-  <style name="D.Widget.Button.Dark.Solid.Rounded" parent="D.Base.Widget.Button.Dark.Solid.Rounded">
-    <item name="android:background">@drawable/d_widget_button_dark_solid_rounded</item>
+
+  <style
+    name="Dep.App.Widget.CommercePaymentOptionProductOwnerName"
+    parent="Dep.Base.Widget.CommercePaymentOptionProductOwnerName">
+    <item name="android:letterSpacing">
+      @dimen/commerce_payment_option_product_owner_name_default_text_letter_spacing
+    </item>
   </style>
-  <style name="D.Widget.Button.Dark.Transparent.Rounded" parent="D.Base.Widget.Button.Dark.Transparent.Rounded">
-    <item name="android:background">@drawable/d_widget_button_dark_transparent_rounded</item>
+
+  <style
+    name="Dep.App.Widget.CommercePaymentOptionReady"
+    parent="Dep.Base.Widget.CommercePaymentOptionReady">
+    <item name="android:letterSpacing">@dimen/commerce_payment_option_ready_text_letter_spacing
+    </item>
   </style>
-  <style name="D.Widget.Button.Light.Solid" parent="D.Base.Widget.Button.Light.Solid">
-    <item name="android:background">@drawable/d_widget_button_light_solid</item>
+
+  <style name="Dep.AppTabText"
+         parent="Dep.BaseDep.AppTabText">
+    <item name="android:letterSpacing">@dimen/text.letter_spacing.small</item>
   </style>
-  <!-- [END] App styles -->
 
-  <!-- [START] Product screen styles -->
-  <style name="D.Products.Label.Secondary" parent="D.Base.Products.Label.Secondary">
-    <item name="android:letterSpacing">0.07</item>
+  <style
+    name="Text.Contact.PhoneNumber"
+    parent="Dep.App.Text.Contact.BasePhoneNumber">
+    <item name="android:letterSpacing">@dimen/text.letter_spacing.small</item>
   </style>
-  <!-- [END] Product screen styles -->
 
-  <!-- Deprecated styles -->
-    <style name="Dep.App.Widget.Button.Colored" parent="Dep.Base.Widget.Button.Colored">
-      <item name="android:background">@drawable/d_button_colored</item>
-    </style>
-    <style name="Dep.App.Widget.Button.Colored.Rounded" parent="Dep.Base.Widget.Button.Colored.Rounded">
-      <item name="android:background">@drawable/d_button_colored_rounded</item>
-    </style>
-    <style
-      name="Dep.App.Text.CommercePaymentMessage"
-      parent="Dep.Base.Text.CommercePaymentMessage">
-      <item name="android:letterSpacing">@dimen/commerce_payment_message_text_default_letter_spacing</item>
-    </style>
+  <!-- Menu styles -->
+  <style
+    name="MenuItem"
+    parent="Dep.BaseMenuItem"/>
 
-    <style
-      name="Dep.App.Widget.CommercePaymentOptionProductNumber"
-      parent="Dep.Base.Widget.CommercePaymentOptionProductNumber">
-      <item name="android:letterSpacing">@dimen/commerce_payment_option_product_number_default_text_letter_spacing</item>
-    </style>
+  <style
+    name="MenuItem.Small"
+    parent="Dep.BaseMenuItem.Small">
+    <item name="android:letterSpacing">0.081</item> <!-- 1.3sp -->
+  </style>
 
-    <style
-      name="Dep.App.Widget.CommercePaymentOptionProductOwnerName"
-      parent="Dep.Base.Widget.CommercePaymentOptionProductOwnerName">
-      <item name="android:letterSpacing">@dimen/commerce_payment_option_product_owner_name_default_text_letter_spacing</item>
-    </style>
+  <style
+    name="MenuItem.Normal"
+    parent="Dep.BaseMenuItem.Normal">
+    <item name="android:letterSpacing">0.081</item> <!-- 1.3sp -->
+  </style>
 
-    <style
-      name="Dep.App.Widget.CommercePaymentOptionReady"
-      parent="Dep.Base.Widget.CommercePaymentOptionReady">
-      <item name="android:letterSpacing">@dimen/commerce_payment_option_ready_text_letter_spacing</item>
-    </style>
+  <style
+    name="MenuItem.Large"
+    parent="Dep.BaseMenuItem.Large">
+    <item name="android:letterSpacing">0.062</item> <!-- 1sp -->
+  </style>
 
-    <style
-      name="Dep.App.Widget.Button.Blurred"
-      parent="Dep.Base.Widget.Button.Blurred">
-      <item name="android:background">@drawable/d_app_widget_button_blurred</item>
-    </style>
+  <!-- Accounts screen styles -->
+  <style
+    name="ListItemAccountAlias"
+    parent="Dep.BaseListItemAccountAlias">
+    <item name="android:letterSpacing">0.062</item> <!-- 1sp -->
+  </style>
 
-    <style name="Dep.AppTabText"
-      parent="Dep.BaseDep.AppTabText">
-      <item name="android:letterSpacing">@dimen/text.letter_spacing.small</item>
-    </style>
+  <!-- Recent transactions screen styles -->
+  <style
+    name="ListItemGroupTitle"
+    parent="Dep.BaseListItemGroupTitle">
+    <item name="android:letterSpacing">0.062</item> <!-- 1sp -->
+  </style>
 
-    <style
-      name="Text.Contact.PhoneNumber"
-      parent="Dep.App.Text.Contact.BasePhoneNumber">
-      <item name="android:letterSpacing">@dimen/text.letter_spacing.small</item>
-    </style>
+  <style
+    name="ListItemTransactionType"
+    parent="Dep.BaseListItemTransactionType">
+    <item name="android:letterSpacing">0.05</item> <!-- 0.8sp -->
+  </style>
 
-    <!-- Menu styles -->
-    <style
-      name="MenuItem"
-      parent="Dep.BaseMenuItem"/>
-    <style
-      name="MenuItem.Small"
-      parent="Dep.BaseMenuItem.Small">
-      <item name="android:letterSpacing">0.081</item> <!-- 1.3sp -->
-    </style>
-    <style
-      name="MenuItem.Normal"
-      parent="Dep.BaseMenuItem.Normal">
-      <item name="android:letterSpacing">0.081</item> <!-- 1.3sp -->
-    </style>
-    <style
-      name="MenuItem.Large"
-      parent="Dep.BaseMenuItem.Large">
-      <item name="android:letterSpacing">0.062</item> <!-- 1sp -->
-    </style>
+  <!-- Add another account screen styles -->
+  <style
+    name="ListItemInstructionIndex"
+    parent="Dep.BaseListItemInstructionIndex">
+    <item name="android:letterSpacing">0.062</item> <!-- 1sp -->
+  </style>
 
-    <!-- Accounts screen styles -->
-    <style
-      name="ListItemAccountAlias"
-      parent="Dep.BaseListItemAccountAlias">
-      <item name="android:letterSpacing">0.062</item> <!-- 1sp -->
-    </style>
+  <!-- [START] Product styles -->
+  <style
+    name="ProductAliasText"
+    parent="Dep.BaseProductAliasText">
+    <item name="android:letterSpacing">@dimen/text.letter_spacing.normal</item>
+  </style>
+  <!-- [END] Product styles -->
+  <!-- [START] Contact styles -->
+  <style
+    name="RecipientExtraText"
+    parent="Dep.BaseRecipientExtraText">
+    <item name="android:letterSpacing">@dimen/text.letter_spacing.small</item>
+  </style>
 
-    <!-- Recent transactions screen styles -->
-    <style
-      name="ListItemGroupTitle"
-      parent="Dep.BaseListItemGroupTitle">
-      <item name="android:letterSpacing">0.062</item> <!-- 1sp -->
-    </style>
+    <style name="LabelClickable.Dark"></style>
 
-    <style
-      name="ListItemTransactionType"
-      parent="Dep.BaseListItemTransactionType">
-      <item name="android:letterSpacing">0.05</item> <!-- 0.8sp -->
-    </style>
-
-    <!-- Add another account screen styles -->
-    <style
-      name="ListItemInstructionIndex"
-      parent="Dep.BaseListItemInstructionIndex">
-      <item name="android:letterSpacing">0.062</item> <!-- 1sp -->
-    </style>
-
-    <!-- [START] Product styles -->
-    <style
-      name="ProductAliasText"
-      parent="Dep.BaseProductAliasText">
-      <item name="android:letterSpacing">@dimen/text.letter_spacing.normal</item>
-    </style>
-    <!-- [END] Product styles -->
-    <!-- [START] Contact styles -->
-    <style
-      name="RecipientExtraText"
-      parent="Dep.BaseRecipientExtraText">
-      <item name="android:letterSpacing">@dimen/text.letter_spacing.small</item>
-    </style>
-    <!-- [END] Contact styles -->
+  <style name="LabelClickable"></style>
+  <!-- [END] Contact styles -->
 </resources>

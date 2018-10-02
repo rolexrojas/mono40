@@ -1,7 +1,7 @@
 package com.tpago.movil.app.ui.main.code;
 
 import com.tpago.movil.app.ui.Presenter;
-import com.tpago.movil.util.Digit;
+import com.tpago.movil.util.digit.Digit;
 
 /**
  * @author hecvasro

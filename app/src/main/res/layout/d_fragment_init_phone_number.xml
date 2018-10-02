@@ -34,15 +34,15 @@
       android:layout_height="match_parent"/>
   </com.tpago.movil.dep.widget.LabelFitterLayout>
 
-  <com.tpago.movil.app.ui.NumPad
+  <com.tpago.movil.app.ui.DNumPad
     android:id="@+id/num_pad"
-    style="@style/NumPad.Dark"
+    style="@style/DNumPad.Dark"
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"/>
 
   <Button
     android:id="@+id/button_move_to_next_screen"
-    style="@style/D.Widget.Button.Dark.Gradient"
+    style="@style/Button.Dark.Primary"
     android:text="@string/init_phone_number_button_move_to_next_screen"/>
 </LinearLayout>

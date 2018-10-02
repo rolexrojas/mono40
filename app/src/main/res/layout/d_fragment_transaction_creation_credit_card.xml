@@ -9,9 +9,7 @@
 
   <Button
     android:id="@+id/button"
-    style="@style/D.Widget.Button.Light.Solid"
-    android:layout_width="match_parent"
-    android:layout_height="50dp"
+    style="@style/Button.Light.Primary"
     android:layout_alignParentBottom="true"/>
 
   <LinearLayout
@@ -44,7 +42,7 @@
           android:gravity="bottom|end"/>
 
         <TextView
-          fontPath="@string/gothamRoundedMediumFont"
+          fontPath="@string/font_gothamRounded_medium"
           android:layout_width="wrap_content"
           android:layout_height="match_parent"
           android:layout_alignParentStart="true"
@@ -105,7 +103,7 @@
         <com.tpago.movil.d.ui.view.widget.PrefixableTextView
           android:id="@+id/prefixable_text_view_period"
           style="@style/D.Screen.Products.Text.Widget.Amount.Content"
-          fontPath="@string/gothamRoundedBookFont"
+          fontPath="@string/font_gothamRounded_book"
           android:layout_width="wrap_content"
           android:layout_height="match_parent"
           android:layout_alignParentEnd="true"
@@ -113,7 +111,7 @@
 
         <RadioButton
           android:id="@+id/radio_button_pay_period"
-          fontPath="@string/gothamRoundedBookFont"
+          fontPath="@string/font_gothamRounded_book"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_alignParentStart="true"
@@ -138,7 +136,7 @@
         <com.tpago.movil.d.ui.view.widget.PrefixableTextView
           android:id="@+id/prefixable_text_view_minimum"
           style="@style/D.Screen.Products.Text.Widget.Amount.Content"
-          fontPath="@string/gothamRoundedBookFont"
+          fontPath="@string/font_gothamRounded_book"
           android:layout_width="wrap_content"
           android:layout_height="match_parent"
           android:layout_alignParentEnd="true"
@@ -146,7 +144,7 @@
 
         <RadioButton
           android:id="@+id/radio_button_pay_minimum"
-          fontPath="@string/gothamRoundedBookFont"
+          fontPath="@string/font_gothamRounded_book"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_alignParentStart="true"
@@ -171,7 +169,7 @@
         <com.tpago.movil.d.ui.view.widget.PrefixableTextView
           android:id="@+id/prefixable_text_view_total"
           style="@style/D.Screen.Products.Text.Widget.Amount.Content"
-          fontPath="@string/gothamRoundedBookFont"
+          fontPath="@string/font_gothamRounded_book"
           android:layout_width="wrap_content"
           android:layout_height="match_parent"
           android:layout_alignParentEnd="true"
@@ -179,7 +177,7 @@
 
         <RadioButton
           android:id="@+id/radio_button_pay_total"
-          fontPath="@string/gothamRoundedBookFont"
+          fontPath="@string/font_gothamRounded_book"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_alignParentStart="true"

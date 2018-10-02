@@ -1,6 +1,6 @@
 package com.tpago.movil.d.ui.main.transaction.contacts;
 
-import com.tpago.movil.app.ui.FragmentScope;
+import com.tpago.movil.app.ui.fragment.FragmentScope;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.Recipient;

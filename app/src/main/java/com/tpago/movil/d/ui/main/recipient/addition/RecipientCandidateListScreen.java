@@ -6,7 +6,7 @@ import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.ui.Refreshable;
 import com.tpago.movil.d.ui.Screen;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * TODO

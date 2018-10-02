@@ -2,8 +2,7 @@ package com.tpago.movil.d.ui.main.recipient.addition.contacts;
 
 import android.content.Context;
 
-import com.tpago.movil.app.ui.FragmentScope;
-import com.tpago.movil.d.data.SchedulerProvider;
+import com.tpago.movil.app.ui.fragment.FragmentScope;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import dagger.Module;
@@ -16,6 +15,7 @@ import dagger.Provides;
  */
 @Module
 class ContactListModule {
+
   @Provides
   @FragmentScope
   ContactProvider provideContactProvider(Context context) {
@@ -24,8 +24,10 @@ class ContactListModule {
 
   @Provides
   @FragmentScope
-  ContactListPresenter providePresenter(SchedulerProvider schedulerProvider,
-    RxPermissions permissionManager, ContactProvider contactProvider) {
-    return new ContactListPresenter(schedulerProvider, permissionManager, contactProvider);
+  ContactListPresenter providePresenter(
+    RxPermissions permissionManager,
+    ContactProvider contactProvider
+  ) {
+    return new ContactListPresenter(permissionManager, contactProvider);
   }
 }

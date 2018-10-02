@@ -74,7 +74,7 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
   public Dialog onCreateDialog(Bundle savedInstanceState) {
     final AlertDialog.Builder builder = Dialogs.builder(getContext())
       .setCancelable(false)
-      .setTitle(R.string.transaction_confirmation_title)
+      .setTitle(R.string.transactionSucceeded)
       .setView(R.layout.d_dialog_transaction_summary);
     if (recipient == null || alreadyExists) {
       builder.setPositiveButton(R.string.ok, null);

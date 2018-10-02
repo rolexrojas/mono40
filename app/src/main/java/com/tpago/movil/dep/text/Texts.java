@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 
+import com.tpago.movil.app.ui.util.Truss;
 import com.tpago.movil.util.ObjectHelper;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;

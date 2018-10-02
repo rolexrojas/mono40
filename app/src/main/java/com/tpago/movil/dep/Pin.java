@@ -1,13 +1,13 @@
 package com.tpago.movil.dep;
 
 import com.google.auto.value.AutoValue;
-import com.tpago.movil.util.Digit;
+import com.tpago.movil.util.digit.Digit;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.tpago.movil.util.DigitHelper.toDigitString;
+import static com.tpago.movil.util.digit.DigitUtil.toDigitString;
 
 /**
  * @author hecvasro

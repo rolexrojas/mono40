@@ -3,7 +3,7 @@ package com.tpago.movil.d.domain.pos;
 import com.cube.sdk.storage.operation.CubeError;
 import com.cube.sdk.storage.operation.PaymentInfo;
 import com.tpago.movil.d.misc.Result;
-import com.tpago.movil.util.DigitHelper;
+import com.tpago.movil.util.digit.DigitUtil;
 
 @Deprecated
 public final class PosResult extends Result<PosCode, String> {
@@ -50,7 +50,7 @@ public final class PosResult extends Result<PosCode, String> {
   }
 
   public static PosResult create(CubeError error) {
-    final int code = Integer.parseInt(DigitHelper.removeNonDigits(error.getErrorCode()));
+    final int code = Integer.parseInt(error.getErrorCode());
     final String data = new StringBuilder()
       .append("{")
       .append("code:")

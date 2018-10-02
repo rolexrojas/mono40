@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.tpago.movil.R;
+import com.tpago.movil.company.CompanyHelper;
 import com.tpago.movil.dep.App;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.data.util.BinderFactory;
@@ -70,6 +71,8 @@ public final class OwnTransactionCreationActivity extends AppCompatActivity impl
   StringHelper stringHelper;
   @Inject
   ProductManager productManager;
+  @Inject
+  CompanyHelper companyHelper;
 
   @Override
   protected void attachBaseContext(Context newBase) {
@@ -122,7 +125,7 @@ public final class OwnTransactionCreationActivity extends AppCompatActivity impl
       .addBinder(
         Product.class,
         OwnProductListItemHolder.class,
-        new OwnProductListItemHolderBinder(stringHelper)
+        new OwnProductListItemHolderBinder(this.stringHelper, this.companyHelper)
       )
       .build();
     adapter = new ListItemAdapter(holderCreatorFactory, holderBinderFactory);
@@ -137,8 +140,8 @@ public final class OwnTransactionCreationActivity extends AppCompatActivity impl
     recyclerView
       .setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(this)
-      .drawable(R.drawable.d_divider)
-      .marginResId(R.dimen.space_horizontal_normal)
+      .drawable(R.drawable.divider_line_horizontal)
+      .marginResId(R.dimen.space_horizontal_20)
       .build();
     recyclerView.addItemDecoration(divider);
   }

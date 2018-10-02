@@ -22,18 +22,14 @@
 
     <TextView
       style="@style/SettingsSectionTitle"
-      android:text="@string/accounts"
-      android:visibility="gone"/>
+      android:text="@string/accounts"/>
 
     <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
       android:id="@+id/primaryPaymentMethodSettingsOption"
       style="@style/SettingsOption"
-      android:visibility="gone"
       app:primaryText="@string/primaryPaymentMethodSettingsOption"/>
 
-    <android.support.v4.widget.Space
-      style="@style/VerticalDivider.Space.Normal"
-      android:visibility="gone"/>
+    <android.support.v4.widget.Space style="@style/VerticalDivider.Space.Normal"/>
 
     <TextView
       style="@style/SettingsSectionTitle"
@@ -46,7 +42,8 @@
 
     <View
       style="@style/VerticalDivider.Line"
-      android:visibility="gone"/>
+      android:layout_marginEnd="@dimen/space_horizontal_20"
+      android:layout_marginStart="@dimen/space_horizontal_20"/>
 
     <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
       android:id="@+id/timeoutSettingsOption"
@@ -56,6 +53,8 @@
 
     <View
       style="@style/VerticalDivider.Line"
+      android:layout_marginEnd="@dimen/space_horizontal_20"
+      android:layout_marginStart="@dimen/space_horizontal_20"
       android:visibility="gone"/>
 
     <com.tpago.movil.app.ui.main.settings.ToggleableSettingsOption
@@ -66,12 +65,34 @@
 
     <View
       style="@style/VerticalDivider.Line"
-      android:visibility="gone"/>
+      android:layout_marginEnd="@dimen/space_horizontal_20"
+      android:layout_marginStart="@dimen/space_horizontal_20"/>
 
     <com.tpago.movil.app.ui.main.settings.SingleLineSettingsOption
       android:id="@+id/pinSettingsOption"
       style="@style/SettingsOption"
-      android:visibility="gone"
       app:primaryText="@string/pinSettingsOption"/>
+
+    <android.support.v4.widget.Space style="@style/VerticalDivider.Space.Normal"/>
+
+    <TextView
+      style="@style/SettingsSectionTitle"
+      android:text="@string/others"/>
+
+    <com.tpago.movil.app.ui.main.settings.SingleLineSettingsOption
+      android:id="@+id/setting_option_help"
+      style="@style/SettingsOption"
+      app:primaryText="@string/help"/>
+
+    <View
+      style="@style/VerticalDivider.Line"
+      android:layout_marginEnd="@dimen/space_horizontal_20"
+      android:layout_marginStart="@dimen/space_horizontal_20"/>
+
+    <com.tpago.movil.app.ui.main.settings.SingleLineSettingsOption
+      android:id="@+id/setting_option_about"
+      style="@style/SettingsOption"
+      app:primaryText="@string/about"/>
+
   </LinearLayout>
 </ScrollView>

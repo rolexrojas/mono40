@@ -1,30 +1,46 @@
 package com.tpago.movil.app.ui.main.settings.profile;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.FragmentManager;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.view.Window;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.R;
 import com.tpago.movil.app.di.ComponentBuilderSupplier;
 import com.tpago.movil.app.di.ComponentBuilderSupplierContainer;
-import com.tpago.movil.app.ui.AlertData;
-import com.tpago.movil.app.ui.AlertManager;
-import com.tpago.movil.app.ui.FragmentModule;
-import com.tpago.movil.app.ui.FragmentQualifier;
+import com.tpago.movil.app.ui.FragmentActivityBase;
+import com.tpago.movil.app.ui.activity.toolbar.ActivityToolbar;
+import com.tpago.movil.app.ui.fragment.FragmentReplacer;
+import com.tpago.movil.app.ui.fragment.base.BaseFragmentModule;
+import com.tpago.movil.app.ui.alert.AlertManager;
+import com.tpago.movil.app.ui.fragment.FragmentQualifier;
+import com.tpago.movil.app.ui.init.unlock.ChangePassword.ChangePasswordFragment;
+import com.tpago.movil.app.ui.init.unlock.EmailPasswordFragment;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.app.ui.main.BaseMainFragment;
+import com.tpago.movil.app.ui.main.settings.profile.change.password.ArgumentChangePassword;
+import com.tpago.movil.d.ui.main.DepMainActivityBase;
 import com.tpago.movil.data.picasso.CircleTransformation;
-import com.tpago.movil.d.ui.main.DepMainActivity;
-import com.tpago.movil.data.StringMapper;
-import com.tpago.movil.dep.init.InitActivity;
+import com.tpago.movil.app.StringMapper;
+import com.tpago.movil.dep.init.InitActivityBase;
 import com.tpago.movil.dep.widget.TextInput;
-import com.tpago.movil.reactivex.DisposableHelper;
+import com.tpago.movil.reactivex.DisposableUtil;
 import com.tpago.movil.session.SessionManager;
+import com.tpago.movil.util.ChangePasswordRadioMenuUtil;
+import com.tpago.movil.util.RadioGroupUtil;
 
 import javax.inject.Inject;
 
@@ -47,6 +63,7 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
   }
 
   private Disposable destroySessionDisposable = Disposables.disposed();
+  private int selectedOption = 0;
 
   @BindView(R.id.pictureImageView) ImageView pictureImageView;
   @BindView(R.id.firstNameTextInput) TextInput firstNameTextInput;
@@ -57,6 +74,7 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
   @Inject
   @FragmentQualifier
   ComponentBuilderSupplier componentBuilderSupplier;
+
   @Inject AlertManager alertManager;
   @Inject ProfilePresenter presenter;
   @Inject SessionManager sessionManager;
@@ -68,10 +86,20 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
     this.presenter.onUserPictureClicked();
   }
 
+  @OnClick(R.id.changeMyPasswordSettingsOption)
+  final void onChangePasswordButtonPressed() {
+    createDialog().show();
+  }
+
   @StringRes
   @Override
   protected int titleResId() {
     return R.string.profile;
+  }
+
+  @Override
+  protected String subTitle() {
+    return "";
   }
 
   @Override
@@ -85,9 +113,9 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
     super.onCreate(savedInstanceState);
 
     // Injects all annotated dependencies.
-    DepMainActivity.get(this.getActivity())
+    DepMainActivityBase.get(this.getActivity())
       .getComponent()
-      .create(FragmentModule.create(this), ProfileModule.create(this))
+      .create(BaseFragmentModule.create(this), ProfileModule.create(this))
       .inject(this);
   }
 
@@ -100,32 +128,125 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
 
   @Override
   public void onPause() {
-    DisposableHelper.dispose(this.destroySessionDisposable);
+    DisposableUtil.dispose(this.destroySessionDisposable);
 
     this.presenter.onPresentationPaused();
 
     super.onPause();
   }
 
+  private Dialog createDialog(){
+    String[] groupName = { getString(R.string.reset_with_pin), getString(R.string.reset_with_email) };
+    Dialog dialog = ChangePasswordRadioMenuUtil.createChangePasswordRadioMenuDialog(getActivity());
+    RadioGroup radioGroup = dialog.findViewById(R.id.radio_group);
+
+    TextView cancel = dialog.findViewById(R.id.cancel_action);
+    TextView confirm = dialog.findViewById(R.id.do_action);
+    confirm.setEnabled(false);
+    confirm.setAlpha(0.5F);
+
+    cancel.setOnClickListener((view) -> dialog.cancel());
+
+    confirm.setOnClickListener((view -> {
+      radioGroup.setOnCheckedChangeListener(null);
+      radioGroup.clearCheck();
+      radioGroup.removeAllViews();
+      dialog.cancel();
+
+      switch (selectedOption) {
+        case 0:
+          openChangePassword(true, false);
+          break;
+        case 1:
+          changePasswordWithEmail();
+          break;
+      }
+    }));
+
+    RadioGroupUtil.setRadioButtons(radioGroup, groupName, getActivity());
+
+    radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+      selectedOption = Integer.valueOf(group.getCheckedRadioButtonId());
+      confirm.setEnabled(true);
+      confirm.setAlpha(1.0F);
+    });
+
+    return dialog;
+  }
+
+  @Override
+  public void openChangePassword(boolean shouldRequestPIN, boolean shouldCloseSession) {
+    this.startActivity(
+      FragmentActivityBase.createLaunchIntent(
+      this.getContext(),
+      ChangePasswordFragment.creator()
+      ).putExtra(ChangePasswordFragment.SHOULD_REQUEST_PIN,shouldRequestPIN)
+       .putExtra(ChangePasswordFragment.SHOULD_CLOSE_SESSION,shouldCloseSession)
+    );
+  }
+
+  private void changePasswordWithEmail(){
+    sessionManager.requestForgotPassword(this.sessionManager.getUser().email().value())
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread())
+      .doOnSubscribe((disposable) -> this.takeoverLoader.show())
+      .doFinally(this.takeoverLoader::hide)
+      .subscribe(() -> handleSuccess(), (error) -> this.alertManager.showAlertForGenericFailure());
+  }
+
+  private void handleSuccess() {
+    this.alertManager.builder()
+      .title(R.string.recipient_addition_title)
+      .message(R.string.request_password_sucess_email)
+      .show();
+  }
   private void handleSignOutSuccess() {
     final Activity activity = this.getActivity();
-    activity.startActivity(InitActivity.getLaunchIntent(activity));
+    activity.startActivity(InitActivityBase.getLaunchIntent(activity));
     activity.finish();
   }
 
   private void handleSignOutFailure(Throwable throwable) {
     Timber.e(throwable, "Signing out");
-    this.alertManager.show(AlertData.createForGenericFailure(this.stringMapper));
+    this.alertManager.showAlertForGenericFailure();
+  }
+
+  private void confirmSignOut() {
+    AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+    builder1.setTitle(R.string.closeSession);
+    builder1.setMessage(R.string.unlinkMessage);
+    builder1.setCancelable(true);
+
+    builder1.setPositiveButton(R.string.close, new DialogInterface.OnClickListener() {
+      public void onClick(DialogInterface dialog, int id) {
+
+        destroySessionDisposable = sessionManager.destroySession().subscribeOn(Schedulers.io())
+              .observeOn(AndroidSchedulers.mainThread())
+              .doOnSubscribe((d) -> takeoverLoader.show())
+              .doFinally(takeoverLoader::hide)
+              .subscribe(() -> handleSignOutSuccess(), (t) -> handleSignOutFailure(t));
+      }
+    });
+
+    builder1.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+      public void onClick(DialogInterface dialog, int id) {
+      }
+    });
+
+    AlertDialog permissionAlert = builder1.create();
+    permissionAlert.setOnShowListener(new DialogInterface.OnShowListener() {
+      @Override
+      public void onShow(DialogInterface dialogInterface) {
+        permissionAlert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.d_widget_text_input_light_erratic));
+        permissionAlert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.d_widget_text_input_light_erratic));
+      }
+    });
+    permissionAlert.show();
   }
 
   @OnClick(R.id.signOutSettingsOption)
   final void onSignOutSettingsOptionClicked() {
-    this.destroySessionDisposable = this.sessionManager.destroySession()
-      .subscribeOn(Schedulers.io())
-      .observeOn(AndroidSchedulers.mainThread())
-      .doOnSubscribe((d) -> this.takeoverLoader.show())
-      .doFinally(this.takeoverLoader::hide)
-      .subscribe(this::handleSignOutSuccess, this::handleSignOutFailure);
+    this.confirmSignOut();
   }
 
   @Override

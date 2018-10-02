@@ -7,14 +7,16 @@ import static com.tpago.movil.d.domain.RecipientType.PHONE_NUMBER;
 
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.RecipientType;
+
 import java.util.HashSet;
 import java.util.Set;
-import rx.functions.Func1;
+
+import io.reactivex.functions.Predicate;
 
 /**
  * @author Hector Vasquez
  */
-final class RecipientDeletionFilter implements Func1<Recipient, Boolean> {
+final class RecipientDeletionFilter implements Predicate<Recipient> {
 
   private static final Set<RecipientType> DELETABLE;
 
@@ -37,7 +39,7 @@ final class RecipientDeletionFilter implements Func1<Recipient, Boolean> {
   }
 
   @Override
-  public Boolean call(Recipient recipient) {
+  public boolean test(Recipient recipient) {
     return !this.deleting || DELETABLE.contains(recipient.getType());
   }
 }

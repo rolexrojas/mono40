@@ -4,9 +4,9 @@ import android.support.annotation.NonNull;
 
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.ui.Screen;
+import com.tpago.movil.paypal.PayPalAccount;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
+import io.reactivex.Observable;
 
 /**
  * Payments screen definition.
@@ -14,6 +14,7 @@ import rx.android.schedulers.AndroidSchedulers;
  * @author hecvasro
  */
 interface RecipientCategoryScreen extends Screen {
+
   /**
    * Creates an {@link Observable observable} that emits all query change events.
    * <p>
@@ -45,18 +46,26 @@ interface RecipientCategoryScreen extends Screen {
   void startTransaction(Recipient recipient);
 
   void setDeleting(boolean deleting);
+
   void showMessage(String message);
+
   void remove(Object item);
+
   void setDeleteButtonEnabled(boolean enabled);
 
   void showRecipientAdditionDialog(Recipient recipient);
+
   void showTransactionSummary(Recipient recipient, boolean alreadyExists, String transactionId);
 
   void requestPin();
 
   void showGenericErrorDialog(String message);
+
   void showGenericErrorDialog();
+
   void showUnavailableNetworkError();
 
   void setDeletingResult(boolean result);
+
+  void startPayPalTransaction(PayPalAccount recipient);
 }

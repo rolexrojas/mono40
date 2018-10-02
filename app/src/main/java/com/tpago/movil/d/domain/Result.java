@@ -46,13 +46,24 @@ public final class Result<T, C> {
 
   @Override
   public String toString() {
+    String failureDataString = "";
+    String succssDataString = "";
+
+    if (ObjectHelper.isNotNull(failureData)) {
+      failureDataString = failureDataString.toString();
+    }
+
+    if (ObjectHelper.isNotNull(successData)) {
+      succssDataString = failureDataString.toString();
+    }
+
     return "Result{"
       + "successful="
-      + successful
+      + String.valueOf(successful)
       + ", successData='"
-      + successData.toString()
+      + failureDataString
       + "', failureData='"
-      + failureData.toString()
+      + succssDataString
       + "'}";
   }
 }

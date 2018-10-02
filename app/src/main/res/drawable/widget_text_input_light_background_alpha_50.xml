@@ -4,7 +4,7 @@
   android:viewportHeight="@dimen/widget_text_input_background_viewport_height"
   android:viewportWidth="@dimen/widget_text_input_background_viewport_width">
   <path
-    android:fillColor="@color/common_transparent"
+    android:fillColor="@color/transparent"
     android:pathData="@string/widget_text_input_background_path_data"
     android:strokeColor="@color/d_widget_text_input_light_background_alpha_50"
     android:strokeWidth="1"/>

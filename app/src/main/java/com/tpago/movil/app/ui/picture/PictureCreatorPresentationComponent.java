@@ -1,14 +1,14 @@
 package com.tpago.movil.app.ui.picture;
 
 import com.tpago.movil.app.di.ComponentBuilder;
-import com.tpago.movil.app.ui.ChildFragmentScope;
+import com.tpago.movil.app.ui.fragment.FragmentScopeChild;
 
 import dagger.Subcomponent;
 
 /**
  * @author hecvasro
  */
-@ChildFragmentScope
+@FragmentScopeChild
 @Subcomponent
 public interface PictureCreatorPresentationComponent {
 

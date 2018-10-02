@@ -6,10 +6,11 @@ import android.support.annotation.NonNull;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
-import com.tpago.movil.util.DigitHelper;
-import com.tpago.movil.util.DigitValueCreator;
+import com.tpago.movil.util.digit.DigitUtil;
+import com.tpago.movil.util.digit.DigitValueCreator;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
+import com.tpago.movil.util.digit.DigitValueCreatorImpl;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -24,7 +25,7 @@ import java.util.regex.Pattern;
 public abstract class PhoneNumber implements Comparable<PhoneNumber>, Parcelable {
 
   private static final Pattern PATTERN = Pattern.compile("\\A8[024]9[0-9]{7}\\z");
-
+  private static final Pattern PATTERN_WITH_ADDITIONAL_CODE = Pattern.compile("\\A1?8[024]9[0-9]{7}\\z");
   /**
    * Checks whether the given {@link String string} is a valid phone number or not.
    *
@@ -37,7 +38,7 @@ public abstract class PhoneNumber implements Comparable<PhoneNumber>, Parcelable
   private static boolean isValid(String s, boolean shouldSanitize) {
     final String sanitizedString;
     if (shouldSanitize) {
-      sanitizedString = DigitHelper.removeNonDigits(s);
+      sanitizedString = DigitUtil.removeNonDigits(s);
     } else {
       sanitizedString = s;
     }
@@ -46,6 +47,22 @@ public abstract class PhoneNumber implements Comparable<PhoneNumber>, Parcelable
     } else {
       return PATTERN.matcher(sanitizedString)
         .matches();
+    }
+  }
+
+  /**
+   * Checks whether the given {@link String string} is a valid phone number(with additional code) or not.
+   *
+   * @return True if the given {@link String string} is a valid phone number (with additional code) , or otherwise false.
+   */
+
+  public static boolean isValidWithAdditionalCode(String s) {
+    final String sanitizedString = DigitUtil.removeNonDigits(s);
+    if (StringHelper.isNullOrEmpty(sanitizedString)) {
+      return false;
+    } else {
+      return PATTERN_WITH_ADDITIONAL_CODE.matcher(sanitizedString)
+              .matches();
     }
   }
 
@@ -64,7 +81,7 @@ public abstract class PhoneNumber implements Comparable<PhoneNumber>, Parcelable
    * given position.
    */
   private static void insertSeparatorIfGreaterThan(String s, int i, StringBuilder sb) {
-    if (s.length() > i) {
+    if (s.length() > i && i > 0) {
       sb.insert(i, '-');
     }
   }
@@ -75,10 +92,15 @@ public abstract class PhoneNumber implements Comparable<PhoneNumber>, Parcelable
    * @return A {@link String string} formatted as a phone number.
    */
   public static String format(String s) {
-    final String sanitizedString = DigitHelper.removeNonDigits(s);
+    final String sanitizedString = DigitUtil.removeNonDigits(s);
     final StringBuilder formattedStringBuilder = new StringBuilder(sanitizedString);
-    insertSeparatorIfGreaterThan(sanitizedString, 3, formattedStringBuilder);
-    insertSeparatorIfGreaterThan(sanitizedString, 7, formattedStringBuilder);
+    insertSeparatorIfGreaterThan(sanitizedString, sanitizedString.length()-7, formattedStringBuilder);
+    insertSeparatorIfGreaterThan(sanitizedString, sanitizedString.length()-3, formattedStringBuilder);
+
+    if(sanitizedString.length() > 10){
+      insertSeparatorIfGreaterThan(sanitizedString, sanitizedString.length()-10, formattedStringBuilder);
+    }
+
     return formattedStringBuilder.toString();
   }
 
@@ -91,19 +113,19 @@ public abstract class PhoneNumber implements Comparable<PhoneNumber>, Parcelable
    *   If {@code s} is not a {@link #isValid(String) valid} phone number.
    */
   public static PhoneNumber create(String s) {
-    final String sanitizedString = DigitHelper.removeNonDigits(s);
-    if (!isValid(sanitizedString, false)) {
+    final String sanitizedString = DigitUtil.removeNonDigits(s);
+    if (!isValid(sanitizedString, false) && !isValidWithAdditionalCode(sanitizedString)) {
       throw new IllegalArgumentException(String.format("!isValid(%1$s, false)", sanitizedString));
     }
     return new AutoValue_PhoneNumber(sanitizedString);
   }
 
   private static DigitValueCreator<PhoneNumber> creator(String value) {
-    return DigitValueCreator.<PhoneNumber>builder()
-      .additionPredicate((i) -> i < 10)
-      .formatPredicate((s) -> isValid(s, false))
-      .formatFunction(PhoneNumber::format)
-      .mapperFunction(PhoneNumber::create)
+    return DigitValueCreatorImpl.<PhoneNumber>builder()
+      .canAdd((i) -> i < 10)
+      .isValid((s) -> isValid(s, false))
+      .formatter(PhoneNumber::format)
+      .mapper(PhoneNumber::create)
       .value(value)
       .build();
   }

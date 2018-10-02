@@ -2,6 +2,7 @@ package com.tpago.movil.dep.init.register;
 
 import android.support.v4.app.Fragment;
 
+import com.tpago.movil.dep.widget.Keyboard;
 import com.tpago.movil.util.ObjectHelper;
 
 /**
@@ -23,5 +24,11 @@ public abstract class BaseRegisterFragment extends Fragment {
       this.component = ((RegisterContainer) f).getRegisterComponent();
     }
     return this.component;
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    Keyboard.hide(this.getView());
   }
 }

@@ -18,4 +18,6 @@ interface ProfilePresentation extends Presentation {
   void setUserPhoneNumber(String content);
 
   void setUserEmail(String content);
+
+  void openChangePassword(boolean shouldRequestPIN, boolean shouldCloseSession);
 }

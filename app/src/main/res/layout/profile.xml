@@ -27,7 +27,10 @@
       style="@style/ProfileInput"
       android:enabled="false"/>
 
-    <View style="@style/VerticalDivider.Line"/>
+    <View
+      style="@style/VerticalDivider.Line"
+      android:layout_marginEnd="@dimen/space_horizontal_20"
+      android:layout_marginStart="@dimen/space_horizontal_20"/>
 
     <android.support.v4.widget.Space style="@style/VerticalDivider.Space.Small"/>
 
@@ -35,13 +38,16 @@
     <TextView
       style="@style/ProfileLabel"
       android:text="@string/lastName"/>
-
+`
     <com.tpago.movil.dep.widget.TextInput
       android:id="@+id/lastNameTextInput"
       style="@style/ProfileInput"
       android:enabled="false"/>
 
-    <View style="@style/VerticalDivider.Line"/>
+    <View
+      style="@style/VerticalDivider.Line"
+      android:layout_marginEnd="@dimen/space_horizontal_20"
+      android:layout_marginStart="@dimen/space_horizontal_20"/>
 
     <android.support.v4.widget.Space style="@style/VerticalDivider.Space.Small"/>
 
@@ -56,7 +62,10 @@
       android:drawableEnd="@drawable/profile_input_indicator_uneditable"
       android:enabled="false"/>
 
-    <View style="@style/VerticalDivider.Line"/>
+    <View
+      style="@style/VerticalDivider.Line"
+      android:layout_marginEnd="@dimen/space_horizontal_20"
+      android:layout_marginStart="@dimen/space_horizontal_20"/>
 
     <android.support.v4.widget.Space style="@style/VerticalDivider.Space.Small"/>
 
@@ -71,18 +80,21 @@
       android:drawableEnd="@drawable/profile_input_indicator_uneditable"
       android:enabled="false"/>
 
-    <View style="@style/VerticalDivider.Line"/>
+    <View
+      style="@style/VerticalDivider.Line"
+      android:layout_marginEnd="@dimen/space_horizontal_20"
+      android:layout_marginStart="@dimen/space_horizontal_20"/>
 
     <!-- Change password -->
     <com.tpago.movil.app.ui.main.settings.SingleLineSettingsOption
       android:id="@+id/changeMyPasswordSettingsOption"
       style="@style/SettingsOption"
-      android:visibility="gone"
       app:primaryText="@string/changeMyPassword"/>
 
     <View
       style="@style/VerticalDivider.Line"
-      android:visibility="gone"/>
+      android:layout_marginEnd="@dimen/space_horizontal_20"
+      android:layout_marginStart="@dimen/space_horizontal_20"/>
 
     <!-- Sign out -->
     <com.tpago.movil.app.ui.main.settings.SingleLineSettingsOption

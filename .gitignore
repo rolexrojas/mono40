@@ -20,6 +20,11 @@ out/
 .gradle/
 build/
 
+# Eclipse project files
+.classpath
+.project
+.settings/
+
 # Local configuration file (sdk path, etc)
 local.properties
 
@@ -101,7 +106,3 @@ Temporary Items
 
 ### Release keystore properties
 keystores/release.properties
-
-### Flavor generated files
-emulatedDevice*/
-notEmulatedDevice*/

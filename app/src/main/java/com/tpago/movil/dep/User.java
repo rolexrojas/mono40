@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import com.google.auto.value.AutoValue;
 import com.tpago.movil.Email;
 import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
 

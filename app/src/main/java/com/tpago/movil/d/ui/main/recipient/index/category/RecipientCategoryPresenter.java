@@ -9,12 +9,11 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
-import com.tpago.movil.dep.Partner;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.User;
-import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
@@ -34,9 +33,12 @@ import com.tpago.movil.d.domain.ErrorCode;
 import com.tpago.movil.d.domain.FailureData;
 import com.tpago.movil.d.domain.Result;
 import com.tpago.movil.dep.net.NetworkService;
-import com.tpago.movil.reactivex.DisposableHelper;
-import com.tpago.movil.util.DigitHelper;
+import com.tpago.movil.paypal.PayPalAccountRecipient;
+import com.tpago.movil.paypal.PayPalAccountStore;
+import com.tpago.movil.reactivex.DisposableUtil;
+import com.tpago.movil.util.digit.DigitUtil;
 import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.util.StringHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -51,40 +54,40 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
-import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action0;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 /**
  * @author hecvasro
  */
+//TODO: Set a timer for the loadingIndicators
 final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen> {
 
   private static final long DEFAULT_IME_SPAN_QUERY = 300L; // 0.3 seconds.
 
   private final User user;
 
-  private final StringHelper stringHelper;
   private final RecipientManager recipientManager;
-  private final NetworkService networkService;
   private final DepApiBridge depApiBridge;
   private final Category category;
   private final CategoryFilter categoryFilter;
   private final String userRecipientLabelForTransfers;
   private final String userRecipientLabelForRecharges;
   private final RecipientComparator recipientComparator;
+  private final com.tpago.movil.d.data.StringHelper sh;
+  private final NetworkService ns;
+  private final PayPalAccountStore payPalAccountStore;
 
   private boolean deleting = false;
-  private RecipientDeletionFilter recipientDeletableFilter = RecipientDeletionFilter
-    .create(this.deleting);
+  private RecipientDeletionFilter recipientDeletableFilter
+    = RecipientDeletionFilter.create(this.deleting);
   private List<Recipient> selectedRecipientList = new ArrayList<>();
 
-  private Subscription querySubscription = Subscriptions.unsubscribed();
-  private Subscription searchSubscription = Subscriptions.unsubscribed();
+  private Disposable queryDisposable = Disposables.disposed();
+  private Disposable searchDisposable = Disposables.disposed();
   private Subscription signOutSubscription = Subscriptions.unsubscribed();
   private Subscription queryBalanceSubscription = Subscriptions.unsubscribed();
 
@@ -94,22 +97,24 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
 
   RecipientCategoryPresenter(
     User user,
-    @NonNull StringHelper stringHelper,
     @NonNull RecipientManager recipientManager,
-    NetworkService networkService,
     DepApiBridge depApiBridge,
-    Category category
+    Category category,
+    com.tpago.movil.d.data.StringHelper sh,
+    NetworkService ns,
+    PayPalAccountStore payPalAccountStore
   ) {
     this.user = user;
-    this.stringHelper = stringHelper;
     this.recipientManager = recipientManager;
-    this.networkService = networkService;
     this.depApiBridge = depApiBridge;
     this.category = category;
     this.categoryFilter = CategoryFilter.create(this.category);
     this.userRecipientLabelForTransfers = "Entre mis cuentas";
     this.userRecipientLabelForRecharges = "Mi teléfono";
     this.recipientComparator = RecipientComparator.create();
+    this.sh = sh;
+    this.ns = ns;
+    this.payPalAccountStore = payPalAccountStore;
   }
 
   private Observable<Object> phoneNumberActions(String s) {
@@ -121,120 +126,90 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
   }
 
   final void start() {
-    assertScreen();
-    querySubscription = screen.onQueryChanged()
-      .flatMap(new Func1<String, Observable<String>>() {
-        @Override
-        public Observable<String> call(String s) {
-          Observable<String> o = Observable.just(s);
-          if (s != null && !s.isEmpty()) {
-            o = o.debounce(DEFAULT_IME_SPAN_QUERY, MILLISECONDS);
-          }
-          return o;
+    this.queryDisposable = this.screen.onQueryChanged()
+      .flatMap((query) -> {
+        Observable<String> qo = Observable.just(StringHelper.emptyIfNull(query));
+        if (StringHelper.isNullOrEmpty(query)) {
+          qo = qo.debounce(DEFAULT_IME_SPAN_QUERY, MILLISECONDS);
         }
+        return qo;
       })
-      .observeOn(rx.android.schedulers.AndroidSchedulers.mainThread())
-      .subscribe(new Action1<String>() {
-        @Override
-        public void call(final String query) {
-          RxUtils.unsubscribe(searchSubscription);
+      .observeOn(AndroidSchedulers.mainThread())
+      .subscribe((query) -> {
+        DisposableUtil.dispose(this.searchDisposable);
 
-          final MatchableFilter matchableFilter = MatchableFilter.create(query);
+        final MatchableFilter matchableFilter = MatchableFilter.create(query);
 
-          final Observable<Recipient> userRecipientSource;
-          if (!deleting && (category == TRANSFER || category == Category.RECHARGE)) {
-            final String label;
-            if (category == TRANSFER) {
-              label = userRecipientLabelForTransfers;
-            } else {
-              label = userRecipientLabelForRecharges;
-            }
-            final UserRecipient userRecipient = new UserRecipient(user);
-            userRecipient.setLabel(label);
-
-            userRecipientSource = Observable.just(userRecipient)
-              .cast(Recipient.class);
+        final Observable<Recipient> userRecipientSource;
+        if (!this.deleting && (this.category == TRANSFER || this.category == RECHARGE)) {
+          final String label;
+          if (this.category == TRANSFER) {
+            label = this.userRecipientLabelForTransfers;
           } else {
-            userRecipientSource = Observable.empty();
+            label = this.userRecipientLabelForRecharges;
           }
+          final UserRecipient userRecipient = new UserRecipient(user);
+          userRecipient.setLabel(label);
 
-          Observable<Object> source = Observable.from(recipientManager.getAll())
-            .filter(categoryFilter)
-            .concatWith(userRecipientSource)
-            .filter(matchableFilter)
-            .filter(recipientDeletableFilter)
-            .toSortedList(recipientComparator)
-            .compose(RxUtils.fromCollection())
-            .cast(Object.class);
+          userRecipientSource = Observable.just(userRecipient)
+            .cast(Recipient.class);
+        } else {
+          userRecipientSource = Observable.empty();
+        }
 
-          if (!deleting && (query != null && !query.isEmpty())) {
-            Observable<Object> actions = Observable.empty();
+        Observable<Recipient> payPalAccountRecipients = Observable.empty();
+        if (!this.deleting && this.category == RECHARGE) {
+          payPalAccountRecipients = this.payPalAccountStore.getAll()
+            .flatMapObservable(Observable::fromIterable)
+            .map(PayPalAccountRecipient::create);
+        }
 
-            if (DigitHelper.containsOnlyDigits(query)) {
-              if (category == TRANSFER) {
-                if (PhoneNumber.isValid(query)) {
-                  actions = phoneNumberActions(query);
-                } else if (AccountAction.isProductNumber(query)) {
-                  actions = Observable.just(AccountAction.create(TRANSACTION_WITH_ACCOUNT, query))
-                    .cast(Object.class)
-                    .concatWith(Observable.just(AccountAction.create(ADD_ACCOUNT, query)))
-                    .cast(Object.class);
-                }
-              } else if (category == RECHARGE && PhoneNumber.isValid(query)) {
+        Observable<Object> source = Observable.fromIterable(this.recipientManager.getAll())
+          .filter(this.categoryFilter)
+          .concatWith(userRecipientSource)
+          .concatWith(payPalAccountRecipients)
+          .filter(matchableFilter)
+          .filter(this.recipientDeletableFilter)
+          .toSortedList(this.recipientComparator)
+          .flatMapObservable(Observable::fromIterable)
+          .cast(Object.class);
+
+        if (!this.deleting && !StringHelper.isNullOrEmpty(query)) {
+          Observable<Object> actions = Observable.empty();
+
+          if (DigitUtil.containsOnlyDigits(query)) {
+            if (this.category == TRANSFER) {
+              if (PhoneNumber.isValidWithAdditionalCode(query)) {
                 actions = phoneNumberActions(query);
+              } else if (AccountAction.isProductNumber(query)) {
+                actions = Observable.just(AccountAction.create(TRANSACTION_WITH_ACCOUNT, query))
+                  .cast(Object.class)
+                  .concatWith(Observable.just(AccountAction.create(ADD_ACCOUNT, query)))
+                  .cast(Object.class);
               }
+            } else if (this.category == RECHARGE && PhoneNumber.isValidWithAdditionalCode(query)) {
+              actions = phoneNumberActions(query);
             }
-
-            source = source.switchIfEmpty(actions);
           }
 
-          searchSubscription = source
-            .switchIfEmpty(Observable.just(new NoResultsListItemItem(query)))
-            .subscribeOn(rx.schedulers.Schedulers.io())
-            .observeOn(rx.android.schedulers.AndroidSchedulers.mainThread())
-            .doOnSubscribe(new Action0() {
-              @Override
-              public void call() {
-                screen.clear();
-                screen.showLoadIndicator(false);
-              }
-            })
-            .doOnUnsubscribe(new Action0() {
-              @Override
-              public void call() {
-                screen.hideLoadIndicator();
-              }
-            })
-            .subscribe(new Action1<Object>() {
-              @Override
-              public void call(Object item) {
-                screen.hideLoadIndicator();
-                screen.add(item);
-              }
-            }, new Action1<Throwable>() {
-              @Override
-              public void call(Throwable throwable) {
-                Timber.e(throwable, "Querying recipients and constructing actions");
-                screen.hideLoadIndicator();
-                // TODO: Let the user know that finding recipients with the given query failed.
-              }
-            });
+          source = source.switchIfEmpty(actions);
         }
-      }, new Action1<Throwable>() {
-        @Override
-        public void call(Throwable throwable) {
-          Timber.e(throwable, "Listening to query change events");
-          // TODO: Let the user know that listening to query change events failed.
-        }
+
+        this.searchDisposable = source
+          .switchIfEmpty(Observable.just(new NoResultsListItemItem(query)))
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .doOnSubscribe((disposable) -> {
+            this.screen.clear();
+          })
+//          .doFinally(this.screen::hideLoadIndicator)
+          .subscribe(this.screen::add);
       });
   }
 
   final void stop() {
-    DisposableHelper.dispose(this.recipientAdditionDisposable);
-    DisposableHelper.dispose(this.recipientRemovalDisposable);
-
-    RxUtils.unsubscribe(this.searchSubscription);
-    RxUtils.unsubscribe(this.querySubscription);
+    DisposableUtil.dispose(this.recipientAdditionDisposable);
+    DisposableUtil.dispose(this.recipientRemovalDisposable);
     RxUtils.unsubscribe(this.queryBalanceSubscription);
     RxUtils.unsubscribe(this.signOutSubscription);
   }
@@ -253,7 +228,7 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
 
   private void handleError(Throwable throwable, String message) {
     Timber.e(throwable, message);
-    this.screen.showMessage(this.stringHelper.cannotProcessYourRequestAtTheMoment());
+    this.screen.showMessage(this.sh.cannotProcessYourRequestAtTheMoment());
   }
 
   private Recipient handleCustomerResult(PhoneNumber phoneNumber, ApiResult<Customer> result) {
@@ -273,7 +248,10 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
     this.handleError(throwable, "Adding a phone number recipient");
   }
 
-  private void handleAddPhoneNumberRecipientResult(PhoneNumber phoneNumber, ApiResult<Customer> result) {
+  private void handleAddPhoneNumberRecipientResult(
+    PhoneNumber phoneNumber,
+    ApiResult<Customer> result
+  ) {
     this.addRecipient(this.handleCustomerResult(phoneNumber, result));
   }
 
@@ -291,8 +269,8 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
         .defer(() -> Single.just(this.depApiBridge.fetchCustomer(phoneNumber.value())))
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe(this::showTakeoverLoader)
-        .doFinally(this::hideTakeoverLoader)
+//        .doOnSubscribe(this::showTakeoverLoader)
+//        .doFinally(this::hideTakeoverLoader)
         .subscribe(
           (result) -> this.handleAddPhoneNumberRecipientResult(phoneNumber, result),
           this::handleAddPhoneNumberRecipientError
@@ -312,7 +290,10 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
     this.handleError(throwable, "Starting a phone number transaction");
   }
 
-  private void handleStartPhoneNumberTransactionResult(PhoneNumber phoneNumber, ApiResult<Customer> result) {
+  private void handleStartPhoneNumberTransactionResult(
+    PhoneNumber phoneNumber,
+    ApiResult<Customer> result
+  ) {
     this.screen.startTransaction(this.handleCustomerResult(phoneNumber, result));
   }
 
@@ -322,8 +303,8 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
         .defer(() -> Single.just(this.depApiBridge.fetchCustomer(phoneNumber.value())))
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe(this::showTakeoverLoader)
-        .doFinally(this::hideTakeoverLoader)
+//        .doOnSubscribe(this::showTakeoverLoader)
+//        .doFinally(this::hideTakeoverLoader)
         .subscribe(
           (result) -> this.handleStartPhoneNumberTransactionResult(phoneNumber, result),
           this::handleStartTransactionError
@@ -400,7 +381,7 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
             @Override
             public rx.Single<Result<BillBalance, ErrorCode>> call() throws Exception {
               final Result<BillBalance, ErrorCode> result;
-              if (networkService.checkIfAvailable()) {
+              if (ns.checkIfAvailable()) {
                 final ApiResult<BillBalance> queryBalanceResult = depApiBridge
                   .queryBalance(billRecipient);
                 if (queryBalanceResult.isSuccessful()) {
@@ -419,7 +400,7 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
               return rx.Single.just(result);
             }
           })
-          .doOnSubscribe(this::showTakeoverLoader)
+//          .doOnSubscribe(this::showTakeoverLoader)
           .subscribeOn(rx.schedulers.Schedulers.io())
           .observeOn(rx.android.schedulers.AndroidSchedulers.mainThread())
           .subscribe(new Action1<Result<BillBalance, ErrorCode>>() {
@@ -433,7 +414,7 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
                 final FailureData<ErrorCode> failureData = result.getFailureData();
                 switch (failureData.getCode()) {
                   case INCORRECT_PIN:
-                    screen.showGenericErrorDialog(stringHelper.resolve(R.string.error_incorrect_pin));
+                    screen.showGenericErrorDialog(sh.resolve(R.string.error_incorrect_pin));
                     break;
                   case UNAVAILABLE_NETWORK:
                     screen.showUnavailableNetworkError();
@@ -464,7 +445,7 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
             @Override
             public rx.Single<Result<ProductBillBalance, ErrorCode>> call() throws Exception {
               final Result<ProductBillBalance, ErrorCode> result;
-              if (networkService.checkIfAvailable()) {
+              if (ns.checkIfAvailable()) {
                 final ApiResult<ProductBillBalance> queryBalanceResult = depApiBridge
                   .queryBalance(productRecipient);
                 if (queryBalanceResult.isSuccessful()) {
@@ -502,7 +483,7 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
                 final FailureData<ErrorCode> failureData = result.getFailureData();
                 switch (failureData.getCode()) {
                   case INCORRECT_PIN:
-                    screen.showGenericErrorDialog(stringHelper.resolve(R.string.error_incorrect_pin));
+                    screen.showGenericErrorDialog(sh.resolve(R.string.error_incorrect_pin));
                     break;
                   case UNAVAILABLE_NETWORK:
                     screen.showUnavailableNetworkError();
@@ -525,6 +506,8 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
       } else {
         screen.startTransaction(productRecipient);
       }
+    } else if (recipient instanceof PayPalAccountRecipient) {
+      this.screen.startPayPalTransaction(((PayPalAccountRecipient) recipient).reference());
     } else {
       screen.startTransaction(recipient);
     }
@@ -537,7 +520,7 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
           @Override
           public SingleSource<Result<Map<Recipient, Boolean>, ErrorCode>> call() throws Exception {
             final Result<Map<Recipient, Boolean>, ErrorCode> result;
-            if (networkService.checkIfAvailable()) {
+            if (ns.checkIfAvailable()) {
               final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(pin);
               if (pinValidationResult.isSuccessful()) {
                 if (pinValidationResult.getData()) {
@@ -611,7 +594,7 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
               final FailureData<ErrorCode> failureData = result.getFailureData();
               switch (failureData.getCode()) {
                 case INCORRECT_PIN:
-                  screen.showGenericErrorDialog(stringHelper.resolve(R.string.error_incorrect_pin));
+                  screen.showGenericErrorDialog(sh.resolve(R.string.error_incorrect_pin));
                   break;
                 case UNAVAILABLE_NETWORK:
                   screen.showUnavailableNetworkError();
@@ -627,7 +610,7 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
           public void accept(Throwable throwable) throws Exception {
             Timber.e(throwable, "Removing one or more recipients");
             screen.setDeletingResult(false);
-            screen.showMessage(stringHelper.cannotProcessYourRequestAtTheMoment());
+            screen.showMessage(sh.cannotProcessYourRequestAtTheMoment());
           }
         });
     }

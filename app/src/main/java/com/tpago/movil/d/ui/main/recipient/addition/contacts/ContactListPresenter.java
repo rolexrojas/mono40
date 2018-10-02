@@ -4,12 +4,10 @@ import android.Manifest;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.tpago.movil.d.data.SchedulerProvider;
-import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.ui.main.recipient.addition.RecipientCandidateListPresenter;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
-import rx.Observable;
+import io.reactivex.Observable;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 
@@ -21,14 +19,9 @@ class ContactListPresenter extends RecipientCandidateListPresenter {
   private final RxPermissions permissionManager;
   private final ContactProvider contactProvider;
 
-  private Subscription permissionSubscription = Subscriptions.unsubscribed();
+  private Subscription subscription = Subscriptions.unsubscribed();
 
-  ContactListPresenter(
-    @NonNull SchedulerProvider schedulerProvider,
-    @NonNull RxPermissions permissionManager,
-    @NonNull ContactProvider contactProvider
-  ) {
-    super(schedulerProvider);
+  ContactListPresenter(RxPermissions permissionManager, ContactProvider contactProvider) {
     this.permissionManager = permissionManager;
     this.contactProvider = contactProvider;
   }
@@ -48,14 +41,13 @@ class ContactListPresenter extends RecipientCandidateListPresenter {
   @Override
   protected Observable<Object> search(@Nullable String query) {
     return this.contactProvider.getAll(query)
-      .compose(RxUtils.fromCollection())
+      .flatMap(Observable::fromIterable)
       .cast(Object.class);
   }
 
   final void create() {
-    this.assertScreen();
-    this.permissionSubscription = this.permissionManager.request(Manifest.permission.READ_CONTACTS)
-      .observeOn(schedulerProvider.ui())
+    this.subscription = this.permissionManager.request(Manifest.permission.READ_CONTACTS)
+      .observeOn(rx.android.schedulers.AndroidSchedulers.mainThread())
       .subscribe((granted) -> {
         if (granted) {
           this.startListeningQueryChangeEvents();
@@ -64,7 +56,8 @@ class ContactListPresenter extends RecipientCandidateListPresenter {
   }
 
   final void destroy() {
-    this.assertScreen();
-    RxUtils.unsubscribe(this.permissionSubscription);
+    if (!this.subscription.isUnsubscribed()) {
+      this.subscription.unsubscribe();
+    }
   }
 }

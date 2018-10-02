@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  style="@style/Container.Light.Primary">
+
+  <android.support.constraint.Guideline
+    android:id="@+id/guideline_top"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:layout_constraintGuide_begin="100dp"/>
+
+  <android.support.constraint.Guideline
+    android:id="@+id/guideline_bottom"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:layout_constraintGuide_begin="240dp"/>
+
+  <Button
+    android:id="@+id/button_submit"
+    style="@style/Button.Light.Primary"
+    android:text="@string/recharge"
+    app:layout_constraintBottom_toBottomOf="parent"/>
+
+  <com.tpago.movil.dep.main.transactions.PaymentMethodChooser
+    android:id="@+id/payment_method_chooser"
+    style="@style/D.Transactions.Widget.PaymentMethodChooser"
+    android:layout_marginEnd="32dp"
+    android:layout_marginStart="32dp"/>
+
+  <com.tpago.movil.app.ui.InputLabel
+    android:id="@+id/input_amount"
+    style="@style/Input.Light"
+    android:layout_marginEnd="60dp"
+    android:layout_marginStart="60dp"
+    app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="@+id/guideline_top">
+
+    <com.tpago.movil.app.ui.LabelPrefix
+      android:id="@+id/label_amount"
+      style="@style/InputLabelMoney.Light"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"/>
+  </com.tpago.movil.app.ui.InputLabel>
+
+  <com.tpago.movil.app.ui.NumPad
+    android:id="@+id/num_pad"
+    style="@style/NumPad.Light"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:layout_marginBottom="20dp"
+    android:layout_marginTop="20dp"
+    app:dotButtonEnabled="true"
+    app:layout_constraintBottom_toTopOf="@+id/button_submit"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="@+id/guideline_bottom"/>
+
+</android.support.constraint.ConstraintLayout>

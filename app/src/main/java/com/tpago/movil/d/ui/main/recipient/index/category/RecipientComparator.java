@@ -2,12 +2,13 @@ package com.tpago.movil.d.ui.main.recipient.index.category;
 
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.UserRecipient;
-import rx.functions.Func2;
+
+import java.util.Comparator;
 
 /**
  * @author Hector Vasquez
  */
-final class RecipientComparator implements Func2<Recipient, Recipient, Integer> {
+final class RecipientComparator implements Comparator<Recipient> {
 
   static RecipientComparator create() {
     return new RecipientComparator();
@@ -17,14 +18,14 @@ final class RecipientComparator implements Func2<Recipient, Recipient, Integer> 
   }
 
   @Override
-  public Integer call(Recipient rA, Recipient rB) {
-    if (rA instanceof UserRecipient) {
+  public int compare(Recipient a, Recipient b) {
+    if (a instanceof UserRecipient) {
       return -1;
-    } else if (rB instanceof UserRecipient) {
+    } else if (b instanceof UserRecipient) {
       return 1;
     } else {
-      return rA.getIdentifier()
-        .compareTo(rB.getIdentifier());
+      return a.getIdentifier()
+        .compareTo(b.getIdentifier());
     }
   }
 }

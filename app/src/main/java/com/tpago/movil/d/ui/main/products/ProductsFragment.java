@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.tpago.movil.company.CompanyHelper;
 import com.tpago.movil.dep.api.DCurrencies;
 import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.ui.Dialogs;
@@ -24,7 +25,7 @@ import com.tpago.movil.d.ui.main.MainContainer;
 import com.tpago.movil.d.ui.main.list.ListItemAdapter;
 import com.tpago.movil.d.ui.main.list.ListItemHolder;
 import com.tpago.movil.d.ui.main.list.ListItemHolderCreatorFactory;
-import com.tpago.movil.d.ui.main.products.transactions.RecentTransactionsActivity;
+import com.tpago.movil.d.ui.main.products.transactions.RecentTransactionsActivityBase;
 import com.tpago.movil.d.ui.view.Views;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
@@ -63,6 +64,8 @@ public class ProductsFragment
 
   @Inject
   StringHelper stringHelper;
+  @Inject
+  CompanyHelper companyHelper;
   @Inject
   ProductsPresenter presenter;
 
@@ -139,7 +142,7 @@ public class ProductsFragment
       .addBinder(
         ProductItem.class,
         ProductListItemHolder.class,
-        new ProductListItemHolderBinder(stringHelper)
+        new ProductListItemHolderBinder(this.stringHelper, this.companyHelper)
       )
       .build();
     adapter = new ListItemAdapter(holderCreatorFactory, holderBinderFactory);
@@ -174,8 +177,8 @@ public class ProductsFragment
     };
     recyclerView.setLayoutManager(layoutManager);
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
-      .drawable(R.drawable.d_divider)
-      .marginResId(R.dimen.space_horizontal_normal)
+      .drawable(R.drawable.divider_line_horizontal)
+      .marginResId(R.dimen.space_horizontal_20)
       .build();
     recyclerView.addItemDecoration(divider);
     // Attaches the screen to the presenter.
@@ -304,6 +307,6 @@ public class ProductsFragment
 
   @Override
   public void onShowRecentTransactionsButtonClicked() {
-    startActivity(RecentTransactionsActivity.getLaunchIntent(getContext()));
+    startActivity(RecentTransactionsActivityBase.getLaunchIntent(getContext()));
   }
 }

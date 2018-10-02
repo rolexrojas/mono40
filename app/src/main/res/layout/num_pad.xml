@@ -1,75 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge
-  xmlns:android="http://schemas.android.com/apk/res/android">
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
 
-  <LinearLayout style="@style/NumPadRow">
+  <android.support.constraint.Guideline
+    android:id="@+id/guideline_vertical_start"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:layout_constraintGuide_percent="0.33"/>
 
-    <Button
-      android:id="@+id/digitOneNumPadButton"
-      style="@style/TextNumPadButton"
-      android:text="1"/>
+  <android.support.constraint.Guideline
+    android:id="@+id/guideline_vertical_end"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:layout_constraintGuide_percent="0.66"/>
 
-    <Button
-      android:id="@+id/digitTwoNumPadButton"
-      style="@style/TextNumPadButton"
-      android:text="2"/>
+  <android.support.constraint.Guideline
+    android:id="@+id/guideline_horizontal_top"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:layout_constraintGuide_percent="0.25"/>
 
-    <Button
-      android:id="@+id/digitThreeNumPadButton"
-      style="@style/TextNumPadButton"
-      android:text="3"/>
-  </LinearLayout>
+  <android.support.constraint.Guideline
+    android:id="@+id/guideline_horizontal_middle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:layout_constraintGuide_percent="0.50"/>
 
-  <LinearLayout style="@style/NumPadRow">
+  <android.support.constraint.Guideline
+    android:id="@+id/guideline_horizontal_bottom"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:layout_constraintGuide_percent="0.75"/>
 
-    <Button
-      android:id="@+id/digitFourNumPadButton"
-      style="@style/TextNumPadButton"
-      android:text="4"/>
+  <Button
+    android:id="@+id/num_pad_button_text_1"
+    style="@style/NumPadButton.Text"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:text="1"
+    app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal_top"
+    app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_start"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"/>
 
-    <Button
-      android:id="@+id/digitFiveNumPadButton"
-      style="@style/TextNumPadButton"
-      android:text="5"/>
+  <Button
+    android:id="@+id/num_pad_button_text_2"
+    style="@style/NumPadButton.Text"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:text="2"
+    app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal_top"
+    app:layout_constraintEnd_toStartOf="@+id/num_pad_button_text_3"
+    app:layout_constraintStart_toStartOf="@+id/guideline_vertical_start"
+    app:layout_constraintTop_toTopOf="parent"/>
 
-    <Button
-      android:id="@+id/digitSixNumPadButton"
-      style="@style/TextNumPadButton"
-      android:text="6"/>
-  </LinearLayout>
+  <Button
+    android:id="@+id/num_pad_button_text_3"
+    style="@style/NumPadButton.Text"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:text="3"
+    app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal_top"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="@+id/guideline_vertical_end"
+    app:layout_constraintTop_toTopOf="parent"/>
 
-  <LinearLayout style="@style/NumPadRow">
+  <Button
+    android:id="@+id/num_pad_button_text_4"
+    style="@style/NumPadButton.Text"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:text="4"
+    app:layout_constraintBottom_toTopOf="@+id/num_pad_button_text_7"
+    app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_start"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_top"/>
 
-    <Button
-      android:id="@+id/digitSevenNumPadButton"
-      style="@style/TextNumPadButton"
-      android:text="7"/>
+  <Button
+    android:id="@+id/num_pad_button_text_5"
+    style="@style/NumPadButton.Text"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:text="5"
+    app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal_middle"
+    app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_end"
+    app:layout_constraintStart_toStartOf="@+id/guideline_vertical_start"
+    app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_top"/>
 
-    <Button
-      android:id="@+id/digitEightNumPadButton"
-      style="@style/TextNumPadButton"
-      android:text="8"/>
+  <Button
+    android:id="@+id/num_pad_button_text_6"
+    style="@style/NumPadButton.Text"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:text="6"
+    app:layout_constraintBottom_toTopOf="@+id/num_pad_button_text_9"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="@+id/guideline_vertical_end"
+    app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_top"/>
 
-    <Button
-      android:id="@+id/digitNineNumPadButton"
-      style="@style/TextNumPadButton"
-      android:text="9"/>
-  </LinearLayout>
+  <Button
+    android:id="@+id/num_pad_button_text_7"
+    style="@style/NumPadButton.Text"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:text="7"
+    app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal_bottom"
+    app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_start"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_middle"/>
 
-  <LinearLayout style="@style/NumPadRow">
+  <Button
+    android:id="@+id/num_pad_button_text_8"
+    style="@style/NumPadButton.Text"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:text="8"
+    app:layout_constraintBottom_toTopOf="@+id/num_pad_button_text_0"
+    app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_end"
+    app:layout_constraintStart_toStartOf="@+id/guideline_vertical_start"
+    app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_middle"/>
 
-    <Button
-      android:id="@+id/dotNumPadButton"
-      style="@style/TextNumPadButton"
-      android:text="."/>
+  <Button
+    android:id="@+id/num_pad_button_text_9"
+    style="@style/NumPadButton.Text"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:text="9"
+    app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal_bottom"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="@+id/guideline_vertical_end"
+    app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_middle"/>
 
-    <Button
-      android:id="@+id/digitZeroNumPadButton"
-      style="@style/TextNumPadButton"
-      android:text="0"/>
+  <Button
+    android:id="@+id/num_pad_button_text_dot"
+    style="@style/NumPadButton.Text"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:text="."
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_start"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_bottom"/>
 
-    <ImageButton
-      android:id="@+id/deleteNumPadButton"
-      style="@style/ImageNumPadButton"/>
-  </LinearLayout>
+  <Button
+    android:id="@+id/num_pad_button_text_0"
+    style="@style/NumPadButton.Text"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:text="0"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_end"
+    app:layout_constraintStart_toStartOf="@+id/guideline_vertical_start"
+    app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_bottom"/>
+
+  <ImageButton
+    android:id="@+id/num_pad_button_delete"
+    style="@style/NumPadButton"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="@+id/guideline_vertical_end"
+    app:layout_constraintTop_toBottomOf="@+id/num_pad_button_text_9"/>
 </merge>

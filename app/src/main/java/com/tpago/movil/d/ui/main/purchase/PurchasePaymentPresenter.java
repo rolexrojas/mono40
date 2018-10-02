@@ -52,7 +52,7 @@ class PurchasePaymentPresenter extends Presenter<PurchasePaymentScreen> {
       return Single.just(false);
     }
     return this.posBridge.get()
-      .selectCard(this.paymentOption.getNumberSanitized())
+      .selectCard(this.paymentOption.getAltpanKey())
       .map(PosResult::isSuccessful);
   }
 

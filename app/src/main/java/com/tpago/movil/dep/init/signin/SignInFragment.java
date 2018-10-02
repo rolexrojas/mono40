@@ -1,26 +1,46 @@
 package com.tpago.movil.dep.init.signin;
 
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.KeyguardManager;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.ActivityQualifier;
-import com.tpago.movil.app.ui.FragmentReplacer;
+import com.tpago.movil.app.ui.FragmentActivityBase;
+import com.tpago.movil.app.ui.activity.ActivityQualifier;
+import com.tpago.movil.app.ui.alert.AlertManager;
+import com.tpago.movil.app.ui.fragment.FragmentReplacer;
+import com.tpago.movil.app.ui.init.unlock.ChangePassword.ChangePasswordFragment;
+import com.tpago.movil.app.ui.init.unlock.EmailPasswordFragment;
 import com.tpago.movil.dep.init.BaseInitFragment;
 import com.tpago.movil.dep.init.InitFragment;
 import com.tpago.movil.dep.init.LogoAnimator;
 import com.tpago.movil.dep.text.BaseTextWatcher;
 import com.tpago.movil.dep.widget.Keyboard;
 import com.tpago.movil.dep.widget.TextInput;
+import com.tpago.movil.util.ChangePasswordRadioMenuUtil;
+import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.util.RadioGroupUtil;
 
 import javax.inject.Inject;
 
@@ -44,12 +64,17 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
   private TextWatcher passwordTextInputTextWatcher;
 
   private SignInPresenter presenter;
+  private Dialog restorePasswordDialog;
+  private int selectedOption = 0;
 
   @Inject
   @ActivityQualifier
   FragmentReplacer fragmentReplacer;
 
   @Inject LogoAnimator logoAnimator;
+  @Inject KeyguardManager keyguardManager;
+  @Inject FingerprintManagerCompat fingerprintManager;
+  @Inject AlertManager alertManager;
 
   @BindView(R.id.text_input_email) TextInput emailTextInput;
   @BindView(R.id.text_input_password) TextInput passwordTextInput;
@@ -60,6 +85,13 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
     presenter.onSignInButtonClicked();
   }
 
+  @OnClick(R.id.userForgotPassword)
+  final void onUserForgotPasswordViewClicked() {
+    if(ObjectHelper.isNull(restorePasswordDialog)){
+      restorePasswordDialog = createDialog();
+    }
+    restorePasswordDialog.show();
+  }
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -139,6 +171,7 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
     // Detaches the first updateName text input from the presenter.
     emailTextInput.removeTextChangedListener(emailTextInputTextWatcher);
     emailTextInputTextWatcher = null;
+    restorePasswordDialog = null;
   }
 
   @Override
@@ -155,6 +188,48 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
     presenter = null;
     // Unbinds all the annotated resources, views and method.
     unbinder.unbind();
+  }
+
+  private Dialog createDialog() {
+    String[] groupName = { getString(R.string.reset_with_email) };
+    Dialog dialog = ChangePasswordRadioMenuUtil.createChangePasswordRadioMenuDialog(getActivity());
+    RadioGroup radioGroup = dialog.findViewById(R.id.radio_group);
+
+    TextView cancel = dialog.findViewById(R.id.cancel_action);
+    TextView confirm = dialog.findViewById(R.id.do_action);
+    confirm.setEnabled(false);
+    confirm.setAlpha(0.5F);
+
+    cancel.setOnClickListener((view) -> dialog.cancel());
+
+    confirm.setOnClickListener((view -> {
+      radioGroup.setOnCheckedChangeListener(null);
+      radioGroup.clearCheck();
+      radioGroup.removeAllViews();
+      dialog.cancel();
+      switch (selectedOption) {
+        case 0:
+          moveTo(EmailPasswordFragment.create());
+          break;
+      }
+    }));
+
+    RadioGroupUtil.setRadioButtons(radioGroup, groupName, getActivity());
+
+    radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+      selectedOption = Integer.valueOf(group.getCheckedRadioButtonId());
+      confirm.setEnabled(true);
+      confirm.setAlpha(1.0F);
+    });
+
+    return dialog;
+  }
+
+  private void moveTo(Fragment screen) {
+    this.fragmentReplacer.begin(screen)
+      .transition(FragmentReplacer.Transition.FIFO)
+      .addToBackStack(true, "Email")
+      .commit();
   }
 
   @Override
@@ -187,10 +262,88 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
     signInButton.setAlpha(showAsEnabled ? 1.0F : 0.5F);
   }
 
+  public void showActivationFingerprintMessage(){
+    this.alertManager.builder()
+        .message(
+                getString(R.string.activatefingerprintmessage)
+        )
+        .negativeButtonText("Seguridad")
+        .negativeButtonAction(
+                () -> this.startActivity(new Intent(Settings.ACTION_SECURITY_SETTINGS))
+        )
+        .show();
+  }
+
+  public void openChangePassword(boolean shouldRequestPIN, boolean shouldCloseSession, boolean shouldDestroySession) {
+    this.startActivity(
+        FragmentActivityBase.createLaunchIntent(
+            this.getContext(),
+            ChangePasswordFragment.creator()
+        ).putExtra(ChangePasswordFragment.SHOULD_REQUEST_PIN, shouldRequestPIN)
+         .putExtra(ChangePasswordFragment.SHOULD_CLOSE_SESSION, shouldCloseSession)
+         .putExtra(ChangePasswordFragment.SHOULD_DESTROY_SESSION, shouldDestroySession)
+    );
+  }
+
+  @TargetApi(Build.VERSION_CODES.M)
   @Override
   public void moveToInitScreen() {
-    fragmentReplacer.begin(InitFragment.create())
-      .transition(FragmentReplacer.Transition.FIFO)
-      .commit();
+    if(this.fingerprintManager.isHardwareDetected()
+            && !this.presenter.isFingerprintUnlockMethodEnabled()){
+
+        //Building the alert
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+
+        builder.setTitle(getString(R.string.usefingerprint));
+        builder.setMessage(getString(R.string.linkappfingeprint));
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            switch(which){
+              case DialogInterface.BUTTON_NEGATIVE:
+                fragmentReplacer.begin(InitFragment.create())
+                        .transition(FragmentReplacer.Transition.FIFO)
+                        .commit();
+                break;
+            }
+          }
+
+        };
+
+        builder.setNegativeButton("CONFIGURAR MÁS TARDE",dialogClickListener);
+        View vieww = View.inflate(this.getActivity(),R.layout.fragment_enable_fingerprint,null);
+
+        //Creating the dialog
+        AlertDialog enableFingerprintDialog = builder.create();
+        enableFingerprintDialog.setCanceledOnTouchOutside(false);
+        enableFingerprintDialog.setCancelable(false);
+
+        enableFingerprintDialog.setView(vieww);
+        enableFingerprintDialog.show();
+
+        //Setting up clickListener for the fingerprint view
+
+        vieww.setOnClickListener((view) ->{
+
+          // Request for fingerprint permissions
+          if (!this.keyguardManager.isDeviceSecure() || !this.fingerprintManager.hasEnrolledFingerprints()) {
+            this.showActivationFingerprintMessage();
+          }else{
+
+            // Activate because permissions are granted
+            this.presenter.onEnableFingerprintButtonClicked();
+            enableFingerprintDialog.dismiss();
+          }
+        });
+
+    }else{
+      // Just proceed initiating the app
+      fragmentReplacer.begin(InitFragment.create())
+              .transition(FragmentReplacer.Transition.FIFO)
+              .commit();
+    }
   }
+
 }

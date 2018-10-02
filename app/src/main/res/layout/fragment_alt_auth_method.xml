@@ -32,6 +32,8 @@
 
       <View
         android:id="@+id/fingerprintOptionDivider"
+        android:layout_marginStart="@dimen/space_horizontal_20"
+        android:layout_marginEnd="@dimen/space_horizontal_20"
         style="@style/VerticalDivider.Line"/>
 
       <com.tpago.movil.app.ui.main.settings.SelectableSettingsOption
@@ -39,7 +41,10 @@
         style="@style/SettingsOption"
         app:primaryText="@string/code"/>
 
-      <View style="@style/VerticalDivider.Line"/>
+      <View
+        android:layout_marginStart="@dimen/space_horizontal_20"
+        android:layout_marginEnd="@dimen/space_horizontal_20"
+        style="@style/VerticalDivider.Line"/>
 
       <com.tpago.movil.app.ui.main.settings.SelectableSettingsOption
         android:id="@+id/noneOption"

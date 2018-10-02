@@ -2,24 +2,30 @@ package com.tpago.movil.dep.init;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.tpago.movil.app.ui.AlertData;
-import com.tpago.movil.app.ui.AlertManager;
+import com.tpago.movil.R;
+import com.tpago.movil.app.ui.alert.AlertManager;
 import com.tpago.movil.app.ui.init.unlock.UnlockFragment;
-import com.tpago.movil.app.ui.ActivityQualifier;
-import com.tpago.movil.app.ui.FragmentReplacer;
+import com.tpago.movil.app.ui.activity.ActivityQualifier;
+import com.tpago.movil.app.ui.fragment.FragmentReplacer;
 import com.tpago.movil.app.ui.permission.PermissionRequestResult;
 import com.tpago.movil.app.upgrade.AppUpgradeManager;
-import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.d.ui.main.DepMainActivityBase;
+import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.app.ui.permission.PermissionHelper;
 import com.tpago.movil.d.domain.InitialDataLoader;
-import com.tpago.movil.d.ui.main.DepMainActivity;
 import com.tpago.movil.dep.init.intro.IntroFragment;
-import com.tpago.movil.reactivex.DisposableHelper;
+import com.tpago.movil.reactivex.DisposableUtil;
+import com.tpago.movil.session.SessionDataLoader;
 import com.tpago.movil.session.SessionManager;
 
 import java.util.Arrays;
@@ -42,10 +48,11 @@ public final class InitFragment extends BaseInitFragment {
   private static final int REQUEST_CODE = 0;
 
   private static final List<String> REQUIRED_PERMISSIONS = Arrays
-    .asList(Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_SMS);
+    .asList(Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS);
 
   @Inject AppUpgradeManager upgradeManager;
   @Inject SessionManager sessionManager;
+  @Inject SessionDataLoader sessionDataLoader;
 
   @Inject AlertManager alertManager;
   @Inject StringMapper stringMapper;
@@ -57,10 +64,12 @@ public final class InitFragment extends BaseInitFragment {
   @Inject InitialDataLoader initialDataLoader;
 
   private Disposable upgradeDisposable = Disposables.disposed();
-  private Disposable loadInitDataDisposable = Disposables.disposed();
+  private Disposable sessionDataDisposable = Disposables.disposed();
 
   private boolean werePermissionsRequested = false;
   private boolean shouldLoadInitData = false;
+
+  AlertDialog permissionAlert;
 
   public static InitFragment create() {
     return new InitFragment();
@@ -73,11 +82,13 @@ public final class InitFragment extends BaseInitFragment {
     // Injects all annotated dependencies.
     this.getInitComponent()
       .inject(this);
+
+    this.configurePermissionAlert();
   }
 
   private void handleError(Throwable throwable, String message) {
     Timber.e(throwable, message);
-    this.alertManager.show(AlertData.createForGenericFailure(this.stringMapper));
+    this.alertManager.showAlertForGenericFailure();
   }
 
   private void resetAndStartLogoAnimator(Disposable disposable) {
@@ -87,7 +98,7 @@ public final class InitFragment extends BaseInitFragment {
 
   private void handleLoadInitDataSuccess() {
     final Activity activity = this.getActivity();
-    activity.startActivity(DepMainActivity.getLaunchIntent(activity));
+    activity.startActivity(DepMainActivityBase.getLaunchIntent(activity));
     activity.finish();
   }
 
@@ -95,7 +106,8 @@ public final class InitFragment extends BaseInitFragment {
     this.handleError(throwable, "Loading initial data");
   }
 
-  private void loadInitData_() {
+  @Deprecated
+  private void loadInitDataFromInitialDataLoader() {
     this.initialDataLoader.load()
       .await();
   }
@@ -110,7 +122,8 @@ public final class InitFragment extends BaseInitFragment {
         .transition(FragmentReplacer.Transition.FIFO)
         .commit();
     } else {
-      this.loadInitDataDisposable = Completable.fromAction(this::loadInitData_)
+      this.sessionDataDisposable = this.sessionDataLoader.load()
+        .concatWith(Completable.fromAction(this::loadInitDataFromInitialDataLoader))
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(this::resetAndStartLogoAnimator)
@@ -154,8 +167,8 @@ public final class InitFragment extends BaseInitFragment {
 
   @Override
   public void onStop() {
-    DisposableHelper.dispose(this.loadInitDataDisposable);
-    DisposableHelper.dispose(this.upgradeDisposable);
+    DisposableUtil.dispose(this.sessionDataDisposable);
+    DisposableUtil.dispose(this.upgradeDisposable);
     super.onStop();
   }
 
@@ -170,7 +183,37 @@ public final class InitFragment extends BaseInitFragment {
       final PermissionRequestResult result = PermissionRequestResult.create(permissions, results);
       if (result.isSuccessful()) {
         this.shouldLoadInitData = true;
+      } else {
+        this.showPermissionAlert();
       }
     }
+  }
+
+  private void configurePermissionAlert() {
+    AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+    builder1.setMessage(R.string.request_for_permission);
+    builder1.setCancelable(false);
+
+    builder1.setPositiveButton(R.string.go_to_configurations, new DialogInterface.OnClickListener() {
+      public void onClick(DialogInterface dialog, int id) {
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
+        intent.setData(uri);
+        getContext().startActivity(intent);
+        getActivity().finish();
+      }
+    });
+    permissionAlert = builder1.create();
+    permissionAlert.setOnShowListener(new DialogInterface.OnShowListener() {
+      @Override
+      public void onShow(DialogInterface dialogInterface) {
+        permissionAlert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.d_widget_text_input_light_erratic));
+        permissionAlert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.d_widget_text_input_light_erratic));
+      }
+    });
+  }
+  private void showPermissionAlert() {
+    permissionAlert.show();
   }
 }

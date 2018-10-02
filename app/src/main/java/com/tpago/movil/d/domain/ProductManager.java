@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import dagger.Lazy;
+import timber.log.Timber;
 
 /**
  * @author hecvasro
@@ -117,7 +118,8 @@ public final class ProductManager {
       final PosBridge bridge = posBridge.get();
       for (Product p : ptrl) {
         if (bridge.isRegistered(p.getNumberSanitized())) {
-          bridge.removeCard(p.getNumberSanitized());
+          final PosResult r = bridge.removeCard(p.getAltpanKey());
+          Timber.d(r.toString());
         }
         indexSet.remove(p.getId());
         editor.remove(p.getId());
@@ -130,10 +132,10 @@ public final class ProductManager {
     //    destroySession local.default
     //    destroySession local.temporary
     //  else if [not local.temporary] then
-    //    set local.default remote.default
+    //    sync local.default remote.default
     //  else if [remote.default equals to local.temporary] then
-    //    set local.default local.temporary
-    //    set remote.default local.temporary
+    //    sync local.default local.temporary
+    //    sync remote.default local.temporary
     //    destroySession local.temporary
     if (ObjectHelper.isNull(rdpo)) {
       defaultPaymentOption = null;
@@ -152,7 +154,7 @@ public final class ProductManager {
       eventBus.dispatch(new ProductRemovalEvent());
     }
 
-    Collections.sort(productList, Product.comparator());
+    Collections.sort(productList, Product::compareTo);
     if (ObjectHelper.isNull(paymentOptionList)) {
       paymentOptionList = new ArrayList<>();
     }
@@ -201,7 +203,7 @@ public final class ProductManager {
     final PosBridge b = posBridge.get();
     final List<Pair<Product, PosResult>> resultList = new ArrayList<>();
     for (Product po : paymentOptionList) {
-      resultList.add(Pair.create(po, b.addCard(phoneNumber, pin, po.getNumberSanitized())));
+      resultList.add(Pair.create(po, b.addCard(phoneNumber, pin, po.getAltpanKey())));
     }
     return resultList;
   }

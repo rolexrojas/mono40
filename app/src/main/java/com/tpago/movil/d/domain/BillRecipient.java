@@ -5,9 +5,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
-import com.tpago.movil.dep.Partner;
+import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.d.domain.util.StringUtils;
 import com.tpago.movil.dep.text.Texts;
+import com.tpago.movil.util.StringHelper;
 
 /**
  * @author hecvasro
@@ -76,7 +77,7 @@ public class BillRecipient extends Recipient {
       "-",
       this.getType(),
       this.getPartner()
-        .getId(),
+        .code(),
       this.getContractNumber()
     );
   }
@@ -91,8 +92,8 @@ public class BillRecipient extends Recipient {
   @Override
   public String getLabel() {
     String label = super.getLabel();
-    if (Texts.checkIfEmpty(label)) {
-      label = String.format("Factura de %1$s", partner.getName());
+    if (StringHelper.isNullOrEmpty(label)) {
+      label = String.format("Factura de %1$s", partner.name());
     }
     return label;
   }
@@ -109,7 +110,7 @@ public class BillRecipient extends Recipient {
   @Override
   public boolean matches(@Nullable String query) {
     return super.matches(query)
-      || StringUtils.matches(partner.getName(), query)
+      || StringUtils.matches(partner.name(), query)
       || StringUtils.matches(contractNumber, query);
   }
 

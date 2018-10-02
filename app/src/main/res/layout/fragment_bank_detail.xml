@@ -1,0 +1,78 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    tools:context="com.tpago.movil.app.ui.main.settings.bankdetail.BankDetailFragment">
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        style="@style/SettingsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/bankDetailLinearLayout">
+
+        <TextView
+            style="@style/SettingsSectionTitle"
+            android:text="Contactos"/>
+
+        <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+            android:id="@+id/sendemail"
+            android:clickable="true"
+            style="@style/SettingsOption"
+            app:primaryText="Enviar Correo"
+            app:secondaryText="banco@banco.com"/>
+
+        <View
+            style="@style/VerticalDivider.Line"
+            android:layout_marginEnd="@dimen/space_horizontal_20"
+            android:layout_marginStart="@dimen/space_horizontal_20"
+            android:id="@+id/emailseparator"/>
+
+        <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+            android:id="@+id/domesticcall"
+            android:clickable="true"
+            style="@style/SettingsOption"
+            app:primaryText="Llamar a servicio al cliente (doméstico)"
+            app:secondaryText="+18005555555"/>
+
+        <View
+            style="@style/VerticalDivider.Line"
+            android:layout_marginEnd="@dimen/space_horizontal_20"
+            android:layout_marginStart="@dimen/space_horizontal_20"
+            android:id="@+id/domesticcallseparator"/>
+
+        <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+            android:id="@+id/freecall"
+            android:clickable="true"
+            style="@style/SettingsOption"
+            app:primaryText="Llamar a servicio al cliente (gratuito)"
+            app:secondaryText="+18005555555"
+            />
+
+        <View
+            style="@style/VerticalDivider.Line"
+            android:layout_marginEnd="@dimen/space_horizontal_20"
+            android:layout_marginStart="@dimen/space_horizontal_20"
+            android:id="@+id/freecallseparator"/>
+
+        <android.support.v4.widget.Space style="@style/VerticalDivider.Space.Normal"/>
+
+        <TextView
+            style="@style/SettingsSectionTitle"
+            android:text="En Línea"/>
+
+        <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+            android:id="@+id/bankurl"
+            android:clickable="true"
+            style="@style/SettingsOption"
+            app:primaryText="Página Web"
+            app:secondaryText="www.banco.com"/>
+
+
+    </LinearLayout>
+
+
+</FrameLayout>

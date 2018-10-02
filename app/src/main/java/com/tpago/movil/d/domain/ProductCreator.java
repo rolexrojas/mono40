@@ -2,6 +2,8 @@ package com.tpago.movil.d.domain;
 
 import android.support.annotation.NonNull;
 
+import com.tpago.movil.company.bank.Bank;
+
 import java.math.BigDecimal;
 
 /**
@@ -9,6 +11,7 @@ import java.math.BigDecimal;
  */
 @Deprecated
 public final class ProductCreator {
+
   @NonNull
   public static Product create(
     ProductType identifier,
@@ -19,7 +22,9 @@ public final class ProductCreator {
     BigDecimal queryFee,
     boolean paymentOption,
     boolean isDefault,
-    String imageUrl) {
+    String imageUrl,
+    String altpanKey
+    ) {
     final Product p = new Product(
       identifier,
       alias,
@@ -28,7 +33,9 @@ public final class ProductCreator {
       currency,
       queryFee,
       paymentOption,
-      isDefault);
+      isDefault,
+      altpanKey
+    );
     p.setImageUriTemplate(imageUrl);
     return p;
   }

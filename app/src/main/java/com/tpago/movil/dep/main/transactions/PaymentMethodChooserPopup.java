@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import android.widget.PopupWindow;
 
 import com.tpago.movil.R;
+import com.tpago.movil.company.CompanyHelper;
 import com.tpago.movil.util.ObjectHelper;
 
 /**
@@ -18,16 +19,19 @@ final class PaymentMethodChooserPopup {
 
   private final View parentView;
   private final PaymentMethodChooserAdapter paymentMethodChooserAdapter;
+  private final CompanyHelper companyHelper;
 
   private PopupWindow popupWindow;
 
   PaymentMethodChooserPopup(
     View parentView,
-    PaymentMethodChooserAdapter paymentMethodChooserAdapter
+    PaymentMethodChooserAdapter paymentMethodChooserAdapter,
+    CompanyHelper companyHelper
   ) {
     this.parentView = ObjectHelper.checkNotNull(parentView, "parentView");
     this.paymentMethodChooserAdapter = ObjectHelper
       .checkNotNull(paymentMethodChooserAdapter, "paymentMethodChooserAdapter");
+    this.companyHelper = ObjectHelper.checkNotNull(companyHelper, "companyHelper");
   }
 
   final void show() {
@@ -43,7 +47,8 @@ final class PaymentMethodChooserPopup {
       ));
       recyclerView.setAdapter(new PaymentMethodChooserRecyclerViewAdapter(
         context,
-        paymentMethodChooserAdapter
+        paymentMethodChooserAdapter,
+        this.companyHelper
       ));
       popupWindow = new PopupWindow(
         recyclerView,

@@ -7,9 +7,7 @@
 
   <FrameLayout
     android:id="@+id/frame_layout_container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/d_background_pin_confirmation">
+    style="@style/Container.Dark.Primary">
 
     <LinearLayout
       xmlns:android="http://schemas.android.com/apk/res/android"
@@ -57,9 +55,9 @@
         android:layout_marginStart="60dp"
         android:layout_marginTop="16dp"/>
 
-      <com.tpago.movil.app.ui.NumPad
+      <com.tpago.movil.app.ui.DNumPad
         android:id="@+id/num_pad"
-        style="@style/NumPad.Dark"
+        style="@style/DNumPad.Dark"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
     </LinearLayout>

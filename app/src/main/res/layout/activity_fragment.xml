@@ -5,11 +5,52 @@
   android:layout_height="match_parent"
   android:orientation="vertical">
 
-  <android.support.v7.widget.Toolbar
-    android:id="@+id/toolbar"
-    style="@style/Toolbar"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"/>
+  <FrameLayout style="@style/Dep.App.Widget.AppBar">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/Toolbar"
+        android:layout_gravity="center_vertical"/>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_change_password"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/primary"
+        android:orientation="horizontal"
+        android:theme="@style/App.ThemeOverlay.Dark"
+        android:visibility="gone">
+
+      <ImageButton
+          android:id="@+id/image_button_cancel_change_password"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          android:layout_marginStart="20dp"
+          android:background="?attr/selectableItemBackgroundBorderless"
+          android:src="@drawable/ic_clear_white_24dp"/>
+
+      <TextView
+          android:fontFamily="@string/font_gothamRounded_book"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_marginStart="20dp"
+          android:layout_weight="1"
+          android:gravity="center_vertical"
+          android:text="@string/restorepassword"
+          android:textColor="@color/white"
+          android:textSize="16sp"/>
+
+      <ImageButton
+          android:id="@+id/image_button_ok_change_password"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          android:layout_marginEnd="20dp"
+          android:layout_marginStart="20dp"
+          android:background="?attr/selectableItemBackgroundBorderless"
+          android:src="@drawable/ic_done_white_24dp"/>
+    </LinearLayout>
+  </FrameLayout>
 
   <FrameLayout
     android:id="@+id/containerFrameLayout"

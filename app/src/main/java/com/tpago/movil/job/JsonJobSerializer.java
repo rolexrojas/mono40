@@ -44,7 +44,7 @@ final class JsonJobSerializer implements SqliteJobQueue.JobSerializer {
     final Class<? extends BaseJob> jobType = job.getClass();
     if (!this.jobTypes.containsKey(jobType)) {
       throw new IllegalArgumentException(
-        String.format("!this.jobTypes.contains(\"%1$s\")", jobType)
+        String.format("!this.jobTypes.containsType(\"%1$s\")", jobType)
       );
     }
     final BaseJobWrapper jobWrapper = BaseJobWrapper.builder()
@@ -65,7 +65,7 @@ final class JsonJobSerializer implements SqliteJobQueue.JobSerializer {
     );
     if (!this.jobClasses.containsKey(jobWrapper.type())) {
       throw new IllegalArgumentException(
-        String.format("!this.jobClasses.contains(\"%1$s\")", jobWrapper.type())
+        String.format("!this.jobClasses.containsType(\"%1$s\")", jobWrapper.type())
       );
     }
     return (T) this.gson.fromJson(jobWrapper.data(), this.jobClasses.get(jobWrapper.type()));

@@ -4,7 +4,7 @@ import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.tpago.movil.util.DigitHelper;
+import com.tpago.movil.util.digit.DigitUtil;
 
 import rx.functions.Func1;
 
@@ -23,11 +23,11 @@ public abstract class TransferResponseBody {
     return new Func1<TransferResponseBody, String>() {
       @Override
       public String call(TransferResponseBody body) {
-        return DigitHelper.removeNonDigits(body.getTransactionId());
+        return body.getTransactionMessage();
       }
     };
   }
 
-  @SerializedName("transaction-id")
-  public abstract String getTransactionId();
+  @SerializedName("transaction-message")
+  public abstract String getTransactionMessage();
 }

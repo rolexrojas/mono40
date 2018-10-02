@@ -9,11 +9,11 @@ import android.view.ViewGroup;
 import com.tpago.movil.R;
 import com.tpago.movil.app.di.ComponentBuilderSupplier;
 import com.tpago.movil.app.di.ComponentBuilderSupplierContainer;
-import com.tpago.movil.app.ui.FragmentModule;
+import com.tpago.movil.app.ui.fragment.base.BaseFragmentModule;
 import com.tpago.movil.dep.BackEventHandler;
 import com.tpago.movil.dep.FragmentBackEventHandler;
-import com.tpago.movil.app.ui.FragmentQualifier;
-import com.tpago.movil.app.ui.FragmentReplacer;
+import com.tpago.movil.app.ui.fragment.FragmentQualifier;
+import com.tpago.movil.app.ui.fragment.FragmentReplacer;
 import com.tpago.movil.dep.init.BaseInitFragment;
 import com.tpago.movil.dep.init.LogoAnimator;
 
@@ -50,7 +50,7 @@ public final class RegisterFragment extends BaseInitFragment implements Register
     super.onCreate(savedInstanceState);
     // Initializes the dependency injector.
     component = getInitComponent()
-      .plus(FragmentModule.create(this));
+      .plus(BaseFragmentModule.create(this));
     // Injects all the annotated dependencies.
     component.inject(this);
     // Pushes a fragment back event handler to the global handler.

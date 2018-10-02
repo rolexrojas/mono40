@@ -35,12 +35,12 @@ public abstract class PayableBalance extends Balance {
   /**
    * Amount pending from the previous period.
    */
+  @Nullable
   public abstract BigDecimal periodAmount();
 
   /**
    * Minimum amount that can be paid.
    */
-  @Nullable
   public abstract BigDecimal minimumAmount();
 
   @Memoized

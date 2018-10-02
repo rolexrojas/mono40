@@ -9,6 +9,10 @@ import java.util.List;
  */
 public final class StringHelper {
 
+  public static StringBuilder builder() {
+    return new StringBuilder();
+  }
+
   /**
    * Checks whether the a {@link String string} is {@code null} or empty.
    *
@@ -97,6 +101,11 @@ public final class StringHelper {
       }
       return builder.toString();
     }
+  }
+
+  public static String extractOTPcode(String s) {
+    String code = s.split(":")[1].replaceAll("[^0-9]+", "");
+    return code;
   }
 
   private StringHelper() {

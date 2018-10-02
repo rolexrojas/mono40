@@ -8,13 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.ActivityQualifier;
-import com.tpago.movil.app.ui.AlertData;
-import com.tpago.movil.app.ui.AlertManager;
-import com.tpago.movil.app.ui.FragmentActivity;
-import com.tpago.movil.app.ui.FragmentReplacer;
+import com.tpago.movil.app.ui.activity.ActivityQualifier;
+import com.tpago.movil.app.ui.alert.AlertManager;
+import com.tpago.movil.app.ui.FragmentActivityBase;
+import com.tpago.movil.app.ui.fragment.FragmentReplacer;
 import com.tpago.movil.app.ui.main.settings.auth.alt.AltAuthMethodFragment;
-import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.dep.graphics.Drawables;
 import com.tpago.movil.dep.init.InitFragment;
 import com.tpago.movil.dep.init.tutorial.TutorialFragment;
@@ -97,22 +96,20 @@ public final class SummaryRegisterFragment extends BaseRegisterFragment {
 
     if (this.shouldAskForAltUnlockMethod) {
       this.shouldAskForAltUnlockMethod = false;
-
-      final AlertData alertData = AlertData.builder(this.stringMapper)
+      this.alertManager.builder()
         .title(R.string.altUnlockMethod)
         .message(R.string.altUnlockMethodEnableQuestion)
         .positiveButtonText(R.string.enableAsVerb)
         .positiveButtonAction(
           () -> this.startActivity(
-            FragmentActivity.createLaunchIntent(
+            FragmentActivityBase.createLaunchIntent(
               this.getContext(),
               AltAuthMethodFragment.creator()
             )
           )
         )
         .negativeButtonText(R.string.laterAsVerb)
-        .build();
-      this.alertManager.show(alertData);
+        .show();
     }
   }
 

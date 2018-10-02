@@ -3,8 +3,7 @@ package com.tpago.movil.d.ui.main.recipient.addition;
 import android.support.annotation.NonNull;
 
 import com.tpago.movil.PhoneNumber;
-import com.tpago.movil.app.ui.AlertData;
-import com.tpago.movil.app.ui.AlertManager;
+import com.tpago.movil.app.ui.alert.AlertManager;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
@@ -13,8 +12,8 @@ import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.ui.Presenter;
-import com.tpago.movil.data.StringMapper;
-import com.tpago.movil.reactivex.DisposableHelper;
+import com.tpago.movil.app.StringMapper;
+import com.tpago.movil.reactivex.DisposableUtil;
 import com.tpago.movil.util.ObjectHelper;
 
 import io.reactivex.Single;
@@ -70,7 +69,7 @@ final class AddRecipientPresenter extends Presenter<AddRecipientScreen> {
 
   private void handleError(Throwable throwable) {
     Timber.e(throwable, "Adding contact recipient");
-    this.alertManager.show(AlertData.createForGenericFailure(this.stringMapper));
+    this.alertManager.showAlertForGenericFailure();
   }
 
   final void add(@NonNull final Contact contact) {
@@ -86,6 +85,6 @@ final class AddRecipientPresenter extends Presenter<AddRecipientScreen> {
   }
 
   final void onStop() {
-    DisposableHelper.dispose(this.disposable);
+    DisposableUtil.dispose(this.disposable);
   }
 }

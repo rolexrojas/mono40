@@ -4,6 +4,7 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 
 import com.tpago.movil.DisplayDensity;
@@ -23,14 +24,20 @@ public final class AppModule {
 
   @Provides
   @Singleton
-  ComponentBuilderSupplier componentBuilderSupplier(Map<Class<?>, ComponentBuilder> map) {
-    return ComponentBuilderSupplier.create(map);
+  DisplayDensity provideDisplayDensity(Context context) {
+    return DisplayDensity.get(context);
   }
 
   @Provides
   @Singleton
-  DisplayDensity provideDisplayDensity(Context context) {
-    return DisplayDensity.get(context);
+  DrawableMapper drawableMapper(Context context) {
+    return (drawableId) -> ContextCompat.getDrawable(context, drawableId);
+  }
+
+  @Provides
+  @Singleton
+  StringMapper stringMapper(Context context) {
+    return context::getString;
   }
 
   @Provides
@@ -49,5 +56,11 @@ public final class AppModule {
   @Singleton
   FingerprintManagerCompat fingerprintManager(Context context) {
     return FingerprintManagerCompat.from(context);
+  }
+
+  @Provides
+  @Singleton
+  ComponentBuilderSupplier componentBuilderSupplier(Map<Class<?>, ComponentBuilder> map) {
+    return ComponentBuilderSupplier.create(map);
   }
 }

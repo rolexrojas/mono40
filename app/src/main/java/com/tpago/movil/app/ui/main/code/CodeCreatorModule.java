@@ -2,7 +2,7 @@ package com.tpago.movil.app.ui.main.code;
 
 import android.support.v4.app.FragmentManager;
 
-import com.tpago.movil.app.ui.ActivityScope;
+import com.tpago.movil.app.ui.activity.ActivityScope;
 
 import dagger.Module;
 import dagger.Provides;

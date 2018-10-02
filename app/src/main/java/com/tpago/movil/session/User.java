@@ -8,7 +8,7 @@ import com.google.auto.value.extension.memoized.Memoized;
 import com.tpago.movil.Email;
 import com.tpago.movil.Name;
 import com.tpago.movil.PhoneNumber;
-import com.tpago.movil.partner.Carrier;
+import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.ObjectHelper;
 
@@ -34,8 +34,10 @@ public abstract class User {
   private Uri picture;
   private final BehaviorSubject<Uri> pictureSubject = BehaviorSubject.create();
 
-  private Carrier carrier;
-  private final BehaviorSubject<Carrier> carrierSubject = BehaviorSubject.create();
+  private boolean passwordChange;
+
+  private Partner carrier;
+  private final BehaviorSubject<Partner> carrierSubject = BehaviorSubject.create();
 
   private final BehaviorSubject<User> subject = BehaviorSubject.create();
 
@@ -106,16 +108,20 @@ public abstract class User {
     this.dispatchChanges();
   }
 
+  public final boolean passwordChanges(){
+    return this.passwordChange;
+  }
+
   @Nullable
-  public final Carrier carrier() {
+  public final Partner carrier() {
     return this.carrier;
   }
 
-  public final Observable<Carrier> carrierChanges() {
+  public final Observable<Partner> carrierChanges() {
     return this.carrierSubject;
   }
 
-  final void updateCarrier(Carrier carrier) {
+  final void updateCarrier(Partner carrier) {
     this.carrier = ObjectHelper.checkNotNull(carrier, "carrier");
     this.carrierSubject.onNext(this.carrier);
 
@@ -153,7 +159,8 @@ public abstract class User {
     private Name name;
     private Integer id;
     private Uri picture;
-    private Carrier carrier;
+    private Partner carrier;
+    private boolean passwordChange;
 
     private Builder() {
     }
@@ -173,6 +180,11 @@ public abstract class User {
       return this;
     }
 
+    public final Builder passwordChange(boolean passwordChange){
+      this.passwordChange = passwordChange;
+      return this;
+    }
+
     public final Builder id(@Nullable Integer id) {
       this.id = ObjectHelper.checkNotNull(id, "id");
       return this;
@@ -183,7 +195,7 @@ public abstract class User {
       return this;
     }
 
-    public final Builder carrier(@Nullable Carrier carrier) {
+    public final Builder carrier(@Nullable Partner carrier) {
       this.carrier = carrier;
       return this;
     }
@@ -199,6 +211,7 @@ public abstract class User {
       user.id = this.id;
       user.picture = this.picture;
       user.carrier = this.carrier;
+      user.passwordChange = this.passwordChange;
       return user;
     }
   }

@@ -2,7 +2,7 @@ package com.tpago.movil.app.ui.loader.takeover;
 
 import android.support.v4.app.FragmentManager;
 
-import com.tpago.movil.app.ui.FragmentHelper;
+import com.tpago.movil.app.ui.fragment.FragmentHelper;
 import com.tpago.movil.app.ui.loader.Loader;
 import com.tpago.movil.util.ObjectHelper;
 

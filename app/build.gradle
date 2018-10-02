@@ -1,220 +1,301 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'io.fabric'
 
 def appName = 'tPago'
 
 android {
-  packagingOptions {
-    exclude 'META-INF/rxjava.properties'
-  }
-
-  compileSdkVersion 25
-  buildToolsVersion '26.0.2'
-
-  defaultConfig {
-    applicationId 'com.tpago.movil'
-
-    def (major, minor, patch) = [2, 2, 45]
-    versionName "${major}.${minor}.${patch}"
-    versionCode ((major * 10_000_000) + (minor * 100_000) + (patch * 1_000))
-
-    minSdkVersion 19
-    targetSdkVersion 25
-
-    multiDexEnabled true
-
-    vectorDrawables.useSupportLibrary = true
-
-    javaCompileOptions {
-      annotationProcessorOptions {
-        includeCompileClasspath false
-
-        arguments = [
-          'autovaluegson.defaultCollectionsToEmpty': 'true',
-          'autovaluegson.mutableAdaptersWithDefaultSetters': 'true'
-        ]
-      }
-    }
-  }
-
-  flavorDimensions 'deviceType', 'environment'
-
-  productFlavors {
-    virtual {
-      dimension 'deviceType'
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
     }
 
-    physical {
-      dimension 'deviceType'
+    compileSdkVersion 26
+    buildToolsVersion '27.0.3'
+
+    defaultConfig {
+        applicationId 'com.tpago.movil'
+
+        def (major, minor, patch) = [2, 3, 83]
+        versionName "${major}.${minor}.${patch}"
+        versionCode((major * 10_000_000) + (minor * 100_000) + (patch * 1_000))
+
+        minSdkVersion 19
+        targetSdkVersion 26
+
+        multiDexEnabled true
+
+        vectorDrawables.useSupportLibrary = true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath false
+
+                arguments = [
+                        'autovaluegson.defaultCollectionsToEmpty'        : 'true',
+                        'autovaluegson.mutableAdaptersWithDefaultSetters': 'true'
+                ]
+            }
+        }
     }
 
-    mock {
-      dimension 'environment'
+    flavorDimensions 'deviceType', 'environment'
 
-      def flavorName = 'mock'
+    productFlavors {
+        mock {
+            dimension 'environment'
 
-      applicationIdSuffix ".${flavorName}"
+            def flavorName = 'mock'
 
-      resValue 'string', 'app_name', "${appName}-${flavorName}"
+            applicationIdSuffix ".${flavorName}"
 
-      buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'true'
-      buildConfigField 'String', 'API_URL', 'null'
+            resValue 'string', 'app_name', "${appName}-${flavorName}"
+
+            buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'false'
+        }
+
+        devt {
+            dimension 'environment'
+
+            def flavorName = 'devt'
+
+            applicationIdSuffix ".${flavorName}"
+
+            resValue 'string', 'app_name', "${appName}-${flavorName}"
+
+            buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'false'
+            buildConfigField 'String', 'API_URL', '"http://tpagonet-dev.gcs-systems.com/api/neo/"'
+        }
+
+        stag {
+            dimension 'environment'
+
+            def flavorName = 'devt'
+
+            applicationIdSuffix ".${flavorName}"
+
+            resValue 'string', 'app_name', "${appName}-${flavorName}"
+
+            buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'true'
+            buildConfigField 'String', 'API_URL', '"http://tpagonet-dev.gcs-systems.com/api/neo/"'
+        }
+
+        prep {
+            dimension 'environment'
+
+            def flavorName = 'prep'
+
+            applicationIdSuffix ".${flavorName}"
+
+            resValue 'string', 'app_name', "${appName}-${flavorName}"
+
+            buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'true'
+            buildConfigField 'String', 'API_URL', '"https://tpagonet-dev.gcs-systems.com/api/neo/"'
+        }
+
+        prod {
+            dimension 'environment'
+
+            resValue 'string', 'app_name', appName
+
+            buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'true'
+            buildConfigField 'String', 'API_URL', '"https://tpagonet.gcs-systems.com/api/neo/"'
+        }
+
+        emulatedDevice {
+            dimension 'deviceType'
+        }
+
+        notEmulatedDevice {
+            dimension 'deviceType'
+        }
     }
 
-    devt {
-      dimension 'environment'
+    sourceSets {
+        def commonDirName = 'src/common/java'
 
-      def flavorName = 'devt'
+        devt {
+            java.srcDir commonDirName
+        }
 
-      applicationIdSuffix ".${flavorName}"
+        stag {
+            java.srcDir commonDirName
+        }
 
-      resValue 'string', 'app_name', "${appName}-${flavorName}"
+        prep {
+            java.srcDir commonDirName
+        }
 
-      buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'false'
-      buildConfigField 'String', 'API_URL', '"http://tpagonet-dev.gcs-systems.com/api/neo/"'
+        prod {
+            java.srcDir commonDirName
+        }
     }
 
-    stag {
-      dimension 'environment'
+    signingConfigs {
+        debug {
+            storeFile rootProject.file('./keystores/debug.jks')
+        }
 
-      def flavorName = 'stag'
+        beta {
+            def properties = new Properties()
+            rootProject.file('./keystores/beta.properties')
+                    .withInputStream { stream -> properties.load(stream) }
 
-      applicationIdSuffix ".${flavorName}"
-
-      resValue 'string', 'app_name', "${appName}-${flavorName}"
-
-      buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'true'
-      buildConfigField 'String', 'API_URL', '"https://tpagonet-dev.gcs-systems.com/api/neo/"'
+            storeFile rootProject.file('./keystores/beta.jks')
+            storePassword properties.storePassword
+            keyAlias 'soluciones gbh'
+            keyPassword properties.keyPassword
+        }
     }
 
-    prep {
-      dimension 'environment'
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
 
-      def flavorName = 'prep'
+        beta {
+            signingConfig signingConfigs.beta
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            zipAlignEnabled true
+        }
 
-      applicationIdSuffix ".${flavorName}"
-
-      resValue 'string', 'app_name', "${appName}-${flavorName}"
-
-      buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'false'
-      buildConfigField 'String', 'API_URL', '"http://tpagonet-dev.gcs-systems.com/api/neo/"'
+        store {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            zipAlignEnabled true
+        }
     }
 
-    prod {
-      dimension 'environment'
-
-      resValue 'string', 'app_name', appName
-
-      buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'true'
-      buildConfigField 'String', 'API_URL', '"https://tpagonet.gcs-systems.com/api/neo/"'
-    }
-  }
-
-  sourceSets {
-    [ devt, stag, prep, prod ].each {
-      it.java.srcDir 'src/common/java'
+    dexOptions {
+        javaMaxHeapSize '4g'
     }
 
-    [ testDevt, testStag, testPrep, testProd ].each {
-      it.java.srcDir 'src/testCommon/java'
-    }
-  }
-
-  signingConfigs {
-    debug {
-      storeFile rootProject.file('./keystores/debug.jks')
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "${appName}-v${variant.versionName}-${variant.name}.apk"
+        }
     }
 
-    beta {
-      def properties = new Properties()
-      rootProject.file('./keystores/beta.properties')
-        .withInputStream { stream -> properties.load(stream) }
-
-      storeFile rootProject.file('./keystores/beta.jks')
-      storePassword properties.storePassword
-      keyAlias 'soluciones gbh'
-      keyPassword properties.keyPassword
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
-  }
-
-  buildTypes {
-    debug {
-      signingConfig signingConfigs.debug
-    }
-
-    beta {
-      signingConfig signingConfigs.beta
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-      zipAlignEnabled true
-    }
-
-    store {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-      zipAlignEnabled true
-    }
-  }
-
-  dexOptions {
-    javaMaxHeapSize '4g'
-  }
-
-  applicationVariants.all { variant ->
-    variant.outputs.all {
-      def name = "${appName}-v${variant.versionName}-${variant.baseName}"
-      if (!variant.signingConfig) {
-        name += '-unsigned'
-      }
-      name += '.apk'
-      outputFileName = name
-    }
-  }
-
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
-}
-
-retrolambda {
-  javaVersion JavaVersion.VERSION_1_7
 }
 
 repositories {
-  // Local repositories
-  flatDir {
-    dirs 'libs'
-  }
+    // Local repositories
+    flatDir {
+        dirs 'libs'
+    }
 
-  // Remote repositories
-  google()
+    // Remote repositories
+    jcenter()
 
-  jcenter()
+    maven {
+        url 'https://maven.google.com'
+    }
 
-  maven {
-    url 'https://maven.fabric.io/public'
-  }
-  maven {
-    url 'https://jitpack.io'
-  }
+    maven {
+        url 'https://maven.fabric.io/public'
+    }
+
+    maven {
+        url 'https://jitpack.io'
+    }
 }
 
 dependencies {
-  def applyDependencies = { context ->
-    context.each { method, deps ->
-      deps.each { identifier, value ->
-        "${method}"(value)
-      }
+    // Local dependencies
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    def cubeSdkName = { version, environment -> "Cub3AltPanSDK-v${version}-${environment}" }
+    implementation 'com.android.support:support-v4:26.1.0'
+    mockImplementation(name: cubeSdkName('1.4.2', 'devt'), ext: 'aar')
+    devtImplementation(name: cubeSdkName('1.4.2', 'devt'), ext: 'aar')
+    stagImplementation(name: cubeSdkName('1.4.1', 'stag'), ext: 'aar')
+    prepImplementation(name: cubeSdkName('1.4.1', 'prep'), ext: 'aar')
+    prodImplementation(name: cubeSdkName('1.4.1', 'prod'), ext: 'aar')
+
+    // Remote dependencies
+    def rxJavaGroupId = 'io.reactivex.rxjava2'
+    implementation "${rxJavaGroupId}:rxjava:2.1.4"
+    implementation "${rxJavaGroupId}:rxandroid:2.0.1"
+
+    def okHttpGroupId = 'com.squareup.okhttp3'
+    def okHttpVersion = '3.9.0'
+    implementation "${okHttpGroupId}:okhttp:${okHttpVersion}"
+    implementation "${okHttpGroupId}:logging-interceptor:${okHttpVersion}"
+
+    implementation 'com.google.code.gson:gson:2.8.1'
+
+    def retrofitGroupId = 'com.squareup.retrofit2'
+    def retrofitVersion = '2.3.0'
+    implementation "${retrofitGroupId}:retrofit:${retrofitVersion}"
+    implementation "${retrofitGroupId}:converter-gson:${retrofitVersion}"
+    implementation "${retrofitGroupId}:adapter-rxjava2:${retrofitVersion}"
+
+    def autoValueVersion = '1.5'
+    annotationProcessor "com.google.auto.value:auto-value:${autoValueVersion}"
+    compileOnly "com.jakewharton.auto.value:auto-value-annotations:${autoValueVersion}"
+
+    def autoValueExtensionGroupId = 'com.ryanharter.auto.value'
+    def autoValueGsonExtensionVersion = '0.5.0'
+    annotationProcessor "${autoValueExtensionGroupId}:auto-value-gson:${autoValueGsonExtensionVersion}"
+    compileOnly "${autoValueExtensionGroupId}:auto-value-gson:${autoValueGsonExtensionVersion}"
+
+    def autoValueParcelExtensionVersion = '0.2.5'
+    annotationProcessor "${autoValueExtensionGroupId}:auto-value-parcel:${autoValueParcelExtensionVersion}"
+
+    def autoValueIgnoreHashEquals = 'com.github.reggar:auto-value-ignore-hash-equals:1.1.4'
+    annotationProcessor autoValueIgnoreHashEquals
+    compileOnly autoValueIgnoreHashEquals
+
+    def daggerGroupId = 'com.google.dagger'
+    def daggerVersion = '2.11'
+    implementation "${daggerGroupId}:dagger:${daggerVersion}"
+    annotationProcessor "${daggerGroupId}:dagger-compiler:${daggerVersion}"
+
+    implementation 'com.jakewharton.timber:timber:4.5.1'
+
+    implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true
     }
-  }
 
-  applyDependencies(rootProject.ext.dependencies)
-  applyDependencies(rootProject.ext.dependenciesDeprecated)
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.4.7'
 
-  // TODO: Find a way of moving all the dependencies into the 'dependencies.gradle' file.
-  implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-    transitive = true
-  }
+    implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
+
+    def butterKnifeGroupId = 'com.jakewharton'
+    def butterKnifeVersion = '8.8.1'
+    implementation "${butterKnifeGroupId}:butterknife:${butterKnifeVersion}"
+    annotationProcessor "${butterKnifeGroupId}:butterknife-compiler:${butterKnifeVersion}"
+
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
+
+    def supportLibraryGroupId = 'com.android.support'
+    def supportLibraryVersion = '27.0.2'
+    implementation "${supportLibraryGroupId}:appcompat-v7:${supportLibraryVersion}"
+    implementation "${supportLibraryGroupId}:design:${supportLibraryVersion}"
+    implementation "${supportLibraryGroupId}:percent:${supportLibraryVersion}"
+    implementation "${supportLibraryGroupId}:recyclerview-v7:${supportLibraryVersion}"
+    implementation "${supportLibraryGroupId}.constraint:constraint-layout:1.0.2"
+
+    implementation 'com.yqritc:recyclerview-flexibledivider:1.4.0'
+
+    testImplementation 'junit:junit:4.12'
+
+    testImplementation 'org.mockito:mockito-core:2.9.0'
+
+    // Deprecated dependencies
+    implementation "${retrofitGroupId}:adapter-rxjava:${retrofitVersion}"
+    implementation "com.github.ozodrukh:CircularReveal:2.0.1"
+    implementation "com.jakewharton.rxbinding:rxbinding:0.4.0"
+    implementation "com.tbruyelle.rxpermissions:rxpermissions:0.9.0"
+    implementation "de.hdodenhof:circleimageview:2.1.0"
+    implementation "io.reactivex:rxandroid:1.2.1"
+    implementation "io.reactivex:rxjava:1.2.2"
+    implementation 'com.birbit:android-priority-jobqueue:2.0.1'
+    // TODO: Find a replacement. Code it?
+    implementation 'javax.annotation:jsr250-api:1.0'
+    implementation 'jp.wasabeef:picasso-transformations:2.1.0'
 }

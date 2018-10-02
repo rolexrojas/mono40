@@ -31,7 +31,7 @@ public enum ProductType {
       case TBD:
         return R.string.debit_card;
       case PPA:
-        return R.string.prepay;
+        return R.string.prepaid;
       case DDA:
         return R.string.current;
       case CC:

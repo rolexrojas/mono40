@@ -10,7 +10,7 @@ import com.google.gson.stream.JsonWriter;
 import com.tpago.movil.Email;
 import com.tpago.movil.Name;
 import com.tpago.movil.PhoneNumber;
-import com.tpago.movil.partner.Carrier;
+import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
 
@@ -28,6 +28,7 @@ public final class UserTypeAdapter extends TypeAdapter<User> {
   private static final String PROPERTY_ID = "id";
   private static final String PROPERTY_PICTURE = "profilePicUrl";
   private static final String PROPERTY_CARRIER = "carrier";
+  private static final String PROPERTY_PASSWORDCHANGE = "passwordChange";
 
   private static final String PROPERTY_DEFAULT_FIRST_NAME = "Usuario";
   private static final String PROPERTY_DEFAULT_LAST_NAME = "tPago";
@@ -36,22 +37,24 @@ public final class UserTypeAdapter extends TypeAdapter<User> {
     return new UserTypeAdapter(gson);
   }
 
-  private final TypeAdapter<Carrier> carrierTypeAdapter;
+  private final TypeAdapter<Partner> carrierTypeAdapter;
   private final TypeAdapter<Email> emailTypeAdapter;
   private final TypeAdapter<Integer> integerTypeAdapter;
   private final TypeAdapter<PhoneNumber> phoneNumberTypeAdapter;
   private final TypeAdapter<String> stringTypeAdapter;
   private final TypeAdapter<Uri> uriTypeAdapter;
+  private final TypeAdapter<Boolean> booleanTypeAdapter;
 
   private UserTypeAdapter(Gson gson) {
     ObjectHelper.checkNotNull(gson, "gson");
 
-    this.carrierTypeAdapter = gson.getAdapter(Carrier.class);
+    this.carrierTypeAdapter = gson.getAdapter(Partner.class);
     this.emailTypeAdapter = gson.getAdapter(Email.class);
     this.integerTypeAdapter = gson.getAdapter(Integer.class);
     this.phoneNumberTypeAdapter = gson.getAdapter(PhoneNumber.class);
     this.stringTypeAdapter = gson.getAdapter(String.class);
     this.uriTypeAdapter = gson.getAdapter(Uri.class);
+    this.booleanTypeAdapter = gson.getAdapter(Boolean.class);
   }
 
   @Override
@@ -95,6 +98,9 @@ public final class UserTypeAdapter extends TypeAdapter<User> {
           case PROPERTY_CARRIER:
             builder.carrier(this.carrierTypeAdapter.read(reader));
             break;
+          case PROPERTY_PASSWORDCHANGE:
+            builder.passwordChange(this.booleanTypeAdapter.read(reader));
+            break;
           default:
             reader.skipValue();
             break;
@@ -128,6 +134,9 @@ public final class UserTypeAdapter extends TypeAdapter<User> {
       this.uriTypeAdapter.write(writer, user.picture());
       writer.name(PROPERTY_CARRIER);
       this.carrierTypeAdapter.write(writer, user.carrier());
+      writer.name(PROPERTY_PASSWORDCHANGE);
+      this.booleanTypeAdapter.write(writer, user.passwordChanges());
+
       writer.endObject();
     }
   }
