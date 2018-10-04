@@ -1,6 +1,6 @@
 package com.tpago.movil.app.ui.main.settings.profile;
 
-import com.tpago.movil.app.ui.FragmentScope;
+import com.tpago.movil.app.ui.fragment.FragmentScope;
 import com.tpago.movil.app.ui.picture.PictureCreator;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.util.ObjectHelper;

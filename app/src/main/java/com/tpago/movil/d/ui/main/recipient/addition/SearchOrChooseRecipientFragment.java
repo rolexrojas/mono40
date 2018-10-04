@@ -15,23 +15,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tpago.movil.dep.Partner;
+import com.tpago.movil.company.bank.Bank;
 import com.tpago.movil.R;
+import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.main.recipient.addition.banks.BankListFragment;
 import com.tpago.movil.d.ui.main.recipient.addition.contacts.ContactListFragment;
 import com.tpago.movil.d.ui.main.recipient.addition.partners.PartnerListFragment;
 import com.tpago.movil.d.ui.main.recipient.index.category.Category;
 import com.tpago.movil.d.ui.view.widget.SearchView;
-import com.tpago.movil.d.domain.Bank;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
 
 import javax.inject.Inject;
-
-import rx.Observable;
 
 /**
  * @author hecvasro

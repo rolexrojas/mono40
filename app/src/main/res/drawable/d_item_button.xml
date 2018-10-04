@@ -3,5 +3,5 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:shape="rectangle">
   <corners android:radius="@dimen/app_widget_button_radius"/>
-  <solid android:color="@color/d_accent_alpha_20"/>
+  <solid android:color="@color/accent_20"/>
 </shape>

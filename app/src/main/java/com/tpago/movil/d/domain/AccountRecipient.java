@@ -4,8 +4,9 @@ import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.tpago.movil.company.bank.Bank;
 import com.tpago.movil.d.domain.util.StringUtils;
-import com.tpago.movil.util.DigitHelper;
+import com.tpago.movil.util.digit.DigitUtil;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
 
@@ -62,7 +63,7 @@ public final class AccountRecipient extends Recipient {
   }
 
   public final void number(String number) {
-    this.number = DigitHelper.removeNonDigits(number);
+    this.number = DigitUtil.removeNonDigits(number);
   }
 
   public final Bank bank() {
@@ -115,8 +116,11 @@ public final class AccountRecipient extends Recipient {
   public boolean matches(@Nullable String query) {
     return super.matches(query)
       || StringUtils.matches(this.number, query)
-      || (ObjectHelper.isNotNull(this.bank) && StringUtils.matches(this.bank.getName(), query))
-      || (ObjectHelper.isNotNull(this.product) && StringUtils.matches(this.product.getAlias(), query));
+      || (ObjectHelper.isNotNull(this.bank) && StringUtils.matches(this.bank.name(), query))
+      || (ObjectHelper.isNotNull(this.product) && StringUtils.matches(
+      this.product.getAlias(),
+      query
+    ));
   }
 
   @Override

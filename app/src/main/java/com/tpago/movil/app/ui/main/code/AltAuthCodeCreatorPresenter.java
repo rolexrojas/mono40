@@ -3,13 +3,12 @@ package com.tpago.movil.app.ui.main.code;
 import android.support.annotation.StringRes;
 
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.AlertData;
-import com.tpago.movil.app.ui.AlertManager;
-import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.app.ui.alert.AlertManager;
+import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.Code;
 import com.tpago.movil.util.BuilderChecker;
-import com.tpago.movil.util.Digit;
-import com.tpago.movil.util.DigitValueCreator;
+import com.tpago.movil.util.digit.Digit;
+import com.tpago.movil.util.digit.DigitValueCreator;
 import com.tpago.movil.util.ObjectHelper;
 
 /**
@@ -72,12 +71,11 @@ final class AltAuthCodeCreatorPresenter extends CodeCreatorPresenter {
         if (code.equals(this.code)) {
           this.codeCreator.resolveActiveRequest(this.code);
         } else {
-          final AlertData data = AlertData.builder(this.stringMapper)
+          this.alertManager.builder()
             .title(R.string.weAreSorry)
             .message(R.string.altUnlockMethodCodeMismatch)
             .positiveButtonText(R.string.ok)
-            .build();
-          this.alertManager.show(data);
+            .show();
         }
         this.code = null;
       }

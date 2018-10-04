@@ -31,8 +31,12 @@ public abstract class App extends Application implements ComponentBuilderSupplie
   DependencyInjector {
 
   public static App get(Context context) {
-    return (App) ObjectHelper.checkNotNull(context, "context")
+    final Context appContext = ObjectHelper.checkNotNull(context, "context")
       .getApplicationContext();
+    if (!(appContext instanceof App)) {
+      throw new ClassCastException("!(appContext instanceof App)");
+    }
+    return (App) appContext;
   }
 
   private com.tpago.movil.app.AppComponent component;

@@ -6,15 +6,15 @@ import android.widget.TextView;
 
 import com.tpago.movil.Code;
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.FragmentReplacer;
-import com.tpago.movil.app.ui.NumPad;
+import com.tpago.movil.app.ui.fragment.FragmentReplacer;
+import com.tpago.movil.app.ui.DNumPad;
 import com.tpago.movil.session.CodeMethodSignatureSupplier;
-import com.tpago.movil.dep.init.InitActivity;
+import com.tpago.movil.dep.init.InitActivityBase;
 import com.tpago.movil.session.SessionManager;
-import com.tpago.movil.function.Action;
-import com.tpago.movil.function.Consumer;
-import com.tpago.movil.util.Digit;
-import com.tpago.movil.util.DigitValueCreator;
+import com.tpago.movil.util.function.Action;
+import com.tpago.movil.util.function.Consumer;
+import com.tpago.movil.util.digit.Digit;
+import com.tpago.movil.util.digit.DigitValueCreator;
 import com.tpago.movil.util.Result;
 
 import javax.inject.Inject;
@@ -38,7 +38,7 @@ public final class CodeUnlockFragment extends BaseUnlockFragment {
 
   @BindView(R.id.valueTextView) TextView valueTextView;
 
-  @BindView(R.id.numPad) NumPad numPad;
+  @BindView(R.id.num_pad) DNumPad DNumPad;
   private Consumer<Integer> numPadDigitConsumer;
   private Action numPadDeleteAction;
 
@@ -106,7 +106,7 @@ public final class CodeUnlockFragment extends BaseUnlockFragment {
   public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    InitActivity.get(this.getActivity())
+    InitActivityBase.get(this.getActivity())
       .getInitComponent()
       .inject(this);
   }
@@ -120,16 +120,16 @@ public final class CodeUnlockFragment extends BaseUnlockFragment {
     this.valueTextView.setText(this.codeCreator.toString());
 
     this.numPadDigitConsumer = this::onNumPadDigitButtonClicked;
-    this.numPad.addDigitConsumer(this.numPadDigitConsumer);
+    this.DNumPad.addDigitConsumer(this.numPadDigitConsumer);
     this.numPadDeleteAction = this::onNumPadDeleteButtonClicked;
-    this.numPad.addDeleteAction(this.numPadDeleteAction);
+    this.DNumPad.addDeleteAction(this.numPadDeleteAction);
   }
 
   @Override
   public void onPause() {
-    this.numPad.removeDeleteAction(this.numPadDeleteAction);
+    this.DNumPad.removeDeleteAction(this.numPadDeleteAction);
     this.numPadDeleteAction = null;
-    this.numPad.removeDigitConsumer(this.numPadDigitConsumer);
+    this.DNumPad.removeDigitConsumer(this.numPadDigitConsumer);
     this.numPadDigitConsumer = null;
 
     super.onPause();

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  style="@style/Container.Light.Primary">
+
+  <android.support.constraint.Guideline
+    android:id="@+id/guideline_top"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:layout_constraintGuide_begin="80dp"/>
+
+  <android.support.constraint.Guideline
+    android:id="@+id/guideline_middle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:layout_constraintGuide_begin="100dp"/>
+
+  <android.support.constraint.Guideline
+    android:id="@+id/guideline_bottom"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:layout_constraintGuide_begin="240dp"/>
+
+  <Button
+    android:id="@+id/button_submit"
+    style="@style/Button.Light.Primary"
+    android:text="@string/next"
+    app:layout_constraintBottom_toBottomOf="parent"/>
+
+  <com.tpago.movil.app.ui.LabelPrefix
+    android:id="@+id/label_balance"
+    style="@style/LabelMoney.Light.LightBook"
+    android:layout_marginEnd="20dp"
+    app:layout_constraintBottom_toBottomOf="@+id/label_balance_fixed"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.5"
+    app:layout_constraintStart_toEndOf="@+id/label_balance_fixed"
+    app:layout_constraintTop_toTopOf="@+id/label_balance_fixed"/>
+
+  <com.tpago.movil.app.ui.Label
+    android:id="@+id/label_balance_fixed"
+    style="@style/Label.Light"
+    android:layout_marginStart="20dp"
+    android:layout_marginTop="20dp"
+    android:ellipsize="end"
+    android:text="@string/available_balance"
+    app:layout_constraintEnd_toStartOf="@+id/label_balance"
+    app:layout_constraintHorizontal_bias="0.5"
+    app:layout_constraintHorizontal_chainStyle="spread_inside"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"/>
+
+  <ImageView
+    android:id="@+id/image_bank_logo"
+    android:layout_width="@dimen/icon_size_20"
+    android:layout_height="@dimen/icon_size_20"
+    android:layout_marginEnd="4dp"
+    app:layout_constraintBottom_toTopOf="@+id/guideline_middle"
+    app:layout_constraintEnd_toStartOf="@+id/label_destination_product"
+    app:layout_constraintHorizontal_bias="0.5"
+    app:layout_constraintHorizontal_chainStyle="packed"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="@+id/guideline_top"/>
+
+  <com.tpago.movil.app.ui.Label
+    android:id="@+id/label_destination_product"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="4dp"
+    android:gravity="center"
+    android:maxLines="1"
+    android:textAllCaps="true"
+    android:textColor="#333"
+    android:textSize="14sp"
+    app:fontFamily="@font/gotham_rounded_book"
+    app:layout_constraintBottom_toBottomOf="@+id/image_bank_logo"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.5"
+    app:layout_constraintStart_toEndOf="@+id/image_bank_logo"
+    app:layout_constraintTop_toTopOf="@+id/image_bank_logo"/>
+
+  <com.tpago.movil.app.ui.InputLabel
+    android:id="@+id/input_amount"
+    style="@style/Input.Light"
+    android:layout_marginEnd="60dp"
+    android:layout_marginStart="60dp"
+    app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="@+id/guideline_middle">
+
+    <com.tpago.movil.app.ui.LabelPrefix
+      android:id="@+id/label_amount"
+      style="@style/InputLabelMoney.Light"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"/>
+  </com.tpago.movil.app.ui.InputLabel>
+
+  <com.tpago.movil.app.ui.NumPad
+    android:id="@+id/num_pad"
+    style="@style/NumPad.Light"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:layout_marginBottom="20dp"
+    android:layout_marginTop="20dp"
+    app:dotButtonEnabled="true"
+    app:layout_constraintBottom_toTopOf="@+id/button_submit"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="@+id/guideline_bottom"/>
+</android.support.constraint.ConstraintLayout>

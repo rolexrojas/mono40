@@ -1,13 +1,22 @@
 package com.tpago.movil.product;
 
-import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
-import com.tpago.movil.currency.Currency;
-import com.tpago.movil.bank.Bank;
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.SerializedName;
+import com.tpago.movil.Currency;
+import com.tpago.movil.company.bank.Bank;
+import com.tpago.movil.util.ComparisonChain;
+import com.tpago.movil.util.digit.DigitUtil;
+import com.tpago.movil.util.IncludeHashEquals;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.math.BigDecimal;
 
 /**
@@ -16,116 +25,105 @@ import java.math.BigDecimal;
  * @author hecvasro
  */
 @AutoValue
-public abstract class Product {
+public abstract class Product implements Comparable<Product> {
+
+  public static TypeAdapter<Product> typeAdapter(Gson gson) {
+    return new AutoValue_Product.GsonTypeAdapter(gson);
+  }
 
   public static Builder builder() {
-    throw new UnsupportedOperationException("not implemented");
+    return new AutoValue_Product.Builder();
   }
 
   Product() {
-    throw new UnsupportedOperationException("not implemented");
   }
 
+  @IncludeHashEquals
   public abstract Bank bank();
 
-  public abstract Type type();
+  @SerializedName("account-type")
+  @IncludeHashEquals
+  @Type
+  public abstract String type();
+
+  @SerializedName("account-number")
+  @IncludeHashEquals
+  public abstract String number();
 
   @Memoized
-  public Category category() {
-    throw new UnsupportedOperationException("not implemented");
+  public String numberSanitized() {
+    return DigitUtil.removeNonDigits(this.number());
   }
 
+  @SerializedName("account-alias")
   public abstract String alias();
-
-  public abstract String number();
 
   public abstract Currency currency();
 
   /**
    * Cost of querying its balance.
    */
+  @SerializedName("query-fee")
   public abstract BigDecimal balanceQueryCost();
 
+  @SerializedName("image-url")
   @Nullable
-  public abstract String imageUriTemplate();
-
-  @Nullable
-  public abstract Uri imageUri();
+  public abstract String imageTemplate();
 
   /**
    * Indicates whether it's a payment method or not.
    */
+  @SerializedName("payable")
   public abstract boolean isPaymentMethod();
 
-  @Memoized
-  @Override
-  public abstract String toString();
-
-  @Memoized
-  @Override
-  public abstract int hashCode();
+  /**
+   * Indicates whether it's the primary payment method or not.
+   */
+  @SerializedName("default-account")
+  public abstract boolean isPrimaryPaymentMethod();
 
   /**
-   * Product type enumeration
+   * Id for the cards
    */
-  public enum Type {
-    /**
-     * American Express from any bank
-     */
-    AMEX,
-    /**
-     * Visa or MasterCard from any bank
-     */
-    CC,
-    /**
-     * Account from Citi Bank
-     * <p>
-     * Only accepts credit transactions.
-     */
-    CDA,
-    /**
-     * Debit direct account from any bank
-     */
-    DDA,
-    /**
-     * Loan from any bank
-     */
-    LOAN,
-    /**
-     * Prepay account from any bank
-     * <p>
-     * Wallets use these type.
-     */
-    PPA,
-    /**
-     * Savings account from any bank
-     */
-    SAV,
-    /**
-     * Savings account from Banco Union
-     * <p>
-     * Only accepts credit transactions.
-     */
-    SAVCLARO,
-    /**
-     * Savings account from Banco Union
-     * <p>
-     * Accepts credit and debit transactions.
-     */
-    SAVELLA,
-    /**
-     * Visa from Banco Union
-     */
-    TBD
+  @SerializedName("altpan-key")
+  @Nullable
+  public abstract String altpanKey();
+
+  @Override
+  public int compareTo(@NonNull Product that) {
+    return ComparisonChain.create()
+      .compare(this.bank(), that.bank())
+      .compare(this.type(), that.type())
+      .compare(this.number(), that.number())
+      .compare(this.alias(), that.alias())
+      .result();
   }
 
-  /**
-   * Product category enumeration
-   */
-  public enum Category {
-    ACCOUNT,
-    CREDIT_CARD,
-    LOAN
+  @Retention(RetentionPolicy.SOURCE)
+  @StringDef({
+    Type.AMEX,
+    Type.CC,
+    Type.CDA,
+    Type.DDA,
+    Type.LOAN,
+    Type.PPA,
+    Type.SAV,
+    Type.SAVCLARO,
+    Type.SAVELLA,
+    Type.TBD
+  })
+  public @interface Type {
+
+    String AMEX = "AMEX"; // TARJETA AMEX
+    String CC = "CC"; // TARJETA VISA/MASTERCARD
+    String CDA = "CDA"; // CITIBANK CUENTA  QUE SOLO PERMITE CREDITO (Pagos suplidores citi)
+    String DDA = "DDA"; // CUENTA CORRIENTE (DEBIT DIRECT ACCOUNT)
+    String LOAN = "LOAN"; // PRESTAMO
+    String PPA = "PPA"; // CUENTA PREPAGO  (Los monederos tienen este tipo de cuenta)
+    String SAV = "SAV";// SAVING CUENTA DE AHORRO
+    String SAVCLARO = "SAVCLARO"; // BANCO UNION AHORRO (SOLO PERMITE CREDITOS)
+    String SAVELLA = "SAVELLA"; // BANCO UNION  AHORRO (CREDITO Y DEBITO)
+    String TBD = "TBD"; // BANCO UNION TARJETA DE DEBITO VISA
   }
 
   @AutoValue.Builder
@@ -136,21 +134,23 @@ public abstract class Product {
 
     public abstract Builder bank(Bank bank);
 
-    public abstract Builder type(Type type);
-
-    public abstract Builder alias(String alias);
+    public abstract Builder type(@Type String type);
 
     public abstract Builder number(String number);
+
+    public abstract Builder alias(String alias);
 
     public abstract Builder currency(Currency currency);
 
     public abstract Builder balanceQueryCost(BigDecimal balanceQueryCost);
 
-    public abstract Builder imageUriTemplate(@Nullable String imageUriTemplate);
-
-    public abstract Builder imageUri(@Nullable Uri imageUri);
+    public abstract Builder imageTemplate(@Nullable String imageTemplate);
 
     public abstract Builder isPaymentMethod(boolean isPaymentMethod);
+
+    public abstract Builder isPrimaryPaymentMethod(boolean isPrimaryPaymentMethod);
+
+    public abstract Builder altpanKey(String altpanKey);
 
     public abstract Product build();
   }

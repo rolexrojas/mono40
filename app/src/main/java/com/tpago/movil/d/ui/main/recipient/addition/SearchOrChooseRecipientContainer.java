@@ -2,16 +2,14 @@ package com.tpago.movil.d.ui.main.recipient.addition;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.dep.Partner;
+import com.tpago.movil.company.bank.Bank;
+import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.ui.Container;
-import com.tpago.movil.d.domain.Bank;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 public interface SearchOrChooseRecipientContainer extends Container<AddRecipientComponent> {

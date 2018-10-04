@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  style="@style/SettingsContainer"
+  android:clickable="false">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+      style="@style/SettingsSectionTitle"
+      android:text="tPago y su uso"/>
+
+    <com.tpago.movil.app.ui.main.settings.SingleLineSettingsOption
+      android:id="@+id/setting_option_faq"
+      style="@style/SettingsOption"
+      app:primaryText="Preguntas frecuentes"
+      android:clickable="true"/>
+
+    <View
+      style="@style/VerticalDivider.Line"
+      android:layout_marginEnd="@dimen/space_horizontal_20"
+      android:layout_marginStart="@dimen/space_horizontal_20"/>
+
+    <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+      android:id="@+id/setting_option_mail_customer_service"
+      style="@style/SettingsOption"
+      app:primaryText="Enviar correo a servicio al cliente"
+      app:secondaryText="ayuda\@tpago.com"
+      android:clickable="true" />
+
+    <View
+      style="@style/VerticalDivider.Line"
+      android:layout_marginEnd="@dimen/space_horizontal_20"
+      android:layout_marginStart="@dimen/space_horizontal_20"/>
+
+    <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+      android:id="@+id/setting_option_call_customer_service"
+      android:clickable="true"
+      style="@style/SettingsOption"
+      app:primaryText="Llamar a servicio al cliente"
+      app:secondaryText="1-809-732-2525"/>
+    <android.support.v4.widget.Space style="@style/VerticalDivider.Space.Normal"/>
+
+    <TextView
+        style="@style/SettingsSectionTitle"
+        android:text="Bancos"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
+  </LinearLayout>
+</ScrollView>

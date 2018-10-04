@@ -7,10 +7,14 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.tpago.movil.R;
+import com.tpago.movil.app.App;
+import com.tpago.movil.company.CompanyHelper;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * @author hecvasro
@@ -18,6 +22,9 @@ import java.util.List;
 public class PaymentMethodChooser
   extends RelativeLayout
   implements PaymentMethodChooserAdapter.OnItemSelectedListener {
+
+  @Inject
+  CompanyHelper companyHelper;
 
   private PaymentMethodChooserAdapter paymentMethodChooserAdapter;
   private PaymentMethodChooserPopup paymentMethodChooserPopup;
@@ -43,6 +50,10 @@ public class PaymentMethodChooser
   }
 
   private void initializePaymentMethodChooser(Context context) {
+    App.get(context)
+      .component()
+      .inject(this);
+
     LayoutInflater.from(context)
       .inflate(R.layout.widget_payment_method_chooser, this);
   }
@@ -63,9 +74,16 @@ public class PaymentMethodChooser
   protected void onFinishInflate() {
     super.onFinishInflate();
     paymentMethodHolder = new SelectedPaymentMethodHolder(this);
-    paymentMethodHolderBinder = new SelectedPaymentMethodHolderBinder(getContext());
+    paymentMethodHolderBinder = new SelectedPaymentMethodHolderBinder(
+      this.getContext(),
+      this.companyHelper
+    );
     paymentMethodChooserAdapter = new PaymentMethodChooserAdapter(this);
-    paymentMethodChooserPopup = new PaymentMethodChooserPopup(this, paymentMethodChooserAdapter);
+    paymentMethodChooserPopup = new PaymentMethodChooserPopup(
+      this,
+      this.paymentMethodChooserAdapter,
+      this.companyHelper
+    );
     setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -74,6 +92,10 @@ public class PaymentMethodChooser
         }
       }
     });
+  }
+
+  public void onPause() {
+    paymentMethodChooserPopup.dismiss();
   }
 
   @Override

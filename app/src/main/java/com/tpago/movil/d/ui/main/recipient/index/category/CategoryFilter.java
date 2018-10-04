@@ -6,12 +6,12 @@ import static com.tpago.movil.d.domain.Recipient.acceptsTransfers;
 
 import com.tpago.movil.d.domain.Recipient;
 
-import rx.functions.Func1;
+import io.reactivex.functions.Predicate;
 
 /**
  * @author Hector Vasquez
  */
-final class CategoryFilter implements Func1<Recipient, Boolean> {
+final class CategoryFilter implements Predicate<Recipient> {
 
   static CategoryFilter create(Category category) {
     return new CategoryFilter(category);
@@ -24,7 +24,7 @@ final class CategoryFilter implements Func1<Recipient, Boolean> {
   }
 
   @Override
-  public Boolean call(Recipient recipient) {
+  public boolean test(Recipient recipient) throws Exception {
     switch (this.category) {
       case PAY:
         return acceptsPayments(recipient);

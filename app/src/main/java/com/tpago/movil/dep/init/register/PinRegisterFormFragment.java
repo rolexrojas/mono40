@@ -6,14 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tpago.movil.function.Action;
-import com.tpago.movil.function.Consumer;
-import com.tpago.movil.util.Digit;
+import com.tpago.movil.util.function.Action;
+import com.tpago.movil.util.function.Consumer;
+import com.tpago.movil.util.digit.Digit;
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.FragmentQualifier;
-import com.tpago.movil.app.ui.FragmentReplacer;
+import com.tpago.movil.app.ui.fragment.FragmentQualifier;
+import com.tpago.movil.app.ui.fragment.FragmentReplacer;
 import com.tpago.movil.dep.widget.EditableLabel;
-import com.tpago.movil.app.ui.NumPad;
+import com.tpago.movil.app.ui.DNumPad;
 
 import javax.inject.Inject;
 
@@ -35,7 +35,7 @@ public final class PinRegisterFormFragment extends BaseRegisterFragment
   FragmentReplacer fragmentReplacer;
 
   @BindView(R.id.editable_label_pin) EditableLabel pinEditableLabel;
-  @BindView(R.id.num_pad) NumPad numPad;
+  @BindView(R.id.num_pad) DNumPad DNumPad;
 
   private Consumer<Integer> numPadDigitConsumer;
   private Action numPadDeleteAction;
@@ -84,19 +84,19 @@ public final class PinRegisterFormFragment extends BaseRegisterFragment
     super.onResume();
     // Adds a listener that gets notified each time a digit button of the num pad is clicked.
     this.numPadDigitConsumer = this::onDigitClicked;
-    this.numPad.addDigitConsumer(this.numPadDigitConsumer);
+    this.DNumPad.addDigitConsumer(this.numPadDigitConsumer);
     // Adds a listener that gets notified each time the delete button of the num pad is clicked.
     this.numPadDeleteAction = this::onDeleteClicked;
-    this.numPad.addDeleteAction(this.numPadDeleteAction);
+    this.DNumPad.addDeleteAction(this.numPadDeleteAction);
   }
 
   @Override
   public void onPause() {
     // Removes the listener that gets notified each time the delete button of the num pad is clicked.
-    this.numPad.removeDeleteAction(this.numPadDeleteAction);
+    this.DNumPad.removeDeleteAction(this.numPadDeleteAction);
     this.numPadDeleteAction = null;
     // Removes the listener that gets notified each time a digit button of the num pad is clicked.
-    this.numPad.removeDigitConsumer(this.numPadDigitConsumer);
+    this.DNumPad.removeDigitConsumer(this.numPadDigitConsumer);
     this.numPadDigitConsumer = null;
 
     super.onPause();

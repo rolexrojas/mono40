@@ -26,7 +26,7 @@ public class MultiLineSettingsOption extends SettingsOption {
   public MultiLineSettingsOption(Context context, AttributeSet attributeSet) {
     super(context, attributeSet);
 
-    // Extracts the secondary text from the given attribute set.
+    // Extracts the secondary text from the given attribute sync.
     final TypedArray array = context.obtainStyledAttributes(
       attributeSet,
       R.styleable.MultiLineSettingsOption

@@ -48,53 +48,69 @@
         android:text="@string/exit"/>
     </LinearLayout>
 
-    <ScrollView
+    <android.support.constraint.ConstraintLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_above="@+id/main_linearLayout_anchor"
-      android:layout_marginBottom="20dp">
+      android:layout_alignParentTop="true"
+      android:paddingBottom="20dp">
 
-      <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+      <TextView
+        android:id="@+id/main_menuItem_pay"
+        style="@style/Widget.Main.MenuItem.Large"
+        android:drawableStart="@drawable/main_menu_item_icon_pay"
+        android:text="@string/pay"
+        app:layout_constraintBottom_toTopOf="@+id/main_menuItem_purchase"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="spread_inside"/>
 
-        <TextView
-          android:id="@+id/main_menuItem_pay"
-          style="@style/Widget.Main.MenuItem.Large"
-          android:drawableStart="@drawable/main_menu_item_icon_pay"
-          android:text="@string/pay"/>
+      <TextView
+        android:id="@+id/main_menuItem_insurance"
+        style="@style/Widget.Main.MenuItem.Large"
+        android:drawableStart="@drawable/main_menu_item_icon_insurance"
+        android:text="Microseguros"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_menuItem_wallet"/>
 
-        <TextView
-          android:id="@+id/main_menuItem_purchase"
-          style="@style/Widget.Main.MenuItem.Large"
-          android:drawableStart="@drawable/main_menu_item_icon_buy"
-          android:text="@string/buy"/>
+      <TextView
+        android:id="@+id/main_menuItem_purchase"
+        style="@style/Widget.Main.MenuItem.Large"
+        android:drawableStart="@drawable/main_menu_item_icon_buy"
+        android:text="@string/buy"
+        app:layout_constraintBottom_toTopOf="@+id/main_menuItem_transfer"
+        app:layout_constraintTop_toBottomOf="@+id/main_menuItem_pay"/>
 
-        <TextView
-          android:id="@+id/main_menuItem_transfer"
-          style="@style/Widget.Main.MenuItem.Large"
-          android:drawableStart="@drawable/main_menu_item_icon_transfer"
-          android:text="@string/transfer"/>
+      <TextView
+        android:id="@+id/main_menuItem_transfer"
+        style="@style/Widget.Main.MenuItem.Large"
+        android:drawableStart="@drawable/main_menu_item_icon_transfer"
+        android:text="@string/transfer"
+        app:layout_constraintBottom_toTopOf="@+id/main_menuItem_recharge"
+        app:layout_constraintTop_toBottomOf="@+id/main_menuItem_purchase"/>
 
-        <TextView
-          android:id="@+id/main_menuItem_recharge"
-          style="@style/Widget.Main.MenuItem.Large"
-          android:drawableStart="@drawable/main_menu_item_icon_recharge"
-          android:text="@string/recharge"/>
+      <TextView
+        android:id="@+id/main_menuItem_recharge"
+        style="@style/Widget.Main.MenuItem.Large"
+        android:drawableStart="@drawable/main_menu_item_icon_recharge"
+        android:text="@string/recharge"
+        app:layout_constraintBottom_toTopOf="@+id/main_menuItem_disburse"
+        app:layout_constraintTop_toBottomOf="@+id/main_menuItem_transfer"/>
 
-        <TextView
-          android:id="@+id/main_menuItem_disburse"
-          style="@style/Widget.Main.MenuItem.Large"
-          android:drawableStart="@drawable/main_menu_item_icon_disbursement"
-          android:text="@string/disburse"/>
+      <TextView
+        android:id="@+id/main_menuItem_disburse"
+        style="@style/Widget.Main.MenuItem.Large"
+        android:drawableStart="@drawable/main_menu_item_icon_disbursement"
+        android:text="@string/withdraw"
+        app:layout_constraintBottom_toTopOf="@+id/main_menuItem_wallet"
+        app:layout_constraintTop_toBottomOf="@+id/main_menuItem_recharge"/>
 
-        <TextView
-          android:id="@+id/main_menuItem_wallet"
-          style="@style/Widget.Main.MenuItem.Large"
-          android:drawableStart="@drawable/main_menu_item_icon_wallet"
-          android:text="@string/products"/>
-      </LinearLayout>
-    </ScrollView>
+      <TextView
+        android:id="@+id/main_menuItem_wallet"
+        style="@style/Widget.Main.MenuItem.Large"
+        android:drawableStart="@drawable/main_menu_item_icon_wallet"
+        android:text="@string/products"
+        app:layout_constraintBottom_toTopOf="@+id/main_menuItem_insurance"
+        app:layout_constraintTop_toBottomOf="@+id/main_menuItem_disburse"/>
+    </android.support.constraint.ConstraintLayout>
   </RelativeLayout>
 </LinearLayout>

@@ -12,13 +12,12 @@ import android.view.View;
 
 import com.google.auto.value.AutoValue;
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.AlertData;
-import com.tpago.movil.app.ui.AlertManager;
-import com.tpago.movil.app.ui.FragmentActivity;
+import com.tpago.movil.app.ui.alert.AlertManager;
+import com.tpago.movil.app.ui.FragmentActivityBase;
 import com.tpago.movil.app.ui.FragmentCreator;
 import com.tpago.movil.app.ui.InjectableFragment;
 import com.tpago.movil.app.ui.main.settings.SelectableSettingsOption;
-import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.app.StringMapper;
 
 import javax.inject.Inject;
 
@@ -52,16 +51,15 @@ public final class AltAuthMethodFragment extends InjectableFragment
   @OnClick(R.id.fingerprintOption)
   final void onFingerprintOptionClicked() {
     if (!this.keyguardManager.isDeviceSecure() || !this.fingerprintManager.hasEnrolledFingerprints()) {
-      final AlertData alertData = AlertData.builder(this.stringMapper)
+      this.alertManager.builder()
         .message(
-          "Es requerido que active la autenticación con huellas digitales del dispositivo para continuar.\nProceda a hacerlo desde la sección de Seguridad de su dispositivo."
+          getString(R.string.activatefingerprintmessage)
         )
         .negativeButtonText("Seguridad")
         .negativeButtonAction(
           () -> this.startActivity(new Intent(Settings.ACTION_SECURITY_SETTINGS))
         )
-        .build();
-      this.alertManager.show(alertData);
+        .show();
     } else {
       this.presenter.onEnableFingerprintButtonClicked();
     }
@@ -99,7 +97,7 @@ public final class AltAuthMethodFragment extends InjectableFragment
     super.onStart();
 
     // Sets the title.
-    FragmentActivity.get(this.getActivity())
+    FragmentActivityBase.get(this.getActivity())
       .setTitle(R.string.altUnlockMethod);
   }
 

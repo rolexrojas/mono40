@@ -2,11 +2,11 @@ package com.tpago.movil.app.ui.main.settings.auth.alt;
 
 import android.support.annotation.Nullable;
 
-import com.tpago.movil.app.ui.AlertManager;
-import com.tpago.movil.app.ui.FragmentScope;
+import com.tpago.movil.app.ui.alert.AlertManager;
+import com.tpago.movil.app.ui.fragment.FragmentScope;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.app.ui.main.code.CodeCreator;
-import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.session.CodeMethodKeyGenerator;
 import com.tpago.movil.session.FingerprintMethodKeyGenerator;
 import com.tpago.movil.session.SessionManager;

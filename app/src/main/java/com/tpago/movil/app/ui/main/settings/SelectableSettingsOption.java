@@ -39,7 +39,7 @@ public class SelectableSettingsOption extends SettingsOption {
       Picasso.with(this.getContext())
         .load(this.iconUri)
         .noFade()
-        .resizeDimen(R.dimen.smallIconSize, R.dimen.smallIconSize)
+        .resizeDimen(R.dimen.icon_size_20, R.dimen.icon_size_20)
         .into(this.iconImageView);
     }
   }

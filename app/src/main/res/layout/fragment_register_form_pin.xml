@@ -40,9 +40,9 @@
       android:layout_height="match_parent"/>
   </com.tpago.movil.dep.widget.LabelFitterLayout>
 
-  <com.tpago.movil.app.ui.NumPad
+  <com.tpago.movil.app.ui.DNumPad
     android:id="@+id/num_pad"
-    style="@style/NumPad.Dark"
+    style="@style/DNumPad.Dark"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_below="@+id/label_fitter_layout"/>

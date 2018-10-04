@@ -3,12 +3,14 @@ package com.tpago.movil.d.ui.main.recipient.addition;
 import android.content.Context;
 import android.net.Uri;
 
-import com.tpago.movil.dep.Partner;
-import com.tpago.movil.dep.api.ApiImageUriBuilder;
+import com.tpago.movil.company.Company;
+import com.tpago.movil.company.CompanyHelper;
+import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
+import com.tpago.movil.util.ObjectHelper;
 
 import rx.Observable;
 import rx.functions.Func1;
@@ -20,25 +22,23 @@ import timber.log.Timber;
 class BillRecipientBuilder extends RecipientBuilder {
 
   private final DepApiBridge apiBridge;
-
   private final Partner partner;
+  private final CompanyHelper companyHelper;
 
-  BillRecipientBuilder(
-    DepApiBridge apiBridge,
-    Partner partner
-  ) {
+  BillRecipientBuilder(DepApiBridge apiBridge, Partner partner, CompanyHelper companyHelper) {
     this.apiBridge = apiBridge;
     this.partner = partner;
+    this.companyHelper = ObjectHelper.checkNotNull(companyHelper, "companyHelper");
   }
 
   @Override
   public Uri getImageUri(Context context) {
-    return ApiImageUriBuilder.build(context, partner, ApiImageUriBuilder.Style.PRIMARY_24);
+    return this.companyHelper.getLogoUri(this.partner, Company.LogoStyle.COLORED_24);
   }
 
   @Override
   public String getTitle() {
-    return partner.getName();
+    return this.partner.name();
   }
 
   @Override

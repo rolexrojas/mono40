@@ -2,11 +2,10 @@ package com.tpago.movil.dep.main;
 
 import android.net.Uri;
 
+import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.dep.ConfigManager;
-import com.tpago.movil.dep.Partner;
 import com.tpago.movil.dep.TimeOutManager;
-import com.tpago.movil.app.ui.ActivityScope;
-import com.tpago.movil.partner.Carrier;
+import com.tpago.movil.app.ui.activity.ActivityScope;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.session.User;
 import com.tpago.movil.util.ObjectHelper;
@@ -25,16 +24,6 @@ public final class MainModule {
 
   public MainModule(TimeOutManager.TimeOutHandler timeOutHandler) {
     this.timeOutHandler = ObjectHelper.checkNotNull(timeOutHandler, "timeOutHandler");
-  }
-
-  private Partner mapPartner(Carrier carrier) {
-    return Partner.builder()
-      .setType(Partner.TYPE_CARRIER)
-      .setCode(carrier.code())
-      .setId(carrier.id())
-      .setName(carrier.name())
-      .setImageUriTemplate(carrier.logoTemplate())
-      .build();
   }
 
   @Provides
@@ -68,13 +57,12 @@ public final class MainModule {
     user.pictureChanges()
       .subscribe(depUser::picture);
 
-    final Carrier carrier = user.carrier();
+    final Partner carrier = user.carrier();
     if (ObjectHelper.isNotNull(carrier)) {
-      depUser.carrier(this.mapPartner(carrier));
+      depUser.carrier(carrier);
     }
 
     user.carrierChanges()
-      .map(this::mapPartner)
       .subscribe(depUser::carrier);
 
     return depUser;

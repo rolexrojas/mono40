@@ -10,7 +10,7 @@ public enum TransactionCategory {
   PAY(R.string.pay),
   TRANSFER(R.string.transfer),
   RECHARGE(R.string.recharge),
-  DISBURSE(R.string.disburse);
+  DISBURSE(R.string.withdraw);
 
   public static TransactionCategory transform(Category category) {
     if (category == Category.PAY) {

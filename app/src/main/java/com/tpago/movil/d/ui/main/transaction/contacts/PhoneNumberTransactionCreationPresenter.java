@@ -6,9 +6,9 @@ import static com.tpago.movil.d.ui.main.transaction.TransactionCategory.TRANSFER
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.dep.Partner;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
+import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.dep.api.DCurrencies;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.AccountRecipient;

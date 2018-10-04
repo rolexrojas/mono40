@@ -4,13 +4,18 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.tpago.movil.Currency;
+import com.tpago.movil.company.bank.Bank;
 import com.tpago.movil.dep.text.Texts;
-import com.tpago.movil.util.DigitHelper;
+import com.tpago.movil.util.BuilderChecker;
+import com.tpago.movil.util.ComparisonChain;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
+import com.tpago.movil.util.digit.DigitUtil;
 
 import java.math.BigDecimal;
-import java.util.Comparator;
+
+import io.reactivex.Observable;
 
 import io.reactivex.Observable;
 
@@ -20,7 +25,31 @@ import io.reactivex.Observable;
  * @author hecvasro
  */
 @Deprecated
-public class Product implements Parcelable {
+public class Product implements Comparable<Product>, Parcelable {
+
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  public static Product create(com.tpago.movil.product.Product product) {
+    ObjectHelper.checkNotNull(product, "product");
+    return builder()
+      .bank(product.bank())
+      .type(ProductType.valueOf(product.type()))
+      .number(product.number())
+      .alias(product.alias())
+      .currency(
+        product.currency()
+          .value()
+      )
+      .queryFee(product.balanceQueryCost())
+      .imageUriTemplate(product.imageTemplate())
+      .paymentOption(product.isPaymentMethod())
+      .isDefault(product.isPrimaryPaymentMethod())
+      .altpanKey(product.altpanKey())
+      .build();
+  }
+
 
   static String numberMasked(String number, int count) {
     return Observable.range(1, count)
@@ -86,24 +115,6 @@ public class Product implements Parcelable {
       .equals(ProductType.LOAN);
   }
 
-  public static Comparator<Product> comparator() {
-    return new Comparator<Product>() {
-      @Override
-      public int compare(Product pa, Product pb) {
-        final int r = pa.getBank()
-          .getName()
-          .compareTo(pb.getBank()
-            .getName());
-        if (r == 0) {
-          return pa.getAlias()
-            .compareTo(pb.getAlias());
-        } else {
-          return r;
-        }
-      }
-    };
-  }
-
   /**
    * Product's {@link ProductType type}.
    */
@@ -134,11 +145,28 @@ public class Product implements Parcelable {
   private boolean isDefault;
 
   /**
+   * Key to activate the card
+   */
+  private String altpanKey;
+  /**
    * Cost of querying the balance.
    */
   private BigDecimal queryFee;
 
   private String imageUriTemplate;
+
+  private Product(Builder builder) {
+    this.bank = builder.bank;
+    this.type = builder.type;
+    this.number = builder.number;
+    this.alias = builder.alias;
+    this.currency = builder.currency;
+    this.queryFee = builder.queryFee;
+    this.imageUriTemplate = builder.imageUriTemplate;
+    this.paymentOption = builder.paymentOption;
+    this.isDefault = builder.isDefault;
+    this.altpanKey = builder.altpanKey;
+  }
 
   /**
    * Constructs a new account.
@@ -166,7 +194,8 @@ public class Product implements Parcelable {
     @NonNull String currency,
     @NonNull BigDecimal queryFee,
     boolean paymentOption,
-    boolean isDefault
+    boolean isDefault,
+    String altpanKey
   ) {
     this.type = type;
     this.alias = alias;
@@ -176,6 +205,7 @@ public class Product implements Parcelable {
     this.queryFee = queryFee;
     this.paymentOption = paymentOption;
     this.isDefault = isDefault;
+    this.altpanKey = altpanKey;
   }
 
   /**
@@ -203,7 +233,7 @@ public class Product implements Parcelable {
   }
 
   public final String getId() {
-    return Texts.join("-", bank.getId(), type, alias, number, currency);
+    return Texts.join("-", bank.code(), type, alias, number, currency);
   }
 
   /**
@@ -237,11 +267,11 @@ public class Product implements Parcelable {
   }
 
   public final String getNumberSanitized() {
-    return DigitHelper.getLast4Digits(this.getNumber());
+    return DigitUtil.getLast4Digits(this.getNumber());
   }
 
-  public final String getNumberMasked() {
-    return numberMasked(this.getNumberSanitized(), checkIfCreditCard(this) ? 3 : 2);
+  final String getNumberLast4Digits() {
+    return DigitUtil.getLast4Digits(this.getNumber());
   }
 
   /**
@@ -265,13 +295,22 @@ public class Product implements Parcelable {
   }
 
   /**
+   * Gets the currency of the creditCard.
+   *
+   * @return Product's currency.
+   */
+  public final String getAltpanKey() {
+    return altpanKey;
+  }
+
+  /**
    * TODO
    *
    * @return TODO
    */
   @NonNull
   public final String getIdentifier() {
-    return String.format("%1$s %2$s", Banks.getName(bank), type);
+    return String.format("%1$s %2$s", bank.name(), type);
   }
 
   /**
@@ -317,13 +356,127 @@ public class Product implements Parcelable {
 
   @Override
   public int hashCode() {
-    return getId().hashCode();
+    return getId()
+      .hashCode();
   }
 
   @Override
   public String toString() {
-    return Product.class.getSimpleName() + ":{type='"
-      + type + "',alias='" + alias + "',number='" + number + "',currency='" + currency
-      + "',bank=" + bank + ",queryFee=" + queryFee + "}";
+    return Product.class.getSimpleName()
+      + ":{type='"
+      + type
+      + "',alias='"
+      + alias
+      + "',number='"
+      + number
+      + "',currency='"
+      + currency
+      + "',bank="
+      + bank
+      + ",queryFee="
+      + queryFee
+      + "}";
+  }
+
+  @Override
+  public int compareTo(@NonNull Product that) {
+    return ComparisonChain.create()
+      .compare(this.bank, that.bank)
+      .compare(this.alias, that.alias)
+      .result();
+  }
+
+  public final com.tpago.movil.product.Product toProduct() {
+    return com.tpago.movil.product.Product.builder()
+      .bank(this.bank)
+      .type(this.type.name())
+      .number(this.number)
+      .alias(this.alias)
+      .currency(Currency.create(this.currency))
+      .balanceQueryCost(this.queryFee)
+      .imageTemplate(this.imageUriTemplate)
+      .isPaymentMethod(this.paymentOption)
+      .isPrimaryPaymentMethod(this.isDefault)
+      .altpanKey(this.altpanKey)
+      .build();
+  }
+
+  public static final class Builder {
+
+    private Bank bank;
+    private ProductType type;
+    private String number;
+    private String alias;
+    private String currency;
+    private BigDecimal queryFee;
+    private String imageUriTemplate;
+    private boolean paymentOption;
+    private boolean isDefault;
+    private String altpanKey;
+
+    private Builder() {
+    }
+
+    public final Builder bank(Bank bank) {
+      this.bank = ObjectHelper.checkNotNull(bank, "bank");
+      return this;
+    }
+
+    public final Builder type(ProductType type) {
+      this.type = ObjectHelper.checkNotNull(type, "type");
+      return this;
+    }
+
+    public final Builder number(String number) {
+      this.number = StringHelper.checkIsNotNullNorEmpty(number, "number");
+      return this;
+    }
+
+    public final Builder alias(String alias) {
+      this.alias = StringHelper.checkIsNotNullNorEmpty(alias, "alias");
+      return this;
+    }
+
+    public final Builder currency(String currency) {
+      this.currency = StringHelper.checkIsNotNullNorEmpty(currency, "currency");
+      return this;
+    }
+
+    public final Builder queryFee(BigDecimal queryFee) {
+      this.queryFee = ObjectHelper.checkNotNull(queryFee, "queryFee");
+      return this;
+    }
+
+    public final Builder imageUriTemplate(String imageUriTemplate) {
+      this.imageUriTemplate = StringHelper.nullIfEmpty(imageUriTemplate);
+      return this;
+    }
+
+    public final Builder paymentOption(boolean paymentOption) {
+      this.paymentOption = paymentOption;
+      return this;
+    }
+
+    public final Builder isDefault(boolean isDefault) {
+      this.isDefault = isDefault;
+      return this;
+    }
+
+    public final Builder altpanKey(String altpanKey) {
+      this.altpanKey = altpanKey;
+      return this;
+    }
+
+    public final Product build() {
+      BuilderChecker.create()
+        .addPropertyNameIfMissing("bank", ObjectHelper.isNull(this.bank))
+        .addPropertyNameIfMissing("type", ObjectHelper.isNull(this.type))
+        .addPropertyNameIfMissing("number", StringHelper.isNullOrEmpty(this.number))
+        .addPropertyNameIfMissing("alias", StringHelper.isNullOrEmpty(this.alias))
+        .addPropertyNameIfMissing("currency", StringHelper.isNullOrEmpty(this.currency))
+        .addPropertyNameIfMissing("queryFee", ObjectHelper.isNull(this.queryFee))
+        .checkNoMissingProperties();
+      return new Product(this);
+    }
   }
 }

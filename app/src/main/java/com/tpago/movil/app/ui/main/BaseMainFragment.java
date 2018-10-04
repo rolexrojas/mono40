@@ -2,25 +2,47 @@ package com.tpago.movil.app.ui.main;
 
 import android.support.annotation.StringRes;
 
-import com.tpago.movil.app.ui.BaseFragment;
-import com.tpago.movil.d.ui.main.DepMainActivity;
+import com.tpago.movil.app.ui.fragment.base.FragmentBase;
+import com.tpago.movil.d.ui.main.DepMainActivityBase;
 
 /**
  * @author hecvasro
  */
-@Deprecated
-public abstract class BaseMainFragment extends BaseFragment {
+public abstract class BaseMainFragment extends FragmentBase {
 
   @StringRes
   protected abstract int titleResId();
+
+  protected abstract String subTitle();
+
 
   @Override
   public void onStart() {
     super.onStart();
 
     // Updates the title.
-    DepMainActivity.get(this.getActivity())
-      .toolbar()
-      .setTitle(this.titleResId());
+    DepMainActivityBase.get(this.getActivity())
+            .toolbar()
+            .setTitle(this.titleResId());
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+
+    // Updates the Subtitle.
+    DepMainActivityBase.get(this.getActivity())
+            .toolbar()
+            .setSubtitle(this.subTitle());
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+
+    // Updates the Subtitle.
+    DepMainActivityBase.get(this.getActivity())
+            .toolbar()
+            .setSubtitle("");
   }
 }

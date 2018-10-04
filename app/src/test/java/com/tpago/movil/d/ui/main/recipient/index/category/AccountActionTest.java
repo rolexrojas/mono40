@@ -36,11 +36,6 @@ public final class AccountActionTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public final void create_invalidType_shouldThrownIllegalArgumentException() {
-    AccountAction.create(TRANSACTION_WITH_PHONE_NUMBER, this.validString);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
   public final void create_nullString_shouldThrowIllegalArgumentException() {
     AccountAction.create(this.validType, null);
   }

@@ -1,9 +1,8 @@
 package com.tpago.movil.d.ui.main.transaction.products;
 
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.AlertData;
-import com.tpago.movil.app.ui.AlertManager;
-import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.app.ui.alert.AlertManager;
+import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.dep.api.DCurrencies;
 import com.tpago.movil.dep.Presenter;
 import com.tpago.movil.d.data.Formatter;
@@ -103,10 +102,9 @@ public class LoanTransactionCreationPresenter
     final BigDecimal a = amountToPay(b, option, otherAmount);
     final String fa = Formatter.amount(c, a);
     if (a.compareTo(ZERO) <= 0) {
-      final AlertData alertData = AlertData.builder(this.stringMapper)
+      this.alertManager.builder()
         .message("No es posible realizar pagos de " + fa + ". Favor seleccionar otra opción.")
-        .build();
-      this.alertManager.show(alertData);
+        .show();
     } else {
       view.requestPin(recipient.getLabel(), fa);
     }

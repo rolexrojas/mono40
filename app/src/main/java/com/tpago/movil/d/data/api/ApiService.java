@@ -64,14 +64,8 @@ interface ApiService {
   @POST("payments/change-default-account")
   Observable<Response<Void>> setDefaultPaymentOption(@Body Map<String, String> body);
 
-  @GET("banks")
-  Observable<Response<BankListRequestResponse>> banks();
-
   @POST("transfer/recipient-account-info")
   Observable<Response<ProductInfo>> fetchProductInfo(@Body RecipientAccountInfoRequestBody body);
-
-  @GET("payments/partners")
-  Observable<Response<PartnerListRequestResponse>> partners();
 
   @POST("payments/invoices")
   Observable<Response<Void>> addBill(@Body BillRequestBody body);
@@ -108,4 +102,5 @@ interface ApiService {
 
   @POST("cash-advance")
   Observable<Response<TransferResponseBody>> advanceCash(@Body CashAdvanceRequestBody body);
+
 }

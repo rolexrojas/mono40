@@ -1,6 +1,6 @@
 package com.tpago.movil.session;
 
-import com.tpago.movil.partner.Carrier;
+import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.util.ObjectHelper;
 
 /**
@@ -10,15 +10,14 @@ public final class UpdateUserCarrierJob extends SessionJob {
 
   public static final String TYPE = "UpdateUserCarrierJob";
 
-  static UpdateUserCarrierJob create(Carrier carrier) {
+  static UpdateUserCarrierJob create(Partner carrier) {
     return new UpdateUserCarrierJob(carrier);
   }
 
-  final Carrier carrier;
+  final Partner carrier;
 
-  private UpdateUserCarrierJob(Carrier carrier) {
+  private UpdateUserCarrierJob(Partner carrier) {
     super(TYPE);
-
     this.carrier = ObjectHelper.checkNotNull(carrier, "carrier");
   }
 

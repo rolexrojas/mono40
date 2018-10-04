@@ -8,16 +8,17 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.tpago.movil.PhoneNumber;
-import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.ui.main.recipient.addition.Contact;
+import com.tpago.movil.util.ComparisonChain;
 import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.util.StringHelper;
+import com.tpago.movil.util.digit.DigitUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.functions.Func0;
-import rx.functions.Func2;
+import io.reactivex.Observable;
+import io.reactivex.Single;
 
 /**
  * @author hecvasro
@@ -44,58 +45,68 @@ final class ContactProvider {
     this.contentResolver = contentResolver;
   }
 
+  private boolean isContained(String name, String query) {
+    return Single.just(name)
+      .map(String::toUpperCase)
+      .zipWith(
+        Single.just(query)
+          .map(String::toUpperCase),
+        String::contains
+      )
+      .blockingGet();
+  }
+
+  private boolean isNumberContained(String phoneNumber, String query) {
+    if (StringHelper.isNullOrEmpty(query)) {
+      return false;
+    }
+    return isContained(phoneNumber,query);
+  }
+
   @NonNull
   Observable<List<Contact>> getAll(@Nullable final String query) {
-    return Observable.defer(new Func0<Observable<List<Contact>>>() {
-      @Override
-      public Observable<List<Contact>> call() {
-        if (ObjectHelper.isNull(contactList)) {
-          contactList = new ArrayList<>();
-          final Cursor cursor = contentResolver.query(
-            QUERY_URI,
-            QUERY_PROJECTION,
-            null,
-            null,
-            QUERY_ORDER
-          );
-          if (ObjectHelper.isNotNull(cursor)) {
-            String name;
-            String phoneNumber;
-            Contact currentContact;
-            while (cursor.moveToNext()) {
-              name = cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_NAME));
-              phoneNumber = cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_PHONE_NUMBER));
-              if (PhoneNumber.isValid(phoneNumber)) {
-                currentContact = Contact.builder()
-                  .phoneNumber(PhoneNumber.create(phoneNumber))
-                  .name(name)
-                  .pictureUri(null)
-                  .build();
-                if (!contactList.contains(currentContact)) {
-                  contactList.add(currentContact);
-                }
+    return Observable.defer(() -> {
+      this.contactList = null;
+      if (ObjectHelper.isNull(this.contactList)) {
+        this.contactList = new ArrayList<>();
+        final Cursor cursor = this.contentResolver.query(
+          QUERY_URI,
+          QUERY_PROJECTION,
+          null,
+          null,
+          QUERY_ORDER
+        );
+        if (ObjectHelper.isNotNull(cursor)) {
+          String name;
+          String phoneNumber;
+          Contact currentContact;
+          while (cursor.moveToNext()) {
+            name = cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_NAME));
+            phoneNumber = cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_PHONE_NUMBER));
+            if (PhoneNumber.isValidWithAdditionalCode(phoneNumber) &&
+               (isContained(name, query) ||
+               isNumberContained(DigitUtil.removeNonDigits(phoneNumber), DigitUtil.removeNonDigits(query)))) {
+
+              currentContact = Contact.builder()
+                .phoneNumber(PhoneNumber.create(phoneNumber))
+                .name(name)
+                .pictureUri(null)
+                .build();
+              if (!this.contactList.contains(currentContact)) {
+                this.contactList.add(currentContact);
               }
             }
-            cursor.close();
           }
+          cursor.close();
         }
-        return Observable.just(contactList);
       }
-    })
-      .compose(RxUtils.fromCollection())
-      .filter((contact) -> contact.matches(query))
-      .toSortedList(new Func2<Contact, Contact, Integer>() {
-        @Override
-        public Integer call(Contact ca, Contact cb) {
-          final int r = ca.name()
-            .compareTo(cb.name());
-          if (r == 0) {
-            return ca.phoneNumber()
-              .compareTo(cb.phoneNumber());
-          } else {
-            return r;
-          }
-        }
-      });
+      return Observable.fromIterable(this.contactList)
+        .toSortedList((a, b) -> ComparisonChain.create()
+          .compare(a.name(), b.name())
+          .compare(a.phoneNumber(), b.phoneNumber())
+          .result()
+        )
+        .toObservable();
+    });
   }
 }

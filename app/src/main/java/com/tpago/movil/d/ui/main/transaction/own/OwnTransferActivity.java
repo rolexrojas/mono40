@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.NumPad;
+import com.tpago.movil.app.ui.DNumPad;
 import com.tpago.movil.dep.api.DCurrencies;
 import com.tpago.movil.dep.App;
 import com.tpago.movil.d.data.Formatter;
@@ -24,14 +24,13 @@ import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
-import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.d.domain.ErrorCode;
 import com.tpago.movil.d.domain.FailureData;
 import com.tpago.movil.d.domain.Result;
 import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
 import com.tpago.movil.dep.net.NetworkService;
-import com.tpago.movil.function.Action;
-import com.tpago.movil.function.Consumer;
+import com.tpago.movil.util.function.Action;
+import com.tpago.movil.util.function.Consumer;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -118,7 +117,7 @@ public final class OwnTransferActivity
   @BindView(R.id.payment_method_chooser) PaymentMethodChooser paymentMethodChooser;
   @BindView(R.id.toolbar) Toolbar toolbar;
   @BindView(R.id.transaction_creation_amount) PrefixableTextView amountTextView;
-  @BindView(R.id.transaction_creation_num_pad) NumPad numPad;
+  @BindView(R.id.transaction_creation_num_pad) DNumPad DNumPad;
 
   @Inject DepApiBridge depApiBridge;
   @Inject NetworkService networkService;
@@ -230,17 +229,16 @@ public final class OwnTransferActivity
         R.string.format_transfer_to,
         Formatter.amount(currency, this.value),
         this.destinationProduct.getAlias(),
-        Formatter.amount(currency, Bank.calculateTransferCost(this.value))
+        Formatter.amount(
+          currency,
+          this.fundingProduct.getBank()
+            .calculateTransferCost(this.value)
+        )
       );
       PinConfirmationDialogFragment.show(
         this.getSupportFragmentManager(),
         description,
-        new PinConfirmationDialogFragment.Callback() {
-          @Override
-          public void confirm(String pin) {
-            OwnTransferActivity.this.transfer(pin);
-          }
-        },
+        OwnTransferActivity.this::transfer,
         x,
         y
       );
@@ -288,7 +286,7 @@ public final class OwnTransferActivity
           String.format(
             "Desde %1$s %2$s",
             fundingProduct.getBank()
-              .getName(),
+              .name(),
             fundingProduct.getNumberSanitized()
           )
         );
@@ -313,11 +311,11 @@ public final class OwnTransferActivity
     this.updateAmountText();
 
     this.numPadDigitConsumer = this::onDigitClicked;
-    this.numPad.addDigitConsumer(this.numPadDigitConsumer);
+    this.DNumPad.addDigitConsumer(this.numPadDigitConsumer);
     this.numPadDotAction = this::onDotClicked;
-    this.numPad.addDotAction(this.numPadDotAction);
+    this.DNumPad.addDotAction(this.numPadDotAction);
     this.numPadDeleteAction = this::onDeleteClicked;
-    this.numPad.addDeleteAction(this.numPadDeleteAction);
+    this.DNumPad.addDeleteAction(this.numPadDeleteAction);
   }
 
   @Override
@@ -341,11 +339,11 @@ public final class OwnTransferActivity
 
   @Override
   protected void onDestroy() {
-    this.numPad.removeDeleteAction(this.numPadDeleteAction);
+    this.DNumPad.removeDeleteAction(this.numPadDeleteAction);
     this.numPadDeleteAction = null;
-    this.numPad.removeDotAction(this.numPadDotAction);
+    this.DNumPad.removeDotAction(this.numPadDotAction);
     this.numPadDotAction = null;
-    this.numPad.removeDigitConsumer(this.numPadDigitConsumer);
+    this.DNumPad.removeDigitConsumer(this.numPadDigitConsumer);
     this.numPadDigitConsumer = null;
 
     this.unbinder.unbind();

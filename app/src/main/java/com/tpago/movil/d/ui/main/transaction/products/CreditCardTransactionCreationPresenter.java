@@ -1,9 +1,8 @@
 package com.tpago.movil.d.ui.main.transaction.products;
 
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.AlertData;
-import com.tpago.movil.app.ui.AlertManager;
-import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.app.ui.alert.AlertManager;
+import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.dep.api.DCurrencies;
 import com.tpago.movil.dep.Presenter;
 import com.tpago.movil.d.data.Formatter;
@@ -106,10 +105,9 @@ public class CreditCardTransactionCreationPresenter
     final BigDecimal a = amountToPay(b, option, otherAmount);
     final String fa = Formatter.amount(c, a);
     if (a.compareTo(ZERO) <= 0) {
-      final AlertData alertData = AlertData.builder(this.stringMapper)
+      this.alertManager.builder()
         .message("No es posible realizar pagos de " + fa + ". Favor seleccionar otra opción.")
-        .build();
-      this.alertManager.show(alertData);
+        .show();
     } else {
       view.requestPin(recipient.getLabel(), fa);
     }
@@ -169,7 +167,7 @@ public class CreditCardTransactionCreationPresenter
         @Override
         public void accept(Result<PaymentResult, ErrorCode> result) throws Exception {
           boolean succeeded = false;
-          String transactionId = null;
+          String transactionMessage = null;
           if (result.isSuccessful()) {
             succeeded = true;
 
@@ -177,8 +175,8 @@ public class CreditCardTransactionCreationPresenter
             pr.setBalance(null);
             recipientManager.update(pr);
 
-            transactionId = result.getSuccessData()
-              .id();
+            transactionMessage = result.getSuccessData()
+              .message();
           } else {
             final FailureData<ErrorCode> failureData = result.getFailureData();
             switch (failureData.getCode()) {
@@ -193,7 +191,7 @@ public class CreditCardTransactionCreationPresenter
                 break;
             }
           }
-          view.setPaymentResult(succeeded, transactionId);
+          view.setPaymentResult(succeeded, transactionMessage);
         }
       }, new Consumer<Throwable>() {
         @Override
@@ -289,7 +287,7 @@ public class CreditCardTransactionCreationPresenter
 
     void requestPin(String partnerName, String value);
 
-    void setPaymentResult(boolean succeeded, String transactionId);
+    void setPaymentResult(boolean succeeded, String transactionMessage);
 
     void showGenericErrorDialog(String message);
 

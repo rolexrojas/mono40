@@ -20,11 +20,10 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import com.tpago.movil.R;
 import com.tpago.movil.app.di.ComponentBuilderSupplier;
 import com.tpago.movil.app.di.ComponentBuilderSupplierContainer;
-import com.tpago.movil.app.ui.AlertData;
-import com.tpago.movil.app.ui.AlertManager;
+import com.tpago.movil.app.ui.alert.AlertManager;
 import com.tpago.movil.app.ui.permission.PermissionHelper;
 import com.tpago.movil.app.ui.permission.PermissionRequestResult;
-import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.dep.MimeType;
 import com.tpago.movil.io.FileHelper;
 import com.tpago.movil.util.ObjectHelper;
@@ -170,10 +169,9 @@ public final class PictureCreatorDialogFragment extends DialogFragment {
       }
     }
     if (ObjectHelper.isNull(this.temporaryFile)) {
-      final AlertData alertData = AlertData.builder(this.stringMapper)
+      this.alertManager.builder()
         .positiveButtonAction(this::dismiss)
-        .build();
-      this.alertManager.show(alertData);
+        .show();
     } else {
       final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
       intent.putExtra(
@@ -276,7 +274,7 @@ public final class PictureCreatorDialogFragment extends DialogFragment {
       .setFixAspectRatio(true)
       .setGuidelines(CropImageView.Guidelines.ON)
       .setOutputUri(Uri.fromFile(this.outputFile))
-      .start(getContext(), this);
+      .start(this.getContext(), this);
   }
 
   @Override

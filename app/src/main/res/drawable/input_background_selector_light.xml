@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:constantSize="true">
+
+  <item
+    android:drawable="@drawable/input_background_light_erratic"
+    android:state_focused="true"
+    app:state_erratic="true"/>
+
+  <item
+    android:drawable="@drawable/input_background_light"
+    android:state_focused="true"/>
+
+  <item
+    android:drawable="@drawable/input_background_light_erratic_50"
+    app:state_erratic="true"/>
+
+  <item android:drawable="@drawable/input_background_light_50"/>
+</selector>

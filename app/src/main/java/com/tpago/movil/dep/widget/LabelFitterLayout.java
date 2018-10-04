@@ -79,7 +79,7 @@ public final class LabelFitterLayout extends FrameLayout {
     AttributeSet attributeSet,
     int defaultStyleAttribute
   ) {
-    // Obtains all attributes from the given attribute set.
+    // Obtains all attributes from the given attribute sync.
     final Resources resources = context.getResources();
     final TypedArray styledAttributes = context.obtainStyledAttributes(
       attributeSet,

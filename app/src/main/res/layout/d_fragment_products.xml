@@ -4,22 +4,23 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:clickable="true">
+
   <android.support.v4.widget.SwipeRefreshLayout
     android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:enabled="false">
+
     <android.support.v7.widget.RecyclerView
       android:id="@+id/recycler_view"
       style="@style/List.Vertical"
       android:layout_width="match_parent"
       android:layout_height="match_parent"/>
   </android.support.v4.widget.SwipeRefreshLayout>
+
   <Button
     android:id="@+id/button_add_another_account"
-    style="@style/Dep.App.Widget.Button"
-    android:layout_width="match_parent"
-    android:layout_height="50dp"
+    style="@style/Button.Light.Tertiary"
     android:layout_gravity="bottom"
     android:layout_marginBottom="10dp"
     android:text="@string/add_another_account"/>

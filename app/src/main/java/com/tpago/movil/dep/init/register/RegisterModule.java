@@ -3,9 +3,9 @@ package com.tpago.movil.dep.init.register;
 import android.support.v4.app.FragmentManager;
 
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.FragmentQualifier;
-import com.tpago.movil.app.ui.FragmentReplacer;
-import com.tpago.movil.app.ui.FragmentScope;
+import com.tpago.movil.app.ui.fragment.FragmentQualifier;
+import com.tpago.movil.app.ui.fragment.FragmentReplacer;
+import com.tpago.movil.app.ui.fragment.FragmentScope;
 import com.tpago.movil.dep.init.InitData;
 
 import dagger.Module;

@@ -283,7 +283,7 @@ public class SlidingPaneLayout extends ViewGroup {
     mDragHelper.setMinVelocity(MIN_FLING_VELOCITY * density);
 
     // Disables all the fade effects.
-    final int transparentColor = ContextCompat.getColor(context, R.color.common_transparent);
+    final int transparentColor = ContextCompat.getColor(context, R.color.transparent);
     setSliderFadeColor(transparentColor);
     setCoveredFadeColor(transparentColor);
   }
@@ -579,7 +579,7 @@ public class SlidingPaneLayout extends ViewGroup {
       }
     }
 
-    // Resolve weight and make sure non-sliding panels are smaller than the full screen.
+    // Resolve weight and getLogoUri sure non-sliding panels are smaller than the full screen.
     if (canSlide || weightSum > 0) {
       final int fixedPanelWidthLimit = (int) (widthAvailable * mOverhangSizePercentage);
 
@@ -1270,7 +1270,7 @@ public class SlidingPaneLayout extends ViewGroup {
       final int scrollX = v.getScrollX();
       final int scrollY = v.getScrollY();
       final int count = group.getChildCount();
-      // Count backwards - let topmost views consume scroll distance first.
+      // Count backwards - let topmost views accept scroll distance first.
       for (int i = count - 1; i >= 0; i--) {
         // TODO: Add versioned support here for transformed views.
         // This will not work for transformed views in Honeycomb+
@@ -1449,7 +1449,7 @@ public class SlidingPaneLayout extends ViewGroup {
     };
 
     /**
-     * The weighted proportion of how much of the leftover space this child should consume after
+     * The weighted proportion of how much of the leftover space this child should accept after
      * measurement.
      */
     public float weight = 0;

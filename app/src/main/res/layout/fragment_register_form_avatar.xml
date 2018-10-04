@@ -33,6 +33,6 @@
 
   <Button
     android:id="@+id/button_move_to_next_screen"
-    style="@style/D.Widget.Button.Dark.Gradient"
+    style="@style/Button.Dark.Primary"
     android:layout_alignParentBottom="true"/>
 </RelativeLayout>

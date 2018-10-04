@@ -2,8 +2,11 @@ package com.tpago.movil.d.ui.main;
 
 import android.content.Context;
 
-import com.tpago.movil.app.ui.AlertManager;
-import com.tpago.movil.app.ui.FragmentModule;
+import com.tpago.movil.app.ui.alert.AlertManager;
+import com.tpago.movil.app.ui.fragment.base.BaseFragmentModule;
+import com.tpago.movil.app.ui.main.settings.help.FragmentHelp;
+import com.tpago.movil.company.CompanyHelper;
+import com.tpago.movil.company.partner.PartnerStore;
 import com.tpago.movil.dep.User;
 import com.tpago.movil.app.ui.main.settings.profile.ProfileComponent;
 import com.tpago.movil.app.ui.main.settings.profile.ProfileModule;
@@ -16,19 +19,18 @@ import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.util.EventBus;
 import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.ui.ActivityComponent;
-import com.tpago.movil.d.ui.main.recipient.index.disburse.DisbursementFragment;
-import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.dep.net.NetworkService;
+import com.tpago.movil.paypal.PayPalAccountStore;
 import com.tpago.movil.session.SessionManager;
 
-/**
- * @author hecvasro
- */
 public interface DepMainComponent extends ActivityComponent {
 
-  void inject(DepMainActivity activity);
+  void inject(DepMainActivityBase activity);
 
-  void inject(DisbursementFragment fragment);
+  void inject(FragmentHelp fragment);
+
+  CompanyHelper logoFactory();
 
   StringMapper stringMapper();
 
@@ -36,7 +38,7 @@ public interface DepMainComponent extends ActivityComponent {
 
   SessionManager sessionManager();
 
-  ProfileComponent create(FragmentModule fragmentModule, ProfileModule profileModule);
+  ProfileComponent create(BaseFragmentModule baseFragmentModule, ProfileModule profileModule);
 
   BalanceManager provideBalanceManager();
 
@@ -59,4 +61,8 @@ public interface DepMainComponent extends ActivityComponent {
   StringHelper provideMessageHelper();
 
   User provideUser();
+
+  PayPalAccountStore payPalAccountStore();
+
+  PartnerStore partnerStore();
 }

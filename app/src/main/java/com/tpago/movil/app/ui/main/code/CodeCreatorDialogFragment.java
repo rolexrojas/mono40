@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.InjectableDialogFragment;
-import com.tpago.movil.app.ui.NumPad;
-import com.tpago.movil.function.Action;
-import com.tpago.movil.function.Consumer;
+import com.tpago.movil.app.ui.DNumPad;
+import com.tpago.movil.util.function.Action;
+import com.tpago.movil.util.function.Consumer;
 
 import javax.inject.Inject;
 
@@ -30,7 +30,7 @@ public final class CodeCreatorDialogFragment extends InjectableDialogFragment
   @BindView(R.id.titleTextView) TextView titleTextView;
   @BindView(R.id.subtitleTextView) TextView subtitleTextView;
   @BindView(R.id.valueTextView) TextView valueTextView;
-  @BindView(R.id.numPad) NumPad numPad;
+  @BindView(R.id.num_pad) DNumPad DNumPad;
 
   @Inject CodeCreatorPresenter presenter;
 
@@ -66,9 +66,9 @@ public final class CodeCreatorDialogFragment extends InjectableDialogFragment
     super.onResume();
 
     this.numPadDigitConsumer = this.presenter::onNumPadDigitButtonClicked;
-    this.numPad.addDigitConsumer(this.numPadDigitConsumer);
+    this.DNumPad.addDigitConsumer(this.numPadDigitConsumer);
     this.numPadDeleteAction = this.presenter::onNumPadDeleteButtonClicked;
-    this.numPad.addDeleteAction(this.numPadDeleteAction);
+    this.DNumPad.addDeleteAction(this.numPadDeleteAction);
 
     this.presenter.onPresentationResumed();
   }
@@ -77,9 +77,9 @@ public final class CodeCreatorDialogFragment extends InjectableDialogFragment
   public void onPause() {
     this.presenter.onPresentationPaused();
 
-    this.numPad.removeDeleteAction(this.numPadDeleteAction);
+    this.DNumPad.removeDeleteAction(this.numPadDeleteAction);
     this.numPadDeleteAction = null;
-    this.numPad.removeDigitConsumer(this.numPadDigitConsumer);
+    this.DNumPad.removeDigitConsumer(this.numPadDigitConsumer);
     this.numPadDigitConsumer = null;
 
     super.onPause();

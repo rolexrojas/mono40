@@ -2,19 +2,19 @@
 <RelativeLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:background="@drawable/d_background_colored"
+  style="@style/Container.Light.Primary"
   android:paddingTop="20dp"
   tools:ignore="MissingPrefix">
+
   <ImageView
     android:id="@+id/image_view_background"
     android:layout_width="24dp"
     android:layout_height="24dp"
     android:layout_marginStart="24dp"/>
+
   <TextView
     android:id="@+id/text_view"
-    fontPath="@string/gothamRoundedBookFont"
+    fontPath="@string/font_gothamRounded_book"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginEnd="24dp"
@@ -23,6 +23,7 @@
     android:lineSpacingExtra="8sp"
     android:textColor="#333"
     android:textSize="16sp"/>
+
   <com.tpago.movil.dep.widget.TextInput
     android:id="@+id/text_input"
     style="@style/Widget.TextInput.Light"
@@ -36,11 +37,10 @@
     android:inputType="number"
     android:maxLines="1"
     android:textSize="20sp"/>
+
   <Button
     android:id="@+id/button"
-    style="@style/D.Widget.Button.Light.Solid"
-    android:layout_width="match_parent"
-    android:layout_height="50dp"
+    style="@style/Button.Light.Primary"
     android:layout_alignParentBottom="true"
     android:text="@string/action.transfer"/>
 </RelativeLayout>

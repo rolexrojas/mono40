@@ -5,20 +5,20 @@
 
   <ImageView
     android:id="@+id/indicator"
-    android:layout_width="@dimen/tinyIconSize"
-    android:layout_height="@dimen/tinyIconSize"
+    android:layout_width="@dimen/icon_size_18"
+    android:layout_height="@dimen/icon_size_18"
     android:layout_alignParentEnd="true"
     android:layout_centerVertical="true"
-    android:layout_marginStart="@dimen/normalHorizontalSpace"
+    android:layout_marginStart="@dimen/space_horizontal_20"
     android:visibility="gone"
     app:srcCompat="@drawable/settings_option_selectable_indicator"/>
 
   <ImageView
     android:id="@+id/icon"
-    android:layout_width="@dimen/normalIconSize"
-    android:layout_height="@dimen/normalIconSize"
+    android:layout_width="@dimen/icon_size_24"
+    android:layout_height="@dimen/icon_size_24"
     android:layout_centerVertical="true"
-    android:layout_marginEnd="@dimen/smallHorizontalSpace"
+    android:layout_marginEnd="@dimen/space_horizontal_16"
     android:visibility="gone"/>
 
   <TextView

@@ -1,9 +1,9 @@
 package com.tpago.movil.app.ui.main;
 
 import com.tpago.movil.app.di.ComponentBuilder;
-import com.tpago.movil.app.ui.ActivityModule;
-import com.tpago.movil.app.ui.ActivityScope;
-import com.tpago.movil.app.ui.FragmentActivityModule;
+import com.tpago.movil.app.ui.activity.base.ActivityModule;
+import com.tpago.movil.app.ui.activity.ActivityScope;
+import com.tpago.movil.app.ui.activity.fragment.ActivityModuleFragment;
 import com.tpago.movil.app.ui.main.code.CodeCreatorModule;
 import com.tpago.movil.app.ui.main.code.CodeCreatorPresentationComponentBuilderModule;
 import com.tpago.movil.d.ui.DepActivityModule;
@@ -16,19 +16,18 @@ import dagger.Subcomponent;
 /**
  * @author hecvasro
  */
+@Deprecated
 @ActivityScope
-@Subcomponent(
-  modules = {
-    ActivityModule.class,
-    CodeCreatorModule.class,
-    CodeCreatorPresentationComponentBuilderModule.class,
-    FragmentActivityModule.class,
-    MainComponentBuilderModule.class,
-    DepActivityModule.class,
-    DepMainModule.class,
-    MainModule.class,
-  }
-)
+@Subcomponent(modules = {
+  MainComponentBuilderModule.class,
+  ActivityModule.class,
+  ActivityModuleFragment.class,
+  MainModule.class,
+  DepActivityModule.class,
+  DepMainModule.class,
+  CodeCreatorModule.class,
+  CodeCreatorPresentationComponentBuilderModule.class,
+})
 public interface MainComponent extends DepMainComponent {
 
   @Subcomponent.Builder
@@ -38,7 +37,7 @@ public interface MainComponent extends DepMainComponent {
 
     Builder depActivityModule(DepActivityModule module);
 
-    Builder fragmentActivityModule(FragmentActivityModule module);
+    Builder fragmentActivityModule(ActivityModuleFragment module);
 
     Builder mainModule(MainModule module);
 

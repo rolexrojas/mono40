@@ -3,7 +3,7 @@ package com.tpago.movil.session;
 import android.util.Base64;
 
 import com.tpago.movil.Code;
-import com.tpago.movil.store.Store;
+import com.tpago.movil.store.DiskStore;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.io.ByteArrayInputStream;
@@ -25,23 +25,23 @@ final class CodeStore {
 
   private static final String STORE_KEY_CODE = "CodeStore.Code";
 
-  static CodeStore create(UnlockMethodConfigData configData, Store store) {
-    return new CodeStore(configData, store);
+  static CodeStore create(UnlockMethodConfigData configData, DiskStore diskStore) {
+    return new CodeStore(configData, diskStore);
   }
 
   private final UnlockMethodConfigData configData;
-  private final Store store;
+  private final DiskStore diskStore;
 
-  private CodeStore(UnlockMethodConfigData configData, Store store) {
+  private CodeStore(UnlockMethodConfigData configData, DiskStore diskStore) {
     this.configData = ObjectHelper.checkNotNull(configData, "configData");
-    this.store = ObjectHelper.checkNotNull(store, "store");
+    this.diskStore = ObjectHelper.checkNotNull(diskStore, "diskStore");
   }
 
   final void set(PublicKey key, Code code) throws Exception {
     ObjectHelper.checkNotNull(key, "key");
     ObjectHelper.checkNotNull(code, "code");
-    if (this.store.isSet(STORE_KEY_CODE)) {
-      throw new IllegalStateException(String.format("store.isSet(\"%1$s\")", STORE_KEY_CODE));
+    if (this.diskStore.isSet(STORE_KEY_CODE)) {
+      throw new IllegalStateException(String.format("diskStore.isSet(\"%1$s\")", STORE_KEY_CODE));
     }
     final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     final Cipher cipher = Cipher
@@ -53,16 +53,18 @@ final class CodeStore {
         .getBytes(CHAR_SET)
     );
     cipherOutputStream.close();
-    this.store
-      .set(STORE_KEY_CODE, Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT));
+    this.diskStore
+      .set(STORE_KEY_CODE, Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT))
+      .blockingAwait();
   }
 
   final Code get(PrivateKey key) throws Exception {
     ObjectHelper.checkNotNull(key, "key");
-    if (!this.store.isSet(STORE_KEY_CODE)) {
-      throw new IllegalStateException(String.format("!store.isSet(\"%1$s\")", STORE_KEY_CODE));
+    if (!this.diskStore.isSet(STORE_KEY_CODE)) {
+      throw new IllegalStateException(String.format("!diskStore.isSet(\"%1$s\")", STORE_KEY_CODE));
     }
-    final String encryptedCode = this.store.get(STORE_KEY_CODE, String.class);
+    final String encryptedCode = this.diskStore.get(STORE_KEY_CODE, String.class)
+      .blockingGet();
     final Cipher cipher = Cipher
       .getInstance(this.configData.codeCipherTransformation());
     cipher.init(Cipher.DECRYPT_MODE, key);
@@ -83,6 +85,7 @@ final class CodeStore {
   }
 
   final void clear() {
-    this.store.remove(STORE_KEY_CODE);
+    this.diskStore.remove(STORE_KEY_CODE)
+      .blockingAwait();
   }
 }

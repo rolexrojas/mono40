@@ -3,20 +3,18 @@ package com.tpago.movil.d.ui.main.recipient.addition;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.tpago.movil.d.data.SchedulerProvider;
-import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.ui.Presenter;
 import com.tpago.movil.d.ui.misc.UiUtils;
 import com.tpago.movil.d.ui.main.list.NoResultsListItemItem;
+import com.tpago.movil.reactivex.DisposableUtil;
 
 import java.util.concurrent.TimeUnit;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.subscriptions.Subscriptions;
-import timber.log.Timber;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author hecvasro
@@ -26,13 +24,10 @@ public abstract class RecipientCandidateListPresenter
 
   private static final long DEFAULT_TIME_SPAN_QUERY = 300L; // 0.3 seconds.
 
-  protected final SchedulerProvider schedulerProvider;
+  private Disposable queryDisposable = Disposables.disposed();
+  private Disposable searchDisposable = Disposables.disposed();
 
-  private Subscription querySubscription = Subscriptions.unsubscribed();
-  private Subscription searchSubscription = Subscriptions.unsubscribed();
-
-  public RecipientCandidateListPresenter(@NonNull SchedulerProvider schedulerProvider) {
-    this.schedulerProvider = schedulerProvider;
+  public RecipientCandidateListPresenter() {
   }
 
   protected abstract boolean canStartListeningQueryChangeEvents();
@@ -41,63 +36,34 @@ public abstract class RecipientCandidateListPresenter
   protected abstract Observable<Object> search(@Nullable String query);
 
   protected final void startListeningQueryChangeEvents() {
-    if (querySubscription.isUnsubscribed()) {
-      querySubscription = screen.onQueryChanged()
+    if (this.queryDisposable.isDisposed()) {
+      this.queryDisposable = this.screen.onQueryChanged()
         .debounce(DEFAULT_TIME_SPAN_QUERY, TimeUnit.MILLISECONDS)
-        .observeOn(schedulerProvider.ui())
-        .subscribe(new Action1<String>() {
-          @Override
-          public void call(String query) {
-            RxUtils.unsubscribe(searchSubscription);
-            searchSubscription = search(query)
-              .subscribeOn(schedulerProvider.io())
-              .switchIfEmpty(Observable.just(new NoResultsListItemItem(query)))
-              .observeOn(schedulerProvider.ui())
-              .doOnSubscribe(new Action0() {
-                @Override
-                public void call() {
-                  screen.clear();
-                  UiUtils.showRefreshIndicator(screen);
-                }
-              })
-              .doOnUnsubscribe(new Action0() {
-                @Override
-                public void call() {
-                  UiUtils.hideRefreshIndicator(screen);
-                }
-              })
-              .subscribe(new Action1<Object>() {
-                @Override
-                public void call(Object item) {
-                  screen.add(item);
-                }
-              }, new Action1<Throwable>() {
-                @Override
-                public void call(Throwable throwable) {
-                  Timber.e(throwable, "Querying recipient candidates");
-                  // TODO: Let the user know that querying recipient candidates failed.
-                }
-              });
-          }
-        }, new Action1<Throwable>() {
-          @Override
-          public void call(Throwable throwable) {
-            Timber.e(throwable, "Listening to query change events");
-            // TODO: Let the user know that listening to query change events failed.
-          }
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe((query) -> {
+          DisposableUtil.dispose(this.searchDisposable);
+          this.searchDisposable = this.search(query)
+            .subscribeOn(Schedulers.io())
+            .switchIfEmpty(Observable.just(new NoResultsListItemItem(query)))
+            .observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
+            .doOnSubscribe((disposable) -> {
+              this.screen.clear();
+              UiUtils.showRefreshIndicator(this.screen);
+            })
+            .doFinally(() -> UiUtils.hideRefreshIndicator(this.screen))
+            .subscribe(this.screen::add);
         });
     }
   }
 
-  void start() {
-    if (canStartListeningQueryChangeEvents()) {
-      startListeningQueryChangeEvents();
+  final void start() {
+    if (this.canStartListeningQueryChangeEvents()) {
+      this.startListeningQueryChangeEvents();
     }
   }
 
-  void stop() {
-    assertScreen();
-    RxUtils.unsubscribe(searchSubscription);
-    RxUtils.unsubscribe(querySubscription);
+  final void stop() {
+    DisposableUtil.dispose(this.searchDisposable);
+    DisposableUtil.dispose(this.queryDisposable);
   }
 }

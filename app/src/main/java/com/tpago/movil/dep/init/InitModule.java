@@ -1,10 +1,10 @@
 package com.tpago.movil.dep.init;
 
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.ActivityQualifier;
-import com.tpago.movil.app.ui.ActivityScope;
-import com.tpago.movil.dep.BaseActivity;
-import com.tpago.movil.app.ui.FragmentReplacer;
+import com.tpago.movil.app.ui.activity.ActivityQualifier;
+import com.tpago.movil.app.ui.activity.ActivityScope;
+import com.tpago.movil.dep.ActivityBase;
+import com.tpago.movil.app.ui.fragment.FragmentReplacer;
 
 import dagger.Module;
 import dagger.Provides;
@@ -24,16 +24,16 @@ public final class InitModule {
   @Provides
   @ActivityScope
   @ActivityQualifier
-  FragmentReplacer provideFragmentReplacer(BaseActivity activity) {
+  FragmentReplacer provideFragmentReplacer(ActivityBase activity) {
     return FragmentReplacer.create(activity.getSupportFragmentManager(), R.id.view_container);
   }
 
   @Provides
   @ActivityScope
-  LogoAnimator provideLogoAnimator(BaseActivity activity) {
+  LogoAnimator provideLogoAnimator(ActivityBase activity) {
     return new LogoAnimator(
-      ((InitActivity) activity).logo,
-      ((InitActivity) activity).placeholderView,
+      ((InitActivityBase) activity).logo,
+      ((InitActivityBase) activity).placeholderView,
       activity.getResources()
         .getInteger(R.integer.anim_duration_test)
     );

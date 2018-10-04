@@ -4,18 +4,17 @@ import com.tpago.movil.Code;
 import com.tpago.movil.Email;
 import com.tpago.movil.lib.Password;
 import com.tpago.movil.PhoneNumber;
-import com.tpago.movil.app.ui.AlertData;
-import com.tpago.movil.app.ui.AlertManager;
+import com.tpago.movil.app.ui.alert.AlertManager;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.data.DeviceIdSupplier;
-import com.tpago.movil.data.StringMapper;
-import com.tpago.movil.reactivex.DisposableHelper;
+import com.tpago.movil.app.StringMapper;
+import com.tpago.movil.reactivex.DisposableUtil;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.session.User;
-import com.tpago.movil.util.Digit;
+import com.tpago.movil.util.digit.Digit;
 import com.tpago.movil.dep.Presenter;
 import com.tpago.movil.dep.reactivex.Disposables;
-import com.tpago.movil.util.DigitValueCreator;
+import com.tpago.movil.util.digit.DigitValueCreator;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.io.File;
@@ -60,18 +59,16 @@ public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPre
       this.registerData.setSubmitted(false);
 
       final com.tpago.movil.util.FailureData failureData = result.failureData();
-      final AlertData data = AlertData.builder(this.stringMapper)
+      this.alertManager.builder()
         .message(failureData.description())
-        .build();
-      this.alertManager.show(data);
+        .show();
     }
   }
 
   private void handleError(Throwable throwable) {
     Timber.e(throwable, "Signing up");
-
     this.registerData.setSubmitted(false);
-    this.alertManager.show(AlertData.createForGenericFailure(this.stringMapper));
+    this.alertManager.showAlertForGenericFailure();
   }
 
   private void updateView() {
@@ -126,7 +123,7 @@ public final class PinRegisterFormPresenter extends Presenter<PinRegisterFormPre
 
   @Override
   public void onViewStopped() {
-    DisposableHelper.dispose(this.disposable);
+    DisposableUtil.dispose(this.disposable);
 
     super.onViewStopped();
   }

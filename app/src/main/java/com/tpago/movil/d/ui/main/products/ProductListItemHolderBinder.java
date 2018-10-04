@@ -6,15 +6,16 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.squareup.picasso.Picasso;
+import com.tpago.movil.company.Company;
+import com.tpago.movil.company.CompanyHelper;
+import com.tpago.movil.company.bank.Bank;
 import com.tpago.movil.dep.api.DCurrencies;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Balance;
-import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductType;
 import com.tpago.movil.d.ui.main.list.ListItemHolderBinder;
-import com.tpago.movil.d.domain.LogoStyle;
 import com.tpago.movil.dep.Dates;
 import com.tpago.movil.util.ObjectHelper;
 
@@ -25,9 +26,11 @@ class ProductListItemHolderBinder
   implements ListItemHolderBinder<ProductItem, ProductListItemHolder> {
 
   private final StringHelper stringHelper;
+  private final CompanyHelper companyHelper;
 
-  ProductListItemHolderBinder(StringHelper stringHelper) {
+  ProductListItemHolderBinder(StringHelper stringHelper, CompanyHelper companyHelper) {
     this.stringHelper = stringHelper;
+    this.companyHelper = ObjectHelper.checkNotNull(companyHelper, "companyHelper");
   }
 
   @Override
@@ -36,12 +39,12 @@ class ProductListItemHolderBinder
     final Bank b = p.getBank();
     final Context c = holder.getContext();
     Picasso.with(c)
-      .load(b.getLogoUri(LogoStyle.GRAY_36))
+      .load(this.companyHelper.getLogoUri(b, Company.LogoStyle.GRAY_36))
       .into(holder.bankLogoImageView);
     holder.productTypeTextView.setText(c.getString(ProductType.findStringId(p)));
     final String productIdentifier;
     if (Product.checkIfCreditCard(p)) {
-      productIdentifier = p.getNumberMasked();
+      productIdentifier = p.getNumberSanitized();
     } else {
       productIdentifier = p.getAlias();
     }

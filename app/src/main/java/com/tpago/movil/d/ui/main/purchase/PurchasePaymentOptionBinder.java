@@ -10,17 +10,18 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.tpago.movil.company.Company;
+import com.tpago.movil.company.CompanyHelper;
+import com.tpago.movil.company.bank.Bank;
 import com.tpago.movil.d.domain.Banks;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.User;
 import com.tpago.movil.dep.api.ApiImageUriBuilder;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.data.util.Binder;
-import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.d.domain.Product;
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.d.domain.ProductType;
-import com.tpago.movil.d.domain.LogoStyle;
 import com.tpago.movil.util.ObjectHelper;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
@@ -35,14 +36,18 @@ final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePayme
 
   private final StringHelper stringHelper;
 
+  private final CompanyHelper companyHelper;
+
   PurchasePaymentOptionBinder(
     User user,
     Context context,
-    StringHelper stringHelper
+    StringHelper stringHelper,
+    CompanyHelper companyHelper
   ) {
     this.user = user;
     this.context = context;
     this.stringHelper = stringHelper;
+    this.companyHelper = ObjectHelper.checkNotNull(companyHelper, "companyHelper");
   }
 
   @Override
@@ -63,7 +68,7 @@ final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePayme
 
       bankLogoImageView.setVisibility(View.VISIBLE);
       Picasso.with(context)
-        .load(bank.getLogoUri(LogoStyle.WHITE_36))
+        .load(this.companyHelper.getLogoUri(bank, Company.LogoStyle.WHITE_36))
         .noFade()
         .into(bankLogoImageView);
 
@@ -77,7 +82,7 @@ final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePayme
       productTypeTextView.setVisibility(View.VISIBLE);
       productTypeTextView.setText(ProductType.findStringId(item));
     } else {
-      backgroundColor = ContextCompat.getColor(context, R.color.common_transparent);
+      backgroundColor = ContextCompat.getColor(context, R.color.transparent);
       backgroundImageView.setVisibility(View.VISIBLE);
       Picasso.with(context)
         .load(backgroundUri)
@@ -106,7 +111,7 @@ final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePayme
     final TextView productNumberTextView = holder.getProductNumberTextView();
     final String productNumber;
     if (Product.checkIfCreditCard(item)) {
-      productNumber = item.getNumberMasked();
+      productNumber = item.getNumberSanitized();
     } else {
       productNumber = item.getAlias();
     }

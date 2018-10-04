@@ -1,7 +1,7 @@
 package com.tpago.movil.app.ui.main.settings.auth.alt;
 
 import com.tpago.movil.app.di.ComponentBuilder;
-import com.tpago.movil.app.ui.FragmentScope;
+import com.tpago.movil.app.ui.fragment.FragmentScope;
 
 import dagger.Subcomponent;
 

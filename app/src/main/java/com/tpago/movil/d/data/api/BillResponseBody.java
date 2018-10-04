@@ -4,7 +4,7 @@ import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.tpago.movil.dep.Partner;
+import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.Recipient;
 
@@ -19,6 +19,7 @@ import rx.functions.Func1;
 @Deprecated
 @AutoValue
 public abstract class BillResponseBody {
+
   public static TypeAdapter<BillResponseBody> typeAdapter(Gson gson) {
     return new AutoValue_BillResponseBody.GsonTypeAdapter(gson);
   }
@@ -40,6 +41,9 @@ public abstract class BillResponseBody {
     };
   }
 
-  @SerializedName("partner") public abstract Partner getPartner();
-  @SerializedName("contract") public abstract String getContractNumber();
+  @SerializedName("partner")
+  public abstract Partner getPartner();
+
+  @SerializedName("contract")
+  public abstract String getContractNumber();
 }

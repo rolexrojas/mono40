@@ -58,9 +58,9 @@ public final class FullSizeLoadIndicator implements LoadIndicator {
     @Nullable
     @Override
     public View onCreateView(
-      LayoutInflater inflater,
-      @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState
+            LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState
     ) {
       return inflater.inflate(R.layout.widget_load_indicator_full_size, container, false);
     }

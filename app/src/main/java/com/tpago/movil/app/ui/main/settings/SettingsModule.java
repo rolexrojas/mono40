@@ -1,10 +1,11 @@
 package com.tpago.movil.app.ui.main.settings;
 
 import com.tpago.movil.dep.ConfigManager;
-import com.tpago.movil.app.ui.FragmentScope;
+import com.tpago.movil.app.ui.fragment.FragmentScope;
 import com.tpago.movil.d.domain.ProductManager;
-import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.dep.User;
+import com.tpago.movil.product.ProductHelper;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.util.ObjectHelper;
 
@@ -31,6 +32,7 @@ public final class SettingsModule {
   @FragmentScope
   SettingsPresenter presenter(
     StringMapper stringMapper,
+    ProductHelper productHelper,
     SessionManager sessionManager,
     User user,
     ProductManager productManager,
@@ -38,11 +40,12 @@ public final class SettingsModule {
   ) {
     return SettingsPresenter.builder()
       .stringMapper(stringMapper)
+      .productHelper(productHelper)
       .sessionManager(sessionManager)
-      .presentation(this.presentation)
       .user(user)
       .productManager(productManager)
       .configManager(configManager)
+      .presentation(this.presentation)
       .build();
   }
 }

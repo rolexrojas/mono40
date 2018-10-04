@@ -11,8 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tpago.movil.dep.Partner;
+import com.tpago.movil.company.CompanyHelper;
+import com.tpago.movil.company.bank.Bank;
 import com.tpago.movil.R;
+import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.main.list.ListItemHolder;
@@ -24,7 +26,6 @@ import com.tpago.movil.d.ui.main.list.NoResultsListItemHolderCreator;
 import com.tpago.movil.d.ui.main.list.NoResultsListItemItem;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
-import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.util.ObjectHelper;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
@@ -33,11 +34,9 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 public abstract class RecipientCandidateListFragment<P extends RecipientCandidateListPresenter>
@@ -51,6 +50,8 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
 
   @Inject
   protected P presenter;
+  @Inject
+  protected CompanyHelper companyHelper;
 
   @BindView(R.id.swipe_refresh_layout)
   SwipeRefreshLayout swipeRefreshLayout;
@@ -87,7 +88,7 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
     super.onViewCreated(view, savedInstanceState);
     // Binds all the annotated views and methods.
     unbinder = ButterKnife.bind(this, view);
-    // Prepares the contact item container.
+    // Prepares the contact itemType container.
     final ListItemHolderCreatorFactory holderCreatorFactory = createHolderCreatorFactoryBuilder()
       .addCreator(NoResultsListItemItem.class, new NoResultsListItemHolderCreator())
       .build();
@@ -104,8 +105,8 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
       false
     ));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
-      .drawable(R.drawable.d_divider)
-      .marginResId(R.dimen.space_horizontal_normal)
+      .drawable(R.drawable.divider_line_horizontal)
+      .marginResId(R.dimen.space_horizontal_20)
       .showLastDivider()
       .build();
     recyclerView.addItemDecoration(divider);
@@ -157,18 +158,22 @@ public abstract class RecipientCandidateListFragment<P extends RecipientCandidat
   @NonNull
   @Override
   public Observable<String> onQueryChanged() {
-    return getContainer().onQueryChanged();
+    return this.getContainer()
+      .onQueryChanged();
   }
 
   @Override
   public void onClick(int position) {
     final Object item = adapter.get(position);
     if (item instanceof Contact) {
-      getContainer().onContactClicked((Contact) item);
+      this.getContainer()
+        .onContactClicked((Contact) item);
     } else if (item instanceof Partner) {
-      getContainer().onPartnerClicked(((Partner) item));
+      this.getContainer()
+        .onPartnerClicked(((Partner) item));
     } else if (item instanceof Bank) {
-      getContainer().onBankClicked((Bank) item);
+      this.getContainer()
+        .onBankClicked((Bank) item);
     }
   }
 }

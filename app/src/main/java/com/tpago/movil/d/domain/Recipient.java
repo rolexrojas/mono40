@@ -87,6 +87,8 @@ public abstract class Recipient implements Parcelable, Matchable {
 
   private boolean selected = false;
 
+  private String nonAffiliateType;
+
   protected Recipient(Parcel source) {
     type = RecipientType.valueOf(source.readString());
     label = source.readString();
@@ -137,6 +139,11 @@ public abstract class Recipient implements Parcelable, Matchable {
     return label;
   }
 
+  @Nullable
+  public String getNonAffiliateType() {
+    return nonAffiliateType;
+  }
+
   /**
    * Gets the identifier of the recipient.
    *
@@ -153,6 +160,10 @@ public abstract class Recipient implements Parcelable, Matchable {
    */
   public void setLabel(@Nullable String label) {
     this.label = label;
+  }
+
+  public void setNonAffiliateType(@Nullable String type) {
+    this.nonAffiliateType = type;
   }
 
   public boolean isSelected() {

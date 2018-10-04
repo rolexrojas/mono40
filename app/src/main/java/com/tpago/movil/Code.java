@@ -2,10 +2,11 @@ package com.tpago.movil;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
-import com.tpago.movil.util.DigitHelper;
-import com.tpago.movil.util.DigitValueCreator;
+import com.tpago.movil.util.digit.DigitUtil;
+import com.tpago.movil.util.digit.DigitValueCreator;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
+import com.tpago.movil.util.digit.DigitValueCreatorImpl;
 
 /**
  * FailureCode representation
@@ -18,7 +19,7 @@ public abstract class Code {
   private static final int LENGTH = 4;
 
   public static Code create(String s) {
-    final String ss = DigitHelper.removeNonDigits(s);
+    final String ss = DigitUtil.removeNonDigits(s);
     if (s.length() != LENGTH) {
       throw new IllegalArgumentException(String.format("\"%1$s\".length() != %2$s", ss, LENGTH));
     }
@@ -26,11 +27,11 @@ public abstract class Code {
   }
 
   private static DigitValueCreator<Code> creator(String value) {
-    return DigitValueCreator.<Code>builder()
-      .additionPredicate((i) -> i < LENGTH)
-      .formatPredicate((s) -> s.length() == LENGTH)
-      .formatFunction((s) -> StringHelper.repeat("•", s.length()))
-      .mapperFunction(AutoValue_Code::new)
+    return DigitValueCreatorImpl.<Code>builder()
+      .canAdd((i) -> i < LENGTH)
+      .isValid((s) -> s.length() == LENGTH)
+      .formatter((s) -> StringHelper.repeat("•", s.length()))
+      .mapper(AutoValue_Code::new)
       .value(value)
       .build();
   }

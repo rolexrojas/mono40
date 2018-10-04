@@ -5,7 +5,7 @@ import com.google.auto.value.extension.memoized.Memoized;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.tpago.movil.util.DigitHelper;
+import com.tpago.movil.util.digit.DigitUtil;
 
 /**
  * @author Hector Vasquez
@@ -27,7 +27,7 @@ public abstract class PaymentResult {
 
   @Memoized
   public String id() {
-    return DigitHelper.removeNonDigits(this.internalId());
+    return DigitUtil.removeNonDigits(this.internalId());
   }
 
   @SerializedName("transaction-message")

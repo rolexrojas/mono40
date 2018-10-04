@@ -2,7 +2,8 @@ package com.tpago.movil.d.ui.main.recipient.index.category;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
-import com.tpago.movil.util.DigitHelper;
+import com.tpago.movil.util.StringHelper;
+import com.tpago.movil.util.digit.DigitUtil;
 
 import java.util.regex.Pattern;
 
@@ -25,7 +26,7 @@ abstract class AccountAction extends Action {
    * false otherwise.
    */
   private static boolean isProductNumber(String s, boolean shouldSanitize) {
-    return PATTERN.matcher(shouldSanitize ? DigitHelper.removeNonDigits(s) : s)
+    return PATTERN.matcher(shouldSanitize ? DigitUtil.removeNonDigits(s) : s)
       .matches();
   }
 
@@ -50,8 +51,11 @@ abstract class AccountAction extends Action {
    *   If {@code s} is not a {@link #isProductNumber(String) valid} {@link Product product} number.
    */
   static AccountAction create(Type type, String s) {
-    final String sanitizedString = DigitHelper.removeNonDigits(s);
-    return new AutoValue_AccountAction(type, sanitizedString);
+    final String sanitizedString = DigitUtil.removeNonDigits(s);
+    return new AutoValue_AccountAction(
+      type,
+      StringHelper.checkIsNotNullNorEmpty(sanitizedString, "sanitizedString")
+    );
   }
 
   AccountAction() {

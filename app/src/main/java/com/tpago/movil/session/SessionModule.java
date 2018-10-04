@@ -6,11 +6,18 @@ import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 
 import com.birbit.android.jobqueue.JobManager;
 import com.tpago.movil.api.Api;
+import com.tpago.movil.company.bank.BankStore;
+import com.tpago.movil.company.partner.PartnerStore;
 import com.tpago.movil.d.domain.BalanceManager;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.domain.pos.PosBridge;
-import com.tpago.movil.store.Store;
+import com.tpago.movil.app.StringMapper;
+import com.tpago.movil.insurance.micro.MicroInsurancePartnerStore;
+import com.tpago.movil.paypal.PayPalAccountStore;
+import com.tpago.movil.product.ProductStore;
+import com.tpago.movil.product.disbursable.DisbursableProductStore;
+import com.tpago.movil.store.DiskStore;
 
 import java.math.BigInteger;
 import java.security.KeyStore;
@@ -25,11 +32,30 @@ import javax.security.auth.x500.X500Principal;
 import dagger.Module;
 import dagger.Provides;
 
-/**
- * @author hecvasro
- */
 @Module
 public final class SessionModule {
+
+  @Provides
+  @Singleton
+  SessionDataLoader sessionDataLoader(
+    BankStore bankStore,
+    PartnerStore partnerStore,
+    ProductStore productStore,
+    DisbursableProductStore disbursableProductStore,
+    MicroInsurancePartnerStore microInsurancePartnerStore,
+    PayPalAccountStore payPalAccountStore,
+    Api api
+  ) {
+    return SessionDataLoader.builder()
+      .bankStore(bankStore)
+      .partnerStore(partnerStore)
+      .productStore(productStore)
+      .disbursableProductStore(disbursableProductStore)
+      .microInsurancePartnerStore(microInsurancePartnerStore)
+      .payPalAccountStore(payPalAccountStore)
+      .api(api)
+      .build();
+  }
 
   @Provides
   @Singleton
@@ -87,8 +113,8 @@ public final class SessionModule {
 
   @Provides
   @Singleton
-  CodeStore codeStore(UnlockMethodConfigData configData, Store store) {
-    return CodeStore.create(configData, store);
+  CodeStore codeStore(UnlockMethodConfigData configData, DiskStore diskStore) {
+    return CodeStore.create(configData, diskStore);
   }
 
   @Provides
@@ -213,7 +239,7 @@ public final class SessionModule {
     AccessTokenStore accessTokenStore,
     Api api,
     JobManager jobManager,
-    Store store,
+    DiskStore diskStore,
     UnlockMethodDisableActionFactory unlockMethodDisableActionFactory,
     List<SessionCloseAction> closeActions,
     List<SessionDestroyAction> destroyActions
@@ -222,7 +248,7 @@ public final class SessionModule {
       .accessTokenStore(accessTokenStore)
       .api(api)
       .jobManager(jobManager)
-      .store(store)
+      .store(diskStore)
       .unlockMethodDisableActionFactory(unlockMethodDisableActionFactory)
       .closeActions(closeActions)
       .destroyActions(destroyActions)

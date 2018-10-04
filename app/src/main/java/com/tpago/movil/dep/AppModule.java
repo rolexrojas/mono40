@@ -2,10 +2,10 @@ package com.tpago.movil.dep;
 
 import android.content.Context;
 
+import com.tpago.movil.data.DataModule;
 import com.tpago.movil.dep.content.SharedPreferencesCreator;
 import com.tpago.movil.dep.content.StringResolver;
 import com.tpago.movil.data.DeviceIdSupplier;
-import com.tpago.movil.dep.data.DataModule;
 import com.tpago.movil.dep.content.ContentModule;
 import com.tpago.movil.d.DepAppModule;
 import com.tpago.movil.d.data.DepDataModule;

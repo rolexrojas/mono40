@@ -55,11 +55,12 @@ public abstract class Password {
    *   If {@code s} is not a {@link #isValid(String) valid} password.
    */
   public static Password create(String s) {
-    final String sanitizedString = StringHelper.emptyIfNull(s);
-    if (!isValid(sanitizedString, false)) {
-      throw new IllegalArgumentException(String.format("!isValid(%1$s, false)", sanitizedString));
-    }
-    return new AutoValue_Password(sanitizedString);
+    return new AutoValue_Password(StringHelper.emptyIfNull(s));
+//    final String sanitizedString = StringHelper.emptyIfNull(s);
+//    if (!isValid(sanitizedString, false)) {
+//      throw new IllegalArgumentException(String.format("!isValid(%1$s, false)", sanitizedString));
+//    }
+//    return new AutoValue_Password(sanitizedString);
   }
 
   Password() {

@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.ActivityQualifier;
-import com.tpago.movil.app.ui.FragmentReplacer;
+import com.tpago.movil.app.ui.activity.ActivityQualifier;
+import com.tpago.movil.app.ui.fragment.FragmentReplacer;
 import com.tpago.movil.dep.init.BaseInitFragment;
 import com.tpago.movil.dep.init.InitFragment;
 import com.tpago.movil.dep.widget.AutoTabSwitcher;

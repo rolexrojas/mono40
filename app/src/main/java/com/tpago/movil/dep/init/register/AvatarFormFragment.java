@@ -11,8 +11,8 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.FragmentQualifier;
-import com.tpago.movil.app.ui.FragmentReplacer;
+import com.tpago.movil.app.ui.fragment.FragmentQualifier;
+import com.tpago.movil.app.ui.fragment.FragmentReplacer;
 import com.tpago.movil.app.ui.picture.PictureCreator;
 import com.tpago.movil.data.picasso.CircleTransformation;
 import com.tpago.movil.util.ObjectHelper;

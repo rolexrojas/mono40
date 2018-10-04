@@ -3,7 +3,8 @@ package com.tpago.movil.d.domain.api;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
-import com.tpago.movil.dep.Partner;
+import com.tpago.movil.company.bank.Bank;
+import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.d.domain.Balance;
 import com.tpago.movil.d.domain.CreditCardBillBalance;
 import com.tpago.movil.d.domain.Customer;
@@ -11,7 +12,6 @@ import com.tpago.movil.d.domain.LoanBillBalance;
 import com.tpago.movil.d.domain.PaymentResult;
 import com.tpago.movil.d.domain.ProductBillBalance;
 import com.tpago.movil.d.domain.ProductRecipient;
-import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.InitialData;
@@ -62,9 +62,11 @@ public interface DepApiBridge {
     String accountNumber
   );
 
-  Observable<ApiResult<List<Bank>>> banks();
-
-  Observable<ApiResult<List<Partner>>> partners();
+  Observable<ApiResult<Pair<String, Product>>> checkAccountNumber(
+    Bank bank,
+    String accountNumber,
+    String type
+  );
 
   Observable<ApiResult<Void>> addBill(
     Partner partner,
@@ -122,4 +124,5 @@ public interface DepApiBridge {
     BigDecimal amount,
     String pin
   );
+
 }

@@ -8,7 +8,7 @@ import com.tpago.movil.Email;
 import com.tpago.movil.Name;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.session.User;
-import com.tpago.movil.store.Store;
+import com.tpago.movil.store.DiskStore;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
 
@@ -24,16 +24,16 @@ final class AppUpgradeAction1 extends AppUpgradeAction {
   private static final String PREF_KEY_FIRST_NAME = "firstName";
   private static final String PREF_KEY_LAST_NAME = "lastName";
 
-  static AppUpgradeAction1 create(Context context, Store store) {
-    return new AppUpgradeAction1(context, store);
+  static AppUpgradeAction1 create(Context context, DiskStore diskStore) {
+    return new AppUpgradeAction1(context, diskStore);
   }
 
   private final Context context;
-  private final Store store;
+  private final DiskStore diskStore;
 
-  private AppUpgradeAction1(Context context, Store store) {
+  private AppUpgradeAction1(Context context, DiskStore diskStore) {
     this.context = ObjectHelper.checkNotNull(context, "context");
-    this.store = ObjectHelper.checkNotNull(store, "store");
+    this.diskStore = ObjectHelper.checkNotNull(diskStore, "diskStore");
   }
 
   @Override
@@ -76,9 +76,10 @@ final class AppUpgradeAction1 extends AppUpgradeAction {
       .clear()
       .apply();
 
-    // Saves the current user to the store, if any.
+    // Saves the current user to the diskStore, if any.
     if (ObjectHelper.isNotNull(user)) {
-      this.store.set("SessionManager.User", user);
+      this.diskStore.set("SessionManager.User", user)
+        .blockingAwait();
     }
   }
 }

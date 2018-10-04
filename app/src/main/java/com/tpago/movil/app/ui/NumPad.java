@@ -2,18 +2,21 @@ package com.tpago.movil.app.ui;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
+import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ImageButton;
 
 import com.tpago.movil.R;
-import com.tpago.movil.function.Action;
-import com.tpago.movil.function.Consumer;
 import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.util.digit.Digit;
+import com.tpago.movil.util.digit.DigitUtil;
+import com.tpago.movil.util.function.Action;
+import com.tpago.movil.util.function.Consumer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,83 +29,135 @@ import butterknife.OnClick;
 /**
  * @author hecvasro
  */
-public final class NumPad extends LinearLayout {
+public final class NumPad extends ConstraintLayout {
 
-  private int buttonTextColor;
   private boolean dotButtonEnabled;
-  private Drawable deleteButtonDrawable;
+
+  @ColorInt private int textButtonTextColor;
+  @DrawableRes private int deleteButtonImageSource;
+
+  private final List<Consumer<Integer>> digitConsumers = new ArrayList<>();
+  private final List<Action> deleteActions = new ArrayList<>();
+  private final List<Action> dotActions = new ArrayList<>();
 
   @BindViews({
-    R.id.digitZeroNumPadButton,
-    R.id.digitOneNumPadButton,
-    R.id.digitTwoNumPadButton,
-    R.id.digitThreeNumPadButton,
-    R.id.digitFourNumPadButton,
-    R.id.digitFiveNumPadButton,
-    R.id.digitSixNumPadButton,
-    R.id.digitSevenNumPadButton,
-    R.id.digitEightNumPadButton,
-    R.id.digitNineNumPadButton
+    R.id.num_pad_button_text_0,
+    R.id.num_pad_button_text_1,
+    R.id.num_pad_button_text_2,
+    R.id.num_pad_button_text_3,
+    R.id.num_pad_button_text_4,
+    R.id.num_pad_button_text_5,
+    R.id.num_pad_button_text_6,
+    R.id.num_pad_button_text_7,
+    R.id.num_pad_button_text_8,
+    R.id.num_pad_button_text_9
   })
-  List<Button> digitButtonList;
+  List<Button> digitButtons;
+  @BindView(R.id.num_pad_button_text_dot) Button dotButton;
+  @BindView(R.id.num_pad_button_delete) ImageButton deleteButton;
 
-  @BindView(R.id.dotNumPadButton) Button dotButton;
-  @BindView(R.id.deleteNumPadButton) ImageView deleteButton;
+  public NumPad(Context context, AttributeSet attrs) {
+    super(context, attrs);
 
-  private final List<Consumer<Integer>> digitConsumerList = new ArrayList<>();
-  private final List<Action> dotActionList = new ArrayList<>();
-  private final List<Action> deleteActionList = new ArrayList<>();
+    // Extracts the given attributes.
+    final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.NumPad);
+    try {
+      this.dotButtonEnabled = array.getBoolean(R.styleable.NumPad_dotButtonEnabled, false);
 
-  public NumPad(Context context, AttributeSet attrSet) {
-    super(context, attrSet);
+      if (!array.hasValue(R.styleable.NumPad_textButtonTextColor)) {
+        throw new IllegalArgumentException("!array.hasValue(R.styleable.NumPad_textButtonTextColor");
+      }
+      this.textButtonTextColor = array.getColor(R.styleable.NumPad_textButtonTextColor, 0);
 
-    // Extracts all attributes from the given attribute set.
-    final TypedArray array = context.obtainStyledAttributes(attrSet, R.styleable.NumPad);
+      if (!array.hasValue(R.styleable.NumPad_deleteButtonImageSource)) {
+        throw new IllegalArgumentException(
+          "!array.hasValue(R.styleable.NumPad_deleteButtonImageSource");
+      }
+      this.deleteButtonImageSource = array.getResourceId(
+        R.styleable.NumPad_deleteButtonImageSource,
+        0
+      );
+    } finally {
+      array.recycle();
+    }
 
-    this.buttonTextColor = array.getColor(R.styleable.NumPad_buttonTextColor, 0);
-    this.dotButtonEnabled = array.getBoolean(R.styleable.NumPad_dotButtonEnabled, false);
-    this.deleteButtonDrawable = array.getDrawable(R.styleable.NumPad_deleteButtonDrawable);
-
-    array.recycle();
-
-    // Inflates its layout.
+    // Inflates the associated layout.
     LayoutInflater.from(context)
       .inflate(R.layout.num_pad, this);
   }
 
   @OnClick({
-    R.id.digitZeroNumPadButton,
-    R.id.digitOneNumPadButton,
-    R.id.digitTwoNumPadButton,
-    R.id.digitThreeNumPadButton,
-    R.id.digitFourNumPadButton,
-    R.id.digitFiveNumPadButton,
-    R.id.digitSixNumPadButton,
-    R.id.digitSevenNumPadButton,
-    R.id.digitEightNumPadButton,
-    R.id.digitNineNumPadButton
+    R.id.num_pad_button_text_0,
+    R.id.num_pad_button_text_1,
+    R.id.num_pad_button_text_2,
+    R.id.num_pad_button_text_3,
+    R.id.num_pad_button_text_4,
+    R.id.num_pad_button_text_5,
+    R.id.num_pad_button_text_6,
+    R.id.num_pad_button_text_7,
+    R.id.num_pad_button_text_8,
+    R.id.num_pad_button_text_9
   })
-  final void onDigitNumPadButtonClicked(Button button) {
-    final int digit = Integer.parseInt(
-      button.getText()
-        .toString()
-    );
-    for (Consumer<Integer> consumer : this.digitConsumerList) {
+  final void onDigitButtonPressed(Button button) {
+    @Digit final int digit = DigitUtil.toDigit(button.getText());
+    for (Consumer<Integer> consumer : this.digitConsumers) {
       consumer.accept(digit);
     }
   }
 
-  @OnClick(R.id.dotNumPadButton)
-  final void onDotNumPadButtonClicked() {
-    for (Action action : this.dotActionList) {
+  @OnClick(R.id.num_pad_button_delete)
+  final void onDeleteButtonPressed() {
+    for (Action action : this.deleteActions) {
       action.run();
     }
   }
 
-  @OnClick(R.id.deleteNumPadButton)
-  final void onDeleteNumPadButtonClicked() {
-    for (Action action : this.deleteActionList) {
+  @OnClick(R.id.num_pad_button_text_dot)
+  final void onDotButtonPressed() {
+    for (Action action : this.dotActions) {
       action.run();
+    }
+  }
+
+  public final void addDigitConsumer(Consumer<Integer> consumer) {
+    ObjectHelper.checkNotNull(consumer, "consumer");
+    if (!this.digitConsumers.contains(consumer)) {
+      this.digitConsumers.add(consumer);
+    }
+  }
+
+  public final void removeDigitConsumer(Consumer<Integer> consumer) {
+    ObjectHelper.checkNotNull(consumer, "consumer");
+    if (this.digitConsumers.contains(consumer)) {
+      this.digitConsumers.remove(consumer);
+    }
+  }
+
+  public final void addDeleteAction(Action action) {
+    ObjectHelper.checkNotNull(action, "action");
+    if (!this.deleteActions.contains(action)) {
+      this.deleteActions.add(action);
+    }
+  }
+
+  public final void removeDeleteAction(Action action) {
+    ObjectHelper.checkNotNull(action, "action");
+    if (this.deleteActions.contains(action)) {
+      this.deleteActions.remove(action);
+    }
+  }
+
+  public final void addDotAction(Action action) {
+    ObjectHelper.checkNotNull(action, "action");
+    if (!this.dotActions.contains(action)) {
+      this.dotActions.add(action);
+    }
+  }
+
+  public final void removeDotAction(Action action) {
+    ObjectHelper.checkNotNull(action, "action");
+    if (this.dotActions.contains(action)) {
+      this.dotActions.remove(action);
     }
   }
 
@@ -110,63 +165,18 @@ public final class NumPad extends LinearLayout {
   protected void onFinishInflate() {
     super.onFinishInflate();
 
-    // Injects all annotated views, resources, and methods.
+    // Binds all annotated methods, resources, and views.
     ButterKnife.bind(this);
 
-    // Initializes all digit buttons.
-    for (Button button : this.digitButtonList) {
-      button.setTextColor(this.buttonTextColor);
+    // Apply the given attributes.
+    for (Button digitButton : this.digitButtons) {
+      digitButton.setTextColor(this.textButtonTextColor);
     }
 
-    // Initializes the dot button.
-    this.dotButton.setTextColor(this.buttonTextColor);
-
-    this.dotButton.setClickable(this.dotButtonEnabled);
+    this.dotButton.setTextColor(this.textButtonTextColor);
+    this.dotButton.setEnabled(this.dotButtonEnabled);
     this.dotButton.setVisibility(this.dotButtonEnabled ? View.VISIBLE : View.INVISIBLE);
 
-    // Initializes the delete button.
-    this.deleteButton.setImageDrawable(this.deleteButtonDrawable);
-  }
-
-  public final void addDigitConsumer(Consumer<Integer> consumer) {
-    ObjectHelper.checkNotNull(consumer, "consumer");
-    if (!this.digitConsumerList.contains(consumer)) {
-      this.digitConsumerList.add(consumer);
-    }
-  }
-
-  public final void removeDigitConsumer(Consumer<Integer> consumer) {
-    ObjectHelper.checkNotNull(consumer, "consumer");
-    if (this.digitConsumerList.contains(consumer)) {
-      this.digitConsumerList.remove(consumer);
-    }
-  }
-
-  public final void addDotAction(Action action) {
-    ObjectHelper.checkNotNull(action, "action");
-    if (!this.dotActionList.contains(action)) {
-      this.dotActionList.add(action);
-    }
-  }
-
-  public final void removeDotAction(Action action) {
-    ObjectHelper.checkNotNull(action, "action");
-    if (this.dotActionList.contains(action)) {
-      this.dotActionList.remove(action);
-    }
-  }
-
-  public final void addDeleteAction(Action action) {
-    ObjectHelper.checkNotNull(action, "action");
-    if (!this.deleteActionList.contains(action)) {
-      this.deleteActionList.add(action);
-    }
-  }
-
-  public final void removeDeleteAction(Action action) {
-    ObjectHelper.checkNotNull(action, "action");
-    if (this.deleteActionList.contains(action)) {
-      this.deleteActionList.remove(action);
-    }
+    this.deleteButton.setImageResource(this.deleteButtonImageSource);
   }
 }

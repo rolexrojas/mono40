@@ -1,6 +1,6 @@
 package com.tpago.movil.dep;
 
-import com.tpago.movil.app.ui.ActivityScope;
+import com.tpago.movil.app.ui.activity.ActivityScope;
 import com.tpago.movil.util.ObjectHelper;
 
 import dagger.Module;
@@ -13,15 +13,15 @@ import dagger.Provides;
 @Module
 public class ActivityModule {
 
-  private final BaseActivity activity;
+  private final ActivityBase activity;
 
-  public ActivityModule(BaseActivity activity) {
+  public ActivityModule(ActivityBase activity) {
     this.activity = ObjectHelper.checkNotNull(activity, "activity");
   }
 
   @Provides
   @ActivityScope
-  BaseActivity provideActivity() {
+  ActivityBase provideActivity() {
     return activity;
   }
 

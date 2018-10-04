@@ -2,18 +2,17 @@ package com.tpago.movil.app.ui.main.settings.auth.alt;
 
 import android.support.annotation.Nullable;
 
-import com.tpago.movil.app.ui.AlertData;
-import com.tpago.movil.app.ui.AlertManager;
+import com.tpago.movil.app.ui.alert.AlertManager;
 import com.tpago.movil.app.ui.Presenter;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.app.ui.main.code.CodeCreator;
-import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.session.CodeMethodKeyGenerator;
 import com.tpago.movil.session.FingerprintMethodKeyGenerator;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.session.UnlockMethodKeyGenerator;
 import com.tpago.movil.session.UnlockMethod;
-import com.tpago.movil.reactivex.DisposableHelper;
+import com.tpago.movil.reactivex.DisposableUtil;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.ObjectHelper;
 
@@ -64,7 +63,7 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
 
   private void handleError(Throwable throwable, String message, Object... argList) {
     Timber.e(throwable, message, argList);
-    this.alertManager.show(AlertData.createForGenericFailure(this.stringMapper));
+    this.alertManager.showAlertForGenericFailure();
   }
 
   private void onEnableButtonClicked(UnlockMethodKeyGenerator generator) {
@@ -138,7 +137,7 @@ public final class AltAuthMethodPresenter extends Presenter<AltAuthMethodPresent
 
   @Override
   public void onPresentationPaused() {
-    DisposableHelper.dispose(this.disposable);
+    DisposableUtil.dispose(this.disposable);
 
     super.onPresentationPaused();
   }

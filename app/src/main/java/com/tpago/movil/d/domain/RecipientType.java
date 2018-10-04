@@ -12,5 +12,6 @@ public enum RecipientType {
   BILL,
   PRODUCT,
   USER,
-  ACCOUNT
+  ACCOUNT,
+  PAY_PAL_ACCOUNT
 }

@@ -10,17 +10,17 @@
   <com.tpago.movil.d.ui.view.widget.PrefixableTextView
     android:id="@+id/view_amount"
     style="@style/D.Screen.Products.Text.Widget.Amount.Content"
-    fontPath="@string/gothamRoundedMediumFont"
+    fontPath="@string/font_gothamRounded_medium"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentEnd="true"
     android:layout_centerVertical="true"
     android:layout_marginStart="25dp"
-    android:textColor="@color/common_black"
+    android:textColor="@color/black"
     android:textSize="16sp"
     app:content="0.00"
     app:prefix="RD$"
-    app:prefixTextColor="@color/common_black"/>
+    app:prefixTextColor="@color/black"/>
 
   <LinearLayout
     android:layout_width="match_parent"

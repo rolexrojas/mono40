@@ -3,8 +3,9 @@ package com.tpago.movil.d.data.api;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
-import com.tpago.movil.dep.Partner;
+import com.tpago.movil.company.bank.Bank;
 import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.domain.Balance;
 import com.tpago.movil.d.domain.CreditCardBillBalance;
@@ -13,7 +14,6 @@ import com.tpago.movil.d.domain.LoanBillBalance;
 import com.tpago.movil.d.domain.PaymentResult;
 import com.tpago.movil.d.domain.ProductBillBalance;
 import com.tpago.movil.d.domain.ProductRecipient;
-import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.d.domain.BillBalance;
 import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.InitialData;
@@ -45,7 +45,7 @@ import rx.functions.Func1;
  * @author hecvasro
  */
 @Deprecated
-class RetrofitApiBridge implements DepApiBridge {
+final class RetrofitApiBridge implements DepApiBridge {
 
   private static final Func1<Void, Void> MAP_FUNC_VOID = (v) -> v;
 
@@ -187,7 +187,7 @@ class RetrofitApiBridge implements DepApiBridge {
       return apiService.transferToNonAffiliated(
         TransferToNonAffiliatedRequestBody.create(
           ProductInfo.create(product),
-          ProductInfo.create(r.product()),
+          ProductInfo.create(r.product(), r.getLabel()),
           pin,
           amount
         )
@@ -196,7 +196,7 @@ class RetrofitApiBridge implements DepApiBridge {
     } else if (recipient instanceof NonAffiliatedPhoneNumberRecipient) {
       final NonAffiliatedPhoneNumberRecipient napnr = (NonAffiliatedPhoneNumberRecipient) recipient;
       return apiService.fetchProductInfo(
-        RecipientAccountInfoRequestBody.create(napnr.getBank(), napnr.getAccountNumber())
+        RecipientAccountInfoRequestBody.create(napnr.getBank(), napnr.getAccountNumber(), napnr.getNonAffiliateType())
       )
         .flatMap(mapToApiResult(RetrofitApiBridge.identityMapFunc()))
         .flatMap(new Func1<ApiResult<ProductInfo>, Observable<ApiResult<String>>>() {
@@ -283,13 +283,13 @@ class RetrofitApiBridge implements DepApiBridge {
       .single();
   }
 
-  @Override
-  public Observable<ApiResult<Pair<String, Product>>> checkAccountNumber(
+  private Observable<ApiResult<Pair<String, Product>>> _checkAccountNumber(
     Bank bank,
-    String accountNumber
+    String accountNumber,
+    String type
   ) {
     return apiService.fetchProductInfo(
-      RecipientAccountInfoRequestBody.create(bank, accountNumber)
+      RecipientAccountInfoRequestBody.create(bank, accountNumber, type)
     )
       .flatMap(mapToApiResult(new Func1<ProductInfo, Pair<String, Product>>() {
         @Override
@@ -305,7 +305,8 @@ class RetrofitApiBridge implements DepApiBridge {
               productInfo.getQueryFee(),
               false,
               false,
-              null
+              null,
+              productInfo.altpanKey()
             )
           );
         }
@@ -313,16 +314,22 @@ class RetrofitApiBridge implements DepApiBridge {
   }
 
   @Override
-  public Observable<ApiResult<List<Bank>>> banks() {
-    return this.apiService.banks()
-      .flatMap(mapToApiResult(BankListRequestResponse.mapFunc()));
+  public Observable<ApiResult<Pair<String, Product>>> checkAccountNumber(
+    Bank bank,
+    String accountNumber
+  ) {
+    return _checkAccountNumber(bank, accountNumber, null);
   }
 
   @Override
-  public Observable<ApiResult<List<Partner>>> partners() {
-    return apiService.partners()
-      .flatMap(mapToApiResult(PartnerListRequestResponse.mapFunc()));
+  public Observable<ApiResult<Pair<String, Product>>> checkAccountNumber(
+    Bank bank,
+    String accountNumber,
+    String type
+  ) {
+    return _checkAccountNumber(bank, accountNumber, type);
   }
+
 
   @Override
   public Observable<ApiResult<Void>> addBill(
@@ -487,4 +494,5 @@ class RetrofitApiBridge implements DepApiBridge {
       .toBlocking()
       .single();
   }
+
 }

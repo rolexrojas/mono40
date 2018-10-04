@@ -1,8 +1,13 @@
 package com.tpago.movil.company;
 
-import android.net.Uri;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.StringDef;
 
-import com.tpago.movil.util.StringHelper;
+import com.tpago.movil.util.ComparisonChain;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * Company representation
@@ -10,45 +15,54 @@ import com.tpago.movil.util.StringHelper;
  *
  * @author hecvasro
  */
-public abstract class Company {
+public abstract class Company implements Comparable<Company>, Parcelable {
 
   protected Company() {
   }
 
-  public abstract String id();
-
   public abstract int code();
+
+  public abstract String id();
 
   public abstract String name();
 
   public abstract String logoTemplate();
 
-  public abstract LogoCatalog logoCatalog();
-
-  /**
-   * Transforms its {@link #logoTemplate() template} into an {@link Uri} for the given {@link
-   * LogoStyle style}.
-   *
-   * @return An {@link Uri} for {@link LogoStyle style}.
-   *
-   * @throws IllegalArgumentException
-   *   If {@code style} is {@code null} or empty.
-   * @throws IllegalArgumentException
-   *   If {@code style} is not a valid {@link LogoStyle style}.
-   */
-  public final Uri logo(@LogoStyle String style) {
-    final LogoCatalog catalog = this.logoCatalog();
-    switch (StringHelper.checkIsNotNullNorEmpty(style, "style")) {
-      case LogoStyle.COLORED_24:
-        return catalog.colored24();
-      case LogoStyle.GRAY_20:
-        return catalog.gray20();
-      case LogoStyle.GRAY_36:
-        return catalog.gray36();
-      case LogoStyle.WHITE_36:
-        return catalog.white36();
-      default:
-        return Uri.EMPTY;
-    }
+  @Override
+  public int compareTo(@NonNull Company that) {
+    return ComparisonChain.create()
+      .compare(this.name(), that.name())
+      .result();
   }
+
+  @StringDef({
+    LogoStyle.COLORED_24,
+    LogoStyle.GRAY_20,
+    LogoStyle.GRAY_36,
+    LogoStyle.WHITE_36
+  })
+  @Retention(RetentionPolicy.SOURCE)
+  public @interface LogoStyle {
+
+    /**
+     * Colored of 24 x 24
+     */
+    String COLORED_24 = "_24";
+
+    /**
+     * Gray of 20 x 20
+     */
+    String GRAY_20 = "_20";
+
+    /**
+     * Gray of 36 x 36
+     */
+    String GRAY_36 = "_36";
+
+    /**
+     * White of 36 x 26
+     */
+    String WHITE_36 = "_36_bln";
+  }
+
 }

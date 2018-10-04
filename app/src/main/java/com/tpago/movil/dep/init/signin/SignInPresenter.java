@@ -5,16 +5,19 @@ import com.tpago.movil.lib.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.api.Api;
-import com.tpago.movil.app.ui.AlertData;
-import com.tpago.movil.app.ui.AlertManager;
+import com.tpago.movil.app.ui.alert.Alert;
+import com.tpago.movil.app.ui.alert.AlertManager;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.data.DeviceIdSupplier;
-import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.dep.Presenter;
 import com.tpago.movil.dep.init.InitComponent;
 import com.tpago.movil.dep.init.InitData;
-import com.tpago.movil.reactivex.DisposableHelper;
+import com.tpago.movil.reactivex.DisposableUtil;
+import com.tpago.movil.session.FingerprintMethodKeyGenerator;
 import com.tpago.movil.session.SessionManager;
+import com.tpago.movil.session.UnlockMethod;
+import com.tpago.movil.session.UnlockMethodKeyGenerator;
 import com.tpago.movil.session.User;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
@@ -22,6 +25,7 @@ import com.tpago.movil.util.StringHelper;
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
 import io.reactivex.schedulers.Schedulers;
@@ -52,6 +56,7 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
   @Inject SessionManager sessionManager;
   @Inject StringMapper stringMapper;
   @Inject TakeoverLoader takeoverLoader;
+  @Inject @Nullable FingerprintMethodKeyGenerator fingerprintMethodKeyGenerator;
 
   public SignInPresenter(View view, InitComponent component) {
     super(view);
@@ -103,7 +108,8 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
     final String sanitizedContent = sanitize(content);
     if (!sanitizedContent.equals(this.passwordTextInputContent)) {
       this.passwordTextInputContent = sanitizedContent;
-      this.isPasswordTextInputContentValid = !StringHelper.isNullOrEmpty(this.passwordTextInputContent);
+      this.isPasswordTextInputContentValid
+        = !StringHelper.isNullOrEmpty(this.passwordTextInputContent);
 
       this.updateView();
     }
@@ -111,29 +117,32 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
 
   private void handleSuccess(com.tpago.movil.util.Result<User> result) {
     if (result.isSuccessful()) {
-      this.view.moveToInitScreen();
+      if(result.successData().passwordChanges()){
+        this.view.openChangePassword(false, true, true);
+      }else {
+        this.view.moveToInitScreen();
+      }
     } else {
       final com.tpago.movil.util.FailureData failureData = result.failureData();
 
-      final AlertData.Builder dataBuilder = AlertData.builder(this.stringMapper);
+      final Alert.Builder alertBuilder = this.alertManager.builder();
       if (failureData.code() == Api.FailureCode.ALREADY_ASSOCIATED_DEVICE) {
-        dataBuilder
+        alertBuilder
           .title(R.string.dialog_title_already_associated_device)
           .message(R.string.dialog_message_already_associated_device)
           .positiveButtonText(R.string.dialog_positive_text_already_associated_device)
           .positiveButtonAction(this::onSignInForcingButtonClicked)
           .negativeButtonText(R.string.dialog_negative_text_already_associated_device);
       } else {
-        dataBuilder.message(failureData.description());
+        alertBuilder.message(failureData.description());
       }
-      this.alertManager.show(dataBuilder.build());
+      alertBuilder.show();
     }
   }
 
   private void handleError(Throwable throwable) {
     Timber.e(throwable, "Signing in");
-
-    this.alertManager.show(AlertData.createForGenericFailure(this.stringMapper));
+    this.alertManager.showAlertForGenericFailure();
   }
 
   final void onSignInButtonClicked() {
@@ -159,11 +168,10 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
       this.view.showEmailTextInputAsErratic(!this.isEmailTextInputContentValid);
       this.view.showPasswordTextInputAsErratic(!this.isPasswordTextInputContentValid);
 
-      final AlertData data = AlertData.builder(this.stringMapper)
+      this.alertManager.builder()
         .title(R.string.register_form_password_error_title)
         .message(R.string.register_form_password_error_message)
-        .build();
-      this.alertManager.show(data);
+        .show();
     }
   }
 
@@ -184,9 +192,27 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
 
   @Override
   public void onViewStopped() {
-    DisposableHelper.dispose(this.disposable);
+    DisposableUtil.dispose(this.disposable);
 
     super.onViewStopped();
+  }
+
+  public boolean isFingerprintUnlockMethodEnabled(){
+    return this.sessionManager.isUnlockMethodEnabled(UnlockMethod.FINGERPRINT);
+  }
+
+  private void onEnableButtonClicked(UnlockMethodKeyGenerator generator) {
+    this.disposable = this.sessionManager.enableUnlockMethod(generator)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe((d) -> this.takeoverLoader.show())
+            .doOnTerminate(this.takeoverLoader::hide)
+            .doOnComplete(()-> this.view.moveToInitScreen())
+            .subscribe();
+  }
+
+  final void onEnableFingerprintButtonClicked() {
+    this.onEnableButtonClicked(this.fingerprintMethodKeyGenerator);
   }
 
   interface View extends Presenter.View {
@@ -204,5 +230,7 @@ public final class SignInPresenter extends Presenter<SignInPresenter.View> {
     void showSignInButtonAsEnabled(boolean showAsEnabled);
 
     void moveToInitScreen();
+
+    void openChangePassword(boolean shouldRequestPIN, boolean shouldCloseSession, boolean shouldDestroySession);
   }
 }

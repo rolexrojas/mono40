@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  style="@style/Container.Light.Primary">
+
+  <Button
+    android:id="@+id/button_submit"
+    style="@style/Button.Light.Primary"
+    android:text="@string/buy"
+    app:layout_constraintBottom_toBottomOf="parent"/>
+
+  <LinearLayout
+      android:id="@+id/linear_layout_summary"
+      android:layout_width="match_parent"
+      android:layout_height="146dp"
+      android:orientation="vertical"
+      android:paddingEnd="@dimen/space_horizontal_20"
+      android:paddingStart="@dimen/space_horizontal_20"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_vertical_16" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+      <com.tpago.movil.app.ui.Label
+          style="@style/Label.Light"
+          android:layout_width="0dp"
+          android:layout_weight="1"
+          android:ellipsize="end"
+          android:gravity="start"
+          android:text="@string/coverage" />
+
+      <com.tpago.movil.app.ui.LabelPrefix
+          android:id="@+id/label_coverage"
+          style="@style/LabelMoney.Light.LightBook"
+          android:layout_width="0dp"
+          android:layout_weight="1"
+          android:gravity="end" />
+    </LinearLayout>
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_vertical_8" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+      <com.tpago.movil.app.ui.Label
+          style="@style/Label.Light"
+          android:layout_width="0dp"
+          android:layout_weight="1"
+          android:ellipsize="end"
+          android:gravity="start"
+          android:text="@string/payType" />
+
+      <com.tpago.movil.app.ui.Label
+          android:id="@+id/label_term"
+          style="@style/Label.Light"
+          android:layout_width="0dp"
+          android:layout_weight="1"
+          android:gravity="end" />
+    </LinearLayout>
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_vertical_8" />
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_vertical_8" />
+
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_vertical_8" />
+
+    <View
+        style="@style/VerticalDivider.Line"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp" />
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_vertical_8" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+      <com.tpago.movil.app.ui.Label
+          style="@style/Label.Light.Bold"
+          android:layout_width="0dp"
+          android:layout_weight="1"
+          android:ellipsize="end"
+          android:gravity="start"
+          android:text="@string/totalPayment" />
+
+      <com.tpago.movil.app.ui.LabelPrefix
+          android:id="@+id/total"
+          style="@style/Label.Light.Bold.Money"
+          android:layout_width="0dp"
+          android:layout_weight="1"
+          android:gravity="end" />
+
+    </LinearLayout>
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_vertical_8" />
+
+    <View
+        style="@style/VerticalDivider.Line"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp" />
+  </LinearLayout>
+
+  <com.tpago.movil.dep.main.transactions.PaymentMethodChooser
+    android:id="@+id/payment_method_chooser"
+    style="@style/D.Transactions.Widget.PaymentMethodChooser"
+    android:layout_marginEnd="32dp"
+    android:layout_marginStart="32dp"
+    app:layout_constraintBottom_toTopOf="@+id/button_submit"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/linear_layout_summary"/>
+</android.support.constraint.ConstraintLayout>

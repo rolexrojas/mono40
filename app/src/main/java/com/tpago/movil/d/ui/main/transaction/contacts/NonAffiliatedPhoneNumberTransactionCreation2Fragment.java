@@ -13,10 +13,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.tpago.movil.d.domain.Banks;
+import com.tpago.movil.company.Company;
+import com.tpago.movil.company.CompanyHelper;
+import com.tpago.movil.company.bank.Bank;
+import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase;
 import com.tpago.movil.dep.api.DCurrencies;
 import com.tpago.movil.d.domain.AccountRecipient;
-import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.R;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
@@ -29,7 +31,6 @@ import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
-import com.tpago.movil.d.domain.LogoStyle;
 import com.tpago.movil.dep.text.Texts;
 import com.tpago.movil.dep.widget.FullSizeLoadIndicator;
 import com.tpago.movil.dep.widget.Keyboard;
@@ -66,6 +67,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
 
   private Subscription checkSubscription = Subscriptions.unsubscribed();
   private Subscription transferSubscription = Subscriptions.unsubscribed();
+  private TransactionCreationActivityBase activity;
 
   @Inject
   DepApiBridge apiBridge;
@@ -75,6 +77,8 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
   AtomicReference<Product> fundingAccount;
   @Inject
   AtomicReference<BigDecimal> value;
+  @Inject
+  CompanyHelper companyHelper;
 
   @BindView(R.id.image_view_background)
   ImageView imageView;
@@ -125,6 +129,17 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
       });
   }
 
+  private String selectLabelToShow(String recipientName, String content, String recipientNumber){
+    if(!StringHelper.isNullOrEmpty(recipientName)){
+      return recipientName;
+    }
+
+    if(!StringHelper.isNullOrEmpty(content)){
+      return content;
+    }
+
+    return recipientNumber;
+  }
   @OnClick(R.id.button)
   final void onButtonClicked() {
     final String content = textInput.getText()
@@ -145,75 +160,67 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
       } else {
         bank = ((NonAffiliatedPhoneNumberRecipient) recipient).getBank();
       }
-      checkSubscription = apiBridge.checkAccountNumber(bank, content)
+      checkSubscription = apiBridge.checkAccountNumber(bank, content, recipient.getNonAffiliateType())
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(this.loadIndicator::start)
-        .subscribe(new Action1<ApiResult<Pair<String, Product>>>() {
-          @Override
-          public void call(ApiResult<Pair<String, Product>> result) {
-            loadIndicator.stop();
-            if (result.isSuccessful()) {
-              final Pair<String, Product> data = result.getData();
-              if (recipient instanceof AccountRecipient) {
-                final AccountRecipient r = (AccountRecipient) recipient;
-                r.setLabel(data.first);
-                r.product(data.second);
-                r.number(content);
-              } else {
-                final NonAffiliatedPhoneNumberRecipient r
-                  = (NonAffiliatedPhoneNumberRecipient) recipient;
-                r.setLabel(data.first);
-                r.setProduct(data.second);
-                r.setAccountNumber(content);
-              }
-              final int x = Math.round((button.getRight() - button.getLeft()) / 2);
-              final int y = Math.round((button.getBottom() - button.getTop()) / 2);
-              PinConfirmationDialogFragment.show(
-                getChildFragmentManager(),
-                getString(
-                  R.string.format_transfer_to,
-                  Formatter
-                    .amount(DCurrencies.map(fundingAccount.get()
-                      .getCurrency()), value.get()),
-                  StringHelper.isNullOrEmpty(data.first) ? content : data.first,
-                  Formatter.amount(
-                    DCurrencies.map(fundingAccount.get()
-                      .getCurrency()),
-                    Bank.calculateTransferCost(value.get())
-                  )
-                ),
-                new PinConfirmationDialogFragment.Callback() {
-                  @Override
-                  public void confirm(String pin) {
-                    transferTo(pin);
-                  }
-                },
-                x,
-                y
-              );
+        .subscribe(result -> {
+          loadIndicator.stop();
+          if (result.isSuccessful()) {
+            final Pair<String, Product> data = result.getData();
+            activity.setRecipientName(data.first);
+            if (recipient instanceof AccountRecipient) {
+              final AccountRecipient r = (AccountRecipient) recipient;
+              r.setLabel(data.first);
+              r.product(data.second);
+              r.number(content);
             } else {
-              Dialogs.builder(getContext())
-                .setTitle(R.string.error_generic_title)
-                .setMessage(result.getError()
-                  .getDescription())
-                .setPositiveButton(R.string.error_positive_button_text, null)
-                .create()
-                .show();
+              final NonAffiliatedPhoneNumberRecipient r
+                = (NonAffiliatedPhoneNumberRecipient) recipient;
+              r.setLabel(data.first);
+              r.setProduct(data.second);
+              r.setAccountNumber(content);
             }
-          }
-        }, new Action1<Throwable>() {
-          @Override
-          public void call(Throwable throwable) {
-            Timber.e(throwable, "");
-            loadIndicator.stop();
+            final int x = Math.round((button.getRight() - button.getLeft()) / 2);
+            final int y = Math.round((button.getBottom() - button.getTop()) / 2);
+            PinConfirmationDialogFragment.show(
+              getChildFragmentManager(),
+              getString(
+                R.string.format_transfer_to,
+                Formatter
+                  .amount(DCurrencies.map(fundingAccount.get()
+                    .getCurrency()), value.get()),
+                selectLabelToShow(data.first, content, recipient.getIdentifier()),
+                Formatter.amount(
+                  DCurrencies.map(fundingAccount.get()
+                    .getCurrency()),
+                  fundingAccount.get()
+                    .getBank()
+                    .calculateTransferCost(value.get())
+                )
+              ),
+                (PinConfirmationDialogFragment.Callback) pin -> transferTo(pin),
+              x,
+              y
+            );
+          } else {
             Dialogs.builder(getContext())
               .setTitle(R.string.error_generic_title)
-              .setMessage(R.string.error_generic)
+              .setMessage(result.getError()
+                .getDescription())
               .setPositiveButton(R.string.error_positive_button_text, null)
               .create()
               .show();
           }
+        }, throwable -> {
+          Timber.e(throwable, "");
+          loadIndicator.stop();
+          Dialogs.builder(getContext())
+            .setTitle(R.string.error_generic_title)
+            .setMessage(R.string.error_generic)
+            .setPositiveButton(R.string.error_positive_button_text, null)
+            .create()
+            .show();
         });
     }
   }
@@ -225,6 +232,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
     if (ObjectHelper.isNotNull(c)) {
       c.inject(this);
     }
+    activity = (TransactionCreationActivityBase) getActivity();
   }
 
   @Nullable
@@ -266,7 +274,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
     }
 
     Picasso.with(getContext())
-      .load(bank.getLogoUri(LogoStyle.PRIMARY_24))
+      .load(this.companyHelper.getLogoUri(bank, Company.LogoStyle.COLORED_24))
       .noFade()
       .into(imageView);
 
@@ -274,7 +282,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
       this.getString(
         R.string.accountNumberConfirmationMessage,
         this.getString(StringHelper.isNullOrEmpty(number) ? R.string.input : R.string.confirm),
-        Banks.getName(bank)
+        bank.name()
       )
     );
 

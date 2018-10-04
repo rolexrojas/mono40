@@ -1,7 +1,6 @@
 package com.tpago.movil.d.ui.main.transaction.contacts;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -18,19 +17,19 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 import com.squareup.picasso.Picasso;
-import com.tpago.movil.company.LogoCatalog;
-import com.tpago.movil.company.TemplateToLogoCatalogMapper;
-import com.tpago.movil.dep.Partner;
+import com.tpago.movil.company.Company;
+import com.tpago.movil.company.CompanyHelper;
+import com.tpago.movil.company.partner.Partner;
+import com.tpago.movil.company.partner.PartnerStore;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
-import com.tpago.movil.dep.api.ApiImageUriBuilder;
+import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase;
 import com.tpago.movil.dep.api.DCurrencies;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Recipient;
-import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.domain.UserRecipient;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
@@ -40,12 +39,9 @@ import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment.Callback;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
-import com.tpago.movil.d.ui.view.widget.LoadIndicator;
-import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
-import com.tpago.movil.partner.Carrier;
-import com.tpago.movil.partner.PartnerBuilderFactory;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.util.StringHelper;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.math.BigDecimal;
@@ -57,7 +53,6 @@ import javax.inject.Inject;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
@@ -75,25 +70,18 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
   private Unbinder unbinder;
 
   private Adapter adapter = new Adapter();
-  private List<Partner> carrierList = new ArrayList<>();
+  private List<Partner> carriers;
+  private TransactionCreationActivityBase activity;
 
-  private LoadIndicator loadIndicator;
-  private Subscription subscription = Subscriptions.unsubscribed();
   private Subscription rechargeSubscription = Subscriptions.unsubscribed();
 
+  @Inject AtomicReference<BigDecimal> value;
+  @Inject AtomicReference<Product> fundingAccount;
+  @Inject DepApiBridge apiBridge;
+  @Inject PartnerStore partnerStore;
+  @Inject Recipient recipient;
   @Inject SessionManager sessionManager;
-  @Inject TemplateToLogoCatalogMapper templateToLogoCatalogMapper;
-
-  @Inject
-  RecipientManager recipientManager;
-  @Inject
-  DepApiBridge apiBridge;
-  @Inject
-  Recipient recipient;
-  @Inject
-  AtomicReference<Product> fundingAccount;
-  @Inject
-  AtomicReference<BigDecimal> value;
+  @Inject CompanyHelper companyHelper;
 
   @BindView(R.id.swipe_refresh_layout)
   SwipeRefreshLayout swipeRefreshLayout;
@@ -170,6 +158,18 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
       });
   }
 
+  private String selectLabelToShow(String recipientName, String recipientLabel, String phoneNumber){
+    if(!StringHelper.isNullOrEmpty(recipientName)){
+      return recipientName;
+    }
+
+    if(!StringHelper.isNullOrEmpty(recipientLabel)){
+      return recipientLabel;
+    }
+
+    return phoneNumber;
+  }
+
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -199,7 +199,6 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
     super.onViewCreated(view, savedInstanceState);
     unbinder = ButterKnife.bind(this, view);
     swipeRefreshLayout.setEnabled(false);
-    loadIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
     adapter = new Adapter();
     recyclerView.setAdapter(adapter);
     final Context context = getContext();
@@ -209,68 +208,24 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
       false
     ));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
-      .drawable(R.drawable.d_divider)
-      .marginResId(R.dimen.space_horizontal_normal)
+      .drawable(R.drawable.divider_line_horizontal)
+      .marginResId(R.dimen.space_horizontal_20)
       .showLastDivider()
       .build();
     recyclerView.addItemDecoration(divider);
+
+    activity = (TransactionCreationActivityBase) getActivity();
   }
 
   @Override
   public void onResume() {
     super.onResume();
-    subscription = apiBridge.partners()
-      .subscribeOn(Schedulers.io())
-      .observeOn(AndroidSchedulers.mainThread())
-      .doOnSubscribe(new Action0() {
-        @Override
-        public void call() {
-          loadIndicator.show();
-        }
-      })
-      .subscribe(new Action1<ApiResult<List<Partner>>>() {
-        @Override
-        public void call(ApiResult<List<Partner>> result) {
-          if (result.isSuccessful()) {
-            if (ObjectHelper.isNull(carrierList)) {
-              carrierList = new ArrayList<>();
-            } else {
-              adapter.notifyItemRangeRemoved(0, carrierList.size());
-              carrierList.clear();
-            }
-
-            for (Partner partner : result.getData()) {
-              if (partner.getType()
-                .equals(Partner.TYPE_CARRIER)) {
-                carrierList.add(partner);
-              }
-            }
-            adapter.notifyItemRangeInserted(0, carrierList.size());
-          } else {
-            Dialogs.builder(getContext())
-              .setTitle(R.string.error_generic_title)
-              .setMessage(result.getError()
-                .getDescription())
-              .setPositiveButton(R.string.ok, null)
-              .show();
-          }
-        }
-      }, new Action1<Throwable>() {
-        @Override
-        public void call(Throwable throwable) {
-          Timber.e(throwable);
-          Dialogs.builder(getContext())
-            .setTitle(R.string.error_generic_title)
-            .setMessage(R.string.error_generic)
-            .setPositiveButton(R.string.error_positive_button_text, null)
-            .show();
-        }
-      }, new Action0() {
-        @Override
-        public void call() {
-          loadIndicator.hide();
-        }
-      });
+    if (ObjectHelper.isNull(this.carriers)) {
+      this.carriers = this.partnerStore.getCarriers()
+        .defaultIfEmpty(new ArrayList<>())
+        .blockingGet();
+      this.adapter.notifyItemRangeInserted(0, this.carriers.size());
+    }
   }
 
   @Override
@@ -278,9 +233,6 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
     super.onPause();
     if (!rechargeSubscription.isUnsubscribed()) {
       rechargeSubscription.unsubscribe();
-    }
-    if (!subscription.isUnsubscribed()) {
-      subscription.unsubscribe();
     }
   }
 
@@ -305,23 +257,13 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
     @Override
     public void onClick(View v) {
       final String phoneNumber;
-      final Partner p = carrierList.get(this.getAdapterPosition());
+      final Partner p = carriers.get(this.getAdapterPosition());
 
       if (recipient instanceof UserRecipient) {
         final UserRecipient r = (UserRecipient) recipient;
         r.setCarrier(p);
 
-        final String logoTemplate = p.getImageUriTemplate();
-        final LogoCatalog logoCatalog = templateToLogoCatalogMapper.apply(logoTemplate);
-        final Carrier carrier
-          = (Carrier) PartnerBuilderFactory.make(com.tpago.movil.partner.Partner.Type.CARRIER)
-          .code(p.getCode())
-          .id(p.getId())
-          .name(p.getName())
-          .logoTemplate(logoTemplate)
-          .logoCatalog(logoCatalog)
-          .build();
-        sessionManager.updateCarrier(carrier);
+        sessionManager.updateCarrier(p);
 
         phoneNumber = r.phoneNumber()
           .formattedValued();
@@ -352,7 +294,7 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
           ),
           value.get()
         ),
-        phoneNumber
+        selectLabelToShow(activity.getRecipientName(),recipient.getLabel(), recipient.getIdentifier())
       );
       final int x = Math.round((v.getRight() - v.getLeft()) / 2);
       final int y = Math.round((v.getBottom() - v.getTop()) / 2);
@@ -384,22 +326,17 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-      final Partner carrier = carrierList.get(position);
+      final Partner carrier = carriers.get(position);
 
-      final Uri imageUri = ApiImageUriBuilder.build(
-        holder.imageView.getContext(),
-        carrier,
-        ApiImageUriBuilder.Style.PRIMARY_24
-      );
       Picasso.with(getContext())
-        .load(imageUri)
+        .load(companyHelper.getLogoUri(carrier, Company.LogoStyle.COLORED_24))
         .into(holder.imageView);
-      holder.textView.setText(carrier.getName());
+      holder.textView.setText(carrier.name());
     }
 
     @Override
     public int getItemCount() {
-      return carrierList.size();
+      return carriers.size();
     }
   }
 }

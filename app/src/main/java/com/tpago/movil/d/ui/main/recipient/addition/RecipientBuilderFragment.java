@@ -17,14 +17,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
-import com.tpago.movil.dep.Partner;
+import com.tpago.movil.company.CompanyHelper;
+import com.tpago.movil.company.bank.Bank;
 import com.tpago.movil.R;
+import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
-import com.tpago.movil.d.domain.Bank;
 import com.tpago.movil.d.domain.ErrorCode;
 import com.tpago.movil.d.domain.FailureData;
 import com.tpago.movil.d.domain.Result;
@@ -32,6 +33,7 @@ import com.tpago.movil.dep.net.NetworkService;
 import com.tpago.movil.dep.reactivex.Disposables;
 import com.tpago.movil.dep.text.Texts;
 import com.tpago.movil.dep.widget.TextInput;
+import com.tpago.movil.util.ObjectHelper;
 
 import java.util.concurrent.Callable;
 
@@ -54,8 +56,11 @@ public class RecipientBuilderFragment extends Fragment {
 
   private static final String KEY_KEYWORD = "keyword";
   private static final String KEY_DATA = "value";
+  private static final String KEY_DATA_TYPE = "accountType";
+
 
   private String keyword;
+  private String accountType;
   private Parcelable data;
   private RecipientBuilder builder;
 
@@ -67,6 +72,8 @@ public class RecipientBuilderFragment extends Fragment {
   DepApiBridge apiBridge;
   @Inject
   NetworkService networkService;
+  @Inject
+  CompanyHelper companyHelper;
 
   private static RecipientBuilderFragment internalCreate(String keyword, Parcelable data) {
     final Bundle bundle = new Bundle();
@@ -77,8 +84,22 @@ public class RecipientBuilderFragment extends Fragment {
     return fragment;
   }
 
+  private static RecipientBuilderFragment internalCreate(String keyword, Parcelable data, String accountType) {
+    final Bundle bundle = new Bundle();
+    bundle.putString(KEY_KEYWORD, keyword);
+    bundle.putString(KEY_DATA_TYPE, accountType);
+    bundle.putParcelable(KEY_DATA, data);
+    final RecipientBuilderFragment fragment = new RecipientBuilderFragment();
+    fragment.setArguments(bundle);
+    return fragment;
+  }
+
   public static RecipientBuilderFragment create(String keyword, Bank data) {
     return internalCreate(keyword, data);
+  }
+
+  public static RecipientBuilderFragment create(String keyword, Bank data, String accountType) {
+    return internalCreate(keyword, data, accountType);
   }
 
   public static RecipientBuilderFragment create(String keyword, Partner data) {
@@ -167,7 +188,7 @@ public class RecipientBuilderFragment extends Fragment {
                     final Activity activity = getActivity();
                     activity.setResult(
                       Activity.RESULT_OK,
-                      AddRecipientActivity.serializeResult(result.getSuccessData())
+                      AddRecipientActivityBase.serializeResult(result.getSuccessData())
                     );
                     activity.finish();
                   } else {
@@ -181,7 +202,7 @@ public class RecipientBuilderFragment extends Fragment {
                         showGenericErrorDialog(getString(R.string.error_unavailable_network));
                         break;
                       default:
-                        showGenericErrorDialog();
+                        showGenericErrorDialog(failureData.getDescription());
                         break;
                     }
                   }
@@ -226,21 +247,33 @@ public class RecipientBuilderFragment extends Fragment {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    ((AddRecipientActivity) getActivity()).getComponent()
+    ((AddRecipientActivityBase) getActivity()).getComponent()
       .inject(this);
     final Bundle bundle = this.getArguments();
     keyword = bundle.getString(KEY_KEYWORD);
+    accountType = bundle.getString(KEY_DATA_TYPE);
     data = bundle.getParcelable(KEY_DATA);
     if (data instanceof Partner) {
       builder = new BillRecipientBuilder(
         apiBridge,
-        (Partner) data
+        (Partner) data,
+        this.companyHelper
       );
     } else {
-      builder = new ProductRecipientBuilder(
-        apiBridge,
-        (Bank) data
-      );
+      if(ObjectHelper.isNotNull(accountType)) {
+        builder = new ProductRecipientBuilder(
+            apiBridge,
+            (Bank) data,
+            this.companyHelper,
+            accountType
+        );
+      } else {
+        builder = new ProductRecipientBuilder(
+            apiBridge,
+            (Bank) data,
+            this.companyHelper
+        );
+      }
     }
   }
 

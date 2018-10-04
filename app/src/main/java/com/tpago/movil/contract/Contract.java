@@ -2,13 +2,13 @@ package com.tpago.movil.contract;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
-import com.tpago.movil.partner.Provider;
+import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.session.User;
 
 /**
  * Contract representation
  * <p>
- * Represents an agreement between an {@link User user} and a {@link Provider provider}.
+ * Represents an agreement between an {@link User user} and a {@link Partner provider}.
  *
  * @author hecvasro
  */
@@ -24,7 +24,7 @@ public abstract class Contract {
   Contract() {
   }
 
-  public abstract Provider provider();
+  public abstract Partner provider();
 
   public abstract String number();
 
@@ -49,7 +49,7 @@ public abstract class Contract {
     Builder() {
     }
 
-    public abstract Builder provider(Provider provider);
+    public abstract Builder provider(Partner provider);
 
     public abstract Builder number(String number);
 

@@ -6,7 +6,7 @@ import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.tpago.movil.dep.Partner;
+import com.tpago.movil.company.partner.Partner;
 
 /**
  * @author hecvasro
@@ -14,6 +14,7 @@ import com.tpago.movil.dep.Partner;
 @Deprecated
 @AutoValue
 public abstract class BillRequestBody {
+
   public static BillRequestBody create(Partner partner, String contractNumber, String pin) {
     return new AutoValue_BillRequestBody(partner, contractNumber, pin);
   }
@@ -22,7 +23,13 @@ public abstract class BillRequestBody {
     return new AutoValue_BillRequestBody.GsonTypeAdapter(gson);
   }
 
-  @SerializedName("partner") public abstract Partner getPartner();
-  @SerializedName("contract") public abstract String getContractNumber();
-  @Nullable @SerializedName("pin") public abstract String getPin();
+  @SerializedName("partner")
+  public abstract Partner getPartner();
+
+  @SerializedName("contract")
+  public abstract String getContractNumber();
+
+  @Nullable
+  @SerializedName("pin")
+  public abstract String getPin();
 }

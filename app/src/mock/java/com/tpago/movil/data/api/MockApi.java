@@ -10,15 +10,14 @@ import com.tpago.movil.Email;
 import com.tpago.movil.Name;
 import com.tpago.movil.lib.Password;
 import com.tpago.movil.PhoneNumber;
-import com.tpago.movil.bank.Bank;
-import com.tpago.movil.dep.MockData;
+import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.io.FileHelper;
-import com.tpago.movil.partner.Carrier;
 import com.tpago.movil.session.AccessTokenStore;
+import com.tpago.movil.session.SessionData;
 import com.tpago.movil.session.UnlockMethodConfigData;
 import com.tpago.movil.session.UnlockMethodSignatureData;
 import com.tpago.movil.session.User;
-import com.tpago.movil.store.Store;
+import com.tpago.movil.store.DiskStore;
 import com.tpago.movil.api.Api;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.FailureData;
@@ -30,14 +29,11 @@ import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.reactivex.Completable;
 import io.reactivex.CompletableTransformer;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.SingleTransformer;
 
@@ -87,38 +83,34 @@ final class MockApi implements Api {
   private final AccessTokenStore accessTokenStore;
   private final Context context;
   private final UnlockMethodConfigData configData;
-  private final Store store;
+  private final DiskStore diskStore;
 
   private final AtomicInteger userId;
   private final UserEmailSet userEmailSet;
+
+  private final MockData mockData;
 
   private MockApi(Builder builder) {
     this.accessTokenStore = builder.accessTokenStore;
     this.configData = builder.configData;
     this.context = builder.context;
-    this.store = builder.store;
+    this.diskStore = builder.diskStore;
 
-    if (this.store.isSet(STORE_KEY_USER_ID)) {
-      this.userId = new AtomicInteger(this.store.get(STORE_KEY_USER_ID, Integer.class));
+    this.mockData = builder.mockData;
+
+    if (this.diskStore.isSet(STORE_KEY_USER_ID)) {
+      this.userId = new AtomicInteger(this.diskStore.get(STORE_KEY_USER_ID, Integer.class));
     } else {
       this.userId = new AtomicInteger(1);
-      this.store.set(STORE_KEY_USER_ID, this.userId.get());
+      this.diskStore.set(STORE_KEY_USER_ID, this.userId.get());
     }
 
-    if (this.store.isSet(STORE_KEY_USER_EMAIL_SET)) {
-      this.userEmailSet = this.store.get(STORE_KEY_USER_EMAIL_SET, UserEmailSet.class);
+    if (this.diskStore.isSet(STORE_KEY_USER_EMAIL_SET)) {
+      this.userEmailSet = this.diskStore.get(STORE_KEY_USER_EMAIL_SET, UserEmailSet.class);
     } else {
       this.userEmailSet = UserEmailSet.create();
-      this.store.set(STORE_KEY_USER_EMAIL_SET, this.userEmailSet);
+      this.diskStore.set(STORE_KEY_USER_EMAIL_SET, this.userEmailSet);
     }
-  }
-
-  @Override
-  public Single<List<Bank>> fetchBanks() {
-    return Observable.fromIterable(MockData.BANK_SET)
-      .map(com.tpago.movil.d.domain.Bank::create)
-      .toList()
-      .compose(singleDelayTransformer());
   }
 
   private void setAccessToken(Result<?> result, PhoneNumber phoneNumber) {
@@ -144,7 +136,7 @@ final class MockApi implements Api {
     final Result<User> result;
 
     final String userStoreKey = createUserStoreKey(phoneNumber);
-    if (this.store.isSet(userStoreKey)) {
+    if (this.diskStore.isSet(userStoreKey)) {
       final FailureData failureData = FailureData.builder()
         .code(FailureCode.ALREADY_ASSOCIATED_PROFILE)
         .build();
@@ -156,10 +148,10 @@ final class MockApi implements Api {
       result = Result.create(failureData);
     } else {
       final int newUserId = this.userId.addAndGet(1);
-      this.store.set(STORE_KEY_USER_ID, newUserId);
+      this.diskStore.set(STORE_KEY_USER_ID, newUserId);
 
       this.userEmailSet.add(email);
-      this.store.set(STORE_KEY_USER_EMAIL_SET, this.userEmailSet);
+      this.diskStore.set(STORE_KEY_USER_EMAIL_SET, this.userEmailSet);
 
       final User user = User.builder()
         .id(newUserId)
@@ -167,13 +159,13 @@ final class MockApi implements Api {
         .email(email)
         .name(Name.create(firstName, lastName))
         .build();
-      this.store.set(userStoreKey, user);
+      this.diskStore.set(userStoreKey, user);
 
       final String userPasswordStoreKey = createUserPasswordStoreKey(phoneNumber);
-      this.store.set(userPasswordStoreKey, password);
+      this.diskStore.set(userPasswordStoreKey, password);
 
       final String userPinStoreKey = createUserPinStoreKey(phoneNumber);
-      this.store.set(userPinStoreKey, pin);
+      this.diskStore.set(userPinStoreKey, pin);
 
       result = Result.create(user);
     }
@@ -186,7 +178,7 @@ final class MockApi implements Api {
     return Single.defer(() -> {
       @PhoneNumber.State final int userState;
       final String userStoreKey = createUserStoreKey(phoneNumber);
-      if (this.store.isSet(userStoreKey)) {
+      if (this.diskStore.isSet(userStoreKey)) {
         userState = PhoneNumber.State.REGISTERED;
       } else {
         userState = PhoneNumber.State.AFFILIATED;
@@ -229,15 +221,15 @@ final class MockApi implements Api {
     final Result<User> result;
 
     final String userStoreKey = createUserStoreKey(phoneNumber);
-    if (!this.store.isSet(userStoreKey)) {
+    if (!this.diskStore.isSet(userStoreKey)) {
       final FailureData failureData = FailureData.builder()
         .code(FailureCode.UNASSOCIATED_PHONE_NUMBER)
         .build();
       result = Result.create(failureData);
     } else {
-      final User user = this.store.get(userStoreKey, User.class);
+      final User user = this.diskStore.get(userStoreKey, User.class);
       final Email userEmail = user.email();
-      final Password userPassword = this.store
+      final Password userPassword = this.diskStore
         .get(createUserPasswordStoreKey(phoneNumber), Password.class);
       if (!email.equals(userEmail) && !password.equals(userPassword)) {
         final FailureData failureData = FailureData.builder()
@@ -271,12 +263,23 @@ final class MockApi implements Api {
       .compose(singleDelayTransformer());
   }
 
+  @Override
+  public Single<SessionData> fetchSessionData() {
+    return Single.defer(() -> {
+      final SessionData sessionData = SessionData.builder()
+        .banks(this.mockData.banks)
+        .partners(this.mockData.partners)
+        .build();
+      return Single.just(sessionData);
+    });
+  }
+
   private void updateUserName_(Name name) throws Exception {
     final String userStoreKey = createUserStoreKey(this.getAccessToken());
-    if (!this.store.isSet(userStoreKey)) {
+    if (!this.diskStore.isSet(userStoreKey)) {
       throw new RuntimeException("Unauthorized");
     } else {
-      final User currentUser = this.store.get(userStoreKey, User.class);
+      final User currentUser = this.diskStore.get(userStoreKey, User.class);
       final User newUser = User.builder()
         .phoneNumber(currentUser.phoneNumber())
         .email(currentUser.email())
@@ -285,7 +288,7 @@ final class MockApi implements Api {
         .picture(currentUser.picture())
         .carrier(currentUser.carrier())
         .build();
-      this.store.set(userStoreKey, newUser);
+      this.diskStore.set(userStoreKey, newUser);
     }
   }
 
@@ -296,10 +299,10 @@ final class MockApi implements Api {
 
   private Uri updateUserPicture_(File picture) throws Exception {
     final String userStoreKey = createUserStoreKey(this.getAccessToken());
-    if (!this.store.isSet(userStoreKey)) {
+    if (!this.diskStore.isSet(userStoreKey)) {
       throw new RuntimeException("Unauthorized");
     } else {
-      final User currentUser = this.store.get(userStoreKey, User.class);
+      final User currentUser = this.diskStore.get(userStoreKey, User.class);
       final Uri currentUserPicture = currentUser.picture();
       if (ObjectHelper.isNotNull(currentUserPicture)) {
         FileHelper.deleteFile(new File(currentUserPicture.getPath()));
@@ -315,7 +318,7 @@ final class MockApi implements Api {
         .picture(newUserPictureUri)
         .carrier(currentUser.carrier())
         .build();
-      this.store.set(userStoreKey, newUser);
+      this.diskStore.set(userStoreKey, newUser);
       return newUserPictureUri;
     }
   }
@@ -325,12 +328,12 @@ final class MockApi implements Api {
     return Single.defer(() -> Single.just(this.updateUserPicture_(picture)));
   }
 
-  private void updateUserCarrier_(Carrier carrier) {
+  private void updateUserCarrier_(Partner carrier) {
     final String userStoreKey = createUserStoreKey(this.getAccessToken());
-    if (!this.store.isSet(userStoreKey)) {
+    if (!this.diskStore.isSet(userStoreKey)) {
       throw new RuntimeException("Unauthorized");
     } else {
-      final User currentUser = this.store.get(userStoreKey, User.class);
+      final User currentUser = this.diskStore.get(userStoreKey, User.class);
       final User newUser = User.builder()
         .phoneNumber(currentUser.phoneNumber())
         .email(currentUser.email())
@@ -339,22 +342,22 @@ final class MockApi implements Api {
         .picture(currentUser.picture())
         .carrier(carrier)
         .build();
-      this.store.set(userStoreKey, newUser);
+      this.diskStore.set(userStoreKey, newUser);
     }
   }
 
   @Override
-  public Completable updateUserCarrier(User user, Carrier carrier) {
+  public Completable updateUserCarrier(User user, Partner carrier) {
     return Completable.fromAction(() -> this.updateUserCarrier_(carrier));
   }
 
   private void enableUnlockMethod_(PublicKey publicKey) throws Exception {
     final PhoneNumber userPhoneNumber = this.getAccessToken();
     final String userStoreKey = createUserStoreKey(userPhoneNumber);
-    if (!this.store.isSet(userStoreKey)) {
+    if (!this.diskStore.isSet(userStoreKey)) {
       throw new IllegalStateException("Unauthorized");
     } else {
-      this.store.set(
+      this.diskStore.set(
         createUserPublicKeyStoreKey(userPhoneNumber),
         Base64.encodeToString(publicKey.getEncoded(), Base64.NO_WRAP)
       );
@@ -376,18 +379,18 @@ final class MockApi implements Api {
     final PhoneNumber userPhoneNumber = user.phoneNumber();
     final String userStoreKey = createUserStoreKey(userPhoneNumber);
     final String userPublicKeyStoreKey = createUserPublicKeyStoreKey(userPhoneNumber);
-    if (!this.store.isSet(userStoreKey)) {
+    if (!this.diskStore.isSet(userStoreKey)) {
       final FailureData failureData = FailureData.builder()
         .code(FailureCode.UNAUTHORIZED)
         .build();
       result = Result.create(failureData);
-    } else if (!this.store.isSet(userPublicKeyStoreKey)) {
+    } else if (!this.diskStore.isSet(userPublicKeyStoreKey)) {
       final FailureData failureData = FailureData.builder()
         .code(FailureCode.UNEXPECTED)
         .build();
       result = Result.create(failureData);
     } else {
-      final String publicKeyBase64 = this.store.get(userPublicKeyStoreKey, String.class);
+      final String publicKeyBase64 = this.diskStore.get(userPublicKeyStoreKey, String.class);
       final PublicKey publicKey = KeyFactory
         .getInstance(this.configData.keyGenAlgName())
         .generatePublic(new X509EncodedKeySpec(Base64.decode(publicKeyBase64, Base64.NO_WRAP)));
@@ -425,10 +428,10 @@ final class MockApi implements Api {
   private void disableUnlockMethod_() throws Exception {
     final PhoneNumber userPhoneNumber = this.getAccessToken();
     final String userStoreKey = createUserStoreKey(userPhoneNumber);
-    if (!this.store.isSet(userStoreKey)) {
+    if (!this.diskStore.isSet(userStoreKey)) {
       throw new IllegalStateException("Unauthorized");
     } else {
-      this.store.remove(createUserPublicKeyStoreKey(userPhoneNumber));
+      this.diskStore.remove(createUserPublicKeyStoreKey(userPhoneNumber));
     }
   }
 
@@ -441,10 +444,12 @@ final class MockApi implements Api {
   static final class Builder {
 
     private AccessTokenStore accessTokenStore;
-    private Store store;
+    private DiskStore diskStore;
     private Context context;
 
     private UnlockMethodConfigData configData;
+
+    private MockData mockData;
 
     private Builder() {
     }
@@ -464,8 +469,13 @@ final class MockApi implements Api {
       return this;
     }
 
-    final Builder store(Store store) {
-      this.store = ObjectHelper.checkNotNull(store, "store");
+    final Builder store(DiskStore diskStore) {
+      this.diskStore = ObjectHelper.checkNotNull(diskStore, "diskStore");
+      return this;
+    }
+
+    final Builder mockData(MockData mockData) {
+      this.mockData = ObjectHelper.checkNotNull(mockData, "mockData");
       return this;
     }
 
@@ -474,7 +484,8 @@ final class MockApi implements Api {
         .addPropertyNameIfMissing("accessTokenStore", ObjectHelper.isNull(this.accessTokenStore))
         .addPropertyNameIfMissing("context", ObjectHelper.isNull(this.context))
         .addPropertyNameIfMissing("configData", ObjectHelper.isNull(this.configData))
-        .addPropertyNameIfMissing("store", ObjectHelper.isNull(this.store))
+        .addPropertyNameIfMissing("diskStore", ObjectHelper.isNull(this.diskStore))
+        .addPropertyNameIfMissing("mockData", ObjectHelper.isNull(this.mockData))
         .checkNoMissingProperties();
       return new MockApi(this);
     }

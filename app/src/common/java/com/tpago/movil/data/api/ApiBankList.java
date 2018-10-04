@@ -5,7 +5,7 @@ import com.google.auto.value.extension.memoized.Memoized;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.tpago.movil.bank.Bank;
+import com.tpago.movil.util.Bank;
 
 import java.util.List;
 

@@ -6,8 +6,8 @@ import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.d.ui.main.recipient.addition.Contact;
-import com.tpago.movil.dep.Partner;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.d.domain.util.StringUtils;
 import com.tpago.movil.dep.text.Texts;

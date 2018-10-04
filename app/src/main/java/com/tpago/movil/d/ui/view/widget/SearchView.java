@@ -5,7 +5,9 @@ import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,32 +17,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.tpago.movil.R;
-import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.ui.misc.UiUtils;
-import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxbinding.widget.RxTextView;
+import com.tpago.movil.reactivex.DisposableUtil;
 
 import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.subscriptions.Subscriptions;
-import timber.log.Timber;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 
 /**
- * TODO
- *
  * @author hecvasro
  */
 public class SearchView extends LinearLayout {
-  private String hint;
 
-  private Subscription queryChangedSubscription = Subscriptions.unsubscribed();
-  private Subscription containerFrameLayoutClickedSubscription = Subscriptions.unsubscribed();
+  private String hint;
+  private Disposable queryChangedDisposable = Disposables.disposed();
 
   @BindColor(R.color.d_search_view_drawable)
   int drawableColor;
@@ -64,63 +58,59 @@ public class SearchView extends LinearLayout {
 
   public SearchView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    setOrientation(LinearLayout.HORIZONTAL);
-    final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.DepSearchView,
-      defStyleAttr, R.style.Dep_App_Widget_SearchView);
+    this.setOrientation(LinearLayout.HORIZONTAL);
+    final TypedArray array = context
+      .obtainStyledAttributes(
+        attrs,
+        R.styleable.DepSearchView,
+        defStyleAttr,
+        R.style.Dep_App_Widget_SearchView
+      );
     try {
-      hint = array.getString(R.styleable.DepSearchView_hint);
+      this.hint = array.getString(R.styleable.DepSearchView_hint);
     } finally {
       array.recycle();
     }
-    LayoutInflater.from(context).inflate(R.layout.d_search_view, this);
+    LayoutInflater.from(context)
+      .inflate(R.layout.d_search_view, this);
   }
 
   @Override
   protected void onFinishInflate() {
     super.onFinishInflate();
     ButterKnife.bind(this);
-    UiUtils.setColorFilter(searchImageView, drawableColor, PorterDuff.Mode.SRC_IN);
-    UiUtils.setColorFilter(clearImageView, drawableColor, PorterDuff.Mode.SRC_IN);
-    setHint(hint);
+    UiUtils.setColorFilter(this.searchImageView, this.drawableColor, PorterDuff.Mode.SRC_IN);
+    UiUtils.setColorFilter(this.clearImageView, this.drawableColor, PorterDuff.Mode.SRC_IN);
+    this.setHint(this.hint);
   }
 
   @Override
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
-    queryChangedSubscription = onQueryChanged()
-      .subscribe(new Action1<String>() {
-        @Override
-        public void call(String query) {
-          final boolean canClear = !TextUtils.isEmpty(query);
-          containerFrameLayout.setEnabled(canClear);
-          searchImageView.setVisibility(!canClear ? View.VISIBLE : View.GONE);
-          clearImageView.setVisibility(canClear ? View.VISIBLE : View.GONE);
-        }
-      }, new Action1<Throwable>() {
-        @Override
-        public void call(Throwable throwable) {
-          Timber.e(throwable);
-        }
-      });
-    containerFrameLayoutClickedSubscription = RxView.clicks(containerFrameLayout)
-      .subscribe(new Action1<Void>() {
-        @Override
-        public void call(Void notification) {
-          queryEditText.setText(null);
-        }
-      }, new Action1<Throwable>() {
-        @Override
-        public void call(Throwable throwable) {
-          Timber.e(throwable);
-        }
+
+    this.containerFrameLayout.setOnClickListener((view) -> {
+      if (this.searchImageView.getVisibility() == View.VISIBLE) {
+        this.queryEditText.requestFocus();
+      } else {
+        this.queryEditText.setText(null);
+      }
+    });
+
+    this.queryChangedDisposable = this.onQueryChanged()
+      .subscribe((query) -> {
+        final boolean canClear = !TextUtils.isEmpty(query);
+        this.searchImageView.setVisibility(!canClear ? View.VISIBLE : View.GONE);
+        this.clearImageView.setVisibility(canClear ? View.VISIBLE : View.GONE);
       });
   }
 
   @Override
   protected void onDetachedFromWindow() {
     super.onDetachedFromWindow();
-    RxUtils.unsubscribe(containerFrameLayoutClickedSubscription);
-    RxUtils.unsubscribe(queryChangedSubscription);
+
+    this.containerFrameLayout.setOnClickListener(null);
+
+    DisposableUtil.dispose(this.queryChangedDisposable);
   }
 
   /**
@@ -156,13 +146,29 @@ public class SearchView extends LinearLayout {
    */
   @NonNull
   public Observable<String> onQueryChanged() {
-    return RxTextView.textChanges(queryEditText)
-      // Creates a copy in order for it to be safe to cache or delay reading.
-      .map(new Func1<CharSequence, String>() {
+    return Observable.create((emitter) -> {
+      final TextWatcher textWatcher = new TextWatcher() {
         @Override
-        public String call(CharSequence charSequence) {
-          return charSequence.toString();
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }
-      });
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+          if (!emitter.isDisposed()) {
+            emitter.onNext(s.toString());
+          }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+      };
+      this.queryEditText.addTextChangedListener(textWatcher);
+      emitter.setCancellable(() -> this.queryEditText.removeTextChangedListener(textWatcher));
+      emitter.onNext(
+        this.queryEditText.getText()
+          .toString()
+      );
+    });
   }
 }

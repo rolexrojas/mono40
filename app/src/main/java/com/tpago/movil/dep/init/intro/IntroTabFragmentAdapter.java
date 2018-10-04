@@ -1,10 +1,12 @@
 package com.tpago.movil.dep.init.intro;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.tpago.movil.R;
+import com.tpago.movil.util.Memory;
 
 /**
  * @author hecvasro
@@ -16,13 +18,22 @@ final class IntroTabFragmentAdapter extends FragmentPagerAdapter {
   private final int[] titleArray;
   private final int[] descriptionArray;
 
-  IntroTabFragmentAdapter(FragmentManager fragmentManager) {
+  IntroTabFragmentAdapter(FragmentManager fragmentManager, Context context) {
     super(fragmentManager);
-    artArray = new int[] {
-      R.drawable.intro_tab_art_01,
-      R.drawable.intro_tab_art_02,
-      R.drawable.intro_tab_art_03
-    };
+
+    if (Memory.canDisplayImageAnimation(context)) {
+      artArray = new int[] {
+              R.drawable.intro_tab_art_01,
+              R.drawable.intro_tab_art_02,
+              R.drawable.intro_tab_art_03
+      };
+    } else {
+      artArray = new int[] {
+              R.drawable.intro_tab_art_01_static,
+              R.drawable.intro_tab_art_02_static,
+              R.drawable.intro_tab_art_03_static
+      };
+    }
     titleArray = new int[] {
       R.string.intro_tab_title_01,
       R.string.intro_tab_title_02,

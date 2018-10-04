@@ -6,7 +6,7 @@ import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.pos.PosBridge;
-import com.tpago.movil.app.ui.ChildFragmentScope;
+import com.tpago.movil.app.ui.fragment.FragmentScopeChild;
 
 import dagger.Lazy;
 import dagger.Module;
@@ -25,7 +25,7 @@ class PurchasePaymentModule {
   }
 
   @Provides
-  @ChildFragmentScope
+  @FragmentScopeChild
   PurchasePaymentPresenter providePresenter(
     StringHelper stringHelper,
     ProductManager productManager,

@@ -1,8 +1,7 @@
 package com.tpago.movil.d.ui.main.transaction;
 
-import com.tpago.movil.app.ui.ActivityModule;
-import com.tpago.movil.app.ui.ActivityScope;
-import com.tpago.movil.app.ui.AlertManager;
+import com.tpago.movil.app.ui.activity.base.ActivityModule;
+import com.tpago.movil.app.ui.activity.ActivityScope;
 import com.tpago.movil.d.data.SchedulerProvider;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Product;
@@ -12,6 +11,7 @@ import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.ui.main.transaction.bills.BillTransactionCreationFragment;
 import com.tpago.movil.d.ui.main.transaction.bills.BillTransactionCreationPresenter;
 import com.tpago.movil.d.ui.main.transaction.contacts.CarrierSelectionFragment;
+import com.tpago.movil.d.ui.main.transaction.contacts.NonAffiliatedPhoneNumberBanReservasTransactionCreationFragment;
 import com.tpago.movil.d.ui.main.transaction.contacts.NonAffiliatedPhoneNumberTransactionCreation1Fragment;
 import com.tpago.movil.d.ui.main.transaction.contacts.NonAffiliatedPhoneNumberTransactionCreation2Fragment;
 import com.tpago.movil.d.ui.main.transaction.products.CreditCardTransactionCreationFragment;
@@ -40,7 +40,9 @@ import dagger.Component;
 )
 public interface TransactionCreationComponent {
 
-  void inject(TransactionCreationActivity activity);
+  void inject(TransactionCreationActivityBase activity);
+
+  void inject(NonAffiliatedPhoneNumberBanReservasTransactionCreationFragment fragment);
 
   void inject(NonAffiliatedPhoneNumberTransactionCreation1Fragment fragment);
 

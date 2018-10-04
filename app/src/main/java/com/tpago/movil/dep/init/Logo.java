@@ -22,10 +22,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
 
-/**
- * @author hecvasro
- */
-@Deprecated
 public final class Logo extends FrameLayout {
 
   private static final long FRAME_DURATION = 2000L;
@@ -52,7 +48,7 @@ public final class Logo extends FrameLayout {
 
   private void initializeAnimatedLogo() {
     LayoutInflater.from(getContext())
-      .inflate(R.layout.d_widget_logo, this);
+      .inflate(R.layout.logo, this);
   }
 
   @Override

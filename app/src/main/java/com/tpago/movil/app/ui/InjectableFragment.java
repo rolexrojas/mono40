@@ -4,11 +4,13 @@ import android.content.Context;
 
 import com.tpago.movil.app.di.ComponentBuilderSupplier;
 import com.tpago.movil.app.di.ComponentBuilderSupplierContainer;
+import com.tpago.movil.app.ui.fragment.base.FragmentBase;
 
 /**
  * @author hecvasro
  */
-public abstract class InjectableFragment extends BaseFragment {
+@Deprecated
+public abstract class InjectableFragment extends FragmentBase {
 
   protected ComponentBuilderSupplier parentComponentBuilderSupplier;
 

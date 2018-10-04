@@ -10,9 +10,9 @@ import com.tpago.movil.Name;
 import com.tpago.movil.lib.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.api.Api;
-import com.tpago.movil.partner.Carrier;
-import com.tpago.movil.reactivex.DisposableHelper;
-import com.tpago.movil.store.Store;
+import com.tpago.movil.company.partner.Partner;
+import com.tpago.movil.reactivex.DisposableUtil;
+import com.tpago.movil.store.DiskStore;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.Result;
@@ -49,7 +49,7 @@ public final class SessionManager {
   private final AccessTokenStore accessTokenStore;
   private final Api api;
   private final JobManager jobManager;
-  private final Store store;
+  private final DiskStore diskStore;
   private final UnlockMethodDisableActionFactory unlockMethodDisableActionFactory;
 
   private final AtomicReference<User> userReference;
@@ -64,7 +64,7 @@ public final class SessionManager {
     this.accessTokenStore = builder.accessTokenStore;
     this.api = builder.api;
     this.jobManager = builder.jobManager;
-    this.store = builder.store;
+    this.diskStore = builder.diskStore;
     this.unlockMethodDisableActionFactory = builder.unlockMethodDisableActionFactory;
 
     this.userReference = new AtomicReference<>();
@@ -75,24 +75,25 @@ public final class SessionManager {
   }
 
   public final boolean isUserSet() {
-    return this.store.isSet(STORE_KEY_USER);
+    return this.diskStore.isSet(STORE_KEY_USER);
   }
 
   private void checkUserIsSet() {
     if (!this.isUserSet()) {
-      throw new IllegalStateException("!this.isUserSet()");
+      throw new IllegalStateException("!this.isUserSet() and it should");
     }
   }
 
   private void checkUserIsNotSet() {
     if (this.isUserSet()) {
-      throw new IllegalStateException("this.isUserSet()");
+      throw new IllegalStateException("this.isUserSet() and it shouldn't");
     }
   }
 
   private void createSession_(Result<User> result, boolean signedUp, @Nullable File picture) {
     if (result.isSuccessful()) {
-      this.store.set(STORE_KEY_USER, result.successData());
+      this.diskStore.set(STORE_KEY_USER, result.successData())
+        .blockingAwait();
       final User user = this.getUser();
       if (signedUp) {
         this.jobManager.addJobInBackground(UpdateUserNameJob.create(user.name()));
@@ -146,11 +147,15 @@ public final class SessionManager {
     this.checkUserIsSet();
     User user = this.userReference.get();
     if (ObjectHelper.isNull(user)) {
-      user = this.store.get(STORE_KEY_USER, User.class);
+      user = this.diskStore.get(STORE_KEY_USER, User.class)
+        .blockingGet();
       this.userReference.set(user);
       this.userDisposable = user.changes()
         .subscribeOn(Schedulers.io())
-        .subscribe((u) -> this.store.set(STORE_KEY_USER, u));
+        .subscribe(
+          (u) -> this.diskStore.set(STORE_KEY_USER, u)
+            .blockingAwait()
+        );
     }
     return user;
   }
@@ -227,14 +232,14 @@ public final class SessionManager {
     this.jobManager.addJobInBackground(UpdateUserPictureJob.create(picture));
   }
 
-  public final void updateCarrier(Carrier carrier) {
+  public final void updateCarrier(Partner carrier) {
     this.checkUserIsSet();
     this.checkSessionIsOpen();
     this.jobManager.addJobInBackground(UpdateUserCarrierJob.create(carrier));
   }
 
   public final boolean isUnlockMethodEnabled() {
-    return this.store.isSet(STORE_KEY_UNLOCK_METHOD);
+    return this.diskStore.isSet(STORE_KEY_UNLOCK_METHOD);
   }
 
   public final boolean isUnlockMethodEnabled(UnlockMethod method) {
@@ -249,7 +254,8 @@ public final class SessionManager {
   }
 
   private void enableUnlockMethod(UnlockMethod method) {
-    this.store.set(STORE_KEY_UNLOCK_METHOD, method);
+    this.diskStore.set(STORE_KEY_UNLOCK_METHOD, method)
+      .blockingAwait();
   }
 
   public final Completable enableUnlockMethod(UnlockMethodKeyGenerator generator) {
@@ -275,7 +281,8 @@ public final class SessionManager {
     this.checkUnlockMethodIsEnabled();
     UnlockMethod unlockMethod = this.unlockMethodReference.get();
     if (ObjectHelper.isNull(unlockMethod)) {
-      unlockMethod = this.store.get(STORE_KEY_UNLOCK_METHOD, UnlockMethod.class);
+      unlockMethod = this.diskStore.get(STORE_KEY_UNLOCK_METHOD, UnlockMethod.class)
+        .blockingGet();
       this.unlockMethodReference.set(unlockMethod);
     }
     return unlockMethod;
@@ -283,7 +290,8 @@ public final class SessionManager {
 
   private void disableUnlockMethod_() {
     this.unlockMethodReference.set(null);
-    this.store.remove(STORE_KEY_UNLOCK_METHOD);
+    this.diskStore.remove(STORE_KEY_UNLOCK_METHOD)
+      .blockingAwait();
   }
 
   public final Completable disableUnlockMethod() {
@@ -293,6 +301,14 @@ public final class SessionManager {
     return this.api.disableUnlockMethod()
       .doOnComplete(this.unlockMethodDisableActionFactory.make(this.getUnlockMethod()))
       .doOnComplete(this::disableUnlockMethod_);
+  }
+
+  private Completable onRequestForgotPassword(String email) {
+    return this.api.requestForgotPassword(email);
+  }
+
+  public final Completable requestForgotPassword(String email) {
+    return onRequestForgotPassword(email);
   }
 
   public final Completable closeSession() {
@@ -315,9 +331,14 @@ public final class SessionManager {
   }
 
   private void destroySession_() {
-    DisposableHelper.dispose(this.userDisposable);
+    DisposableUtil.dispose(this.userDisposable);
     this.userReference.set(null);
-    this.store.remove(STORE_KEY_USER);
+    this.diskStore.remove(STORE_KEY_USER)
+      .blockingAwait();
+  }
+
+  public void destroySessionOnSigninForgotPassword() {
+    this.destroySession_();
   }
 
   public final Completable destroySession() {
@@ -338,6 +359,7 @@ public final class SessionManager {
     if (this.isUnlockMethodEnabled()) {
       completable = completable.concatWith(this.disableUnlockMethod());
     }
+    // this.destroySession_();
     return completable.doOnComplete(this::destroySession_);
   }
 
@@ -346,7 +368,7 @@ public final class SessionManager {
     private AccessTokenStore accessTokenStore;
     private Api api;
     private JobManager jobManager;
-    private Store store;
+    private DiskStore diskStore;
     private UnlockMethodDisableActionFactory unlockMethodDisableActionFactory;
 
     private final List<SessionCloseAction> closeActions;
@@ -372,8 +394,8 @@ public final class SessionManager {
       return this;
     }
 
-    final Builder store(Store store) {
-      this.store = ObjectHelper.checkNotNull(store, "store");
+    final Builder store(DiskStore diskStore) {
+      this.diskStore = ObjectHelper.checkNotNull(diskStore, "diskStore");
       return this;
     }
 
@@ -401,7 +423,7 @@ public final class SessionManager {
         .addPropertyNameIfMissing("accessTokenStore", ObjectHelper.isNull(this.accessTokenStore))
         .addPropertyNameIfMissing("api", ObjectHelper.isNull(this.api))
         .addPropertyNameIfMissing("jobManager", ObjectHelper.isNull(this.jobManager))
-        .addPropertyNameIfMissing("store", ObjectHelper.isNull(this.store))
+        .addPropertyNameIfMissing("diskStore", ObjectHelper.isNull(this.diskStore))
         .addPropertyNameIfMissing(
           "unlockMethodDisableActionFactory",
           ObjectHelper.isNull(this.unlockMethodDisableActionFactory)

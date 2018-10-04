@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.tpago.movil.R;
 import com.tpago.movil.dep.graphics.Drawables;
+import com.tpago.movil.util.Memory;
 import com.tpago.movil.util.ObjectHelper;
 
 import butterknife.BindView;
@@ -27,6 +28,7 @@ public final class IntroTabFragment extends Fragment {
   private static final String KEY_DESCRIPTION_ID = "descriptionId";
 
   private Unbinder unbinder;
+  private Boolean animationStarted = false;
 
   @BindView(R.id.image_view_art) ImageView artImageView;
   @BindView(R.id.label_title) TextView titleTextView;
@@ -67,13 +69,18 @@ public final class IntroTabFragment extends Fragment {
   @Override
   public void onResume() {
     super.onResume();
-    Drawables.startAnimationDrawable(artImageView);
+    if(Memory.canDisplayImageAnimation(getContext())) {
+      Drawables.startAnimationDrawable(artImageView);
+      animationStarted = true;
+    }
   }
 
   @Override
   public void onPause() {
     super.onPause();
-    Drawables.stopAnimationDrawable(artImageView);
+    if(animationStarted) {
+      Drawables.stopAnimationDrawable(artImageView);
+    }
   }
 
   @Override

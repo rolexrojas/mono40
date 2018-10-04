@@ -7,23 +7,23 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.ActivityQualifier;
-import com.tpago.movil.app.ui.AlertData;
-import com.tpago.movil.app.ui.AlertManager;
-import com.tpago.movil.app.ui.BaseFragment;
-import com.tpago.movil.app.ui.FragmentReplacer;
+import com.tpago.movil.app.ui.activity.ActivityQualifier;
+import com.tpago.movil.app.ui.alert.AlertManager;
+import com.tpago.movil.app.ui.fragment.base.FragmentBase;
+import com.tpago.movil.app.ui.fragment.FragmentReplacer;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.data.DeviceIdSupplier;
-import com.tpago.movil.data.StringMapper;
+import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.data.picasso.CircleTransformation;
 import com.tpago.movil.dep.init.InitFragment;
 import com.tpago.movil.dep.init.LogoAnimator;
-import com.tpago.movil.reactivex.DisposableHelper;
+import com.tpago.movil.reactivex.DisposableUtil;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.session.UnlockMethodSignatureSupplier;
 import com.tpago.movil.session.User;
 import com.tpago.movil.util.FailureData;
 import com.tpago.movil.util.Result;
+import com.tpago.movil.util.StringHelper;
 
 import javax.inject.Inject;
 
@@ -32,7 +32,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
 import timber.log.Timber;
 
-public abstract class BaseUnlockFragment extends BaseFragment {
+public abstract class BaseUnlockFragment extends FragmentBase {
 
   @BindView(R.id.userPictureImageView) ImageView userPictureImageView;
   @BindView(R.id.userNameTextView) TextView userNameTextView;
@@ -60,28 +60,24 @@ public abstract class BaseUnlockFragment extends BaseFragment {
     } else {
       final FailureData failureData = result.failureData();
 
-      String title = null;
-      String message = failureData.description();
-
       final int code = failureData.code();
       if (code == UnlockMethodSignatureSupplier.FailureCode.UNAUTHORIZED) {
-        title = "Código incorrecto";
-        message
-          = "El código introducido no coincide con el código utilizado durante la configuración del desbloqueo rápido.";
+        showErrorMessage("Código incorrecto","El código introducido no coincide con el código utilizado durante la configuración del desbloqueo rápido.");
+      } else {
+        showErrorMessage(getString(R.string.error_generic_title), StringHelper.isNullOrEmpty(result.failureData().description()) ? getString(R.string.error_generic) : result.failureData().description());
       }
-
-      final AlertData alertData = AlertData.builder(this.stringMapper)
-        .title(title)
-        .message(message)
-        .build();
-
-      this.alertManager.show(alertData);
     }
   }
 
+  private void showErrorMessage(String title, String message){
+    this.alertManager.builder()
+      .title(title)
+      .message(message)
+      .show();
+  }
   protected void handleError(Throwable throwable) {
     Timber.e(throwable, "Opening a session");
-    this.alertManager.show(AlertData.createForGenericFailure(this.stringMapper));
+    this.alertManager.showAlertForGenericFailure();
   }
 
   @Override
@@ -96,21 +92,23 @@ public abstract class BaseUnlockFragment extends BaseFragment {
   public void onResume() {
     super.onResume();
 
-    final User user = this.sessionManager.getUser();
+    if(this.sessionManager.isUserSet()){
+      final User user = this.sessionManager.getUser();
 
-    Picasso.with(this.getContext())
-      .load(user.picture())
-      .resizeDimen(R.dimen.normalImageSize, R.dimen.normalImageSize)
-      .transform(new CircleTransformation())
-      .noFade()
-      .into(this.userPictureImageView);
+      Picasso.with(this.getContext())
+        .load(user.picture())
+        .resizeDimen(R.dimen.normalImageSize, R.dimen.normalImageSize)
+        .transform(new CircleTransformation())
+        .noFade()
+        .into(this.userPictureImageView);
 
-    this.userNameTextView.setText(this.getString(R.string.welcomeUser, user.firstName()));
+      this.userNameTextView.setText(this.getString(R.string.welcomeUser, user.firstName()));
+    }
   }
 
   @Override
   public void onPause() {
-    DisposableHelper.dispose(this.disposable);
+    DisposableUtil.dispose(this.disposable);
 
     super.onPause();
   }

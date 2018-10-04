@@ -2,7 +2,7 @@ package com.tpago.movil.d.ui.main.transaction;
 
 import android.support.annotation.NonNull;
 
-import com.tpago.movil.app.ui.ActivityScope;
+import com.tpago.movil.app.ui.activity.ActivityScope;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Recipient;
 

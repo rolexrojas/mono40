@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.BaseDialogFragment;
+import com.tpago.movil.app.ui.fragment.base.BaseDialogFragment;
 
 /**
  * @author Hector Vasquez

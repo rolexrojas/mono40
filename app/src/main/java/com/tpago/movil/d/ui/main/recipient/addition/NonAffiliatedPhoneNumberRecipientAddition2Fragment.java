@@ -15,8 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.tpago.movil.d.domain.Banks;
-import com.tpago.movil.d.domain.Bank;
+import com.tpago.movil.company.Company;
+import com.tpago.movil.company.CompanyHelper;
+import com.tpago.movil.company.bank.Bank;
 import com.tpago.movil.R;
 import com.tpago.movil.dep.App;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
@@ -24,7 +25,6 @@ import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.ui.Dialogs;
-import com.tpago.movil.d.domain.LogoStyle;
 import com.tpago.movil.dep.text.Texts;
 import com.tpago.movil.dep.widget.FullSizeLoadIndicator;
 import com.tpago.movil.dep.widget.Keyboard;
@@ -57,8 +57,8 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
 
   private Subscription subscription = Subscriptions.unsubscribed();
 
-  @Inject
-  DepApiBridge apiBridge;
+  @Inject DepApiBridge apiBridge;
+  @Inject CompanyHelper companyHelper;
 
   @BindView(R.id.image_view_background)
   ImageView imageView;
@@ -105,7 +105,7 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
               final Activity activity = getActivity();
               activity.setResult(
                 Activity.RESULT_OK,
-                NonAffiliatedPhoneNumberRecipientAdditionActivity.serializeResult(recipient)
+                NonAffiliatedPhoneNumberRecipientAdditionActivityBase.serializeResult(recipient)
               );
               activity.finish();
             } else {
@@ -137,7 +137,7 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
-    recipient = ((NonAffiliatedPhoneNumberRecipientAdditionActivity) getActivity()).recipient;
+    recipient = ((NonAffiliatedPhoneNumberRecipientAdditionActivityBase) getActivity()).recipient;
   }
 
   @Override
@@ -174,7 +174,7 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
     super.onResume();
     final Bank bank = recipient.getBank();
     Picasso.with(getContext())
-      .load(bank.getLogoUri(LogoStyle.PRIMARY_24))
+      .load(companyHelper.getLogoUri(bank, Company.LogoStyle.COLORED_24))
       .noFade()
       .into(imageView);
 
@@ -182,7 +182,7 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
       this.getString(
         R.string.accountNumberConfirmationMessage,
         this.getString(R.string.input),
-        Banks.getName(bank)
+        bank.name()
       )
     );
 

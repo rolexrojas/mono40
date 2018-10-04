@@ -11,6 +11,7 @@ import com.tpago.movil.d.domain.util.StringUtils;
  */
 @Deprecated
 public final class ProductRecipient extends Recipient {
+
   public static final Creator<ProductRecipient> CREATOR = new Creator<ProductRecipient>() {
     @Override
     public ProductRecipient createFromParcel(Parcel source) {
@@ -73,7 +74,11 @@ public final class ProductRecipient extends Recipient {
   @Override
   public boolean matches(@Nullable String query) {
     return super.matches(query)
-      || StringUtils.matches(product.getBank().getName(), query)
+      || StringUtils.matches(
+      product.getBank()
+        .name(),
+      query
+    )
       || StringUtils.matches(product.getAlias(), query);
   }
 

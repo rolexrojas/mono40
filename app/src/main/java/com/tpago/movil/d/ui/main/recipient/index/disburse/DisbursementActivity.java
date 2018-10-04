@@ -21,7 +21,9 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import com.tpago.movil.R;
-import com.tpago.movil.app.ui.NumPad;
+import com.tpago.movil.app.ui.DNumPad;
+import com.tpago.movil.app.ui.main.transaction.summary.TransactionSummaryUtil;
+import com.tpago.movil.transaction.TransactionSummary;
 import com.tpago.movil.dep.api.DCurrencies;
 import com.tpago.movil.dep.App;
 import com.tpago.movil.d.data.Formatter;
@@ -39,8 +41,10 @@ import com.tpago.movil.d.domain.FailureData;
 import com.tpago.movil.d.domain.Result;
 import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
 import com.tpago.movil.dep.net.NetworkService;
-import com.tpago.movil.function.Action;
-import com.tpago.movil.function.Consumer;
+import com.tpago.movil.util.function.Action;
+import com.tpago.movil.util.function.Consumer;
+import com.tpago.movil.util.BuilderChecker;
+import com.tpago.movil.util.ObjectHelper;
 
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
@@ -72,6 +76,10 @@ public final class DisbursementActivity
   private static final String KEY_PRODUCT_FUNDING = "fundingProduct";
   private static final String KEY_PRODUCT_DESTINATION = "destinationProduct";
 
+  public static IntentBuilder intentBuilder() {
+    return new IntentBuilder();
+  }
+
   @NonNull
   private static BigDecimal getFraction(@NonNull BigDecimal value) {
     return value.subtract(BigDecimal.valueOf(value.intValue()));
@@ -101,12 +109,6 @@ public final class DisbursementActivity
     return formattedValue;
   }
 
-  public static Intent createLaunchIntent(Context context, Product originProduct) {
-    final Intent intent = new Intent(context, DisbursementActivity.class);
-    intent.putExtra(KEY_PRODUCT_FUNDING, originProduct);
-    return intent;
-  }
-
   private BigDecimal fractionOffset = ONE;
   private BigDecimal value = ZERO;
   private Disposable disposable = Disposables.disposed();
@@ -120,7 +122,7 @@ public final class DisbursementActivity
   @BindView(R.id.payment_method_chooser) PaymentMethodChooser paymentMethodChooser;
   @BindView(R.id.toolbar) Toolbar toolbar;
   @BindView(R.id.transaction_creation_amount) PrefixableTextView amountTextView;
-  @BindView(R.id.transaction_creation_num_pad) NumPad numPad;
+  @BindView(R.id.transaction_creation_num_pad) DNumPad DNumPad;
 
   @Inject DepApiBridge depApiBridge;
   @Inject NetworkService networkService;
@@ -289,7 +291,7 @@ public final class DisbursementActivity
           String.format(
             "Desde %1$s Crédito %2$s",
             fundingProduct.getBank()
-              .getName(),
+              .name(),
             fundingProduct.getNumberSanitized()
           )
         );
@@ -314,11 +316,11 @@ public final class DisbursementActivity
     this.updateAmountText();
 
     this.numPadDigitConsumer = this::onDigitClicked;
-    this.numPad.addDigitConsumer(this.numPadDigitConsumer);
+    this.DNumPad.addDigitConsumer(this.numPadDigitConsumer);
     this.numPadDotAction = this::onDotClicked;
-    this.numPad.addDotAction(this.numPadDotAction);
+    this.DNumPad.addDotAction(this.numPadDotAction);
     this.numPadDeleteAction = this::onDeleteClicked;
-    this.numPad.addDeleteAction(this.numPadDeleteAction);
+    this.DNumPad.addDeleteAction(this.numPadDeleteAction);
   }
 
   @Override
@@ -342,11 +344,11 @@ public final class DisbursementActivity
 
   @Override
   protected void onDestroy() {
-    this.numPad.removeDeleteAction(this.numPadDeleteAction);
+    this.DNumPad.removeDeleteAction(this.numPadDeleteAction);
     this.numPadDeleteAction = null;
-    this.numPad.removeDotAction(this.numPadDotAction);
+    this.DNumPad.removeDotAction(this.numPadDotAction);
     this.numPadDotAction = null;
-    this.numPad.removeDigitConsumer(this.numPadDigitConsumer);
+    this.DNumPad.removeDigitConsumer(this.numPadDigitConsumer);
     this.numPadDigitConsumer = null;
 
     this.unbinder.unbind();
@@ -412,7 +414,10 @@ public final class DisbursementActivity
   public final void setTransferResult(boolean succeeded, String transactionId) {
     PinConfirmationDialogFragment.dismiss(getSupportFragmentManager(), succeeded);
     if (succeeded) {
-      this.setResult(RESULT_OK, DisbursementFragment.serializeResult(transactionId));
+      final TransactionSummary transactionSummary = TransactionSummary.builder()
+        .id(transactionId)
+        .build();
+      this.setResult(RESULT_OK, TransactionSummaryUtil.wrap(transactionSummary));
       this.finish();
     }
   }
@@ -436,5 +441,34 @@ public final class DisbursementActivity
   public void showUnavailableNetworkError() {
     Toast.makeText(this, R.string.error_unavailable_network, Toast.LENGTH_LONG)
       .show();
+  }
+
+  public static final class IntentBuilder {
+
+    private Context context;
+    private com.tpago.movil.product.Product creditCard;
+
+    private IntentBuilder() {
+    }
+
+    public final IntentBuilder context(Context context) {
+      this.context = ObjectHelper.checkNotNull(context, "context");
+      return this;
+    }
+
+    public final IntentBuilder creditCard(com.tpago.movil.product.Product creditCard) {
+      this.creditCard = ObjectHelper.checkNotNull(creditCard, "creditCard");
+      return this;
+    }
+
+    public final Intent build() {
+      BuilderChecker.create()
+        .addPropertyNameIfMissing("context", ObjectHelper.isNull(this.context))
+        .addPropertyNameIfMissing("creditCard", ObjectHelper.isNull(this.creditCard))
+        .checkNoMissingProperties();
+      final Intent intent = new Intent(this.context, DisbursementActivity.class);
+      intent.putExtra(KEY_PRODUCT_FUNDING, Product.create(this.creditCard));
+      return intent;
+    }
   }
 }

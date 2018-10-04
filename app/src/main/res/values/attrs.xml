@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <declare-styleable name="NumPad">
-    <attr name="buttonTextColor" format="color|reference"/>
-    <attr name="dotButtonEnabled" format="boolean"/>
-    <attr name="deleteButtonDrawable" format="reference"/>
+  <!-- TODO: Remove every dimension from this point downwards -->
+  <declare-styleable name="LabelPrefix">
+    <attr name="prefixAppearance" format="reference"/>
+    <attr name="prefix" format="string|reference"/>
+    <attr name="valueAppearance" format="reference"/>
+    <attr name="value" format="string|reference"/>
   </declare-styleable>
 
-  <declare-styleable name="MoneyLabel">
-    <attr name="currency" format="string|reference"/>
+  <declare-styleable name="StateErratic">
+    <attr name="state_erratic" format="boolean"/>
+  </declare-styleable>
+
+  <declare-styleable name="NumPad">
+    <attr name="dotButtonEnabled" format="boolean"/>
+    <attr name="textButtonTextColor" format="color|reference"/>
+    <attr name="deleteButtonImageSource" format="reference"/>
+  </declare-styleable>
+
+  <declare-styleable name="DNumPad">
+    <attr name="buttonTextColor" format="color|reference"/>
+    <attr name="dotButtonEnabled"/>
+    <attr name="deleteButtonDrawable" format="reference"/>
   </declare-styleable>
 
   <declare-styleable name="SettingsOption">
@@ -24,11 +38,6 @@
     <attr name="dividerStyle" format="reference"/>
     <attr name="settingsSectionDividerStyle" format="reference"/>
     <attr name="settingsOptionStyle" format="reference"/>
-  </declare-styleable>
-
-  <!-- TODO: Remove every dimension from this point downwards -->
-  <declare-styleable name="ErraticState">
-    <attr name="state_erratic" format="boolean"/>
   </declare-styleable>
 
   <declare-styleable name="LabelFitterLayout">
@@ -58,9 +67,7 @@
 
   <declare-styleable name="DepPrefixableTextView">
     <attr name="content" format="string|reference"/>
-    <attr
-      name="prefix"
-      format="string|reference"/>
+    <attr name="prefix"/>
     <attr
       name="prefixTextColor"
       format="color|reference"/>
@@ -74,6 +81,7 @@
       name="prefixPaddingEnd"
       format="dimension|reference"/>
   </declare-styleable>
+
   <declare-styleable name="DepAutoResizeablePrefixableTextView">
     <attr name="maxTextSize"/>
     <attr name="minTextSize"/>

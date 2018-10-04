@@ -55,7 +55,7 @@ public final class EmailRegisterFormFragment
 
   @Override
   protected Fragment getNextScreen() {
-    return PasswordRegisterFormFragment.create();
+    return EmailOTPRegisterFormFragment.create();
   }
 
   @Override

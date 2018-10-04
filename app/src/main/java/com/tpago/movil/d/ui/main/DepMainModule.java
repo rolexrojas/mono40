@@ -1,6 +1,6 @@
 package com.tpago.movil.d.ui.main;
 
-import com.tpago.movil.app.ui.ActivityScope;
+import com.tpago.movil.app.ui.activity.ActivityScope;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.BalanceManager;
 import com.tpago.movil.d.domain.pos.PosBridge;

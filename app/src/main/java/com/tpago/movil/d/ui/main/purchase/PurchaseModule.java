@@ -2,8 +2,9 @@ package com.tpago.movil.d.ui.main.purchase;
 
 import android.content.Context;
 
+import com.tpago.movil.company.CompanyHelper;
 import com.tpago.movil.dep.User;
-import com.tpago.movil.app.ui.FragmentScope;
+import com.tpago.movil.app.ui.fragment.FragmentScope;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.api.DepApiBridge;
@@ -26,9 +27,10 @@ class PurchaseModule {
   PurchasePaymentOptionBinder providePaymentOptionBinder(
     User user,
     Context context,
-    StringHelper stringHelper
+    StringHelper stringHelper,
+    CompanyHelper companyHelper
   ) {
-    return new PurchasePaymentOptionBinder(user, context, stringHelper);
+    return new PurchasePaymentOptionBinder(user, context, stringHelper, companyHelper);
   }
 
   @Provides

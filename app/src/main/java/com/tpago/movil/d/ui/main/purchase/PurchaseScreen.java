@@ -52,4 +52,8 @@ interface PurchaseScreen extends Screen {
   void showGenericErrorDialog();
 
   void showUnavailableNetworkError();
+
+  void requestNFCPermissions();
+
+  void setHasCards(boolean hasCards);
 }

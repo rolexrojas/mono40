@@ -7,7 +7,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_centerVertical="true"
-    android:layout_marginEnd="@dimen/space_horizontal_small"
+    android:layout_marginEnd="@dimen/space_horizontal_16"
     android:contentDescription="@string/bank_logo"/>
   <TextView
     android:id="@+id/text_view_product_type"

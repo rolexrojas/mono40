@@ -5,7 +5,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
-import com.tpago.movil.partner.Carrier;
+import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.io.IOException;
@@ -21,12 +21,12 @@ public final class UpdateUserCarrierJobTypeAdapter extends TypeAdapter<UpdateUse
 
   private static final String PROPERTY_CARRIER = "carrier";
 
-  private final TypeAdapter<Carrier> carrierTypeAdapter;
+  private final TypeAdapter<Partner> carrierTypeAdapter;
 
   private UpdateUserCarrierJobTypeAdapter(Gson gson) {
     ObjectHelper.checkNotNull(gson, "gson");
 
-    this.carrierTypeAdapter = gson.getAdapter(Carrier.class);
+    this.carrierTypeAdapter = gson.getAdapter(Partner.class);
   }
 
   @Override
@@ -35,7 +35,7 @@ public final class UpdateUserCarrierJobTypeAdapter extends TypeAdapter<UpdateUse
     if (reader.peek() == JsonToken.NULL) {
       reader.nextNull();
     } else {
-      Carrier carrier = null;
+      Partner carrier = null;
 
       reader.beginObject();
       while (reader.hasNext()) {
