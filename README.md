@@ -20,6 +20,11 @@ User:
 Password:
 > qwerty123
 
+# Github repo
+> https://github.com/GCS/tPago-mobile-2.0-Android
+
+> ASK for credentians in npass
+
 # Apiary
 
 > https://mobileappws.docs.apiary.io/#reference/0/initial-load/list-of-all-the-transactions
