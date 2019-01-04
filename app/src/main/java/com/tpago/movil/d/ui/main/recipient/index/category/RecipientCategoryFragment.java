@@ -47,6 +47,8 @@ import com.tpago.movil.d.ui.main.list.NoResultsListItemHolder;
 import com.tpago.movil.d.ui.main.list.NoResultsListItemHolderBinder;
 import com.tpago.movil.d.ui.main.list.NoResultsListItemHolderCreator;
 import com.tpago.movil.d.ui.main.recipient.addition.AddRecipientActivityBase;
+import com.tpago.movil.d.ui.main.recipient.index.category.selectbank.BankListFragment;
+import com.tpago.movil.d.ui.main.recipient.index.category.selectcarrier.CarrierSelectFragment;
 import com.tpago.movil.d.ui.main.transaction.TransactionCategory;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase;
 import com.tpago.movil.d.ui.main.transaction.own.OwnTransactionCreationActivity;
@@ -74,10 +76,11 @@ import io.reactivex.Observable;
  * @author hecvasro
  */
 public class RecipientCategoryFragment
-  extends ChildFragment<MainContainer>
-  implements RecipientCategoryScreen,
-  ListItemHolder.OnClickListener,
-  OnSaveButtonClickedListener {
+    extends ChildFragment<MainContainer>
+    implements RecipientCategoryScreen,
+    ListItemHolder.OnClickListener,
+    OnSaveButtonClickedListener,
+    CarrierSelectFragment.CarrierSelectFragmentCallback {
 
   private static final int REQUEST_CODE_RECIPIENT_ADDITION = 0;
   private static final int REQUEST_CODE_TRANSACTION_CREATION = 1;
@@ -108,7 +111,8 @@ public class RecipientCategoryFragment
   @Inject
   StringHelper stringHelper;
 
-  @Inject PartnerStore partnerStore;
+  @Inject
+  PartnerStore partnerStore;
   @Inject
   Category category;
   @Inject
@@ -116,9 +120,12 @@ public class RecipientCategoryFragment
   @Inject
   RecipientCategoryPresenter presenter;
 
-  @Inject StringMapper stringMapper;
-  @Inject AlertManager alertManager;
-  @Inject ProductManager productManager;
+  @Inject
+  StringMapper stringMapper;
+  @Inject
+  AlertManager alertManager;
+  @Inject
+  ProductManager productManager;
 
   @NonNull
   public static RecipientCategoryFragment create(Category category) {
@@ -136,20 +143,20 @@ public class RecipientCategoryFragment
     setHasOptionsMenu(true);
     // Injects all the annotated dependencies.
     final String categoryName = getArguments()
-      .getString(KEY_CATEGORY);
+        .getString(KEY_CATEGORY);
     final Category category = Category.valueOf(categoryName);
     final RecipientCategoryComponent component = DaggerRecipientCategoryComponent.builder()
-      .depMainComponent(getContainer().getComponent())
-      .recipientCategoryModule(new RecipientCategoryModule(category))
-      .build();
+        .depMainComponent(getContainer().getComponent())
+        .recipientCategoryModule(new RecipientCategoryModule(category))
+        .build();
     component.inject(this);
   }
 
   @Nullable
   @Override
   public View onCreateView(
-    LayoutInflater inflater, @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState
+      LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState
   ) {
     return inflater.inflate(R.layout.d_fragment_payments, container, false);
   }
@@ -161,40 +168,40 @@ public class RecipientCategoryFragment
     unbinder = ButterKnife.bind(this, view);
     // Prepares the actions and recipients list.
     final ListItemHolderCreatorFactory holderCreatorFactory = new ListItemHolderCreatorFactory
-      .Builder()
-      .addCreator(Recipient.class, new RecipientListItemHolderCreator(this))
-      .addCreator(Action.class, new ActionListItemHolderCreator(this))
-      .addCreator(NoResultsListItemItem.class, new NoResultsListItemHolderCreator())
-      .build();
+        .Builder()
+        .addCreator(Recipient.class, new RecipientListItemHolderCreator(this))
+        .addCreator(Action.class, new ActionListItemHolderCreator(this))
+        .addCreator(NoResultsListItemItem.class, new NoResultsListItemHolderCreator())
+        .build();
     final Context context = getContext();
     recipientBinder = new RecipientListItemHolderBinder(this.category, this.companyHelper, this.partnerStore);
     final BinderFactory binderFactory = new BinderFactory.Builder()
-      .addBinder(
-        Recipient.class,
-        RecipientListItemHolder.class,
-        recipientBinder
-      )
-      .addBinder(
-        Action.class,
-        ActionListItemHolder.class,
-        new ActionListItemHolderBinder(stringHelper, category)
-      )
-      .addBinder(
-        NoResultsListItemItem.class,
-        NoResultsListItemHolder.class,
-        new NoResultsListItemHolderBinder(context)
-      )
-      .build();
+        .addBinder(
+            Recipient.class,
+            RecipientListItemHolder.class,
+            recipientBinder
+        )
+        .addBinder(
+            Action.class,
+            ActionListItemHolder.class,
+            new ActionListItemHolderBinder(stringHelper, category)
+        )
+        .addBinder(
+            NoResultsListItemItem.class,
+            NoResultsListItemHolder.class,
+            new NoResultsListItemHolderBinder(context)
+        )
+        .build();
     adapter = new ListItemAdapter(holderCreatorFactory, binderFactory);
     recyclerView.setAdapter(adapter);
     recyclerView.setHasFixedSize(true);
     recyclerView
-      .setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        .setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
-      .drawable(R.drawable.divider_line_horizontal)
-      .marginResId(R.dimen.space_horizontal_20)
-      .showLastDivider()
-      .build();
+        .drawable(R.drawable.divider_line_horizontal)
+        .marginResId(R.dimen.space_horizontal_20)
+        .showLastDivider()
+        .build();
     recyclerView.addItemDecoration(divider);
     // Attaches the screen to the presenter.
     presenter.attachScreen(this);
@@ -205,7 +212,7 @@ public class RecipientCategoryFragment
     super.onStart();
     // Sets the title.
     this.getContainer()
-      .setTitle(this.getString(this.category.stringId));
+        .setTitle(this.getString(this.category.stringId));
     // Sets the hint of the search box.
     final int hintId;
     if (this.category == PAY) {
@@ -217,6 +224,7 @@ public class RecipientCategoryFragment
     }
     this.searchView.setHint(this.getString(hintId));
     // Starts the presenter.
+    presenter.attachScreen(this);
     presenter.start();
   }
 
@@ -229,7 +237,7 @@ public class RecipientCategoryFragment
       if (code == REQUEST_CODE_TRANSACTION_CREATION || code == REQUEST_CODE_OWN_TRANSACTION_CREATION) {
         presenter.showTransactionSummary(recipient, requestResult.second.second);
       } else if (code == REQUEST_CODE_RECIPIENT_ADDITION) {
-        presenter.addRecipient(recipient);
+        presenter.addRecipient(recipient, category);
       }
       requestResult = null;
     }
@@ -242,13 +250,13 @@ public class RecipientCategoryFragment
     inflater.inflate(R.menu.recipient_index_category, menu);
 
     final String categoryDeletionString = this.getString(this.category.subjectStringId)
-      .toLowerCase();
+        .toLowerCase();
     final MenuItem addMenuItem = menu.findItem(R.id.recipientIndexCategory_menuItem_add);
     addMenuItem
-      .setTitle(String.format(this.getString(R.string.format_add), categoryDeletionString));
+        .setTitle(String.format(this.getString(R.string.format_add), categoryDeletionString));
     final MenuItem removeMenuItem = menu.findItem(R.id.recipientIndexCategory_menuItem_remove);
     removeMenuItem
-      .setTitle(String.format(this.getString(R.string.format_remove), categoryDeletionString));
+        .setTitle(String.format(this.getString(R.string.format_remove), categoryDeletionString));
   }
 
   @Override
@@ -256,8 +264,8 @@ public class RecipientCategoryFragment
     switch (item.getItemId()) {
       case R.id.recipientIndexCategory_menuItem_add:
         startActivityForResult(
-          AddRecipientActivityBase.getLaunchIntent(this.getContext(), this.category),
-          REQUEST_CODE_RECIPIENT_ADDITION
+            AddRecipientActivityBase.getLaunchIntent(this.getContext(), this.category),
+            REQUEST_CODE_RECIPIENT_ADDITION
         );
         return true;
       case R.id.recipientIndexCategory_menuItem_remove:
@@ -297,7 +305,7 @@ public class RecipientCategoryFragment
     } else if (requestCode == REQUEST_CODE_TRANSACTION_CREATION) {
       if (resultCode == Activity.RESULT_OK) {
         final Pair<Recipient, String> result = TransactionCreationActivityBase.deserializeResult(
-          data);
+            data);
         if (ObjectHelper.isNotNull(result)) {
           requestResult = Pair.create(requestCode, result);
         }
@@ -312,8 +320,8 @@ public class RecipientCategoryFragment
     } else if (requestCode == REQUEST_CODE_TRANSACTION) {
       if (resultCode == Activity.RESULT_OK) {
         com.tpago.movil.app.ui.main.transaction.summary.TransactionSummaryDialogFragment
-          .create(TransactionSummaryUtil.unwrap(data))
-          .show(this.getFragmentManager(), null);
+            .create(TransactionSummaryUtil.unwrap(data))
+            .show(this.getFragmentManager(), null);
       }
     }
   }
@@ -408,19 +416,19 @@ public class RecipientCategoryFragment
   @Override
   public void startTransaction(Recipient recipient) {
     startActivityForResult(
-      TransactionCreationActivityBase.getLaunchIntent(
-        this.getActivity(),
-        TransactionCategory.transform(this.category),
-        recipient
-      ),
-      REQUEST_CODE_TRANSACTION_CREATION
+        TransactionCreationActivityBase.getLaunchIntent(
+            this.getActivity(),
+            TransactionCategory.transform(this.category),
+            recipient
+        ),
+        REQUEST_CODE_TRANSACTION_CREATION
     );
   }
 
   @Override
   public void showMessage(String message) {
     Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT)
-      .show();
+        .show();
   }
 
   @Override
@@ -436,17 +444,17 @@ public class RecipientCategoryFragment
   @Override
   public void showRecipientAdditionDialog(Recipient recipient) {
     RecipientAdditionDialogFragment.create(recipient)
-      .show(getChildFragmentManager(), null);
+        .show(getChildFragmentManager(), null);
   }
 
   @Override
   public void showTransactionSummary(
-    Recipient recipient,
-    boolean alreadyExists,
-    String transactionId
+      Recipient recipient,
+      boolean alreadyExists,
+      String transactionId
   ) {
     TransactionSummaryDialogFragment.create(recipient, alreadyExists, transactionId)
-      .show(getChildFragmentManager(), null);
+        .show(getChildFragmentManager(), null);
   }
 
   @Override
@@ -455,26 +463,26 @@ public class RecipientCategoryFragment
     final int x = Math.round((rootView.getRight() - rootView.getLeft()) / 2);
     final int y = Math.round((rootView.getBottom() - rootView.getTop()) / 2);
     PinConfirmationDialogFragment.show(
-      getChildFragmentManager(),
-      getString(R.string.remove_recipients),
-      new PinConfirmationDialogFragment.Callback() {
-        @Override
-        public void confirm(@NonNull String pin) {
-          presenter.onPinRequestFinished(pin);
-        }
-      },
-      x,
-      y
+        getChildFragmentManager(),
+        getString(R.string.remove_recipients),
+        new PinConfirmationDialogFragment.Callback() {
+          @Override
+          public void confirm(@NonNull String pin) {
+            presenter.onPinRequestFinished(pin);
+          }
+        },
+        x,
+        y
     );
   }
 
   @Override
   public void showGenericErrorDialog(String message) {
     Dialogs.builder(getContext())
-      .setTitle(R.string.error_generic_title)
-      .setMessage(message)
-      .setPositiveButton(R.string.error_positive_button_text, null)
-      .show();
+        .setTitle(R.string.error_generic_title)
+        .setMessage(message)
+        .setPositiveButton(R.string.error_positive_button_text, null)
+        .show();
   }
 
   @Override
@@ -485,7 +493,7 @@ public class RecipientCategoryFragment
   @Override
   public void showUnavailableNetworkError() {
     Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG)
-      .show();
+        .show();
   }
 
   @Override
@@ -496,9 +504,9 @@ public class RecipientCategoryFragment
   @Override
   public void startPayPalTransaction(PayPalAccount recipient) {
     final Intent intent = ActivityToolbar.intentBuilder()
-      .context(this.getContext())
-      .argument(PayPalTransactionArgument.create(recipient))
-      .build();
+        .context(this.getContext())
+        .argument(PayPalTransactionArgument.create(recipient))
+        .build();
     this.startActivityForResult(intent, REQUEST_CODE_TRANSACTION);
   }
 
@@ -518,22 +526,22 @@ public class RecipientCategoryFragment
           }
           if (hasAccounts) {
             this.startActivityForResult(
-              OwnTransactionCreationActivity.createLaunchIntent(context),
-              REQUEST_CODE_TRANSACTION_CREATION
+                OwnTransactionCreationActivity.createLaunchIntent(context),
+                REQUEST_CODE_TRANSACTION_CREATION
             );
           } else {
             this.alertManager.builder()
-              .message("No hay cuentas activas asociadas a este teléfono.")
-              .show();
+                .message("No hay cuentas activas asociadas a este teléfono.")
+                .show();
           }
         } else {
           this.startActivityForResult(
-            TransactionCreationActivityBase.getLaunchIntent(
-              context,
-              TransactionCategory.transform(this.category),
-              (UserRecipient) item
-            ),
-            REQUEST_CODE_TRANSACTION_CREATION
+              TransactionCreationActivityBase.getLaunchIntent(
+                  context,
+                  TransactionCategory.transform(this.category),
+                  (UserRecipient) item
+              ),
+              REQUEST_CODE_TRANSACTION_CREATION
           );
         }
       } else {
@@ -542,16 +550,16 @@ public class RecipientCategoryFragment
     } else if (item instanceof Action) {
       switch (((Action) item).type()) {
         case ADD_PHONE_NUMBER:
-          presenter.addRecipient(((PhoneNumberAction) item).phoneNumber());
+          presenter.addRecipient(((PhoneNumberAction) item).phoneNumber(), category);
           break;
         case TRANSACTION_WITH_PHONE_NUMBER:
           presenter.startTransfer(((PhoneNumberAction) item).phoneNumber());
           break;
         case ADD_ACCOUNT:
           presenter.addRecipient(
-            AccountRecipient.builder()
-              .number(((AccountAction) item).number())
-              .build()
+              AccountRecipient.builder()
+                  .number(((AccountAction) item).number())
+                  .build(), category
           );
           break;
         case TRANSACTION_WITH_ACCOUNT:
@@ -564,5 +572,24 @@ public class RecipientCategoryFragment
   @Override
   public void onSaveButtonClicked(Recipient recipient, String label) {
     presenter.updateRecipient(recipient, label);
+  }
+
+  @Override
+  public void showRecipientAdditionCarrierSelection(Recipient recipient) {
+    this.getContainer()
+        .setChildFragment(CarrierSelectFragment.create(recipient),
+            true, true);
+  }
+
+  @Override
+  public void onCarrierSelect(Recipient recipient) {
+    presenter.onCarrierSelected(recipient);
+  }
+
+  @Override
+  public void showRecipientAdditionBankSelection(Recipient recipient) {
+    this.getContainer()
+        .setChildFragment(BankListFragment.create(recipient),
+            true, true);
   }
 }

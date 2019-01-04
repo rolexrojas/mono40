@@ -26,6 +26,7 @@ import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
 import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
 import com.tpago.movil.dep.text.BaseTextWatcher;
 import com.tpago.movil.dep.widget.Keyboard;
+import com.tpago.movil.util.UiUtil;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -239,8 +240,7 @@ public class LoanTransactionCreationFragment extends ChildFragment<TransactionCr
 
   @Override
   public void setPayButtonEnabled(boolean enabled) {
-    button.setEnabled(enabled);
-    button.setAlpha(enabled ? 1.00F : 0.50F);
+    UiUtil.setEnabled(button, enabled);
   }
 
   @Override

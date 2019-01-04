@@ -11,6 +11,7 @@ import com.tpago.movil.app.ui.activity.ActivityQualifier;
 import com.tpago.movil.app.ui.fragment.FragmentQualifier;
 import com.tpago.movil.app.ui.fragment.FragmentReplacer;
 import com.tpago.movil.dep.InformationalDialogFragment;
+import com.tpago.movil.util.UiUtil;
 
 import javax.inject.Inject;
 
@@ -101,7 +102,7 @@ public abstract class CaptureFormFragment<P extends CaptureFormPresenter>
 
   @Override
   public void showMoveToNextScreenButtonAsEnabled(boolean showAsEnabled) {
-    moveToNextScreenButton.setAlpha(showAsEnabled ? 1.0F : 0.5F);
+    UiUtil.setEnabled(moveToNextScreenButton, showAsEnabled);
   }
 
   @Override

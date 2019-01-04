@@ -17,8 +17,6 @@ import java.math.BigDecimal;
 
 import io.reactivex.Observable;
 
-import io.reactivex.Observable;
-
 /**
  * Abstract creditCard representation.
  *
@@ -49,7 +47,6 @@ public class Product implements Comparable<Product>, Parcelable {
       .altpanKey(product.altpanKey())
       .build();
   }
-
 
   static String numberMasked(String number, int count) {
     return Observable.range(1, count)

@@ -2,6 +2,7 @@ package com.tpago.movil.d.ui.main.recipient.index.category;
 
 import android.support.annotation.NonNull;
 
+import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.ui.Screen;
 import com.tpago.movil.paypal.PayPalAccount;
@@ -24,7 +25,7 @@ interface RecipientCategoryScreen extends Screen {
    * <em>Note:</em> A value will be emitted immediately on subscribe.
    * <p>
    * <em>Note:</em> By default {@link #onQueryChanged()} operates on {@link
-   * AndroidSchedulers#mainThread()}.
+   * io.reactivex.android.schedulers.AndroidSchedulers#mainThread()}.
    *
    * @return An {@link Observable observable} that emits all query change events.
    */
@@ -68,4 +69,8 @@ interface RecipientCategoryScreen extends Screen {
   void setDeletingResult(boolean result);
 
   void startPayPalTransaction(PayPalAccount recipient);
+
+  void showRecipientAdditionCarrierSelection(Recipient recipient);
+
+  void showRecipientAdditionBankSelection(Recipient recipient);
 }

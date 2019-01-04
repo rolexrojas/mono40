@@ -41,6 +41,7 @@ import com.tpago.movil.dep.widget.TextInput;
 import com.tpago.movil.util.ChangePasswordRadioMenuUtil;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.RadioGroupUtil;
+import com.tpago.movil.util.UiUtil;
 
 import javax.inject.Inject;
 
@@ -197,8 +198,7 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
 
     TextView cancel = dialog.findViewById(R.id.cancel_action);
     TextView confirm = dialog.findViewById(R.id.do_action);
-    confirm.setEnabled(false);
-    confirm.setAlpha(0.5F);
+    UiUtil.setEnabled(confirm, false);
 
     cancel.setOnClickListener((view) -> dialog.cancel());
 
@@ -218,8 +218,7 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
 
     radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
       selectedOption = Integer.valueOf(group.getCheckedRadioButtonId());
-      confirm.setEnabled(true);
-      confirm.setAlpha(1.0F);
+      UiUtil.setEnabled(confirm, true);
     });
 
     return dialog;
@@ -259,7 +258,7 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
 
   @Override
   public void showSignInButtonAsEnabled(boolean showAsEnabled) {
-    signInButton.setAlpha(showAsEnabled ? 1.0F : 0.5F);
+    UiUtil.setEnabled(signInButton, showAsEnabled);
   }
 
   public void showActivationFingerprintMessage(){

@@ -18,6 +18,7 @@ import com.tpago.movil.app.ui.activity.ActivityQualifier;
 import com.tpago.movil.app.ui.activity.toolbar.ActivityToolbarBase;
 import com.tpago.movil.app.ui.fragment.FragmentReplacer;
 import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.util.UiUtil;
 
 import javax.inject.Inject;
 
@@ -110,8 +111,7 @@ public final class FragmentActivityBase extends ActivityToolbarBase implements
   }
 
   public void setChangePasswordOkButtonEnabled(boolean enabled) {
-    changePasswordOkButton.setEnabled(enabled);
-    changePasswordOkButton.setAlpha(enabled ? 1F : 0.5F);
+    UiUtil.setEnabled(changePasswordOkButton, enabled);
   }
 
   public void setOnChangePasswordOkButtonClickListener(View.OnClickListener listener) {

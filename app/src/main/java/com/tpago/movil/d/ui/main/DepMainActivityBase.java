@@ -50,6 +50,7 @@ import com.tpago.movil.reactivex.DisposableUtil;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.RootUtil;
+import com.tpago.movil.util.UiUtil;
 
 import javax.inject.Inject;
 
@@ -366,8 +367,7 @@ public class DepMainActivityBase
   }
 
   public void setDeleteButtonEnabled(boolean enabled) {
-    deleteImageButton.setEnabled(enabled);
-    deleteImageButton.setAlpha(enabled ? 1F : 0.5F);
+    UiUtil.setEnabled(deleteImageButton, enabled);
   }
 
   public void setOnDeleteButtonClickListener(View.OnClickListener listener) {

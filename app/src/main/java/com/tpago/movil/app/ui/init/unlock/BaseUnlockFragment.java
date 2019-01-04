@@ -2,6 +2,7 @@ package com.tpago.movil.app.ui.init.unlock;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -86,6 +87,11 @@ public abstract class BaseUnlockFragment extends FragmentBase {
 
     this.fragmentReplacer = FragmentReplacer
       .create(this.getFragmentManager(), R.id.subcontainerFrameLayout);
+  }
+
+  @Override
+  public void onViewCreated(View view, Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
   }
 
   @Override

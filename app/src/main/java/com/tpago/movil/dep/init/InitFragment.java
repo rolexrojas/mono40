@@ -48,7 +48,7 @@ public final class InitFragment extends BaseInitFragment {
   private static final int REQUEST_CODE = 0;
 
   private static final List<String> REQUIRED_PERMISSIONS = Arrays
-    .asList(Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS);
+    .asList(Manifest.permission.READ_PHONE_STATE);
 
   @Inject AppUpgradeManager upgradeManager;
   @Inject SessionManager sessionManager;

@@ -58,7 +58,6 @@ public class SearchOrChooseRecipientFragment extends ChildFragment<AddRecipientC
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
     // Injects all annotated dependencies.
     this.getComponent()
       .inject(this);
@@ -67,15 +66,15 @@ public class SearchOrChooseRecipientFragment extends ChildFragment<AddRecipientC
   @Nullable
   @Override
   public View onCreateView(
-    LayoutInflater inflater,
-    @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState
+      @NonNull LayoutInflater inflater,
+      @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState
   ) {
     return inflater.inflate(R.layout.d_fragment_search_or_choose_recipient, container, false);
   }
 
   @Override
-  public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     // Binds all the annotated views and methods.
     this.unbinder = ButterKnife.bind(this, view);
