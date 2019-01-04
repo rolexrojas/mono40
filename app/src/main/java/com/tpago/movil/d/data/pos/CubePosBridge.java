@@ -23,8 +23,11 @@ import rx.CompletableSubscriber;
 import rx.Single;
 import rx.SingleSubscriber;
 
+/**
+ * @author hecvasro
+ */
 @Deprecated
-final class CubePosBridge implements PosBridge {
+class CubePosBridge implements PosBridge {
 
   private static final String FILE_NAME = PosBridge.class.getCanonicalName();
   private static final String KEY_COUNT = "count";

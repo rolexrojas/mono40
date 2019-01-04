@@ -5,6 +5,9 @@ import com.cube.sdk.storage.operation.PaymentInfo;
 import com.tpago.movil.d.misc.Result;
 import com.tpago.movil.util.digit.DigitUtil;
 
+/**
+ * @author hecvasro
+ */
 @Deprecated
 public final class PosResult extends Result<PosCode, String> {
 
@@ -70,7 +73,8 @@ public final class PosResult extends Result<PosCode, String> {
     return new PosResult(PosCode.fromValue(code), data);
   }
 
-  private PosResult(PosCode code, String data) {
+
+  public PosResult(PosCode code, String data) {
     super(code.equals(PosCode.OK), code, data);
   }
 }

@@ -53,33 +53,33 @@ public final class RecipientAdditionDialogFragment extends DialogFragment {
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     this.recipient = ObjectHelper.checkNotNull(this.getArguments(), "this.getArguments()")
-      .getParcelable(KEY_RECIPIENT);
+        .getParcelable(KEY_RECIPIENT);
   }
 
   @NonNull
   @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
     return Dialogs.builder(getContext())
-      .setCancelable(false)
-      .setTitle(R.string.recipient_addition_title)
-      .setPositiveButton(R.string.action_save, new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
+        .setCancelable(false)
+        .setTitle(R.string.recipient_addition_title)
+        .setPositiveButton(R.string.action_save, (dialog, which) -> {
           if (ObjectHelper.isNotNull(listener)) {
             final EditText editText = ButterKnife.findById(getDialog(), R.id.edit_text);
             final String label = editText.getText()
-              .toString()
-              .trim();
+                .toString()
+                .trim();
             listener.onSaveButtonClicked(
-              recipient,
-              StringHelper.nullIfEmpty(label)
+                recipient,
+                StringHelper.nullIfEmpty(label)
             );
           }
-        }
-      })
-      .setNegativeButton(R.string.skip, null)
-      .setView(R.layout.d_dialog_recipient_addition)
-      .create();
+        })
+        .setNegativeButton(R.string.skip, (dialogInterface, i) -> {
+          listener.onSaveButtonClicked(recipient, null
+          );
+        })
+        .setView(R.layout.d_dialog_recipient_addition)
+        .create();
   }
 
   @Override
@@ -89,7 +89,7 @@ public final class RecipientAdditionDialogFragment extends DialogFragment {
     final TextView textView = ButterKnife.findById(dialog, R.id.text_view);
     final TextInputLayout textInputLayout = ButterKnife.findById(dialog, R.id.text_input_layout);
     if (recipient.getType()
-      .equals(RecipientType.BILL)) {
+        .equals(RecipientType.BILL)) {
       textView.setText(R.string.recipient_addition_message_bill);
       textInputLayout.setHint(getString(R.string.recipient_addition_hint_bill));
     } else {

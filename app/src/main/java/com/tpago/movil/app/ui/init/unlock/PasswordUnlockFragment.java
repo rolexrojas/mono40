@@ -26,6 +26,7 @@ import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.RadioGroupUtil;
 import com.tpago.movil.util.Result;
 import com.tpago.movil.util.StringHelper;
+import com.tpago.movil.util.UiUtil;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -52,8 +53,10 @@ public final class PasswordUnlockFragment extends BaseUnlockFragment {
   private void afterUserPasswordTextInputChanged(String s) {
     this.userPassword = s;
     if (!StringHelper.isNullOrEmpty(this.userPassword)) {
-      this.unlockButton.setAlpha(1.00F);
+      UiUtil.setEnabled(unlockButton, true);
       this.userPasswordTextInput.setErraticStateEnabled(false);
+    } else {
+      UiUtil.setEnabled(unlockButton, false);
     }
   }
 
@@ -88,7 +91,7 @@ public final class PasswordUnlockFragment extends BaseUnlockFragment {
         .doFinally(this.takeoverLoader::hide)
         .subscribe(this::handleSuccess, this::handleError);
     } else {
-      this.unlockButton.setAlpha(0.50F);
+      UiUtil.setEnabled(this.unlockButton, false);
       this.userPasswordTextInput.setErraticStateEnabled(true);
 
       this.alertManager.builder()
@@ -130,8 +133,7 @@ public final class PasswordUnlockFragment extends BaseUnlockFragment {
 
     TextView cancel = dialog.findViewById(R.id.cancel_action);
     TextView confirm = dialog.findViewById(R.id.do_action);
-    confirm.setEnabled(false);
-    confirm.setAlpha(0.5F);
+    UiUtil.setEnabled(confirm, false);
 
     cancel.setOnClickListener((view) -> dialog.cancel());
 
@@ -155,8 +157,7 @@ public final class PasswordUnlockFragment extends BaseUnlockFragment {
 
     radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
       selectedOption = Integer.valueOf(group.getCheckedRadioButtonId());
-      confirm.setEnabled(true);
-      confirm.setAlpha(1.0F);
+      UiUtil.setEnabled(confirm, true);
     });
 
     return dialog;
@@ -174,6 +175,7 @@ public final class PasswordUnlockFragment extends BaseUnlockFragment {
     InitActivityBase.get(this.getActivity())
       .getInitComponent()
       .inject(this);
+    UiUtil.setEnabled(this.unlockButton, false);
   }
 
   @Override

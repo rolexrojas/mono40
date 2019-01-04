@@ -10,6 +10,7 @@ import com.tpago.movil.R;
 import com.tpago.movil.app.ui.fragment.FragmentQualifier;
 import com.tpago.movil.app.ui.fragment.FragmentReplacer;
 import com.tpago.movil.dep.InformationalDialogFragment;
+import com.tpago.movil.util.UiUtil;
 
 import javax.inject.Inject;
 
@@ -91,12 +92,12 @@ public abstract class RegisterFormFragment<P extends RegisterFormPresenter>
 
   @Override
   public void setMoveToNextScreenButtonEnabled(boolean enabled) {
-    moveToNextScreenButton.setEnabled(enabled);
+    UiUtil.setEnabled(moveToNextScreenButton, enabled);
   }
 
   @Override
   public void showMoveToNextScreenButtonAsEnabled(boolean showAsEnabled) {
-    moveToNextScreenButton.setAlpha(showAsEnabled ? 1.0F : 0.5F);
+    UiUtil.setEnabled(moveToNextScreenButton, showAsEnabled);
   }
 
   @Override

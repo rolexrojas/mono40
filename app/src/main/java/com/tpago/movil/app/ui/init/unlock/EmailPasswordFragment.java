@@ -17,6 +17,7 @@ import com.tpago.movil.dep.init.InitActivityBase;
 import com.tpago.movil.dep.text.BaseTextWatcher;
 import com.tpago.movil.dep.widget.TextInput;
 import com.tpago.movil.util.StringHelper;
+import com.tpago.movil.util.UiUtil;
 
 
 import butterknife.BindView;
@@ -82,7 +83,7 @@ public class EmailPasswordFragment extends BaseUnlockFragment {
 				.doFinally(this.takeoverLoader::hide)
 				.subscribe(() -> handleSuccess(), this::handleError);
 		} else {
-			this.unlockButton.setAlpha(0.50F);
+			UiUtil.setEnabled(this.unlockButton, false);
 			this.userEmailTextInput.setErraticStateEnabled(true);
 			this.alertManager.builder()
 				.title(R.string.request_password_error_title)
@@ -94,10 +95,10 @@ public class EmailPasswordFragment extends BaseUnlockFragment {
 	private void afterUserEmailTextInputChanged(String s) {
 		this.userEmail = s;
 		if (!StringHelper.isNullOrEmpty(this.userEmail)) {
-			this.unlockButton.setAlpha(1.00F);
+			UiUtil.setEnabled(this.unlockButton, true);
 			this.userEmailTextInput.setErraticStateEnabled(false);
 		} else {
-			this.unlockButton.setAlpha(0.50F);
+			UiUtil.setEnabled(this.unlockButton, false);
 		}
 	}
 
@@ -109,7 +110,7 @@ public class EmailPasswordFragment extends BaseUnlockFragment {
 		InitActivityBase.get(this.getActivity())
 			.getInitComponent()
 			.inject(this);
-		this.unlockButton.setAlpha(0.50F);
+		UiUtil.setEnabled(this.unlockButton, false);
 	}
 
 	@Override

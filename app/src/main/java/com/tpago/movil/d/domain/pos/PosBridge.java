@@ -4,6 +4,9 @@ import com.tpago.movil.PhoneNumber;
 
 import rx.Single;
 
+/**
+ * @author hecvasro
+ */
 @Deprecated
 public interface PosBridge {
 

@@ -41,6 +41,7 @@ import com.tpago.movil.reactivex.DisposableUtil;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.util.ChangePasswordRadioMenuUtil;
 import com.tpago.movil.util.RadioGroupUtil;
+import com.tpago.movil.util.UiUtil;
 
 import javax.inject.Inject;
 
@@ -142,8 +143,7 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
 
     TextView cancel = dialog.findViewById(R.id.cancel_action);
     TextView confirm = dialog.findViewById(R.id.do_action);
-    confirm.setEnabled(false);
-    confirm.setAlpha(0.5F);
+    UiUtil.setEnabled(confirm, false);
 
     cancel.setOnClickListener((view) -> dialog.cancel());
 
@@ -167,8 +167,7 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
 
     radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
       selectedOption = Integer.valueOf(group.getCheckedRadioButtonId());
-      confirm.setEnabled(true);
-      confirm.setAlpha(1.0F);
+      UiUtil.setEnabled(confirm, true);
     });
 
     return dialog;

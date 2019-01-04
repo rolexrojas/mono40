@@ -41,7 +41,7 @@ import java.util.List;
  * @author hecvasro
  */
 class RecipientListItemHolderBinder implements
-  ListItemHolderBinder<Recipient, RecipientListItemHolder> {
+    ListItemHolderBinder<Recipient, RecipientListItemHolder> {
 
   private final Category category;
   private final RecipientDrawableStore recipientDrawableStore = RecipientDrawableStore.create();
@@ -50,15 +50,11 @@ class RecipientListItemHolderBinder implements
 
   private boolean deleting = false;
 
-//  public RecipientListItemHolderBinder(Category category, CompanyHelper companyHelper) {
-//    this.category = category;
-//    this.companyHelper = ObjectHelper.checkNotNull(companyHelper, "companyHelper");
-//  }
-
   public RecipientListItemHolderBinder(Category category, CompanyHelper companyHelper, PartnerStore partnerStore) {
     this.category = category;
     this.companyHelper = ObjectHelper.checkNotNull(companyHelper, "companyHelper");
-    this.partnerStore = ObjectHelper.checkNotNull(partnerStore, "partnerStore");;
+    this.partnerStore = ObjectHelper.checkNotNull(partnerStore, "partnerStore");
+    ;
   }
 
   final void setDeleting(boolean deleting) {
@@ -80,15 +76,18 @@ class RecipientListItemHolderBinder implements
     } else if (type == RecipientType.NON_AFFILIATED_PHONE_NUMBER) {
       final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) item;
       final Bank bank = r.getBank();
+      final Partner carrier = r.getCarrier();
       if (ObjectHelper.isNotNull(bank)) {
         imageUri = this.companyHelper.getLogoUri(bank, Company.LogoStyle.COLORED_24);
+      } else if (ObjectHelper.isNotNull(carrier)) {
+        imageUri = this.companyHelper.getLogoUri(carrier, Company.LogoStyle.COLORED_24);
       }
     } else if (type == RecipientType.BILL) {
       Partner partner = ((BillRecipient) item).getPartner();
       imageUri = this.companyHelper.getLogoUri(partner, Company.LogoStyle.COLORED_24);
     } else if (type == RecipientType.PRODUCT) {
       final Bank bank = ((ProductRecipient) item).getProduct()
-        .getBank();
+          .getBank();
       imageUri = this.companyHelper.getLogoUri(bank, Company.LogoStyle.COLORED_24);
     } else if (type == RecipientType.USER) {
       final UserRecipient r = (UserRecipient) item;
@@ -100,7 +99,7 @@ class RecipientListItemHolderBinder implements
       if (ObjectHelper.isNotNull(this.partnerStore)) {
         List<Partner> partners = this.partnerStore.getProviders().blockingGet();
         Partner partner = null;
-        for (Partner p: partners) {
+        for (Partner p : partners) {
           if (p.id().toUpperCase().equals("PAL")) {
             partner = p;
           }
@@ -112,9 +111,9 @@ class RecipientListItemHolderBinder implements
       holder.recipientPictureImageView.setImageDrawable(imageDrawable);
     } else if (ObjectHelper.isNotNull(imageUri)) {
       Picasso.with(context)
-        .load(imageUri)
-        .resizeDimen(R.dimen.icon_size_24, R.dimen.icon_size_24)
-        .into(holder.recipientPictureImageView);
+          .load(imageUri)
+          .resizeDimen(R.dimen.icon_size_24, R.dimen.icon_size_24)
+          .into(holder.recipientPictureImageView);
     } else {
       holder.recipientPictureImageView.setImageDrawable(null);
     }
@@ -158,7 +157,7 @@ class RecipientListItemHolderBinder implements
           if (ObjectHelper.isNotNull(b)) {
             dueDate = b.dueDate();
             totalOwedCurrency = DCurrencies.map(r.getProduct()
-              .getCurrency());
+                .getCurrency());
             final BigDecimal v;
             if (b instanceof LoanBillBalance) {
               v = b.periodAmount();

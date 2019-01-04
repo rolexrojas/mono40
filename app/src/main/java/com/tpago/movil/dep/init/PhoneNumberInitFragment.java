@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.dep.init.capture.CaptureFragment;
+import com.tpago.movil.util.UiUtil;
 import com.tpago.movil.util.function.Action;
 import com.tpago.movil.util.function.Consumer;
 import com.tpago.movil.util.digit.Digit;
@@ -139,7 +140,7 @@ public final class PhoneNumberInitFragment
 
   @Override
   public void showNextButtonAsEnabled(boolean showAsEnabled) {
-    nextButton.setAlpha(showAsEnabled ? 1.0F : 0.5F);
+    UiUtil.setEnabled(nextButton, showAsEnabled);
   }
 
   @Override

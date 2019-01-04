@@ -2,6 +2,11 @@ package com.tpago.movil.d.domain.pos;
 
 import android.support.annotation.NonNull;
 
+/**
+ * {@link PosBridge POS}'s code enumeration.
+ *
+ * @author hecvasro
+ */
 @Deprecated
 public enum PosCode {
   OK(1),
@@ -18,6 +23,14 @@ public enum PosCode {
     this.value = value;
   }
 
+  /**
+   * TODO
+   *
+   * @param value
+   *   TODO
+   *
+   * @return TODO
+   */
   @NonNull
   public static PosCode fromValue(int value) {
     for (PosCode apiCode : PosCode.values()) {
@@ -28,6 +41,11 @@ public enum PosCode {
     return UNEXPECTED;
   }
 
+  /**
+   * TODO
+   *
+   * @return TODO
+   */
   public final int getValue() {
     return value;
   }

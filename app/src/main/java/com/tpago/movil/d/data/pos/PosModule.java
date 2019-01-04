@@ -4,25 +4,29 @@ import android.content.Context;
 
 import com.tpago.movil.BuildConfig;
 import com.tpago.movil.d.domain.pos.PosBridge;
+import com.tpago.movil.util.StringHelper;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 
+/**
+ * TODO
+ *
+ * @author hecvasro
+ */
 @Deprecated
 @Module
-public final class PosModule {
+public class PosModule {
 
-  @Deprecated
   @Provides
   @Singleton
   PosBridge providePosBridge(Context context) {
-    final String flavor = BuildConfig.FLAVOR
-      .toLowerCase();
-    if (flavor.contains("mock")) {
+    if (StringHelper.isNullOrEmpty(BuildConfig.API_URL)) {
       return MockPosBridge.create();
+    } else {
+      return new CubePosBridge(context);
     }
-    return new CubePosBridge(context);
   }
 }

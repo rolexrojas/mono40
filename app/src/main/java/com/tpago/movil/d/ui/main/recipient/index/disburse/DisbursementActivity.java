@@ -41,6 +41,7 @@ import com.tpago.movil.d.domain.FailureData;
 import com.tpago.movil.d.domain.Result;
 import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
 import com.tpago.movil.dep.net.NetworkService;
+import com.tpago.movil.util.UiUtil;
 import com.tpago.movil.util.function.Action;
 import com.tpago.movil.util.function.Consumer;
 import com.tpago.movil.util.BuilderChecker;
@@ -144,7 +145,7 @@ public final class DisbursementActivity
   }
 
   private void showTransferButtonAsEnabled() {
-    this.transferActionButton.setAlpha(this.destinationProduct == null ? 0.50F : 1.00F);
+    UiUtil.setEnabled(this.transferActionButton, this.destinationProduct != null);
   }
 
   private void transfer(final String pin) {

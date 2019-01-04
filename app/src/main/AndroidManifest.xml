@@ -1,63 +1,59 @@
 <manifest
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  package="com.tpago.movil">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.tpago.movil">
 
   <uses-feature
-    android:name="android.hardware.nfc"
-    android:required="false"/>
+      android:name="android.hardware.nfc"
+      android:required="false"/>
 
-  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
   <uses-permission android:name="android.permission.CAMERA"/>
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.READ_CONTACTS"/>
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-  <uses-permission android:name="android.permission.READ_SMS"/>
-  <uses-permission android:name="android.permission.RECEIVE_SMS"/>
-  <uses-permission android:name="android.permission.SEND_SMS"/>
   <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
   <application
-    android:name=".app.App"
-    android:allowBackup="false"
-    android:fullBackupContent="false"
-    android:icon="@mipmap/ic_launcher"
-    android:label="@string/app_name"
-    android:supportsRtl="true"
-    android:theme="@style/AppTheme"
-    tools:replace="android:icon,android:theme,android:allowBackup,android:fullBackupContent">
+      android:name=".app.App"
+      android:allowBackup="false"
+      android:fullBackupContent="false"
+      android:icon="@mipmap/ic_launcher"
+      android:label="@string/app_name"
+      android:supportsRtl="true"
+      android:theme="@style/AppTheme"
+      tools:replace="android:icon,android:theme,android:allowBackup,android:fullBackupContent">
 
     <meta-data
-      android:name="io.fabric.ApiKey"
-      android:value="1222b6a0c933aee641154a066ae9daaa93d7d2d8"/>
+        android:name="io.fabric.ApiKey"
+        android:value="1222b6a0c933aee641154a066ae9daaa93d7d2d8"/>
 
     <provider
-      android:name="android.support.v4.content.FileProvider"
-      android:authorities="${applicationId}.provider"
-      android:exported="false"
-      android:grantUriPermissions="true">
+        android:name="android.support.v4.content.FileProvider"
+        android:authorities="${applicationId}.provider"
+        android:exported="false"
+        android:grantUriPermissions="true">
 
       <meta-data
-        android:name="android.support.FILE_PROVIDER_PATHS"
-        android:resource="@xml/provider_paths"/>
+          android:name="android.support.FILE_PROVIDER_PATHS"
+          android:resource="@xml/provider_paths"/>
     </provider>
 
     <activity
-      android:name=".app.ui.activity.toolbar.ActivityToolbar"
-      android:screenOrientation="portrait"/>
+        android:name=".app.ui.activity.toolbar.ActivityToolbar"
+        android:screenOrientation="portrait"/>
 
     <activity
-      android:name=".app.ui.main.transaction.insurance.micro.purchase.MicroInsurancePurchaseActivity"
-      android:screenOrientation="portrait"/>
+        android:name=".app.ui.main.transaction.insurance.micro.purchase.MicroInsurancePurchaseActivity"
+        android:screenOrientation="portrait"/>
 
     <!-- [START] Deprecated -->
     <activity
-      android:name=".dep.init.InitActivityBase"
-      android:screenOrientation="portrait"
-      android:windowSoftInputMode="adjustResize">
+        android:name=".dep.init.InitActivityBase"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustResize">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
 
@@ -66,59 +62,53 @@
       </intent-filter>
     </activity>
 
-    <receiver android:name=".SMSBroadCastReceiver" >
-      <intent-filter>
-        <action android:name="android.provider.Telephony.SMS_RECEIVED" />
-      </intent-filter>
-    </receiver>
+    <activity
+        android:name=".app.ui.FragmentActivityBase"
+        android:screenOrientation="portrait"/>
 
     <activity
-      android:name=".app.ui.FragmentActivityBase"
-      android:screenOrientation="portrait"/>
+        android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/D.CropImage.Theme"/>
 
     <activity
-      android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-      android:screenOrientation="portrait"
-      android:theme="@style/D.CropImage.Theme"/>
+        android:name="com.tpago.movil.d.ui.main.DepMainActivityBase"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustResize"/>
 
     <activity
-      android:name="com.tpago.movil.d.ui.main.DepMainActivityBase"
-      android:screenOrientation="portrait"
-      android:windowSoftInputMode="adjustResize"/>
+        android:name="com.tpago.movil.d.ui.main.recipient.addition.AddRecipientActivityBase"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustResize"/>
 
     <activity
-      android:name="com.tpago.movil.d.ui.main.recipient.addition.AddRecipientActivityBase"
-      android:screenOrientation="portrait"
-      android:windowSoftInputMode="adjustResize"/>
+        android:name="com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustPan"/>
 
     <activity
-      android:name="com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase"
-      android:screenOrientation="portrait"
-      android:windowSoftInputMode="adjustPan"/>
+        android:name="com.tpago.movil.d.ui.main.products.transactions.RecentTransactionsActivityBase"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustResize"/>
 
     <activity
-      android:name="com.tpago.movil.d.ui.main.products.transactions.RecentTransactionsActivityBase"
-      android:screenOrientation="portrait"
-      android:windowSoftInputMode="adjustResize"/>
+        android:name=".d.ui.main.recipient.addition.NonAffiliatedPhoneNumberRecipientAdditionActivityBase"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustResize"/>
 
     <activity
-      android:name=".d.ui.main.recipient.addition.NonAffiliatedPhoneNumberRecipientAdditionActivityBase"
-      android:screenOrientation="portrait"
-      android:windowSoftInputMode="adjustResize"/>
+        android:name=".d.ui.main.transaction.own.OwnTransactionCreationActivity"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustResize"/>
 
     <activity
-      android:name=".d.ui.main.transaction.own.OwnTransactionCreationActivity"
-      android:screenOrientation="portrait"
-      android:windowSoftInputMode="adjustResize"/>
+        android:name=".d.ui.main.transaction.own.OwnTransferActivity"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustResize"/>
 
     <activity
-      android:name=".d.ui.main.transaction.own.OwnTransferActivity"
-      android:screenOrientation="portrait"
-      android:windowSoftInputMode="adjustResize"/>
-
-    <activity
-      android:name=".d.ui.main.recipient.index.disburse.DisbursementActivity"
-      android:screenOrientation="portrait"
-      android:windowSoftInputMode="adjustResize"/>
+        android:name=".d.ui.main.recipient.index.disburse.DisbursementActivity"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustResize"/>
   </application>
 </manifest>

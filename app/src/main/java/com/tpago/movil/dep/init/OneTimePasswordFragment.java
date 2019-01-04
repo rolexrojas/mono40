@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tpago.movil.app.ui.alert.AlertManager;
-import com.tpago.movil.SMSBroadCastReceiver;
 import com.tpago.movil.util.function.Action;
 import com.tpago.movil.util.function.Consumer;
 import com.tpago.movil.util.digit.Digit;
@@ -54,19 +53,6 @@ public final class OneTimePasswordFragment
 
   private Consumer<Integer> numPadDigitConsumer;
   private Action numPadDeleteAction;
-
-  private BroadcastReceiver receiver = new BroadcastReceiver() {
-    @Override
-    public void onReceive(Context context, Intent intent) {
-      if (intent.getAction().equalsIgnoreCase(SMSBroadCastReceiver.OTP_IDENTIFIER)) {
-        final String message = intent.getStringExtra(SMSBroadCastReceiver.MESSAGE);
-        if(autoComplete) {
-          presenter.setValue(message);
-          autoComplete = false;
-        }
-      }
-    }
-  };
 
   @OnClick(R.id.sendcodeagain)
   void onSendCodeAgainClicked(){
@@ -115,8 +101,6 @@ public final class OneTimePasswordFragment
   @Override
   public void onResume() {
     super.onResume();
-    LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver,
-      new IntentFilter(SMSBroadCastReceiver.OTP_IDENTIFIER));
     // Moves the logo out of the screen.
     logoAnimator.moveOutOfScreen();
 
@@ -143,7 +127,6 @@ public final class OneTimePasswordFragment
     this.DNumPad.removeDigitConsumer(this.numPadDigitConsumer);
     this.numPadDigitConsumer = null;
 
-    LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
     super.onPause();
   }
 

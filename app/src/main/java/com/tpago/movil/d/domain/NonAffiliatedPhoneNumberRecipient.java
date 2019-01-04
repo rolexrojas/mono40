@@ -140,7 +140,7 @@ public class NonAffiliatedPhoneNumberRecipient extends Recipient {
   public boolean matches(@Nullable String query) {
     return super.matches(query)
             || StringUtils.matches(this.phoneNumber.value(), query)
-            || StringUtils.matches(this.getLabel(), query);
+            || StringUtils.matches(this.getLabel() != null ? this.getLabel() : "", query);
   }
 
   @Override

@@ -2,6 +2,7 @@ package com.tpago.movil.net;
 
 import android.content.Context;
 
+import com.tpago.movil.BuildConfig;
 import com.tpago.movil.io.FileHelper;
 import com.tpago.movil.session.AccessTokenInterceptor;
 
@@ -48,14 +49,17 @@ public final class NetModule {
   @Provides
   @Singleton
   OkHttpClient okHttpClient(Cache cache, AccessTokenInterceptor accessTokenInterceptor) {
-    return new OkHttpClient.Builder()
-      .addInterceptor(accessTokenInterceptor)
-      .addInterceptor(createLoggingInterceptor())
-      .addInterceptor(createUserAgentInterceptor())
-      .cache(cache)
-      .connectTimeout(30, TimeUnit.SECONDS)
-      .readTimeout(30, TimeUnit.SECONDS)
-      .writeTimeout(30, TimeUnit.SECONDS)
+    OkHttpClient.Builder builder = new OkHttpClient.Builder()
+        .addInterceptor(accessTokenInterceptor)
+        .addInterceptor(createUserAgentInterceptor())
+        .cache(cache)
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .writeTimeout(30, TimeUnit.SECONDS);
+    if (BuildConfig.DEBUG) {
+      builder.addInterceptor(createLoggingInterceptor());
+    }
+    return builder
       .build();
   }
 }
