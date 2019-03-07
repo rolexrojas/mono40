@@ -106,7 +106,7 @@ public class LoanTransactionCreationPresenter
         .message("No es posible realizar pagos de " + fa + ". Favor seleccionar otra opción.")
         .show();
     } else {
-      view.requestPin(recipient.getLabel(), fa);
+      view.requestPin(recipient.getLabel(), fa, a);
     }
   }
 
@@ -271,7 +271,7 @@ public class LoanTransactionCreationPresenter
 
     void setPayButtonEnabled(boolean enabled);
 
-    void requestPin(String partnerName, String value);
+    void requestPin(String partnerName, String value, BigDecimal inputAmount);
 
     void setPaymentResult(boolean succeeded, String transactionId);
 

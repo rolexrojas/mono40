@@ -8,6 +8,7 @@ import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.app.ui.Presenter;
 import com.tpago.movil.app.ui.alert.AlertManager;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
+import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.paypal.PayPalAccount;
@@ -21,6 +22,7 @@ import com.tpago.movil.util.Result;
 import com.tpago.movil.util.StringHelper;
 import com.tpago.movil.util.digit.Digit;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -30,228 +32,234 @@ import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 final class PayPalTransactionConfirmPresenter
-  extends Presenter<PayPalTransactionConfirmPresentation> {
+        extends Presenter<PayPalTransactionConfirmPresentation> {
 
-  static Builder builder() {
-    return new Builder();
-  }
-
-  private final PayPalAccount recipient;
-
-  private final ProductManager productManager;
-  private final Api api;
-
-  private final StringMapper stringMapper;
-  private final AlertManager alertManager;
-  private final TakeoverLoader takeoverLoader;
-
-  private final Money.Creator amount = Money.creator();
-
-  private Product paymentMethod = null;
-  private PayPalTransactionData transactionData = null;
-
-  private CompositeDisposable disposables;
-
-  private PayPalTransactionConfirmPresenter(Builder builder) {
-    super(builder.presentation);
-
-    this.recipient = builder.recipient;
-
-    this.productManager = builder.productManager;
-    this.api = builder.api;
-
-    this.stringMapper = builder.stringMapper;
-    this.alertManager = builder.alertManager;
-    this.takeoverLoader = builder.takeoverLoader;
-  }
-
-  private void updateAmount() {
-    this.presentation.setAmount(this.amount.toString());
-  }
-
-  final void onNumPadDigitPressed(@Digit int digit) {
-    this.amount.addDigit(digit);
-    this.updateAmount();
-  }
-
-  final void onNumPadDotPressed() {
-    this.amount.switchToFractional();
-    this.updateAmount();
-  }
-
-  final void onNumPadDeletePressed() {
-    this.amount.removeLastDigit();
-    this.updateAmount();
-  }
-
-  final void onPaymentMethodChanged(Product paymentMethod) {
-    this.paymentMethod = ObjectHelper.checkNotNull(paymentMethod, "paymentMethod");
-  }
-
-  private void handleError(Throwable throwable) {
-    Timber.e(throwable);
-
-    this.alertManager.showAlertForGenericFailure();
-  }
-
-  private void handleTransactionData(PayPalTransactionData data) {
-    this.transactionData = data;
-
-    final String currency = Currency.USD.value();
-    final String paymentMethodCurrency = this.paymentMethod.getCurrency();
-
-    final String amount = Money.format(currency, this.amount.create());
-    final String alias = this.recipient.alias();
-    final String fee = Money.format(currency, data.fee());
-    final String rate = Money.format(paymentMethodCurrency, data.rate());
-    final String total = Money.format(paymentMethodCurrency, data.total());
-
-    final String text = StringHelper.builder()
-      .append(String.format(
-        this.stringMapper.apply(R.string.main_transaction_pay_pal_summary),
-        amount,
-        alias,
-        fee
-      ))
-      .append("\n")
-      .append(String.format(this.stringMapper.apply(R.string.main_transaction_pay_pal_rate), rate))
-      .append("\n")
-      .append(String.format(
-        this.stringMapper.apply(R.string.main_transaction_pay_pal_total),
-        total
-      ))
-      .toString();
-    this.presentation.requestPin(text);
-  }
-
-  final void onSubmitPressed() {
-    final Disposable disposable = this.api.fetchPayPalTransactionData(
-      this.recipient,
-      this.paymentMethod,
-      this.amount.create()
-    )
-      .subscribeOn(Schedulers.io())
-      .observeOn(AndroidSchedulers.mainThread())
-      .doOnSubscribe((d) -> this.takeoverLoader.show())
-      .doFinally(this.takeoverLoader::hide)
-      .subscribe(this::handleTransactionData, this::handleError);
-    this.disposables.add(disposable);
-  }
-
-  private void handleConfirmationResult(Result<TransactionSummary> result) {
-    if (result.isSuccessful()) {
-      this.presentation.finish(result.successData());
-    } else {
-      final FailureData failureData = result.failureData();
-      this.alertManager.builder()
-        .message(failureData.description())
-        .show();
-    }
-  }
-
-  final void onPin(Code pin) {
-    final Disposable disposable = this.api.confirmPayPalTransaction(
-      this.recipient,
-      this.paymentMethod,
-      this.amount.create(),
-      this.transactionData,
-      pin
-    )
-      .subscribeOn(Schedulers.io())
-      .observeOn(AndroidSchedulers.mainThread())
-      .doOnSubscribe((d) -> this.takeoverLoader.show())
-      .doFinally(this.takeoverLoader::hide)
-      .subscribe(this::handleConfirmationResult, this::handleError);
-    this.disposables.add(disposable);
-  }
-
-  @Override
-  public void onPresentationResumed() {
-    this.disposables = new CompositeDisposable();
-
-    // TODO: Set PayPal's logo.
-
-    this.presentation.setAccountAlias(this.recipient.alias());
-    this.presentation.setAccountCurrency(Currency.USD.value());
-
-    final List<Product> paymentMethods = this.productManager.getPaymentOptionList();
-    if (ObjectHelper.isNull(this.paymentMethod) || !paymentMethods.contains(this.paymentMethod)) {
-      this.paymentMethod = paymentMethods.get(0);
-    }
-    this.presentation.setPaymentMethods(paymentMethods);
-
-    this.updateAmount();
-  }
-
-  @Override
-  public void onPresentationPaused() {
-    if (!this.disposables.isDisposed()) {
-      this.disposables.dispose();
-    }
-  }
-
-  static final class Builder {
-
-    private PayPalAccount recipient;
-
-    private ProductManager productManager;
-    private Api api;
-
-    private StringMapper stringMapper;
-    private AlertManager alertManager;
-    private TakeoverLoader takeoverLoader;
-
-    private PayPalTransactionConfirmPresentation presentation;
-
-    private Builder() {
+    static Builder builder() {
+        return new Builder();
     }
 
-    final Builder recipient(PayPalAccount recipient) {
-      this.recipient = ObjectHelper.checkNotNull(recipient, "recipient");
-      return this;
+    private final PayPalAccount recipient;
+
+    private final ProductManager productManager;
+    private final Api api;
+
+    private final StringMapper stringMapper;
+    private final AlertManager alertManager;
+    private final TakeoverLoader takeoverLoader;
+
+    private final Money.Creator amount = Money.creator();
+
+    private Product paymentMethod = null;
+    private PayPalTransactionData transactionData = null;
+
+    private CompositeDisposable disposables;
+
+    private PayPalTransactionConfirmPresenter(Builder builder) {
+        super(builder.presentation);
+
+        this.recipient = builder.recipient;
+
+        this.productManager = builder.productManager;
+        this.api = builder.api;
+
+        this.stringMapper = builder.stringMapper;
+        this.alertManager = builder.alertManager;
+        this.takeoverLoader = builder.takeoverLoader;
     }
 
-    final Builder productManager(ProductManager productManager) {
-      this.productManager = ObjectHelper.checkNotNull(productManager, "productManager");
-      return this;
+    private void updateAmount() {
+        this.presentation.setAmount(this.amount.toString());
     }
 
-    final Builder api(Api api) {
-      this.api = ObjectHelper.checkNotNull(api, "api");
-      return this;
+    final void onNumPadDigitPressed(@Digit int digit) {
+        this.amount.addDigit(digit);
+        this.updateAmount();
     }
 
-    final Builder stringMapper(StringMapper stringMapper) {
-      this.stringMapper = ObjectHelper.checkNotNull(stringMapper, "stringMapper");
-      return this;
+    final void onNumPadDotPressed() {
+        this.amount.switchToFractional();
+        this.updateAmount();
     }
 
-    final Builder alertManager(AlertManager alertManager) {
-      this.alertManager = ObjectHelper.checkNotNull(alertManager, "alertManager");
-      return this;
+    final void onNumPadDeletePressed() {
+        this.amount.removeLastDigit();
+        this.updateAmount();
     }
 
-    final Builder takeoverLoader(TakeoverLoader takeoverLoader) {
-      this.takeoverLoader = ObjectHelper.checkNotNull(takeoverLoader, "takeoverLoader");
-      return this;
+    final void onPaymentMethodChanged(Product paymentMethod) {
+        this.paymentMethod = ObjectHelper.checkNotNull(paymentMethod, "paymentMethod");
     }
 
-    final Builder presentation(PayPalTransactionConfirmPresentation presentation) {
-      this.presentation = ObjectHelper.checkNotNull(presentation, "presentation");
-      return this;
+    private void handleError(Throwable throwable) {
+        Timber.e(throwable);
+
+        this.alertManager.showAlertForGenericFailure();
     }
 
-    final PayPalTransactionConfirmPresenter build() {
-      BuilderChecker.create()
-        .addPropertyNameIfMissing("recipient", ObjectHelper.isNull(this.recipient))
-        .addPropertyNameIfMissing("productManager", ObjectHelper.isNull(this.productManager))
-        .addPropertyNameIfMissing("api", ObjectHelper.isNull(this.api))
-        .addPropertyNameIfMissing("stringMapper", ObjectHelper.isNull(this.stringMapper))
-        .addPropertyNameIfMissing("alertManager", ObjectHelper.isNull(this.alertManager))
-        .addPropertyNameIfMissing("takeoverLoader", ObjectHelper.isNull(this.takeoverLoader))
-        .addPropertyNameIfMissing("presentation", ObjectHelper.isNull(this.presentation))
-        .checkNoMissingProperties();
-      return new PayPalTransactionConfirmPresenter(this);
+    private void handleTransactionData(PayPalTransactionData data) {
+        this.transactionData = data;
+
+        final String currency = Currency.USD.value();
+        final String paymentMethodCurrency = this.paymentMethod.getCurrency();
+
+        final String amount = Money.format(currency, this.amount.create());
+        final String alias = this.recipient.alias();
+        final String fee = Money.format(currency, data.fee());
+        final String rate = Money.format(paymentMethodCurrency, data.rate());
+        final String total = Money.format(paymentMethodCurrency, data.total());
+
+        final double taxPercentage = 0.15;
+        double taxAmount = data.total().doubleValue() * (taxPercentage / 100);
+        String taxAmountText = Formatter.amount("RD", new BigDecimal(taxAmount));
+
+        final String text = StringHelper.builder()
+                .append(String.format(
+                        this.stringMapper.apply(R.string.main_transaction_pay_pal_summary),
+                        amount,
+                        alias,
+                        fee
+                ))
+                .append("\n")
+                .append(String.format(this.stringMapper.apply(R.string.main_transaction_pay_pal_rate), rate))
+                .append("\n")
+                .append(String.format(
+                        this.stringMapper.apply(R.string.main_transaction_pay_pal_total),
+                        total,
+                        taxPercentage + "%",
+                        taxAmountText
+                ))
+                .toString();
+        this.presentation.requestPin(text);
     }
-  }
+
+    final void onSubmitPressed() {
+        final Disposable disposable = this.api.fetchPayPalTransactionData(
+                this.recipient,
+                this.paymentMethod,
+                this.amount.create()
+        )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe((d) -> this.takeoverLoader.show())
+                .doFinally(this.takeoverLoader::hide)
+                .subscribe(this::handleTransactionData, this::handleError);
+        this.disposables.add(disposable);
+    }
+
+    private void handleConfirmationResult(Result<TransactionSummary> result) {
+        if (result.isSuccessful()) {
+            this.presentation.finish(result.successData());
+        } else {
+            final FailureData failureData = result.failureData();
+            this.alertManager.builder()
+                    .message(failureData.description())
+                    .show();
+        }
+    }
+
+    final void onPin(Code pin) {
+        final Disposable disposable = this.api.confirmPayPalTransaction(
+                this.recipient,
+                this.paymentMethod,
+                this.amount.create(),
+                this.transactionData,
+                pin
+        )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe((d) -> this.takeoverLoader.show())
+                .doFinally(this.takeoverLoader::hide)
+                .subscribe(this::handleConfirmationResult, this::handleError);
+        this.disposables.add(disposable);
+    }
+
+    @Override
+    public void onPresentationResumed() {
+        this.disposables = new CompositeDisposable();
+
+        // TODO: Set PayPal's logo.
+
+        this.presentation.setAccountAlias(this.recipient.alias());
+        this.presentation.setAccountCurrency(Currency.USD.value());
+
+        final List<Product> paymentMethods = this.productManager.getPaymentOptionList();
+        if (ObjectHelper.isNull(this.paymentMethod) || !paymentMethods.contains(this.paymentMethod)) {
+            this.paymentMethod = paymentMethods.get(0);
+        }
+        this.presentation.setPaymentMethods(paymentMethods);
+
+        this.updateAmount();
+    }
+
+    @Override
+    public void onPresentationPaused() {
+        if (!this.disposables.isDisposed()) {
+            this.disposables.dispose();
+        }
+    }
+
+    static final class Builder {
+
+        private PayPalAccount recipient;
+
+        private ProductManager productManager;
+        private Api api;
+
+        private StringMapper stringMapper;
+        private AlertManager alertManager;
+        private TakeoverLoader takeoverLoader;
+
+        private PayPalTransactionConfirmPresentation presentation;
+
+        private Builder() {
+        }
+
+        final Builder recipient(PayPalAccount recipient) {
+            this.recipient = ObjectHelper.checkNotNull(recipient, "recipient");
+            return this;
+        }
+
+        final Builder productManager(ProductManager productManager) {
+            this.productManager = ObjectHelper.checkNotNull(productManager, "productManager");
+            return this;
+        }
+
+        final Builder api(Api api) {
+            this.api = ObjectHelper.checkNotNull(api, "api");
+            return this;
+        }
+
+        final Builder stringMapper(StringMapper stringMapper) {
+            this.stringMapper = ObjectHelper.checkNotNull(stringMapper, "stringMapper");
+            return this;
+        }
+
+        final Builder alertManager(AlertManager alertManager) {
+            this.alertManager = ObjectHelper.checkNotNull(alertManager, "alertManager");
+            return this;
+        }
+
+        final Builder takeoverLoader(TakeoverLoader takeoverLoader) {
+            this.takeoverLoader = ObjectHelper.checkNotNull(takeoverLoader, "takeoverLoader");
+            return this;
+        }
+
+        final Builder presentation(PayPalTransactionConfirmPresentation presentation) {
+            this.presentation = ObjectHelper.checkNotNull(presentation, "presentation");
+            return this;
+        }
+
+        final PayPalTransactionConfirmPresenter build() {
+            BuilderChecker.create()
+                    .addPropertyNameIfMissing("recipient", ObjectHelper.isNull(this.recipient))
+                    .addPropertyNameIfMissing("productManager", ObjectHelper.isNull(this.productManager))
+                    .addPropertyNameIfMissing("api", ObjectHelper.isNull(this.api))
+                    .addPropertyNameIfMissing("stringMapper", ObjectHelper.isNull(this.stringMapper))
+                    .addPropertyNameIfMissing("alertManager", ObjectHelper.isNull(this.alertManager))
+                    .addPropertyNameIfMissing("takeoverLoader", ObjectHelper.isNull(this.takeoverLoader))
+                    .addPropertyNameIfMissing("presentation", ObjectHelper.isNull(this.presentation))
+                    .checkNoMissingProperties();
+            return new PayPalTransactionConfirmPresenter(this);
+        }
+    }
 }
