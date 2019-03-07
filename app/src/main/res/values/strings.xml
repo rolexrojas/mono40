@@ -104,12 +104,12 @@
 
     <!-- [main/transaction/insurance/micro] -->
     <string name="main_transaction_insurance_micro">Microseguros</string>
-    <string name="main_transaction_insurance_micro_confirm_message">Comprar póliza %1$s con prima de %2$s.</string>
+    <string name="main_transaction_insurance_micro_confirm_message">Comprar póliza %1$s con prima de %2$s\nImp. DGII %3$s RD$%4$s.</string>
 
     <!-- [main/transaction/pay-pal] -->
     <string name="main_transaction_pay_pal_summary">Recargar %1$s a %2$s más cargo de %3$s.</string>
     <string name="main_transaction_pay_pal_rate">Tasa de cambio: %1$s</string>
-    <string name="main_transaction_pay_pal_total">Monto total: %1$s</string>
+    <string name="main_transaction_pay_pal_total">Monto total: %1$s\nImp. DGII %2$s RD$%3$s</string>
 
     <!-- [START] disburse/product -->
     <string name="disburse_product_amount_incorrect_value">El monto a desembolsar debe ser mayor o igual que %1$s y menor o igual que %2$s.</string>
@@ -225,7 +225,7 @@
     <string name="format_remove">Eliminar %1$s</string>
     <string name="format_transaction_confirmation_message_phone_number">¿Le gustaría guardar y apodar a %1$s para usarlo más fácil en el futuro?</string>
     <string name="format_transaction_title">%1$s a %2$s</string>
-    <string name="format_transfer_to">Transferir %1$s a %2$s, más cargo de %3$s.</string>
+    <string name="format_transfer_to">Transferir %1$s a %2$s, más cargo de %3$s.\nImp. DGII %4$s RD$%5$s</string>
     <string name="go_to_accounts">Ver cuentas</string>
     <string name="help">Ayuda</string>
     <string name="norootdevices">Este equipo no cumple con los niveles de seguridad requeridos.</string>
@@ -380,8 +380,9 @@
     <string name="transaction_creation.text.widget.amount.value.font">@string/font_gothamRounded_light</string>
     <string name="transaction_creation.title">Transacción con %1$s</string>
     <string name="capture_bank_continue">Continuar con  1 banco</string>
-    <string name="transaction_creation_bill_confirmation">Pago de %1$s a %2$s</string>
+    <string name="transaction_creation_bill_confirmation">Pago de %1$s a %2$s\nImp. DGII %3$s RD$%4$s</string>
     <string name="transaction_creation_title_bill">Pago a %1$s</string>
+    <string name="transaction_creation_dgii_tax">Imp. DGII %1$s% RD$%2$s</string>
     <string name="transfer">Transferir</string>
     <string name="tutorial_tab_label_description_01">Envia dinero o recargas minutos a tu familia y amigos. ¡Además pagas facturas en segundos!</string>
     <string name="tutorial_tab_label_description_02">Toca arriba para agregar amigos. Utiliza tus contactos para agregar a las personas más rapido.</string>

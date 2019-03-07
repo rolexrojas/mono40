@@ -13,14 +13,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.tpago.movil.R;
 import com.tpago.movil.company.Company;
 import com.tpago.movil.company.CompanyHelper;
 import com.tpago.movil.company.bank.Bank;
-import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase;
-import com.tpago.movil.dep.api.DCurrencies;
-import com.tpago.movil.d.domain.AccountRecipient;
-import com.tpago.movil.R;
 import com.tpago.movil.d.data.Formatter;
+import com.tpago.movil.d.domain.AccountRecipient;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Recipient;
@@ -29,8 +27,10 @@ import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
+import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
+import com.tpago.movil.dep.api.DCurrencies;
 import com.tpago.movil.dep.text.Texts;
 import com.tpago.movil.dep.widget.FullSizeLoadIndicator;
 import com.tpago.movil.dep.widget.Keyboard;
@@ -59,261 +59,270 @@ import timber.log.Timber;
  * @author hecvasro
  */
 public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
-  ChildFragment<TransactionCreationContainer> {
+        ChildFragment<TransactionCreationContainer> {
 
-  private Unbinder unbinder;
+    private Unbinder unbinder;
 
-  private LoadIndicator loadIndicator;
+    private LoadIndicator loadIndicator;
 
-  private Subscription checkSubscription = Subscriptions.unsubscribed();
-  private Subscription transferSubscription = Subscriptions.unsubscribed();
-  private TransactionCreationActivityBase activity;
+    private Subscription checkSubscription = Subscriptions.unsubscribed();
+    private Subscription transferSubscription = Subscriptions.unsubscribed();
+    private TransactionCreationActivityBase activity;
 
-  @Inject
-  DepApiBridge apiBridge;
-  @Inject
-  Recipient recipient;
-  @Inject
-  AtomicReference<Product> fundingAccount;
-  @Inject
-  AtomicReference<BigDecimal> value;
-  @Inject
-  CompanyHelper companyHelper;
+    @Inject
+    DepApiBridge apiBridge;
+    @Inject
+    Recipient recipient;
+    @Inject
+    AtomicReference<Product> fundingAccount;
+    @Inject
+    AtomicReference<BigDecimal> value;
+    @Inject
+    CompanyHelper companyHelper;
 
-  @BindView(R.id.image_view_background)
-  ImageView imageView;
-  @BindView(R.id.text_view)
-  TextView textView;
-  @BindView(R.id.text_input)
-  TextInput textInput;
-  @BindView(R.id.button)
-  Button button;
+    @BindView(R.id.image_view_background)
+    ImageView imageView;
+    @BindView(R.id.text_view)
+    TextView textView;
+    @BindView(R.id.text_input)
+    TextInput textInput;
+    @BindView(R.id.button)
+    Button button;
 
-  private void transferTo(String pin) {
-    transferSubscription = apiBridge.transferTo(
-      fundingAccount.get(),
-      recipient,
-      value.get(),
-      pin
-    )
-      .subscribeOn(Schedulers.io())
-      .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(new Action1<ApiResult<String>>() {
-        @Override
-        public void call(ApiResult<String> result) {
-          PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), result.isSuccessful());
-          if (result.isSuccessful()) {
-            getContainer().finish(true, result.getData());
-          } else {
+    private void transferTo(String pin) {
+        transferSubscription = apiBridge.transferTo(
+                fundingAccount.get(),
+                recipient,
+                value.get(),
+                pin
+        )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<ApiResult<String>>() {
+                    @Override
+                    public void call(ApiResult<String> result) {
+                        PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), result.isSuccessful());
+                        if (result.isSuccessful()) {
+                            getContainer().finish(true, result.getData());
+                        } else {
+                            Dialogs.builder(getContext())
+                                    .setTitle(R.string.error_generic_title)
+                                    .setMessage(result.getError()
+                                            .getDescription())
+                                    .setPositiveButton(R.string.error_positive_button_text, null)
+                                    .create()
+                                    .show();
+                        }
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Timber.e(throwable, "Transfer to a non affiliated recipient");
+                        PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), false);
+                        Dialogs.builder(getContext())
+                                .setTitle(R.string.error_generic_title)
+                                .setMessage(R.string.error_generic)
+                                .setPositiveButton(R.string.error_positive_button_text, null)
+                                .create()
+                                .show();
+                    }
+                });
+    }
+
+    private String selectLabelToShow(String recipientName, String content, String recipientNumber) {
+        if (!StringHelper.isNullOrEmpty(recipientName)) {
+            return recipientName;
+        }
+
+        if (!StringHelper.isNullOrEmpty(content)) {
+            return content;
+        }
+
+        return recipientNumber;
+    }
+
+    @OnClick(R.id.button)
+    final void onButtonClicked() {
+        final String content = textInput.getText()
+                .toString()
+                .trim();
+        if (Texts.checkIfEmpty(content)) {
             Dialogs.builder(getContext())
-              .setTitle(R.string.error_generic_title)
-              .setMessage(result.getError()
-                .getDescription())
-              .setPositiveButton(R.string.error_positive_button_text, null)
-              .create()
-              .show();
-          }
-        }
-      }, new Action1<Throwable>() {
-        @Override
-        public void call(Throwable throwable) {
-          Timber.e(throwable, "Transfer to a non affiliated recipient");
-          PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), false);
-          Dialogs.builder(getContext())
-            .setTitle(R.string.error_generic_title)
-            .setMessage(R.string.error_generic)
-            .setPositiveButton(R.string.error_positive_button_text, null)
-            .create()
-            .show();
-        }
-      });
-  }
-
-  private String selectLabelToShow(String recipientName, String content, String recipientNumber){
-    if(!StringHelper.isNullOrEmpty(recipientName)){
-      return recipientName;
-    }
-
-    if(!StringHelper.isNullOrEmpty(content)){
-      return content;
-    }
-
-    return recipientNumber;
-  }
-  @OnClick(R.id.button)
-  final void onButtonClicked() {
-    final String content = textInput.getText()
-      .toString()
-      .trim();
-    if (Texts.checkIfEmpty(content)) {
-      Dialogs.builder(getContext())
-        .setTitle("Número de cuenta incorrecto")
-        .setMessage("El número de cuenta es requerido para la transferencia.")
-        .setPositiveButton(R.string.ok, null)
-        .create()
-        .show();
-      textInput.setErraticStateEnabled(true);
-    } else {
-      final Bank bank;
-      if (recipient instanceof AccountRecipient) {
-        bank = ((AccountRecipient) recipient).bank();
-      } else {
-        bank = ((NonAffiliatedPhoneNumberRecipient) recipient).getBank();
-      }
-      checkSubscription = apiBridge.checkAccountNumber(bank, content, recipient.getNonAffiliateType())
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe(this.loadIndicator::start)
-        .subscribe(result -> {
-          loadIndicator.stop();
-          if (result.isSuccessful()) {
-            final Pair<String, Product> data = result.getData();
-            activity.setRecipientName(data.first);
+                    .setTitle("Número de cuenta incorrecto")
+                    .setMessage("El número de cuenta es requerido para la transferencia.")
+                    .setPositiveButton(R.string.ok, null)
+                    .create()
+                    .show();
+            textInput.setErraticStateEnabled(true);
+        } else {
+            final Bank bank;
             if (recipient instanceof AccountRecipient) {
-              final AccountRecipient r = (AccountRecipient) recipient;
-              r.setLabel(data.first);
-              r.product(data.second);
-              r.number(content);
+                bank = ((AccountRecipient) recipient).bank();
             } else {
-              final NonAffiliatedPhoneNumberRecipient r
-                = (NonAffiliatedPhoneNumberRecipient) recipient;
-              r.setLabel(data.first);
-              r.setProduct(data.second);
-              r.setAccountNumber(content);
+                bank = ((NonAffiliatedPhoneNumberRecipient) recipient).getBank();
             }
-            final int x = Math.round((button.getRight() - button.getLeft()) / 2);
-            final int y = Math.round((button.getBottom() - button.getTop()) / 2);
-            PinConfirmationDialogFragment.show(
-              getChildFragmentManager(),
-              getString(
-                R.string.format_transfer_to,
-                Formatter
-                  .amount(DCurrencies.map(fundingAccount.get()
-                    .getCurrency()), value.get()),
-                selectLabelToShow(data.first, content, recipient.getIdentifier()),
-                Formatter.amount(
-                  DCurrencies.map(fundingAccount.get()
-                    .getCurrency()),
-                  fundingAccount.get()
-                    .getBank()
-                    .calculateTransferCost(value.get())
+            checkSubscription = apiBridge.checkAccountNumber(bank, content, recipient.getNonAffiliateType())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(this.loadIndicator::start)
+                    .subscribe(result -> {
+                        loadIndicator.stop();
+                        if (result.isSuccessful()) {
+                            final Pair<String, Product> data = result.getData();
+                            activity.setRecipientName(data.first);
+                            if (recipient instanceof AccountRecipient) {
+                                final AccountRecipient r = (AccountRecipient) recipient;
+                                r.setLabel(data.first);
+                                r.product(data.second);
+                                r.number(content);
+                            } else {
+                                final NonAffiliatedPhoneNumberRecipient r
+                                        = (NonAffiliatedPhoneNumberRecipient) recipient;
+                                r.setLabel(data.first);
+                                r.setProduct(data.second);
+                                r.setAccountNumber(content);
+                            }
+                            final int x = Math.round((button.getRight() - button.getLeft()) / 2);
+                            final int y = Math.round((button.getBottom() - button.getTop()) / 2);
+
+
+                            final double taxPercentage = 0.15;
+                            double taxAmount = value.get().doubleValue() * (taxPercentage / 100);
+                            String taxAmountText = Formatter.amount("RD", new BigDecimal(taxAmount));
+
+                            PinConfirmationDialogFragment.show(
+                                    getChildFragmentManager(),
+                                    getString(
+                                            R.string.format_transfer_to,
+                                            Formatter
+                                                    .amount(DCurrencies.map(fundingAccount.get()
+                                                            .getCurrency()), value.get()),
+                                            selectLabelToShow(data.first, content, recipient.getIdentifier()),
+                                            Formatter.amount(
+                                                    DCurrencies.map(fundingAccount.get()
+                                                            .getCurrency()),
+                                                    fundingAccount.get()
+                                                            .getBank()
+                                                            .calculateTransferCost(value.get())
+                                            ),
+                                            taxPercentage + "%",
+                                            taxAmountText
+                                    ),
+                                    (PinConfirmationDialogFragment.Callback) pin -> transferTo(pin),
+                                    x,
+                                    y
+                            );
+                        } else {
+                            Dialogs.builder(getContext())
+                                    .setTitle(R.string.error_generic_title)
+                                    .setMessage(result.getError()
+                                            .getDescription())
+                                    .setPositiveButton(R.string.error_positive_button_text, null)
+                                    .create()
+                                    .show();
+                        }
+                    }, throwable -> {
+                        Timber.e(throwable, "");
+                        loadIndicator.stop();
+                        Dialogs.builder(getContext())
+                                .setTitle(R.string.error_generic_title)
+                                .setMessage(R.string.error_generic)
+                                .setPositiveButton(R.string.error_positive_button_text, null)
+                                .create()
+                                .show();
+                    });
+        }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        final TransactionCreationComponent c = getContainer().getComponent();
+        if (ObjectHelper.isNotNull(c)) {
+            c.inject(this);
+        }
+        activity = (TransactionCreationActivityBase) getActivity();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(
+            LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState
+    ) {
+        return inflater.inflate(
+                R.layout.d_fragment_non_affiliated_phone_number_transaction_creation_2,
+                container,
+                false
+        );
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        unbinder = ButterKnife.bind(this, view);
+        loadIndicator = new FullSizeLoadIndicator(getChildFragmentManager());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        final Bank bank;
+        final String number;
+        if (recipient instanceof AccountRecipient) {
+            final AccountRecipient r = (AccountRecipient) recipient;
+
+            bank = r.bank();
+            number = r.number();
+        } else {
+            final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) recipient;
+
+            bank = r.getBank();
+            number = r.getAccountNumber();
+        }
+
+        Picasso.with(getContext())
+                .load(this.companyHelper.getLogoUri(bank, Company.LogoStyle.COLORED_24))
+                .noFade()
+                .into(imageView);
+
+        this.textView.setText(
+                this.getString(
+                        R.string.accountNumberConfirmationMessage,
+                        this.getString(StringHelper.isNullOrEmpty(number) ? R.string.input : R.string.confirm),
+                        bank.name()
                 )
-              ),
-                (PinConfirmationDialogFragment.Callback) pin -> transferTo(pin),
-              x,
-              y
-            );
-          } else {
-            Dialogs.builder(getContext())
-              .setTitle(R.string.error_generic_title)
-              .setMessage(result.getError()
-                .getDescription())
-              .setPositiveButton(R.string.error_positive_button_text, null)
-              .create()
-              .show();
-          }
-        }, throwable -> {
-          Timber.e(throwable, "");
-          loadIndicator.stop();
-          Dialogs.builder(getContext())
-            .setTitle(R.string.error_generic_title)
-            .setMessage(R.string.error_generic)
-            .setPositiveButton(R.string.error_positive_button_text, null)
-            .create()
-            .show();
+        );
+
+        Keyboard.show(this.textInput);
+
+        this.textInput.setText(number);
+        this.textInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    onButtonClicked();
+                }
+                return false;
+            }
         });
     }
-  }
 
-  @Override
-  public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    final TransactionCreationComponent c = getContainer().getComponent();
-    if (ObjectHelper.isNotNull(c)) {
-      c.inject(this);
-    }
-    activity = (TransactionCreationActivityBase) getActivity();
-  }
-
-  @Nullable
-  @Override
-  public View onCreateView(
-    LayoutInflater inflater,
-    @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState
-  ) {
-    return inflater.inflate(
-      R.layout.d_fragment_non_affiliated_phone_number_transaction_creation_2,
-      container,
-      false
-    );
-  }
-
-  @Override
-  public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    unbinder = ButterKnife.bind(this, view);
-    loadIndicator = new FullSizeLoadIndicator(getChildFragmentManager());
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
-    final Bank bank;
-    final String number;
-    if (recipient instanceof AccountRecipient) {
-      final AccountRecipient r = (AccountRecipient) recipient;
-
-      bank = r.bank();
-      number = r.number();
-    } else {
-      final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) recipient;
-
-      bank = r.getBank();
-      number = r.getAccountNumber();
-    }
-
-    Picasso.with(getContext())
-      .load(this.companyHelper.getLogoUri(bank, Company.LogoStyle.COLORED_24))
-      .noFade()
-      .into(imageView);
-
-    this.textView.setText(
-      this.getString(
-        R.string.accountNumberConfirmationMessage,
-        this.getString(StringHelper.isNullOrEmpty(number) ? R.string.input : R.string.confirm),
-        bank.name()
-      )
-    );
-
-    Keyboard.show(this.textInput);
-
-    this.textInput.setText(number);
-    this.textInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-      @Override
-      public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_DONE) {
-          onButtonClicked();
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (!transferSubscription.isUnsubscribed()) {
+            transferSubscription.unsubscribe();
         }
-        return false;
-      }
-    });
-  }
-
-  @Override
-  public void onPause() {
-    super.onPause();
-    if (!transferSubscription.isUnsubscribed()) {
-      transferSubscription.unsubscribe();
+        if (!checkSubscription.isUnsubscribed()) {
+            checkSubscription.unsubscribe();
+        }
     }
-    if (!checkSubscription.isUnsubscribed()) {
-      checkSubscription.unsubscribe();
-    }
-  }
 
-  @Override
-  public void onDestroyView() {
-    super.onDestroyView();
-    unbinder.unbind();
-  }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 }

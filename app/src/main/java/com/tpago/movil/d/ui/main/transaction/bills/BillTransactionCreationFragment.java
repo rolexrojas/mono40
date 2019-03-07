@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tpago.movil.R;
+import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.Product;
@@ -23,6 +24,7 @@ import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
 import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
 import com.tpago.movil.util.UiUtil;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -37,194 +39,203 @@ import butterknife.Unbinder;
  */
 
 public class BillTransactionCreationFragment extends ChildFragment<TransactionCreationContainer>
-  implements BillTransactionCreationPresenter.View {
+        implements BillTransactionCreationPresenter.View {
 
-  private BillTransactionCreationPresenter presenter;
+    private BillTransactionCreationPresenter presenter;
 
-  private Unbinder unbinder;
+    private Unbinder unbinder;
 
-  @Inject StringHelper stringHelper;
+    @Inject
+    StringHelper stringHelper;
 
-  @BindView(R.id.button) Button button;
-  @BindView(R.id.payment_method_chooser) PaymentMethodChooser paymentMethodChooser;
-  @BindView(R.id.prefixable_text_view_minimum) PrefixableTextView minimumPrefixableTextView;
-  @BindView(R.id.prefixable_text_view_total) PrefixableTextView totalPrefixableTextView;
-  @BindView(R.id.prefixable_text_view_total_owed) PrefixableTextView totalOwedPrefixableTextView;
-  @BindView(R.id.radio_button_pay_minimum) RadioButton minimumRadioButton;
-  @BindView(R.id.radio_button_pay_total) RadioButton totalRadioButton;
-  @BindView(R.id.text_view_due_date) TextView dueDateTextView;
-  @BindView(R.id.view_minimum) View minimumView;
-  @BindView(R.id.view_total) View totalView;
+    @BindView(R.id.button)
+    Button button;
+    @BindView(R.id.payment_method_chooser)
+    PaymentMethodChooser paymentMethodChooser;
+    @BindView(R.id.prefixable_text_view_minimum)
+    PrefixableTextView minimumPrefixableTextView;
+    @BindView(R.id.prefixable_text_view_total)
+    PrefixableTextView totalPrefixableTextView;
+    @BindView(R.id.prefixable_text_view_total_owed)
+    PrefixableTextView totalOwedPrefixableTextView;
+    @BindView(R.id.radio_button_pay_minimum)
+    RadioButton minimumRadioButton;
+    @BindView(R.id.radio_button_pay_total)
+    RadioButton totalRadioButton;
+    @BindView(R.id.text_view_due_date)
+    TextView dueDateTextView;
+    @BindView(R.id.view_minimum)
+    View minimumView;
+    @BindView(R.id.view_total)
+    View totalView;
 
-  public static BillTransactionCreationFragment create() {
-    return new BillTransactionCreationFragment();
-  }
-
-  @OnClick(R.id.view_total)
-  void onPayTotalButtonClicked() {
-    presenter.onOptionSelectionChanged(BillRecipient.Option.TOTAL);
-  }
-
-  @OnClick(R.id.view_minimum)
-  void onPayMinimumButtonClicked() {
-    presenter.onOptionSelectionChanged(BillRecipient.Option.MINIMUM);
-  }
-
-  @OnClick(R.id.button)
-  void onPayButtonClicked() {
-    presenter.onPayButtonClicked();
-  }
-
-  @Override
-  public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    final TransactionCreationContainer container = getContainer();
-    final TransactionCreationComponent component = container.getComponent();
-    component.inject(this);
-    presenter = new BillTransactionCreationPresenter(this, component);
-  }
-
-  @Nullable
-  @Override
-  public View onCreateView(
-    LayoutInflater inflater,
-    @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState
-  ) {
-    return inflater.inflate(R.layout.d_fragment_transaction_creation_bill, container, false);
-  }
-
-  @Override
-  public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    unbinder = ButterKnife.bind(this, view);
-  }
-
-  @Override
-  public void onStart() {
-    super.onStart();
-    presenter.onViewStarted();
-  }
-
-  @Override
-  public void onStop() {
-    super.onStop();
-    presenter.onViewStopped();
-  }
-
-  @Override
-  public void onDestroyView() {
-    super.onDestroyView();
-    unbinder.unbind();
-  }
-
-  @Override
-  public void onDestroy() {
-    super.onDestroy();
-    presenter = null;
-  }
-
-  @Override
-  public void setCurrencyValue(String value) {
-    totalOwedPrefixableTextView.setPrefix(value);
-    totalPrefixableTextView.setPrefix(value);
-    minimumPrefixableTextView.setPrefix(value);
-  }
-
-  @Override
-  public void setDueDateValue(String value) {
-    dueDateTextView.setText(value);
-  }
-
-  @Override
-  public void setTotalValue(String value) {
-    totalOwedPrefixableTextView.setContent(value);
-    totalPrefixableTextView.setContent(value);
-  }
-
-  @Override
-  public void setTotalValueEnabled(boolean enabled) {
-    this.totalRadioButton.setEnabled(enabled);
-    this.totalView.setEnabled(enabled);
-  }
-
-  @Override
-  public void setMinimumValue(String value) {
-    minimumPrefixableTextView.setContent(value);
-  }
-
-  @Override
-  public void setMinimumValueEnabled(boolean enabled) {
-    this.minimumRadioButton.setEnabled(enabled);
-    this.minimumView.setEnabled(enabled);
-  }
-
-  @Override
-  public void setPaymentOptions(List<Product> paymentOptionList) {
-    paymentMethodChooser.setPaymentMethodList(paymentOptionList);
-  }
-
-  @Override
-  public void setOptionChecked(BillRecipient.Option option) {
-    if (option.equals(BillRecipient.Option.TOTAL)) {
-      minimumRadioButton.setChecked(false);
-      totalRadioButton.setChecked(true);
-      button.setText(R.string.pay_total);
-    } else {
-      totalRadioButton.setChecked(false);
-      minimumRadioButton.setChecked(true);
-      button.setText(R.string.pay_minimum);
+    public static BillTransactionCreationFragment create() {
+        return new BillTransactionCreationFragment();
     }
-  }
 
-  @Override
-  public void setPayButtonEnabled(boolean enabled) {
-    UiUtil.setEnabled(button, enabled);
-  }
+    @OnClick(R.id.view_total)
+    void onPayTotalButtonClicked() {
+        presenter.onOptionSelectionChanged(BillRecipient.Option.TOTAL);
+    }
 
-  @Override
-  public void requestPin(String partnerName, String value) {
-    final int x = Math.round((button.getRight() - button.getLeft()) / 2);
-    final int y = Math.round(button.getY() + ((button.getBottom() - button.getTop()) / 2));
-    PinConfirmationDialogFragment.show(
-      getChildFragmentManager(),
-      getString(R.string.transaction_creation_bill_confirmation, value, partnerName),
-      new PinConfirmationDialogFragment.Callback() {
-        @Override
-        public void confirm(String pin) {
-          presenter.onPinRequestFinished(paymentMethodChooser.getSelectedItem(), pin);
+    @OnClick(R.id.view_minimum)
+    void onPayMinimumButtonClicked() {
+        presenter.onOptionSelectionChanged(BillRecipient.Option.MINIMUM);
+    }
+
+    @OnClick(R.id.button)
+    void onPayButtonClicked() {
+        presenter.onPayButtonClicked();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        final TransactionCreationContainer container = getContainer();
+        final TransactionCreationComponent component = container.getComponent();
+        component.inject(this);
+        presenter = new BillTransactionCreationPresenter(this, component);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(
+            LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState
+    ) {
+        return inflater.inflate(R.layout.d_fragment_transaction_creation_bill, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        unbinder = ButterKnife.bind(this, view);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        presenter.onViewStarted();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        presenter.onViewStopped();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter = null;
+    }
+
+    @Override
+    public void setCurrencyValue(String value) {
+        totalOwedPrefixableTextView.setPrefix(value);
+        totalPrefixableTextView.setPrefix(value);
+        minimumPrefixableTextView.setPrefix(value);
+    }
+
+    @Override
+    public void setDueDateValue(String value) {
+        dueDateTextView.setText(value);
+    }
+
+    @Override
+    public void setTotalValue(String value) {
+        totalOwedPrefixableTextView.setContent(value);
+        totalPrefixableTextView.setContent(value);
+    }
+
+    @Override
+    public void setTotalValueEnabled(boolean enabled) {
+        this.totalRadioButton.setEnabled(enabled);
+        this.totalView.setEnabled(enabled);
+    }
+
+    @Override
+    public void setMinimumValue(String value) {
+        minimumPrefixableTextView.setContent(value);
+    }
+
+    @Override
+    public void setMinimumValueEnabled(boolean enabled) {
+        this.minimumRadioButton.setEnabled(enabled);
+        this.minimumView.setEnabled(enabled);
+    }
+
+    @Override
+    public void setPaymentOptions(List<Product> paymentOptionList) {
+        paymentMethodChooser.setPaymentMethodList(paymentOptionList);
+    }
+
+    @Override
+    public void setOptionChecked(BillRecipient.Option option) {
+        if (option.equals(BillRecipient.Option.TOTAL)) {
+            minimumRadioButton.setChecked(false);
+            totalRadioButton.setChecked(true);
+            button.setText(R.string.pay_total);
+        } else {
+            totalRadioButton.setChecked(false);
+            minimumRadioButton.setChecked(true);
+            button.setText(R.string.pay_minimum);
         }
-      },
-      x,
-      y
-    );
-  }
-
-  @Override
-  public void setPaymentResult(boolean succeeded, String message) {
-    PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), succeeded);
-    if (succeeded) {
-      getContainer().finish(true, message);
     }
-  }
 
-  @Override
-  public void showGenericErrorDialog(String message) {
-    Dialogs.builder(getContext())
-      .setTitle(R.string.error_generic_title)
-      .setMessage(message)
-      .setPositiveButton(R.string.error_positive_button_text, null)
-      .show();
-  }
+    @Override
+    public void setPayButtonEnabled(boolean enabled) {
+        UiUtil.setEnabled(button, enabled);
+    }
 
-  @Override
-  public void showGenericErrorDialog() {
-    showGenericErrorDialog(getString(R.string.error_generic));
-  }
+    @Override
+    public void requestPin(String partnerName, String value, BigDecimal inputAmount) {
+        final int x = Math.round((button.getRight() - button.getLeft()) / 2);
+        final int y = Math.round(button.getY() + ((button.getBottom() - button.getTop()) / 2));
+        final double taxPercentage = 0.15;
+        double taxAmount = inputAmount.doubleValue() * (taxPercentage / 100);
+        String taxAmountText = Formatter.amount("RD", new BigDecimal(taxAmount));
+        PinConfirmationDialogFragment.show(
+                getChildFragmentManager(),
+                getString(R.string.transaction_creation_bill_confirmation, value, partnerName, taxPercentage + "%", taxAmountText),
+                (PinConfirmationDialogFragment.Callback) pin -> presenter.onPinRequestFinished(paymentMethodChooser.getSelectedItem(), pin),
+                x,
+                y
+        );
+    }
 
-  @Override
-  public void showUnavailableNetworkError() {
-    Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG)
-      .show();
-  }
+    @Override
+    public void setPaymentResult(boolean succeeded, String message) {
+        PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), succeeded);
+        if (succeeded) {
+            getContainer().finish(true, message);
+        }
+    }
+
+    @Override
+    public void showGenericErrorDialog(String message) {
+        Dialogs.builder(getContext())
+                .setTitle(R.string.error_generic_title)
+                .setMessage(message)
+                .setPositiveButton(R.string.error_positive_button_text, null)
+                .show();
+    }
+
+    @Override
+    public void showGenericErrorDialog() {
+        showGenericErrorDialog(getString(R.string.error_generic));
+    }
+
+    @Override
+    public void showUnavailableNetworkError() {
+        Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG)
+                .show();
+    }
 }
