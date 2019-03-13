@@ -12,36 +12,32 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-
 import com.squareup.picasso.Picasso;
+import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.R;
+import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.company.Company;
 import com.tpago.movil.company.CompanyHelper;
 import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.company.partner.PartnerStore;
-import com.tpago.movil.PhoneNumber;
-import com.tpago.movil.R;
-import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase;
-import com.tpago.movil.dep.api.DCurrencies;
-import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.UserRecipient;
-import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment.Callback;
+import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
+import com.tpago.movil.util.TaxUtil;
+import com.tpago.movil.util.TransactionType;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.math.BigDecimal;
@@ -51,9 +47,11 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
@@ -63,280 +61,272 @@ import timber.log.Timber;
  */
 public final class CarrierSelectionFragment extends ChildFragment<TransactionCreationContainer> {
 
-  static CarrierSelectionFragment create() {
-    return new CarrierSelectionFragment();
-  }
-
-  private Unbinder unbinder;
-
-  private Adapter adapter = new Adapter();
-  private List<Partner> carriers;
-  private TransactionCreationActivityBase activity;
-
-  private Subscription rechargeSubscription = Subscriptions.unsubscribed();
-
-  @Inject AtomicReference<BigDecimal> value;
-  @Inject AtomicReference<Product> fundingAccount;
-  @Inject DepApiBridge apiBridge;
-  @Inject PartnerStore partnerStore;
-  @Inject Recipient recipient;
-  @Inject SessionManager sessionManager;
-  @Inject CompanyHelper companyHelper;
-
-  @BindView(R.id.swipe_refresh_layout)
-  SwipeRefreshLayout swipeRefreshLayout;
-  @BindView(R.id.recycler_view)
-  RecyclerView recyclerView;
-
-  private void recharge(String pin) {
-    final Partner carrier;
-    final PhoneNumber phoneNumber;
-    if (this.recipient instanceof UserRecipient) {
-      final UserRecipient r = (UserRecipient) this.recipient;
-
-      carrier = r.getCarrier();
-      phoneNumber = r.phoneNumber();
-    } else if (this.recipient instanceof NonAffiliatedPhoneNumberRecipient) {
-      final NonAffiliatedPhoneNumberRecipient r
-        = (NonAffiliatedPhoneNumberRecipient) this.recipient;
-
-      carrier = r.getCarrier();
-      phoneNumber = r.getPhoneNumber();
-    } else {
-      final PhoneNumberRecipient r = (PhoneNumberRecipient) this.recipient;
-
-      carrier = r.getCarrier();
-      phoneNumber = r.getPhoneNumber();
+    static CarrierSelectionFragment create() {
+        return new CarrierSelectionFragment();
     }
 
-    rechargeSubscription = this.apiBridge.recharge(
-      carrier,
-      phoneNumber,
-      this.fundingAccount.get(),
-      this.value.get(),
-      pin
-    )
-      .subscribeOn(Schedulers.io())
-      .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(new Action1<ApiResult<String>>() {
-        @Override
-        public void call(ApiResult<String> result) {
-          PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), result.isSuccessful());
+    private Unbinder unbinder;
 
-          if (result.isSuccessful()) {
-            getContainer()
-              .finish(true, result.getData());
-          } else {
-            Dialogs.builder(getContext())
-              .setTitle(R.string.error_generic_title)
-              .setMessage(
-                result.getError()
-                  .getDescription()
-              )
-              .setPositiveButton(
-                R.string.error_positive_button_text,
-                null
-              )
-              .create()
-              .show();
-          }
+    private Adapter adapter = new Adapter();
+    private List<Partner> carriers;
+    private TransactionCreationActivityBase activity;
+
+    private Subscription rechargeSubscription = Subscriptions.unsubscribed();
+
+    @Inject
+    AtomicReference<BigDecimal> value;
+    @Inject
+    AtomicReference<Product> fundingAccount;
+    @Inject
+    DepApiBridge apiBridge;
+    @Inject
+    PartnerStore partnerStore;
+    @Inject
+    Recipient recipient;
+    @Inject
+    SessionManager sessionManager;
+    @Inject
+    CompanyHelper companyHelper;
+    @Inject
+    StringMapper stringMapper;
+
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
+
+    private void recharge(String pin) {
+        final Partner carrier;
+        final PhoneNumber phoneNumber;
+        if (this.recipient instanceof UserRecipient) {
+            final UserRecipient r = (UserRecipient) this.recipient;
+
+            carrier = r.getCarrier();
+            phoneNumber = r.phoneNumber();
+        } else if (this.recipient instanceof NonAffiliatedPhoneNumberRecipient) {
+            final NonAffiliatedPhoneNumberRecipient r
+                    = (NonAffiliatedPhoneNumberRecipient) this.recipient;
+
+            carrier = r.getCarrier();
+            phoneNumber = r.getPhoneNumber();
+        } else {
+            final PhoneNumberRecipient r = (PhoneNumberRecipient) this.recipient;
+
+            carrier = r.getCarrier();
+            phoneNumber = r.getPhoneNumber();
         }
-      }, new Action1<Throwable>() {
-        @Override
-        public void call(Throwable throwable) {
-          Timber.e(throwable);
 
-          PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), false);
+        rechargeSubscription = this.apiBridge.recharge(
+                carrier,
+                phoneNumber,
+                this.fundingAccount.get(),
+                this.value.get(),
+                pin
+        )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                    PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), result.isSuccessful());
 
-          Dialogs.builder(getContext())
-            .setTitle(R.string.error_generic_title)
-            .setMessage(R.string.error_generic)
-            .setPositiveButton(R.string.error_positive_button_text, null)
-            .create()
-            .show();
+                    if (result.isSuccessful()) {
+                        getContainer()
+                                .finish(true, result.getData());
+                    } else {
+                        Dialogs.builder(getContext())
+                                .setTitle(R.string.error_generic_title)
+                                .setMessage(
+                                        result.getError()
+                                                .getDescription()
+                                )
+                                .setPositiveButton(
+                                        R.string.error_positive_button_text,
+                                        null
+                                )
+                                .create()
+                                .show();
+                    }
+                }, throwable -> {
+                    Timber.e(throwable);
+
+                    PinConfirmationDialogFragment.dismiss(getChildFragmentManager(), false);
+
+                    Dialogs.builder(getContext())
+                            .setTitle(R.string.error_generic_title)
+                            .setMessage(R.string.error_generic)
+                            .setPositiveButton(R.string.error_positive_button_text, null)
+                            .create()
+                            .show();
+                });
+    }
+
+    private String selectLabelToShow(String recipientName, String recipientLabel, String phoneNumber) {
+        if (!StringHelper.isNullOrEmpty(recipientName)) {
+            return recipientName;
         }
-      });
-  }
 
-  private String selectLabelToShow(String recipientName, String recipientLabel, String phoneNumber){
-    if(!StringHelper.isNullOrEmpty(recipientName)){
-      return recipientName;
-    }
+        if (!StringHelper.isNullOrEmpty(recipientLabel)) {
+            return recipientLabel;
+        }
 
-    if(!StringHelper.isNullOrEmpty(recipientLabel)){
-      return recipientLabel;
-    }
-
-    return phoneNumber;
-  }
-
-  @Override
-  public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    final TransactionCreationComponent c = getContainer().getComponent();
-    if (ObjectHelper.isNotNull(c)) {
-      c.inject(this);
-    }
-  }
-
-  @Nullable
-  @Override
-  public View onCreateView(
-    LayoutInflater inflater,
-    @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState
-  ) {
-    return inflater.inflate(
-      R.layout.carrier_selection_fragment,
-      container,
-      false
-    );
-  }
-
-
-  @Override
-  public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    unbinder = ButterKnife.bind(this, view);
-    swipeRefreshLayout.setEnabled(false);
-    adapter = new Adapter();
-    recyclerView.setAdapter(adapter);
-    final Context context = getContext();
-    recyclerView.setLayoutManager(new LinearLayoutManager(
-      context,
-      LinearLayoutManager.VERTICAL,
-      false
-    ));
-    final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
-      .drawable(R.drawable.divider_line_horizontal)
-      .marginResId(R.dimen.space_horizontal_20)
-      .showLastDivider()
-      .build();
-    recyclerView.addItemDecoration(divider);
-
-    activity = (TransactionCreationActivityBase) getActivity();
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
-    if (ObjectHelper.isNull(this.carriers)) {
-      this.carriers = this.partnerStore.getCarriers()
-        .defaultIfEmpty(new ArrayList<>())
-        .blockingGet();
-      this.adapter.notifyItemRangeInserted(0, this.carriers.size());
-    }
-  }
-
-  @Override
-  public void onPause() {
-    super.onPause();
-    if (!rechargeSubscription.isUnsubscribed()) {
-      rechargeSubscription.unsubscribe();
-    }
-  }
-
-  @Override
-  public void onDestroyView() {
-    super.onDestroyView();
-    unbinder.unbind();
-  }
-
-  final class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-    private ImageView imageView;
-    private TextView textView;
-
-    ViewHolder(View itemView) {
-      super(itemView);
-      itemView.setOnClickListener(this);
-      imageView = ButterKnife.findById(itemView, R.id.image_view_background);
-      textView = ButterKnife.findById(itemView, R.id.text_view);
+        return phoneNumber;
     }
 
     @Override
-    public void onClick(View v) {
-      final String phoneNumber;
-      final Partner p = carriers.get(this.getAdapterPosition());
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        final TransactionCreationComponent c = getContainer().getComponent();
+        if (ObjectHelper.isNotNull(c)) {
+            c.inject(this);
+        }
+    }
 
-      if (recipient instanceof UserRecipient) {
-        final UserRecipient r = (UserRecipient) recipient;
-        r.setCarrier(p);
+    @Nullable
+    @Override
+    public View onCreateView(
+            LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState
+    ) {
+        return inflater.inflate(
+                R.layout.carrier_selection_fragment,
+                container,
+                false
+        );
+    }
 
-        sessionManager.updateCarrier(p);
 
-        phoneNumber = r.phoneNumber()
-          .formattedValued();
-      } else if (recipient instanceof NonAffiliatedPhoneNumberRecipient) {
-        final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) recipient;
-        r.setCarrier(p);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        unbinder = ButterKnife.bind(this, view);
+        swipeRefreshLayout.setEnabled(false);
+        adapter = new Adapter();
+        recyclerView.setAdapter(adapter);
+        final Context context = getContext();
+        recyclerView.setLayoutManager(new LinearLayoutManager(
+                context,
+                LinearLayoutManager.VERTICAL,
+                false
+        ));
+        final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
+                .drawable(R.drawable.divider_line_horizontal)
+                .marginResId(R.dimen.space_horizontal_20)
+                .showLastDivider()
+                .build();
+        recyclerView.addItemDecoration(divider);
+
+        activity = (TransactionCreationActivityBase) getActivity();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (ObjectHelper.isNull(this.carriers)) {
+            this.carriers = this.partnerStore.getCarriers()
+                    .defaultIfEmpty(new ArrayList<>())
+                    .blockingGet();
+            this.adapter.notifyItemRangeInserted(0, this.carriers.size());
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (!rechargeSubscription.isUnsubscribed()) {
+            rechargeSubscription.unsubscribe();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    final class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        private ImageView imageView;
+        private TextView textView;
+
+        ViewHolder(View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(this);
+            imageView = ButterKnife.findById(itemView, R.id.image_view_background);
+            textView = ButterKnife.findById(itemView, R.id.text_view);
+        }
+
+        @Override
+        public void onClick(View v) {
+            final String phoneNumber;
+            final Partner p = carriers.get(this.getAdapterPosition());
+
+            if (recipient instanceof UserRecipient) {
+                final UserRecipient r = (UserRecipient) recipient;
+                r.setCarrier(p);
+
+                sessionManager.updateCarrier(p);
+
+                phoneNumber = r.phoneNumber()
+                        .formattedValued();
+            } else if (recipient instanceof NonAffiliatedPhoneNumberRecipient) {
+                final NonAffiliatedPhoneNumberRecipient r = (NonAffiliatedPhoneNumberRecipient) recipient;
+                r.setCarrier(p);
 
 //        recipientManager.update(recipient);
 
-        phoneNumber = r.getPhoneNumber()
-          .formattedValued();
-      } else {
-        final PhoneNumberRecipient r = (PhoneNumberRecipient) recipient;
-        r.setCarrier(p);
+                phoneNumber = r.getPhoneNumber()
+                        .formattedValued();
+            } else {
+                final PhoneNumberRecipient r = (PhoneNumberRecipient) recipient;
+                r.setCarrier(p);
 
 //        recipientManager.update(recipient);
 
-        phoneNumber = r.getPhoneNumber()
-          .formattedValued();
-      }
+                phoneNumber = r.getPhoneNumber()
+                        .formattedValued();
+            }
 
-      final String description = String.format(
-        "Recargar %1$s a %2$s",
-        Formatter.amount(
-          DCurrencies.map(
-            fundingAccount.get()
-              .getCurrency()
-          ),
-          value.get()
-        ),
-        selectLabelToShow(activity.getRecipientName(),recipient.getLabel(), recipient.getIdentifier())
-      );
-      final int x = Math.round((v.getRight() - v.getLeft()) / 2);
-      final int y = Math.round((v.getBottom() - v.getTop()) / 2);
+            final String description = TaxUtil.getConfirmPinTransactionMessage(
+                    TransactionType.RECHARGE, value.get().doubleValue(),
+                    fundingAccount.get(), selectLabelToShow(activity.getRecipientName(), recipient.getLabel(), recipient.getIdentifier()),
+                    fundingAccount.get().getCurrency(), "",
+                    stringMapper, 0, 0, 0, 0);
+            final int x = Math.round((v.getRight() - v.getLeft()) / 2);
+            final int y = Math.round((v.getBottom() - v.getTop()) / 2);
 
-      PinConfirmationDialogFragment.show(
-        getChildFragmentManager(),
-        description,
-        new Callback() {
-          @Override
-          public void confirm(String pin) {
-            recharge(pin);
-          }
-        },
-        x,
-        y
-      );
-    }
-  }
-
-  final class Adapter extends RecyclerView.Adapter<ViewHolder> {
-
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-      return new ViewHolder(
-        LayoutInflater.from(parent.getContext())
-          .inflate(R.layout.d_list_item_bank, parent, false)
-      );
+            PinConfirmationDialogFragment.show(
+                    getChildFragmentManager(),
+                    description,
+                    (Callback) pin -> recharge(pin),
+                    x,
+                    y
+            );
+        }
     }
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-      final Partner carrier = carriers.get(position);
+    final class Adapter extends RecyclerView.Adapter<ViewHolder> {
 
-      Picasso.with(getContext())
-        .load(companyHelper.getLogoUri(carrier, Company.LogoStyle.COLORED_24))
-        .into(holder.imageView);
-      holder.textView.setText(carrier.name());
-    }
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new ViewHolder(
+                    LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.d_list_item_bank, parent, false)
+            );
+        }
 
-    @Override
-    public int getItemCount() {
-      return carriers.size();
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            final Partner carrier = carriers.get(position);
+
+            Picasso.with(getContext())
+                    .load(companyHelper.getLogoUri(carrier, Company.LogoStyle.COLORED_24))
+                    .into(holder.imageView);
+            holder.textView.setText(carrier.name());
+        }
+
+        @Override
+        public int getItemCount() {
+            return carriers.size();
+        }
     }
-  }
 }

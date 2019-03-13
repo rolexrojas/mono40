@@ -116,4 +116,5 @@ public interface AppComponent {
 
   @Deprecated
   void inject(ChangePasswordFragment fragment);
+
 }

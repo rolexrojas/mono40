@@ -1,7 +1,6 @@
 package com.tpago.movil.app.ui.main.transaction.insurance.micro.purchase.confirm;
 
 import com.tpago.movil.Code;
-import com.tpago.movil.R;
 import com.tpago.movil.api.Api;
 import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.app.ui.Presenter;
@@ -9,7 +8,6 @@ import com.tpago.movil.app.ui.alert.AlertManager;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.app.ui.main.transaction.insurance.micro.purchase.MicroInsurancePurchase;
 import com.tpago.movil.app.ui.main.transaction.insurance.micro.purchase.MicroInsurancePurchaseComponent;
-import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.insurance.micro.MicroInsurancePartner;
@@ -20,8 +18,8 @@ import com.tpago.movil.util.FailureData;
 import com.tpago.movil.util.Money;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.Result;
-
-import java.math.BigDecimal;
+import com.tpago.movil.util.TaxUtil;
+import com.tpago.movil.util.TransactionType;
 
 import javax.inject.Inject;
 
@@ -99,17 +97,11 @@ public final class MicroInsurancePurchaseConfirmPresenter
         final MicroInsurancePlan.Request request = ObjectHelper
                 .checkNotNull(this.purchase.request(), "request");
 
-        final double taxPercentage = 0.15;
-        double taxAmount = request.premium().doubleValue() * (taxPercentage / 100);
-        String taxAmountText = Formatter.amount("RD", new BigDecimal(taxAmount));
 
-        this.presentation.requestPin(String.format(
-                this.stringMapper.apply(R.string.main_transaction_insurance_micro_confirm_message),
-                planData.name(),
-                Money.format(planData.currency(), request.premium()),
-                taxPercentage + "%",
-                taxAmountText
-        ));
+        this.presentation.requestPin(TaxUtil.getConfirmPinTransactionMessage(TransactionType.MICRO_INSURANCE,
+                0, paymentMethod, planData.name(), paymentMethod.getCurrency(), "",
+                stringMapper, 0, 0, 0, request.premium().doubleValue())
+        );
     }
 
     final void onPinInputted(Code pin) {
