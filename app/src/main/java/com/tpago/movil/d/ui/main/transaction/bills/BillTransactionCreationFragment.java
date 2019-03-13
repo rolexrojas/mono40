@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tpago.movil.R;
-import com.tpago.movil.d.data.Formatter;
+import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.BillRecipient;
 import com.tpago.movil.d.domain.Product;
@@ -22,6 +22,8 @@ import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
 import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
 import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
+import com.tpago.movil.util.TaxUtil;
+import com.tpago.movil.util.TransactionType;
 import com.tpago.movil.util.UiUtil;
 
 import java.math.BigDecimal;
@@ -68,6 +70,9 @@ public class BillTransactionCreationFragment extends ChildFragment<TransactionCr
     View minimumView;
     @BindView(R.id.view_total)
     View totalView;
+    private String currencyCode;
+    @Inject
+    StringMapper stringMapper;
 
     public static BillTransactionCreationFragment create() {
         return new BillTransactionCreationFragment();
@@ -142,6 +147,7 @@ public class BillTransactionCreationFragment extends ChildFragment<TransactionCr
         totalOwedPrefixableTextView.setPrefix(value);
         totalPrefixableTextView.setPrefix(value);
         minimumPrefixableTextView.setPrefix(value);
+        currencyCode = value;
     }
 
     @Override
@@ -199,12 +205,11 @@ public class BillTransactionCreationFragment extends ChildFragment<TransactionCr
     public void requestPin(String partnerName, String value, BigDecimal inputAmount) {
         final int x = Math.round((button.getRight() - button.getLeft()) / 2);
         final int y = Math.round(button.getY() + ((button.getBottom() - button.getTop()) / 2));
-        final double taxPercentage = 0.15;
-        double taxAmount = inputAmount.doubleValue() * (taxPercentage / 100);
-        String taxAmountText = Formatter.amount("RD", new BigDecimal(taxAmount));
+
         PinConfirmationDialogFragment.show(
                 getChildFragmentManager(),
-                getString(R.string.transaction_creation_bill_confirmation, value, partnerName, taxPercentage + "%", taxAmountText),
+                TaxUtil.getConfirmPinTransactionMessage(TransactionType.PAY, inputAmount.doubleValue(), paymentMethodChooser.getSelectedItem(),
+                        partnerName, currencyCode, "", stringMapper, 0, 0, 0, 0),
                 (PinConfirmationDialogFragment.Callback) pin -> presenter.onPinRequestFinished(paymentMethodChooser.getSelectedItem(), pin),
                 x,
                 y

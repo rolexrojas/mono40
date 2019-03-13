@@ -249,9 +249,7 @@ public final class OwnTransferActivity
                             currency,
                             this.fundingProduct.getBank()
                                     .calculateTransferCost(this.value)
-                    ),
-                    taxPercentage + "%",
-                    taxAmountText
+                    )
             );
             PinConfirmationDialogFragment.show(
                     this.getSupportFragmentManager(),
@@ -296,19 +294,16 @@ public final class OwnTransferActivity
         getSupportActionBar()
                 .setDisplayHomeAsUpEnabled(true);
 
-        this.toolbar.post(new Runnable() {
-            @Override
-            public void run() {
-                toolbar.setTitle("Transferir entre mis cuentas");
-                toolbar.setSubtitle(
-                        String.format(
-                                "Desde %1$s %2$s",
-                                fundingProduct.getBank()
-                                        .name(),
-                                fundingProduct.getNumberSanitized()
-                        )
-                );
-            }
+        this.toolbar.post(() -> {
+            toolbar.setTitle("Transferir entre mis cuentas");
+            toolbar.setSubtitle(
+                    String.format(
+                            "Desde %1$s %2$s",
+                            fundingProduct.getBank()
+                                    .name(),
+                            fundingProduct.getNumberSanitized()
+                    )
+            );
         });
 
         this.paymentMethodChooser.setOnPaymentMethodChosenListener(this);

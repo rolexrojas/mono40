@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.tpago.movil.R;
+import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.app.ui.DNumPad;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.data.StringHelper;
@@ -23,6 +24,8 @@ import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
 import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
 import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
+import com.tpago.movil.util.TaxUtil;
+import com.tpago.movil.util.TransactionType;
 import com.tpago.movil.util.function.Action;
 import com.tpago.movil.util.function.Consumer;
 
@@ -66,6 +69,8 @@ public class PhoneNumberTransactionCreationFragment
     AtomicReference<Product> fundingAccount;
     @Inject
     AtomicReference<BigDecimal> value;
+    @Inject
+    StringMapper stringMapper;
 
     private Unbinder unbinder;
 
@@ -282,33 +287,26 @@ public class PhoneNumberTransactionCreationFragment
             String label = selectLabelToShow(activity.getRecipientName(), recipient.getLabel(), recipient.getIdentifier());
             final String description;
 
-            final double taxPercentage = 0.15;
-            double taxAmount = value.get().doubleValue() * (taxPercentage / 100);
-            String taxAmountText = Formatter.amount("RD", new BigDecimal(taxAmount));
-
             if (transactionCategory == TRANSFER) {
-                description = getString(
-                        R.string.format_transfer_to,
-                        Formatter.amount(currency, value.get()),
-                        label,
-                        Formatter.amount(
+                description = TaxUtil.getConfirmPinTransactionMessage(
+                        TransactionType.TRANSFER, value.get().doubleValue(),
+                        paymentMethodChooser.getSelectedItem(), label, currency, Formatter.amount(
                                 currency,
-                                this.fundingAccount.get()
+                                paymentMethodChooser.getSelectedItem()
                                         .getBank()
                                         .calculateTransferCost(this.value.get())
                         ),
-                        taxPercentage + "%",
-                        taxAmountText
-                );
+                        stringMapper, 0, 0, 0, 0);
             } else {
-                description = String.format(
-                        "Recargar %1$s a %2$s\nImp. DGII %3$s RD$%4$s",
-                        Formatter.amount(
+                description = TaxUtil.getConfirmPinTransactionMessage(
+                        TransactionType.RECHARGE, value.get().doubleValue(),
+                        paymentMethodChooser.getSelectedItem(), label, currency, Formatter.amount(
                                 currency,
-                                value.get()
+                                paymentMethodChooser.getSelectedItem()
+                                        .getBank()
+                                        .calculateTransferCost(this.value.get())
                         ),
-                        label
-                );
+                        stringMapper, 0, 0, 0, 0);
             }
             PinConfirmationDialogFragment.show(
                     getChildFragmentManager(),

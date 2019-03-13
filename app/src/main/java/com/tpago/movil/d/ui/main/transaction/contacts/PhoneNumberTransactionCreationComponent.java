@@ -1,5 +1,6 @@
 package com.tpago.movil.d.ui.main.transaction.contacts;
 
+import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.app.ui.fragment.FragmentScope;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 

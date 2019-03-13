@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.R;
+import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.company.Company;
 import com.tpago.movil.company.CompanyHelper;
 import com.tpago.movil.company.bank.Bank;
@@ -38,6 +39,8 @@ import com.tpago.movil.dep.widget.LoadIndicator;
 import com.tpago.movil.dep.widget.TextInput;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
+import com.tpago.movil.util.TaxUtil;
+import com.tpago.movil.util.TransactionType;
 
 import java.math.BigDecimal;
 import java.util.concurrent.atomic.AtomicReference;
@@ -88,6 +91,8 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
     TextInput textInput;
     @BindView(R.id.button)
     Button button;
+    @Inject
+    StringMapper stringMapper;
 
     private void transferTo(String pin) {
         transferSubscription = apiBridge.transferTo(
@@ -186,28 +191,18 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
                             final int y = Math.round((button.getBottom() - button.getTop()) / 2);
 
 
-                            final double taxPercentage = 0.15;
-                            double taxAmount = value.get().doubleValue() * (taxPercentage / 100);
-                            String taxAmountText = Formatter.amount("RD", new BigDecimal(taxAmount));
-
                             PinConfirmationDialogFragment.show(
                                     getChildFragmentManager(),
-                                    getString(
-                                            R.string.format_transfer_to,
-                                            Formatter
-                                                    .amount(DCurrencies.map(fundingAccount.get()
-                                                            .getCurrency()), value.get()),
+                                    TaxUtil.getConfirmPinTransactionMessage(TransactionType.TRANSFER,
+                                            value.get().doubleValue(), fundingAccount.get(),
                                             selectLabelToShow(data.first, content, recipient.getIdentifier()),
-                                            Formatter.amount(
+                                            fundingAccount.get().getCurrency(), Formatter.amount(
                                                     DCurrencies.map(fundingAccount.get()
                                                             .getCurrency()),
                                                     fundingAccount.get()
                                                             .getBank()
-                                                            .calculateTransferCost(value.get())
-                                            ),
-                                            taxPercentage + "%",
-                                            taxAmountText
-                                    ),
+                                                            .calculateTransferCost(value.get())),
+                                            stringMapper, 0, 0, 0, 0),
                                     (PinConfirmationDialogFragment.Callback) pin -> transferTo(pin),
                                     x,
                                     y
