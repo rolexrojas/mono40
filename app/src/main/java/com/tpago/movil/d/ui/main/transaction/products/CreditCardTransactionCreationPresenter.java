@@ -34,7 +34,6 @@ import javax.inject.Inject;
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import timber.log.Timber;
 
 import static java.math.BigDecimal.ZERO;
@@ -109,15 +108,14 @@ public class CreditCardTransactionCreationPresenter
         .message("No es posible realizar pagos de " + fa + ". Favor seleccionar otra opción.")
         .show();
     } else {
-      view.requestPin(recipient.getLabel(), fa);
+
+      view.requestPin(recipient.getLabel(), fa, a);
     }
   }
 
   final void onPinRequestFinished(final Product product, final String pin) {
     paymentSubscription
-      = Single.defer(new Callable<SingleSource<Result<PaymentResult, ErrorCode>>>() {
-      @Override
-      public SingleSource<Result<PaymentResult, ErrorCode>> call() throws Exception {
+      = Single.defer((Callable<SingleSource<Result<PaymentResult, ErrorCode>>>) () -> {
         final Result<PaymentResult, ErrorCode> result;
         if (networkService.checkIfAvailable()) {
           final ApiResult<Boolean> pinValidationResult = apiBridge.validatePin(pin);
@@ -159,47 +157,40 @@ public class CreditCardTransactionCreationPresenter
           result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
         }
         return Single.just(result);
-      }
-    })
+      })
       .subscribeOn(io.reactivex.schedulers.Schedulers.io())
       .observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
-      .subscribe(new Consumer<Result<PaymentResult, ErrorCode>>() {
-        @Override
-        public void accept(Result<PaymentResult, ErrorCode> result) throws Exception {
-          boolean succeeded = false;
-          String transactionMessage = null;
-          if (result.isSuccessful()) {
-            succeeded = true;
+      .subscribe(result -> {
+        boolean succeeded = false;
+        String transactionMessage = null;
+        if (result.isSuccessful()) {
+          succeeded = true;
 
-            final ProductRecipient pr = (ProductRecipient) recipient;
-            pr.setBalance(null);
-            recipientManager.update(pr);
+          final ProductRecipient pr = (ProductRecipient) recipient;
+          pr.setBalance(null);
+          recipientManager.update(pr);
 
-            transactionMessage = result.getSuccessData()
-              .message();
-          } else {
-            final FailureData<ErrorCode> failureData = result.getFailureData();
-            switch (failureData.getCode()) {
-              case INCORRECT_PIN:
-                view.showGenericErrorDialog(stringHelper.resolve(R.string.error_incorrect_pin));
-                break;
-              case UNAVAILABLE_NETWORK:
-                view.showUnavailableNetworkError();
-                break;
-              default:
-                view.showGenericErrorDialog(failureData.getDescription());
-                break;
-            }
+          transactionMessage = result.getSuccessData()
+            .message();
+        } else {
+          final FailureData<ErrorCode> failureData = result.getFailureData();
+          switch (failureData.getCode()) {
+            case INCORRECT_PIN:
+              view.showGenericErrorDialog(stringHelper.resolve(R.string.error_incorrect_pin));
+              break;
+            case UNAVAILABLE_NETWORK:
+              view.showUnavailableNetworkError();
+              break;
+            default:
+              view.showGenericErrorDialog(failureData.getDescription());
+              break;
           }
-          view.setPaymentResult(succeeded, transactionMessage);
         }
-      }, new Consumer<Throwable>() {
-        @Override
-        public void accept(Throwable throwable) throws Exception {
-          Timber.e(throwable);
-          view.setPaymentResult(false, null);
-          view.showGenericErrorDialog();
-        }
+        view.setPaymentResult(succeeded, transactionMessage);
+      }, throwable -> {
+        Timber.e(throwable);
+        view.setPaymentResult(false, null);
+        view.showGenericErrorDialog();
       });
   }
 
@@ -285,7 +276,7 @@ public class CreditCardTransactionCreationPresenter
 
     void setPayButtonEnabled(boolean enabled);
 
-    void requestPin(String partnerName, String value);
+    void requestPin(String partnerName, String value, BigDecimal a);
 
     void setPaymentResult(boolean succeeded, String transactionMessage);
 

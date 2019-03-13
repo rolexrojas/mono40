@@ -1,5 +1,6 @@
 package com.tpago.movil.d.ui.main.transaction;
 
+import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.app.ui.activity.base.ActivityModule;
 import com.tpago.movil.app.ui.activity.ActivityScope;
 import com.tpago.movil.d.data.SchedulerProvider;
@@ -79,4 +80,7 @@ public interface TransactionCreationComponent {
   StringHelper provideStringHelper();
 
   TransactionCategory transactionCategory();
+
+  @Deprecated
+  StringMapper stringMapper();
 }

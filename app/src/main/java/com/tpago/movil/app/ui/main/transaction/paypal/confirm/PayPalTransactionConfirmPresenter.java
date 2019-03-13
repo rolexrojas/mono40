@@ -2,7 +2,6 @@ package com.tpago.movil.app.ui.main.transaction.paypal.confirm;
 
 import com.tpago.movil.Code;
 import com.tpago.movil.Currency;
-import com.tpago.movil.R;
 import com.tpago.movil.api.Api;
 import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.app.ui.Presenter;
@@ -19,10 +18,10 @@ import com.tpago.movil.util.FailureData;
 import com.tpago.movil.util.Money;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.Result;
-import com.tpago.movil.util.StringHelper;
+import com.tpago.movil.util.TaxUtil;
+import com.tpago.movil.util.TransactionType;
 import com.tpago.movil.util.digit.Digit;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -108,27 +107,10 @@ final class PayPalTransactionConfirmPresenter
         final String rate = Money.format(paymentMethodCurrency, data.rate());
         final String total = Money.format(paymentMethodCurrency, data.total());
 
-        final double taxPercentage = 0.15;
-        double taxAmount = data.total().doubleValue() * (taxPercentage / 100);
-        String taxAmountText = Formatter.amount("RD", new BigDecimal(taxAmount));
 
-        final String text = StringHelper.builder()
-                .append(String.format(
-                        this.stringMapper.apply(R.string.main_transaction_pay_pal_summary),
-                        amount,
-                        alias,
-                        fee
-                ))
-                .append("\n")
-                .append(String.format(this.stringMapper.apply(R.string.main_transaction_pay_pal_rate), rate))
-                .append("\n")
-                .append(String.format(
-                        this.stringMapper.apply(R.string.main_transaction_pay_pal_total),
-                        total,
-                        taxPercentage + "%",
-                        taxAmountText
-                ))
-                .toString();
+        final String text = TaxUtil.getConfirmPinTransactionMessage(TransactionType.PAYPAL_RECHARGE,
+                this.amount.create().doubleValue(), paymentMethod, alias, currency, Formatter.amount(currency, data.fee()), stringMapper,
+                data.fee().doubleValue(), data.rate().doubleValue(), data.total().doubleValue(), 0.0);
         this.presentation.requestPin(text);
     }
 

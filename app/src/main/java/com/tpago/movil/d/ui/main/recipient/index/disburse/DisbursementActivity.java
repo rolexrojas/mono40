@@ -239,27 +239,16 @@ public final class DisbursementActivity
             final String currency = DCurrencies.map(this.fundingProduct.getCurrency());
 
 
-            final double taxPercentage = 0.15;
-            double taxAmount = this.value.doubleValue() * (taxPercentage / 100);
-            String taxAmountText = Formatter.amount("RD", new BigDecimal(taxAmount));
-
             final String description = String.format(
-                    "Avanzar %1$s a %2$s %3$s\nImp. DGII %4$s RD$%5$s",
+                    "Avanzar %1$s a %2$s %3$s.",
                     Formatter.amount(currency, this.value),
                     this.getString(ProductType.findStringId(this.destinationProduct)),
-                    this.destinationProduct.getAlias(),
-                    taxPercentage + "%",
-                    taxAmountText
+                    this.destinationProduct.getAlias()
             );
             PinConfirmationDialogFragment.show(
                     this.getSupportFragmentManager(),
                     description,
-                    new PinConfirmationDialogFragment.Callback() {
-                        @Override
-                        public void confirm(String pin) {
-                            DisbursementActivity.this.transfer(pin);
-                        }
-                    },
+                    (PinConfirmationDialogFragment.Callback) pin -> DisbursementActivity.this.transfer(pin),
                     x,
                     y
             );
@@ -299,19 +288,16 @@ public final class DisbursementActivity
         getSupportActionBar()
                 .setDisplayHomeAsUpEnabled(true);
 
-        this.toolbar.post(new Runnable() {
-            @Override
-            public void run() {
-                toolbar.setTitle(R.string.forward);
-                toolbar.setSubtitle(
-                        String.format(
-                                "Desde %1$s Crédito %2$s",
-                                fundingProduct.getBank()
-                                        .name(),
-                                fundingProduct.getNumberSanitized()
-                        )
-                );
-            }
+        this.toolbar.post(() -> {
+            toolbar.setTitle(R.string.forward);
+            toolbar.setSubtitle(
+                    String.format(
+                            "Desde %1$s Crédito %2$s",
+                            fundingProduct.getBank()
+                                    .name(),
+                            fundingProduct.getNumberSanitized()
+                    )
+            );
         });
 
         this.paymentMethodChooser.setOnPaymentMethodChosenListener(this);
