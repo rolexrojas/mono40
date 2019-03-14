@@ -99,7 +99,7 @@ public class NonAffiliatedBanreservasPhoneNumberRecipientAdditionFragment extend
   public void onAttach(Context context) {
     super.onAttach(context);
     final Bundle bundle = this.getArguments();
-    bank = (Bank) bundle.getParcelable(KEY_DATA);
+    bank = bundle.getParcelable(KEY_DATA);
     keyword = bundle.getString(KEY_KEYWORD);
     data = bundle.getParcelable(KEY_DATA);
 

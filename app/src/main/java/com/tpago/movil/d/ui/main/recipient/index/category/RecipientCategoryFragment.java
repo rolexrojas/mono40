@@ -299,7 +299,7 @@ public class RecipientCategoryFragment
       if (resultCode == Activity.RESULT_OK) {
         final Recipient recipient = AddRecipientActivityBase.deserializeResult(data);
         if (ObjectHelper.isNotNull(recipient)) {
-          requestResult = Pair.create(requestCode, Pair.create(recipient, (String) null));
+          requestResult = Pair.create(requestCode, Pair.create(recipient, null));
         }
       }
     } else if (requestCode == REQUEST_CODE_TRANSACTION_CREATION) {
@@ -314,7 +314,7 @@ public class RecipientCategoryFragment
       if (resultCode == Activity.RESULT_OK) {
         final String transactionId = OwnTransactionCreationActivity.deserializeResult(data);
         if (ObjectHelper.isNotNull(transactionId)) {
-          requestResult = Pair.create(requestCode, Pair.create((Recipient) null, transactionId));
+          requestResult = Pair.create(requestCode, Pair.create(null, transactionId));
         }
       }
     } else if (requestCode == REQUEST_CODE_TRANSACTION) {

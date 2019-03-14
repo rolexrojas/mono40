@@ -106,11 +106,11 @@ public class NonAffiliatedPhoneNumberTransactionCreation1Fragment extends
   @Override
   public void onResume() {
     super.onResume();
-    if (ObjectHelper.isNull(this.banks)) {
-      this.banks = this.bankStore.getAll()
+    if (ObjectHelper.isNull(banks)) {
+      banks = this.bankStore.getAll()
         .defaultIfEmpty(new ArrayList<>())
         .blockingGet();
-      this.adapter.notifyItemRangeInserted(0, this.banks.size());
+      this.adapter.notifyItemRangeInserted(0, banks.size());
     }
   }
 

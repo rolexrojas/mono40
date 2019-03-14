@@ -109,7 +109,9 @@ public class PrimaryPaymentMethodFragment extends FragmentBase implements Primar
 
     @Override
     public void finish() {
-        getActivity().finish();
+        if (getActivity() != null) {
+            getActivity().finish();
+        }
     }
 
     @AutoValue

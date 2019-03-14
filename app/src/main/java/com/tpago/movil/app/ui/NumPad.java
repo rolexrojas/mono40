@@ -128,9 +128,7 @@ public final class NumPad extends ConstraintLayout {
 
   public final void removeDigitConsumer(Consumer<Integer> consumer) {
     ObjectHelper.checkNotNull(consumer, "consumer");
-    if (this.digitConsumers.contains(consumer)) {
       this.digitConsumers.remove(consumer);
-    }
   }
 
   public final void addDeleteAction(Action action) {
@@ -142,9 +140,7 @@ public final class NumPad extends ConstraintLayout {
 
   public final void removeDeleteAction(Action action) {
     ObjectHelper.checkNotNull(action, "action");
-    if (this.deleteActions.contains(action)) {
       this.deleteActions.remove(action);
-    }
   }
 
   public final void addDotAction(Action action) {
@@ -156,9 +152,7 @@ public final class NumPad extends ConstraintLayout {
 
   public final void removeDotAction(Action action) {
     ObjectHelper.checkNotNull(action, "action");
-    if (this.dotActions.contains(action)) {
       this.dotActions.remove(action);
-    }
   }
 
   @Override

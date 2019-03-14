@@ -69,7 +69,7 @@ final class TypeAdapterInitialDataDeprecated implements JsonDeserializer<Initial
     final List<Product> products = new ArrayList<>();
     final JsonArray accountsArray = accountsJsonElement.getAsJsonArray();
     for (int i = 0; i < accountsArray.size(); i++) {
-      products.add((Product) context.deserialize(
+      products.add(context.deserialize(
         accountsArray.get(i)
           .getAsJsonObject(),
         Product.class
@@ -77,7 +77,7 @@ final class TypeAdapterInitialDataDeprecated implements JsonDeserializer<Initial
     }
     final JsonArray creditCardsArray = creditCardsJsonElement.getAsJsonArray();
     for (int i = 0; i < creditCardsArray.size(); i++) {
-      products.add((Product) context.deserialize(
+      products.add(context.deserialize(
         creditCardsArray.get(i)
           .getAsJsonObject(),
         Product.class
@@ -85,7 +85,7 @@ final class TypeAdapterInitialDataDeprecated implements JsonDeserializer<Initial
     }
     final JsonArray loansArray = loansJsonElement.getAsJsonArray();
     for (int i = 0; i < loansArray.size(); i++) {
-      products.add((Product) context.deserialize(
+      products.add(context.deserialize(
         loansArray.get(i)
           .getAsJsonObject(),
         Product.class

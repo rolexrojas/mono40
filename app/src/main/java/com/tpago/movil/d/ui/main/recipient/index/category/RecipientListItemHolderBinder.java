@@ -54,7 +54,6 @@ class RecipientListItemHolderBinder implements
     this.category = category;
     this.companyHelper = ObjectHelper.checkNotNull(companyHelper, "companyHelper");
     this.partnerStore = ObjectHelper.checkNotNull(partnerStore, "partnerStore");
-    ;
   }
 
   final void setDeleting(boolean deleting) {

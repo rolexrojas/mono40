@@ -138,9 +138,7 @@ public final class DNumPad extends LinearLayout {
 
   public final void removeDigitConsumer(Consumer<Integer> consumer) {
     ObjectHelper.checkNotNull(consumer, "consumer");
-    if (this.digitConsumerList.contains(consumer)) {
       this.digitConsumerList.remove(consumer);
-    }
   }
 
   public final void addDotAction(Action action) {
@@ -152,9 +150,7 @@ public final class DNumPad extends LinearLayout {
 
   public final void removeDotAction(Action action) {
     ObjectHelper.checkNotNull(action, "action");
-    if (this.dotActionList.contains(action)) {
       this.dotActionList.remove(action);
-    }
   }
 
   public final void addDeleteAction(Action action) {
@@ -166,8 +162,6 @@ public final class DNumPad extends LinearLayout {
 
   public final void removeDeleteAction(Action action) {
     ObjectHelper.checkNotNull(action, "action");
-    if (this.deleteActionList.contains(action)) {
       this.deleteActionList.remove(action);
-    }
   }
 }

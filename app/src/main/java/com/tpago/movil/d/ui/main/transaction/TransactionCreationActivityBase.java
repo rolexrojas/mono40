@@ -88,7 +88,7 @@ public class TransactionCreationActivityBase
   }
 
   public void setRecipientName(String name) {
-    this.recipientName = name;
+    recipientName = name;
   }
 
   @Override

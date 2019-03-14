@@ -79,7 +79,7 @@ public class TypeAdapterProductDeprecated implements JsonDeserializer<Product>, 
           .getAsString(),
         jsonObject.get(PROPERTY_NUMBER)
           .getAsString(),
-        (Bank) context.deserialize(jsonObject.get(PROPERTY_BANK), Bank.class),
+              context.deserialize(jsonObject.get(PROPERTY_BANK), Bank.class),
         jsonObject.get(PROPERTY_CURRENCY)
           .getAsString(),
         queryFee,

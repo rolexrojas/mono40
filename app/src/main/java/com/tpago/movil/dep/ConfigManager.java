@@ -42,9 +42,7 @@ public final class ConfigManager {
 
     public final void removeOnTimeOutChangedListener(OnTimeOutChangedListener listener) {
         ObjectHelper.checkNotNull(listener, "listener");
-        if (onTimeOutChangedListenerList.contains(listener)) {
-            onTimeOutChangedListenerList.remove(listener);
-        }
+        onTimeOutChangedListenerList.remove(listener);
     }
 
     public static void setTimeOut(Context context, TimeoutSessionOption timeOut) {

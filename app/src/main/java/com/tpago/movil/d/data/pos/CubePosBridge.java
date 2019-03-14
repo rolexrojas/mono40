@@ -179,7 +179,7 @@ class CubePosBridge implements PosBridge {
         .error(new IllegalStateException(String.format("!this.isRegistered(%1$s)", identifier)));
     }
     return this.getAltPan(identifier)
-      .<PosResult>flatMap(
+      .flatMap(
         (altPan) -> Single.create(
           (subscriber) -> sdk.SelectCard(
             selectCardParams(identifier, altPan),

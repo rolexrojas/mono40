@@ -227,7 +227,7 @@ final class RetrofitApiBridge implements DepApiBridge {
         pnr.getPhoneNumber()
           .value()
       )
-        .flatMap(mapToApiResult(RetrofitApiBridge.<Customer>identityMapFunc()))
+        .flatMap(mapToApiResult(RetrofitApiBridge.identityMapFunc()))
         .flatMap(new Func1<ApiResult<Customer>, Observable<ApiResult<String>>>() {
           @Override
           public Observable<ApiResult<String>> call(ApiResult<Customer> result) {
@@ -356,7 +356,7 @@ final class RetrofitApiBridge implements DepApiBridge {
     return apiService.queryBalance(
       BillRequestBody.create(recipient.getPartner(), recipient.getContractNumber(), null)
     )
-      .flatMap(mapToApiResult(RetrofitApiBridge.<BillBalance>identityMapFunc()))
+      .flatMap(mapToApiResult(RetrofitApiBridge.identityMapFunc()))
       .toBlocking()
       .single();
   }
@@ -419,7 +419,7 @@ final class RetrofitApiBridge implements DepApiBridge {
       .creditCard(creditCard)
       .build();
     return apiService.payCreditCardBill(body)
-      .flatMap(mapToApiResult(RetrofitApiBridge.<PaymentResult>identityMapFunc()));
+      .flatMap(mapToApiResult(RetrofitApiBridge.identityMapFunc()));
   }
 
   @Override
@@ -438,13 +438,13 @@ final class RetrofitApiBridge implements DepApiBridge {
       .loan(loan)
       .build();
     return apiService.payLoanBill(body)
-      .flatMap(mapToApiResult(RetrofitApiBridge.<PaymentResult>identityMapFunc()));
+      .flatMap(mapToApiResult(RetrofitApiBridge.identityMapFunc()));
   }
 
   @Override
   public ApiResult<Boolean> validatePin(String pin) {
     return apiService.validatePin(ValidatePinRequestBody.create(pin))
-      .flatMap(mapToApiResult(RetrofitApiBridge.<Boolean>identityMapFunc()))
+      .flatMap(mapToApiResult(RetrofitApiBridge.identityMapFunc()))
       .toBlocking()
       .single();
   }
@@ -452,7 +452,7 @@ final class RetrofitApiBridge implements DepApiBridge {
   @Override
   public ApiResult<Customer> fetchCustomer(String phoneNumber) {
     return apiService.fetchCustomer(phoneNumber)
-      .flatMap(mapToApiResult(RetrofitApiBridge.<Customer>identityMapFunc()))
+      .flatMap(mapToApiResult(RetrofitApiBridge.identityMapFunc()))
       .toBlocking()
       .single();
   }
