@@ -1,7 +1,5 @@
 package com.tpago.movil.d.domain;
 
-import static java.math.BigDecimal.ZERO;
-
 import android.support.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
@@ -12,6 +10,8 @@ import com.tpago.movil.company.bank.Bank;
 
 import java.math.BigDecimal;
 
+import static java.math.BigDecimal.ZERO;
+
 /**
  * @author hecvasro
  */
@@ -19,69 +19,68 @@ import java.math.BigDecimal;
 @AutoValue
 public abstract class ProductInfo {
 
-  public static ProductInfo create(Product product) {
-    return new AutoValue_ProductInfo(
-        product.getBank(),
-        product.getType(),
-        product.getAlias(),
-        product.getNumber(),
-        product.getCurrency(),
-        product.getQueryFee(),
-        Product.isPaymentOption(product),
-        Product.isDefaultPaymentOption(product),
-        null,
-        product.getAltpanKey()
-    );
-  }
+    public static ProductInfo create(Product product) {
+        return new AutoValue_ProductInfo(
+                product.getBank(),
+                product.getType(),
+                product.getAlias(),
+                product.getNumber(),
+                product.getCurrency(),
+                Product.isPaymentOption(product),
+                Product.isDefaultPaymentOption(product),
+                null,
+                product.getAltpanKey()
+        );
+    }
 
-  public static ProductInfo create(Product product, String name) {
-    return new AutoValue_ProductInfo(
-        product.getBank(),
-        product.getType(),
-        product.getAlias(),
-        product.getNumber(),
-        product.getCurrency(),
-        product.getQueryFee(),
-        Product.isPaymentOption(product),
-        Product.isDefaultPaymentOption(product),
-        name,
-        product.getAltpanKey()
-    );
-  }
+    public static ProductInfo create(Product product, String name) {
+        return new AutoValue_ProductInfo(
+                product.getBank(),
+                product.getType(),
+                product.getAlias(),
+                product.getNumber(),
+                product.getCurrency(),
+                Product.isPaymentOption(product),
+                Product.isDefaultPaymentOption(product),
+                name,
+                product.getAltpanKey()
+        );
+    }
 
-  public static TypeAdapter<ProductInfo> typeAdapter(Gson gson) {
-    return new AutoValue_ProductInfo.GsonTypeAdapter(gson);
-  }
+    public static TypeAdapter<ProductInfo> typeAdapter(Gson gson) {
+        return new AutoValue_ProductInfo.GsonTypeAdapter(gson);
+    }
 
-  @SerializedName("bank")
-  public abstract Bank getBank();
+    @SerializedName("bank")
+    public abstract Bank getBank();
 
-  @SerializedName("account-type")
-  public abstract ProductType getType();
+    @SerializedName("account-type")
+    public abstract ProductType getType();
 
-  @SerializedName("account-alias")
-  public abstract String getAlias();
+    @SerializedName("account-alias")
+    public abstract String getAlias();
 
-  @SerializedName("account-number")
-  public abstract String getNumber();
+    @SerializedName("account-number")
+    public abstract String getNumber();
 
-  @SerializedName("currency")
-  public abstract String getCurrency();
+    @SerializedName("currency")
+    public abstract String getCurrency();
 
-  @SerializedName("query-fee")
-  public abstract BigDecimal getQueryFee();
+    public BigDecimal getQueryFee() {
+        return ZERO;
+    }
 
-  @SerializedName("payable")
-  public abstract boolean isPaymentMethod();
+    @SerializedName("payable")
+    public abstract boolean isPaymentMethod();
 
-  @SerializedName("default-account")
-  public abstract boolean isDefaultPaymentMethod();
+    @SerializedName("default-account")
+    public abstract boolean isDefaultPaymentMethod();
 
-  @SerializedName("recipient-name")
-  @Nullable
-  public abstract String getRecipientName();
+    @SerializedName("recipient-name")
+    @Nullable
+    public abstract String getRecipientName();
 
-  @SerializedName("altpan-key")
-  @Nullable
-  public abstract String altpanKey();
+    @SerializedName("altpan-key")
+    @Nullable
+    public abstract String altpanKey();
 }
