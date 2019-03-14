@@ -34,7 +34,7 @@ public final class StringHelper {
 
   @NonNull
   private String format(@StringRes int id, @NonNull String... args) {
-    return String.format(getString(id), args);
+    return String.format(getString(id), (Object) args);
   }
 
   public final String resolve(@StringRes int id) {
