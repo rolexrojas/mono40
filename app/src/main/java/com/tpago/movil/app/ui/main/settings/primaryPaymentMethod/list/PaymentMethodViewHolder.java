@@ -45,7 +45,7 @@ public class PaymentMethodViewHolder extends RecyclerView.ViewHolder implements 
 
     @Override
     public void onClick(View view) {
-        Product product = this.productManager.getProductList().get(this.productPosition);
+        Product product = this.productManager.getPaymentOptionList().get(this.productPosition);
         this.subscription = Single
             .defer(() -> Single.just(this.productManager.setDefaultPaymentOption(product)))
             .flatMap(this::flatMap)

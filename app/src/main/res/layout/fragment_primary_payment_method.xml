@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:lineSpacingExtra="8dp"
-            android:text="Selecciona la cuenta que quieres usar como primaria para realizar transacciones."
+            android:text="@string/selecciona_la_cuenta_que_quieres_usar_como_primaria_para_realizar_transacciones"
             android:textColor="#333"
             android:textSize="16sp" />
     </FrameLayout>

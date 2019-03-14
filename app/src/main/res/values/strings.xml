@@ -424,4 +424,5 @@
     <string name="unregisteredfingerprint">Como la seguridad del dispositivo fue desactivada o una nueva huella fue enrolada es requerido volver a configurar el desbloqueo rápido con huellas digitales, pero primero debe desbloquear la aplicación usando su contraseña.</string>
     <string name="chooseSessionTimeout">Selecciona el tiempo de inactividad en el cual tPago se bloquea             automáticamente.</string>
     <string name="sessionTimeoutTitle">Bloquear automáticamente</string>
+    <string name="selecciona_la_cuenta_que_quieres_usar_como_primaria_para_realizar_transacciones">Selecciona la cuenta que quieres usar como primaria para realizar transacciones.</string>
 </resources>
