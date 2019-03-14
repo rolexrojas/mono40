@@ -99,7 +99,7 @@ public final class MicroInsurancePurchaseConfirmPresenter
 
 
         this.presentation.requestPin(TaxUtil.getConfirmPinTransactionMessage(TransactionType.MICRO_INSURANCE,
-                0, paymentMethod, planData.name(), paymentMethod.getCurrency(), "",
+                request.premium().doubleValue(), paymentMethod, planData.name(), paymentMethod.getCurrency(), "",
                 stringMapper, 0, 0, request.premium().doubleValue(), request.premium().doubleValue())
         );
     }
