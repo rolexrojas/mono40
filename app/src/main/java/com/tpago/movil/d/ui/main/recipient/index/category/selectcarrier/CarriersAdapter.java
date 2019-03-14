@@ -61,7 +61,7 @@ public class CarriersAdapter extends RecyclerViewBaseAdapter<Partner, CarrierVie
         @Override
         public void bind(Partner carrier) {
             super.bind(carrier);
-            Picasso.with(itemView.getContext())
+            Picasso.get()
                     .load(companyHelper.getLogoUri(carrier, Company.LogoStyle.COLORED_24))
                     .into(imageView);
             textView.setText(carrier.name());

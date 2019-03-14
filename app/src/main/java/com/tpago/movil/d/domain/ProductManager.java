@@ -164,7 +164,7 @@ public final class ProductManager {
     }
     for (Product p : productList) {
       if (Product.checkIfCreditCard(p)) {
-        Picasso.with(context)
+        Picasso.get()
           .load(ApiImageUriBuilder.build(context, p))
           .fetch();
       }

@@ -98,9 +98,9 @@ public final class AvatarFormFragment extends BaseRegisterFragment {
 
       this.moveToNextScreenButton.setText(R.string.next);
 
-      Picasso.with(context)
+      Picasso.get()
         .invalidate(picture);
-      Picasso.with(context)
+      Picasso.get()
         .load(picture)
         .resizeDimen(R.dimen.normalImageSize, R.dimen.normalImageSize)
         .transform(new CircleTransformation())

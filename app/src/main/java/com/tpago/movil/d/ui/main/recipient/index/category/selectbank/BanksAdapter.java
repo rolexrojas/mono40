@@ -59,7 +59,7 @@ public class BanksAdapter extends RecyclerViewBaseAdapter<Bank, BanksAdapter.Ban
     @Override
     public void bind(Bank item) {
       super.bind(item);
-      Picasso.with(itemView.getContext())
+      Picasso.get()
           .load(companyHelper.getLogoUri(item, Company.LogoStyle.COLORED_24))
           .into(imageView);
       textView.setText(item.name());

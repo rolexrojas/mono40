@@ -48,7 +48,7 @@ public class PaymentMethodViewViewHolderAdapter extends RecyclerView.Adapter<Pay
         if(ObjectHelper.isNotNull(holder)) {
             List<Product> productList = this.productManager.getProductList();
             final Product product = productList.get(position);
-            Picasso.with(context)
+            Picasso.get()
                 .load(companyHelper.getLogoUri(product.getBank(), Company.LogoStyle.COLORED_24))
                 .into(holder.icon);
             if(ObjectHelper.isNotNull(this.productManager.getDefaultPaymentOption()) && productList.get(position).getId().equals(this.productManager.getDefaultPaymentOption().getId())) {

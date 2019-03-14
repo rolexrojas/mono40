@@ -27,7 +27,7 @@ final class PartnerListItemHolderBinder
 
   @Override
   public void bind(@NonNull Partner item, @NonNull PartnerListItemHolder holder) {
-    Picasso.with(holder.getContext())
+    Picasso.get()
       .load(this.companyHelper.getLogoUri(item, Company.LogoStyle.COLORED_24))
       .into(holder.imageView);
     holder.textView.setText(item.name());

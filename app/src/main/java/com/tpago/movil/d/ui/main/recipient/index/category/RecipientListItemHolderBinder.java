@@ -110,7 +110,7 @@ class RecipientListItemHolderBinder implements
     if (ObjectHelper.isNotNull(imageDrawable)) {
       holder.recipientPictureImageView.setImageDrawable(imageDrawable);
     } else if (ObjectHelper.isNotNull(imageUri)) {
-      Picasso.with(context)
+      Picasso.get()
           .load(imageUri)
           .resizeDimen(R.dimen.icon_size_24, R.dimen.icon_size_24)
           .into(holder.recipientPictureImageView);

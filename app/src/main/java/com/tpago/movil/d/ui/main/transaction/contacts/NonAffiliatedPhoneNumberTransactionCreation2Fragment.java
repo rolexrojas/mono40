@@ -277,7 +277,7 @@ public class NonAffiliatedPhoneNumberTransactionCreation2Fragment extends
             number = r.getAccountNumber();
         }
 
-        Picasso.with(getContext())
+        Picasso.get()
                 .load(this.companyHelper.getLogoUri(bank, Company.LogoStyle.COLORED_24))
                 .noFade()
                 .into(imageView);

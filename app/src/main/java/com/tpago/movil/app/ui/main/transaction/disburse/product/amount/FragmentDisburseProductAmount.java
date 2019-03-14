@@ -125,7 +125,7 @@ public final class FragmentDisburseProductAmount extends FragmentBase
 
   @Override
   public void setBankLogo(Uri uri) {
-    Picasso.with(this.getContext())
+    Picasso.get()
       .load(uri)
       .resizeDimen(R.dimen.icon_size_20, R.dimen.icon_size_20)
       .noFade()

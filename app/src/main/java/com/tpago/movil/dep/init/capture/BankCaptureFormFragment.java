@@ -202,7 +202,7 @@ public class BankCaptureFormFragment
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
       final Bank bank = banks.get(position);
-      Picasso.with(getContext())
+      Picasso.get()
           .load(companyHelper.getLogoUri(bank, Company.LogoStyle.COLORED_24))
           .noFade()
           .into(holder.imageView);

@@ -164,7 +164,7 @@ public final class FragmentHelp extends FragmentBase implements  HelpPresentatio
          @Override
         public void onBindViewHolder(FragmentHelp.ViewHolder holder, int position) {
             final Bank bank = banks.get(position);
-            Picasso.with(getContext())
+            Picasso.get()
                     .load(companyHelper.getLogoUri(bank, Company.LogoStyle.COLORED_24))
                     .into(holder.imageView);
             holder.textView.setText(bank.name());

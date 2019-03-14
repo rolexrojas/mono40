@@ -250,7 +250,7 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
 
   @Override
   public void setUserPicture(Uri uri) {
-    Picasso.with(this.getContext())
+    Picasso.get()
       .load(uri)
       .resizeDimen(R.dimen.largeImageSize, R.dimen.largeImageSize)
       .transform(new CircleTransformation())

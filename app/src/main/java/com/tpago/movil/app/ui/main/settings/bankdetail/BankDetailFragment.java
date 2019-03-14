@@ -65,7 +65,7 @@ BankDetailFragment extends FragmentBase {
 
         //Loading the logo
         ImageView image = new ImageView(this.getContext());
-        Picasso.with(getContext()).load(this.bank.getLogoURL()).into(image);
+        Picasso.get().load(this.bank.getLogoURL()).into(image);
 
         this.drawImage = image.getDrawable();
         this.setBankData();
