@@ -39,7 +39,7 @@
   </style>
 
   <!-- Toolbar styles -->
-  <style name="ToolbarText.Subtitle" parent="ToolbarText.Subtitle">
+  <style name="ToolbarText.Subtitle" parent="Base.ToolbarText.Subtitle">
     <item name="android:letterSpacing">0.05</item>
   </style>
 

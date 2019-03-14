@@ -15,6 +15,8 @@ import com.tpago.movil.session.UpdateUserNameJob;
 import com.tpago.movil.session.UpdateUserPictureJob;
 import com.tpago.movil.store.DiskStoreModule;
 import com.tpago.movil.time.TimeModule;
+import com.tpago.movil.util.LogoutTimerService;
+import com.tpago.movil.util.LogoutTimerServiceModule;
 
 import javax.inject.Singleton;
 
@@ -36,7 +38,8 @@ import dagger.Component;
   ProductModule.class,
   SessionModule.class,
   TimeModule.class,
-  com.tpago.movil.dep.AppModule.class
+  com.tpago.movil.dep.AppModule.class,
+        LogoutTimerServiceModule.class
 })
 public interface AppComponent extends com.tpago.movil.dep.AppComponent {
 

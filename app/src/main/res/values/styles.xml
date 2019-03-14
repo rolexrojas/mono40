@@ -387,7 +387,7 @@
 
   <style name="ToolbarText.Title" parent="Base.ToolbarText.Title"/>
 
-  <style name="ToolbarText.Subtitle" parent="ToolbarText.Subtitle"/>
+  <style name="ToolbarText.Subtitle" parent="Base.ToolbarText.Subtitle"/>
 
   <style name="Base.ToolbarText.Subtitle">
     <item name="android:textSize">10sp</item>

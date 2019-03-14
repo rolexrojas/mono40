@@ -21,9 +21,11 @@ import com.tpago.movil.app.ui.main.settings.help.FragmentHelp;
 import com.tpago.movil.app.ui.main.settings.primaryPaymentMethod.PrimaryPaymentMethodFragment;
 import com.tpago.movil.app.ui.main.settings.profile.ProfileFragment;
 import com.tpago.movil.app.ui.main.settings.auth.alt.AltAuthMethodFragment;
+import com.tpago.movil.app.ui.main.settings.timeout.TimeoutFragment;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.DepMainActivityBase;
 import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
+import com.tpago.movil.dep.ConfigManager;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.util.ObjectHelper;
 
@@ -120,7 +122,12 @@ public final class SettingsFragment extends BaseMainFragment implements Settings
 
   @OnClick(R.id.timeoutSettingsOption)
   final void onTimeoutSettingsOptionClicked() {
-    // TODO
+    this.startActivity(
+            FragmentActivityBase.createLaunchIntent(
+                    this.getContext(),
+                    TimeoutFragment.creator()
+            )
+    );
   }
 
   @OnClick(R.id.lockOnExitSettingsOption)
@@ -193,6 +200,7 @@ public final class SettingsFragment extends BaseMainFragment implements Settings
     super.onResume();
 
     this.presenter.onPresentationResumed();
+    timeoutSettingsOption.secondaryText(ConfigManager.getTimeOut(requireContext()).getTitle());
   }
 
   @Override

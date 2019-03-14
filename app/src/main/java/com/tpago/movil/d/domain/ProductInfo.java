@@ -50,8 +50,7 @@ public abstract class ProductInfo {
   }
 
   public static TypeAdapter<ProductInfo> typeAdapter(Gson gson) {
-    return new AutoValue_ProductInfo.GsonTypeAdapter(gson)
-      .setDefaultGetQueryFee(ZERO);
+    return new AutoValue_ProductInfo.GsonTypeAdapter(gson);
   }
 
   @SerializedName("bank")

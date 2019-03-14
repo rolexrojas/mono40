@@ -23,6 +23,7 @@ import com.tpago.movil.d.ui.SwitchableContainerActivityBase;
 import com.tpago.movil.d.ui.main.recipient.index.category.Category;
 import com.tpago.movil.d.ui.view.widget.FullScreenLoadIndicator;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
+import com.tpago.movil.util.LogoutTimerService;
 import com.tpago.movil.util.ObjectHelper;
 
 import javax.inject.Inject;

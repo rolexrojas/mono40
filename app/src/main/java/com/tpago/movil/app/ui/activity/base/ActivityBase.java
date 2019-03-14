@@ -1,15 +1,21 @@
 package com.tpago.movil.app.ui.activity.base;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.tpago.movil.app.ui.activity.NavButtonPressEventHandler;
 import com.tpago.movil.app.ui.alert.AlertManager;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.app.StringMapper;
+import com.tpago.movil.dep.init.InitActivityBase;
+import com.tpago.movil.util.LogoutTimerService;
 
 import javax.inject.Inject;
 
@@ -31,6 +37,8 @@ public abstract class ActivityBase extends AppCompatActivity {
 
   @Inject protected AlertManager alertManager;
   @Inject protected TakeoverLoader takeoverLoader;
+  private LocalBroadcastManager localBroadcastManager;
+  private LogoutReceiver logoutReceiver;
 
   /**
    * Layout resource identifier of the activity
@@ -50,11 +58,32 @@ public abstract class ActivityBase extends AppCompatActivity {
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    localBroadcastManager = LocalBroadcastManager.getInstance(this);
+    logoutReceiver = new LogoutReceiver();
 
     this.setContentView(this.layoutResId());
 
     // Binds all annotated methods, resources, and views.
     this.unbinder = ButterKnife.bind(this);
+  }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+    IntentFilter intentFilter = new IntentFilter(LogoutTimerService.LOGOUT_BROADCAST);
+    localBroadcastManager.registerReceiver(logoutReceiver, intentFilter);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    localBroadcastManager.unregisterReceiver(logoutReceiver);
+  }
+
+  @Override
+  public void onUserInteraction() {
+    super.onUserInteraction();
+    localBroadcastManager.sendBroadcast(new Intent(LogoutTimerService.USER_INTERACTION_BROADCAST));
   }
 
   @Override
@@ -69,6 +98,15 @@ public abstract class ActivityBase extends AppCompatActivity {
   public void onBackPressed() {
     if (!this.backButtonPressEventHandler.accept()) {
       super.onBackPressed();
+    }
+  }
+
+  class LogoutReceiver extends BroadcastReceiver {
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      ActivityBase.this.startActivity(InitActivityBase.getLaunchIntent(ActivityBase.this));
+      ActivityBase.this.finish();
     }
   }
 }

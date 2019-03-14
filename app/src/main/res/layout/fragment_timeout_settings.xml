@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/SettingsContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+  <TextView
+    style="@style/SettingsDescription"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/chooseSessionTimeout"/>
+
+  <android.support.v4.widget.Space
+    style="@style/VerticalDivider.Space.Normal"/>
+
+  <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/session_timeout_options"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:background="@color/white"/>
+
+      <!--<com.tpago.movil.app.ui.main.settings.SelectableSettingsOption-->
+        <!--android:id="@+id/fingerprintOption"-->
+        <!--style="@style/SettingsOption"-->
+        <!--app:primaryText="@string/fingerprint"/>-->
+
+      <!--<View-->
+        <!--android:id="@+id/fingerprintOptionDivider"-->
+        <!--android:layout_marginStart="@dimen/space_horizontal_20"-->
+        <!--android:layout_marginEnd="@dimen/space_horizontal_20"-->
+        <!--style="@style/VerticalDivider.Line"/>-->
+
+      <!--<com.tpago.movil.app.ui.main.settings.SelectableSettingsOption-->
+        <!--android:id="@+id/codeOption"-->
+        <!--style="@style/SettingsOption"-->
+        <!--app:primaryText="@string/code"/>-->
+
+      <!--<View-->
+        <!--android:layout_marginStart="@dimen/space_horizontal_20"-->
+        <!--android:layout_marginEnd="@dimen/space_horizontal_20"-->
+        <!--style="@style/VerticalDivider.Line"/>-->
+
+      <!--<com.tpago.movil.app.ui.main.settings.SelectableSettingsOption-->
+        <!--android:id="@+id/noneOption"-->
+        <!--style="@style/SettingsOption"-->
+        <!--app:primaryText="@string/noneUsePassword"/>-->
+    </LinearLayout>
+  </ScrollView>
+</LinearLayout>

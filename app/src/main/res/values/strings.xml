@@ -422,4 +422,6 @@
     <string name="errorNewPinMessage">El pin nuevo y el pin de confirmación no coinciden.</string>
     <string name="succededpasswordtransaction">El cambio de contraseña se ha efectuado correctamente.</string>
     <string name="unregisteredfingerprint">Como la seguridad del dispositivo fue desactivada o una nueva huella fue enrolada es requerido volver a configurar el desbloqueo rápido con huellas digitales, pero primero debe desbloquear la aplicación usando su contraseña.</string>
+    <string name="chooseSessionTimeout">Selecciona el tiempo de inactividad en el cual tPago se bloquea             automáticamente.</string>
+    <string name="sessionTimeoutTitle">Bloquear automáticamente</string>
 </resources>
