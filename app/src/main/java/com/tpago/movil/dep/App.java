@@ -65,10 +65,6 @@ public abstract class App extends Application implements ComponentBuilderSupplie
   }
 
   private void initializePicasso() {
-//    final Picasso picasso = new Picasso.Builder(this)
-//      .downloader(new OkHttp3Downloader(httpClient))
-//      .build();
-//    Picasso.setSingletonInstance(picasso);
   }
 
   @Deprecated
