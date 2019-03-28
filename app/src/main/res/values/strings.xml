@@ -425,4 +425,6 @@
     <string name="chooseSessionTimeout">Selecciona el tiempo de inactividad en el cual tPago se bloquea             automáticamente.</string>
     <string name="sessionTimeoutTitle">Bloquear automáticamente</string>
     <string name="selecciona_la_cuenta_que_quieres_usar_como_primaria_para_realizar_transacciones">Selecciona la cuenta que quieres usar como primaria para realizar transacciones.</string>
+    <string name="request_profile_update_sucess">Su perfil ha sido actualizado correctamente</string>
+    <string name="request_profile_update_title">Perfil actualizado.</string>
 </resources>

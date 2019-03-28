@@ -384,8 +384,7 @@ final class ApiRetrofitImpl implements Api {
   public Completable updateUserName(User user, Name name) {
     ObjectHelper.checkNotNull(user, "user");
     ObjectHelper.checkNotNull(name, "name");
-    return this.api.updateUserName(ApiName.create(name))
-      .concatWith(this.api.updateBeneficiary(ApiBeneficiary.create(user, name)));
+    return this.api.updateUserName(ApiName.create(name));
   }
 
   @Override
