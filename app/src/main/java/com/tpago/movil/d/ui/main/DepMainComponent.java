@@ -2,11 +2,13 @@ package com.tpago.movil.d.ui.main;
 
 import android.content.Context;
 
+import com.tpago.movil.api.Api;
 import com.tpago.movil.app.ui.alert.AlertManager;
 import com.tpago.movil.app.ui.fragment.base.BaseFragmentModule;
 import com.tpago.movil.app.ui.main.settings.help.FragmentHelp;
 import com.tpago.movil.company.CompanyHelper;
 import com.tpago.movil.company.partner.PartnerStore;
+import com.tpago.movil.d.ui.DepActivityBase;
 import com.tpago.movil.dep.User;
 import com.tpago.movil.app.ui.main.settings.profile.ProfileComponent;
 import com.tpago.movil.app.ui.main.settings.profile.ProfileModule;
@@ -35,6 +37,8 @@ public interface DepMainComponent extends ActivityComponent {
   StringMapper stringMapper();
 
   AlertManager alertManager();
+
+  void inject(DepActivityBase activity);
 
   SessionManager sessionManager();
 
@@ -65,4 +69,6 @@ public interface DepMainComponent extends ActivityComponent {
   PayPalAccountStore payPalAccountStore();
 
   PartnerStore partnerStore();
+
+  Api api();
 }

@@ -12,6 +12,7 @@ import com.tpago.movil.d.data.api.ChangePasswordBody;
 import com.tpago.movil.d.data.api.ChangePinBody;
 import com.tpago.movil.d.data.api.ChangePinResponseBody;
 import com.tpago.movil.d.data.api.ResetPasswordPINBody;
+import com.tpago.movil.d.domain.Customer;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.dep.MimeType;
 import com.tpago.movil.insurance.micro.MicroInsurancePartner;
@@ -42,9 +43,9 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Response;
 
-final class ApiRetrofitImpl implements Api {
+public final class ApiRetrofitImpl implements Api {
 
-  static ApiRetrofitImpl create(ApiRetrofit api, MapperResult.Creator resultCreator, EmptyMapperResult.Creator emptyResultCreator) {
+  public static ApiRetrofitImpl create(ApiRetrofit api, MapperResult.Creator resultCreator, EmptyMapperResult.Creator emptyResultCreator) {
     return new ApiRetrofitImpl(api, resultCreator, emptyResultCreator);
   }
 
@@ -482,5 +483,11 @@ final class ApiRetrofitImpl implements Api {
     EmailVerifcationCodeBody body = EmailVerifcationCodeBody.create(msisdn, email, code);
     return this.api.verifyEmailOneTimePasswordActivationCode(body)
       .map(this.emptyResultCreator.create());
+  }
+
+  @Override
+  public Single<Result<Customer>> fetchCustomer(String phoneNumber) {
+    return this.api.fetchCustomer(phoneNumber)
+            .map(resultCreator.create());
   }
 }

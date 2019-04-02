@@ -27,7 +27,7 @@ import rx.Observable;
  * @author hecvasro
  */
 @Deprecated
-interface ApiService {
+public interface ApiService {
 
   @GET("initial-load")
   Observable<Response<InitialData>> initialLoad();

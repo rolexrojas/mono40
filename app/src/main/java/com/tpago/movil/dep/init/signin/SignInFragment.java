@@ -43,6 +43,7 @@ import com.tpago.movil.util.ChangePasswordRadioMenuUtil;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.RadioGroupUtil;
 import com.tpago.movil.util.UiUtil;
+import com.tpago.movil.util.function.Action;
 
 import javax.inject.Inject;
 
@@ -172,10 +173,14 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
         });
 
         if (shouldInit) {
-            fragmentReplacer.begin(InitFragment.create())
-                    .transition(FragmentReplacer.Transition.FIFO)
-                    .commit();
+            gotToInit();
         }
+    }
+
+    private void gotToInit() {
+        fragmentReplacer.begin(InitFragment.create())
+                .transition(FragmentReplacer.Transition.FIFO)
+                .commit();
     }
 
     @Override
@@ -321,6 +326,12 @@ public final class SignInFragment extends BaseInitFragment implements SignInPres
                         )
                 )
                 .negativeButtonText(R.string.laterAsVerb)
+                .negativeButtonAction(new Action() {
+                    @Override
+                    public void run() {
+                     gotToInit();
+                    }
+                })
                 .show();
     }
 

@@ -10,9 +10,9 @@ import retrofit2.Response;
 /**
  * @author hecvasro
  */
-final class MapperResult<T> implements Function<Response<T>, Result<T>> {
+public final class MapperResult<T> implements Function<Response<T>, Result<T>> {
 
-  static Creator creator(MapperFailureData mapper) {
+  public static Creator creator(MapperFailureData mapper) {
     return new Creator(mapper);
   }
 
@@ -30,7 +30,7 @@ final class MapperResult<T> implements Function<Response<T>, Result<T>> {
     return Result.create(this.mapper.apply(response.errorBody()));
   }
 
-  static final class Creator {
+  public static final class Creator {
 
     private final MapperFailureData mapper;
 

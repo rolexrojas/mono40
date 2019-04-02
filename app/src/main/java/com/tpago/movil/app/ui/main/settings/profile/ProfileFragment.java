@@ -143,6 +143,7 @@ public final class ProfileFragment extends BaseMainFragment implements ProfilePr
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         this.submitButton = menu.findItem(R.id.menu_item_submit);
+        this.hideSaveButton();
     }
 
     @Override
