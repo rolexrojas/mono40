@@ -44,7 +44,7 @@ import com.tpago.movil.d.ui.main.recipient.index.category.RecipientCategoryFragm
 import com.tpago.movil.d.ui.view.widget.SlidingPaneLayout;
 import com.tpago.movil.dep.init.InitActivityBase;
 import com.tpago.movil.dep.main.MainModule;
-import com.tpago.movil.dep.main.purchase.NonNfcPurchaseFragment;
+import com.tpago.movil.d.ui.main.purchase.NonNfcPurchaseFragment;
 import com.tpago.movil.dep.widget.Keyboard;
 import com.tpago.movil.reactivex.DisposableUtil;
 import com.tpago.movil.session.SessionManager;

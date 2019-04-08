@@ -1,0 +1,184 @@
+package com.tpago.movil.d.ui.main.purchase;
+
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.tpago.movil.R;
+import com.tpago.movil.app.ui.activity.base.ActivityModule;
+import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
+import com.tpago.movil.d.domain.Product;
+import com.tpago.movil.d.domain.ProductManager;
+import com.tpago.movil.d.domain.api.ApiCode;
+import com.tpago.movil.d.domain.api.ApiResult;
+import com.tpago.movil.d.domain.api.DepApiBridge;
+import com.tpago.movil.d.ui.ChildFragment;
+import com.tpago.movil.d.ui.DepActivityBase;
+import com.tpago.movil.d.ui.Dialogs;
+import com.tpago.movil.d.ui.main.MainContainer;
+import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
+import com.tpago.movil.d.ui.main.recipient.index.disburse.DisbursementActivity;
+import com.tpago.movil.d.ui.view.RecyclerViewBaseAdapter;
+import com.tpago.movil.reactivex.DisposableUtil;
+import com.tpago.movil.session.SessionManager;
+
+import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import io.reactivex.Single;
+import io.reactivex.disposables.Disposable;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
+import rx.schedulers.Schedulers;
+
+/**
+ * @author hecvasro
+ */
+public final class NonNfcPurchaseFragment extends ChildFragment<MainContainer> implements PurchaseContainer {
+
+    public static NonNfcPurchaseFragment create() {
+        return new NonNfcPurchaseFragment();
+    }
+
+    private static final String TAG_PAYMENT_SCREEN = "paymentScreen";
+
+    @Inject
+    ProductManager productManager;
+    @Inject
+    PurchasePresenter presenter;
+
+    @Inject
+    SessionManager sessionManager;
+    @Inject
+    DepApiBridge apiBridge;
+    @Inject
+    TakeoverLoader takeoverLoader;
+
+    private Unbinder unbinder;
+    @BindView(R.id.card_list)
+    RecyclerView cardListView;
+    private Disposable disposable;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        final NonNfcPurchaseComponent component = DaggerNonNfcPurchaseComponent.builder()
+                .depMainComponent(getContainer().getComponent())
+                .purchaseModule(new PurchaseModule((DepActivityBase) requireActivity()))
+                .build();
+        component.inject(this);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(
+            LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState
+    ) {
+        return inflater.inflate(R.layout.d_fragment_purchase_fragment_non_nfc, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Binds all the annotated resources, views and methods.
+        unbinder = ButterKnife.bind(this, view);
+        cardListView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        cardListView.setAdapter(new CardListAdapter());
+    }
+
+    public void handleSuccess(Product paymentMethod) {
+        PinConfirmationDialogFragment.dismiss(getFragmentManager(), true);
+        final FragmentTransaction transaction = getChildFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
+        NonNfcPurchasePaymentDialogFragment.newInstance(paymentMethod, new NonNfcPurchasePaymentDialogFragment.OnDismissedListener() {
+            @Override
+            public void onDismissed() {
+                loadProducts();
+            }
+        })
+                .show(transaction, TAG_PAYMENT_SCREEN);
+    }
+
+
+    public void handleError() {
+        PinConfirmationDialogFragment.dismiss(getFragmentManager(), false);
+        Dialogs.builder(getContext())
+                .setTitle(R.string.error_generic_title)
+                .setMessage(R.string.error_incorrect_pin)
+                .setPositiveButton(R.string.error_positive_button_text, null)
+                .show();
+    }
+
+    public void handleResult(ApiResult<Void> apiResultObservable, Product paymentMethod) {
+        if (apiResultObservable.getCode() == ApiCode.OK) {
+            handleSuccess(paymentMethod);
+        } else {
+            handleError();
+        }
+    }
+
+    public void activatePurchase(String pin, Product paymentMethod) {
+        apiBridge.activatePurchaseWithoutNfc(paymentMethod, pin)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(apiResultObservable -> handleResult(apiResultObservable, paymentMethod), throwable -> handleError());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Sets the title.
+        getContainer().setTitle(getString(R.string.screen_payments_commerce_title));
+        loadProducts();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    private void loadProducts() {
+        cardListView.setAdapter(null);
+        CardListAdapter adapter = new CardListAdapter(productManager.getPaymentOptionList(),
+                item -> {
+                    PinConfirmationDialogFragment.show(
+                            requireActivity().getSupportFragmentManager(),
+                            requireContext().getString(R.string.confirm_pin_payment_authorize_description),
+                            (PinConfirmationDialogFragment.Callback) pin -> activatePurchase(pin, item),
+                            0,
+                            0
+                    );
+                }, sessionManager.getUser());
+        cardListView.setAdapter(adapter);
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Unbinds all the annotated resources, views and methods.
+        unbinder.unbind();
+    }
+
+    @Nullable
+    @Override
+    public PurchaseComponent getComponent() {
+        return DaggerPurchaseComponent.builder()
+                .depMainComponent(getContainer().getComponent())
+                .purchaseModule(new PurchaseModule((DepActivityBase) requireActivity()))
+                .build();
+    }
+}

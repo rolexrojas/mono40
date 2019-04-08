@@ -125,4 +125,9 @@ public interface DepApiBridge {
     String pin
   );
 
+  Observable<ApiResult<Void>> activatePurchaseWithoutNfc(
+          Product fundingProduct,
+          String pin
+  );
+
 }

@@ -13,7 +13,7 @@ import dagger.Component;
   modules = ProductsModule.class,
   dependencies = DepMainComponent.class
 )
-interface ProductsComponent {
+public interface ProductsComponent {
 
   void inject(ProductsFragment fragment);
 }

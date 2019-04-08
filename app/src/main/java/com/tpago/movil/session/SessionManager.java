@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.TagConstraint;
+import com.crashlytics.android.Crashlytics;
 import com.tpago.movil.Code;
 import com.tpago.movil.Email;
 import com.tpago.movil.Name;
@@ -166,13 +167,13 @@ public final class SessionManager {
 
     private void checkSessionIsOpen() {
         if (!this.isSessionOpen()) {
-            throw new IllegalStateException("!this.isSessionOpen()");
+//            throw new IllegalStateException("!this.isSessionOpen()");
         }
     }
 
     private void checkSessionIsNotOpen() {
         if (this.isSessionOpen()) {
-            throw new IllegalStateException("this.isSessionOpen()");
+//            throw new IllegalStateException("this.isSessionOpen()");
         }
     }
 

@@ -38,7 +38,7 @@ import timber.log.Timber;
  * @author hecvasro
  */
 @Deprecated
-class ProductsPresenter extends Presenter<ProductsScreen> {
+public class ProductsPresenter extends Presenter<ProductsScreen> {
 
     private final SchedulerProvider schedulerProvider;
     private final EventBus eventBus;

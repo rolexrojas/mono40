@@ -12,6 +12,7 @@ import com.tpago.movil.d.domain.PaymentResult;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductInfo;
 import com.tpago.movil.d.domain.Transaction;
+import com.tpago.movil.d.domain.api.ApiResult;
 
 import java.util.List;
 import java.util.Map;
@@ -102,5 +103,8 @@ public interface ApiService {
 
   @POST("cash-advance")
   Observable<Response<TransferResponseBody>> advanceCash(@Body CashAdvanceRequestBody body);
+
+  @POST("payments/pay/without-nfc")
+  Observable<Response<Void>> activatePurchaseWithoutNfc(@Body PurchaseWithoutNfcRequestBody body);
 
 }

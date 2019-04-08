@@ -1,8 +1,12 @@
 package com.tpago.movil.d.ui.main.purchase;
 
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 
+import com.tpago.movil.app.ui.activity.ActivityScope;
+import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.company.CompanyHelper;
+import com.tpago.movil.d.ui.DepActivityBase;
 import com.tpago.movil.dep.User;
 import com.tpago.movil.app.ui.fragment.FragmentScope;
 import com.tpago.movil.d.data.StringHelper;
@@ -20,7 +24,12 @@ import dagger.Provides;
  * @author hecvasro
  */
 @Module
-class PurchaseModule {
+public class PurchaseModule {
+  private final DepActivityBase activity;
+
+  public PurchaseModule(DepActivityBase activity) {
+    this.activity = activity;
+  }
 
   @Provides
   @FragmentScope
@@ -56,5 +65,17 @@ class PurchaseModule {
       user.phoneNumber()
         .value()
     );
+  }
+
+  @Provides
+  @FragmentScope
+  TakeoverLoader takeoverLoader(FragmentManager fragmentManager) {
+    return TakeoverLoader.create(fragmentManager);
+  }
+
+  @Provides
+  @FragmentScope
+  FragmentManager fragmentManager() {
+    return this.activity.getSupportFragmentManager();
   }
 }

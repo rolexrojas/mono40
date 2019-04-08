@@ -9,11 +9,16 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.tpago.movil.app.ui.activity.NavButtonPressEventHandler;
 import com.tpago.movil.app.ui.alert.AlertManager;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.app.StringMapper;
+import com.tpago.movil.d.misc.Utils;
 import com.tpago.movil.dep.init.InitActivityBase;
 import com.tpago.movil.util.LogoutTimerService;
 
@@ -68,6 +73,15 @@ public abstract class ActivityBase extends AppCompatActivity {
   }
 
   @Override
+  protected void onResume() {
+    super.onResume();
+
+    final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this
+            .findViewById(android.R.id.content)).getChildAt(0);
+    setupUI(viewGroup);
+  }
+
+  @Override
   protected void onStart() {
     super.onStart();
     IntentFilter intentFilter = new IntentFilter(LogoutTimerService.LOGOUT_BROADCAST);
@@ -98,6 +112,27 @@ public abstract class ActivityBase extends AppCompatActivity {
   public void onBackPressed() {
     if (!this.backButtonPressEventHandler.accept()) {
       super.onBackPressed();
+    }
+  }
+
+  public void setupUI(View view) {
+
+    // Set up touch listener for non-text box views to hide keyboard.
+    if (!(view instanceof EditText)) {
+      view.setOnTouchListener(new View.OnTouchListener() {
+        public boolean onTouch(View v, MotionEvent event) {
+          Utils.hideSoftKeyboard(ActivityBase.this);
+          return false;
+        }
+      });
+    }
+
+    //If a layout container, iterate over children and seed recursion.
+    if (view instanceof ViewGroup) {
+      for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+        View innerView = ((ViewGroup) view).getChildAt(i);
+        setupUI(innerView);
+      }
     }
   }
 

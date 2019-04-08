@@ -398,28 +398,25 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
             final BillRecipient billRecipient = (BillRecipient) recipient;
             if (ObjectHelper.isNull(billRecipient.getBalance())) {
                 this.queryBalanceSubscription = rx.Single
-                        .defer(new Callable<rx.Single<Result<BillBalance, ErrorCode>>>() {
-                            @Override
-                            public rx.Single<Result<BillBalance, ErrorCode>> call() throws Exception {
-                                final Result<BillBalance, ErrorCode> result;
-                                if (ns.checkIfAvailable()) {
-                                    final ApiResult<BillBalance> queryBalanceResult = depApiBridge
-                                            .queryBalance(billRecipient);
-                                    if (queryBalanceResult.isSuccessful()) {
-                                        result = Result.create(queryBalanceResult.getData());
-                                    } else {
-                                        result = Result.create(
-                                                FailureData.create(
-                                                        ErrorCode.UNEXPECTED,
-                                                        queryBalanceResult.getError()
-                                                                .getDescription()
-                                                ));
-                                    }
+                        .defer(() -> {
+                            final Result<BillBalance, ErrorCode> result;
+                            if (ns.checkIfAvailable()) {
+                                final ApiResult<BillBalance> queryBalanceResult = depApiBridge
+                                        .queryBalance(billRecipient);
+                                if (queryBalanceResult.isSuccessful()) {
+                                    result = Result.create(queryBalanceResult.getData());
                                 } else {
-                                    result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
+                                    result = Result.create(
+                                            FailureData.create(
+                                                    ErrorCode.UNEXPECTED,
+                                                    queryBalanceResult.getError()
+                                                            .getDescription()
+                                            ));
                                 }
-                                return rx.Single.just(result);
+                            } else {
+                                result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
                             }
+                            return rx.Single.just(result);
                         })
                         .subscribeOn(rx.schedulers.Schedulers.io())
                         .observeOn(rx.android.schedulers.AndroidSchedulers.mainThread())

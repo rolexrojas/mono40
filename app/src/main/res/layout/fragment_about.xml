@@ -3,12 +3,14 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   style="@style/SettingsContainer"
-  android:clickable="false">
+  android:clickable="false"
+    android:paddingTop="0dp">
 
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+      android:paddingTop="14dp">
 
     <TextView
       style="@style/SettingsSectionTitle"
@@ -205,5 +207,11 @@
         </LinearLayout>
       </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
+      <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+          android:id="@+id/setting_option_version"
+          style="@style/SettingsOption"
+          android:clickable="true"
+          app:primaryText="Versión"
+          app:secondaryText="2.4.91" />
   </LinearLayout>
 </ScrollView>

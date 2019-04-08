@@ -26,7 +26,7 @@ public class TimeoutSessionOptionsAdapter extends RecyclerViewBaseAdapter<Timeou
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.payment_method_list_item;
+        return R.layout.settings_option_selectable_no_merge;
     }
 
     @Override
@@ -41,6 +41,8 @@ public class TimeoutSessionOptionsAdapter extends RecyclerViewBaseAdapter<Timeou
     static class TimeoutSessionOptionViewHolder extends RecyclerViewBaseAdapter.BaseViewHolder<TimeoutSessionOption> {
         @BindView(R.id.primaryTextView)
         TextView primaryText;
+        @BindView(R.id.indicator)
+        View view;
 
         public TimeoutSessionOptionViewHolder(View itemView, RecyclerAdapterCallback<TimeoutSessionOption> listener) {
             super(itemView, listener);
@@ -50,6 +52,11 @@ public class TimeoutSessionOptionsAdapter extends RecyclerViewBaseAdapter<Timeou
         @Override
         public void bind(TimeoutSessionOption item) {
             super.bind(item);
+            if (item.getTitle().equalsIgnoreCase(ConfigManager.getTimeOut(itemView.getContext()).getTitle())) {
+                view.setVisibility(View.VISIBLE);
+            } else {
+                view.setVisibility(View.GONE);
+            }
             primaryText.setText(item.getTitle());
         }
     }

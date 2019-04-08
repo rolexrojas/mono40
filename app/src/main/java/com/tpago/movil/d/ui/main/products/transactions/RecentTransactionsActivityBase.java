@@ -92,12 +92,7 @@ public class RecentTransactionsActivityBase
     final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(this)
       .drawable(R.drawable.divider_line_horizontal)
       .marginResId(R.dimen.space_horizontal_20)
-      .visibilityProvider(new FlexibleDividerDecoration.VisibilityProvider() {
-        @Override
-        public boolean shouldHideDivider(int position, RecyclerView parent) {
-          return position < 0 || adapter.shouldHideDivider(position);
-        }
-      })
+      .visibilityProvider((position, parent) -> position < 0 || adapter.shouldHideDivider(position))
       .build();
     recyclerView.addItemDecoration(divider);
     // Injects all the dependencies.
