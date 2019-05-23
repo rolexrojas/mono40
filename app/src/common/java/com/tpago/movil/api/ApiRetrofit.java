@@ -146,19 +146,7 @@ public interface ApiRetrofit {
 
     // [SECTION] Utils
     @GET("customer/{phoneNumber}/status")
-    Single<ApiPhoneNumberState> fetchPhoneNumberState(@Path("phoneNumber") String phoneNumber,
-                                                      @Header("version") String version,
-                                                      @Header("os") String os,
-                                                      @Query("manufacturer") String manufacturer,
-                                                      @Query("serial") String serial,
-                                                      @Query("fingerprint") String fingerprint,
-                                                      @Query("device") String device,
-                                                      @Query("display") String display,
-                                                      @Query("board") String board,
-                                                      @Query("bootloader") String bootloader,
-                                                      @Query("brand") String brand,
-                                                      @Query("hardware") String hardware,
-                                                      @Query("model") String model);
+    Single<ApiPhoneNumberState> fetchPhoneNumberState(@Path("phoneNumber") String phoneNumber);
 
     @POST("account/reset-password-pin")
     Single<Response<Void>> resetPasswordWithPIN(@Body ResetPasswordPINBody body);

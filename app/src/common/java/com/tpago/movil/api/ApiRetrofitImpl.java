@@ -477,19 +477,7 @@ public final class ApiRetrofitImpl implements Api {
     // [SECTION] Utils
     @Override
     public Single<Integer> fetchPhoneNumberState(PhoneNumber phoneNumber) {
-        return this.api.fetchPhoneNumberState(phoneNumber.value(),
-                DeviceInformation.getAppVersionName(context),
-                DeviceInformation.getOS(),
-                Build.MANUFACTURER,
-                Build.SERIAL,
-                Build.FINGERPRINT,
-                Build.DEVICE,
-                Build.DISPLAY,
-                Build.BOARD,
-                Build.BOOTLOADER,
-                Build.BRAND,
-                Build.HARDWARE,
-                Build.MODEL)
+        return this.api.fetchPhoneNumberState(phoneNumber.value())
                 .map(ApiPhoneNumberState::state);
     }
 
