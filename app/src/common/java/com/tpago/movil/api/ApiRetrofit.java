@@ -23,6 +23,7 @@ import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -34,19 +35,27 @@ public interface ApiRetrofit {
 
     // [SECTION] Auth
     @POST("signup")
-    Single<Response<User>> signUp(@Body RetrofitApiSignUpBody body);
+    Single<Response<User>> signUp(@Body RetrofitApiSignUpBody body,
+                                  @Header("version") String version,
+                                  @Header("os") String os);
 
     @POST("customer/pre-registration-information")
     Single<Response<RetrofitApiEmailRequestVerificationCodeResponse>> preRegisterInformation(@Body RetrofitApiPreRegistrationBody body);
 
     @POST("associate")
-    Single<Response<User>> associateDevice(@Body RetrofitApiAssociateDeviceBody body);
+    Single<Response<User>> associateDevice(@Body RetrofitApiAssociateDeviceBody body,
+                                           @Header("version") String version,
+                                           @Header("os") String os);
 
     @POST("signin")
-    Single<Response<User>> signIn(@Body RetrofitApiSignInBody body);
+    Single<Response<User>> signIn(@Body RetrofitApiSignInBody body,
+                                  @Header("version") String version,
+                                  @Header("os") String os);
 
     @POST("signin/fingerprint")
-    Single<Response<User>> openSession(@Body RetrofitApiOpenSessionBody body);
+    Single<Response<User>> openSession(@Body RetrofitApiOpenSessionBody body,
+                                       @Header("version") String version,
+                                       @Header("os") String os);
 
     // [SECTION] Session
     @GET("banks")
@@ -137,7 +146,19 @@ public interface ApiRetrofit {
 
     // [SECTION] Utils
     @GET("customer/{phoneNumber}/status")
-    Single<ApiPhoneNumberState> fetchPhoneNumberState(@Path("phoneNumber") String phoneNumber);
+    Single<ApiPhoneNumberState> fetchPhoneNumberState(@Path("phoneNumber") String phoneNumber,
+                                                      @Header("version") String version,
+                                                      @Header("os") String os,
+                                                      @Query("manufacturer") String manufacturer,
+                                                      @Query("serial") String serial,
+                                                      @Query("fingerprint") String fingerprint,
+                                                      @Query("device") String device,
+                                                      @Query("display") String display,
+                                                      @Query("board") String board,
+                                                      @Query("bootloader") String bootloader,
+                                                      @Query("brand") String brand,
+                                                      @Query("hardware") String hardware,
+                                                      @Query("model") String model);
 
     @POST("account/reset-password-pin")
     Single<Response<Void>> resetPasswordWithPIN(@Body ResetPasswordPINBody body);

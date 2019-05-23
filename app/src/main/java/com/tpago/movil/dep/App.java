@@ -5,16 +5,14 @@ import android.content.Context;
 
 import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.di.DependencyInjector;
-import com.jakewharton.picasso.OkHttp3Downloader;
-import com.squareup.picasso.Picasso;
 import com.tpago.movil.BuildConfig;
 import com.tpago.movil.app.AppComponent;
 import com.tpago.movil.app.di.ComponentBuilderSupplier;
 import com.tpago.movil.app.di.ComponentBuilderSupplierContainer;
 import com.tpago.movil.d.DepAppModule;
 import com.tpago.movil.job.JobModule;
-import com.tpago.movil.session.UpdateUserNameJob;
 import com.tpago.movil.session.UpdateUserCarrierJob;
+import com.tpago.movil.session.UpdateUserNameJob;
 import com.tpago.movil.session.UpdateUserPictureJob;
 import com.tpago.movil.util.ObjectHelper;
 
@@ -28,80 +26,82 @@ import timber.log.Timber;
  */
 @Deprecated
 public abstract class App extends Application implements ComponentBuilderSupplierContainer,
-  DependencyInjector {
+        DependencyInjector {
 
-  public static App get(Context context) {
-    final Context appContext = ObjectHelper.checkNotNull(context, "context")
-      .getApplicationContext();
-    if (!(appContext instanceof App)) {
-      throw new ClassCastException("!(appContext instanceof App)");
+    public static App get(Context context) {
+        final Context appContext = ObjectHelper.checkNotNull(context, "context")
+                .getApplicationContext();
+        if (!(appContext instanceof App)) {
+            throw new ClassCastException("!(appContext instanceof App)");
+        }
+        return (App) appContext;
     }
-    return (App) appContext;
-  }
 
-  private com.tpago.movil.app.AppComponent component;
+    private com.tpago.movil.app.AppComponent component;
 
-  private boolean visible = false;
+    private boolean visible = false;
 
-  @Inject ComponentBuilderSupplier componentBuilderSupplier;
-  @Inject OkHttpClient httpClient;
+    @Inject
+    ComponentBuilderSupplier componentBuilderSupplier;
+    @Inject
+    OkHttpClient httpClient;
 
-  private void initTimber() {
-    if (BuildConfig.DEBUG) {
-      Timber.plant(new DebugLogTree());
+    private void initTimber() {
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
+        if (BuildConfig.MODE_CRASH_REPORTING) {
+            Timber.plant(new CrashlyticsLogTree(this));
+        }
     }
-    if (BuildConfig.MODE_CRASH_REPORTING) {
-      Timber.plant(new CrashlyticsLogTree(this));
+
+    private void initDagger() {
+        component = com.tpago.movil.app.DaggerAppComponent.builder()
+                .appModule(new AppModule(this))
+                .depAppModule(new DepAppModule(this))
+                .jobModule(JobModule.create(this))
+                .build();
+        component.inject(this);
     }
-  }
 
-  private void initDagger() {
-    component = com.tpago.movil.app.DaggerAppComponent.builder()
-      .appModule(new AppModule(this))
-      .depAppModule(new DepAppModule(this))
-      .jobModule(JobModule.create(this))
-      .build();
-    component.inject(this);
-  }
+    private void initializePicasso() {
+    }
 
-  private void initializePicasso() {
-  }
+    @Deprecated
+    public final AppComponent component() {
+        return component;
+    }
 
-  @Deprecated
-  public final AppComponent component() {
-    return component;
-  }
+    public final boolean isVisible() {
+        return visible;
+    }
 
-  public final boolean isVisible() {
-    return visible;
-  }
+    public final void setVisible(boolean visible) {
+        this.visible = visible;
+    }
 
-  public final void setVisible(boolean visible) {
-    this.visible = visible;
-  }
-
-  @Override
-  public void onCreate() {
-    super.onCreate();
-    initTimber();
-    initDagger();
-    initializePicasso();
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        initTimber();
+        initDagger();
+        initializePicasso();
 //    FirebaseApp.initializeApp(this);
-  }
-
-  @Override
-  public ComponentBuilderSupplier componentBuilderSupplier() {
-    return this.componentBuilderSupplier;
-  }
-
-  @Override
-  public void inject(Job job) {
-    if (job instanceof UpdateUserNameJob) {
-      this.component.inject((UpdateUserNameJob) job);
-    } else if (job instanceof UpdateUserPictureJob) {
-      this.component.inject((UpdateUserPictureJob) job);
-    } else if (job instanceof UpdateUserCarrierJob) {
-      this.component.inject((UpdateUserCarrierJob) job);
     }
-  }
+
+    @Override
+    public ComponentBuilderSupplier componentBuilderSupplier() {
+        return this.componentBuilderSupplier;
+    }
+
+    @Override
+    public void inject(Job job) {
+        if (job instanceof UpdateUserNameJob) {
+            this.component.inject((UpdateUserNameJob) job);
+        } else if (job instanceof UpdateUserPictureJob) {
+            this.component.inject((UpdateUserPictureJob) job);
+        } else if (job instanceof UpdateUserCarrierJob) {
+            this.component.inject((UpdateUserCarrierJob) job);
+        }
+    }
 }

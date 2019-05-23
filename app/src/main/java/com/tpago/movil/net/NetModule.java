@@ -24,42 +24,43 @@ import okhttp3.logging.HttpLoggingInterceptor;
 @Module
 public final class NetModule {
 
-  private static Interceptor createLoggingInterceptor() {
-    return new HttpLoggingInterceptor()
-      .setLevel(HttpLoggingInterceptor.Level.BODY);
-  }
-
-  private static Interceptor createUserAgentInterceptor() {
-    return (chain) -> {
-      final Request request = chain.request()
-        .newBuilder()
-        .addHeader("User-Agent", System.getProperty("http.agent"))
-        .build();
-
-      return chain.proceed(request);
-    };
-  }
-
-  @Provides
-  @Singleton
-  Cache provideCache(Context context) {
-    return new Cache(FileHelper.createIntCacheDir(context), Integer.MAX_VALUE);
-  }
-
-  @Provides
-  @Singleton
-  OkHttpClient okHttpClient(Cache cache, AccessTokenInterceptor accessTokenInterceptor) {
-    OkHttpClient.Builder builder = new OkHttpClient.Builder()
-        .addInterceptor(accessTokenInterceptor)
-        .addInterceptor(createUserAgentInterceptor())
-        .cache(cache)
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
-        .writeTimeout(30, TimeUnit.SECONDS);
-    if (BuildConfig.DEBUG) {
-      builder.addInterceptor(createLoggingInterceptor());
+    private static Interceptor createLoggingInterceptor() {
+        return new HttpLoggingInterceptor()
+                .setLevel(HttpLoggingInterceptor.Level.BODY);
     }
-    return builder
-      .build();
-  }
+
+    private static Interceptor createUserAgentInterceptor() {
+        return (chain) -> {
+            final Request request = chain.request()
+                    .newBuilder()
+                    .addHeader("User-Agent", System.getProperty("http.agent"))
+                    .build();
+
+            return chain.proceed(request);
+        };
+    }
+
+    @Provides
+    @Singleton
+    Cache provideCache(Context context) {
+        return new Cache(FileHelper.createIntCacheDir(context), Integer.MAX_VALUE);
+    }
+
+    @Provides
+    @Singleton
+    OkHttpClient okHttpClient(Cache cache, AccessTokenInterceptor accessTokenInterceptor) {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .addInterceptor(createLoggingInterceptor())
+                .addInterceptor(accessTokenInterceptor)
+                .addInterceptor(createUserAgentInterceptor())
+                .cache(cache)
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS);
+//        if (BuildConfig.DEBUG) {
+//            builder.addInterceptor(createLoggingInterceptor());
+//        }` `
+        return builder
+                .build();
+    }
 }

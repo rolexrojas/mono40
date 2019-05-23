@@ -1,5 +1,8 @@
 package com.tpago.movil.api;
 
+import android.app.Application;
+import android.content.Context;
+
 import com.google.gson.Gson;
 import com.tpago.movil.BuildConfig;
 import com.tpago.movil.util.FailureData;
@@ -23,26 +26,27 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public final class ApiModuleFlavored {
 
-  @Provides
-  @Singleton
-  Api api(Gson gson, OkHttpClient okHttpClient) {
-    final Retrofit retrofit = new Retrofit.Builder()
-      .baseUrl(BuildConfig.API_URL)
-      .client(okHttpClient)
-      .addConverterFactory(GsonConverterFactory.create(gson))
-      .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-      .build();
+    @Provides
+    @Singleton
+    Api api(Gson gson, OkHttpClient okHttpClient, Context context) {
+        final Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BuildConfig.API_URL)
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build();
 
-    final ApiRetrofit api = retrofit.create(ApiRetrofit.class);
-    final Converter<ResponseBody, FailureData> apiFailureDataConverter = retrofit
-      .responseBodyConverter(FailureData.class, new Annotation[0]);
-    final MapperFailureData retrofitApiFailureDataMapper
-      = MapperFailureData.create(apiFailureDataConverter);
-    final MapperResult.Creator retrofitApiResultMapperCreator = MapperResult
-      .creator(retrofitApiFailureDataMapper);
-    final EmptyMapperResult.Creator retrofitApiResultEmptyMapperCreator = EmptyMapperResult
-            .creator(retrofitApiFailureDataMapper);
+        final ApiRetrofit api = retrofit.create(ApiRetrofit.class);
+        final Converter<ResponseBody, FailureData> apiFailureDataConverter = retrofit
+                .responseBodyConverter(FailureData.class, new Annotation[0]);
+        final MapperFailureData retrofitApiFailureDataMapper
+                = MapperFailureData.create(apiFailureDataConverter);
+        final MapperResult.Creator retrofitApiResultMapperCreator = MapperResult
+                .creator(retrofitApiFailureDataMapper);
+        final EmptyMapperResult.Creator retrofitApiResultEmptyMapperCreator = EmptyMapperResult
+                .creator(retrofitApiFailureDataMapper);
 
-    return ApiRetrofitImpl.create(api, retrofitApiResultMapperCreator, retrofitApiResultEmptyMapperCreator);
-  }
+        return ApiRetrofitImpl.create(api, retrofitApiResultMapperCreator, retrofitApiResultEmptyMapperCreator,
+                context);
+    }
 }
