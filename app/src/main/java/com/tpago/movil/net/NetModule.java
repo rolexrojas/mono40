@@ -59,7 +59,7 @@ public final class NetModule {
                 .writeTimeout(30, TimeUnit.SECONDS);
         if (BuildConfig.DEBUG) {
             builder.addInterceptor(createLoggingInterceptor());
-        }` `
+        }
         return builder
                 .build();
     }
