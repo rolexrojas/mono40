@@ -73,7 +73,7 @@ public final class NonNfcPurchaseFragment extends ChildFragment<MainContainer> i
         super.onCreate(savedInstanceState);
         final NonNfcPurchaseComponent component = DaggerNonNfcPurchaseComponent.builder()
                 .depMainComponent(getContainer().getComponent())
-                .purchaseModule(new PurchaseModule((DepActivityBase) requireActivity()))
+                .purchaseModule(new PurchaseModule((DepActivityBase) getActivity()))
                 .build();
         component.inject(this);
     }
@@ -94,7 +94,7 @@ public final class NonNfcPurchaseFragment extends ChildFragment<MainContainer> i
 
         // Binds all the annotated resources, views and methods.
         unbinder = ButterKnife.bind(this, view);
-        cardListView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        cardListView.setLayoutManager(new LinearLayoutManager(getContext()));
         cardListView.setAdapter(new CardListAdapter());
     }
 
@@ -155,8 +155,8 @@ public final class NonNfcPurchaseFragment extends ChildFragment<MainContainer> i
         CardListAdapter adapter = new CardListAdapter(productManager.getPaymentOptionList(),
                 item -> {
                     PinConfirmationDialogFragment.show(
-                            requireActivity().getSupportFragmentManager(),
-                            requireContext().getString(R.string.confirm_pin_payment_authorize_description),
+                            getActivity().getSupportFragmentManager(),
+                            getContext().getString(R.string.confirm_pin_payment_authorize_description),
                             (PinConfirmationDialogFragment.Callback) pin -> activatePurchase(pin, item),
                             0,
                             0
@@ -178,7 +178,7 @@ public final class NonNfcPurchaseFragment extends ChildFragment<MainContainer> i
     public PurchaseComponent getComponent() {
         return DaggerPurchaseComponent.builder()
                 .depMainComponent(getContainer().getComponent())
-                .purchaseModule(new PurchaseModule((DepActivityBase) requireActivity()))
+                .purchaseModule(new PurchaseModule((DepActivityBase) getActivity()))
                 .build();
     }
 }

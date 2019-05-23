@@ -200,7 +200,7 @@ public final class SettingsFragment extends BaseMainFragment implements Settings
     super.onResume();
 
     this.presenter.onPresentationResumed();
-    timeoutSettingsOption.secondaryText(ConfigManager.getTimeOut(requireContext()).getTitle());
+    timeoutSettingsOption.secondaryText(ConfigManager.getTimeOut(getContext()).getTitle());
   }
 
   @Override

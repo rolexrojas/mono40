@@ -39,17 +39,17 @@ public final class TimeoutFragment extends InjectableFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        sessionTimeoutOptionsRv.setLayoutManager(new LinearLayoutManager(requireContext()));
+        sessionTimeoutOptionsRv.setLayoutManager(new LinearLayoutManager(getContext()));
         List<TimeoutSessionOption> items = new ArrayList<>();
         int[] minutes = new int[]{1, 2, 3, 4, 5, 10};
         for (int minute : minutes) {
             items.add(new TimeoutSessionOption(minute));
         }
-        sessionTimeoutOptionsRv.addItemDecoration(ItemHelper.dividerLineHorizontal(requireContext()));
+        sessionTimeoutOptionsRv.addItemDecoration(ItemHelper.dividerLineHorizontal(getContext()));
         sessionTimeoutOptionsRv.setAdapter(new TimeoutSessionOptionsAdapter(
                 items,
                 item -> {
-                    ConfigManager.setTimeOut(requireContext(), item);
+                    ConfigManager.setTimeOut(getContext(), item);
                     getActivity().finish();
                 }));
     }

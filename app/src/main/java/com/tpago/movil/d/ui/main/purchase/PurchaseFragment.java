@@ -90,7 +90,7 @@ public class PurchaseFragment
         // Injects all the annotated dependencies.
         component = DaggerPurchaseComponent.builder()
                 .depMainComponent(getContainer().getComponent())
-                .purchaseModule(new PurchaseModule((DepActivityBase) requireActivity()))
+                .purchaseModule(new PurchaseModule((DepActivityBase) getActivity()))
                 .build();
         component.inject(this);
 
