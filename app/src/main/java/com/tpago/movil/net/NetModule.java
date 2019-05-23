@@ -57,9 +57,9 @@ public final class NetModule {
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(30, TimeUnit.SECONDS);
-//        if (BuildConfig.DEBUG) {
-//            builder.addInterceptor(createLoggingInterceptor());
-//        }` `
+        if (BuildConfig.DEBUG) {
+            builder.addInterceptor(createLoggingInterceptor());
+        }` `
         return builder
                 .build();
     }
