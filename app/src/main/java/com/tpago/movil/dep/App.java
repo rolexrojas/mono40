@@ -86,6 +86,7 @@ public abstract class App extends Application implements ComponentBuilderSupplie
     initTimber();
     initDagger();
     initializePicasso();
+//    FirebaseApp.initializeApp(this);
   }
 
   @Override
