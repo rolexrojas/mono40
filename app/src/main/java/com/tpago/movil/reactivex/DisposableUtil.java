@@ -9,13 +9,14 @@ import io.reactivex.disposables.Disposable;
  */
 public final class DisposableUtil {
 
-  public static void dispose(Disposable disposable) {
-    ObjectHelper.checkNotNull(disposable, "disposable");
-    if (!disposable.isDisposed()) {
-      disposable.dispose();
+    public static void dispose(Disposable disposable) {
+        if (disposable != null) {
+            if (!disposable.isDisposed()) {
+                disposable.dispose();
+            }
+        }
     }
-  }
 
-  private DisposableUtil() {
-  }
+    private DisposableUtil() {
+    }
 }

@@ -44,10 +44,11 @@ import com.tpago.movil.d.ui.main.recipient.index.category.RecipientCategoryFragm
 import com.tpago.movil.d.ui.view.widget.SlidingPaneLayout;
 import com.tpago.movil.dep.init.InitActivityBase;
 import com.tpago.movil.dep.main.MainModule;
-import com.tpago.movil.dep.main.purchase.NonNfcPurchaseFragment;
+import com.tpago.movil.d.ui.main.purchase.NonNfcPurchaseFragment;
 import com.tpago.movil.dep.widget.Keyboard;
 import com.tpago.movil.reactivex.DisposableUtil;
 import com.tpago.movil.session.SessionManager;
+import com.tpago.movil.util.LogoutTimerService;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.RootUtil;
 import com.tpago.movil.util.UiUtil;
@@ -208,6 +209,7 @@ public class DepMainActivityBase
       this.closeSession();
     } else {
       this.presenter.start();
+      startService(new Intent(this, LogoutTimerService.class));
     }
   }
 

@@ -398,28 +398,25 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
             final BillRecipient billRecipient = (BillRecipient) recipient;
             if (ObjectHelper.isNull(billRecipient.getBalance())) {
                 this.queryBalanceSubscription = rx.Single
-                        .defer(new Callable<rx.Single<Result<BillBalance, ErrorCode>>>() {
-                            @Override
-                            public rx.Single<Result<BillBalance, ErrorCode>> call() throws Exception {
-                                final Result<BillBalance, ErrorCode> result;
-                                if (ns.checkIfAvailable()) {
-                                    final ApiResult<BillBalance> queryBalanceResult = depApiBridge
-                                            .queryBalance(billRecipient);
-                                    if (queryBalanceResult.isSuccessful()) {
-                                        result = Result.create(queryBalanceResult.getData());
-                                    } else {
-                                        result = Result.create(
-                                                FailureData.create(
-                                                        ErrorCode.UNEXPECTED,
-                                                        queryBalanceResult.getError()
-                                                                .getDescription()
-                                                ));
-                                    }
+                        .defer(() -> {
+                            final Result<BillBalance, ErrorCode> result;
+                            if (ns.checkIfAvailable()) {
+                                final ApiResult<BillBalance> queryBalanceResult = depApiBridge
+                                        .queryBalance(billRecipient);
+                                if (queryBalanceResult.isSuccessful()) {
+                                    result = Result.create(queryBalanceResult.getData());
                                 } else {
-                                    result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
+                                    result = Result.create(
+                                            FailureData.create(
+                                                    ErrorCode.UNEXPECTED,
+                                                    queryBalanceResult.getError()
+                                                            .getDescription()
+                                            ));
                                 }
-                                return rx.Single.just(result);
+                            } else {
+                                result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
                             }
+                            return rx.Single.just(result);
                         })
                         .subscribeOn(rx.schedulers.Schedulers.io())
                         .observeOn(rx.android.schedulers.AndroidSchedulers.mainThread())
@@ -516,44 +513,41 @@ final class RecipientCategoryPresenter extends Presenter<RecipientCategoryScreen
     final void onPinRequestFinished(final String pin) {
         if (deleting) {
             recipientRemovalDisposable = Single
-                    .defer(new Callable<SingleSource<Result<Map<Recipient, Boolean>, ErrorCode>>>() {
-                        @Override
-                        public SingleSource<Result<Map<Recipient, Boolean>, ErrorCode>> call() throws Exception {
-                            final Result<Map<Recipient, Boolean>, ErrorCode> result;
-                            if (ns.checkIfAvailable()) {
-                                final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(pin);
-                                if (pinValidationResult.isSuccessful()) {
-                                    if (pinValidationResult.getData()) {
-                                        final Map<Recipient, Boolean> resultMap = new HashMap<>();
-                                        for (Recipient recipient : selectedRecipientList) {
-                                            boolean resultFlag = true;
-                                            if (Recipient.checkIfBill(recipient)) {
-                                                final ApiResult<Void> recipientRemovalResult = depApiBridge
-                                                        .removeBill((BillRecipient) recipient, pin);
-                                                resultFlag = recipientRemovalResult.isSuccessful();
-                                            }
-                                            if (resultFlag) {
-                                                recipientManager.remove(recipient);
-                                            }
-                                            resultMap.put(recipient, resultFlag);
+                    .defer((Callable<SingleSource<Result<Map<Recipient, Boolean>, ErrorCode>>>) () -> {
+                        final Result<Map<Recipient, Boolean>, ErrorCode> result;
+                        if (ns.checkIfAvailable()) {
+                            final ApiResult<Boolean> pinValidationResult = depApiBridge.validatePin(pin);
+                            if (pinValidationResult.isSuccessful()) {
+                                if (pinValidationResult.getData()) {
+                                    final Map<Recipient, Boolean> resultMap = new HashMap<>();
+                                    for (Recipient recipient : selectedRecipientList) {
+                                        boolean resultFlag = true;
+                                        if (Recipient.checkIfBill(recipient)) {
+                                            final ApiResult<Void> recipientRemovalResult = depApiBridge
+                                                    .removeBill((BillRecipient) recipient, pin);
+                                            resultFlag = recipientRemovalResult.isSuccessful();
                                         }
-                                        result = Result.create(resultMap);
-                                    } else {
-                                        result = Result.create(FailureData.create(ErrorCode.INCORRECT_PIN));
+                                        if (resultFlag) {
+                                            recipientManager.remove(recipient);
+                                        }
+                                        resultMap.put(recipient, resultFlag);
                                     }
+                                    result = Result.create(resultMap);
                                 } else {
-                                    result = Result.create(
-                                            FailureData.create(
-                                                    ErrorCode.UNEXPECTED,
-                                                    pinValidationResult.getError()
-                                                            .getDescription()
-                                            ));
+                                    result = Result.create(FailureData.create(ErrorCode.INCORRECT_PIN));
                                 }
                             } else {
-                                result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
+                                result = Result.create(
+                                        FailureData.create(
+                                                ErrorCode.UNEXPECTED,
+                                                pinValidationResult.getError()
+                                                        .getDescription()
+                                        ));
                             }
-                            return Single.just(result);
+                        } else {
+                            result = Result.create(FailureData.create(ErrorCode.UNAVAILABLE_NETWORK));
                         }
+                        return Single.just(result);
                     })
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())

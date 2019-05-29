@@ -8,6 +8,7 @@ import com.tpago.movil.Email;
 import com.tpago.movil.Name;
 import com.tpago.movil.company.bank.Bank;
 import com.tpago.movil.d.data.api.ChangePinResponseBody;
+import com.tpago.movil.d.domain.Customer;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.insurance.micro.MicroInsurancePartner;
 import com.tpago.movil.insurance.micro.MicroInsurancePlan;
@@ -210,5 +211,9 @@ public interface Api {
   Single<Result<Void>> verifyOneTimePasswordActivationCode(String msisdn, String activationCode);
 
   Single<Result<Void>> verifyEmailOneTimePasswordActivationCode(String msisdn, String email, String activationCode);
+
+  Single<Result<Customer>> fetchCustomer(
+          String phoneNumber
+  );
 
 }

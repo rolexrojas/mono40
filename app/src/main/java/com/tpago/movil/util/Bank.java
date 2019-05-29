@@ -17,18 +17,18 @@ package com.tpago.movil.util;
     * */
 
 public class Bank {
-    private static final int ADEMI = 38;
-    private static final int ADOPEM = 44;
-    private static final int ALAVER = 35;
-    private static final int BANRESERVAS = 4;
-    private static final int BDI= 36;
-    private static final int LOPEZ_DE_HARO = 37;
-    private static final int UNION = 45;
-    private static final int PROGRESO = 24;
-    private static final int CITIBANK = 34;
-    private static final int DKT = 39;
-    private static final int POPULAR = 5;
-    private static final int SCOTIABANK= 49;
+    public static final int ADEMI = 38;
+    public static final int ADOPEM = 44;
+    public static final int ALAVER = 35;
+    public static final int BANRESERVAS = 4;
+    public static final int BDI= 36;
+    public static final int LOPEZ_DE_HARO = 37;
+    public static final int UNION = 45;
+    public static final int PROGRESO = 24;
+    public static final int CITIBANK = 34;
+    public static final int DKT = 39;
+    public static final int POPULAR = 5;
+    public static final int SCOTIABANK= 49;
 
     private String Email;
     private String DomesticPhone;

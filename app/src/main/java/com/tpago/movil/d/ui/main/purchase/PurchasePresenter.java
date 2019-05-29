@@ -38,7 +38,7 @@ import timber.log.Timber;
  * @author hecvasro
  */
 @Deprecated
-final class PurchasePresenter extends Presenter<PurchaseScreen> {
+public final class PurchasePresenter extends Presenter<PurchaseScreen> {
 
   private final StringHelper stringHelper;
   private final ProductManager productManager;

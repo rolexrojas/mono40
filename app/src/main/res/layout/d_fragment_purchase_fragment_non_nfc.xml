@@ -1,60 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
-  style="@style/Container.Dark.Primary">
-
-  <LinearLayout
-    android:id="@+id/view_anchor"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:orientation="vertical">
-
-    <TextView
-      style="@style/D.Label.Dark.Primary"
+  style="@style/Container.Light.Primary">
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/card_list"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginEnd="60dp"
-      android:layout_marginStart="60dp"
-      android:text="@string/purchase_non_nfc_label_primary_01"/>
-
-    <TextView
-      style="@style/D.Label.Dark.Secondary"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginEnd="60dp"
-      android:layout_marginStart="60dp"
-      android:layout_marginTop="8dp"
-      android:text="@string/purchase_non_nfc_label_secondary_01"/>
-
-    <TextView
-      style="@style/D.Label.Dark.Secondary"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginEnd="60dp"
-      android:layout_marginStart="60dp"
-      android:layout_marginTop="30dp"
-      android:text="@string/purchase_non_nfc_label_secondary_02"/>
-
-    <Button
-      android:id="@+id/button_learn_more"
-      style="@style/Button.Dark.Tertiary"
-      android:layout_gravity="center_horizontal"
-      android:layout_marginBottom="32dp"
-      android:text="@string/purchase_non_nfc_button_01"/>
-  </LinearLayout>
-
-  <FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_above="@+id/view_anchor"
-    android:layout_alignParentTop="true">
-
-    <ImageView
-      android:id="@+id/image_view_art"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      android:src="@drawable/intro_tab_art_02"/>
-  </FrameLayout>
-</RelativeLayout>
+      android:layout_height="match_parent"
+    />
+</LinearLayout>

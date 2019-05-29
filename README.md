@@ -41,7 +41,7 @@ Password:
 * https://www.getpostman.com/collections/bf8c1d0b4f38e39b1d04
 
 ### DEVT Enviroment
-baseUrl:http://tpagonet-dev.gcs-systems.com/api/neo/
+baseUrl:https://tpagonet-dev.gcs-systems.com/api/neo/
 userPhoneNumber:8099521818
 sessionToken:Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0MTE6ODA5OTUyMTgxODowMTIzNDU2Nzg5MDEyMzQ1Njc4OSIsImV4cCI6MTUyOTA1MzA3MH0.W1zNngZCNzkO-eqNvD5DL4Sy1TludYM202Cm3IaHXFs
 userEmail:r.amarante@gbh.com.do

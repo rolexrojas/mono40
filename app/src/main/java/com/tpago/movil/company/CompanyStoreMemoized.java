@@ -1,7 +1,9 @@
 package com.tpago.movil.company;
 
+import com.tpago.movil.company.bank.Bank;
 import com.tpago.movil.util.ObjectHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -39,7 +41,13 @@ public final class CompanyStoreMemoized<T extends Company> implements CompanySto
       if (ObjectHelper.isNull(reference)) {
         return Maybe.empty();
       }
-      return Maybe.just(reference);
+      List<T> filteredBanks =  new ArrayList<>();
+      for (Company bank: reference) {
+        if (!bank.id().equalsIgnoreCase("DKT") && !bank.id().equalsIgnoreCase("CTB")) {
+          filteredBanks.add((T)bank);
+        }
+      }
+      return Maybe.just(filteredBanks);
     });
   }
 

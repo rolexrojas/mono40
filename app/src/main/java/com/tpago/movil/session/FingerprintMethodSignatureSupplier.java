@@ -115,7 +115,7 @@ public final class FingerprintMethodSignatureSupplier implements UnlockMethodSig
               final FailureData failureData = FailureData.builder()
                 .code(FailureCode.UNEXPECTED)
                 .build();
-              subscriber.onNext(Result.<Signature>create(failureData));
+              subscriber.onNext(Result.create(failureData));
               subscriber.onComplete();
             }
 
@@ -125,7 +125,7 @@ public final class FingerprintMethodSignatureSupplier implements UnlockMethodSig
                 .description("No se pudo leer la huella digital introducida o la misma no está registrada en el dispositivo.")
                 .code(FailureCode.UNEXPECTED)
                 .build();
-              subscriber.onNext(Result.<Signature>create(failureData));
+              subscriber.onNext(Result.create(failureData));
               subscriber.onComplete();
             }
 
@@ -142,7 +142,7 @@ public final class FingerprintMethodSignatureSupplier implements UnlockMethodSig
               final FailureData failureData = FailureData.builder()
                 .code(FailureCode.UNAUTHORIZED)
                 .build();
-              subscriber.onNext(Result.<Signature>create(failureData));
+              subscriber.onNext(Result.create(failureData));
               subscriber.onComplete();
             }
           },

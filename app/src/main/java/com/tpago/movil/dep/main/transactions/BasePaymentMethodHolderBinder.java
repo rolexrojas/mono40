@@ -34,7 +34,7 @@ abstract class BasePaymentMethodHolderBinder<H extends BasePaymentMethodHolder>
 
   @Override
   public void bind(Product product, H holder) {
-    Picasso.with(this.context)
+    Picasso.get()
       .load(this.companyHelper.getLogoUri(product.getBank(), Company.LogoStyle.COLORED_24))
       .noFade()
       .into(holder.getBankLogoImageView());

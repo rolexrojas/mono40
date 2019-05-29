@@ -35,6 +35,7 @@ import com.tpago.movil.d.domain.UserRecipient;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.domain.Recipient;
+import com.tpago.movil.d.ui.DepActivityBase;
 import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.DepMainActivityBase;
 import com.tpago.movil.d.ui.main.MainContainer;
@@ -147,7 +148,7 @@ public class RecipientCategoryFragment
     final Category category = Category.valueOf(categoryName);
     final RecipientCategoryComponent component = DaggerRecipientCategoryComponent.builder()
         .depMainComponent(getContainer().getComponent())
-        .recipientCategoryModule(new RecipientCategoryModule(category))
+        .recipientCategoryModule(new RecipientCategoryModule(category,(DepActivityBase) getActivity()))
         .build();
     component.inject(this);
   }

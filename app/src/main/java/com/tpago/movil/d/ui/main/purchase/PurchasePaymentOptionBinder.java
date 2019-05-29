@@ -67,7 +67,7 @@ final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePayme
       backgroundImageView.setVisibility(View.GONE);
 
       bankLogoImageView.setVisibility(View.VISIBLE);
-      Picasso.with(context)
+      Picasso.get()
         .load(this.companyHelper.getLogoUri(bank, Company.LogoStyle.WHITE_36))
         .noFade()
         .into(bankLogoImageView);
@@ -84,7 +84,7 @@ final class PurchasePaymentOptionBinder implements Binder<Product, PurchasePayme
     } else {
       backgroundColor = ContextCompat.getColor(context, R.color.transparent);
       backgroundImageView.setVisibility(View.VISIBLE);
-      Picasso.with(context)
+      Picasso.get()
         .load(backgroundUri)
         .transform(new RoundedCornersTransformation(
           context.getResources()

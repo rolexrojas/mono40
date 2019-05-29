@@ -54,7 +54,6 @@ class RecipientListItemHolderBinder implements
     this.category = category;
     this.companyHelper = ObjectHelper.checkNotNull(companyHelper, "companyHelper");
     this.partnerStore = ObjectHelper.checkNotNull(partnerStore, "partnerStore");
-    ;
   }
 
   final void setDeleting(boolean deleting) {
@@ -110,7 +109,7 @@ class RecipientListItemHolderBinder implements
     if (ObjectHelper.isNotNull(imageDrawable)) {
       holder.recipientPictureImageView.setImageDrawable(imageDrawable);
     } else if (ObjectHelper.isNotNull(imageUri)) {
-      Picasso.with(context)
+      Picasso.get()
           .load(imageUri)
           .resizeDimen(R.dimen.icon_size_24, R.dimen.icon_size_24)
           .into(holder.recipientPictureImageView);

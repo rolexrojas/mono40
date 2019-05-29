@@ -16,7 +16,7 @@ import dagger.Provides;
  * @author hecvasro
  */
 @Module
-class ProductsModule {
+public class ProductsModule {
 
   ProductsModule() {
   }

@@ -31,12 +31,12 @@ public final class TimeOutManager {
   }
 
   private void startInternally() {
-    final TimeOut timeOut = configManager.getTimeOut();
-    disposable = Completable.complete()
-      .delay(timeOut.getValue(), TimeOut.getUnit())
-      .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(this.timeOutHandler::handleTimeOut);
-    configManager.addOnTimeOutChangedListener(onTimeOutChangedListener);
+//    final TimeOut timeOut = configManager.getTimeOut();
+//    disposable = Completable.complete()
+//      .delay(timeOut.getValue(), TimeOut.getUnit())
+//      .observeOn(AndroidSchedulers.mainThread())
+//      .subscribe(this.timeOutHandler::handleTimeOut);
+//    configManager.addOnTimeOutChangedListener(onTimeOutChangedListener);
   }
 
   private void stopInternally() {

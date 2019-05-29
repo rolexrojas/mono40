@@ -46,9 +46,9 @@ public class PaymentMethodViewViewHolderAdapter extends RecyclerView.Adapter<Pay
     @Override
     public void onBindViewHolder(PaymentMethodViewHolder holder, int position) {
         if(ObjectHelper.isNotNull(holder)) {
-            List<Product> productList = this.productManager.getProductList();
+            List<Product> productList = this.productManager.getPaymentOptionList();
             final Product product = productList.get(position);
-            Picasso.with(context)
+            Picasso.get()
                 .load(companyHelper.getLogoUri(product.getBank(), Company.LogoStyle.COLORED_24))
                 .into(holder.icon);
             if(ObjectHelper.isNotNull(this.productManager.getDefaultPaymentOption()) && productList.get(position).getId().equals(this.productManager.getDefaultPaymentOption().getId())) {
@@ -64,7 +64,7 @@ public class PaymentMethodViewViewHolderAdapter extends RecyclerView.Adapter<Pay
 
     @Override
     public int getItemCount() {
-        return this.productManager.getProductList().size();
+        return this.productManager.getPaymentOptionList().size();
     }
 
 }

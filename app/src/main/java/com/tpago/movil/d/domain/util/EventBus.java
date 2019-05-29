@@ -36,9 +36,7 @@ public final class EventBus {
    */
   public void dispatch(@NonNull Event event) {
     if (event.isSticky()) {
-      if (stickyEvents.contains(event)) {
         stickyEvents.remove(event);
-      }
       stickyEvents.add(0, event);
     }
     subject.onNext(event);
@@ -87,8 +85,6 @@ public final class EventBus {
    *   TODO
    */
   public final void release(@NonNull Event event) {
-    if (stickyEvents.contains(event)) {
       stickyEvents.remove(event);
-    }
   }
 }

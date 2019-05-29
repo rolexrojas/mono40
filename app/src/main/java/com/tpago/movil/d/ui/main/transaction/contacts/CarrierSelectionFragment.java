@@ -318,7 +318,7 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
         public void onBindViewHolder(ViewHolder holder, int position) {
             final Partner carrier = carriers.get(position);
 
-            Picasso.with(getContext())
+            Picasso.get()
                     .load(companyHelper.getLogoUri(carrier, Company.LogoStyle.COLORED_24))
                     .into(holder.imageView);
             holder.textView.setText(carrier.name());

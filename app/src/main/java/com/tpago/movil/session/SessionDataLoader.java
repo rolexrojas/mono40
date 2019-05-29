@@ -48,6 +48,8 @@ public final class SessionDataLoader {
 
         final Completable productsSync = this.productStore.sync(products)
           .flatMapCompletable((diff) -> Completable.complete()); // TODO: Add and remove products to and from the purchase service.
+
+
         return CompletableBuilder.create()
           .add(this.bankStore.sync(data.banks()))
           .add(this.partnerStore.sync(data.partners()))

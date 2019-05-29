@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.app.ui.alert.AlertManager;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
+import com.tpago.movil.d.domain.Customer;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.Recipient;
@@ -15,6 +16,7 @@ import com.tpago.movil.d.ui.Presenter;
 import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.reactivex.DisposableUtil;
 import com.tpago.movil.util.ObjectHelper;
+import com.tpago.movil.util.Result;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -28,63 +30,65 @@ import timber.log.Timber;
  */
 final class AddRecipientPresenter extends Presenter<AddRecipientScreen> {
 
-  private final RecipientManager recipientManager;
+    private final RecipientManager recipientManager;
 
-  private final DepApiBridge apiBridge;
-  private final AlertManager alertManager;
-  private final StringMapper stringMapper;
-  private final TakeoverLoader takeoverLoader;
+    private final DepApiBridge apiBridge;
+    private final AlertManager alertManager;
+    private final StringMapper stringMapper;
+    private final TakeoverLoader takeoverLoader;
+    private Contact selectedContact;
 
-  private Disposable disposable = Disposables.disposed();
+    private Disposable disposable = Disposables.disposed();
 
-  AddRecipientPresenter(
-    RecipientManager recipientManager,
-    DepApiBridge apiBridge,
-    AlertManager alertManager,
-    StringMapper stringMapper,
-    TakeoverLoader takeoverLoader
-  ) {
-    this.recipientManager = ObjectHelper
-      .checkNotNull(recipientManager, "recipientManager");
+    AddRecipientPresenter(
+            RecipientManager recipientManager,
+            DepApiBridge apiBridge,
+            AlertManager alertManager,
+            StringMapper stringMapper,
+            TakeoverLoader takeoverLoader
+    ) {
+        this.recipientManager = ObjectHelper
+                .checkNotNull(recipientManager, "recipientManager");
 
-    this.apiBridge = ObjectHelper.checkNotNull(apiBridge, "apiBridge");
+        this.apiBridge = ObjectHelper.checkNotNull(apiBridge, "apiBridge");
 
-    this.alertManager = ObjectHelper.checkNotNull(alertManager, "alertManager");
-    this.stringMapper = ObjectHelper.checkNotNull(stringMapper, "stringMapper");
-    this.takeoverLoader = ObjectHelper.checkNotNull(takeoverLoader, "takeoverLoader");
-  }
-
-  private void handleResult(Contact contact, boolean successful) {
-    final PhoneNumber recipientPhoneNumber = contact.phoneNumber();
-    final String recipientLabel = contact.name();
-    final Recipient recipient;
-    if (successful) {
-      recipient = new PhoneNumberRecipient(recipientPhoneNumber, recipientLabel);
-    } else {
-      recipient = new NonAffiliatedPhoneNumberRecipient(recipientPhoneNumber, recipientLabel);
+        this.alertManager = ObjectHelper.checkNotNull(alertManager, "alertManager");
+        this.stringMapper = ObjectHelper.checkNotNull(stringMapper, "stringMapper");
+        this.takeoverLoader = ObjectHelper.checkNotNull(takeoverLoader, "takeoverLoader");
     }
-    this.recipientManager.add(recipient);
-    this.screen.finish(recipient);
-  }
 
-  private void handleError(Throwable throwable) {
-    Timber.e(throwable, "Adding contact recipient");
-    this.alertManager.showAlertForGenericFailure();
-  }
+    private void handleResult(ApiResult<Customer> customerResult) {
+        final PhoneNumber recipientPhoneNumber = selectedContact.phoneNumber();
+        final Recipient recipient;
+        if (customerResult != null && customerResult.isSuccessful()) {
+            final String recipientLabel = customerResult.getData().getName();
+            recipient = new PhoneNumberRecipient(recipientPhoneNumber, recipientLabel);
+        } else {
+            final String recipientLabel = selectedContact.name();
+            recipient = new NonAffiliatedPhoneNumberRecipient(recipientPhoneNumber, recipientLabel);
+        }
+        this.recipientManager.add(recipient);
+        this.screen.finish(recipient);
+    }
 
-  final void add(@NonNull final Contact contact) {
-    final String phoneNumber = contact.phoneNumber()
-      .value();
-    this.disposable = Single.defer(() -> Single.just(this.apiBridge.fetchCustomer(phoneNumber)))
-      .map(ApiResult::isSuccessful)
-      .subscribeOn(Schedulers.io())
-      .observeOn(AndroidSchedulers.mainThread())
-      .doOnSubscribe((disposable) -> this.takeoverLoader.show())
-      .doFinally(this.takeoverLoader::hide)
-      .subscribe((successful) -> this.handleResult(contact, successful), this::handleError);
-  }
+    private void handleError(Throwable throwable) {
+        Timber.e(throwable, "Adding contact recipient");
+        this.alertManager.showAlertForGenericFailure();
+    }
 
-  final void onStop() {
-    DisposableUtil.dispose(this.disposable);
-  }
+    final void add(@NonNull final Contact contact) {
+        final String phoneNumber = contact.phoneNumber()
+                .value();
+        this.selectedContact = contact;
+        this.disposable = Single.defer(() -> Single.just(this.apiBridge.fetchCustomer(phoneNumber)))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe((disposable) -> this.takeoverLoader.show())
+                .doFinally(this.takeoverLoader::hide)
+                .subscribe(this::handleResult, this::handleError);
+    }
+
+    final void onStop() {
+        DisposableUtil.dispose(this.disposable);
+    }
 }

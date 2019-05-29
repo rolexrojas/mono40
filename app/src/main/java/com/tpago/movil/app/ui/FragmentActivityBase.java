@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -29,102 +30,113 @@ import butterknife.BindView;
  */
 @Deprecated
 public final class FragmentActivityBase extends ActivityToolbarBase implements
-  ComponentBuilderSupplierContainer {
+        ComponentBuilderSupplierContainer {
 
-  private static final String KEY_CREATOR = "creator";
+    private static final String KEY_CREATOR = "creator";
 
-  public static Intent createLaunchIntent(Context context, FragmentCreator creator) {
-    ObjectHelper.checkNotNull(context, "context");
-    ObjectHelper.checkNotNull(creator, "creator");
+    public static Intent createLaunchIntent(Context context, FragmentCreator creator) {
+        ObjectHelper.checkNotNull(context, "context");
+        ObjectHelper.checkNotNull(creator, "creator");
 
-    final Intent intent = new Intent(context, FragmentActivityBase.class);
-    intent.putExtra(KEY_CREATOR, creator);
-    return intent;
-  }
-
-  public static FragmentActivityBase get(Activity activity) {
-    ObjectHelper.checkNotNull(activity, "activity");
-    if (!(activity instanceof FragmentActivityBase)) {
-      throw new ClassCastException("!(activity instanceof FragmentActivityBase)");
+        final Intent intent = new Intent(context, FragmentActivityBase.class);
+        intent.putExtra(KEY_CREATOR, creator);
+        return intent;
     }
-    return (FragmentActivityBase) activity;
-  }
 
-  private FragmentActivityComponent component;
+    public static FragmentActivityBase get(Activity activity) {
+        ObjectHelper.checkNotNull(activity, "activity");
+        if (!(activity instanceof FragmentActivityBase)) {
+            throw new ClassCastException("!(activity instanceof FragmentActivityBase)");
+        }
+        return (FragmentActivityBase) activity;
+    }
 
-  @Inject
-  @ActivityQualifier
-  ComponentBuilderSupplier componentBuilderSupplier;
-  @Inject
-  @ActivityQualifier
-  FragmentReplacer fragmentReplacer;
+    private FragmentActivityComponent component;
 
-  @BindView(R.id.linear_layout_change_password)
-  LinearLayout changePasswordLinearLayout;
-  @BindView(R.id.image_button_ok_change_password)
-  ImageButton changePasswordOkButton;
-  @BindView(R.id.image_button_cancel_change_password)
-  ImageButton changePasswordCancelButton;
+    @Inject
+    @ActivityQualifier
+    ComponentBuilderSupplier componentBuilderSupplier;
+    @Inject
+    @ActivityQualifier
+    FragmentReplacer fragmentReplacer;
 
-  @Override
-  protected int layoutResId() {
-    return R.layout.activity_fragment;
-  }
+    @BindView(R.id.linear_layout_change_password)
+    LinearLayout changePasswordLinearLayout;
+    @BindView(R.id.image_button_ok_change_password)
+    ImageButton changePasswordOkButton;
+    @BindView(R.id.image_button_cancel_change_password)
+    ImageButton changePasswordCancelButton;
 
-  @Override
-  protected void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+    @Override
+    protected int layoutResId() {
+        return R.layout.activity_fragment;
+    }
 
-    // Initializes the dependency injector.
-    this.component = App.get(this.getApplicationContext())
-      .componentBuilderSupplier()
-      .get(FragmentActivityBase.class, FragmentActivityComponent.Builder.class)
-      .activityModule(ActivityModule.create(this))
-      .build();
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-    // Injects all annotated dependencies.
-    this.component.inject(this);
+        // Initializes the dependency injector.
+        this.component = App.get(this.getApplicationContext())
+                .componentBuilderSupplier()
+                .get(FragmentActivityBase.class, FragmentActivityComponent.Builder.class)
+                .activityModule(ActivityModule.create(this))
+                .build();
 
-    // Extracts the creator from the arguments.
-    final FragmentCreator creator = this.getIntent()
-      .getExtras()
-      .getParcelable(KEY_CREATOR);
+        // Injects all annotated dependencies.
+        this.component.inject(this);
 
-    // Initializes the fragment container.
-    this.fragmentReplacer.begin(creator.create())
-      .commit();
-  }
+        // Extracts the creator from the arguments.
+        final FragmentCreator creator = this.getIntent()
+                .getExtras()
+                .getParcelable(KEY_CREATOR);
 
-  public final FragmentActivityComponent component() {
-    return this.component;
-  }
+        // Initializes the fragment container.
+        this.fragmentReplacer.begin(creator.create())
+                .commit();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+        }
+    }
 
-  @Override
-  public final ComponentBuilderSupplier componentBuilderSupplier() {
-    return this.componentBuilderSupplier;
-  }
+    public final FragmentActivityComponent component() {
+        return this.component;
+    }
 
-  public void showChangePasswordLayout(){
-    this.changePasswordLinearLayout.setVisibility(View.VISIBLE);
-    this.toolbar.setVisibility(View.INVISIBLE);
-    this.toolbar.setEnabled(false);
-  }
+    @Override
+    public final ComponentBuilderSupplier componentBuilderSupplier() {
+        return this.componentBuilderSupplier;
+    }
 
-  public void setChangePasswordOkButtonEnabled(boolean enabled) {
-    UiUtil.setEnabled(changePasswordOkButton, enabled);
-  }
+    public void showChangePasswordLayout() {
+        this.changePasswordLinearLayout.setVisibility(View.VISIBLE);
+        this.toolbar.setVisibility(View.INVISIBLE);
+        this.toolbar.setEnabled(false);
+    }
 
-  public void setOnChangePasswordOkButtonClickListener(View.OnClickListener listener) {
-    changePasswordOkButton.setOnClickListener(listener);
-  }
+    public void setChangePasswordOkButtonEnabled(boolean enabled) {
+        UiUtil.setEnabled(changePasswordOkButton, enabled);
+    }
 
-  public void hideChangePasswordLinearLayout(){
-    this.toolbar.setEnabled(true);
-    this.toolbar.setVisibility(View.VISIBLE);
-    changePasswordLinearLayout.setVisibility(View.GONE);
-  }
+    public void setOnChangePasswordOkButtonClickListener(View.OnClickListener listener) {
+        changePasswordOkButton.setOnClickListener(listener);
+    }
 
-  public void setOnChangePasswordCancelButtonClickListener(View.OnClickListener listener) {
-    changePasswordCancelButton.setOnClickListener(listener);
-  }
+    public void hideChangePasswordLinearLayout() {
+        this.toolbar.setEnabled(true);
+        this.toolbar.setVisibility(View.VISIBLE);
+        changePasswordLinearLayout.setVisibility(View.GONE);
+    }
+
+    public void setOnChangePasswordCancelButtonClickListener(View.OnClickListener listener) {
+        changePasswordCancelButton.setOnClickListener(listener);
+    }
+
+    @Override
+    public void setTitle(int titleId) {
+        super.setTitle(titleId);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(titleId);
+        }
+    }
 }

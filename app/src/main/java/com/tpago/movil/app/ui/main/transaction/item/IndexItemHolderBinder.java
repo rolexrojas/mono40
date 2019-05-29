@@ -14,7 +14,7 @@ public final class IndexItemHolderBinder implements ItemHolderBinder<IndexItem, 
 
   @Override
   public void bind(IndexItem item, IndexItemHolder holder) {
-    Picasso.with(holder.context)
+    Picasso.get()
       .load(item.pictureUri())
       .noFade()
       .into(holder.pictureImageView);

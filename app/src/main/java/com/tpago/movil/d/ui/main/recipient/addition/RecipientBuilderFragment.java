@@ -300,7 +300,7 @@ public class RecipientBuilderFragment extends Fragment {
   @Override
   public void onResume() {
     super.onResume();
-    Picasso.with(getContext())
+    Picasso.get()
       .load(builder.getImageUri(getContext()))
       .into(imageView);
     textView.setText(

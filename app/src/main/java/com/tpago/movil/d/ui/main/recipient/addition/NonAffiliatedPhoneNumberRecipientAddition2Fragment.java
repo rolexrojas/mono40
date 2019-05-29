@@ -173,7 +173,7 @@ public class NonAffiliatedPhoneNumberRecipientAddition2Fragment extends Fragment
   public void onResume() {
     super.onResume();
     final Bank bank = recipient.getBank();
-    Picasso.with(getContext())
+    Picasso.get()
       .load(companyHelper.getLogoUri(bank, Company.LogoStyle.COLORED_24))
       .noFade()
       .into(imageView);

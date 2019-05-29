@@ -7,9 +7,9 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 import retrofit2.Response;
 
-final class EmptyMapperResult<T> implements Function<Response<T>, Result<T>> {
+public final class EmptyMapperResult<T> implements Function<Response<T>, Result<T>> {
 
-  static Creator creator(MapperFailureData mapper) {
+  public static Creator creator(MapperFailureData mapper) {
     return new Creator(mapper);
   }
 
@@ -27,7 +27,7 @@ final class EmptyMapperResult<T> implements Function<Response<T>, Result<T>> {
     return Result.create(this.mapper.apply(response.errorBody()));
   }
 
-  static final class Creator {
+  public static final class Creator {
 
     private final MapperFailureData mapper;
 

@@ -50,16 +50,16 @@ public final class Result<T, C> {
     String succssDataString = "";
 
     if (ObjectHelper.isNotNull(failureData)) {
-      failureDataString = failureDataString.toString();
+      failureDataString = failureDataString;
     }
 
     if (ObjectHelper.isNotNull(successData)) {
-      succssDataString = failureDataString.toString();
+      succssDataString = failureDataString;
     }
 
     return "Result{"
       + "successful="
-      + String.valueOf(successful)
+      + successful
       + ", successData='"
       + failureDataString
       + "', failureData='"

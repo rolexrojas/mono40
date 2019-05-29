@@ -48,7 +48,6 @@
     <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
       android:id="@+id/timeoutSettingsOption"
       style="@style/SettingsOption"
-      android:visibility="gone"
       app:primaryText="@string/timeoutSettingsOption"/>
 
     <View

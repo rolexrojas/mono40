@@ -25,7 +25,7 @@
     <com.tpago.movil.dep.widget.TextInput
       android:id="@+id/firstNameTextInput"
       style="@style/ProfileInput"
-      android:enabled="false"/>
+      android:enabled="true"/>
 
     <View
       style="@style/VerticalDivider.Line"
@@ -42,7 +42,7 @@
     <com.tpago.movil.dep.widget.TextInput
       android:id="@+id/lastNameTextInput"
       style="@style/ProfileInput"
-      android:enabled="false"/>
+      android:enabled="true"/>
 
     <View
       style="@style/VerticalDivider.Line"

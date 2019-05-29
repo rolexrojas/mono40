@@ -99,7 +99,7 @@ public class NonAffiliatedBanreservasPhoneNumberRecipientAdditionFragment extend
   public void onAttach(Context context) {
     super.onAttach(context);
     final Bundle bundle = this.getArguments();
-    bank = (Bank) bundle.getParcelable(KEY_DATA);
+    bank = bundle.getParcelable(KEY_DATA);
     keyword = bundle.getString(KEY_KEYWORD);
     data = bundle.getParcelable(KEY_DATA);
 
@@ -228,7 +228,7 @@ public class NonAffiliatedBanreservasPhoneNumberRecipientAdditionFragment extend
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
       final BanreservasType type = types.get(position);
-      Picasso.with(getContext())
+      Picasso.get()
               .load(companyHelper.getLogoUri(bank, Company.LogoStyle.COLORED_24))
               .into(holder.imageView);
       holder.textView.setText(type.name);

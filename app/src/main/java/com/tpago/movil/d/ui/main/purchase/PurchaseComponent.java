@@ -1,5 +1,6 @@
 package com.tpago.movil.d.ui.main.purchase;
 
+import com.tpago.movil.app.ui.activity.ActivityScope;
 import com.tpago.movil.app.ui.fragment.FragmentScope;
 import com.tpago.movil.company.CompanyHelper;
 import com.tpago.movil.d.data.StringHelper;
@@ -7,6 +8,7 @@ import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.ui.main.DepMainComponent;
+import com.tpago.movil.dep.AppComponent;
 
 import dagger.Component;
 
@@ -15,10 +17,10 @@ import dagger.Component;
  */
 @FragmentScope
 @Component(
-  dependencies = DepMainComponent.class,
+  dependencies = {DepMainComponent.class},
   modules = PurchaseModule.class
 )
-interface PurchaseComponent {
+public interface PurchaseComponent {
 
   void inject(PurchaseFragment screen);
 

@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
 public class RootUtil {
 
     public static boolean isDeviceRooted() {
-        return checkRootMethod1() || checkRootMethod2() || checkRootMethod3();
+        return false;
     }
 
     private static boolean checkRootMethod1() {
@@ -35,8 +35,7 @@ public class RootUtil {
         try {
             process = Runtime.getRuntime().exec(new String[] { "/system/xbin/which", "su" });
             BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            if (in.readLine() != null) return true;
-            return false;
+            return in.readLine() != null;
         } catch (Throwable t) {
             return false;
         } finally {

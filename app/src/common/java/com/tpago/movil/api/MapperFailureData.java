@@ -11,9 +11,9 @@ import retrofit2.Converter;
 /**
  * @author hecvasro
  */
-final class MapperFailureData implements Function<ResponseBody, FailureData> {
+public final class MapperFailureData implements Function<ResponseBody, FailureData> {
 
-  static MapperFailureData create(Converter<ResponseBody, FailureData> converter) {
+  public static MapperFailureData create(Converter<ResponseBody, FailureData> converter) {
     return new MapperFailureData(converter);
   }
 

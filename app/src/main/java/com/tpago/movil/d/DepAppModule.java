@@ -63,13 +63,16 @@ public final class DepAppModule {
     EventBus eventBus,
     DepApiBridge apiBridge,
     Lazy<PosBridge> posBridge) {
-    return new ProductManager(
+    ProductManager productManager = new ProductManager(
       sharedPreferencesCreator,
       gson,
       context,
       eventBus,
       apiBridge,
       posBridge);
+    productManager.setInitialDataLoader(provideInitialDataLoader(apiBridge, productManager, provideRecipientManager(sharedPreferencesCreator,
+            gson), context));
+    return productManager;
   }
 
   @Provides

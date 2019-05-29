@@ -121,7 +121,7 @@ final class PresenterDisburseProductConfirm extends Presenter<PresentationDisbur
     this.presentation.setCurrency(currency);
 
     this.presentation.setAmount(Money.format(termData.amount()));
-    this.presentation.setTerm(Integer.toString(feeData.term()) + " Meses");
+    this.presentation.setTerm(feeData.term() + " Meses");
     this.presentation.setRate(Rate.format(feeData.rate()) + "% " + feeData.rateType(this.stringMapper));
     this.presentation.setInsurance(Money.format(feeData.insurance()));
     this.presentation.setBalance(Money.format(feeData.newBalance()));

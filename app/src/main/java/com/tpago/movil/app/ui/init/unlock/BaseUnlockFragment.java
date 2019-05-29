@@ -101,7 +101,7 @@ public abstract class BaseUnlockFragment extends FragmentBase {
     if(this.sessionManager.isUserSet()){
       final User user = this.sessionManager.getUser();
 
-      Picasso.with(this.getContext())
+      Picasso.get()
         .load(user.picture())
         .resizeDimen(R.dimen.normalImageSize, R.dimen.normalImageSize)
         .transform(new CircleTransformation())

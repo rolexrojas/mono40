@@ -43,7 +43,7 @@ public final class StringHelper {
 
   @NonNull
   public final String appName() {
-    return getString(R.string.app_name);
+    return "tPago";
   }
 
   @NonNull

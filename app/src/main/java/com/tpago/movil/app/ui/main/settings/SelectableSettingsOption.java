@@ -36,7 +36,7 @@ public class SelectableSettingsOption extends SettingsOption {
     } else {
       this.iconImageView.setVisibility(View.VISIBLE);
 
-      Picasso.with(this.getContext())
+      Picasso.get()
         .load(this.iconUri)
         .noFade()
         .resizeDimen(R.dimen.icon_size_20, R.dimen.icon_size_20)

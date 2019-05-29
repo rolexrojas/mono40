@@ -64,9 +64,7 @@ public final class RecipientDrawableStore {
   }
 
   private void remove(Recipient recipient) {
-    if (this.map.containsKey(recipient)) {
-      this.map.remove(recipient);
-    }
+    this.map.remove(recipient);
   }
 
   public final void remove(PhoneNumberRecipient recipient) {

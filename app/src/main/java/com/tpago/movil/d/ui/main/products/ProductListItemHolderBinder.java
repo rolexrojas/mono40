@@ -38,7 +38,7 @@ class ProductListItemHolderBinder
     final Product p = item.getProduct();
     final Bank b = p.getBank();
     final Context c = holder.getContext();
-    Picasso.with(c)
+    Picasso.get()
       .load(this.companyHelper.getLogoUri(b, Company.LogoStyle.GRAY_36))
       .into(holder.bankLogoImageView);
     holder.productTypeTextView.setText(c.getString(ProductType.findStringId(p)));

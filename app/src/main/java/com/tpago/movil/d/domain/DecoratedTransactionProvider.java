@@ -30,6 +30,6 @@ public class DecoratedTransactionProvider implements TransactionProvider {
   @Override
   public Observable<List<Transaction>> getAll() {
     return apiBridge.recentTransactions()
-      .compose(ApiUtils.<List<Transaction>>handleApiResult(true));
+      .compose(ApiUtils.handleApiResult(true));
   }
 }

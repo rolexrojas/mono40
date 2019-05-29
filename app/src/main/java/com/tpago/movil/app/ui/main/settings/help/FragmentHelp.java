@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,6 +25,7 @@ import com.tpago.movil.company.bank.BankStore;
 import com.tpago.movil.d.ui.main.DepMainActivityBase;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -35,101 +35,112 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 
-public final class FragmentHelp extends FragmentBase implements  HelpPresentation{
+public final class FragmentHelp extends FragmentBase implements HelpPresentation {
 
-  public static FragmentHelp create() {
-    return new FragmentHelp();
-  }
+    public static FragmentHelp create() {
+        return new FragmentHelp();
+    }
 
-  private static List<Bank> banks;
-  private Adapter adapter = new Adapter();
-  private int selectedBankCode;
-  private String selectedBankName;
-  private String selectedBankLogoURL;
+    private static List<Bank> banks;
+    private Adapter adapter = new Adapter();
+    private int selectedBankCode;
+    private String selectedBankName;
+    private String selectedBankLogoURL;
 
-  @Inject BankStore bankStore;
-  @Inject CompanyHelper companyHelper;
+    @Inject
+    BankStore bankStore;
+    @Inject
+    CompanyHelper companyHelper;
 
-  @BindView(R.id.recycler_view)
-  RecyclerView recyclerView;
-  @Override
-  protected int layoutResId() {
-    return R.layout.fragment_help;
-  }
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
 
-  @OnClick(R.id.setting_option_faq)
-  final void onFaqPressed() {
-  getActivity().getSupportFragmentManager().beginTransaction()
-    .replace(R.id.containerFrameLayout, FragmentHelpFaq.create(),"fragmentHelpFaq")
-    .addToBackStack(null)
-    .commit();
-  }
+    @Override
+    protected int layoutResId() {
+        return R.layout.fragment_help;
+    }
 
-  @OnClick(R.id.setting_option_mail_customer_service)
-  final void onEmailPressed() {
-    String URL = getString(R.string.tpagoemail);
-    Intent i = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + URL));
-    startActivity(i);
-  }
+    @OnClick(R.id.setting_option_faq)
+    final void onFaqPressed() {
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.containerFrameLayout, FragmentHelpFaq.create(), "fragmentHelpFaq")
+                .addToBackStack(null)
+                .commit();
+    }
 
-  @OnClick(R.id.setting_option_call_customer_service)
-  final void onPhonePressed() {
-    String URL = getString(R.string.tpagophone);
-    Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + URL));
-    startActivity(i);
-  }
+    @OnClick(R.id.setting_option_mail_customer_service)
+    final void onEmailPressed() {
+        String URL = getString(R.string.tpagoemail);
+        Intent i = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + URL));
+        startActivity(i);
+    }
+
+    @OnClick(R.id.setting_option_call_customer_service)
+    final void onPhonePressed() {
+        String URL = getString(R.string.tpagophone);
+        Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + URL));
+        startActivity(i);
+    }
 
 
-  @Override
-  public void onStart() {
-    super.onStart();
+    @Override
+    public void onStart() {
+        super.onStart();
 
-    DepMainActivityBase.get(this.getActivity())
-      .toolbar()
-      .setTitle(R.string.help);
-  }
+        DepMainActivityBase.get(this.getActivity())
+                .toolbar()
+                .setTitle(R.string.help);
+    }
 
-  @Override
-  public void moveToNextScreen() {
+    @Override
+    public void moveToNextScreen() {
 
-      BankDetailFragment bankDetailFragment =
-              BankDetailFragment.newInstance(selectedBankCode, selectedBankName, selectedBankLogoURL);
+        BankDetailFragment bankDetailFragment =
+                BankDetailFragment.newInstance(selectedBankCode, selectedBankName, selectedBankLogoURL);
 
-      this.getActivity().getSupportFragmentManager().beginTransaction()
-              .replace(R.id.containerFrameLayout, bankDetailFragment,"bankDetailFragment")
-              .addToBackStack(null)
-              .commit();
-  }
+        this.getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.containerFrameLayout, bankDetailFragment, "bankDetailFragment")
+                .addToBackStack(null)
+                .commit();
+    }
 
-  @Override
-  public void onViewCreated(View view, Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-      adapter = new Adapter();
-      recyclerView.setAdapter(adapter);
+        adapter = new Adapter();
+        recyclerView.setAdapter(adapter);
 
-      final Context context = getContext();
-      recyclerView.setLayoutManager(new LinearLayoutManager(
-              context,
-              LinearLayoutManager.VERTICAL,
-              false
-      ));
-      final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
-              .drawable(R.drawable.divider_line_horizontal)
-              .marginResId(R.dimen.space_horizontal_20)
-              .showLastDivider()
-              .build();
-      recyclerView.addItemDecoration(divider);
+        final Context context = getContext();
+        recyclerView.setLayoutManager(new LinearLayoutManager(
+                context,
+                LinearLayoutManager.VERTICAL,
+                false
+        ));
+        final RecyclerView.ItemDecoration divider = new HorizontalDividerItemDecoration.Builder(context)
+                .drawable(R.drawable.divider_line_horizontal)
+                .marginResId(R.dimen.space_horizontal_20)
+                .showLastDivider()
+                .build();
+        recyclerView.addItemDecoration(divider);
 
-  }
+    }
 
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    DepMainActivityBase.get(getActivity()).getComponent().inject(this);
-    banks = this.bankStore.getAll().flatMapObservable(Observable::fromIterable).toList().blockingGet();
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        DepMainActivityBase.get(getActivity()).getComponent().inject(this);
+        List<Bank> allBanks = this.bankStore.getAll().flatMapObservable(Observable::fromIterable).toList().blockingGet();
+        banks = new ArrayList<>();
+        for (Bank bank : allBanks) {
+            if (bank.id().equalsIgnoreCase("DKT") || bank.id().equalsIgnoreCase("CTB")) {
 
-    return super.onCreateView(inflater, container, savedInstanceState);
-  }
+            } else {
+                banks.add(bank);
+            }
+        }
+
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
 
     final class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -153,7 +164,7 @@ public final class FragmentHelp extends FragmentBase implements  HelpPresentatio
         }
     }
 
-     class Adapter extends RecyclerView.Adapter<FragmentHelp.ViewHolder> {
+    class Adapter extends RecyclerView.Adapter<FragmentHelp.ViewHolder> {
         @Override
         public FragmentHelp.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             return new FragmentHelp.ViewHolder(
@@ -161,10 +172,10 @@ public final class FragmentHelp extends FragmentBase implements  HelpPresentatio
                             .inflate(R.layout.d_list_item_bank, parent, false));
         }
 
-         @Override
+        @Override
         public void onBindViewHolder(FragmentHelp.ViewHolder holder, int position) {
             final Bank bank = banks.get(position);
-            Picasso.with(getContext())
+            Picasso.get()
                     .load(companyHelper.getLogoUri(bank, Company.LogoStyle.COLORED_24))
                     .into(holder.imageView);
             holder.textView.setText(bank.name());

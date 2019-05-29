@@ -103,7 +103,7 @@ public class NonAffiliatedPhoneNumberBanReservasTransactionCreationFragment exte
   @Override
   public void onResume() {
     super.onResume();
-    this.types = new ArrayList<>();
+    types = new ArrayList<>();
     if (recipient instanceof AccountRecipient) {
       bank = ((AccountRecipient) recipient).bank();
     } else {
@@ -111,15 +111,15 @@ public class NonAffiliatedPhoneNumberBanReservasTransactionCreationFragment exte
     }
     BanreservasType sav = new BanreservasType().name("Banreservas Ahorros").logoTemplate(bank.logoTemplate()).savType();
     BanreservasType dda = new BanreservasType().name("Banreservas Corriente").logoTemplate(bank.logoTemplate()).ddaType();
-    this.types.add(sav);
-    this.types.add(dda);
-    this.adapter.notifyItemRangeInserted(0, this.types.size());
+    types.add(sav);
+    types.add(dda);
+    this.adapter.notifyItemRangeInserted(0, types.size());
   }
 
   @Override
   public void onPause() {
     super.onPause();
-    this.types = new ArrayList<>();
+    types = new ArrayList<>();
   }
 
   @Override
@@ -162,7 +162,7 @@ public class NonAffiliatedPhoneNumberBanReservasTransactionCreationFragment exte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
       final BanreservasType type = types.get(position);
-      Picasso.with(getContext())
+      Picasso.get()
         .load(companyHelper.getLogoUri(bank, Company.LogoStyle.COLORED_24))
         .into(holder.imageView);
       holder.textView.setText(type.name);

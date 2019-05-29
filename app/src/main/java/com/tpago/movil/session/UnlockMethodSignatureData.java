@@ -5,6 +5,7 @@ import com.google.auto.value.extension.memoized.Memoized;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Signature;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public abstract class UnlockMethodSignatureData {
     tokenList.add(this.deviceId());
 
     return StringHelper.join(":", tokenList)
-      .getBytes("UTF-8");
+      .getBytes(StandardCharsets.UTF_8);
   }
 
   public final byte[] sign(Signature signature) throws Exception {

@@ -15,7 +15,7 @@ class ContactListItemHolderBinder implements ListItemHolderBinder<Contact, Conta
 
   @Override
   public void bind(@NonNull Contact item, @NonNull ContactListItemHolder holder) {
-    Picasso.with(holder.getContext())
+    Picasso.get()
       .load(item.pictureUri())
       .into(holder.pictureImageView);
     holder.nameTextView.setText(item.name());

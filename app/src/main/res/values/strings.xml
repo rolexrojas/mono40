@@ -62,8 +62,8 @@
     <string name="faq">Preguntas Frecuentes</string>
 
     <!-- [START] Common/Formats -->
-    <string name="format_productNumber_masked">•••• •••• %1$s</string>
-    <string name="format_productNumber_masked_creditCard">•••• •••• •••• %1$s</string>
+    <string name="format_productNumber_masked">%1$s</string>
+    <string name="format_productNumber_masked_creditCard">%1$s</string>
     <string name="format_to">A %1$s</string>
     <string name="pictureCreatorTitleFormat">%1$s foto de perfil</string>
     <!-- [END] Common/Formats -->
@@ -422,4 +422,12 @@
     <string name="errorNewPinMessage">El pin nuevo y el pin de confirmación no coinciden.</string>
     <string name="succededpasswordtransaction">El cambio de contraseña se ha efectuado correctamente.</string>
     <string name="unregisteredfingerprint">Como la seguridad del dispositivo fue desactivada o una nueva huella fue enrolada es requerido volver a configurar el desbloqueo rápido con huellas digitales, pero primero debe desbloquear la aplicación usando su contraseña.</string>
+    <string name="chooseSessionTimeout">Selecciona el tiempo de inactividad en el cual tPago se bloquea             automáticamente.</string>
+    <string name="sessionTimeoutTitle">Bloquear automáticamente</string>
+    <string name="selecciona_la_cuenta_que_quieres_usar_como_primaria_para_realizar_transacciones">Selecciona la cuenta que quieres usar como primaria para realizar transacciones.</string>
+    <string name="request_profile_update_sucess">Su perfil ha sido actualizado correctamente</string>
+    <string name="request_profile_update_title">Perfil actualizado.</string>
+    <string name="confirm_pin_payment_authorize_description">Para autorizar el pago</string>
+    <string name="non_nfc_purchase_title">La compra en comercio ha sido habilitada.</string>
+    <string name="non_nfc_purchase_subtitle">Favor de indicar su número de télefono al dependiente del comercio.</string>
 </resources>

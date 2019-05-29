@@ -92,7 +92,10 @@ public abstract class PhoneNumber implements Comparable<PhoneNumber>, Parcelable
    * @return A {@link String string} formatted as a phone number.
    */
   public static String format(String s) {
-    final String sanitizedString = DigitUtil.removeNonDigits(s);
+    String sanitizedString = DigitUtil.removeNonDigits(s);
+    if (sanitizedString.startsWith("1")) {
+      sanitizedString = sanitizedString.replaceFirst("1", "");
+    }
     final StringBuilder formattedStringBuilder = new StringBuilder(sanitizedString);
     insertSeparatorIfGreaterThan(sanitizedString, sanitizedString.length()-7, formattedStringBuilder);
     insertSeparatorIfGreaterThan(sanitizedString, sanitizedString.length()-3, formattedStringBuilder);

@@ -26,7 +26,7 @@ class BankListItemHolderBinder implements ListItemHolderBinder<Bank, BankListIte
 
   @Override
   public void bind(@NonNull Bank item, @NonNull BankListItemHolder holder) {
-    Picasso.with(holder.getContext())
+    Picasso.get()
       .load(this.companyHelper.getLogoUri(item, Company.LogoStyle.COLORED_24))
       .into(holder.imageView);
     holder.textView.setText(item.name());
