@@ -34,7 +34,7 @@ public abstract class RetrofitApiOpenSessionBody {
   @SerializedName("msisdn")
   public abstract String userPhoneNumber();
 
-  @SerializedName("device-informacion")
+  @SerializedName("device-information")
   abstract DeviceInformationBody deviceInformationBody();
 
   @SerializedName("public-key")

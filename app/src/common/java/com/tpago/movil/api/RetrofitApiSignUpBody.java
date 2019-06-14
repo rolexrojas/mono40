@@ -50,7 +50,7 @@ public abstract class RetrofitApiSignUpBody {
     @SerializedName("pin")
     abstract String pin();
 
-    @SerializedName("device-informacion")
+    @SerializedName("device-information")
     abstract DeviceInformationBody deviceInformationBody();
 
 

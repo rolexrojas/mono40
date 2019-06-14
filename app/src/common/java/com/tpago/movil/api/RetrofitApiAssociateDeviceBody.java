@@ -40,7 +40,7 @@ public abstract class RetrofitApiAssociateDeviceBody {
   @SerializedName("new-imei")
   abstract String deviceId();
 
-  @SerializedName("device-informacion")
+  @SerializedName("device-information")
   abstract DeviceInformationBody deviceInformationBody();
 
   @Memoized

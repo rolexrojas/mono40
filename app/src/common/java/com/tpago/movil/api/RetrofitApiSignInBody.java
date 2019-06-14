@@ -37,7 +37,7 @@ public abstract class RetrofitApiSignInBody {
   @SerializedName("password")
   abstract String password();
 
-  @SerializedName("device-informacion")
+  @SerializedName("device-information")
   abstract DeviceInformationBody deviceInformationBody();
 
   @Memoized
