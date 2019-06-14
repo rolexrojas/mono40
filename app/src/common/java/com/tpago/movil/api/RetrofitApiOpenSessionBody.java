@@ -7,6 +7,7 @@ import com.google.auto.value.extension.memoized.Memoized;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
+import com.tpago.movil.data.api.DeviceInformationBody;
 import com.tpago.movil.session.User;
 import com.tpago.movil.util.ObjectHelper;
 
@@ -33,38 +34,8 @@ public abstract class RetrofitApiOpenSessionBody {
   @SerializedName("msisdn")
   public abstract String userPhoneNumber();
 
-  @SerializedName("imei")
-  public abstract String deviceId();
-
-  @SerializedName("manufacturer")
-  abstract String manufacturer();
-
-  @SerializedName("serial")
-  abstract String serial();
-
-  @SerializedName("fingerprint")
-  abstract String fingerprint();
-
-  @SerializedName("device")
-  abstract String device();
-
-  @SerializedName("display")
-  abstract String display();
-
-  @SerializedName("board")
-  abstract String board();
-
-  @SerializedName("bootloader")
-  abstract String bootloader();
-
-  @SerializedName("brand")
-  abstract String brand();
-
-  @SerializedName("hardware")
-  abstract String hardware();
-
-  @SerializedName("model")
-  abstract String model();
+  @SerializedName("device-information")
+  abstract DeviceInformationBody deviceInformationBody();
 
   @SerializedName("public-key")
   public abstract String signedData();
@@ -97,7 +68,6 @@ public abstract class RetrofitApiOpenSessionBody {
         );
     }
 
-    public abstract Builder deviceId(String deviceId);
 
     abstract Builder signedData(String signedData);
 
@@ -105,16 +75,7 @@ public abstract class RetrofitApiOpenSessionBody {
       return this.signedData(Base64.encodeToString(signedData, Base64.NO_WRAP));
     }
 
-    public abstract Builder manufacturer(String manufacturer);
-    public abstract Builder serial(String serial);
-    public abstract Builder fingerprint(String fingerprint);
-    public abstract Builder device(String device);
-    public abstract Builder display(String display);
-    public abstract Builder board(String board);
-    public abstract Builder bootloader(String bootloader);
-    public abstract Builder brand(String brand);
-    public abstract Builder hardware(String hardware);
-    public abstract Builder model(String model);
+    public abstract Builder deviceInformationBody(DeviceInformationBody deviceInformationBody);
 
     public abstract RetrofitApiOpenSessionBody build();
   }

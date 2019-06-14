@@ -1,5 +1,8 @@
 package com.tpago.movil.api;
 
+import android.os.Build;
+
+import com.tpago.movil.BuildConfig;
 import com.tpago.movil.d.data.api.ChangePasswordBody;
 import com.tpago.movil.d.data.api.ChangePinBody;
 import com.tpago.movil.d.data.api.ChangePinResponseBody;
@@ -12,6 +15,7 @@ import com.tpago.movil.product.disbursable.Disbursable;
 import com.tpago.movil.product.disbursable.DisbursableProduct;
 import com.tpago.movil.session.User;
 import com.tpago.movil.transaction.TransactionSummary;
+import com.tpago.movil.util.DeviceInformation;
 
 import java.util.List;
 
@@ -24,6 +28,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -34,28 +39,32 @@ import retrofit2.http.Query;
 public interface ApiRetrofit {
 
     // [SECTION] Auth
+    @Headers({
+            "version: " + BuildConfig.VERSION_NAME,
+            "os: Android"
+    })
     @POST("signup")
-    Single<Response<User>> signUp(@Body RetrofitApiSignUpBody body,
-                                  @Header("version") String version,
-                                  @Header("os") String os);
+    Single<Response<User>> signUp(@Body RetrofitApiSignUpBody body);
 
     @POST("customer/pre-registration-information")
     Single<Response<RetrofitApiEmailRequestVerificationCodeResponse>> preRegisterInformation(@Body RetrofitApiPreRegistrationBody body);
 
+    @Headers({
+            "version: " + BuildConfig.VERSION_NAME,
+            "os: Android"
+    })
     @POST("associate")
-    Single<Response<User>> associateDevice(@Body RetrofitApiAssociateDeviceBody body,
-                                           @Header("version") String version,
-                                           @Header("os") String os);
+    Single<Response<User>> associateDevice(@Body RetrofitApiAssociateDeviceBody body);
 
+    @Headers({
+            "version: " + BuildConfig.VERSION_NAME,
+            "os: Android"
+    })
     @POST("signin")
-    Single<Response<User>> signIn(@Body RetrofitApiSignInBody body,
-                                  @Header("version") String version,
-                                  @Header("os") String os);
+    Single<Response<User>> signIn(@Body RetrofitApiSignInBody body);
 
     @POST("signin/fingerprint")
-    Single<Response<User>> openSession(@Body RetrofitApiOpenSessionBody body,
-                                       @Header("version") String version,
-                                       @Header("os") String os);
+    Single<Response<User>> openSession(@Body RetrofitApiOpenSessionBody body);
 
     // [SECTION] Session
     @GET("banks")
@@ -145,6 +154,10 @@ public interface ApiRetrofit {
     Completable requestForgotPassword(@Query("email") String email);
 
     // [SECTION] Utils
+    @Headers({
+            "version: " + BuildConfig.VERSION_NAME,
+            "os: Android"
+    })
     @GET("customer/{phoneNumber}/status")
     Single<ApiPhoneNumberState> fetchPhoneNumberState(@Path("phoneNumber") String phoneNumber);
 

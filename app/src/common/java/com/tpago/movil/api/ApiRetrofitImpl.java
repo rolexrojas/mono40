@@ -16,6 +16,7 @@ import com.tpago.movil.d.data.api.ChangePinResponseBody;
 import com.tpago.movil.d.data.api.ResetPasswordPINBody;
 import com.tpago.movil.d.domain.Customer;
 import com.tpago.movil.d.domain.Product;
+import com.tpago.movil.data.api.DeviceInformationBody;
 import com.tpago.movil.dep.MimeType;
 import com.tpago.movil.insurance.micro.MicroInsurancePartner;
 import com.tpago.movil.insurance.micro.MicroInsurancePlan;
@@ -27,7 +28,6 @@ import com.tpago.movil.session.SessionData;
 import com.tpago.movil.session.UnlockMethodSignatureData;
 import com.tpago.movil.session.User;
 import com.tpago.movil.transaction.TransactionSummary;
-import com.tpago.movil.util.DeviceInformation;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.Result;
 
@@ -83,19 +83,21 @@ public final class ApiRetrofitImpl implements Api {
                 .lastName(lastName)
                 .password(password)
                 .pin(pin)
-                .deviceId(deviceId)
-                .manufacturer(Build.MANUFACTURER)
-                .serial(Build.SERIAL)
-                .fingerprint(Build.FINGERPRINT)
-                .device(Build.DEVICE)
-                .display(Build.DISPLAY)
-                .board(Build.BOARD)
-                .bootloader(Build.BOOTLOADER)
-                .brand(Build.BRAND)
-                .hardware(Build.HARDWARE)
-                .model(Build.MODEL)
+                .deviceInformationBody(DeviceInformationBody.builder()
+                        .deviceId(deviceId)
+                        .manufacturer(Build.MANUFACTURER)
+                        .serial(Build.SERIAL)
+                        .fingerprint(Build.FINGERPRINT)
+                        .device(Build.DEVICE)
+                        .display(Build.DISPLAY)
+                        .board(Build.BOARD)
+                        .bootloader(Build.BOOTLOADER)
+                        .brand(Build.BRAND)
+                        .hardware(Build.HARDWARE)
+                        .model(Build.MODEL)
+                        .build())
                 .build();
-        return this.api.signUp(body, DeviceInformation.getAppVersionName(context), DeviceInformation.getOS())
+        return this.api.signUp(body)
                 .map(this.resultCreator.create());
     }
 
@@ -135,36 +137,41 @@ public final class ApiRetrofitImpl implements Api {
                     .email(email)
                     .password(password)
                     .deviceId(deviceId)
-                    .manufacturer(Build.MANUFACTURER)
-                    .serial(Build.SERIAL)
-                    .fingerprint(Build.FINGERPRINT)
-                    .device(Build.DEVICE)
-                    .display(Build.DISPLAY)
-                    .board(Build.BOARD)
-                    .bootloader(Build.BOOTLOADER)
-                    .brand(Build.BRAND)
-                    .hardware(Build.HARDWARE)
-                    .model(Build.MODEL)
+                    .deviceInformationBody(
+                            DeviceInformationBody.builder()
+                                    .deviceId(deviceId)
+                                    .manufacturer(Build.MANUFACTURER)
+                                    .serial(Build.SERIAL)
+                                    .fingerprint(Build.FINGERPRINT)
+                                    .device(Build.DEVICE)
+                                    .display(Build.DISPLAY)
+                                    .board(Build.BOARD)
+                                    .bootloader(Build.BOOTLOADER)
+                                    .brand(Build.BRAND)
+                                    .hardware(Build.HARDWARE)
+                                    .model(Build.MODEL).build()
+                    )
                     .build();
-            single = this.api.associateDevice(body, DeviceInformation.getAppVersionName(context), DeviceInformation.getOS());
+            single = this.api.associateDevice(body);
         } else {
             final RetrofitApiSignInBody body = RetrofitApiSignInBody.builder()
                     .phoneNumber(phoneNumber)
                     .email(email)
                     .password(password)
-                    .deviceId(deviceId)
-                    .manufacturer(Build.MANUFACTURER)
-                    .serial(Build.SERIAL)
-                    .fingerprint(Build.FINGERPRINT)
-                    .device(Build.DEVICE)
-                    .display(Build.DISPLAY)
-                    .board(Build.BOARD)
-                    .bootloader(Build.BOOTLOADER)
-                    .brand(Build.BRAND)
-                    .hardware(Build.HARDWARE)
-                    .model(Build.MODEL)
+                    .deviceInformationBody(DeviceInformationBody.builder()
+                            .deviceId(deviceId)
+                            .manufacturer(Build.MANUFACTURER)
+                            .serial(Build.SERIAL)
+                            .fingerprint(Build.FINGERPRINT)
+                            .device(Build.DEVICE)
+                            .display(Build.DISPLAY)
+                            .board(Build.BOARD)
+                            .bootloader(Build.BOOTLOADER)
+                            .brand(Build.BRAND)
+                            .hardware(Build.HARDWARE)
+                            .model(Build.MODEL).build())
                     .build();
-            single = this.api.signIn(body, DeviceInformation.getAppVersionName(context), DeviceInformation.getOS());
+            single = this.api.signIn(body);
         }
         return single.map(this.resultCreator.create());
     }
@@ -176,20 +183,21 @@ public final class ApiRetrofitImpl implements Api {
     ) {
         final RetrofitApiOpenSessionBody body = RetrofitApiOpenSessionBody.builder()
                 .user(signatureData.user())
-                .deviceId(signatureData.deviceId())
                 .signedData(signedData)
-                .manufacturer(Build.MANUFACTURER)
-                .serial(Build.SERIAL)
-                .fingerprint(Build.FINGERPRINT)
-                .device(Build.DEVICE)
-                .display(Build.DISPLAY)
-                .board(Build.BOARD)
-                .bootloader(Build.BOOTLOADER)
-                .brand(Build.BRAND)
-                .hardware(Build.HARDWARE)
-                .model(Build.MODEL)
+                .deviceInformationBody(DeviceInformationBody.builder()
+                        .deviceId(signatureData.deviceId())
+                        .manufacturer(Build.MANUFACTURER)
+                        .serial(Build.SERIAL)
+                        .fingerprint(Build.FINGERPRINT)
+                        .device(Build.DEVICE)
+                        .display(Build.DISPLAY)
+                        .board(Build.BOARD)
+                        .bootloader(Build.BOOTLOADER)
+                        .brand(Build.BRAND)
+                        .hardware(Build.HARDWARE)
+                        .model(Build.MODEL).build())
                 .build();
-        return this.api.openSession(body, DeviceInformation.getAppVersionName(context), DeviceInformation.getOS())
+        return this.api.openSession(body)
                 .map(this.resultCreator.create());
     }
 
