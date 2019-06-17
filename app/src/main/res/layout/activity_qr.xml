@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/my_qr_background">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/white"
+        android:padding="20dp"
+        android:gravity="center_horizontal|center_vertical"
+        >
+        <com.tpago.movil.d.ui.qr.QrTab
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:isSelected="true"
+            app:text="@string/qr_scan"
+            android:elevation="1dp"
+            />
+        <com.tpago.movil.d.ui.qr.QrTab
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:text="@string/qr_my_qr"
+            android:layout_marginStart="-10dp"
+
+            />
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

@@ -1847,4 +1847,8 @@
   <!-- [END] Product styles -->
   <!-- [START] Recipient styles -->
   <!-- [END] Contact styles -->
+
+  <style name="QrTab">
+
+  </style>
 </resources>

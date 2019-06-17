@@ -121,6 +121,11 @@
         android:screenOrientation="portrait"
         android:windowSoftInputMode="adjustResize" />
 
+    <activity android:name=".d.ui.qr.QrActivity"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustResize"
+      />
+
     <service android:name=".util.LogoutTimerService"
       />
   </application>

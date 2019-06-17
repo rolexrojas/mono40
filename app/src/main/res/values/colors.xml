@@ -159,4 +159,6 @@
   <color name="widget_text_input_dark_cursor_background">@color/white</color>
   <color name="widget_text_input_dark_erratic">#F8E81C</color>
   <color name="widget_text_input_dark_erratic_alpha_50">#7FF8E81C</color>
+    <color name="my_qr_background">#d8d8d8</color>
+  <color name="my_qr_selected_tab_background">#9b1890</color>
 </resources>
