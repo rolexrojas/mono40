@@ -23,4 +23,5 @@ task clean(type: Delete) {
 
 repositories {
   google()
+  maven { url 'https://jitpack.io' }
 }

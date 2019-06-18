@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/white"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
         android:paddingStart="45dp"
         android:paddingTop="35dp"
@@ -31,7 +32,10 @@
             android:layout_height="wrap_content"
             android:text="Código QR" />
 
-        <QR
+        <ImageView
+            android:id="@+id/qrCodeImage"
+            android:layout_width="250dp"
+            android:layout_height="250dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -41,15 +45,14 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/ic_qr_code"
                 android:layout_alignParentLeft="true"
-                />
+                android:src="@drawable/ic_qr_code" />
+
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/ic_qr_code"
                 android:layout_alignParentRight="true"
-                />
+                android:src="@drawable/ic_qr_code" />
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

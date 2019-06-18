@@ -33,16 +33,11 @@ public class QrActivity extends AppCompatActivity {
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                Fragment fragment = null;
-                switch (position) {
-                    case 0:
-                        fragment = new QrScannerFragment();
-                        break;
-                    case 1:
-                        fragment = new MyQrFragment();
-                        break;
+                if (position == 0) {
+                    return new QrScannerFragment();
+                } else {
+                    return new MyQrFragment();
                 }
-                return fragment;
             }
 
             @Override
