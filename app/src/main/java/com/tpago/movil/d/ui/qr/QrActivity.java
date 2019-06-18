@@ -6,27 +6,43 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.tpago.movil.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.internal.DebouncingOnClickListener;
 
 public class QrActivity extends AppCompatActivity {
     private static final String MY_QR_CODE_FRAGMENT = "MY_QR_CODE_FRAGMENT";
     private static final String QR_CODE_SCANNER_FRAGMENT = "QR_CODE_SCANNER_FRAGMENT";
     @BindView(R.id.container)
     ViewPager viewPager;
+    @BindView(R.id.qrScanTab)
+    QrTab qrScanTab;
+    @BindView(R.id.myQrTab)
+    QrTab myQrTab;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr);
         ButterKnife.bind(this);
+        viewPager.setOffscreenPageLimit(0);
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                return new QrScannerFragment();
+                Fragment fragment = null;
+                switch (position) {
+                    case 0:
+                        fragment = new QrScannerFragment();
+                        break;
+                    case 1:
+                        fragment = new MyQrFragment();
+                        break;
+                }
+                return fragment;
             }
 
             @Override
@@ -34,11 +50,36 @@ public class QrActivity extends AppCompatActivity {
                 return 2;
             }
         });
-        viewPager.setCurrentItem(0);
-//        QrScannerFragment qrScannerFragment = new QrScannerFragment();
-//        findViewById(R.id.container);
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.container, qrScannerFragment, QR_CODE_SCANNER_FRAGMENT)
-//                .commit();
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                qrScanTab.setIsSelected(position == 0);
+                myQrTab.setIsSelected(position == 1);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        myQrTab.setOnClickListener(new DebouncingOnClickListener() {
+            @Override
+            public void doClick(View v) {
+                viewPager.setCurrentItem(1);
+            }
+        });
+
+        qrScanTab.setOnClickListener(new DebouncingOnClickListener() {
+            @Override
+            public void doClick(View v) {
+                viewPager.setCurrentItem(0);
+            }
+        });
     }
 }

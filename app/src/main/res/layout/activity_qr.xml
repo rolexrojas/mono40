@@ -16,6 +16,7 @@
         android:padding="20dp">
 
         <com.tpago.movil.d.ui.qr.QrTab
+            android:id="@+id/qrScanTab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:elevation="1dp"
@@ -23,9 +24,10 @@
             app:text="@string/qr_scan" />
 
         <com.tpago.movil.d.ui.qr.QrTab
+            android:id="@+id/myQrTab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="-10dp"
+            android:layout_marginStart="-16dp"
             app:text="@string/qr_my_qr"
 
             />
