@@ -39,7 +39,6 @@ public class MyQrFragment extends Fragment {
 
     public void getQr() {
         Color color = new Color(false, 0xFFFFFF, 0xFFFFFF, 0xFF9B188F);
-//        color.setLight(0x9B188F);
         color.setAuto(false);
 
         Logo logo = new Logo();
@@ -55,11 +54,7 @@ public class MyQrFragment extends Fragment {
         renderOption.setEcl(ErrorCorrectionLevel.H); // (optional) specify an error correction level
         renderOption.setRoundedPatterns(true);
         renderOption.setPatternScale(0.35f); // (optional) specify a scale for patterns
-//        renderOption.setRoundedPatterns(true); // (optional) if true, blocks will be drawn as dots instead
-//        renderOption.setClearBorder(true); // if set to true, the background will NOT be drawn on the border area
         renderOption.setColor(color); // set a color palette for the QR code
-//        renderOption.setBackground(background); // set a background, keep reading to find more about it
-//        renderOption.setLogo(logo); // set a logo, keep reading to find more about it
 
         try {
             RenderResult render = AwesomeQrRenderer.render(renderOption);
