@@ -1,5 +1,8 @@
 package com.tpago.movil.d.ui.qr;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +16,7 @@ import com.github.sumimakito.awesomeqr.AwesomeQrRenderer;
 import com.github.sumimakito.awesomeqr.RenderResult;
 import com.github.sumimakito.awesomeqr.option.RenderOption;
 import com.github.sumimakito.awesomeqr.option.color.Color;
+import com.github.sumimakito.awesomeqr.option.logo.Logo;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.tpago.movil.R;
 
@@ -38,12 +42,19 @@ public class MyQrFragment extends Fragment {
 //        color.setLight(0x9B188F);
         color.setAuto(false);
 
+        Logo logo = new Logo();
+        logo.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_logo_qr_tpago_1080));
+        logo.setScale(0.3f);
+
+
         RenderOption renderOption = new RenderOption();
+        renderOption.setLogo(logo);
         renderOption.setContent("Special, thus awesome."); // content to encode
         renderOption.setSize(800); // size of the final QR code image
         renderOption.setBorderWidth(20); // width of the empty space around the QR code
-//        renderOption.setEcl(ErrorCorrectionLevel.M); // (optional) specify an error correction level
-//        renderOption.setPatternScale(0.35f); // (optional) specify a scale for patterns
+        renderOption.setEcl(ErrorCorrectionLevel.H); // (optional) specify an error correction level
+        renderOption.setRoundedPatterns(true);
+        renderOption.setPatternScale(0.35f); // (optional) specify a scale for patterns
 //        renderOption.setRoundedPatterns(true); // (optional) if true, blocks will be drawn as dots instead
 //        renderOption.setClearBorder(true); // if set to true, the background will NOT be drawn on the border area
         renderOption.setColor(color); // set a color palette for the QR code
