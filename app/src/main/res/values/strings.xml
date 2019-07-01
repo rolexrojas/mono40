@@ -432,4 +432,5 @@
     <string name="non_nfc_purchase_subtitle">Favor de indicar su número de télefono al dependiente del comercio.</string>
     <string name="qr_scan">ESCANEAR</string>
     <string name="qr_my_qr">MI CÓDIGO QR</string>
+    <string name="import_gallery">Importar</string>
 </resources>

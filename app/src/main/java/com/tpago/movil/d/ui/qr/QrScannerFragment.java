@@ -2,6 +2,7 @@ package com.tpago.movil.d.ui.qr;
 
 import android.Manifest;
 import android.content.Intent;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +19,7 @@ import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.journeyapps.barcodescanner.DefaultDecoderFactory;
+import com.journeyapps.barcodescanner.camera.CameraSettings;
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.permission.PermissionHelper;
 import com.tpago.movil.util.QrDecryptUtil;
@@ -33,6 +35,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class QrScannerFragment extends Fragment {
     private static final List<String> REQUIRED_PERMISSIONS_GALLERY;
@@ -54,6 +57,8 @@ public class QrScannerFragment extends Fragment {
     DecoratedBarcodeView barcodeView;
     BeepManager beepManager;
     String lastText;
+    boolean isFlashOn;
+    boolean isFrontCameraOn;
 
     @Nullable
     @Override
@@ -139,5 +144,36 @@ public class QrScannerFragment extends Fragment {
     public void onPause() {
         super.onPause();
         barcodeView.pauseAndWait();
+    }
+
+    @OnClick(R.id.qr_flash)
+    public void onFlashClicked() {
+        if(this.isFlashOn) {
+            this.barcodeView.setTorchOff();
+        } else {
+            this.barcodeView.setTorchOn();
+        }
+        isFlashOn = !isFlashOn;
+    }
+
+    @OnClick(R.id.qr_camera_flip)
+    public void onCameraFlipClicked() {
+        CameraSettings cs = this.barcodeView.getBarcodeView().getCameraSettings();
+        if(barcodeView.getBarcodeView().isPreviewActive()) {
+            barcodeView.pause();
+        }
+        if(this.isFrontCameraOn) {
+            cs.setRequestedCameraId(Camera.CameraInfo.CAMERA_FACING_BACK);
+        } else {
+            cs.setRequestedCameraId(Camera.CameraInfo.CAMERA_FACING_FRONT);
+        }
+        this.barcodeView.getBarcodeView().setCameraSettings(cs);
+        this.barcodeView.resume();
+        isFrontCameraOn = !isFrontCameraOn;
+    }
+
+    @OnClick(R.id.qr_import)
+    public void onImportClicked() {
+
     }
 }
