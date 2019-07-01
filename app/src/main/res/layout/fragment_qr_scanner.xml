@@ -6,7 +6,7 @@
     <com.journeyapps.barcodescanner.DecoratedBarcodeView
         android:id="@+id/cameraPreview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,10 +16,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:layout_weight=".5"
             android:gravity="center_vertical|left"
-            android:padding="8dp"
-            android:layout_marginTop="4dp">
+            android:padding="8dp">
 
             <ImageView
                 android:id="@+id/qr_flash"
@@ -27,12 +27,14 @@
                 android:layout_height="32dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="8dp"
+                android:background="?selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_camera_flip" />
 
             <ImageView
                 android:id="@+id/qr_camera_flip"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
+                android:background="?selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_camera_flip" />
         </LinearLayout>
 
@@ -47,9 +49,10 @@
                 android:id="@+id/qr_import_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:background="?selectableItemBackgroundBorderless"
                 android:gravity="center_vertical|center_horizontal"
-                android:orientation="vertical"
-                android:layout_marginRight="20dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
