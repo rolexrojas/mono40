@@ -27,14 +27,12 @@
                 android:layout_height="32dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="8dp"
-                android:foreground="?android:attr/selectableItemBackground"
                 android:src="@drawable/ic_camera_flip" />
 
             <ImageView
                 android:id="@+id/qr_camera_flip"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:foreground="?android:attr/selectableItemBackground"
                 android:src="@drawable/ic_camera_flip" />
         </LinearLayout>
 
@@ -46,6 +44,7 @@
             android:padding="8dp">
 
             <LinearLayout
+                android:id="@+id/qr_import_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical|center_horizontal"
@@ -63,7 +62,6 @@
                     android:id="@+id/qr_import"
                     android:layout_width="26dp"
                     android:layout_height="26dp"
-                    android:foreground="?android:attr/selectableItemBackground"
                     android:src="@drawable/ic_gallery" />
             </LinearLayout>
         </LinearLayout>
