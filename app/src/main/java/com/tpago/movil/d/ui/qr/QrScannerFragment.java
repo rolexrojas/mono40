@@ -1,5 +1,7 @@
 package com.tpago.movil.d.ui.qr;
 
+import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,12 +19,14 @@ import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.journeyapps.barcodescanner.DefaultDecoderFactory;
 import com.tpago.movil.R;
+import com.tpago.movil.app.ui.permission.PermissionHelper;
 import com.tpago.movil.util.QrDecryptUtil;
 import com.tpago.movil.util.QrJWT;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -31,6 +35,21 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class QrScannerFragment extends Fragment {
+    private static final List<String> REQUIRED_PERMISSIONS_GALLERY;
+    private static final List<String> REQUIRED_PERMISSIONS_CAMERA;
+
+    static {
+        REQUIRED_PERMISSIONS_GALLERY = new ArrayList<>();
+        REQUIRED_PERMISSIONS_GALLERY.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+        REQUIRED_PERMISSIONS_GALLERY.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        REQUIRED_PERMISSIONS_CAMERA = new ArrayList<>();
+        REQUIRED_PERMISSIONS_CAMERA.addAll(REQUIRED_PERMISSIONS_GALLERY);
+        REQUIRED_PERMISSIONS_CAMERA.add(Manifest.permission.CAMERA);
+    }
+
+    private static final int REQUEST_CODE_CAMERA = 1;
+
     @BindView(R.id.cameraPreview)
     DecoratedBarcodeView barcodeView;
     BeepManager beepManager;
@@ -41,6 +60,29 @@ public class QrScannerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_qr_scanner, container, false);
         ButterKnife.bind(this, view);
+        if (!PermissionHelper.areGranted(this.getContext(), REQUIRED_PERMISSIONS_CAMERA)) {
+            PermissionHelper.requestPermissions(this, REQUEST_CODE_CAMERA, REQUIRED_PERMISSIONS_CAMERA);
+        }
+        return view;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case REQUEST_CODE_CAMERA:
+                for(int n = 0; n < permissions.length; n++) {
+                    if(grantResults[n] != 0) {
+                        this.getActivity().finish();
+                        break;
+                    }
+                }
+        }
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         Collection<BarcodeFormat> formats = Arrays.asList(BarcodeFormat.QR_CODE, BarcodeFormat.CODE_39);
         barcodeView.getBarcodeView().setDecoderFactory(new DefaultDecoderFactory(formats, null, null, Intents.Scan.NORMAL_SCAN));
         beepManager = new BeepManager(getActivity());
@@ -73,7 +115,6 @@ public class QrScannerFragment extends Fragment {
 
             }
         });
-        return view;
     }
 
     @Override
