@@ -1,7 +1,9 @@
 package com.tpago.movil.d.ui.qr;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -51,10 +53,13 @@ public class QrActivity extends AppCompatActivity {
 
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onPageSelected(int position) {
                 qrScanTab.setIsSelected(position == 0);
+                qrScanTab.setZ(position == 0 ? 2 : 1);
                 myQrTab.setIsSelected(position == 1);
+                myQrTab.setZ(position == 1 ? 2 : 1);
             }
 
             @Override

@@ -6,7 +6,7 @@
     android:background="@color/my_qr_background"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
@@ -27,11 +27,12 @@
             android:id="@+id/myQrTab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/qrScanTab"
             android:layout_marginStart="-16dp"
             app:text="@string/qr_my_qr"
 
             />
-    </LinearLayout>
+    </RelativeLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/container"
