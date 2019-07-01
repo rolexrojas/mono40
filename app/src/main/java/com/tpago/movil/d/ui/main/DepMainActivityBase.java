@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.tpago.movil.R;
 import com.tpago.movil.app.di.ComponentBuilderSupplier;
@@ -128,6 +129,8 @@ public class DepMainActivityBase
     SlidingPaneLayout slidingPaneLayout;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.toolbar_title)
+    TextView toolbarTitle;
     @BindView(R.id.linear_layout_delete)
     LinearLayout deleteLinearLayout;
     @BindView(R.id.image_button_cancel)
@@ -191,6 +194,7 @@ public class DepMainActivityBase
             actionBar.setDisplayShowTitleEnabled(true);
         }
         // Prepares the toolbar.
+        this.toolbarTitle.setText(R.string.pay);
         this.toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
         this.toolbar.setNavigationOnClickListener((view) -> {
             if (this.slidingPaneLayout.isOpen()) {
@@ -277,9 +281,11 @@ public class DepMainActivityBase
 
         switch (view.getId()) {
             case R.id.main_menuItem_pay:
+                this.toolbarTitle.setText(R.string.pay);
                 this.setChildFragment(RecipientCategoryFragment.create(PAY));
                 break;
             case R.id.main_menuItem_purchase:
+                this.toolbarTitle.setText(R.string.buy);
                 if (this.posBridge.isAvailable()) {
                     this.setChildFragment(PurchaseFragment.newInstance());
                 } else {
@@ -287,27 +293,33 @@ public class DepMainActivityBase
                 }
                 break;
             case R.id.main_menuItem_transfer:
+                this.toolbarTitle.setText(R.string.transfer);
                 this.setChildFragment(RecipientCategoryFragment.create(TRANSFER));
                 break;
             case R.id.main_menuItem_recharge:
+                this.toolbarTitle.setText(R.string.recharge);
                 this.setChildFragment(RecipientCategoryFragment.create(RECHARGE));
                 break;
             case R.id.main_menuItem_disburse:
+                this.toolbarTitle.setText(R.string.withdraw);
                 this.fragmentReplacer.begin(FragmentDisburseIndex.create())
                         .transition(FragmentReplacer.Transition.FIFO)
                         .addToBackStack()
                         .commit();
                 break;
             case R.id.main_menuItem_wallet:
+                this.toolbarTitle.setText(R.string.products);
                 this.setChildFragment(ProductsFragment.newInstance());
                 break;
             case R.id.main_menuItem_insurance:
+                this.toolbarTitle.setText(R.string.main_transaction_insurance_micro);
                 this.fragmentReplacer.begin(MicroInsuranceIndexFragment.create())
                         .transition(FragmentReplacer.Transition.FIFO)
                         .addToBackStack()
                         .commit();
                 break;
             case R.id.main_menuItem_settings:
+                this.toolbarTitle.setText(R.string.settings);
                 this.fragmentReplacer.begin(SettingsFragment.create())
                         .transition(FragmentReplacer.Transition.FIFO)
                         .addToBackStack()
