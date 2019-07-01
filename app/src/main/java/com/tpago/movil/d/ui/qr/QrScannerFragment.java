@@ -85,6 +85,8 @@ public class QrScannerFragment extends Fragment implements BarcodeCallback {
         if (!PermissionHelper.areGranted(this.getContext(), REQUIRED_PERMISSIONS_CAMERA)) {
             PermissionHelper.requestPermissions(this, REQUEST_CODE_CAMERA, REQUIRED_PERMISSIONS_CAMERA);
         }
+        beepManager = new BeepManager(getActivity());
+        barcodeView.decodeContinuous(this);
         return view;
     }
 
@@ -100,16 +102,6 @@ public class QrScannerFragment extends Fragment implements BarcodeCallback {
                     }
                 }
         }
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        Collection<BarcodeFormat> formats = Arrays.asList(BarcodeFormat.QR_CODE, BarcodeFormat.CODE_39);
-        barcodeView.getBarcodeView().setDecoderFactory(new DefaultDecoderFactory(formats, null, null, Intents.Scan.NORMAL_SCAN));
-        beepManager = new BeepManager(getActivity());
-        barcodeView.initializeFromIntent(getActivity().getIntent());
-        barcodeView.decodeContinuous(this);
     }
 
     @Override
