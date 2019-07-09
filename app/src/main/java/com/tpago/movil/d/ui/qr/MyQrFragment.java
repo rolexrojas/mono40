@@ -3,6 +3,7 @@ package com.tpago.movil.d.ui.qr;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.github.sumimakito.awesomeqr.AwesomeQrRenderer;
 import com.github.sumimakito.awesomeqr.RenderResult;
@@ -22,42 +24,101 @@ import com.github.sumimakito.awesomeqr.option.RenderOption;
 import com.github.sumimakito.awesomeqr.option.color.Color;
 import com.github.sumimakito.awesomeqr.option.logo.Logo;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import com.tpago.movil.R;
+import com.tpago.movil.data.picasso.CircleTransformation;
+import com.tpago.movil.dep.App;
+import com.tpago.movil.session.SessionManager;
+import com.tpago.movil.session.User;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class MyQrFragment extends Fragment {
+
+    @Inject
+    SessionManager sessionManager;
+
     @BindView(R.id.qrCodeImage)
     ImageView qrCodeImageView;
+    @BindView(R.id.qr_code_profile_icon)
+    CircleImageView qrCodeProfileIcon;
+    @BindView(R.id.qr_code_profile_name)
+    TextView qrCodeProfileName;
+    Logo logo;
     RenderResult render;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((App) getActivity().getApplicationContext()).component().inject(this);
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_qr, container, false);
         ButterKnife.bind(this, view);
-        getQr();
+        getProfileAndQr();
         return view;
+    }
+
+    public void getProfileAndQr() {
+        User user = sessionManager.getUser();
+        this.qrCodeProfileName.setText(user.name().toString());
+        this.logo = new Logo();
+        this.logo.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_logo_qr_tpago_1080));
+        this.logo.setScale(0.3f);
+        Uri uri = user.picture();
+
+        if (uri == null) {
+            this.getQr();
+            return;
+        }
+
+        Picasso.get()
+                .load(uri)
+                .resizeDimen(R.dimen.largeImageSize, R.dimen.largeImageSize)
+                .transform(new CircleTransformation())
+                .placeholder(R.drawable.avatar_monster_32)
+                .error(R.drawable.avatar_monster_32)
+                .noFade()
+                .into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        // Setting profile icon to image at the top
+                        qrCodeProfileIcon.setImageBitmap(bitmap);
+                        // Setting profile icon to logo on QR
+                        logo.setBitmap(bitmap);
+                        // Generating My QR
+                        getQr();
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                    }
+                });
     }
 
     public void getQr() {
         Color color = new Color(false, 0xFFFFFF, 0xFFFFFF, 0xFF9B188F);
         color.setAuto(false);
 
-        Logo logo = new Logo();
-        logo.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_logo_qr_tpago_1080));
-        logo.setScale(0.3f);
-
-
         RenderOption renderOption = new RenderOption();
-        renderOption.setLogo(logo);
+        if (this.logo != null) renderOption.setLogo(this.logo);
         renderOption.setContent("Special, thus awesome."); // content to encode
         renderOption.setSize(800); // size of the final QR code image
         renderOption.setBorderWidth(20); // width of the empty space around the QR code

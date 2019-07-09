@@ -2,6 +2,7 @@ package com.tpago.movil.app;
 
 import com.tpago.movil.api.ApiModule;
 import com.tpago.movil.company.CompanyModule;
+import com.tpago.movil.d.ui.qr.MyQrFragment;
 import com.tpago.movil.data.DataModule;
 import com.tpago.movil.gson.GsonModule;
 import com.tpago.movil.insurance.micro.MicroInsuranceModule;
@@ -48,4 +49,6 @@ public interface AppComponent extends com.tpago.movil.dep.AppComponent {
   void inject(UpdateUserPictureJob job);
 
   void inject(UpdateUserCarrierJob job);
+
+  void inject(MyQrFragment fragment);
 }
