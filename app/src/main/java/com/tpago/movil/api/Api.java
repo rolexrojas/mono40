@@ -216,4 +216,6 @@ public interface Api {
           String phoneNumber
   );
 
+  Single<Result<ApiSecretTokenResponse>> getQrForCustomer();
+
 }

@@ -544,4 +544,10 @@ public final class ApiRetrofitImpl implements Api {
         return this.api.fetchCustomer(phoneNumber)
                 .map(resultCreator.create());
     }
+
+    @Override
+    public Single<Result<ApiSecretTokenResponse>> getQrForCustomer() {
+        return this.api.getQrForGustomer()
+                .map(resultCreator.create());
+    }
 }
