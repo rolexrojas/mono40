@@ -1,25 +1,28 @@
 package com.tpago.movil.util;
 
 
+import android.util.Base64;
+import android.util.Log;
+
 import com.google.gson.Gson;
 
-import org.spongycastle.util.encoders.Base64;
+import org.apache.commons.codec.DecoderException;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
 import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import okio.ByteString;
 
@@ -28,33 +31,69 @@ public class QrDecryptUtil {
         Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);
     }
 
-    public static Key getPrivateKey(String base64PrivateKey) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        byte[] pkcs8EncodedBytes = Base64.decode(base64PrivateKey);
-        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(pkcs8EncodedBytes);
-        KeyFactory kf = KeyFactory.getInstance("RSA");
-        PrivateKey privKey = kf.generatePrivate(keySpec);
-        return privKey;
+
+    public static QrJWT decryptData(String data, String key) throws DecoderException, NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {
+        Log.d("com.tpago.mobile", "decryptData - " + data + " | " + key);
+        byte[] decodedKey = Base64.decode(key, 0);
+        SecretKey llave = new SecretKeySpec(decodedKey, "AES");
+        byte[] bytesDataEncriptada = Base64.decode(data, 0);
+        byte[] bytesDesencriptados = decrypt(llave, bytesDataEncriptada);
+        String jwtStr = Base64.encodeToString(bytesDesencriptados, 0);
+        return decodeJwt(jwtStr);
     }
 
-    public static String decrypt(Key decryptionKey, byte[] buffer) {
-        try {
-            Cipher rsa;
-            rsa = Cipher.getInstance("RSA");
-            rsa.init(Cipher.DECRYPT_MODE, decryptionKey);
-            byte[] utf8 = rsa.doFinal(buffer);
-            return new String(utf8, "UTF8");
-        } catch (NoSuchPaddingException | IllegalBlockSizeException | NoSuchAlgorithmException | InvalidKeyException | BadPaddingException | UnsupportedEncodingException e) {
-            e.printStackTrace();
+    private static byte[] decrypt(SecretKey secretKey, byte[] encryptedData)
+            throws NoSuchPaddingException,
+            NoSuchAlgorithmException,
+            InvalidAlgorithmParameterException,
+            InvalidKeyException,
+            BadPaddingException,
+            IllegalBlockSizeException,
+            InvalidKeySpecException {
+
+
+        //Wrap the data into a byte buffer to ease the reading process
+        ByteBuffer byteBuffer = ByteBuffer.wrap(encryptedData);
+
+        int noonceSize = byteBuffer.getInt();
+
+        //Make sure that the file was encrypted properly
+        if (noonceSize < 12 || noonceSize >= 16) {
+            throw new IllegalArgumentException("Nonce size is incorrect. Make sure that the incoming data is an AES encrypted file.");
         }
-        return null;
+        byte[] iv = new byte[12];
+        byteBuffer.get(iv);
+
+        //Prepare your key/password
+        //SecretKey secretKey = generateSecretKey(key, iv);
+
+        //get the rest of encrypted data
+        byte[] cipherBytes = new byte[byteBuffer.remaining()];
+        byteBuffer.get(cipherBytes);
+
+        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+
+
+        GCMParameterSpec parameterSpec = new GCMParameterSpec(128, iv);
+
+        //Encryption mode on!
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, parameterSpec);
+
+        //Encrypt the data
+        return cipher.doFinal(cipherBytes);
+
     }
 
     public static QrJWT decodeJwt(String jwtToken) {
-        String[] split_string = jwtToken.split("\\.");
+        String[] split_string = ByteString.decodeBase64(jwtToken.replaceAll("\n", "")).string(Charset.forName("utf-8")).split("\\.");
         String base64EncodedBody = split_string[1];
 
+        Log.d("com.tpago.mobile", "JWT Token encoded = " + base64EncodedBody);
 
         String body = ByteString.decodeBase64(base64EncodedBody).string(Charset.forName("utf-8"));
-        return new Gson().fromJson(body, QrJWT.class);
+
+        Log.d("com.tpago.mobile", "JWT Token = " + base64EncodedBody);
+        Gson gson = new Gson();
+        return gson.fromJson(gson.fromJson(body, QrJWT.class).getSub(), QrJWT.class);
     }
 }

@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.util.Pair;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -25,9 +27,13 @@ import com.tpago.movil.app.ui.main.MainComponent;
 import com.tpago.movil.app.ui.main.settings.SettingsFragment;
 import com.tpago.movil.app.ui.main.transaction.disburse.index.FragmentDisburseIndex;
 import com.tpago.movil.app.ui.main.transaction.insurance.micro.index.MicroInsuranceIndexFragment;
+import com.tpago.movil.app.ui.main.transaction.summary.TransactionSummaryUtil;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.ProductManager;
+import com.tpago.movil.d.domain.Recipient;
+import com.tpago.movil.d.domain.RecipientManager;
 import com.tpago.movil.d.domain.ResetEvent;
+import com.tpago.movil.d.domain.UserRecipient;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.util.EventBus;
 import com.tpago.movil.d.ui.ChildFragment;
@@ -36,7 +42,12 @@ import com.tpago.movil.d.ui.SwitchableContainerActivityBase;
 import com.tpago.movil.d.ui.main.products.ProductsFragment;
 import com.tpago.movil.d.ui.main.purchase.NonNfcPurchaseFragment;
 import com.tpago.movil.d.ui.main.purchase.PurchaseFragment;
+import com.tpago.movil.d.ui.main.recipient.addition.AddRecipientActivityBase;
+import com.tpago.movil.d.ui.main.recipient.index.category.OnSaveButtonClickedListener;
 import com.tpago.movil.d.ui.main.recipient.index.category.RecipientCategoryFragment;
+import com.tpago.movil.d.ui.main.recipient.index.category.TransactionSummaryDialogFragment;
+import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase;
+import com.tpago.movil.d.ui.main.transaction.own.OwnTransactionCreationActivity;
 import com.tpago.movil.d.ui.qr.QrActivity;
 import com.tpago.movil.d.ui.view.widget.SlidingPaneLayout;
 import com.tpago.movil.dep.App;
@@ -46,6 +57,7 @@ import com.tpago.movil.dep.main.MainModule;
 import com.tpago.movil.dep.widget.Keyboard;
 import com.tpago.movil.reactivex.DisposableUtil;
 import com.tpago.movil.session.SessionManager;
+import com.tpago.movil.transaction.TransactionSummary;
 import com.tpago.movil.util.LogoutTimerService;
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.RootUtil;
@@ -76,6 +88,12 @@ public class DepMainActivityBase
         implements MainContainer,
         MainScreen,
         TimeOutManager.TimeOutHandler {
+    private static final int REQUEST_CODE_RECIPIENT_ADDITION = 0;
+    private static final int REQUEST_CODE_TRANSACTION_CREATION = 1;
+    private static final int REQUEST_CODE_OWN_TRANSACTION_CREATION = 3;
+    private static final int REQUEST_CODE_TRANSACTION = 42;
+    private Pair<Integer, Pair<Recipient, String>> requestResult;
+
 
     @NonNull
     public static Intent getLaunchIntent(Context context) {
@@ -124,6 +142,8 @@ public class DepMainActivityBase
     StringHelper depStringHelper;
     @Inject
     TimeOutManager timeOutManager;
+    @Inject
+    RecipientManager recipientManager;
 
     @BindView(R.id.sliding_pane_layout)
     SlidingPaneLayout slidingPaneLayout;
@@ -235,11 +255,45 @@ public class DepMainActivityBase
         super.onStop();
     }
 
+    final void showTransactionSummary(final Recipient recipient, final String transactionId) {
+        showTransactionSummaryP(
+                recipient,
+                this.recipientManager.checkIfExists(recipient),
+                transactionId
+        );
+    }
+
+    public void showTransactionSummaryP(
+            Recipient recipient,
+            boolean alreadyExists,
+            String transactionId
+    ) {
+        TransactionSummaryDialogFragment dialogFragment = TransactionSummaryDialogFragment.create(recipient, alreadyExists, transactionId);
+        dialogFragment.setListener((recipient1, label) -> updateRecipient(recipient1, label));
+        dialogFragment.show(getSupportFragmentManager(), null);
+
+    }
+
+    final void updateRecipient(@NonNull Recipient recipient, @Nullable String label) {
+        if (!(recipient instanceof UserRecipient)) {
+            recipient.setLabel(label);
+            this.recipientManager.update(recipient);
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         if (RootUtil.isDeviceRooted()) {
             RootUtil.showRootErrorDialog(this, this);
+        }
+        if (ObjectHelper.isNotNull(requestResult)) {
+            final Recipient recipient = requestResult.second.first;
+            final int code = requestResult.first;
+            if (code == REQUEST_CODE_TRANSACTION_CREATION || code == REQUEST_CODE_OWN_TRANSACTION_CREATION) {
+                showTransactionSummary(recipient, requestResult.second.second);
+            }
+            requestResult = null;
         }
     }
 
@@ -425,7 +479,54 @@ public class DepMainActivityBase
 
     @OnClick(R.id.qr_code_icon)
     public void onQrCodeIconClick(View view) {
-        startActivity(new Intent(this, QrActivity.class));
+        Intent intent = new Intent(this, QrActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_TRANSACTION_CREATION);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_RECIPIENT_ADDITION) {
+            if (resultCode == Activity.RESULT_OK) {
+                final Recipient recipient = AddRecipientActivityBase.deserializeResult(data);
+                if (ObjectHelper.isNotNull(recipient)) {
+                    requestResult = Pair.create(requestCode, Pair.create(recipient, (String) null));
+                }
+            }
+        } else if (requestCode == REQUEST_CODE_TRANSACTION_CREATION) {
+            if (resultCode == Activity.RESULT_OK) {
+                final Pair<Recipient, String> result = TransactionCreationActivityBase.deserializeResult(
+                        data);
+                Log.d("com.tpago.mobile", "QR_CODE_RECIPIENT = " + result.first.getId());
+                if (ObjectHelper.isNotNull(result)) {
+                    requestResult = Pair.create(requestCode, result);
+                }
+            }
+        } else if (requestCode == REQUEST_CODE_OWN_TRANSACTION_CREATION) {
+            if (resultCode == Activity.RESULT_OK) {
+                final String transactionId = OwnTransactionCreationActivity.deserializeResult(data);
+                if (ObjectHelper.isNotNull(transactionId)) {
+                    requestResult = Pair.create(requestCode, Pair.create((Recipient) null, transactionId));
+                }
+            }
+        } else if (requestCode == REQUEST_CODE_TRANSACTION) {
+            Log.d("com.tpago.mobile", "resultCode = " + (resultCode == Activity.RESULT_OK));
+            if (data != null && data.getExtras() != null) {
+                Log.d("com.tpago.mobile", "resultData = " + data.getExtras().toString());
+                for (String key : data.getExtras().keySet()) {
+                    Log.d("com.tpago.mobile", key + " is a key in the bundle = " + data.getExtras().getString(key));
+                }
+            }
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                TransactionSummary transactionSummary = TransactionSummaryUtil.unwrap(data);
+                if (transactionSummary != null) {
+                    com.tpago.movil.app.ui.main.transaction.summary.TransactionSummaryDialogFragment
+                            .create(transactionSummary)
+                            .show(getSupportFragmentManager(), null);
+                }
+            }
+        }
     }
 
     public interface OnBackPressedListener {

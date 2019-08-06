@@ -433,4 +433,5 @@
     <string name="qr_scan">ESCANEAR</string>
     <string name="qr_my_qr">MI CÓDIGO QR</string>
     <string name="import_gallery">Importar</string>
+    <string name="qr_activity_title">tPago QR Code</string>
 </resources>

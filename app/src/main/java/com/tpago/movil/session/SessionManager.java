@@ -4,14 +4,13 @@ import android.support.annotation.Nullable;
 
 import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.TagConstraint;
-import com.crashlytics.android.Crashlytics;
 import com.tpago.movil.Code;
 import com.tpago.movil.Email;
 import com.tpago.movil.Name;
-import com.tpago.movil.lib.Password;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.api.Api;
 import com.tpago.movil.company.partner.Partner;
+import com.tpago.movil.lib.Password;
 import com.tpago.movil.reactivex.DisposableUtil;
 import com.tpago.movil.store.DiskStore;
 import com.tpago.movil.util.BuilderChecker;
@@ -42,6 +41,8 @@ public final class SessionManager {
 
     private static final String STORE_KEY_USER = createStoreKey("User");
     private static final String STORE_KEY_UNLOCK_METHOD = createStoreKey("UnlockMethod");
+    private static final String STORE_KEY_CUSTOMER_SECRET_TOKEN = createStoreKey("CustomerSecretToken");
+    private static final String STORE_KEY_CUSTOMER_SECRET_KEY = createStoreKey("CustomerSecretKey");
 
     static Builder builder() {
         return new Builder();
@@ -77,6 +78,10 @@ public final class SessionManager {
 
     public final boolean isUserSet() {
         return this.diskStore.isSet(STORE_KEY_USER);
+    }
+
+    public final boolean isCustomerSecretTokenSet() {
+        return this.diskStore.isSet(STORE_KEY_CUSTOMER_SECRET_TOKEN);
     }
 
     private void checkUserIsSet() {
@@ -259,6 +264,14 @@ public final class SessionManager {
                 .blockingAwait();
     }
 
+    public void saveCustomerSecretToken(String token) {
+        this.diskStore.set(STORE_KEY_CUSTOMER_SECRET_TOKEN, token).blockingAwait();
+    }
+
+    public void saveCustomerSecretKey(String key) {
+        this.diskStore.set(STORE_KEY_CUSTOMER_SECRET_KEY, key).blockingAwait();
+    }
+
     public final Completable enableUnlockMethod(UnlockMethodKeyGenerator generator) {
         this.checkUserIsSet();
         this.checkSessionIsOpen();
@@ -287,6 +300,14 @@ public final class SessionManager {
             this.unlockMethodReference.set(unlockMethod);
         }
         return unlockMethod;
+    }
+
+    public String getCustomerSecretToken() {
+        return this.diskStore.get(STORE_KEY_CUSTOMER_SECRET_TOKEN, String.class).blockingGet();
+    }
+
+    public String getCustomerSecretKey() {
+        return this.diskStore.get(STORE_KEY_CUSTOMER_SECRET_KEY, String.class).blockingGet();
     }
 
     private void disableUnlockMethod_() {

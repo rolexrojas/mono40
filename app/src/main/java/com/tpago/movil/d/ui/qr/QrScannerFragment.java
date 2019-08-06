@@ -4,11 +4,10 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,45 +16,62 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.ml.vision.FirebaseVision;
+import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
+import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector;
+import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetectorOptions;
+import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.zxing.BarcodeFormat;
-import com.google.zxing.BinaryBitmap;
-import com.google.zxing.MultiFormatReader;
-import com.google.zxing.NotFoundException;
-import com.google.zxing.RGBLuminanceSource;
-import com.google.zxing.Result;
 import com.google.zxing.ResultPoint;
 import com.google.zxing.client.android.BeepManager;
-import com.google.zxing.client.android.Intents;
-import com.google.zxing.common.HybridBinarizer;
 import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
-import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.journeyapps.barcodescanner.DefaultDecoderFactory;
-import com.journeyapps.barcodescanner.SourceData;
 import com.journeyapps.barcodescanner.camera.CameraSettings;
+import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.permission.PermissionHelper;
-import com.tpago.movil.dep.MimeType;
+import com.tpago.movil.d.domain.Customer;
+import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
+import com.tpago.movil.d.domain.PhoneNumberRecipient;
+import com.tpago.movil.d.domain.Recipient;
+import com.tpago.movil.d.domain.api.ApiResult;
+import com.tpago.movil.d.domain.api.DepApiBridge;
+import com.tpago.movil.d.ui.main.transaction.TransactionCategory;
+import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase;
+import com.tpago.movil.dep.App;
+import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.util.QrDecryptUtil;
 import com.tpago.movil.util.QrJWT;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import org.apache.commons.codec.DecoderException;
+
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
-public class QrScannerFragment extends Fragment implements BarcodeCallback {
+public class QrScannerFragment extends Fragment {
     private static final List<String> REQUIRED_PERMISSIONS_GALLERY;
     private static final List<String> REQUIRED_PERMISSIONS_CAMERA;
+    private static final int REQUEST_CODE_TRANSACTION_CREATION = 1;
 
     static {
         REQUIRED_PERMISSIONS_GALLERY = new ArrayList<>();
@@ -71,11 +87,25 @@ public class QrScannerFragment extends Fragment implements BarcodeCallback {
     private static final int REQUEST_CODE_CAMERA = 1;
 
     @BindView(R.id.cameraPreview)
-    DecoratedBarcodeView barcodeView;
+    CustomBarCodeView barcodeView;
     BeepManager beepManager;
-    String lastText;
     boolean isFlashOn;
     boolean isFrontCameraOn;
+    @Inject
+    SessionManager sessionManager;
+    @Inject
+    DepApiBridge depApiBridge;
+    boolean isInProgress;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((App) getActivity().getApplicationContext()).component().inject(this);
+        FirebaseVisionBarcodeDetectorOptions options = new FirebaseVisionBarcodeDetectorOptions
+                .Builder()
+                .setBarcodeFormats(FirebaseVisionBarcode.FORMAT_QR_CODE)
+                .build();
+    }
 
     @Nullable
     @Override
@@ -86,17 +116,108 @@ public class QrScannerFragment extends Fragment implements BarcodeCallback {
             PermissionHelper.requestPermissions(this, REQUEST_CODE_CAMERA, REQUIRED_PERMISSIONS_CAMERA);
         }
         beepManager = new BeepManager(getActivity());
-        barcodeView.decodeContinuous(this);
+        beepManager.setBeepEnabled(false);
+        barcodeView.setStatusText(null);
+
+        Collection<BarcodeFormat> formats = Collections.singletonList(BarcodeFormat.QR_CODE);
+
+        barcodeView.getBarcodeView().setDecoderFactory(new DefaultDecoderFactory(formats));
+        barcodeView.decodeContinuous(new BarcodeCallback() {
+            @Override
+            public void barcodeResult(BarcodeResult result) {
+                if (isInProgress) {
+                    return;
+                }
+                isInProgress = true;
+                QrScannerFragment.this.onBarCodeResult(result.getText());
+            }
+
+            @Override
+            public void possibleResultPoints(List<ResultPoint> resultPoints) {
+            }
+        });
         return view;
+    }
+
+    void onBarCodeResult(String result) {
+        try {
+            beepManager.playBeepSoundAndVibrate();
+            decipherQrCode(result);
+            isInProgress = true;
+        } catch (Exception ex) {
+            isInProgress = false;
+            Log.e("com.tpago.mobile", "error al desencriptar qr", ex);
+        }
+    }
+
+    private void decipherQrCode(String data) {
+        Log.d("com.tpago.mobile", "qrCodeData = " + data);
+        String encriptedMessage = data.split("data=")[1];
+        QrJWT decriptedMessage = null;
+        try {
+            Log.d("com.tpago.mobile", "encripted Message = " + sessionManager.getCustomerSecretKey());
+            Log.d("com.tpago.mobile", "encripted key = " + sessionManager.getCustomerSecretKey());
+            decriptedMessage = QrDecryptUtil.decryptData(encriptedMessage, sessionManager.getCustomerSecretKey());
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | DecoderException | IllegalBlockSizeException e) {
+            Log.e("com.tpago.mobile", "error decoding qr", e);
+        }
+        Log.d("com.tpago.mobile", "decoded qr code = " + decriptedMessage.getSub());
+        final PhoneNumber phoneNumber = PhoneNumber.create(decriptedMessage.getSub());
+        Single.defer(() -> Single.just(this.depApiBridge.fetchCustomer(phoneNumber.value())))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        (result) -> this.handleStartPhoneNumberTransactionResult(phoneNumber, result),
+                        this::handleStartTransactionError
+                );
+    }
+
+    private void handleStartTransactionError(Throwable throwable) {
+        this.isInProgress = false;
+    }
+
+
+    public void startTransaction(Recipient recipient) {
+        Intent intent = TransactionCreationActivityBase.getLaunchIntent(
+                this.getActivity(),
+                TransactionCategory.TRANSFER,
+                recipient
+        );
+        intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+        startActivity(
+                intent
+        );
+        getActivity().finish();
+    }
+
+    private void handleStartPhoneNumberTransactionResult(
+            PhoneNumber phoneNumber,
+            ApiResult<Customer> result
+    ) {
+        this.isInProgress = false;
+        this.startTransaction(this.handleCustomerResult(phoneNumber, result));
+    }
+
+    private Recipient handleCustomerResult(PhoneNumber phoneNumber, ApiResult<Customer> result) {
+        String customerName = null;
+        if (result.isSuccessful()) {
+            customerName = result.getData()
+                    .getName();
+        }
+        if (com.tpago.movil.util.StringHelper.isNullOrEmpty(customerName)) {
+            return new NonAffiliatedPhoneNumberRecipient(phoneNumber, customerName);
+        } else {
+            return new PhoneNumberRecipient(phoneNumber, customerName);
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
+        switch (requestCode) {
             case REQUEST_CODE_CAMERA:
-                for(int n = 0; n < permissions.length; n++) {
-                    if(grantResults[n] != 0) {
+                for (int n = 0; n < permissions.length; n++) {
+                    if (grantResults[n] != 0) {
                         this.getActivity().finish();
                         break;
                     }
@@ -130,7 +251,7 @@ public class QrScannerFragment extends Fragment implements BarcodeCallback {
 
     @OnClick(R.id.qr_flash)
     public void onFlashClicked() {
-        if(this.isFlashOn) {
+        if (this.isFlashOn) {
             this.barcodeView.setTorchOff();
         } else {
             this.barcodeView.setTorchOn();
@@ -141,10 +262,10 @@ public class QrScannerFragment extends Fragment implements BarcodeCallback {
     @OnClick(R.id.qr_camera_flip)
     public void onCameraFlipClicked() {
         CameraSettings cs = this.barcodeView.getBarcodeView().getCameraSettings();
-        if(barcodeView.getBarcodeView().isPreviewActive()) {
+        if (barcodeView.getBarcodeView().isPreviewActive()) {
             barcodeView.pause();
         }
-        if(this.isFrontCameraOn) {
+        if (this.isFrontCameraOn) {
             cs.setRequestedCameraId(Camera.CameraInfo.CAMERA_FACING_BACK);
         } else {
             cs.setRequestedCameraId(Camera.CameraInfo.CAMERA_FACING_FRONT);
@@ -156,85 +277,40 @@ public class QrScannerFragment extends Fragment implements BarcodeCallback {
 
     @OnClick(R.id.qr_import_container)
     public void onImportClicked() {
-        final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType(MimeType.IMAGE);
+        final Intent intent = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         this.startActivityForResult(intent, REQUEST_CODE_GALLERY);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode){
+        switch (requestCode) {
             case REQUEST_CODE_GALLERY:
                 if (resultCode == Activity.RESULT_OK) {
-                    this.barcodeResult(this.scanSingleImage(data.getData()));
+                    Log.d("com.tpago.mobile", "image data = " + data.getData());
+                    try {
+                        this.scanSingleImage(data.getData());
+                    } catch (IOException e) {
+                        Log.e("com.tpago.mobile", "error decoding image data", e);
+                    }
                 }
         }
     }
 
-    public BarcodeResult scanSingleImage(Uri uri) {
-        try
-        {
-            InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
-            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-            if (bitmap == null)
-            {
-                Log.e(this.getTag(), "uri is not a bitmap," + uri.toString());
-                return null;
-            }
-            int width = bitmap.getWidth(), height = bitmap.getHeight();
-            int[] pixels = new int[width * height];
-            bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
-            bitmap.recycle();
-            bitmap = null;
-            RGBLuminanceSource source = new RGBLuminanceSource(width, height, pixels);
-            BinaryBitmap bBitmap = new BinaryBitmap(new HybridBinarizer(source));
-            MultiFormatReader reader = new MultiFormatReader();
-            try
-            {
-                Result result = reader.decode(bBitmap);
-                return new BarcodeResult(result, null);
-            }
-            catch (NotFoundException e)
-            {
-                Log.e(this.getTag(), "decode exception", e);
-                return null;
-            }
-        }
-        catch (FileNotFoundException e)
-        {
-            Log.e(this.getTag(), "can not open file" + uri.toString(), e);
-            return null;
-        }
-    }
-
-    @Override
-    public void barcodeResult(BarcodeResult result) {
-        try {
-            if (result.getText() == null || !result.getText().contains("type=") || result.getText().equals(lastText)) {
-                return;
-            }
-
-            String encriptedMessage = result.getText().split("data=")[1];
-            beepManager.playBeepSoundAndVibrate();
-//                String encriptedMessage = "bFOvDFnfqywdlikH4XAIJOE21WH00MrobLFY3z035ypT5IVLC1zjwpNn99Q1KESD7+fiQATQV4eQoLx/PzpAFlnxyiAGeq1wkyBJjTqmm7z9uQkkXXfkBwJE0l1Z6nTn9sGYHxFXICWLCIaUy7P2hFr0g7HTaqWDsVJ2hFf0zFIXaYIVcXbmEEG9CdTnhoAfeJIb0+/lXU1Iewe+/81n5XLGmv6P21DxNpGcuhZm46t0Wcpz1p6Jq9BrbQM62QHrXyRCfgKzqfZ9mluqz0ef+6De011sd98T5vnllDFLBZOJsDa5iZieG+Ac8t65ZItygCfSVITrxZsEt85O7sRIrJ13vfmbm4vI/j+d2/orODfw1ths1/bv4DesR7hddnivFO71IgUTBx+yLznfN3WzDut88bMPMoimrcmx1jJwogiz79BnUCRqNhTx8G7/hlYIqkvRzZEKbAymsb8mpARXT+xwDD1umJmg1lGlh6ojILhyWHV6i5Jnj2YrG/IeipXfDc5yv+e7AmLjOXAbyUTwTEB+S2hTMDp+gszqiTCntBL5+emxoF63/nHcXGTP6yR4gA3wv7+WR1MRt78kPqYPPqwQvoFfqh09Fwp0awfmc5YrOe6TmhcfHsDdvIC737pOkdpGZ/Cr5YjBK65sNYOWkX/WntFQgr0AJx4QL11UGwc=";
-//                String decriptedMessage = "";
-//                try {
-////                    decriptedMessage = QrDecryptUtil.decrypt(QrDecryptUtil.getPrivateKey("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"
-//                    ), encriptedMessage.getBytes());
-//                } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-//                    e.printStackTrace();
-//                }
-//                System.out.println(encriptedMessage);
-//        QrJWT decodedJwt = QrDecryptUtil.decodeJwt(encriptedMessage);
-            Log.d(this.getTag(), encriptedMessage);
-        }catch (Exception ex){
-            Log.e(this.getTag(), "No Barcode Result from this image");
-        }
-    }
-
-
-    @Override
-    public void possibleResultPoints(List<ResultPoint> resultPoints) {
-
+    public void scanSingleImage(Uri uri) throws IOException {
+        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
+        FirebaseVisionImage firebaseVisionImage = FirebaseVisionImage.fromBitmap(bitmap);
+        FirebaseVisionBarcodeDetector visionBarcodeDetector = FirebaseVision.getInstance()
+                .getVisionBarcodeDetector();
+        visionBarcodeDetector.detectInImage(firebaseVisionImage)
+                .addOnSuccessListener(firebaseVisionBarcodes -> {
+                    Log.d("com.tpago.mobile", "FirebaseVisionBarcodes = " + firebaseVisionBarcodes.size());
+                    if (!firebaseVisionBarcodes.isEmpty()) {
+                        QrScannerFragment.this.onBarCodeResult(firebaseVisionBarcodes.get(0).getRawValue());
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("com.tpago.mobile", "FirebaseVisionBarcodes Error  =", e);
+                });
     }
 }

@@ -236,7 +236,7 @@ public final class ProductManager {
                         .putString(KEY_DEFAULT_PAYMENT_OPTION_ID, defaultPaymentOption.getId())
                         .apply();
 
-                initialDataLoader.load().await();
+                initialDataLoader.load(null).await();
                 return true;
             } else {
                 return false;

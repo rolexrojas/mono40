@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.journeyapps.barcodescanner.DecoratedBarcodeView
+    <com.tpago.movil.d.ui.qr.CustomBarCodeView
         android:id="@+id/cameraPreview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -28,16 +28,16 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="8dp"
                 android:background="?selectableItemBackgroundBorderless"
-                android:tint="@color/white"
-                android:src="@drawable/ic_camera_flash" />
+                android:src="@drawable/ic_camera_flash"
+                android:tint="@color/white" />
 
             <ImageView
                 android:id="@+id/qr_camera_flip"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:background="?selectableItemBackgroundBorderless"
-                android:tint="@color/white"
-                android:src="@drawable/ic_camera_flip" />
+                android:src="@drawable/ic_camera_flip"
+                android:tint="@color/white" />
         </LinearLayout>
 
         <LinearLayout
@@ -67,8 +67,8 @@
                     android:id="@+id/qr_import"
                     android:layout_width="26dp"
                     android:layout_height="26dp"
-                    android:tint="@color/white"
-                    android:src="@drawable/ic_gallery" />
+                    android:src="@drawable/ic_gallery"
+                    android:tint="@color/white" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
