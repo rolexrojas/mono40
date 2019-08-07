@@ -46,6 +46,7 @@ import com.tpago.movil.d.ui.main.recipient.addition.AddRecipientActivityBase;
 import com.tpago.movil.d.ui.main.recipient.index.category.RecipientCategoryFragment;
 import com.tpago.movil.d.ui.main.recipient.index.category.TransactionSummaryDialogFragment;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase;
+import com.tpago.movil.d.ui.main.transaction.TransactionResult;
 import com.tpago.movil.d.ui.main.transaction.own.OwnTransactionCreationActivity;
 import com.tpago.movil.d.ui.qr.QrActivity;
 import com.tpago.movil.d.ui.view.widget.SlidingPaneLayout;
@@ -508,11 +509,15 @@ public class DepMainActivityBase
             }
         } else if (requestCode == REQUEST_CODE_TRANSACTION_CREATION) {
             if (resultCode == Activity.RESULT_OK) {
-                final Pair<Recipient, String> result = TransactionCreationActivityBase.deserializeResult(
+                final TransactionResult result = TransactionCreationActivityBase.deserializeTransactionResult(
                         data);
-                Log.d("com.tpago.mobile", "QR_CODE_RECIPIENT = " + result.first.getId());
+                View view = new View(this);
+                view.setId(R.id.main_menuItem_transfer);
+                onMenuItemButtonClicked(view);
+                Log.d("com.tpago.mobile", "QR_CODE_RECIPIENT = " + result.getTransactionId());
                 if (ObjectHelper.isNotNull(result)) {
-                    requestResult = Pair.create(requestCode, result);
+                    requestResult = Pair.create(requestCode, TransactionCreationActivityBase.deserializeResult(
+                            data));
                 }
             }
         } else if (requestCode == REQUEST_CODE_OWN_TRANSACTION_CREATION) {

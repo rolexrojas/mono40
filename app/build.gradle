@@ -16,7 +16,7 @@ android {
     defaultConfig {
         applicationId 'com.tpago.movil'
 
-        def (major, minor, patch) = [2, 8, 2]
+        def (major, minor, patch) = [2, 8, 6]
         versionName "${major}.${minor}.${patch}"
         versionCode((major * 10_000_000) + (minor * 100_000) + (patch * 1_000))
 
@@ -225,7 +225,7 @@ dependencies {
     implementation "${okHttpGroupId}:okhttp:${okHttpVersion}"
     implementation "${okHttpGroupId}:logging-interceptor:${okHttpVersion}"
 
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.code.gson:gson:2.8.6'
 
     def retrofitGroupId = 'com.squareup.retrofit2'
     def retrofitVersion = '2.3.0'
@@ -317,6 +317,7 @@ configurations.all {
     resolutionStrategy.force "${supportLibraryGroupId}:recyclerview-v7:${supportLibraryVersion}"
     resolutionStrategy.force "${supportLibraryGroupId}.constraint:constraint-layout:1.0.2"
     resolutionStrategy.force "${supportLibraryGroupId}:exifinterface:${supportLibraryVersion}"
+    resolutionStrategy.force "com.google.code.gson:gson:2.8.0"
 }
 
 
