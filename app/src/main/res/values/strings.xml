@@ -434,4 +434,8 @@
     <string name="qr_my_qr">MI CÓDIGO QR</string>
     <string name="import_gallery">Importar</string>
     <string name="qr_activity_title">tPago QR Code</string>
+    <string name="qr_error_own_code">Codigo propio</string>
+    <string name="qr_error_own_code_message">Este codigo qr pertenece a ti</string>
+    <string name="qr_error_unsupported_code">Codigo no soportado</string>
+    <string name="qr_error_unsupported_code_message">Este no es un codigo de tpago valido</string>
 </resources>

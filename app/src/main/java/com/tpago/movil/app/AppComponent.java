@@ -1,6 +1,7 @@
 package com.tpago.movil.app;
 
 import com.tpago.movil.api.ApiModule;
+import com.tpago.movil.app.ui.alert.AlertManager;
 import com.tpago.movil.company.CompanyModule;
 import com.tpago.movil.d.ui.qr.MyQrFragment;
 import com.tpago.movil.d.ui.qr.QrScannerFragment;

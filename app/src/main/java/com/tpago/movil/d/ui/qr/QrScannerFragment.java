@@ -30,6 +30,8 @@ import com.journeyapps.barcodescanner.DefaultDecoderFactory;
 import com.journeyapps.barcodescanner.camera.CameraSettings;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
+import com.tpago.movil.app.StringMapper;
+import com.tpago.movil.app.ui.alert.AlertManager;
 import com.tpago.movil.app.ui.permission.PermissionHelper;
 import com.tpago.movil.d.domain.Customer;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
@@ -96,6 +98,9 @@ public class QrScannerFragment extends Fragment {
     @Inject
     DepApiBridge depApiBridge;
     boolean isInProgress;
+    AlertManager alertManager;
+    @Inject
+    StringMapper stringMapper;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,6 +110,7 @@ public class QrScannerFragment extends Fragment {
                 .Builder()
                 .setBarcodeFormats(FirebaseVisionBarcode.FORMAT_QR_CODE)
                 .build();
+        this.alertManager = AlertManager.create(getContext(), stringMapper);
     }
 
     @Nullable
@@ -145,9 +151,17 @@ public class QrScannerFragment extends Fragment {
             decipherQrCode(result);
             isInProgress = true;
         } catch (Exception ex) {
-            isInProgress = false;
             Log.e("com.tpago.mobile", "error al desencriptar qr", ex);
+            showErrorMessage(R.string.qr_error_unsupported_code, R.string.qr_error_unsupported_code_message);
         }
+    }
+
+    private void showErrorMessage(int title, int message) {
+        this.alertManager.builder()
+                .title(title)
+                .message(message)
+                .positiveButtonAction(() -> this.isInProgress = false)
+                .show();
     }
 
     private void decipherQrCode(String data) {
@@ -160,16 +174,22 @@ public class QrScannerFragment extends Fragment {
             decriptedMessage = QrDecryptUtil.decryptData(encriptedMessage, sessionManager.getCustomerSecretKey());
         } catch (InvalidKeySpecException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | DecoderException | IllegalBlockSizeException e) {
             Log.e("com.tpago.mobile", "error decoding qr", e);
+            showErrorMessage(R.string.qr_error_unsupported_code, R.string.qr_error_unsupported_code_message);
         }
         Log.d("com.tpago.mobile", "decoded qr code = " + decriptedMessage.getSub());
         final PhoneNumber phoneNumber = PhoneNumber.create(decriptedMessage.getSub());
-        Single.defer(() -> Single.just(this.depApiBridge.fetchCustomer(phoneNumber.value())))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        (result) -> this.handleStartPhoneNumberTransactionResult(phoneNumber, result),
-                        this::handleStartTransactionError
-                );
+        if (!phoneNumber.equals(sessionManager.getUser().phoneNumber())) {
+            Single.defer(() -> Single.just(this.depApiBridge.fetchCustomer(phoneNumber.value())))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            (result) -> this.handleStartPhoneNumberTransactionResult(phoneNumber, result),
+                            this::handleStartTransactionError
+                    );
+        } else {
+            showErrorMessage(R.string.qr_error_own_code, R.string.qr_error_own_code_message);
+        }
+
     }
 
     private void handleStartTransactionError(Throwable throwable) {
@@ -307,10 +327,13 @@ public class QrScannerFragment extends Fragment {
                     Log.d("com.tpago.mobile", "FirebaseVisionBarcodes = " + firebaseVisionBarcodes.size());
                     if (!firebaseVisionBarcodes.isEmpty()) {
                         QrScannerFragment.this.onBarCodeResult(firebaseVisionBarcodes.get(0).getRawValue());
+                    } else {
+                        showErrorMessage(R.string.qr_error_unsupported_code, R.string.qr_error_unsupported_code_message);
                     }
                 })
                 .addOnFailureListener(e -> {
                     Log.e("com.tpago.mobile", "FirebaseVisionBarcodes Error  =", e);
+                    showErrorMessage(R.string.qr_error_unsupported_code, R.string.qr_error_unsupported_code_message);
                 });
     }
 }

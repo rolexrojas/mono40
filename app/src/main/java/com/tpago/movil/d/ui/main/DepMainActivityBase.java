@@ -43,7 +43,6 @@ import com.tpago.movil.d.ui.main.products.ProductsFragment;
 import com.tpago.movil.d.ui.main.purchase.NonNfcPurchaseFragment;
 import com.tpago.movil.d.ui.main.purchase.PurchaseFragment;
 import com.tpago.movil.d.ui.main.recipient.addition.AddRecipientActivityBase;
-import com.tpago.movil.d.ui.main.recipient.index.category.OnSaveButtonClickedListener;
 import com.tpago.movil.d.ui.main.recipient.index.category.RecipientCategoryFragment;
 import com.tpago.movil.d.ui.main.recipient.index.category.TransactionSummaryDialogFragment;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase;
@@ -157,6 +156,8 @@ public class DepMainActivityBase
     ImageButton cancelImageButton;
     @BindView(R.id.image_button_delete)
     ImageButton deleteImageButton;
+    @BindView(R.id.qr_code_icon)
+    View qrCodeIcon;
 
     private Disposable closeSessionDisposable = Disposables.disposed();
 
@@ -215,6 +216,7 @@ public class DepMainActivityBase
         }
         // Prepares the toolbar.
         this.toolbarTitle.setText(R.string.pay);
+        qrCodeIcon.setVisibility(View.VISIBLE);
         this.toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
         this.toolbar.setNavigationOnClickListener((view) -> {
             if (this.slidingPaneLayout.isOpen()) {
@@ -287,6 +289,7 @@ public class DepMainActivityBase
         if (RootUtil.isDeviceRooted()) {
             RootUtil.showRootErrorDialog(this, this);
         }
+        qrCodeIcon.setEnabled(true);
         if (ObjectHelper.isNotNull(requestResult)) {
             final Recipient recipient = requestResult.second.first;
             final int code = requestResult.first;
@@ -337,6 +340,7 @@ public class DepMainActivityBase
             case R.id.main_menuItem_pay:
                 this.toolbarTitle.setText(R.string.pay);
                 this.setChildFragment(RecipientCategoryFragment.create(PAY));
+                qrCodeIcon.setVisibility(View.VISIBLE);
                 break;
             case R.id.main_menuItem_purchase:
                 this.toolbarTitle.setText(R.string.buy);
@@ -345,14 +349,17 @@ public class DepMainActivityBase
                 } else {
                     this.setChildFragment(NonNfcPurchaseFragment.create());
                 }
+                qrCodeIcon.setVisibility(View.VISIBLE);
                 break;
             case R.id.main_menuItem_transfer:
                 this.toolbarTitle.setText(R.string.transfer);
                 this.setChildFragment(RecipientCategoryFragment.create(TRANSFER));
+                qrCodeIcon.setVisibility(View.VISIBLE);
                 break;
             case R.id.main_menuItem_recharge:
                 this.toolbarTitle.setText(R.string.recharge);
                 this.setChildFragment(RecipientCategoryFragment.create(RECHARGE));
+                qrCodeIcon.setVisibility(View.GONE);
                 break;
             case R.id.main_menuItem_disburse:
                 this.toolbarTitle.setText(R.string.withdraw);
@@ -360,10 +367,12 @@ public class DepMainActivityBase
                         .transition(FragmentReplacer.Transition.FIFO)
                         .addToBackStack()
                         .commit();
+                qrCodeIcon.setVisibility(View.GONE);
                 break;
             case R.id.main_menuItem_wallet:
                 this.toolbarTitle.setText(R.string.products);
                 this.setChildFragment(ProductsFragment.newInstance());
+                qrCodeIcon.setVisibility(View.GONE);
                 break;
             case R.id.main_menuItem_insurance:
                 this.toolbarTitle.setText(R.string.main_transaction_insurance_micro);
@@ -371,6 +380,7 @@ public class DepMainActivityBase
                         .transition(FragmentReplacer.Transition.FIFO)
                         .addToBackStack()
                         .commit();
+                qrCodeIcon.setVisibility(View.GONE);
                 break;
             case R.id.main_menuItem_settings:
                 this.toolbarTitle.setText(R.string.settings);
@@ -378,6 +388,7 @@ public class DepMainActivityBase
                         .transition(FragmentReplacer.Transition.FIFO)
                         .addToBackStack()
                         .commit();
+                qrCodeIcon.setVisibility(View.GONE);
                 break;
             case R.id.main_menuItem_exit:
                 this.closeSession();
@@ -479,6 +490,7 @@ public class DepMainActivityBase
 
     @OnClick(R.id.qr_code_icon)
     public void onQrCodeIconClick(View view) {
+        view.setEnabled(false);
         Intent intent = new Intent(this, QrActivity.class);
         startActivityForResult(intent, REQUEST_CODE_TRANSACTION_CREATION);
 
