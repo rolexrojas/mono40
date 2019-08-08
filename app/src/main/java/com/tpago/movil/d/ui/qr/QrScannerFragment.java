@@ -2,6 +2,7 @@ package com.tpago.movil.d.ui.qr;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
@@ -32,6 +33,7 @@ import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.app.ui.alert.AlertManager;
+import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.app.ui.permission.PermissionHelper;
 import com.tpago.movil.d.domain.Customer;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
@@ -39,6 +41,7 @@ import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
+import com.tpago.movil.d.ui.Dialogs;
 import com.tpago.movil.d.ui.main.transaction.TransactionCategory;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase;
 import com.tpago.movil.dep.App;
@@ -101,6 +104,7 @@ public class QrScannerFragment extends Fragment {
     AlertManager alertManager;
     @Inject
     StringMapper stringMapper;
+    TakeoverLoader takeoverLoader;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,6 +115,7 @@ public class QrScannerFragment extends Fragment {
                 .setBarcodeFormats(FirebaseVisionBarcode.FORMAT_QR_CODE)
                 .build();
         this.alertManager = AlertManager.create(getContext(), stringMapper);
+        this.takeoverLoader = TakeoverLoader.create(getFragmentManager());
     }
 
     @Nullable
@@ -134,6 +139,7 @@ public class QrScannerFragment extends Fragment {
                 if (isInProgress) {
                     return;
                 }
+                takeoverLoader.show();
                 isInProgress = true;
                 QrScannerFragment.this.onBarCodeResult(result.getText());
             }
@@ -157,6 +163,7 @@ public class QrScannerFragment extends Fragment {
     }
 
     private void showErrorMessage(int title, int message) {
+        this.takeoverLoader.hide();
         this.alertManager.builder()
                 .title(title)
                 .message(message)
@@ -181,6 +188,8 @@ public class QrScannerFragment extends Fragment {
         if (!phoneNumber.equals(sessionManager.getUser().phoneNumber())) {
             Single.defer(() -> Single.just(this.depApiBridge.fetchCustomer(phoneNumber.value())))
                     .subscribeOn(Schedulers.io())
+                    .doOnSubscribe((disposable) -> this.takeoverLoader.show())
+                    .doFinally(this.takeoverLoader::hide)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             (result) -> this.handleStartPhoneNumberTransactionResult(phoneNumber, result),
@@ -193,7 +202,16 @@ public class QrScannerFragment extends Fragment {
     }
 
     private void handleStartTransactionError(Throwable throwable) {
-        this.isInProgress = false;
+        takeoverLoader.hide();
+        showGenericErrorDialog(getString(R.string.cannot_process_your_request_at_the_moment));
+    }
+
+    public void showGenericErrorDialog(String message) {
+        Dialogs.builder(getContext())
+                .setTitle(R.string.error_generic_title)
+                .setMessage(message)
+                .setPositiveButton(R.string.error_positive_button_text, (dialog, which) -> isInProgress = false)
+                .show();
     }
 
 
@@ -215,7 +233,11 @@ public class QrScannerFragment extends Fragment {
             ApiResult<Customer> result
     ) {
         this.isInProgress = false;
-        this.startTransaction(this.handleCustomerResult(phoneNumber, result));
+        if (result.isSuccessful()) {
+            this.startTransaction(this.handleCustomerResult(phoneNumber, result));
+        } else {
+            this.showGenericErrorDialog(result.getError().getDescription());
+        }
     }
 
     private Recipient handleCustomerResult(PhoneNumber phoneNumber, ApiResult<Customer> result) {

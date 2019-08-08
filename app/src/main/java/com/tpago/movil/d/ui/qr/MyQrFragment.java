@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.github.sumimakito.awesomeqr.option.logo.Logo;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -53,7 +52,6 @@ public class MyQrFragment extends Fragment {
     CircleImageView qrCodeProfileIcon;
     @BindView(R.id.qr_code_profile_name)
     TextView qrCodeProfileName;
-    Logo logo;
     // Default token for Testing since endpoints are throwing {"error":{"code":"0014","description":"El servicio no está disponible. Favor intente de nuevo.","msisdn":null,"transaction":null}}
     String token = null;
     private Bitmap qrBitmap;
@@ -74,8 +72,8 @@ public class MyQrFragment extends Fragment {
             @Override
             public void onBitmapFailed(Exception e, Drawable errorDrawable) {
                 Log.e("com.tpago.mobile", "error loading profile image", e);
-                MyQrFragment.this.qrBitmap = overlay(qrBitmap, BitmapFactory.decodeResource(getResources(), R.drawable.tpago_logo_qr));
-                qrCodeImageView.setImageBitmap(MyQrFragment.this.qrBitmap);
+                MyQrFragment.this.qrBitmap = overlay(MyQrFragment.this.qrBitmap, BitmapFactory.decodeResource(getResources(), R.drawable.tpago_logo_qr));
+                MyQrFragment.this.qrCodeImageView.setImageBitmap(MyQrFragment.this.qrBitmap);
             }
 
             @Override
@@ -97,8 +95,6 @@ public class MyQrFragment extends Fragment {
     public void getProfileAndQr() {
         User user = sessionManager.getUser();
         this.qrCodeProfileName.setText(user.name().toString());
-        this.logo = new Logo();
-        this.logo.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_logo_qr_tpago_1080));
         Uri uri = user.picture();
 
         this.getQr();
@@ -126,20 +122,22 @@ public class MyQrFragment extends Fragment {
 
         qrCodeImageView.setImageBitmap(qrBitmap);
 
-        Log.d("com.tpago.mobile", "profileImageUri = " + uri);
-
-
-        Picasso.get().load(uri)
-                .resizeDimen(R.dimen.largeImageSize, R.dimen.largeImageSize)
-                .transform(new CircleTransformation())
-                .into(tPagoLogo);
+        if (uri != null) {
+            Picasso.get().load(uri)
+                    .resizeDimen(R.dimen.largeImageSize, R.dimen.largeImageSize)
+                    .transform(new CircleTransformation())
+                    .into(tPagoLogo);
+        } else {
+            MyQrFragment.this.qrBitmap = overlay(MyQrFragment.this.qrBitmap, BitmapFactory.decodeResource(getResources(), R.drawable.tpago_logo_qr));
+            MyQrFragment.this.qrCodeImageView.setImageBitmap(MyQrFragment.this.qrBitmap);
+        }
 
     }
 
     public Bitmap overlay(Bitmap qrBitmap, Bitmap logoBitmap) {
         Bitmap bmOverlay = Bitmap.createBitmap(qrBitmap.getWidth(), qrBitmap.getHeight(), qrBitmap.getConfig());
 
-        Bitmap scaledLogo = Bitmap.createScaledBitmap(logoBitmap, 150, 150, false);
+        Bitmap scaledLogo = Bitmap.createScaledBitmap(logoBitmap, 250, 250, false);
         Canvas canvas = new Canvas(bmOverlay);
         canvas.drawColor(Color.WHITE);
         canvas.drawBitmap(qrBitmap, 0, 0, null);

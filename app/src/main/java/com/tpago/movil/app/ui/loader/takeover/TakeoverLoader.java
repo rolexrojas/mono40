@@ -19,7 +19,7 @@ public final class TakeoverLoader implements Loader {
 
   private final FragmentManager fragmentManager;
 
-  private TakeoverLoader(FragmentManager fragmentManager) {
+  public TakeoverLoader(FragmentManager fragmentManager) {
     this.fragmentManager = ObjectHelper.checkNotNull(fragmentManager, "fragmentManager");
   }
 

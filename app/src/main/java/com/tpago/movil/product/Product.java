@@ -53,7 +53,7 @@ public abstract class Product implements Comparable<Product> {
   @Memoized
   public String numberSanitized() {
     String number = DigitUtil.removeNonDigits(this.number());
-    return "•••• •••• •••• " + number.substring(number.length() - 4);
+    return number.substring(number.length() - 4);
   }
 
   @SerializedName("account-alias")

@@ -3,6 +3,7 @@ package com.tpago.movil.app;
 import com.tpago.movil.api.ApiModule;
 import com.tpago.movil.app.ui.alert.AlertManager;
 import com.tpago.movil.company.CompanyModule;
+import com.tpago.movil.d.ui.main.purchase.PurchaseModule;
 import com.tpago.movil.d.ui.qr.MyQrFragment;
 import com.tpago.movil.d.ui.qr.QrScannerFragment;
 import com.tpago.movil.data.DataModule;
@@ -41,7 +42,8 @@ import dagger.Component;
         SessionModule.class,
         TimeModule.class,
         com.tpago.movil.dep.AppModule.class,
-        LogoutTimerServiceModule.class
+        LogoutTimerServiceModule.class,
+        LogoutTimerServiceModule.class,
 })
 public interface AppComponent extends com.tpago.movil.dep.AppComponent {
 

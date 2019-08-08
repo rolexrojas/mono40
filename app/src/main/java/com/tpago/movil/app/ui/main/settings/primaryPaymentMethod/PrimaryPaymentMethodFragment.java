@@ -79,7 +79,7 @@ public class PrimaryPaymentMethodFragment extends FragmentBase implements Primar
         super.onStart();
         // Sets the title.
         FragmentActivityBase.get(this.getActivity())
-                .setTitle(R.string.altUnlockMethod);
+                .setTitle(R.string.primaryPaymentMethodSettingsOption);
     }
 
     @Override

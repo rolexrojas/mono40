@@ -254,12 +254,7 @@ public class PurchaseFragment
         PinConfirmationDialogFragment.show(
                 getChildFragmentManager(),
                 getString(R.string.activate_payment_methods),
-                new PinConfirmationDialogFragment.Callback() {
-                    @Override
-                    public void confirm(String pin) {
-                        presenter.activateCards(pin);
-                    }
-                },
+                (PinConfirmationDialogFragment.Callback) pin -> presenter.activateCards(pin),
                 originX,
                 originY
         );

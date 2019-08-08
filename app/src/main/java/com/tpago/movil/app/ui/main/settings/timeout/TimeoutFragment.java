@@ -1,6 +1,7 @@
 package com.tpago.movil.app.ui.main.settings.timeout;
 
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,7 +28,22 @@ public final class TimeoutFragment extends InjectableFragment {
     RecyclerView sessionTimeoutOptionsRv;
 
     public static FragmentCreator creator() {
-        return new AutoValue_TimeoutFragment_Creator();
+        return new FragmentCreator() {
+            @Override
+            public Fragment create() {
+                return new TimeoutFragment();
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+
+            }
+        };
     }
 
 
