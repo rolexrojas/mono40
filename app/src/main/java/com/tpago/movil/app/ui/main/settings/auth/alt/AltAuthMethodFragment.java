@@ -68,7 +68,7 @@ public final class AltAuthMethodFragment extends InjectableFragment
 
   @OnClick(R.id.codeOption)
   final void onCodeOptionClicked() {
-    this.presenter.onEnableCodeButtonClicked();
+    this.presenter.onEnableCodeButtonClicked(getActivity());
   }
 
   @OnClick(R.id.noneOption)

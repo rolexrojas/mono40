@@ -1,24 +1,26 @@
 package com.tpago.movil.app.ui.main.code;
 
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
-import com.tpago.movil.R;
-import com.tpago.movil.app.ui.activity.ActivityQualifier;
-import com.tpago.movil.app.ui.fragment.FragmentHelper;
 import com.tpago.movil.Code;
+import com.tpago.movil.R;
+import com.tpago.movil.app.ui.fragment.FragmentHelper;
 import com.tpago.movil.app.ui.fragment.FragmentReplacer;
-import com.tpago.movil.app.ui.main.transaction.disburse.index.FragmentDisburseIndex;
-import com.tpago.movil.util.function.Consumer;
 import com.tpago.movil.util.ObjectHelper;
-
-import javax.inject.Inject;
+import com.tpago.movil.util.function.Consumer;
 
 /**
  * @author hecvasro
  */
 public final class CodeCreator {
+    private static final String KEY_ACTION_DESCRIPTION = "actionDescription";
+    private static final String KEY_ORIGIN_X = "originX";
+    private static final String KEY_ORIGIN_Y = "originY";
+    private int originX;
+    private int originY;
 
     private static final String TAG = CodeCreator.class.getCanonicalName();
 
@@ -58,7 +60,8 @@ public final class CodeCreator {
         FragmentHelper.dismissByTag(this.fragmentManager, TAG);
     }
 
-    public final void create(RequestType requestType, Consumer<Code> codeConsumer) {
+    public final void create(RequestType requestType, Consumer<Code> codeConsumer, int originX,
+                             int originY) {
         ObjectHelper.checkNotNull(requestType, "requestType");
         ObjectHelper.checkNotNull(codeConsumer, "codeConsumer");
 
@@ -70,10 +73,17 @@ public final class CodeCreator {
 
         this.activeRequest = Request.create(requestType, codeConsumer);
 
-        this.fragmentReplacer.begin(CodeCreatorDialogFragment.create(), TAG)
-                .transition(FragmentReplacer.Transition.FIFO)
-                .addToBackStack()
-                .commit();
+        final Bundle argumentBundle = new Bundle();
+        argumentBundle.putInt(KEY_ORIGIN_X, originX);
+        argumentBundle.putInt(KEY_ORIGIN_Y, originY);
+
+        CodeCreatorDialogFragment fragment = CodeCreatorDialogFragment.create();
+
+
+        fragment.setArguments(argumentBundle);
+        fragment.show(fragmentManager, TAG);
+
+
     }
 
     public enum RequestType {

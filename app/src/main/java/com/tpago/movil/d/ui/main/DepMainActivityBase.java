@@ -1,12 +1,15 @@
 package com.tpago.movil.d.ui.main;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.util.Pair;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -159,6 +162,8 @@ public class DepMainActivityBase
     ImageButton deleteImageButton;
     @BindView(R.id.qr_code_icon)
     View qrCodeIcon;
+    private LocalBroadcastManager localBroadcastManager;
+    private LogoutReceiver logoutReceiver;
 
     private Disposable closeSessionDisposable = Disposables.disposed();
 
@@ -235,6 +240,9 @@ public class DepMainActivityBase
         this.presenter.create();
 
         this.timeOutManager.start();
+
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        logoutReceiver = new LogoutReceiver();
     }
 
     @Override
@@ -246,7 +254,15 @@ public class DepMainActivityBase
         } else {
             this.presenter.start();
             startService(new Intent(this, LogoutTimerService.class));
+            IntentFilter intentFilter = new IntentFilter(LogoutTimerService.LOGOUT_BROADCAST);
+            localBroadcastManager.registerReceiver(logoutReceiver, intentFilter);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        localBroadcastManager.unregisterReceiver(logoutReceiver);
     }
 
     @Override
@@ -477,6 +493,7 @@ public class DepMainActivityBase
     public void onUserInteraction() {
         super.onUserInteraction();
         timeOutManager.reset();
+        localBroadcastManager.sendBroadcast(new Intent(LogoutTimerService.USER_INTERACTION_BROADCAST));
     }
 
     @Override
@@ -549,5 +566,14 @@ public class DepMainActivityBase
     public interface OnBackPressedListener {
 
         boolean onBackPressed();
+    }
+
+    class LogoutReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            DepMainActivityBase.this.startActivity(InitActivityBase.getLaunchIntent(DepMainActivityBase.this));
+            DepMainActivityBase.this.finish();
+        }
     }
 }

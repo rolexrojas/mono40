@@ -1,17 +1,25 @@
 package com.tpago.movil.d.ui.qr;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.tpago.movil.R;
+import com.tpago.movil.d.ui.main.DepMainActivityBase;
+import com.tpago.movil.dep.init.InitActivityBase;
+import com.tpago.movil.util.LogoutTimerService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +36,8 @@ public class QrActivity extends AppCompatActivity {
     QrTab myQrTab;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    private LocalBroadcastManager localBroadcastManager;
+    private LogoutReceiver logoutReceiver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,5 +98,36 @@ public class QrActivity extends AppCompatActivity {
                 viewPager.setCurrentItem(0);
             }
         });
+
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        logoutReceiver = new QrActivity.LogoutReceiver();
+    }
+
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        localBroadcastManager.sendBroadcast(new Intent(LogoutTimerService.USER_INTERACTION_BROADCAST));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter intentFilter = new IntentFilter(LogoutTimerService.LOGOUT_BROADCAST);
+        localBroadcastManager.registerReceiver(logoutReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        localBroadcastManager.unregisterReceiver(logoutReceiver);
+    }
+
+    class LogoutReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            QrActivity.this.startActivity(InitActivityBase.getLaunchIntent(QrActivity.this));
+            QrActivity.this.finish();
+        }
     }
 }
