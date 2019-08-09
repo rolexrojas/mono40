@@ -36,6 +36,7 @@ import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.main.list.ListItemAdapter;
 import com.tpago.movil.d.ui.main.list.ListItemHolder;
 import com.tpago.movil.d.ui.main.list.ListItemHolderCreatorFactory;
+import com.tpago.movil.dep.init.InitActivityBase;
 
 import javax.inject.Inject;
 
@@ -270,7 +271,12 @@ public class PurchaseFragment
         Dialogs.builder(getContext())
                 .setTitle(title)
                 .setMessage(message)
-                .setPositiveButton(R.string.error_positive_button_text, null)
+                .setPositiveButton(R.string.error_positive_button_text, (dialog, which) -> {
+                    if (message.contains(getString(R.string.session_expired))) {
+                        this.startActivity(InitActivityBase.getLaunchIntent(getContext()));
+                        getActivity().finish();
+                    }
+                })
                 .show();
     }
 

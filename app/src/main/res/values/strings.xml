@@ -439,4 +439,5 @@
     <string name="qr_error_unsupported_code">Codigo no soportado</string>
     <string name="qr_error_unsupported_code_message">Este no es un codigo de tpago valido</string>
     <string name="delete_profile_image">Restablecer imagen de perfil</string>
+    <string name="session_expired">Su sesión expiró</string>
 </resources>

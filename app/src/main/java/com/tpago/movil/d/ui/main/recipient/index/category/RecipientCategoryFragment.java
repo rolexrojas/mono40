@@ -59,6 +59,7 @@ import com.tpago.movil.d.ui.ChildFragment;
 import com.tpago.movil.d.ui.view.widget.SearchView;
 import com.tpago.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.tpago.movil.app.StringMapper;
+import com.tpago.movil.dep.init.InitActivityBase;
 import com.tpago.movil.paypal.PayPalAccount;
 import com.tpago.movil.util.ObjectHelper;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -482,7 +483,12 @@ public class RecipientCategoryFragment
     Dialogs.builder(getContext())
         .setTitle(R.string.error_generic_title)
         .setMessage(message)
-        .setPositiveButton(R.string.error_positive_button_text, null)
+        .setPositiveButton(R.string.error_positive_button_text, (dialog, which) -> {
+          if (message.contains(getString(R.string.session_expired))) {
+            this.startActivity(InitActivityBase.getLaunchIntent(getContext()));
+            getActivity().finish();
+          }
+        })
         .show();
   }
 

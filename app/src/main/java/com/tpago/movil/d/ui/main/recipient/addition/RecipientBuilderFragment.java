@@ -29,6 +29,7 @@ import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.domain.ErrorCode;
 import com.tpago.movil.d.domain.FailureData;
 import com.tpago.movil.d.domain.Result;
+import com.tpago.movil.dep.init.InitActivityBase;
 import com.tpago.movil.dep.net.NetworkService;
 import com.tpago.movil.dep.reactivex.Disposables;
 import com.tpago.movil.dep.text.Texts;
@@ -227,7 +228,12 @@ public class RecipientBuilderFragment extends Fragment {
     Dialogs.builder(getContext())
       .setTitle(title)
       .setMessage(message)
-      .setPositiveButton(R.string.error_positive_button_text, null)
+      .setPositiveButton(R.string.error_positive_button_text, (dialog, which) -> {
+        if (message.contains(getString(R.string.session_expired))) {
+          this.startActivity(InitActivityBase.getLaunchIntent(getContext()));
+          getActivity().finish();
+        }
+      })
       .show();
   }
 

@@ -36,6 +36,7 @@ import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Balance;
 import com.tpago.movil.d.ui.ChildFragment;
+import com.tpago.movil.dep.init.InitActivityBase;
 import com.tpago.movil.util.ObjectHelper;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
@@ -261,7 +262,12 @@ public class ProductsFragment
     Dialogs.builder(getContext())
       .setTitle(title)
       .setMessage(message)
-      .setPositiveButton(R.string.error_positive_button_text, null)
+      .setPositiveButton(R.string.error_positive_button_text, (dialog, which) -> {
+        if (message.contains(getString(R.string.session_expired))) {
+          this.startActivity(InitActivityBase.getLaunchIntent(getContext()));
+          getActivity().finish();
+        }
+      })
       .show();
   }
 

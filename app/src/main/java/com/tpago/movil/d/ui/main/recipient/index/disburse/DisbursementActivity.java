@@ -29,6 +29,7 @@ import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
 import com.tpago.movil.dep.App;
 import com.tpago.movil.dep.api.DCurrencies;
+import com.tpago.movil.dep.init.InitActivityBase;
 import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
 import com.tpago.movil.dep.net.NetworkService;
 import com.tpago.movil.transaction.TransactionSummary;
@@ -428,7 +429,12 @@ public final class DisbursementActivity
         Dialogs.builder(this)
                 .setTitle(title)
                 .setMessage(message)
-                .setPositiveButton(R.string.error_positive_button_text, null)
+                .setPositiveButton(R.string.error_positive_button_text, (dialog, which) -> {
+                    if (message.contains(getString(R.string.session_expired))) {
+                        this.startActivity(InitActivityBase.getLaunchIntent(this));
+                        this.finish();
+                    }
+                })
                 .show();
     }
 

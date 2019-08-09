@@ -1,5 +1,6 @@
 package com.tpago.movil.d.ui.main.transaction.contacts;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,6 +24,7 @@ import com.tpago.movil.d.ui.main.transaction.TransactionCategory;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
 import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
+import com.tpago.movil.dep.init.InitActivityBase;
 import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
 import com.tpago.movil.util.TaxUtil;
 import com.tpago.movil.util.TransactionType;
@@ -400,7 +402,12 @@ public class PhoneNumberTransactionCreationFragment
         Dialogs.builder(getContext())
                 .setTitle(title)
                 .setMessage(message)
-                .setPositiveButton(R.string.error_positive_button_text, null)
+                .setPositiveButton(R.string.error_positive_button_text, (dialog, which) -> {
+                    if (message.contains(getString(R.string.session_expired))) {
+                        this.startActivity(InitActivityBase.getLaunchIntent(getContext()));
+                        getActivity().finish();
+                    }
+                })
                 .show();
     }
 

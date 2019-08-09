@@ -42,9 +42,11 @@ import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.ui.Dialogs;
+import com.tpago.movil.d.ui.main.DepMainActivityBase;
 import com.tpago.movil.d.ui.main.transaction.TransactionCategory;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase;
 import com.tpago.movil.dep.App;
+import com.tpago.movil.dep.init.InitActivityBase;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.util.QrDecryptUtil;
 import com.tpago.movil.util.QrJWT;
@@ -210,7 +212,13 @@ public class QrScannerFragment extends Fragment {
         Dialogs.builder(getContext())
                 .setTitle(R.string.error_generic_title)
                 .setMessage(message)
-                .setPositiveButton(R.string.error_positive_button_text, (dialog, which) -> isInProgress = false)
+                .setPositiveButton(R.string.error_positive_button_text, (dialog, which) -> {
+                    isInProgress = false;
+                    if (message.contains(getString(R.string.session_expired))) {
+                        this.startActivity(InitActivityBase.getLaunchIntent(getContext()));
+                        getActivity().finish();
+                    }
+                })
                 .show();
     }
 

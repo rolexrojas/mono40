@@ -24,6 +24,7 @@ import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
 import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
+import com.tpago.movil.dep.init.InitActivityBase;
 import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
 import com.tpago.movil.dep.text.BaseTextWatcher;
 import com.tpago.movil.dep.widget.Keyboard;
@@ -292,7 +293,12 @@ public class LoanTransactionCreationFragment extends ChildFragment<TransactionCr
         Dialogs.builder(getContext())
                 .setTitle(R.string.error_generic_title)
                 .setMessage(message)
-                .setPositiveButton(R.string.error_positive_button_text, null)
+                .setPositiveButton(R.string.error_positive_button_text, (dialog, which) -> {
+                    if (message.contains(getString(R.string.session_expired))) {
+                        this.startActivity(InitActivityBase.getLaunchIntent(getContext()));
+                        getActivity().finish();
+                    }
+                })
                 .show();
     }
 
