@@ -26,6 +26,7 @@ import com.tpago.movil.app.ui.permission.PermissionRequestResult;
 import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.dep.MimeType;
 import com.tpago.movil.io.FileHelper;
+import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.util.ObjectHelper;
 
 import java.io.File;
@@ -79,6 +80,8 @@ public final class PictureCreatorDialogFragment extends DialogFragment {
   private View useTheCameraActionView;
 
   private boolean shouldResolve = false;
+  @Inject
+  SessionManager sessionManager;
 
   @Override
   public void onAttach(Context context) {
@@ -207,6 +210,15 @@ public final class PictureCreatorDialogFragment extends DialogFragment {
     this.useTheCameraActionView = ButterKnife
       .findById(dialog, R.id.relative_layout_use_the_camera);
     this.useTheCameraActionView.setOnClickListener(this::onUseTheCameraOptionClicked);
+
+    ButterKnife.findById(dialog, R.id.relative_layout_delete_profile_image).setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        sessionManager.getUser().updatePicture(Uri.EMPTY);
+        sessionManager.clearUserPicture();
+        dismiss();
+      }
+    });
   }
 
   @Override

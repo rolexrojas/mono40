@@ -112,6 +112,10 @@ public final class SessionManager {
         }
     }
 
+    public void clearUserPicture() {
+        this.jobManager.addJobInBackground(UpdateUserPictureJob.create(null));
+    }
+
     private void createSession_(Result<User> result) {
         this.createSession_(result, false, null);
     }
