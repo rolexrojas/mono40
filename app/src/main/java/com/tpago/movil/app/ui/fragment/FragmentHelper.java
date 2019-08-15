@@ -25,6 +25,10 @@ public final class FragmentHelper {
     if (ObjectHelper.isNotNull(fragment)) {
       if (fragment instanceof DialogFragment) {
         ((DialogFragment) fragment).dismiss();
+      } else {
+        fragmentManager.beginTransaction()
+                .remove(fragment)
+                .commit();
       }
     }
   }

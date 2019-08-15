@@ -34,6 +34,7 @@ import com.tpago.movil.R;
 import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.app.ui.alert.AlertManager;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
+import com.tpago.movil.app.ui.loader.takeover.TakeoverLoaderDialogFragment;
 import com.tpago.movil.app.ui.permission.PermissionHelper;
 import com.tpago.movil.d.domain.Customer;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
@@ -79,6 +80,7 @@ public class QrScannerFragment extends Fragment {
     private static final List<String> REQUIRED_PERMISSIONS_GALLERY;
     private static final List<String> REQUIRED_PERMISSIONS_CAMERA;
     private static final int REQUEST_CODE_TRANSACTION_CREATION = 1;
+    private static final String TAKE_OVER_LOADER_DIALOG = "TAKE_OVER_LOADER_DIALOG";
 
     static {
         REQUIRED_PERMISSIONS_GALLERY = new ArrayList<>();
@@ -106,7 +108,7 @@ public class QrScannerFragment extends Fragment {
     AlertManager alertManager;
     @Inject
     StringMapper stringMapper;
-    TakeoverLoader takeoverLoader;
+    TakeoverLoaderDialogFragment takeoverLoader;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -117,7 +119,31 @@ public class QrScannerFragment extends Fragment {
                 .setBarcodeFormats(FirebaseVisionBarcode.FORMAT_QR_CODE)
                 .build();
         this.alertManager = AlertManager.create(getContext(), stringMapper);
-        this.takeoverLoader = TakeoverLoader.create(getFragmentManager());
+    }
+
+    private void showTakeOver() {
+        if (takeoverLoader != null) {
+            takeoverLoader.dismiss();
+        } else {
+            takeoverLoader = TakeoverLoaderDialogFragment.create();
+            getChildFragmentManager().beginTransaction()
+                    .add(takeoverLoader, TAKE_OVER_LOADER_DIALOG)
+                    .show(takeoverLoader)
+                    .commit();
+        }
+
+    }
+
+    private void dismissTakeOverLoader() {
+        if (takeoverLoader != null) {
+            takeoverLoader.dismiss();
+            takeoverLoader = null;
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     @Nullable
@@ -141,7 +167,7 @@ public class QrScannerFragment extends Fragment {
                 if (isInProgress) {
                     return;
                 }
-                takeoverLoader.show();
+                showTakeOver();
                 isInProgress = true;
                 QrScannerFragment.this.onBarCodeResult(result.getText());
             }
@@ -165,7 +191,7 @@ public class QrScannerFragment extends Fragment {
     }
 
     private void showErrorMessage(int title, int message) {
-        this.takeoverLoader.hide();
+        dismissTakeOverLoader();
         this.alertManager.builder()
                 .title(title)
                 .message(message)
@@ -190,8 +216,8 @@ public class QrScannerFragment extends Fragment {
         if (!phoneNumber.equals(sessionManager.getUser().phoneNumber())) {
             Single.defer(() -> Single.just(this.depApiBridge.fetchCustomer(phoneNumber.value())))
                     .subscribeOn(Schedulers.io())
-                    .doOnSubscribe((disposable) -> this.takeoverLoader.show())
-                    .doFinally(this.takeoverLoader::hide)
+                    .doOnSubscribe((disposable) -> showTakeOver())
+                    .doFinally(() -> this.dismissTakeOverLoader())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             (result) -> this.handleStartPhoneNumberTransactionResult(phoneNumber, result),
@@ -204,18 +230,21 @@ public class QrScannerFragment extends Fragment {
     }
 
     private void handleStartTransactionError(Throwable throwable) {
-        takeoverLoader.hide();
+        dismissTakeOverLoader();
         showGenericErrorDialog(getString(R.string.cannot_process_your_request_at_the_moment));
     }
 
     public void showGenericErrorDialog(String message) {
+
         Dialogs.builder(getContext())
                 .setTitle(R.string.error_generic_title)
                 .setMessage(message)
                 .setPositiveButton(R.string.error_positive_button_text, (dialog, which) -> {
                     isInProgress = false;
                     if (message.contains(getString(R.string.session_expired))) {
-                        this.startActivity(InitActivityBase.getLaunchIntent(getContext()));
+                        Intent intent = InitActivityBase.getLaunchIntent(getContext());
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        this.startActivity(intent);
                         getActivity().finish();
                     }
                 })
@@ -240,8 +269,8 @@ public class QrScannerFragment extends Fragment {
             PhoneNumber phoneNumber,
             ApiResult<Customer> result
     ) {
-        this.isInProgress = false;
         if (result.isSuccessful()) {
+            this.isInProgress = false;
             this.startTransaction(this.handleCustomerResult(phoneNumber, result));
         } else {
             this.showGenericErrorDialog(result.getError().getDescription());

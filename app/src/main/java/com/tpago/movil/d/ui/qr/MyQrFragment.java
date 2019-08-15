@@ -162,8 +162,9 @@ public class MyQrFragment extends Fragment {
             String bitmapPath = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), this.qrBitmap, "tPagoQr", null);
             Uri bitmapUri = Uri.parse(bitmapPath);
 
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("image/png");
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_MEDIA_SHARED);
+            intent.setType("image/*");
             intent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
             startActivity(Intent.createChooser(intent, "Compartir"));
         } catch (Exception e) {

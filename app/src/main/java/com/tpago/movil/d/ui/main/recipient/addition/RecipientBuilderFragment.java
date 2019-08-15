@@ -1,6 +1,7 @@
 package com.tpago.movil.d.ui.main.recipient.addition;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -230,7 +231,9 @@ public class RecipientBuilderFragment extends Fragment {
       .setMessage(message)
       .setPositiveButton(R.string.error_positive_button_text, (dialog, which) -> {
         if (message.contains(getString(R.string.session_expired))) {
-          this.startActivity(InitActivityBase.getLaunchIntent(getContext()));
+                        Intent intent = InitActivityBase.getLaunchIntent(getContext());
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        this.startActivity(intent);
           getActivity().finish();
         }
       })

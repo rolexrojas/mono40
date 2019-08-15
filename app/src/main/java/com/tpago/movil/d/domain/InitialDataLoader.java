@@ -11,6 +11,8 @@ import com.tpago.movil.session.SessionManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import rx.Completable;
 
 /**
@@ -22,7 +24,8 @@ public final class InitialDataLoader {
     private final DepApiBridge apiBridge;
     private final ProductManager productManager;
     private final RecipientManager recipientManager;
-    private SessionManager sessionManager;
+    @Inject
+    public SessionManager sessionManager;
     private final Context context;
 
     public InitialDataLoader(
@@ -57,13 +60,13 @@ public final class InitialDataLoader {
     }
 
     private void handleCustomerSecretResult(ApiResult<CustomerSecretTokenResponse> customerSecretTokenResponseApiResult) {
-        if (customerSecretTokenResponseApiResult.isSuccessful()) {
+        if (customerSecretTokenResponseApiResult.isSuccessful() && sessionManager != null) {
             sessionManager.saveCustomerSecretToken(customerSecretTokenResponseApiResult.getData().token());
         }
     }
 
     private void handleCustomerSecretKeyResult(ApiResult<CustomerSecretKey> customerSecretKeyResponseApiResult) {
-        if (customerSecretKeyResponseApiResult.isSuccessful()) {
+        if (customerSecretKeyResponseApiResult.isSuccessful() && sessionManager != null) {
             sessionManager.saveCustomerSecretKey(customerSecretKeyResponseApiResult.getData().key());
         }
     }

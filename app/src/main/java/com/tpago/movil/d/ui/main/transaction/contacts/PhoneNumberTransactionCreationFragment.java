@@ -1,6 +1,7 @@
 package com.tpago.movil.d.ui.main.transaction.contacts;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -404,7 +405,9 @@ public class PhoneNumberTransactionCreationFragment
                 .setMessage(message)
                 .setPositiveButton(R.string.error_positive_button_text, (dialog, which) -> {
                     if (message.contains(getString(R.string.session_expired))) {
-                        this.startActivity(InitActivityBase.getLaunchIntent(getContext()));
+                        Intent intent = InitActivityBase.getLaunchIntent(getContext());
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        this.startActivity(intent);
                         getActivity().finish();
                     }
                 })
