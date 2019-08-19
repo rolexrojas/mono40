@@ -19,6 +19,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.flipboard.bottomsheet.commons.IntentPickerSheetView;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -52,6 +54,8 @@ public class MyQrFragment extends Fragment {
     CircleImageView qrCodeProfileIcon;
     @BindView(R.id.qr_code_profile_name)
     TextView qrCodeProfileName;
+    @BindView(R.id.bottomsheet)
+    BottomSheetLayout bottomSheet;
     // Default token for Testing since endpoints are throwing {"error":{"code":"0014","description":"El servicio no está disponible. Favor intente de nuevo.","msisdn":null,"transaction":null}}
     String token = null;
     private Bitmap qrBitmap;
@@ -163,10 +167,17 @@ public class MyQrFragment extends Fragment {
             Uri bitmapUri = Uri.parse(bitmapPath);
 
             Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_MEDIA_SHARED);
-            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_SEND);
+            intent.setType("image/png");
             intent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
-            startActivity(Intent.createChooser(intent, "Compartir"));
+
+            bottomSheet.showWithSheetView(new IntentPickerSheetView(getContext(), intent, "Share with...", new IntentPickerSheetView.OnIntentPickedListener() {
+                @Override
+                public void onIntentPicked(IntentPickerSheetView.ActivityInfo activityInfo) {
+                    bottomSheet.dismissSheet();
+                    startActivity(activityInfo.getConcreteIntent(intent ));
+                }
+            }));
         } catch (Exception e) {
             Log.d(this.getTag(), "Exception while trying to write file for sharing: " + e.getMessage());
         }

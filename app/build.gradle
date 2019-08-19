@@ -308,8 +308,12 @@ dependencies {
 
     implementation 'com.github.kenglxn.QRGen:android:2.6.0'
 
+
     implementation 'commons-codec:commons-codec:1.10'
     implementation 'com.google.firebase:firebase-ml-vision:18.0.1'
+
+    compile 'com.flipboard:bottomsheet-core:1.5.3'
+    compile 'com.flipboard:bottomsheet-commons:1.5.3' // optional
 }
 
 configurations.all {
