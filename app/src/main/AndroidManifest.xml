@@ -131,7 +131,12 @@
             android:windowSoftInputMode="adjustResize"
             android:launchMode="singleInstance">
         </activity>
+        
+        <activity android:name=".d.ui.qr.SaveToGalleryActivity" android:theme="@style/Theme.AppCompat.Translucent">
+
+        </activity>
 
         <service android:name=".util.LogoutTimerService" />
+        
     </application>
 </manifest>

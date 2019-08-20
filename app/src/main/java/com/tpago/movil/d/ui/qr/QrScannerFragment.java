@@ -47,6 +47,7 @@ import com.tpago.movil.d.ui.main.DepMainActivityBase;
 import com.tpago.movil.d.ui.main.transaction.TransactionCategory;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase;
 import com.tpago.movil.dep.App;
+import com.tpago.movil.dep.MimeType;
 import com.tpago.movil.dep.init.InitActivityBase;
 import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.util.QrDecryptUtil;
@@ -92,8 +93,8 @@ public class QrScannerFragment extends Fragment {
         REQUIRED_PERMISSIONS_CAMERA.add(Manifest.permission.CAMERA);
     }
 
-    private static final int REQUEST_CODE_GALLERY = 0;
-    private static final int REQUEST_CODE_CAMERA = 1;
+    private static final int REQUEST_CODE_GALLERY = 400;
+    private static final int REQUEST_CODE_CAMERA = 500;
 
     @BindView(R.id.cameraPreview)
     CustomBarCodeView barcodeView;
@@ -356,8 +357,8 @@ public class QrScannerFragment extends Fragment {
 
     @OnClick(R.id.qr_import_container)
     public void onImportClicked() {
-        final Intent intent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType(MimeType.IMAGE);
         this.startActivityForResult(intent, REQUEST_CODE_GALLERY);
     }
 

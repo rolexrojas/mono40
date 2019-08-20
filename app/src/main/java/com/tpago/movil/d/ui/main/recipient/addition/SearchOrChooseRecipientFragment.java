@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.tpago.movil.R;
 import com.tpago.movil.company.bank.Bank;
@@ -50,8 +51,6 @@ public class SearchOrChooseRecipientFragment extends ChildFragment<AddRecipientC
     TabLayout tabLayout;
     @BindView(R.id.view_pager)
     ViewPager viewPager;
-    @BindView(R.id.qr_code_icon)
-    View qrCodeIcon;
 
     @NonNull
     public static SearchOrChooseRecipientFragment newInstance() {
@@ -70,10 +69,13 @@ public class SearchOrChooseRecipientFragment extends ChildFragment<AddRecipientC
     public void onResume() {
         super.onResume();
         TransactionCategory transactionCategory = TransactionCategory.transform(category);
-        if (transactionCategory == TransactionCategory.PAY || transactionCategory == TransactionCategory.TRANSFER) {
-            qrCodeIcon.setVisibility(View.VISIBLE);
-        } else {
-            qrCodeIcon.setVisibility(View.GONE);
+        ImageView qrCodeIcon = getView().findViewById(R.id.qr_code_icon);
+        if (qrCodeIcon != null) {
+            if (transactionCategory == TransactionCategory.PAY || transactionCategory == TransactionCategory.TRANSFER) {
+                qrCodeIcon.setVisibility(View.VISIBLE);
+            } else {
+                qrCodeIcon.setVisibility(View.GONE);
+            }
         }
     }
 

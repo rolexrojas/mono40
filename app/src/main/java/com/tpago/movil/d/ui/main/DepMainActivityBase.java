@@ -288,7 +288,11 @@ public class DepMainActivityBase
             String transactionId
     ) {
         TransactionSummaryDialogFragment dialogFragment = TransactionSummaryDialogFragment.create(recipient, alreadyExists, transactionId);
-        dialogFragment.setListener((recipient1, label) -> updateRecipient(recipient1, label));
+        dialogFragment.setListener((recipient1, label) -> {
+            recipient1.setLabel(label);
+            updateRecipient(recipient1, label);
+            ((RecipientCategoryFragment) getSupportFragmentManager().findFragmentByTag(TAG_CHILD_FRAGMENT)).update(recipient);
+        });
         dialogFragment.show(getSupportFragmentManager(), null);
 
     }
