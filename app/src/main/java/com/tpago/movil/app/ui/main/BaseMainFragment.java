@@ -1,6 +1,6 @@
 package com.tpago.movil.app.ui.main;
 
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 
 import com.tpago.movil.app.ui.fragment.base.FragmentBase;
 import com.tpago.movil.d.ui.main.DepMainActivityBase;

@@ -1,6 +1,6 @@
 package com.tpago.movil.d.ui.main.transaction.contacts;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.ui.Screen;

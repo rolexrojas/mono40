@@ -1,8 +1,8 @@
 package com.tpago.movil.d.ui.main.purchase;
 
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.widget.ImageView;
 import android.widget.TextView;
 

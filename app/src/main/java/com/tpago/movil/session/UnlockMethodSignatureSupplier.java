@@ -1,6 +1,6 @@
 package com.tpago.movil.session;
 
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 
 import com.tpago.movil.util.Result;
 import com.tpago.movil.util.function.Supplier;

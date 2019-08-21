@@ -1,6 +1,6 @@
 package com.tpago.movil.d.misc;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * TODO

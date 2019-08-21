@@ -1,8 +1,9 @@
 package com.tpago.movil;
 
 import android.os.Parcelable;
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;

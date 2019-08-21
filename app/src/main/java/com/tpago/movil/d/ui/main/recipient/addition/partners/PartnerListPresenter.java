@@ -1,7 +1,7 @@
 package com.tpago.movil.d.ui.main.recipient.addition.partners;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 import com.tpago.movil.company.partner.Partner;

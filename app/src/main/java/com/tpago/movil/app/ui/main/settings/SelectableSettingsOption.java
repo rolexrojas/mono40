@@ -2,8 +2,8 @@ package com.tpago.movil.app.ui.main.settings;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.Nullable;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;

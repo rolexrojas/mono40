@@ -1,7 +1,7 @@
 package com.tpago.movil.d.ui;
 
 import android.content.Context;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 
 import com.tpago.movil.R;
 

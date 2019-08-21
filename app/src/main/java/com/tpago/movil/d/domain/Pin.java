@@ -1,6 +1,6 @@
 package com.tpago.movil.d.domain;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.tpago.movil.d.domain.text.TextHelper;
 

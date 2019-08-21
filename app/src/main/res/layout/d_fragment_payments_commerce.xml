@@ -4,7 +4,7 @@
   style="@style/Container.Light.Primary"
   android:orientation="vertical">
 
-  <android.support.v7.widget.RecyclerView
+  <androidx.recyclerview.widget.RecyclerView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/recycler_view"
     style="@style/List.Vertical"

@@ -1,8 +1,8 @@
 package com.tpago.movil.dep;
 
 import android.content.Context;
-import android.support.annotation.PluralsRes;
-import android.support.annotation.StringRes;
+import androidx.annotation.PluralsRes;
+import androidx.annotation.StringRes;
 
 import com.tpago.movil.R;
 import com.tpago.movil.util.ObjectHelper;

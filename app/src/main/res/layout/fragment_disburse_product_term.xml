@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   style="@style/Container.Light.Primary">
 
-  <android.support.constraint.Guideline
+  <androidx.constraintlayout.widget.Guideline
     android:id="@+id/guideline_top"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     app:layout_constraintGuide_begin="80dp"/>
 
-  <android.support.constraint.Guideline
+  <androidx.constraintlayout.widget.Guideline
     android:id="@+id/guideline_middle"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     app:layout_constraintGuide_begin="100dp"/>
 
-  <android.support.constraint.Guideline
+  <androidx.constraintlayout.widget.Guideline
     android:id="@+id/guideline_bottom"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -70,4 +70,4 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="@+id/guideline_bottom"/>
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

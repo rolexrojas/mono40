@@ -1,6 +1,6 @@
 package com.tpago.movil.session;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.tpago.movil.util.StringHelper;
 

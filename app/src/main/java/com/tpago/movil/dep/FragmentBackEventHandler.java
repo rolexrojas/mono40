@@ -1,6 +1,6 @@
 package com.tpago.movil.dep;
 
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 
 import com.tpago.movil.util.ObjectHelper;
 

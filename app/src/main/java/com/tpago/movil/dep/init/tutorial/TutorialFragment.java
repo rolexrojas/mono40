@@ -1,11 +1,11 @@
 package com.tpago.movil.dep.init.tutorial;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
+import androidx.annotation.Nullable;
+import com.google.android.material.tabs.TabLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -118,7 +118,7 @@ public final class TutorialFragment extends BaseInitFragment {
     unbinder.unbind();
   }
 
-  private static class TabAdapter extends android.support.v4.app.FragmentPagerAdapter {
+  private static class TabAdapter extends androidx.fragment.app.FragmentPagerAdapter {
 
     private static final List<Integer> TAB_LIST_TITLE = Arrays.asList(
       R.string.tutorial_tab_label_title_01,

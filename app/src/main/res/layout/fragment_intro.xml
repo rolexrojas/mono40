@@ -5,7 +5,7 @@
   android:layout_height="match_parent"
   android:paddingTop="@dimen/init_container_padding_top_large">
 
-  <android.support.design.widget.TabLayout
+  <com.google.android.material.tabs.TabLayout
     android:id="@+id/tab_layout"
     style="@style/D.Widget.TabLayout.Dark"
     android:layout_alignParentBottom="true"
@@ -20,7 +20,7 @@
     android:layout_marginBottom="32dp"
     android:text="@string/intro_button_start"/>
 
-  <android.support.v4.view.ViewPager
+  <androidx.viewpager.widget.ViewPager
     android:id="@+id/view_pager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"

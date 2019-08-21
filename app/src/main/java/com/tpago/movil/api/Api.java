@@ -1,7 +1,8 @@
 package com.tpago.movil.api;
 
 import android.net.Uri;
-import android.support.annotation.IntDef;
+
+import androidx.annotation.IntDef;
 
 import com.tpago.movil.Code;
 import com.tpago.movil.Email;

@@ -1,8 +1,8 @@
 package com.tpago.movil.company;
 
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringDef;
 
 import com.tpago.movil.util.ComparisonChain;
 

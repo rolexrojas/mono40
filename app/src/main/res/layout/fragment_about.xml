@@ -35,13 +35,13 @@
       app:primaryText="Llámanos"
       app:secondaryText="1-809-732-2525"/>
 
-    <android.support.v4.widget.Space style="@style/VerticalDivider.Space.Normal"/>
+    <androidx.legacy.widget.Space style="@style/VerticalDivider.Space.Normal"/>
 
     <TextView
       style="@style/SettingsSectionTitle"
       android:text="En línea"/>
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -206,7 +206,7 @@
               app:secondaryText="tPagoTV"/>
         </LinearLayout>
       </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
       <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
           android:id="@+id/setting_option_version"
           style="@style/SettingsOption"

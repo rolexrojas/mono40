@@ -1,6 +1,6 @@
 package com.tpago.movil.company.partner;
 
-import android.support.annotation.StringDef;
+import androidx.annotation.StringDef;
 
 import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;

@@ -1,6 +1,6 @@
 package com.tpago.movil.d.ui.main.recipient.addition;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.tpago.movil.company.bank.Bank;
 import com.tpago.movil.company.partner.Partner;

@@ -1,7 +1,7 @@
 package com.tpago.movil.d.ui.main.list;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.tpago.movil.R;
 

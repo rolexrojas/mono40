@@ -2,8 +2,8 @@ package com.tpago.movil.session;
 
 import android.annotation.TargetApi;
 import android.os.Build;
-import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
-import android.support.v4.os.CancellationSignal;
+import androidx.core.hardware.fingerprint.FingerprintManagerCompat;
+import androidx.core.os.CancellationSignal;
 
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.FailureData;

@@ -1,7 +1,7 @@
 package com.tpago.movil.dep;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
+import androidx.annotation.LayoutRes;
 
 import javax.inject.Inject;
 

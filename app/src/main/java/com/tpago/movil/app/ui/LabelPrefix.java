@@ -2,11 +2,12 @@ package com.tpago.movil.app.ui;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.StyleRes;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.SuperscriptSpan;
 import android.text.style.TextAppearanceSpan;
 import android.util.AttributeSet;
+
+import androidx.annotation.StyleRes;
 
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.util.Truss;
@@ -17,7 +18,8 @@ import com.tpago.movil.util.StringHelper;
  */
 public final class LabelPrefix extends Label {
 
-  @StyleRes private Integer prefixAppearance;
+  @StyleRes
+  private Integer prefixAppearance;
   private CharSequence prefix;
 
   @StyleRes private Integer valueAppearance;

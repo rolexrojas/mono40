@@ -1,9 +1,9 @@
 package com.tpago.movil.d.data;
 
 import android.content.res.Resources;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 
 import com.tpago.movil.R;
 import com.tpago.movil.d.domain.Product;

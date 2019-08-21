@@ -1,6 +1,6 @@
 package com.tpago.movil.d.domain.api;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.tpago.movil.dep.net.HttpCode;
 

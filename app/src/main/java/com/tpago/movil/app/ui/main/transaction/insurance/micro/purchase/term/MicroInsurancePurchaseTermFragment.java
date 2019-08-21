@@ -2,7 +2,7 @@ package com.tpago.movil.app.ui.main.transaction.insurance.micro.purchase.term;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 

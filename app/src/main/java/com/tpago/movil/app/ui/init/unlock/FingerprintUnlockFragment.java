@@ -2,9 +2,9 @@ package com.tpago.movil.app.ui.init.unlock;
 
 import android.os.Bundle;
 import android.security.keystore.KeyPermanentlyInvalidatedException;
-import android.support.annotation.Nullable;
-import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
-import android.support.v4.os.CancellationSignal;
+import androidx.annotation.Nullable;
+import androidx.core.hardware.fingerprint.FingerprintManagerCompat;
+import androidx.core.os.CancellationSignal;
 import android.view.View;
 
 import com.tpago.movil.R;

@@ -2,7 +2,7 @@ package com.tpago.movil.d.domain;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v4.util.Pair;
+import androidx.core.util.Pair;
 
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;

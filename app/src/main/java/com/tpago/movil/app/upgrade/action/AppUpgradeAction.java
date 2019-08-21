@@ -1,6 +1,6 @@
 package com.tpago.movil.app.upgrade.action;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import io.reactivex.functions.Action;
 

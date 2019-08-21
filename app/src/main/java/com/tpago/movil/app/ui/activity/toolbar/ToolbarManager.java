@@ -1,9 +1,9 @@
 package com.tpago.movil.app.ui.activity.toolbar;
 
 import android.graphics.drawable.Drawable;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.StringRes;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
+import androidx.appcompat.widget.Toolbar;
 
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;

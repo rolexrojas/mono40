@@ -2,8 +2,8 @@ package com.tpago.movil.app.ui.permission;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
 
 import com.tpago.movil.util.ObjectHelper;
 import com.tpago.movil.util.StringHelper;

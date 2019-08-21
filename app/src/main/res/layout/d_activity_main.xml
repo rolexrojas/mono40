@@ -15,7 +15,7 @@
 
         <FrameLayout style="@style/Dep.App.Widget.AppBar">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 style="@style/Toolbar"
                 android:layout_gravity="center_vertical">
@@ -68,7 +68,7 @@
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
-            </android.support.v7.widget.Toolbar>
+            </androidx.appcompat.widget.Toolbar>
 
             <LinearLayout
                 android:id="@+id/linear_layout_delete"

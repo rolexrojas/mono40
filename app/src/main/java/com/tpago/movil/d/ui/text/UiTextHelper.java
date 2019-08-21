@@ -1,6 +1,6 @@
 package com.tpago.movil.d.ui.text;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding.widget.RxTextView;

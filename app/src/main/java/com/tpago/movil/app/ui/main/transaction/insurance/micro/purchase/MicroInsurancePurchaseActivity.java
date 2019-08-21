@@ -3,7 +3,7 @@ package com.tpago.movil.app.ui.main.transaction.insurance.micro.purchase;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.tpago.movil.R;
 import com.tpago.movil.app.App;

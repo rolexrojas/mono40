@@ -1,7 +1,7 @@
 package com.tpago.movil.app.ui.main.settings;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
+import androidx.annotation.LayoutRes;
 import android.util.AttributeSet;
 
 import com.tpago.movil.R;

@@ -2,7 +2,6 @@ package com.tpago.movil.data.api;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.annotation.Nullable;
 import android.util.Base64;
 
 import com.tpago.movil.Code;

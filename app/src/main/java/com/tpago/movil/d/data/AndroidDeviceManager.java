@@ -1,7 +1,7 @@
 package com.tpago.movil.d.data;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.telephony.TelephonyManager;
 
 import com.tpago.movil.d.domain.DepDeviceManager;

@@ -2,7 +2,7 @@ package com.tpago.movil.app.ui.main.settings.auth.alt;
 
 import android.app.Activity;
 import android.graphics.Point;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.Display;
 
 import com.tpago.movil.app.StringMapper;

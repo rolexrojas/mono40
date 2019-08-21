@@ -1,8 +1,8 @@
 package com.tpago.movil.app.ui.item;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.tpago.movil.R;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;

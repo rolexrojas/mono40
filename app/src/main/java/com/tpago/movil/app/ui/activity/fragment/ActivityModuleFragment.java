@@ -1,6 +1,6 @@
 package com.tpago.movil.app.ui.activity.fragment;
 
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.activity.ActivityQualifier;

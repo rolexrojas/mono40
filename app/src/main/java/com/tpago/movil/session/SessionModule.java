@@ -1,8 +1,8 @@
 package com.tpago.movil.session;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
+import androidx.annotation.Nullable;
+import androidx.core.hardware.fingerprint.FingerprintManagerCompat;
 
 import com.birbit.android.jobqueue.JobManager;
 import com.tpago.movil.api.Api;
