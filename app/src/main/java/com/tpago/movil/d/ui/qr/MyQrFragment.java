@@ -268,8 +268,8 @@ public class MyQrFragment extends Fragment {
         final Intent intent = new Intent(context, SaveToGalleryActivity.class);
         intent.putExtra(SaveToGalleryActivity.EXTRA_BITMAP_URI, bitmapPath);
         return new LabeledIntent(intent, BuildConfig.APPLICATION_ID,
-                "Save to gallery",
-                R.drawable.ic_gallery);
+                "Guardar a la galeria",
+                R.drawable.ic_save_to_gallery);
     }
 
 

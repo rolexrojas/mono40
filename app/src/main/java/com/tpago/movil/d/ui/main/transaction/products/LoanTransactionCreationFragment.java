@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.tpago.movil.R;
 import com.tpago.movil.app.StringMapper;
+import com.tpago.movil.app.ui.loader.takeover.TakeoverLoaderDialogFragment;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.LoanBillBalance;
 import com.tpago.movil.d.domain.Product;
@@ -29,6 +31,7 @@ import com.tpago.movil.dep.init.InitActivityBase;
 import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
 import com.tpago.movil.dep.text.BaseTextWatcher;
 import com.tpago.movil.dep.widget.Keyboard;
+import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.util.TaxUtil;
 import com.tpago.movil.util.TransactionType;
 import com.tpago.movil.util.UiUtil;
@@ -42,6 +45,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author hecvasro
@@ -49,6 +56,7 @@ import butterknife.Unbinder;
 public class LoanTransactionCreationFragment extends ChildFragment<TransactionCreationContainer>
         implements LoanTransactionCreationPresenter.View {
 
+    private static final String TAKE_OVER_LOADER_DIALOG = "TAKE_OVER_LOADER_DIALOG";
     private LoanTransactionCreationPresenter presenter;
 
     private Unbinder unbinder;
@@ -90,6 +98,10 @@ public class LoanTransactionCreationFragment extends ChildFragment<TransactionCr
     private String currency;
     @Inject
     StringMapper stringMapper;
+    private TakeoverLoaderDialogFragment takeoverLoader;
+    private Disposable closeSessionDisposable;
+    @Inject
+    SessionManager sessionManager;
 
     public static LoanTransactionCreationFragment create() {
         return new LoanTransactionCreationFragment();
@@ -296,10 +308,7 @@ public class LoanTransactionCreationFragment extends ChildFragment<TransactionCr
                 .setMessage(message)
                 .setPositiveButton(R.string.error_positive_button_text, (dialog, which) -> {
                     if (message.contains(getString(R.string.session_expired))) {
-                        Intent intent = InitActivityBase.getLaunchIntent(getContext());
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        this.startActivity(intent);
-                        getActivity().finish();
+                        closeSession();
                     }
                 })
                 .show();
@@ -314,5 +323,46 @@ public class LoanTransactionCreationFragment extends ChildFragment<TransactionCr
     public void showUnavailableNetworkError() {
         Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG)
                 .show();
+    }
+
+    private void closeSession() {
+        this.closeSessionDisposable = sessionManager.closeSession()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe((d) -> this.showTakeOver())
+                .doFinally(this::dismissTakeOverLoader)
+                .subscribe(this::handleCloseSession, (Consumer<Throwable>) throwable -> {
+                    Log.d("com.tpago.mobile", throwable.getMessage(), throwable);
+                });
+    }
+
+    private void showTakeOver() {
+        if (takeoverLoader != null) {
+            takeoverLoader.dismiss();
+        } else {
+            takeoverLoader = TakeoverLoaderDialogFragment.create();
+            getChildFragmentManager().beginTransaction()
+                    .add(takeoverLoader, TAKE_OVER_LOADER_DIALOG)
+                    .show(takeoverLoader)
+                    .commit();
+        }
+
+    }
+
+    private void dismissTakeOverLoader() {
+        if (takeoverLoader != null) {
+            takeoverLoader.dismiss();
+            takeoverLoader = null;
+        }
+    }
+
+    private void handleCloseSession() {
+        Intent intent = InitActivityBase.getLaunchIntent(getContext());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        this.getActivity().finish();
+        this.startActivity(intent);
     }
 }

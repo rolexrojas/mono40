@@ -75,6 +75,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class QrScannerFragment extends Fragment {
@@ -110,6 +112,7 @@ public class QrScannerFragment extends Fragment {
     @Inject
     StringMapper stringMapper;
     TakeoverLoaderDialogFragment takeoverLoader;
+    private Disposable closeSessionDisposable;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -156,7 +159,6 @@ public class QrScannerFragment extends Fragment {
             PermissionHelper.requestPermissions(this, REQUEST_CODE_CAMERA, REQUIRED_PERMISSIONS_CAMERA);
         }
         beepManager = new BeepManager(getActivity());
-        beepManager.setBeepEnabled(false);
         barcodeView.setStatusText(null);
 
         Collection<BarcodeFormat> formats = Collections.singletonList(BarcodeFormat.QR_CODE);
@@ -182,7 +184,6 @@ public class QrScannerFragment extends Fragment {
 
     void onBarCodeResult(String result) {
         try {
-            beepManager.playBeepSoundAndVibrate();
             decipherQrCode(result);
             isInProgress = true;
         } catch (Exception ex) {
@@ -236,17 +237,13 @@ public class QrScannerFragment extends Fragment {
     }
 
     public void showGenericErrorDialog(String message) {
-
         Dialogs.builder(getContext())
                 .setTitle(R.string.error_generic_title)
                 .setMessage(message)
                 .setPositiveButton(R.string.error_positive_button_text, (dialog, which) -> {
                     isInProgress = false;
                     if (message.contains(getString(R.string.session_expired))) {
-                        Intent intent = InitActivityBase.getLaunchIntent(getContext());
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        this.startActivity(intent);
-                        getActivity().finish();
+                        this.closeSession();
                     }
                 })
                 .show();
@@ -360,6 +357,27 @@ public class QrScannerFragment extends Fragment {
         final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType(MimeType.IMAGE);
         this.startActivityForResult(intent, REQUEST_CODE_GALLERY);
+    }
+
+    private void closeSession() {
+        this.closeSessionDisposable = this.sessionManager.closeSession()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe((d) -> this.showTakeOver())
+                .doFinally(this::dismissTakeOverLoader)
+                .subscribe(this::handleCloseSession, (Consumer<Throwable>) throwable -> {
+                    Log.d("com.tpago.mobile", throwable.getMessage(), throwable);
+                });
+    }
+
+    private void handleCloseSession() {
+        Intent intent = InitActivityBase.getLaunchIntent(getContext());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        this.getActivity().finish();
+        this.startActivity(intent);
     }
 
     @Override

@@ -7,12 +7,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.DNumPad;
+import com.tpago.movil.app.ui.loader.takeover.TakeoverLoaderDialogFragment;
 import com.tpago.movil.app.ui.main.transaction.summary.TransactionSummaryUtil;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.data.StringHelper;
@@ -32,6 +34,7 @@ import com.tpago.movil.dep.api.DCurrencies;
 import com.tpago.movil.dep.init.InitActivityBase;
 import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
 import com.tpago.movil.dep.net.NetworkService;
+import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.transaction.TransactionSummary;
 import com.tpago.movil.util.BuilderChecker;
 import com.tpago.movil.util.ObjectHelper;
@@ -75,6 +78,9 @@ public final class DisbursementActivity
 
     private static final String KEY_PRODUCT_FUNDING = "fundingProduct";
     private static final String KEY_PRODUCT_DESTINATION = "destinationProduct";
+    private static final String TAKE_OVER_LOADER_DIALOG = "TAKE_OVER_LOADER";
+    private TakeoverLoaderDialogFragment takeoverLoader;
+    private Disposable closeSessionDisposable;
 
     public static IntentBuilder intentBuilder() {
         return new IntentBuilder();
@@ -137,6 +143,8 @@ public final class DisbursementActivity
     ProductManager productManager;
     @Inject
     StringHelper stringHelper;
+    @Inject
+    SessionManager sessionManager;
 
     private Consumer<Integer> numPadDigitConsumer;
     private Action numPadDotAction;
@@ -431,8 +439,7 @@ public final class DisbursementActivity
                 .setMessage(message)
                 .setPositiveButton(R.string.error_positive_button_text, (dialog, which) -> {
                     if (message.contains(getString(R.string.session_expired))) {
-                        this.startActivity(InitActivityBase.getLaunchIntent(this));
-                        this.finish();
+                        closeSession();
                     }
                 })
                 .show();
@@ -478,5 +485,46 @@ public final class DisbursementActivity
             intent.putExtra(KEY_PRODUCT_FUNDING, Product.create(this.creditCard));
             return intent;
         }
+    }
+
+    private void closeSession() {
+        this.closeSessionDisposable = sessionManager.closeSession()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe((d) -> this.showTakeOver())
+                .doFinally(this::dismissTakeOverLoader)
+                .subscribe(this::handleCloseSession, (io.reactivex.functions.Consumer<Throwable>) throwable -> {
+                    Log.d("com.tpago.mobile", throwable.getMessage(), throwable);
+                });
+    }
+
+    private void showTakeOver() {
+        if (takeoverLoader != null) {
+            takeoverLoader.dismiss();
+        } else {
+            takeoverLoader = TakeoverLoaderDialogFragment.create();
+            getSupportFragmentManager().beginTransaction()
+                    .add(takeoverLoader, TAKE_OVER_LOADER_DIALOG)
+                    .show(takeoverLoader)
+                    .commit();
+        }
+
+    }
+
+    private void dismissTakeOverLoader() {
+        if (takeoverLoader != null) {
+            takeoverLoader.dismiss();
+            takeoverLoader = null;
+        }
+    }
+
+    private void handleCloseSession() {
+        Intent intent = InitActivityBase.getLaunchIntent(this);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        finish();
+        this.startActivity(intent);
     }
 }

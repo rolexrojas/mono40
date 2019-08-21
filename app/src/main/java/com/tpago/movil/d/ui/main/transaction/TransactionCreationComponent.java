@@ -21,6 +21,7 @@ import com.tpago.movil.d.ui.main.transaction.products.LoanTransactionCreationFra
 import com.tpago.movil.d.ui.main.transaction.products.LoanTransactionCreationPresenter;
 import com.tpago.movil.dep.AppComponent;
 import com.tpago.movil.dep.net.NetworkService;
+import com.tpago.movil.session.SessionManager;
 
 import java.math.BigDecimal;
 import java.util.concurrent.atomic.AtomicReference;
@@ -83,4 +84,6 @@ public interface TransactionCreationComponent {
 
   @Deprecated
   StringMapper stringMapper();
+
+  SessionManager sessionManager();
 }
