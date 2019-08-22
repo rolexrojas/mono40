@@ -2,16 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 def appName = 'tPago'
-def supportLibraryGroupId = 'com.android.support'
-def supportLibraryVersion = '26.1.0'
 
 android {
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
     }
 
-    compileSdkVersion 26
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 28
+    buildToolsVersion '29.0.2'
 
     defaultConfig {
         applicationId 'com.tpago.movil'
@@ -21,7 +19,7 @@ android {
         versionCode((major * 10_000_000) + (minor * 100_000) + (patch * 1_000))
 
         minSdkVersion 19
-        targetSdkVersion 26
+        targetSdkVersion 28
 
         multiDexEnabled true
 
@@ -265,10 +263,8 @@ dependencies {
 
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
 
-    def butterKnifeGroupId = 'com.jakewharton'
-    def butterKnifeVersion = '8.8.1'
-    implementation "${butterKnifeGroupId}:butterknife:${butterKnifeVersion}"
-    annotationProcessor "${butterKnifeGroupId}:butterknife-compiler:${butterKnifeVersion}"
+    implementation 'com.jakewharton:butterknife:10.1.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
 
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
@@ -302,7 +298,7 @@ dependencies {
 
 
     implementation 'commons-codec:commons-codec:1.10'
-    implementation 'com.google.firebase:firebase-ml-vision:18.0.1'
+    implementation 'com.google.firebase:firebase-ml-vision:22.0.0'
 
     compile 'com.flipboard:bottomsheet-core:1.5.3'
     compile 'com.flipboard:bottomsheet-commons:1.5.3' // optional
@@ -313,15 +309,11 @@ dependencies {
 
     implementation 'com.google.android.material:material:1.0.0'
 
+    implementation 'androidx.percentlayout:percentlayout:1.0.0'
+
 }
 
 configurations.all {
-    resolutionStrategy.force "${supportLibraryGroupId}:appcompat-v7:${supportLibraryVersion}"
-    resolutionStrategy.force "${supportLibraryGroupId}:design:${supportLibraryVersion}"
-    resolutionStrategy.force "${supportLibraryGroupId}:percent:${supportLibraryVersion}"
-    resolutionStrategy.force "${supportLibraryGroupId}:recyclerview-v7:${supportLibraryVersion}"
-    resolutionStrategy.force "${supportLibraryGroupId}.constraint:constraint-layout:1.0.2"
-    resolutionStrategy.force "${supportLibraryGroupId}:exifinterface:${supportLibraryVersion}"
     resolutionStrategy.force "com.google.code.gson:gson:2.8.0"
 }
 

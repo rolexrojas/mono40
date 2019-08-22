@@ -150,8 +150,8 @@ public final class FragmentHelp extends FragmentBase implements HelpPresentation
         ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            imageView = ButterKnife.findById(itemView, R.id.image_view_background);
-            textView = ButterKnife.findById(itemView, R.id.text_view);
+            imageView = itemView.findViewById(R.id.image_view_background);
+            textView = itemView.findViewById(R.id.text_view);
         }
 
         @Override

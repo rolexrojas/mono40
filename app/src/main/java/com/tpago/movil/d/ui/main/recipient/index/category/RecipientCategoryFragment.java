@@ -7,12 +7,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -470,7 +472,7 @@ public class RecipientCategoryFragment
 
     @Override
     public void requestPin() {
-        final View rootView = ButterKnife.findById(getActivity(), android.R.id.content);
+        final View rootView = getActivity().findViewById(android.R.id.content);
         final int x = Math.round((rootView.getRight() - rootView.getLeft()) / 2);
         final int y = Math.round((rootView.getBottom() - rootView.getTop()) / 2);
         PinConfirmationDialogFragment.show(

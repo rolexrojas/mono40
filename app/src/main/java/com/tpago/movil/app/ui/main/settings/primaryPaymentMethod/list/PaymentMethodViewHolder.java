@@ -1,6 +1,7 @@
 package com.tpago.movil.app.ui.main.settings.primaryPaymentMethod.list;
 
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,7 +23,7 @@ import timber.log.Timber;
  * Created by solucionesgbh on 6/4/18.
  */
 
-public class PaymentMethodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener  {
+public class PaymentMethodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private ProductManager productManager;
     private Subscription subscription = Subscriptions.unsubscribed();
 
@@ -33,13 +34,12 @@ public class PaymentMethodViewHolder extends RecyclerView.ViewHolder implements 
     public PrimaryPaymentMethodFragment fragment;
 
 
-
     public PaymentMethodViewHolder(View itemView, ProductManager productManager) {
         super(itemView);
         itemView.setOnClickListener(this);
-        icon = ButterKnife.findById(itemView, R.id.icon);
-        indicator = ButterKnife.findById(itemView, R.id.indicator);
-        primaryTextView = ButterKnife.findById(itemView, R.id.primaryTextView);
+        icon = itemView.findViewById(R.id.icon);
+        indicator = itemView.findViewById(R.id.indicator);
+        primaryTextView = itemView.findViewById(R.id.primaryTextView);
         this.productManager = productManager;
     }
 
@@ -47,13 +47,13 @@ public class PaymentMethodViewHolder extends RecyclerView.ViewHolder implements 
     public void onClick(View view) {
         Product product = this.productManager.getPaymentOptionList().get(this.productPosition);
         this.subscription = Single
-            .defer(() -> Single.just(this.productManager.setDefaultPaymentOption(product)))
-            .flatMap(this::flatMap)
-            .subscribeOn(Schedulers.io())
-            .unsubscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe(this::doOnSubscribe)
-            .subscribe(this::handleResult, this::handleError);
+                .defer(() -> Single.just(this.productManager.setDefaultPaymentOption(product)))
+                .flatMap(this::flatMap)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(this::doOnSubscribe)
+                .subscribe(this::handleResult, this::handleError);
     }
 
 

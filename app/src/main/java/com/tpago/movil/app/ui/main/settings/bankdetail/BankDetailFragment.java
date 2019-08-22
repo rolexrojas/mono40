@@ -75,37 +75,37 @@ BankDetailFragment extends FragmentBase {
     public void setBankData(){
         //Updating Bank Info
 
-        MultiLineSettingsOption emailView = ButterKnife.findById(this.getView(), R.id.sendemail);
+        MultiLineSettingsOption emailView = this.getView().findViewById(R.id.sendemail);
         emailView.secondaryText(this.bank.getEmail());
 
-        MultiLineSettingsOption domesticCallView = ButterKnife.findById(this.getView(), R.id.domesticcall);
+        MultiLineSettingsOption domesticCallView = this.getView().findViewById(R.id.domesticcall);
         domesticCallView.secondaryText(this.bank.getDomesticPhone());
 
-        MultiLineSettingsOption freeCallView = ButterKnife.findById(this.getView(), R.id.freecall);
+        MultiLineSettingsOption freeCallView = this.getView().findViewById(R.id.freecall);
         freeCallView.secondaryText(this.bank.getFreeCallPhone());
 
-        MultiLineSettingsOption bankURLView = ButterKnife.findById(this.getView(), R.id.bankurl);
+        MultiLineSettingsOption bankURLView = this.getView().findViewById(R.id.bankurl);
         bankURLView.secondaryText(this.bank.getURL());
     }
 
     public void hideEmptyEntries(){
         if(this.bank.getEmail().isEmpty()){
-            ButterKnife.findById(getActivity(),R.id.sendemail).setVisibility(View.GONE);
-            ButterKnife.findById(getActivity(),R.id.emailseparator).setVisibility(View.GONE);
+            getActivity().findViewById(R.id.sendemail).setVisibility(View.GONE);
+            getActivity().findViewById(R.id.emailseparator).setVisibility(View.GONE);
         }
 
         if(this.bank.getDomesticPhone().isEmpty()){
-            ButterKnife.findById(getActivity(),R.id.domesticcall).setVisibility(View.GONE);
-            ButterKnife.findById(getActivity(),R.id.domesticcallseparator).setVisibility(View.GONE);
+            getActivity().findViewById(R.id.domesticcall).setVisibility(View.GONE);
+            getActivity().findViewById(R.id.domesticcallseparator).setVisibility(View.GONE);
         }
 
         if(this.bank.getFreeCallPhone().isEmpty()){
-            ButterKnife.findById(getActivity(),R.id.freecall).setVisibility(View.GONE);
-            ButterKnife.findById(getActivity(),R.id.freecallseparator).setVisibility(View.GONE);
+            getActivity().findViewById(R.id.freecall).setVisibility(View.GONE);
+            getActivity().findViewById(R.id.freecallseparator).setVisibility(View.GONE);
         }
 
         if(this.bank.getURL().isEmpty()){
-            ButterKnife.findById(getActivity(),R.id.bankurl).setVisibility(View.GONE);
+            getActivity().findViewById(R.id.bankurl).setVisibility(View.GONE);
         }
 
     }

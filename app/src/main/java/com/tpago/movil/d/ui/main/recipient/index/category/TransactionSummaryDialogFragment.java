@@ -3,12 +3,16 @@ package com.tpago.movil.d.ui.main.recipient.index.category;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.google.android.material.textfield.TextInputLayout;
+
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AlertDialog;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -82,7 +86,7 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
             builder.setPositiveButton(R.string.action_save, (dialog, which) -> {
                 if (ObjectHelper.isNotNull(listener)) {
                     Log.d("com.tpago.mobile", "TransactionSummaryDialogFragment = " + recipient.getId());
-                    final EditText editText = ButterKnife.findById(getDialog(), R.id.edit_text);
+                    final EditText editText = getDialog().findViewById(R.id.edit_text);
                     listener.onSaveButtonClicked(
                             recipient,
                             editText.getText()
@@ -100,10 +104,10 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
         final Dialog dialog = getDialog();
-        final TextView transactionTextView = ButterKnife.findById(dialog, R.id.text_view_transaction);
+        final TextView transactionTextView = dialog.findViewById(R.id.text_view_transaction);
         transactionTextView.setText(String.format("#%1$s", transactionId));
         if (recipient == null || alreadyExists) {
-            ButterKnife.findById(dialog, R.id.inclusion)
+            ((View) dialog.findViewById(R.id.inclusion))
                     .setVisibility(View.GONE);
         } else {
             final String textValue;
@@ -116,11 +120,11 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
                 textValue = getString(R.string.recipient_addition_message_phone_number);
                 hintValue = getString(R.string.recipient_addition_hint_phone_number);
             }
-            ButterKnife.<TextView>findById(dialog, R.id.text_view)
+            ((TextView) dialog.findViewById(R.id.text_view))
                     .setText(textValue);
-            ButterKnife.<TextInputLayout>findById(dialog, R.id.text_input_layout)
+            ((TextInputLayout) dialog.findViewById(R.id.text_input_layout))
                     .setHint(hintValue.toUpperCase());
-            final EditText editText = ButterKnife.findById(dialog, R.id.edit_text);
+            final EditText editText = dialog.findViewById(R.id.edit_text);
             editText.setText(recipient.getLabel());
         }
     }

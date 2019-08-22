@@ -1,12 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.tpago.movil">
-
-    <meta-data
-        android:name="com.google.firebase.ml.vision.DEPENDENCIES"
-        android:value="barcode" />
-
-
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="false" />
@@ -19,6 +13,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:name=".app.App"
@@ -30,6 +25,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
+
+        <meta-data
+            android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+            android:value="barcode" />
 
         <meta-data
             android:name="io.fabric.ApiKey"

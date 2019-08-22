@@ -66,7 +66,7 @@
     </declare-styleable>
 
     <declare-styleable name="DepPrefixableTextView">
-        <attr name="content" format="string|reference" />
+        <attr name="contentPrefix" format="string|reference" />
         <attr name="prefix" />
         <attr name="prefixTextColor" format="color|reference" />
         <attr name="prefixFontPath" format="string|reference" />

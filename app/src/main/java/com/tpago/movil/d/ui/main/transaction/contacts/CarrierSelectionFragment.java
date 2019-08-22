@@ -2,10 +2,12 @@ package com.tpago.movil.d.ui.main.transaction.contacts;
 
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -251,8 +253,8 @@ public final class CarrierSelectionFragment extends ChildFragment<TransactionCre
         ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            imageView = ButterKnife.findById(itemView, R.id.image_view_background);
-            textView = ButterKnife.findById(itemView, R.id.text_view);
+            imageView = itemView.findViewById(R.id.image_view_background);
+            textView = itemView.findViewById(R.id.text_view);
         }
 
         @Override
