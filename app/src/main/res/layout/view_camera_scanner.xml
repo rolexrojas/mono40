@@ -10,18 +10,10 @@
         android:layout_height="match_parent"
         android:keepScreenOn="true"
         app:cameraEngine="camera2"
-        app:cameraAutoFocusMarker="@string/cameraview_default_autofocus_marker"
-        app:cameraExperimental="true"
         app:cameraGestureTap="autoFocus"
-        app:cameraPictureSizeMaxHeight="360"
-        app:cameraPictureSizeMaxWidth="480"
-        app:cameraVideoSizeMaxHeight="360"
-        app:cameraVideoSizeMaxWidth="480"
+        app:cameraAutoFocusResetDelay="0"
         app:cameraAudio="off"
-        app:cameraPlaySounds="false"
-        app:cameraSnapshotMaxHeight="360"
-        app:cameraSnapshotMaxWidth="480"
-        app:cameraUseDeviceOrientation="false">
+        app:cameraPlaySounds="false">
 
         <ImageView
             android:layout_width="200dp"

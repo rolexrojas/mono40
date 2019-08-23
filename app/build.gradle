@@ -14,7 +14,10 @@ android {
     defaultConfig {
         applicationId 'com.tpago.movil'
 
-        def (major, minor, patch) = [2, 9, 2]
+        renderscriptTargetApi 16
+        renderscriptSupportModeEnabled true
+
+        def (major, minor, patch) = [2, 9, 4]
         versionName "${major}.${minor}.${patch}"
         versionCode((major * 10_000_000) + (minor * 100_000) + (patch * 1_000))
 
@@ -310,6 +313,9 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
 
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
+
+    compile 'io.github.silvaren:easyrs:0.5.3'
+
 
 }
 

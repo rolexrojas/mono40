@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.otaliastudios.cameraview.CameraView;
+import com.otaliastudios.cameraview.controls.Flash;
 import com.otaliastudios.cameraview.frame.FrameProcessor;
 import com.tpago.movil.R;
 
@@ -42,5 +43,22 @@ public class CameraScanner extends FrameLayout {
 
     public void addFrameProcessor(FrameProcessor frameProcessor) {
         cameraView.addFrameProcessor(frameProcessor);
+    }
+
+    public void toggleFacing() {
+        cameraView.toggleFacing();
+    }
+
+    public void toggleFlash() {
+        Flash flash = cameraView.getFlash();
+        switch (flash) {
+            case OFF:
+                cameraView.setFlash(Flash.TORCH);
+                break;
+            case ON:
+            case TORCH:
+            default:
+                cameraView.setFlash(Flash.OFF);
+        }
     }
 }

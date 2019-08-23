@@ -6,7 +6,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
+import android.graphics.Matrix;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.net.Uri;
@@ -18,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.renderscript.RenderScript;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,6 +52,7 @@ import com.otaliastudios.cameraview.size.Size;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
 import com.tpago.movil.app.StringMapper;
+import com.tpago.movil.app.ui.alert.Alert;
 import com.tpago.movil.app.ui.alert.AlertManager;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoaderDialogFragment;
@@ -70,6 +76,7 @@ import com.tpago.movil.util.QrJWT;
 
 import org.apache.commons.codec.DecoderException;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -135,15 +142,17 @@ public class QrScannerFragment extends Fragment {
     CameraScanner cameraScanner;
     FirebaseVisionBarcodeDetector visionBarcodeDetector;
     long lastRead;
-    private boolean processingImage;
+    RenderScript rs;
+    private Alert errorDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        RenderScript renderScript = RenderScript.create(requireContext());
         ((App) getActivity().getApplicationContext()).component().inject(this);
         FirebaseVisionBarcodeDetectorOptions options = new FirebaseVisionBarcodeDetectorOptions
                 .Builder()
-                .setBarcodeFormats(FirebaseVisionBarcode.FORMAT_QR_CODE, FirebaseVisionBarcode.FORMAT_AZTEC)
+                .setBarcodeFormats(FirebaseVisionBarcode.FORMAT_ALL_FORMATS)
                 .build();
         visionBarcodeDetector = FirebaseVision.getInstance()
                 .getVisionBarcodeDetector(options);
@@ -151,21 +160,16 @@ public class QrScannerFragment extends Fragment {
     }
 
     private void showTakeOver() {
-        if (takeoverLoader != null) {
-            takeoverLoader.dismiss();
-        } else {
-            takeoverLoader = TakeoverLoaderDialogFragment.create();
-            takeoverLoader.show(getActivity().getSupportFragmentManager(), TAKE_OVER_LOADER_DIALOG);
+        if (errorDialog == null) {
+            TakeoverLoader.create(getFragmentManager())
+                    .show();
         }
 
     }
 
     private void dismissTakeOverLoader() {
-        if (takeoverLoader != null) {
-            takeoverLoader.dismiss();
-            takeoverLoader = null;
-        }
-        isInProgress = false;
+        TakeoverLoader.create(getFragmentManager())
+                .hide();
     }
 
     public int degreesToFirebaseRotation(int degrees) {
@@ -189,6 +193,16 @@ public class QrScannerFragment extends Fragment {
         super.onStart();
     }
 
+    private Bitmap arrayToBitmap(byte[] data, int width, int height) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        YuvImage yuvImage = new YuvImage(data, ImageFormat.NV21, width, height, null);
+        yuvImage.compressToJpeg(new Rect(0, 0, width, height), 100, byteArrayOutputStream);
+        byte[] array = byteArrayOutputStream.toByteArray();
+        Bitmap bitmap = BitmapFactory.decodeByteArray(array, 0, array.length);
+        Log.d("com.tpago.mobile", "Testing bitmap");
+        return bitmap;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -199,29 +213,46 @@ public class QrScannerFragment extends Fragment {
         }
         cameraScanner.setLifecycleOwner(this);
         cameraScanner.addFrameProcessor(frame -> {
-            if (processingImage) {
+            if (isInProgress) {
                 return;
             }
+
             byte[] data = frame.getData();
             int rotation = frame.getRotation();
             long time = frame.getTime();
             Size size = frame.getSize();
             int format = frame.getFormat();
 
-//            if (lastRead != 0 && (time - lastRead) <= 1000) {
-//                return;
-//            }
+            if (lastRead != 0 && (time - lastRead) <= 500) {
+                return;
+            }
             lastRead = time;
+
+
             FirebaseVisionImageMetadata metaData = new FirebaseVisionImageMetadata.Builder()
-                    .setWidth(360)
-                    .setHeight(480)
+                    .setWidth(size.getWidth())
+                    .setHeight(size.getHeight())
                     .setRotation(FirebaseVisionImageMetadata.ROTATION_0) // always assuming portrait
                     .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
                     .build();
 
-            processImage(FirebaseVisionImage.fromByteArray(data, metaData));
+            Bitmap bitmap = rotateBitmap(arrayToBitmap(data, size.getWidth(), size.getHeight()));
+
+            processImage(FirebaseVisionImage.fromBitmap(bitmap));
+            isInProgress = true;
         });
         return view;
+    }
+
+    private Bitmap rotateBitmap(Bitmap bitmap) {
+        Matrix matrix = new Matrix();
+
+        matrix.postRotate(90);
+
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
+
+        Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
+        return rotatedBitmap;
     }
 
     void onBarCodeResult(String result) {
@@ -235,11 +266,18 @@ public class QrScannerFragment extends Fragment {
 
     private void showErrorMessage(int title, int message) {
         dismissTakeOverLoader();
-        this.alertManager.builder()
+        if (errorDialog != null) {
+            errorDialog = null;
+        }
+        errorDialog = this.alertManager.builder()
                 .title(title)
                 .message(message)
-                .positiveButtonAction(() -> this.isInProgress = false)
-                .show();
+                .positiveButtonAction(() -> {
+                    this.isInProgress = false;
+                    errorDialog = null;
+                })
+                .build();
+        errorDialog.show();
     }
 
     private void decipherQrCode(String data) {
@@ -302,6 +340,7 @@ public class QrScannerFragment extends Fragment {
                 intent
         );
         getActivity().finish();
+        this.isInProgress = false;
     }
 
     private void handleStartPhoneNumberTransactionResult(
@@ -309,7 +348,6 @@ public class QrScannerFragment extends Fragment {
             ApiResult<Customer> result
     ) {
         if (result.isSuccessful()) {
-            this.isInProgress = false;
             this.startTransaction(this.handleCustomerResult(phoneNumber, result));
         } else {
             this.showGenericErrorDialog(result.getError().getDescription());
@@ -369,27 +407,18 @@ public class QrScannerFragment extends Fragment {
 
     @OnClick(R.id.qr_flash)
     public void onFlashClicked() {
-        if (this.isFlashOn) {
-//            this.barcodeView.setTorchOff();
-        } else {
-//            this.barcodeView.setTorchOn();
-        }
+//        if (this.isFlashOn) {
+////            this.barcodeView.setTorchOff();
+//        } else {
+////            this.barcodeView.setTorchOn();
+//        }
+        cameraScanner.toggleFlash();
         isFlashOn = !isFlashOn;
     }
 
     @OnClick(R.id.qr_camera_flip)
     public void onCameraFlipClicked() {
-//        CameraSettings cs = this.barcodeView.getBarcodeView().getCameraSettings();
-//        if (barcodeView.getBarcodeView().isPreviewActive()) {
-//            barcodeView.pause();
-//        }
-//        if (this.isFrontCameraOn) {
-//            cs.setRequestedCameraId(Camera.CameraInfo.CAMERA_FACING_BACK);
-//        } else {
-//            cs.setRequestedCameraId(Camera.CameraInfo.CAMERA_FACING_FRONT);
-//        }
-//        this.barcodeView.getBarcodeView().setCameraSettings(cs);
-//        this.barcodeView.resume();
+        cameraScanner.toggleFacing();
         isFrontCameraOn = !isFrontCameraOn;
     }
 
@@ -437,22 +466,19 @@ public class QrScannerFragment extends Fragment {
     }
 
     private void processImage(FirebaseVisionImage image) {
-        processingImage = true;
         visionBarcodeDetector.detectInImage(image)
                 .addOnSuccessListener(firebaseVisionBarcodes -> {
                     Log.d("com.tpago.mobile", "FirebaseVisionBarcodes = " + firebaseVisionBarcodes.size());
                     if (!firebaseVisionBarcodes.isEmpty()) {
                         isInProgress = true;
-                        showTakeOver();
                         QrScannerFragment.this.onBarCodeResult(firebaseVisionBarcodes.get(0).getRawValue());
-                        processingImage = false;
+                    } else {
+                        isInProgress = false;
                     }
-                    processingImage = false;
                 })
                 .addOnFailureListener(e -> {
                     Log.e("com.tpago.mobile", "FirebaseVisionBarcodes Error  =", e);
                     showErrorMessage(R.string.qr_error_unsupported_code, R.string.qr_error_unsupported_code_message);
-                    processingImage = false;
                 });
     }
 
