@@ -8,8 +8,8 @@ android {
         exclude 'META-INF/rxjava.properties'
     }
 
-    compileSdkVersion 29
-    buildToolsVersion '29.0.2'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId 'com.tpago.movil'
@@ -22,7 +22,7 @@ android {
         versionCode((major * 10_000_000) + (minor * 100_000) + (patch * 1_000))
 
         minSdkVersion 19
-        targetSdkVersion 29
+        targetSdkVersion 28
 
         multiDexEnabled true
 
@@ -211,6 +211,12 @@ dependencies {
     // Local dependencies
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
+    def cubeSdkName = { version, environment -> "Cub3AltPanSDK-v${version}-${environment}" }
+    mockImplementation(name: cubeSdkName('1.4.2', 'devt'), ext: 'aar')
+    devtImplementation(name: cubeSdkName('1.4.2', 'devt'), ext: 'aar')
+    stagImplementation(name: cubeSdkName('1.4.1', 'stag'), ext: 'aar')
+    prepImplementation(name: cubeSdkName('1.4.1', 'prep'), ext: 'aar')
+    prodImplementation(name: cubeSdkName('1.4.1', 'prod'), ext: 'aar')
 
     // Remote dependencies
     def rxJavaGroupId = 'io.reactivex.rxjava2'

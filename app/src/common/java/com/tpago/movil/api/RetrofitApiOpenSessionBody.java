@@ -34,8 +34,8 @@ public abstract class RetrofitApiOpenSessionBody {
   @SerializedName("msisdn")
   public abstract String userPhoneNumber();
 
-  @SerializedName("device-information")
-  abstract DeviceInformationBody deviceInformationBody();
+  @SerializedName("imei")
+  abstract String deviceId();
 
   @SerializedName("public-key")
   public abstract String signedData();
@@ -75,7 +75,7 @@ public abstract class RetrofitApiOpenSessionBody {
       return this.signedData(Base64.encodeToString(signedData, Base64.NO_WRAP));
     }
 
-    public abstract Builder deviceInformationBody(DeviceInformationBody deviceInformationBody);
+    public abstract Builder deviceId(String deviceId);
 
     public abstract RetrofitApiOpenSessionBody build();
   }
