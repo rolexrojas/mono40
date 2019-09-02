@@ -61,6 +61,13 @@ public interface DepApiBridge {
             String pin
     );
 
+    Observable<ApiResult<String>> payToMerchant(
+            Product product,
+            Recipient recipient,
+            BigDecimal amount,
+            String pin
+    );
+
     ApiResult<Void> setDefaultPaymentOption(Product paymentOption);
 
     Observable<ApiResult<Pair<String, Product>>> checkAccountNumber(

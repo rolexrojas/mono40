@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.activity.base.ActivityModule;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
+import com.tpago.movil.company.CompanyHelper;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.api.ApiCode;
@@ -55,6 +56,8 @@ public final class NonNfcPurchaseFragment extends ChildFragment<MainContainer> i
     ProductManager productManager;
     @Inject
     PurchasePresenter presenter;
+    @Inject
+    CompanyHelper companyHelper;
 
     @Inject
     SessionManager sessionManager;
@@ -161,7 +164,7 @@ public final class NonNfcPurchaseFragment extends ChildFragment<MainContainer> i
                             0,
                             0
                     );
-                }, sessionManager.getUser());
+                }, sessionManager.getUser(), companyHelper);
         cardListView.setAdapter(adapter);
     }
 

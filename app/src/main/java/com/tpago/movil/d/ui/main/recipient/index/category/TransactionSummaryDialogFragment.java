@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.tpago.movil.R;
+import com.tpago.movil.d.domain.MerchantRecipient;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.RecipientType;
 import com.tpago.movil.d.ui.Dialogs;
@@ -80,7 +81,7 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
                 .setCancelable(false)
                 .setTitle(R.string.transactionSucceeded)
                 .setView(R.layout.d_dialog_transaction_summary);
-        if (recipient == null || alreadyExists) {
+        if (recipient == null || alreadyExists || recipient instanceof MerchantRecipient) {
             builder.setPositiveButton(R.string.ok, null);
         } else {
             builder.setPositiveButton(R.string.action_save, (dialog, which) -> {
@@ -120,10 +121,16 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
                 textValue = getString(R.string.recipient_addition_message_phone_number);
                 hintValue = getString(R.string.recipient_addition_hint_phone_number);
             }
-            ((TextView) dialog.findViewById(R.id.text_view))
-                    .setText(textValue);
-            ((TextInputLayout) dialog.findViewById(R.id.text_input_layout))
-                    .setHint(hintValue.toUpperCase());
+            if (recipient.getType() == RecipientType.MERCHANT) {
+                ((TextView) dialog.findViewById(R.id.text_view)).setVisibility(View.GONE);
+                ((TextInputLayout) dialog.findViewById(R.id.text_input_layout))
+                        .setVisibility(View.GONE);
+            } else {
+                ((TextView) dialog.findViewById(R.id.text_view))
+                        .setText(textValue);
+                ((TextInputLayout) dialog.findViewById(R.id.text_input_layout))
+                        .setHint(hintValue.toUpperCase());
+            }
             final EditText editText = dialog.findViewById(R.id.edit_text);
             editText.setText(recipient.getLabel());
         }

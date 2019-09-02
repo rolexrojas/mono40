@@ -58,6 +58,7 @@ import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoaderDialogFragment;
 import com.tpago.movil.app.ui.permission.PermissionHelper;
 import com.tpago.movil.d.domain.Customer;
+import com.tpago.movil.d.domain.MerchantRecipient;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.Recipient;
@@ -283,29 +284,57 @@ public class QrScannerFragment extends Fragment {
     private void decipherQrCode(String data) {
         this.showTakeOver();
         Log.d("com.tpago.mobile", "qrCodeData = " + data);
-        String encriptedMessage = data.split("data=")[1];
-        QrJWT decriptedMessage = null;
+        String qrType = null;
+        String encryptedMessage = null;
+        QrJWT decryptedMessage = null;
         try {
+            qrType = data.split("data=")[0].replace("type=", "").replace(";", "");
+            encryptedMessage = data.split("data=")[1];
             Log.d("com.tpago.mobile", "encripted Message = " + sessionManager.getCustomerSecretKey());
             Log.d("com.tpago.mobile", "encripted key = " + sessionManager.getCustomerSecretKey());
-            decriptedMessage = QrDecryptUtil.decryptData(encriptedMessage, sessionManager.getCustomerSecretKey());
-        } catch (InvalidKeySpecException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | DecoderException | IllegalBlockSizeException e) {
+            decryptedMessage = QrDecryptUtil.decryptData(encryptedMessage, sessionManager.getCustomerSecretKey());
+        } catch (Exception e) {
             Log.e("com.tpago.mobile", "error decoding qr", e);
             showErrorMessage(R.string.qr_error_unsupported_code, R.string.qr_error_unsupported_code_message);
         }
-        Log.d("com.tpago.mobile", "decoded qr code = " + decriptedMessage.getSub());
-        final PhoneNumber phoneNumber = PhoneNumber.create(decriptedMessage.getSub());
-        if (!phoneNumber.equals(sessionManager.getUser().phoneNumber())) {
-            Single.defer(() -> Single.just(this.depApiBridge.fetchCustomer(phoneNumber.value())))
-                    .subscribeOn(Schedulers.io())
-                    .doFinally(() -> this.dismissTakeOverLoader())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            (result) -> this.handleStartPhoneNumberTransactionResult(phoneNumber, result),
-                            this::handleStartTransactionError
-                    );
-        } else {
-            showErrorMessage(R.string.qr_error_own_code, R.string.qr_error_own_code_message);
+        if (qrType == null || decryptedMessage == null) {
+            showErrorMessage(R.string.qr_error_unsupported_code, R.string.qr_error_unsupported_code_message);
+            return;
+        }
+        switch (qrType) {
+            case "TPN":
+                if (decryptedMessage.getMerchantDescription() == null) {
+                    this.dismissTakeOverLoader();
+                    showErrorMessage(R.string.qr_error_unsupported_code, R.string.qr_error_unsupported_code_message);
+                    return;
+                }
+                this.startTransaction(new MerchantRecipient(decryptedMessage.getMerchantDescription(), decryptedMessage.getSub()));
+                break;
+            case "TRF-IN":
+                if (decryptedMessage.getSub() == null) {
+                    this.dismissTakeOverLoader();
+                    showErrorMessage(R.string.qr_error_unsupported_code, R.string.qr_error_unsupported_code_message);
+                    return;
+                }
+                final PhoneNumber phoneNumber = PhoneNumber.create(decryptedMessage.getSub());
+                if (!phoneNumber.equals(sessionManager.getUser().phoneNumber())) {
+                    Single.defer(() -> Single.just(this.depApiBridge.fetchCustomer(phoneNumber.value())))
+                            .subscribeOn(Schedulers.io())
+                            .doFinally(() -> this.dismissTakeOverLoader())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    (result) -> this.handleStartPhoneNumberTransactionResult(phoneNumber, result),
+                                    this::handleStartTransactionError
+                            );
+                } else {
+                    this.dismissTakeOverLoader();
+                    showErrorMessage(R.string.qr_error_own_code, R.string.qr_error_own_code_message);
+                }
+                break;
+            default:
+                this.dismissTakeOverLoader();
+                showErrorMessage(R.string.qr_error_unsupported_code, R.string.qr_error_unsupported_code_message);
+                break;
         }
 
     }
@@ -332,7 +361,7 @@ public class QrScannerFragment extends Fragment {
     public void startTransaction(Recipient recipient) {
         Intent intent = TransactionCreationActivityBase.getLaunchIntent(
                 this.getActivity(),
-                TransactionCategory.TRANSFER,
+                TransactionCategory.PAY,
                 recipient
         );
         intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
@@ -340,7 +369,6 @@ public class QrScannerFragment extends Fragment {
                 intent
         );
         getActivity().finish();
-        this.isInProgress = false;
     }
 
     private void handleStartPhoneNumberTransactionResult(
@@ -381,37 +409,8 @@ public class QrScannerFragment extends Fragment {
         }
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-//        if (barcodeView != null) {
-//            if (isVisibleToUser) {
-//                barcodeView.resume();
-//            } else {
-//                barcodeView.pauseAndWait();
-//            }
-//        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-//        barcodeView.resume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-//        barcodeView.pauseAndWait();
-    }
-
     @OnClick(R.id.qr_flash)
     public void onFlashClicked() {
-//        if (this.isFlashOn) {
-////            this.barcodeView.setTorchOff();
-//        } else {
-////            this.barcodeView.setTorchOn();
-//        }
         cameraScanner.toggleFlash();
         isFlashOn = !isFlashOn;
     }

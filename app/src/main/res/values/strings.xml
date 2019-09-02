@@ -107,6 +107,7 @@
     <string name="main_transaction_insurance_micro_confirm_message">Comprar póliza %1$s con prima de %2$s.</string>
 
     <string name="main_transaction_recharge_summary">Recargar %1$s a %2$s.</string>
+    <string name="main_transaction_pay_summary">Pagar %1$s a %2$s.</string>
     <!-- [main/transaction/pay-pal] -->
     <string name="main_transaction_pay_pal_summary">Recargar %1$s a %2$s más cargo de %3$s.</string>
     <string name="main_transaction_pay_pal_rate">Tasa de cambio: %1$s</string>

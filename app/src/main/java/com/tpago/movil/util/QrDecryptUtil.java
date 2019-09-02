@@ -39,6 +39,7 @@ public class QrDecryptUtil {
         byte[] bytesDataEncriptada = Base64.decode(data, 0);
         byte[] bytesDesencriptados = decrypt(llave, bytesDataEncriptada);
         String jwtStr = Base64.encodeToString(bytesDesencriptados, 0);
+        Log.d("com.tpago.mobile", "jwtStr=" + jwtStr);
         return decodeJwt(jwtStr);
     }
 

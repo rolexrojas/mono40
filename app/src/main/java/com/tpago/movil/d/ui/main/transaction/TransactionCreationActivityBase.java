@@ -167,6 +167,8 @@ public class TransactionCreationActivityBase
                 case USER:
                     fragment = PhoneNumberTransactionCreationFragment.newInstance();
                     break;
+                case MERCHANT:
+                    fragment = PhoneNumberTransactionCreationFragment.newInstance();
             }
             this.setChildFragment(fragment, false, false);
         }

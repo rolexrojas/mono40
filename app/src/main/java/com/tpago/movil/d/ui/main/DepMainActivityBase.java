@@ -32,6 +32,7 @@ import com.tpago.movil.app.ui.main.transaction.disburse.index.FragmentDisburseIn
 import com.tpago.movil.app.ui.main.transaction.insurance.micro.index.MicroInsuranceIndexFragment;
 import com.tpago.movil.app.ui.main.transaction.summary.TransactionSummaryUtil;
 import com.tpago.movil.d.data.StringHelper;
+import com.tpago.movil.d.domain.MerchantRecipient;
 import com.tpago.movil.d.domain.ProductManager;
 import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.RecipientManager;
@@ -533,7 +534,11 @@ public class DepMainActivityBase
                 final TransactionResult result = TransactionCreationActivityBase.deserializeTransactionResult(
                         data);
                 View view = new View(this);
-                view.setId(R.id.main_menuItem_transfer);
+                if (result.getRecipient() instanceof MerchantRecipient) {
+                    view.setId(R.id.main_menuItem_pay);
+                } else {
+                    view.setId(R.id.main_menuItem_transfer);
+                }
                 onMenuItemButtonClicked(view);
                 Log.d("com.tpago.mobile", "QR_CODE_RECIPIENT = " + result.getTransactionId());
                 if (ObjectHelper.isNotNull(result)) {

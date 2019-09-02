@@ -17,7 +17,7 @@ android {
         renderscriptTargetApi 16
         renderscriptSupportModeEnabled true
 
-        def (major, minor, patch) = [2, 9, 8]
+        def (major, minor, patch) = [3, 0, 2]
         versionName "${major}.${minor}.${patch}"
 
         ndk.abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'
@@ -215,7 +215,12 @@ dependencies {
     // Local dependencies
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    implementation(name: 'CubeAltepanSDK-V2.0', ext: 'aar')
+    def cubeSdkName = { version, environment -> "Cub3AltPanSDK-v${version}-${environment}" }
+    mockImplementation(name: cubeSdkName('2.0.0', 'devt'), ext: 'aar')
+    devtImplementation(name: cubeSdkName('2.0.0', 'devt'), ext: 'aar')
+    stagImplementation(name: cubeSdkName('2.0.0', 'stag'), ext: 'aar')
+    prepImplementation(name: cubeSdkName('2.0.0', 'prep'), ext: 'aar')
+    prodImplementation(name: cubeSdkName('2.0.0', 'prod'), ext: 'aar')
 
     implementation "net.zetetic:android-database-sqlcipher:4.2.0"
 

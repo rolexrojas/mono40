@@ -20,6 +20,7 @@ import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rx.Observable;
 
@@ -51,6 +52,12 @@ public interface ApiService {
     @POST("transfer/gcs-gcs")
     Observable<Response<TransferResponseBody>> transferToAffiliated(
             @Body TransferToAffiliatedRequestBody body
+    );
+
+    @POST("payments/merchants/{id}/pay")
+    Observable<Response<TransferResponseBody>> payToMerchant(
+            @Path("id") String merchantId,
+            @Body TransferToMerchantRequestBody body
     );
 
     @POST("transfer/gcs-non")

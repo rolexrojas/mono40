@@ -268,6 +268,19 @@ final class RetrofitApiBridge implements DepApiBridge {
     }
 
     @Override
+    public Observable<ApiResult<String>> payToMerchant(Product product, Recipient recipient, BigDecimal amount, String pin) {
+        return apiService.payToMerchant(
+                recipient.getId(),
+                TransferToMerchantRequestBody.builder()
+                        .fundingProduct(product)
+                        .amount(amount)
+                        .pin(pin)
+                        .build()
+        )
+                .flatMap(mapToApiResult(TransferResponseBody.mapFunc()));
+    }
+
+    @Override
     public ApiResult<Void> setDefaultPaymentOption(Product product) {
         final Map<String, String> body = new HashMap<>();
         body.put("alias", product.getAlias());

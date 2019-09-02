@@ -3,8 +3,10 @@ package com.tpago.movil.d.ui.main.transaction.contacts;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +53,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.tpago.movil.d.ui.main.transaction.TransactionCategory.PAY;
 import static com.tpago.movil.d.ui.main.transaction.TransactionCategory.TRANSFER;
 
 /**
@@ -203,7 +206,7 @@ public class PhoneNumberTransactionCreationFragment
         this.numPadDeleteAction = this::onDeleteClicked;
         this.DNumPad.addDeleteAction(this.numPadDeleteAction);
 
-        if (this.transactionCategory == TRANSFER) {
+        if (this.transactionCategory == TRANSFER || this.transactionCategory == PAY) {
             this.transferActionButton.setVisibility(View.VISIBLE);
             this.rechargeActionButton.setVisibility(View.GONE);
         } else {
@@ -312,6 +315,16 @@ public class PhoneNumberTransactionCreationFragment
                                         .calculateTransferCost(this.value.get())
                         ),
                         stringMapper, 0, 0, 0, 0);
+            } else if (transactionCategory == PAY) {
+                description = TaxUtil.getConfirmPinTransactionMessage(
+                        TransactionType.PAY, value.get().doubleValue(),
+                        paymentMethodChooser.getSelectedItem(), label, currency, Formatter.amount(
+                                currency,
+                                paymentMethodChooser.getSelectedItem()
+                                        .getBank()
+                                        .calculateTransferCost(this.value.get())
+                        ),
+                        stringMapper, 0, 0, 0, 0);
             } else {
                 description = TaxUtil.getConfirmPinTransactionMessage(
                         TransactionType.RECHARGE, value.get().doubleValue(),
@@ -331,6 +344,7 @@ public class PhoneNumberTransactionCreationFragment
                     y
             );
         } else {
+            // TODO: Let the user know that he must insert an amount greater than zero.
             // TODO: Let the user know that he must insert an amount greater than zero.
         }
     }
