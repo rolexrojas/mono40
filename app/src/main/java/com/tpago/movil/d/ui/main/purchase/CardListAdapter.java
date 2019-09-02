@@ -1,6 +1,7 @@
 package com.tpago.movil.d.ui.main.purchase;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -84,14 +85,16 @@ public class CardListAdapter extends RecyclerViewBaseAdapter<Product, CardListAd
         @Override
         public void bind(Product item) {
             super.bind(item);
-            accountContainer.setBackgroundColor(Banks.getColor(item.getBank()));
-            accountContainer.setBorderColor(Banks.getColor(item.getBank()));
+            int bankColor = Banks.getColor(item.getBank());
+            accountContainer.setBackgroundColor(bankColor);
+            accountContainer.setBorderColor(bankColor);
+            containerImageBackground.setBackgroundColor(bankColor);
             accountAlias.setText(item.getAlias());
             accountOwnerName.setText(user.name().toString());
             accountType.setText(ProductType.findStringId(item));
             accountBankName.setText(item.toProduct().bank().name());
 
-            final Uri bankLogoUri = companyHelper.getLogoUri(item.toProduct().bank(), Company.LogoStyle.COLORED_24);
+            final Uri bankLogoUri = companyHelper.getLogoUri(item.toProduct().bank(), Company.LogoStyle.WHITE_36);
             Picasso.get()
                     .load(bankLogoUri)
                     .noFade()

@@ -27,8 +27,7 @@
         <ImageView
             android:id="@+id/accountContainerImage"
             android:layout_width="match_parent"
-            android:layout_height="210dp"
-            android:background="#DF4F2A"/>
+            android:layout_height="210dp" />
     </com.github.florent37.shapeofview.shapes.RoundRectView>
     <ImageView
         android:id="@+id/bankLogo"
