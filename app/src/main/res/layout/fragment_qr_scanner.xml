@@ -28,7 +28,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="8dp"
                 android:background="?selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_camera_flash"
+                android:src="@drawable/flash_switch_qr"
                 android:tint="@color/white" />
 
             <ImageView
@@ -36,7 +36,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:background="?selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_camera_flip"
+                android:src="@drawable/flip_camera_qr"
                 android:tint="@color/white" />
         </LinearLayout>
 
@@ -64,10 +64,10 @@
                     android:textSize="8dp" />
 
                 <ImageView
-                    android:id="@+id/qr_import"
+                    android:id="@+id/qr_import_gallery"
                     android:layout_width="26dp"
                     android:layout_height="26dp"
-                    android:src="@drawable/ic_gallery"
+                    android:src="@drawable/qr_import_gallery"
                     android:tint="@color/white" />
             </LinearLayout>
         </LinearLayout>

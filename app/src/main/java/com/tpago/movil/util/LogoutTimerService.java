@@ -70,7 +70,7 @@ public class LogoutTimerService extends Service {
     class UserInteractionReceiver extends BroadcastReceiver {
 
         @Override
-        public void onReceive(Context conext, Intent intent) {
+        public void onReceive(Context context, Intent intent) {
             lastActivityTimeInMillis = System.currentTimeMillis();
         }
     }

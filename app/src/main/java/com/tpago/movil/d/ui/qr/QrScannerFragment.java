@@ -2,8 +2,6 @@ package com.tpago.movil.d.ui.qr;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,22 +9,18 @@ import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
-import android.hardware.Camera;
-import android.hardware.camera2.CameraAccessException;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
+
 import androidx.fragment.app.Fragment;
 import androidx.renderscript.RenderScript;
 
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -36,18 +30,7 @@ import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetectorOptions;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.ResultPoint;
-import com.google.zxing.client.android.BeepManager;
-import com.journeyapps.barcodescanner.BarcodeCallback;
-import com.journeyapps.barcodescanner.BarcodeResult;
-import com.journeyapps.barcodescanner.DefaultDecoderFactory;
-import com.journeyapps.barcodescanner.camera.CameraManager;
-import com.journeyapps.barcodescanner.camera.CameraSettings;
-import com.otaliastudios.cameraview.CameraOptions;
-import com.otaliastudios.cameraview.CameraUtils;
-import com.otaliastudios.cameraview.frame.Frame;
-import com.otaliastudios.cameraview.frame.FrameProcessor;
+
 import com.otaliastudios.cameraview.size.Size;
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.R;
@@ -55,7 +38,6 @@ import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.app.ui.alert.Alert;
 import com.tpago.movil.app.ui.alert.AlertManager;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
-import com.tpago.movil.app.ui.loader.takeover.TakeoverLoaderDialogFragment;
 import com.tpago.movil.app.ui.permission.PermissionHelper;
 import com.tpago.movil.d.domain.Customer;
 import com.tpago.movil.d.domain.MerchantRecipient;
@@ -65,7 +47,6 @@ import com.tpago.movil.d.domain.Recipient;
 import com.tpago.movil.d.domain.api.ApiResult;
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.ui.Dialogs;
-import com.tpago.movil.d.ui.main.DepMainActivityBase;
 import com.tpago.movil.d.ui.main.transaction.TransactionCategory;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase;
 import com.tpago.movil.dep.App;
@@ -75,23 +56,11 @@ import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.util.QrDecryptUtil;
 import com.tpago.movil.util.QrJWT;
 
-import org.apache.commons.codec.DecoderException;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -102,8 +71,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
-
-import static android.content.Context.CAMERA_SERVICE;
 
 public class QrScannerFragment extends Fragment {
     private static final List<String> REQUIRED_PERMISSIONS_GALLERY;
@@ -124,9 +91,6 @@ public class QrScannerFragment extends Fragment {
     private static final int REQUEST_CODE_GALLERY = 400;
     private static final int REQUEST_CODE_CAMERA = 500;
 
-    //    @BindView(R.id.cameraPreview)
-//    CustomBarCodeView barcodeView;
-    BeepManager beepManager;
     boolean isFlashOn;
     boolean isFrontCameraOn;
     @Inject
@@ -137,7 +101,6 @@ public class QrScannerFragment extends Fragment {
     AlertManager alertManager;
     @Inject
     StringMapper stringMapper;
-    TakeoverLoaderDialogFragment takeoverLoader;
     private Disposable closeSessionDisposable;
     @BindView(R.id.camera_scanner)
     CameraScanner cameraScanner;
@@ -145,12 +108,14 @@ public class QrScannerFragment extends Fragment {
     long lastRead;
     RenderScript rs;
     private Alert errorDialog;
+    TakeoverLoader takeoverLoader;
+    private Disposable subscribe;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         RenderScript renderScript = RenderScript.create(requireContext());
-        ((App) getActivity().getApplicationContext()).component().inject(this);
+        ((App) requireActivity().getApplicationContext()).component().inject(this);
         FirebaseVisionBarcodeDetectorOptions options = new FirebaseVisionBarcodeDetectorOptions
                 .Builder()
                 .setBarcodeFormats(FirebaseVisionBarcode.FORMAT_ALL_FORMATS)
@@ -158,19 +123,18 @@ public class QrScannerFragment extends Fragment {
         visionBarcodeDetector = FirebaseVision.getInstance()
                 .getVisionBarcodeDetector(options);
         this.alertManager = AlertManager.create(getContext(), stringMapper);
+        takeoverLoader = TakeoverLoader.create(getFragmentManager());
     }
 
     private void showTakeOver() {
         if (errorDialog == null) {
-            TakeoverLoader.create(getFragmentManager())
-                    .show();
+            takeoverLoader.show();
         }
 
     }
 
     private void dismissTakeOverLoader() {
-        TakeoverLoader.create(getFragmentManager())
-                .hide();
+        takeoverLoader.hide();
     }
 
     public int degreesToFirebaseRotation(int degrees) {
@@ -261,6 +225,7 @@ public class QrScannerFragment extends Fragment {
             decipherQrCode(result);
         } catch (Exception ex) {
             Log.e("com.tpago.mobile", "error al desencriptar qr", ex);
+            dismissTakeOverLoader();
             showErrorMessage(R.string.qr_error_unsupported_code, R.string.qr_error_unsupported_code_message);
         }
     }
@@ -282,7 +247,6 @@ public class QrScannerFragment extends Fragment {
     }
 
     private void decipherQrCode(String data) {
-        this.showTakeOver();
         Log.d("com.tpago.mobile", "qrCodeData = " + data);
         String qrType = null;
         String encryptedMessage = null;
@@ -296,6 +260,7 @@ public class QrScannerFragment extends Fragment {
         } catch (Exception e) {
             Log.e("com.tpago.mobile", "error decoding qr", e);
             showErrorMessage(R.string.qr_error_unsupported_code, R.string.qr_error_unsupported_code_message);
+            return;
         }
         if (qrType == null || decryptedMessage == null) {
             showErrorMessage(R.string.qr_error_unsupported_code, R.string.qr_error_unsupported_code_message);
@@ -308,7 +273,8 @@ public class QrScannerFragment extends Fragment {
                     showErrorMessage(R.string.qr_error_unsupported_code, R.string.qr_error_unsupported_code_message);
                     return;
                 }
-                this.startTransaction(new MerchantRecipient(decryptedMessage.getMerchantDescription(), decryptedMessage.getSub()));
+                this.startTransaction(new MerchantRecipient(decryptedMessage.getMerchantDescription(), decryptedMessage.getSub()),
+                        TransactionCategory.PAY);
                 break;
             case "TRF-IN":
                 if (decryptedMessage.getSub() == null) {
@@ -318,9 +284,10 @@ public class QrScannerFragment extends Fragment {
                 }
                 final PhoneNumber phoneNumber = PhoneNumber.create(decryptedMessage.getSub());
                 if (!phoneNumber.equals(sessionManager.getUser().phoneNumber())) {
-                    Single.defer(() -> Single.just(this.depApiBridge.fetchCustomer(phoneNumber.value())))
+                    showTakeOver();
+                    subscribe = Single.defer(() -> Single.just(this.depApiBridge.fetchCustomer(phoneNumber.value())))
                             .subscribeOn(Schedulers.io())
-                            .doFinally(() -> this.dismissTakeOverLoader())
+                            .doFinally(this::dismissTakeOverLoader)
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(
                                     (result) -> this.handleStartPhoneNumberTransactionResult(phoneNumber, result),
@@ -358,17 +325,17 @@ public class QrScannerFragment extends Fragment {
     }
 
 
-    public void startTransaction(Recipient recipient) {
+    public void startTransaction(Recipient recipient, TransactionCategory transactionCategory) {
         Intent intent = TransactionCreationActivityBase.getLaunchIntent(
-                this.getActivity(),
-                TransactionCategory.PAY,
+                requireActivity(),
+                transactionCategory,
                 recipient
         );
         intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
         startActivity(
                 intent
         );
-        getActivity().finish();
+        requireActivity().finish();
     }
 
     private void handleStartPhoneNumberTransactionResult(
@@ -376,7 +343,8 @@ public class QrScannerFragment extends Fragment {
             ApiResult<Customer> result
     ) {
         if (result.isSuccessful()) {
-            this.startTransaction(this.handleCustomerResult(phoneNumber, result));
+            this.startTransaction(this.handleCustomerResult(phoneNumber, result),
+                    TransactionCategory.TRANSFER);
         } else {
             this.showGenericErrorDialog(result.getError().getDescription());
         }
@@ -402,7 +370,7 @@ public class QrScannerFragment extends Fragment {
             case REQUEST_CODE_CAMERA:
                 for (int n = 0; n < permissions.length; n++) {
                     if (grantResults[n] != 0) {
-                        this.getActivity().finish();
+                        requireActivity().finish();
                         break;
                     }
                 }
@@ -445,7 +413,7 @@ public class QrScannerFragment extends Fragment {
                 | Intent.FLAG_ACTIVITY_CLEAR_TASK
                 | Intent.FLAG_ACTIVITY_CLEAR_TOP
                 | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        this.getActivity().finish();
+        requireActivity().finish();
         this.startActivity(intent);
     }
 
@@ -482,7 +450,13 @@ public class QrScannerFragment extends Fragment {
     }
 
     public void scanSingleImage(Uri uri) throws IOException {
-        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
-        processImage(FirebaseVisionImage.fromBitmap(bitmap));
+        if (uri != null) {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
+            if (bitmap != null) {
+                processImage(FirebaseVisionImage.fromBitmap(bitmap));
+                return;
+            }
+        }
+        showErrorMessage(R.string.qr_error_unsupported_code, R.string.qr_error_unsupported_code_message);
     }
 }

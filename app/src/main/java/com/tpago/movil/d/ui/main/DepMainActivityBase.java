@@ -257,6 +257,7 @@ public class DepMainActivityBase
             startService(new Intent(this, LogoutTimerService.class));
             IntentFilter intentFilter = new IntentFilter(LogoutTimerService.LOGOUT_BROADCAST);
             localBroadcastManager.registerReceiver(logoutReceiver, intentFilter);
+            onUserInteraction();
         }
     }
 

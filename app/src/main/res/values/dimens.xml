@@ -137,7 +137,8 @@
   <dimen name="widget_text_input_content_size">16sp</dimen>
   <dimen name="widget_text_input_cursor_width">1dp</dimen>
   <dimen name="widget_text_input_not_editable_content_size">34sp</dimen>
-  <item name="commerce_payment_message_text_default_letter_spacing" format="float" type="dimen">0.083</item> <!-- letter_spacing_em = letter_spacing_sp / text_size_sp -->
+    <dimen name="largeImageSizeLogo">500dp</dimen>
+    <item name="commerce_payment_message_text_default_letter_spacing" format="float" type="dimen">0.083</item> <!-- letter_spacing_em = letter_spacing_sp / text_size_sp -->
   <item name="commerce_payment_option_product_number_default_text_letter_spacing" format="float" type="dimen">0.17</item> <!-- letter_spacing_em = letter_spacing_sp / text_size_sp -->
   <item name="commerce_payment_option_product_number_default_text_shadow_dx" format="float" type="dimen">0.0</item>
   <item name="commerce_payment_option_product_number_default_text_shadow_dy" format="float" type="dimen">4.0</item>

@@ -15,9 +15,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,7 +77,6 @@ public class MyQrFragment extends Fragment {
     TextView qrCodeProfileName;
     @BindView(R.id.bottomsheet)
     BottomSheetLayout bottomSheet;
-    // Default token for Testing since endpoints are throwing {"error":{"code":"0014","description":"El servicio no está disponible. Favor intente de nuevo.","msisdn":null,"transaction":null}}
     String token = null;
     private Bitmap qrBitmap;
     private Target tPagoLogo;
@@ -147,7 +148,7 @@ public class MyQrFragment extends Fragment {
 
         if (uri != null) {
             Picasso.get().load(uri)
-                    .resizeDimen(R.dimen.largeImageSize, R.dimen.largeImageSize)
+                    .resizeDimen(R.dimen.largeImageSizeLogo, R.dimen.largeImageSizeLogo)
                     .transform(new CircleTransformation())
                     .into(tPagoLogo);
         } else {
@@ -160,7 +161,7 @@ public class MyQrFragment extends Fragment {
     public Bitmap overlay(Bitmap qrBitmap, Bitmap logoBitmap) {
         Bitmap bmOverlay = Bitmap.createBitmap(qrBitmap.getWidth(), qrBitmap.getHeight(), qrBitmap.getConfig());
 
-        Bitmap scaledLogo = Bitmap.createScaledBitmap(logoBitmap, 250, 250, false);
+        Bitmap scaledLogo = Bitmap.createScaledBitmap(logoBitmap, 400, 400, false);
         Canvas canvas = new Canvas(bmOverlay);
         canvas.drawColor(Color.WHITE);
         canvas.drawBitmap(qrBitmap, 0, 0, null);
@@ -181,47 +182,9 @@ public class MyQrFragment extends Fragment {
     @OnClick(R.id.qr_share)
     public void onShareClicked() {
         showShareChooser();
-//        Uri uri = null;
-//        try {
-//            String bitmapPath = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), this.qrBitmap, "tPagoQr", null);
-//            Uri bitmapUri = Uri.parse(bitmapPath);
-//
-//            Intent exportIntent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-//            exportIntent.addCategory(Intent.CATEGORY_OPENABLE);
-//            exportIntent.setType("image/png");
-//            String filename = "MyQrCode.png";
-//            exportIntent.putExtra(Intent.EXTRA_TITLE, filename);
-//
-//            bottomSheet.showWithSheetView(new IntentPickerSheetView(getContext(), exportIntent, "Share with...", new IntentPickerSheetView.OnIntentPickedListener() {
-//                @Override
-//                public void onIntentPicked(IntentPickerSheetView.ActivityInfo activityInfo) {
-//                    bottomSheet.dismissSheet();
-//                    startActivityForResult(activityInfo.getConcreteIntent(exportIntent), FILE_EXPORT_REQUEST_CODE);
-//                }
-//            }));
-//        } catch (Exception e) {
-//            Log.d(this.getTag(), "Exception while trying to write file for sharing: " + e.getMessage());
-//        }
     }
 
     private void showShareChooser() {
-//        String bitmapPath = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), this.qrBitmap, "tPagoQr", null);
-//        Uri bitmapUri = Uri.parse(bitmapPath);
-//
-//        Intent exportIntent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-//        exportIntent.addCategory(Intent.CATEGORY_OPENABLE);
-//        exportIntent.setType("image/png");
-//        String filename = "MyQrCode.png";
-//        exportIntent.putExtra(Intent.EXTRA_TITLE, filename);
-//
-//        Intent shareIntent = new Intent();
-//        shareIntent.setAction(Intent.ACTION_MEDIA_SHARED);
-//        shareIntent.setType("image/*");
-//        shareIntent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
-//
-//
-//        Intent chooserIntent = Intent.createChooser(shareIntent, "Compartir en...");
-//        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{exportIntent});
         startActivity(getNativeShareIntent(getContext()));
 
     }
