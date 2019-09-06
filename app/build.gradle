@@ -17,11 +17,8 @@ android {
         renderscriptTargetApi 16
         renderscriptSupportModeEnabled true
 
-        def (major, minor, patch) = [3, 0, 4]
+        def (major, minor, patch) = [2, 7, 3]
         versionName "${major}.${minor}.${patch}"
-
-        ndk.abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'
-
 
         versionCode((major * 10_000_000) + (minor * 100_000) + (patch * 1_000))
 
@@ -220,7 +217,7 @@ dependencies {
     devtImplementation(name: cubeSdkName('2.0.0', 'devt'), ext: 'aar')
     stagImplementation(name: cubeSdkName('2.0.0', 'devt'), ext: 'aar')
     prepImplementation(name: cubeSdkName('2.0.0', 'devt'), ext: 'aar')
-    prodImplementation(name: cubeSdkName('2.0.0', 'devt'), ext: 'aar')
+    prodImplementation(name: cubeSdkName('2.0.0', 'prod'), ext: 'aar')
 
     implementation "net.zetetic:android-database-sqlcipher:4.2.0"
 
@@ -251,7 +248,7 @@ dependencies {
     annotationProcessor 'com.ryanharter.auto.value:auto-value-parcel:0.2.6'
 
 // Optionally for TypeAdapter support
-    compile 'com.ryanharter.auto.value:auto-value-parcel-adapter:0.2.6'
+    implementation 'com.ryanharter.auto.value:auto-value-parcel-adapter:0.2.6'
 
     def autoValueIgnoreHashEquals = 'com.github.reggar:auto-value-ignore-hash-equals:1.1.4'
     annotationProcessor autoValueIgnoreHashEquals
@@ -309,8 +306,8 @@ dependencies {
     implementation 'commons-codec:commons-codec:1.10'
     implementation 'com.google.firebase:firebase-ml-vision:23.0.0'
 
-    compile 'com.flipboard:bottomsheet-core:1.5.3'
-    compile 'com.flipboard:bottomsheet-commons:1.5.3' // optional
+    implementation 'com.flipboard:bottomsheet-core:1.5.3'
+    implementation 'com.flipboard:bottomsheet-commons:1.5.3' // optional
 
     api 'com.otaliastudios:cameraview:2.1.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
@@ -319,8 +316,6 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
 
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
-
-    compile 'io.github.silvaren:easyrs:0.5.3'
 
 
 }

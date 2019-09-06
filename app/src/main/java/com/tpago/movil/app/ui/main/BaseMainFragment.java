@@ -31,9 +31,11 @@ public abstract class BaseMainFragment extends FragmentBase {
     super.onResume();
 
     // Updates the Subtitle.
-    DepMainActivityBase.get(this.getActivity())
-            .toolbar()
-            .setSubtitle(this.subTitle());
+    DepMainActivityBase mainActivityBase = DepMainActivityBase.get(this.getActivity());
+    if (mainActivityBase != null) {
+      mainActivityBase.toolbar()
+              .setSubtitle(this.subTitle());
+    }
   }
 
   @Override

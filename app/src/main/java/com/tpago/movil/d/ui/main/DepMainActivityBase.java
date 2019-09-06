@@ -105,7 +105,6 @@ public class DepMainActivityBase
     }
 
     public static DepMainActivityBase get(Activity activity) {
-        ObjectHelper.checkNotNull(activity, "activity");
         if (!(activity instanceof DepMainActivityBase)) {
             throw new ClassCastException("!(activity instanceof DepMainActivityBase)");
         }

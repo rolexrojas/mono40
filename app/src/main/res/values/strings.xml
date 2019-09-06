@@ -434,7 +434,7 @@
     <string name="qr_scan">ESCANEAR</string>
     <string name="qr_my_qr">MI CÓDIGO QR</string>
     <string name="import_gallery">Importar</string>
-    <string name="qr_activity_title">QR Code</string>
+    <string name="qr_activity_title">Código QR</string>
     <string name="qr_error_own_code">Codigo propio</string>
     <string name="qr_error_own_code_message">Este codigo qr pertenece a ti</string>
     <string name="qr_error_unsupported_code">Codigo no soportado</string>

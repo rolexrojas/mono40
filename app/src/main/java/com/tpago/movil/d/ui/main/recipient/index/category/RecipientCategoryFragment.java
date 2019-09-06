@@ -10,6 +10,9 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.util.Pair;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,6 +25,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tpago.movil.R;
@@ -253,6 +257,10 @@ public class RecipientCategoryFragment
                 presenter.addRecipient(recipient, category);
             }
             requestResult = null;
+        }
+        TextView toolbarTitle = getActivity().findViewById(R.id.toolbar_title);
+        if (this.category != null && toolbarTitle != null) {
+            toolbarTitle.setText(this.getString(this.category.stringId));
         }
     }
 
