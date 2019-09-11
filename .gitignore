@@ -108,3 +108,5 @@ Temporary Items
 keystores/release.properties
 
 java_pid*
+
+*.hprof
