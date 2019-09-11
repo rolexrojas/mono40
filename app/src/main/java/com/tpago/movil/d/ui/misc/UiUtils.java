@@ -23,7 +23,8 @@ import com.tpago.movil.d.ui.Refreshable;
 import com.tpago.movil.d.ui.view.widget.LoadIndicator;
 import com.tpago.movil.util.ObjectHelper;
 
-import uk.co.chrisjenx.calligraphy.TypefaceUtils;
+import io.github.inflationx.calligraphy3.TypefaceUtils;
+
 
 /**
  * UI utility methods.
@@ -46,7 +47,7 @@ public final class UiUtils {
   public static void setTypeface(@NonNull TextView textView, @StyleRes int styleId) {
     final Context context = textView.getContext();
     final TypedArray array = context
-      .obtainStyledAttributes(styleId, new int[]{uk.co.chrisjenx.calligraphy.R.attr.fontPath});
+      .obtainStyledAttributes(styleId, new int[]{io.github.inflationx.calligraphy3.R.attr.fontPath});
     try {
       final String fontPath = array.getString(0);
       if (ObjectHelper.isNotNull(fontPath)) {

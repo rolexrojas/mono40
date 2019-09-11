@@ -8,8 +8,8 @@ android {
         exclude 'META-INF/rxjava.properties'
     }
 
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 29
+    buildToolsVersion '29.0.2'
 
     defaultConfig {
         applicationId 'com.tpago.movil'
@@ -17,13 +17,13 @@ android {
         renderscriptTargetApi 16
         renderscriptSupportModeEnabled true
 
-        def (major, minor, patch) = [2, 7, 3]
+        def (major, minor, patch) = [3, 0, 6]
         versionName "${major}.${minor}.${patch}"
 
         versionCode((major * 10_000_000) + (minor * 100_000) + (patch * 1_000))
 
         minSdkVersion 19
-        targetSdkVersion 28
+        targetSdkVersion 29
 
         multiDexEnabled true
 
@@ -217,7 +217,7 @@ dependencies {
     devtImplementation(name: cubeSdkName('2.0.0', 'devt'), ext: 'aar')
     stagImplementation(name: cubeSdkName('2.0.0', 'devt'), ext: 'aar')
     prepImplementation(name: cubeSdkName('2.0.0', 'devt'), ext: 'aar')
-    prodImplementation(name: cubeSdkName('2.0.0', 'prod'), ext: 'aar')
+    prodImplementation(name: cubeSdkName('2.0.0', 'devt'), ext: 'aar')
 
     implementation "net.zetetic:android-database-sqlcipher:4.2.0"
 
@@ -267,7 +267,8 @@ dependencies {
 
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.4.7'
 
-    implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
+    implementation 'io.github.inflationx:calligraphy3:3.1.1'
+    implementation 'io.github.inflationx:viewpump:2.0.3'
 
     implementation 'com.jakewharton:butterknife:10.1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
@@ -316,6 +317,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
 
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
+
+    implementation 'androidx.biometric:biometric:1.0.0-beta01'
 
 
 }

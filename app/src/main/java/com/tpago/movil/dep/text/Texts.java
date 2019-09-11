@@ -7,7 +7,8 @@ import android.text.style.ForegroundColorSpan;
 import com.tpago.movil.app.ui.util.Truss;
 import com.tpago.movil.util.ObjectHelper;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
+import io.github.inflationx.calligraphy3.CalligraphyTypefaceSpan;
+
 
 /**
  * @author hecvasro

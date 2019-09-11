@@ -5,7 +5,7 @@ import android.graphics.Typeface;
 
 import com.tpago.movil.util.ObjectHelper;
 
-import uk.co.chrisjenx.calligraphy.TypefaceUtils;
+import io.github.inflationx.calligraphy3.TypefaceUtils;
 
 /**
  * @author hecvasro

@@ -19,13 +19,13 @@ import android.text.style.RelativeSizeSpan;
 import android.text.style.SuperscriptSpan;
 import android.text.style.TextAppearanceSpan;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.util.Truss;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
-import uk.co.chrisjenx.calligraphy.TypefaceUtils;
+import io.github.inflationx.calligraphy3.CalligraphyTypefaceSpan;
+import io.github.inflationx.calligraphy3.TypefaceUtils;
+
 
 /**
  * TODO
