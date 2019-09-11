@@ -32,7 +32,7 @@
       android:layout_marginEnd="@dimen/space_horizontal_20"
       android:layout_marginStart="@dimen/space_horizontal_20"/>
 
-    <android.support.v4.widget.Space style="@style/VerticalDivider.Space.Small"/>
+    <androidx.legacy.widget.Space style="@style/VerticalDivider.Space.Small"/>
 
     <!-- Last updateName -->
     <TextView
@@ -49,7 +49,7 @@
       android:layout_marginEnd="@dimen/space_horizontal_20"
       android:layout_marginStart="@dimen/space_horizontal_20"/>
 
-    <android.support.v4.widget.Space style="@style/VerticalDivider.Space.Small"/>
+    <androidx.legacy.widget.Space style="@style/VerticalDivider.Space.Small"/>
 
     <!-- Phone number -->
     <TextView
@@ -67,7 +67,7 @@
       android:layout_marginEnd="@dimen/space_horizontal_20"
       android:layout_marginStart="@dimen/space_horizontal_20"/>
 
-    <android.support.v4.widget.Space style="@style/VerticalDivider.Space.Small"/>
+    <androidx.legacy.widget.Space style="@style/VerticalDivider.Space.Small"/>
 
     <!-- Email -->
     <TextView

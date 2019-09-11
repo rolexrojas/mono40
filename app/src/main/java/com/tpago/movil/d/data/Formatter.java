@@ -1,6 +1,6 @@
 package com.tpago.movil.d.data;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;

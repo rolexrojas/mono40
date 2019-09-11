@@ -1,7 +1,7 @@
 package com.tpago.movil.dep;
 
 import android.net.Uri;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
 import com.tpago.movil.Email;

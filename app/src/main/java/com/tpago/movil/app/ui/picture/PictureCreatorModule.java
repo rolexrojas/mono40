@@ -1,6 +1,6 @@
 package com.tpago.movil.app.ui.picture;
 
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 
 import com.tpago.movil.app.ui.fragment.FragmentQualifier;
 import com.tpago.movil.app.ui.fragment.FragmentScope;

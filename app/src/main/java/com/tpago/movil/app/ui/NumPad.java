@@ -2,9 +2,11 @@ package com.tpago.movil.app.ui;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
-import android.support.constraint.ConstraintLayout;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +35,8 @@ public final class NumPad extends ConstraintLayout {
 
   private boolean dotButtonEnabled;
 
-  @ColorInt private int textButtonTextColor;
+  @ColorInt
+  private int textButtonTextColor;
   @DrawableRes private int deleteButtonImageSource;
 
   private final List<Consumer<Integer>> digitConsumers = new ArrayList<>();

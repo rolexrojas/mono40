@@ -1,6 +1,6 @@
 package com.tpago.movil.app.ui.item;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.tpago.movil.util.BuilderChecker;

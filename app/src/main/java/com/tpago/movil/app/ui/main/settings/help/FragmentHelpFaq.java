@@ -2,8 +2,8 @@ package com.tpago.movil.app.ui.main.settings.help;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.StringRes;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

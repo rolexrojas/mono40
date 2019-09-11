@@ -1,6 +1,6 @@
 package com.tpago.movil.d.ui.main.products.transactions;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.tpago.movil.d.misc.rx.RxUtils;
 import com.tpago.movil.d.data.SchedulerProvider;

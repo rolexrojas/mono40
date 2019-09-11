@@ -1,6 +1,6 @@
 package com.tpago.movil.d.ui.main.recipient.index.category;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.tpago.movil.d.domain.PhoneNumberRecipient;
 import com.tpago.movil.d.domain.Recipient;

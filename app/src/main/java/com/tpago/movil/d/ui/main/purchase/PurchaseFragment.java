@@ -10,12 +10,12 @@ import android.nfc.NfcAdapter;
 import android.nfc.cardemulation.CardEmulation;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.tpago.movil.R;
+import com.tpago.movil.app.ui.loader.takeover.TakeoverLoaderDialogFragment;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.data.util.BinderFactory;
 import com.tpago.movil.d.domain.Product;
@@ -36,6 +37,7 @@ import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.main.list.ListItemAdapter;
 import com.tpago.movil.d.ui.main.list.ListItemHolder;
 import com.tpago.movil.d.ui.main.list.ListItemHolderCreatorFactory;
+import com.tpago.movil.dep.init.InitActivityBase;
 
 import javax.inject.Inject;
 
@@ -43,6 +45,10 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author hecvasro
@@ -57,6 +63,7 @@ public class PurchaseFragment
         PurchasePaymentDialogFragment.OnDismissedListener {
 
     private static final String TAG_PAYMENT_SCREEN = "paymentScreen";
+    private static final String TAKE_OVER_LOADER_DIALOG = "TAKE_OVER_LOADER";
     private final String NFC_SERVICE = "com.cube.sdk.hce.TorreHostApduService";  // TODO: Change to PosBridge
 
     PurchaseComponent component;
@@ -78,6 +85,8 @@ public class PurchaseFragment
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+    private TakeoverLoaderDialogFragment takeoverLoader;
+    private Disposable closeSessionDisposable;
 
     @NonNull
     public static PurchaseFragment newInstance() {
@@ -254,12 +263,7 @@ public class PurchaseFragment
         PinConfirmationDialogFragment.show(
                 getChildFragmentManager(),
                 getString(R.string.activate_payment_methods),
-                new PinConfirmationDialogFragment.Callback() {
-                    @Override
-                    public void confirm(String pin) {
-                        presenter.activateCards(pin);
-                    }
-                },
+                (PinConfirmationDialogFragment.Callback) pin -> presenter.activateCards(pin),
                 originX,
                 originY
         );
@@ -275,7 +279,11 @@ public class PurchaseFragment
         Dialogs.builder(getContext())
                 .setTitle(title)
                 .setMessage(message)
-                .setPositiveButton(R.string.error_positive_button_text, null)
+                .setPositiveButton(R.string.error_positive_button_text, (dialog, which) -> {
+                    if (message.contains(getString(R.string.session_expired))) {
+                        closeSession();
+                    }
+                })
                 .show();
     }
 
@@ -333,6 +341,47 @@ public class PurchaseFragment
     @Override
     public void onDismissed() {
         presenter.resume();
+    }
+
+    private void closeSession() {
+        this.closeSessionDisposable = getContainer().getComponent().sessionManager().closeSession()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe((d) -> this.showTakeOver())
+                .doFinally(this::dismissTakeOverLoader)
+                .subscribe(this::handleCloseSession, (Consumer<Throwable>) throwable -> {
+                    Log.d("com.tpago.mobile", throwable.getMessage(), throwable);
+                });
+    }
+
+    private void showTakeOver() {
+        if (takeoverLoader != null) {
+            takeoverLoader.dismiss();
+        } else {
+            takeoverLoader = TakeoverLoaderDialogFragment.create();
+            getChildFragmentManager().beginTransaction()
+                    .add(takeoverLoader, TAKE_OVER_LOADER_DIALOG)
+                    .show(takeoverLoader)
+                    .commit();
+        }
+
+    }
+
+    private void dismissTakeOverLoader() {
+        if (takeoverLoader != null) {
+            takeoverLoader.dismiss();
+            takeoverLoader = null;
+        }
+    }
+
+    private void handleCloseSession() {
+        Intent intent = InitActivityBase.getLaunchIntent(getContext());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        this.getActivity().finish();
+        this.startActivity(intent);
     }
 
 }

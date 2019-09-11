@@ -1,6 +1,6 @@
 package com.tpago.movil.d.domain.util;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Event representation.

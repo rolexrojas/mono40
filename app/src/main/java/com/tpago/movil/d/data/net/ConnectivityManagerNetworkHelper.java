@@ -3,7 +3,7 @@ package com.tpago.movil.d.data.net;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.tpago.movil.util.ObjectHelper;
 

@@ -1,7 +1,8 @@
 package com.tpago.movil.app.ui;
 
 import android.os.Parcelable;
-import android.support.v4.app.Fragment;
+
+import androidx.fragment.app.Fragment;
 
 /**
  * @author hecvasro

@@ -2,7 +2,7 @@ package com.tpago.movil.d.ui.main.recipient.addition;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.v4.util.Pair;
+import androidx.core.util.Pair;
 
 import com.tpago.movil.company.Company;
 import com.tpago.movil.company.CompanyHelper;

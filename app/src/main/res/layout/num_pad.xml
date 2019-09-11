@@ -3,35 +3,35 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto">
 
-  <android.support.constraint.Guideline
+  <androidx.constraintlayout.widget.Guideline
     android:id="@+id/guideline_vertical_start"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     app:layout_constraintGuide_percent="0.33"/>
 
-  <android.support.constraint.Guideline
+  <androidx.constraintlayout.widget.Guideline
     android:id="@+id/guideline_vertical_end"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     app:layout_constraintGuide_percent="0.66"/>
 
-  <android.support.constraint.Guideline
+  <androidx.constraintlayout.widget.Guideline
     android:id="@+id/guideline_horizontal_top"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     app:layout_constraintGuide_percent="0.25"/>
 
-  <android.support.constraint.Guideline
+  <androidx.constraintlayout.widget.Guideline
     android:id="@+id/guideline_horizontal_middle"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     app:layout_constraintGuide_percent="0.50"/>
 
-  <android.support.constraint.Guideline
+  <androidx.constraintlayout.widget.Guideline
     android:id="@+id/guideline_horizontal_bottom"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

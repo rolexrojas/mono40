@@ -1,6 +1,6 @@
 package com.tpago.movil.dep.init.register;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.tpago.movil.Email;
 import com.tpago.movil.lib.Password;

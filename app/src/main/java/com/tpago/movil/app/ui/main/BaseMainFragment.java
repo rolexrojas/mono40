@@ -1,6 +1,6 @@
 package com.tpago.movil.app.ui.main;
 
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 
 import com.tpago.movil.app.ui.fragment.base.FragmentBase;
 import com.tpago.movil.d.ui.main.DepMainActivityBase;
@@ -31,9 +31,11 @@ public abstract class BaseMainFragment extends FragmentBase {
     super.onResume();
 
     // Updates the Subtitle.
-    DepMainActivityBase.get(this.getActivity())
-            .toolbar()
-            .setSubtitle(this.subTitle());
+    DepMainActivityBase mainActivityBase = DepMainActivityBase.get(this.getActivity());
+    if (mainActivityBase != null) {
+      mainActivityBase.toolbar()
+              .setSubtitle(this.subTitle());
+    }
   }
 
   @Override

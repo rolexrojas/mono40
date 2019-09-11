@@ -1,6 +1,6 @@
 package com.tpago.movil.d.ui.main.recipient.addition.partners;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.company.Company;

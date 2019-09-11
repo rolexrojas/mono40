@@ -1,7 +1,7 @@
 package com.tpago.movil.d.ui.main.purchase;
 
 import android.content.Context;
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 
 import com.tpago.movil.app.ui.activity.ActivityScope;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;

@@ -1,6 +1,6 @@
 package com.tpago.movil.app.ui.main.code;
 
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 
 import com.tpago.movil.R;
 import com.tpago.movil.app.ui.alert.AlertManager;

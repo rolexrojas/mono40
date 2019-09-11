@@ -1,127 +1,141 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.tpago.movil">
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="false" />
 
-  <uses-feature
-      android:name="android.hardware.nfc"
-      android:required="false" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
-  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-  <uses-permission android:name="android.permission.CAMERA" />
-  <uses-permission android:name="android.permission.INTERNET" />
-  <uses-permission android:name="android.permission.READ_CONTACTS" />
-  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-  <uses-permission android:name="android.permission.USE_FINGERPRINT" />
-  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <application
+        android:name=".app.App"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:replace="android:allowBackup">
 
-  <application
-      android:name=".app.App"
-      android:allowBackup="false"
-      android:fullBackupContent="false"
-      android:icon="@mipmap/ic_launcher"
-      android:label="@string/app_name"
-      android:supportsRtl="true"
-      android:theme="@style/AppTheme"
-      tools:replace="android:allowBackup">
+        <meta-data
+            android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+            android:value="barcode" />
 
-    <meta-data
-        android:name="io.fabric.ApiKey"
-        android:value="1222b6a0c933aee641154a066ae9daaa93d7d2d8" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="1222b6a0c933aee641154a066ae9daaa93d7d2d8" />
 
-    <provider
-        android:name="android.support.v4.content.FileProvider"
-        android:authorities="${applicationId}.provider"
-        android:exported="false"
-        android:grantUriPermissions="true">
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
 
-      <meta-data
-          android:name="android.support.FILE_PROVIDER_PATHS"
-          android:resource="@xml/provider_paths" />
-    </provider>
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
 
-    <activity
-        android:name=".app.ui.activity.toolbar.ActivityToolbar"
-        android:screenOrientation="portrait">
-      <intent-filter>
-        <action android:name="android.intent.action.VIEW" />
+        <activity
+            android:name=".app.ui.activity.toolbar.ActivityToolbar"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-        <data
-            android:scheme="http"
-            android:host="app.tpago.gcs.com" />
-      </intent-filter>
-    </activity>
+                <data
+                    android:host="app.tpago.gcs.com"
+                    android:scheme="http" />
+            </intent-filter>
+        </activity>
 
-    <activity
-        android:name=".app.ui.main.transaction.insurance.micro.purchase.MicroInsurancePurchaseActivity"
-        android:screenOrientation="portrait" />
+        <activity
+            android:name=".app.ui.main.transaction.insurance.micro.purchase.MicroInsurancePurchaseActivity"
+            android:screenOrientation="portrait" />
 
-    <!-- [START] Deprecated -->
-    <activity
-        android:name=".dep.init.InitActivityBase"
-        android:screenOrientation="portrait"
-        android:windowSoftInputMode="adjustResize">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
+        <!-- [START] Deprecated -->
+        <activity
+            android:name=".dep.init.InitActivityBase"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.LAUNCHER" />
-      </intent-filter>
-    </activity>
+        <activity
+            android:name=".app.ui.FragmentActivityBase"
+            android:screenOrientation="portrait" />
 
-    <activity
-        android:name=".app.ui.FragmentActivityBase"
-        android:screenOrientation="portrait" />
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/D.CropImage.Theme" />
 
-    <activity
-        android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-        android:screenOrientation="portrait"
-        android:theme="@style/D.CropImage.Theme" />
+        <activity
+            android:name="com.tpago.movil.d.ui.main.DepMainActivityBase"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
 
-    <activity
-        android:name="com.tpago.movil.d.ui.main.DepMainActivityBase"
-        android:screenOrientation="portrait"
-        android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.tpago.movil.d.ui.main.recipient.addition.AddRecipientActivityBase"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
 
-    <activity
-        android:name="com.tpago.movil.d.ui.main.recipient.addition.AddRecipientActivityBase"
-        android:screenOrientation="portrait"
-        android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
 
-    <activity
-        android:name="com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase"
-        android:screenOrientation="portrait"
-        android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="com.tpago.movil.d.ui.main.products.transactions.RecentTransactionsActivityBase"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
 
-    <activity
-        android:name="com.tpago.movil.d.ui.main.products.transactions.RecentTransactionsActivityBase"
-        android:screenOrientation="portrait"
-        android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".d.ui.main.recipient.addition.NonAffiliatedPhoneNumberRecipientAdditionActivityBase"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
 
-    <activity
-        android:name=".d.ui.main.recipient.addition.NonAffiliatedPhoneNumberRecipientAdditionActivityBase"
-        android:screenOrientation="portrait"
-        android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".d.ui.main.transaction.own.OwnTransactionCreationActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
 
-    <activity
-        android:name=".d.ui.main.transaction.own.OwnTransactionCreationActivity"
-        android:screenOrientation="portrait"
-        android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".d.ui.main.transaction.own.OwnTransferActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
 
-    <activity
-        android:name=".d.ui.main.transaction.own.OwnTransferActivity"
-        android:screenOrientation="portrait"
-        android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".d.ui.main.recipient.index.disburse.DisbursementActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
 
-    <activity
-        android:name=".d.ui.main.recipient.index.disburse.DisbursementActivity"
-        android:screenOrientation="portrait"
-        android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".d.ui.qr.QrActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleInstance">
+        </activity>
+        
+        <activity android:name=".d.ui.qr.SaveToGalleryActivity" android:theme="@style/Theme.AppCompat.Translucent">
 
-    <service android:name=".util.LogoutTimerService"
-      />
-  </application>
+        </activity>
+
+        <service android:name=".util.LogoutTimerService" />
+        
+    </application>
 </manifest>

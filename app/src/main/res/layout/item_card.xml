@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -27,8 +27,7 @@
         <ImageView
             android:id="@+id/accountContainerImage"
             android:layout_width="match_parent"
-            android:layout_height="210dp"
-            android:background="#DF4F2A"/>
+            android:layout_height="210dp" />
     </com.github.florent37.shapeofview.shapes.RoundRectView>
     <ImageView
         android:id="@+id/bankLogo"
@@ -36,7 +35,6 @@
         android:layout_height="50dp"
         android:layout_marginStart="14dp"
         android:layout_marginTop="8dp"
-        android:src="@drawable/ado_dummy"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -86,4 +84,4 @@
         app:layout_constraintStart_toStartOf="@id/bankLogo"
         app:layout_constraintTop_toBottomOf="@id/accountAlias"
         tools:text="Jose Perez" />
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

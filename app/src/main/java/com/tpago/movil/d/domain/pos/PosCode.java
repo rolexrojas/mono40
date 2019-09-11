@@ -1,6 +1,6 @@
 package com.tpago.movil.d.domain.pos;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * {@link PosBridge POS}'s code enumeration.

@@ -1,6 +1,7 @@
 package com.tpago.movil.d.ui.main.purchase;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -11,6 +12,7 @@ import com.github.florent37.shapeofview.shapes.RoundRectView;
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.R;
 import com.tpago.movil.company.Company;
+import com.tpago.movil.company.CompanyHelper;
 import com.tpago.movil.d.domain.Banks;
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.ProductType;
@@ -25,6 +27,7 @@ import butterknife.BindView;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class CardListAdapter extends RecyclerViewBaseAdapter<Product, CardListAdapter.CardListViewHolder> {
+    private CompanyHelper companyHelper;
     private User user;
 
     public CardListAdapter() {
@@ -32,9 +35,10 @@ public class CardListAdapter extends RecyclerViewBaseAdapter<Product, CardListAd
     }
 
     public CardListAdapter(List<Product> items, RecyclerAdapterCallback<Product> listener,
-                           User user) {
+                           User user, CompanyHelper companyHelper) {
         super(items, listener);
         this.user = user;
+        this.companyHelper = companyHelper;
     }
 
     @Override
@@ -48,10 +52,11 @@ public class CardListAdapter extends RecyclerViewBaseAdapter<Product, CardListAd
             if (listener != null) {
                 listener.onItemClick(item);
             }
-        }, user);
+        }, user, companyHelper);
     }
 
     public static class CardListViewHolder extends RecyclerViewBaseAdapter.BaseViewHolder<Product> {
+        private final CompanyHelper companyHelper;
         @BindView(R.id.accountContainer)
         RoundRectView accountContainer;
         @BindView(R.id.accountAlias)
@@ -65,24 +70,35 @@ public class CardListAdapter extends RecyclerViewBaseAdapter<Product, CardListAd
         User user;
         @BindView(R.id.accountContainerImage)
         ImageView containerImageBackground;
+        @BindView(R.id.bankLogo)
+        ImageView bankLogo;
         private RecyclerAdapterCallback<Product> listener;
 
         public CardListViewHolder(View itemView, RecyclerAdapterCallback<Product> listener,
-                                  User user) {
+                                  User user, CompanyHelper companyHelper) {
             super(itemView, listener);
             this.user = user;
             this.listener = listener;
+            this.companyHelper = companyHelper;
         }
 
         @Override
         public void bind(Product item) {
             super.bind(item);
-            accountContainer.setBackgroundColor(Banks.getColor(item.getBank()));
-            accountContainer.setBorderColor(Banks.getColor(item.getBank()));
+            int bankColor = Banks.getColor(item.getBank());
+            accountContainer.setBackgroundColor(bankColor);
+            accountContainer.setBorderColor(bankColor);
+            containerImageBackground.setBackgroundColor(bankColor);
             accountAlias.setText(item.getAlias());
             accountOwnerName.setText(user.name().toString());
             accountType.setText(ProductType.findStringId(item));
             accountBankName.setText(item.toProduct().bank().name());
+
+            final Uri bankLogoUri = companyHelper.getLogoUri(item.toProduct().bank(), Company.LogoStyle.WHITE_36);
+            Picasso.get()
+                    .load(bankLogoUri)
+                    .noFade()
+                    .into(bankLogo);
 
 
             Context context = itemView.getContext();

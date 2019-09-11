@@ -3,8 +3,8 @@ package com.tpago.movil.d.domain;
 import static com.tpago.movil.d.domain.RecipientType.NON_AFFILIATED_PHONE_NUMBER;
 
 import android.os.Parcel;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.tpago.movil.PhoneNumber;
 import com.tpago.movil.company.bank.Bank;

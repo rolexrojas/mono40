@@ -1,11 +1,11 @@
 package com.tpago.movil.d.ui.main.recipient.index.category;
 
-import static android.support.v4.content.ContextCompat.getDrawable;
+import static androidx.core.content.ContextCompat.getDrawable;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.Gravity;
 import android.view.View;
 

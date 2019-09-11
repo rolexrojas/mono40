@@ -1,6 +1,6 @@
 package com.tpago.movil.d.domain;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.tpago.movil.d.domain.api.DepApiBridge;
 import com.tpago.movil.d.domain.api.ApiUtils;

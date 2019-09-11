@@ -1,6 +1,6 @@
 package com.tpago.movil.d.domain;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.tpago.movil.d.domain.util.Event;
 import com.tpago.movil.d.domain.util.EventType;

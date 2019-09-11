@@ -1,6 +1,6 @@
 package com.tpago.movil.app.ui.main.settings.auth.alt;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.tpago.movil.app.ui.alert.AlertManager;
 import com.tpago.movil.app.ui.fragment.FragmentScope;

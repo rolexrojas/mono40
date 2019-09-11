@@ -1,8 +1,13 @@
 package com.tpago.movil.d.ui.main.transaction.contacts;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +17,8 @@ import android.widget.Toast;
 import com.tpago.movil.R;
 import com.tpago.movil.app.StringMapper;
 import com.tpago.movil.app.ui.DNumPad;
+import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
+import com.tpago.movil.app.ui.loader.takeover.TakeoverLoaderDialogFragment;
 import com.tpago.movil.d.data.Formatter;
 import com.tpago.movil.d.data.StringHelper;
 import com.tpago.movil.d.domain.Product;
@@ -23,7 +30,9 @@ import com.tpago.movil.d.ui.main.transaction.TransactionCategory;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationActivityBase;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
 import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
+import com.tpago.movil.dep.init.InitActivityBase;
 import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
+import com.tpago.movil.session.SessionManager;
 import com.tpago.movil.util.TaxUtil;
 import com.tpago.movil.util.TransactionType;
 import com.tpago.movil.util.function.Action;
@@ -40,7 +49,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
+import static com.tpago.movil.d.ui.main.transaction.TransactionCategory.PAY;
 import static com.tpago.movil.d.ui.main.transaction.TransactionCategory.TRANSFER;
 
 /**
@@ -55,6 +68,7 @@ public class PhoneNumberTransactionCreationFragment
     private static final BigDecimal ONE = BigDecimal.ONE;
     private static final BigDecimal TEN = BigDecimal.TEN;
     private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
+    private static final String TAKE_OVER_LOADER_DIALOG = "TAKE_OVER_LOADER";
     private TransactionCreationActivityBase activity;
 
     @Inject
@@ -71,6 +85,8 @@ public class PhoneNumberTransactionCreationFragment
     AtomicReference<BigDecimal> value;
     @Inject
     StringMapper stringMapper;
+    @Inject
+    SessionManager sessionManager;
 
     private Unbinder unbinder;
 
@@ -92,6 +108,8 @@ public class PhoneNumberTransactionCreationFragment
     private Consumer<Integer> numPadDigitConsumer;
     private Action numPadDotAction;
     private Action numPadDeleteAction;
+    private TakeoverLoaderDialogFragment takeoverLoader;
+    private Disposable closeSessionDisposable;
 
     @NonNull
     public static PhoneNumberTransactionCreationFragment newInstance() {
@@ -188,7 +206,7 @@ public class PhoneNumberTransactionCreationFragment
         this.numPadDeleteAction = this::onDeleteClicked;
         this.DNumPad.addDeleteAction(this.numPadDeleteAction);
 
-        if (this.transactionCategory == TRANSFER) {
+        if (this.transactionCategory == TRANSFER || this.transactionCategory == PAY) {
             this.transferActionButton.setVisibility(View.VISIBLE);
             this.rechargeActionButton.setVisibility(View.GONE);
         } else {
@@ -297,6 +315,16 @@ public class PhoneNumberTransactionCreationFragment
                                         .calculateTransferCost(this.value.get())
                         ),
                         stringMapper, 0, 0, 0, 0);
+            } else if (transactionCategory == PAY) {
+                description = TaxUtil.getConfirmPinTransactionMessage(
+                        TransactionType.PAY, value.get().doubleValue(),
+                        paymentMethodChooser.getSelectedItem(), label, currency, Formatter.amount(
+                                currency,
+                                paymentMethodChooser.getSelectedItem()
+                                        .getBank()
+                                        .calculateTransferCost(this.value.get())
+                        ),
+                        stringMapper, 0, 0, 0, 0);
             } else {
                 description = TaxUtil.getConfirmPinTransactionMessage(
                         TransactionType.RECHARGE, value.get().doubleValue(),
@@ -316,6 +344,7 @@ public class PhoneNumberTransactionCreationFragment
                     y
             );
         } else {
+            // TODO: Let the user know that he must insert an amount greater than zero.
             // TODO: Let the user know that he must insert an amount greater than zero.
         }
     }
@@ -400,7 +429,11 @@ public class PhoneNumberTransactionCreationFragment
         Dialogs.builder(getContext())
                 .setTitle(title)
                 .setMessage(message)
-                .setPositiveButton(R.string.error_positive_button_text, null)
+                .setPositiveButton(R.string.error_positive_button_text, (dialog, which) -> {
+                    if (message.contains(getString(R.string.session_expired))) {
+                        closeSession();
+                    }
+                })
                 .show();
     }
 
@@ -415,5 +448,46 @@ public class PhoneNumberTransactionCreationFragment
     public void showUnavailableNetworkError() {
         Toast.makeText(getContext(), R.string.error_unavailable_network, Toast.LENGTH_LONG)
                 .show();
+    }
+
+    private void closeSession() {
+        this.closeSessionDisposable = sessionManager.closeSession()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe((d) -> this.showTakeOver())
+                .doFinally(this::dismissTakeOverLoader)
+                .subscribe(this::handleCloseSession, (io.reactivex.functions.Consumer<Throwable>) throwable -> {
+                    Log.d("com.tpago.mobile", throwable.getMessage(), throwable);
+                });
+    }
+
+    private void showTakeOver() {
+        if (takeoverLoader != null) {
+            takeoverLoader.dismiss();
+        } else {
+            takeoverLoader = TakeoverLoaderDialogFragment.create();
+            getChildFragmentManager().beginTransaction()
+                    .add(takeoverLoader, TAKE_OVER_LOADER_DIALOG)
+                    .show(takeoverLoader)
+                    .commit();
+        }
+
+    }
+
+    private void dismissTakeOverLoader() {
+        if (takeoverLoader != null) {
+            takeoverLoader.dismiss();
+            takeoverLoader = null;
+        }
+    }
+
+    private void handleCloseSession() {
+        Intent intent = InitActivityBase.getLaunchIntent(getContext());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        this.getActivity().finish();
+        this.startActivity(intent);
     }
 }

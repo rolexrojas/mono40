@@ -1,7 +1,8 @@
 package com.tpago.movil.app;
 
 import android.graphics.drawable.Drawable;
-import android.support.annotation.DrawableRes;
+
+import androidx.annotation.DrawableRes;
 
 /**
  * Functional interface that transforms a given {@link DrawableRes drawable resource identifier}

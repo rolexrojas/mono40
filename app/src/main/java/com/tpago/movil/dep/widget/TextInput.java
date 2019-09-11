@@ -1,7 +1,7 @@
 package com.tpago.movil.dep.widget;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatEditText;
 import android.util.AttributeSet;
 
 import com.tpago.movil.util.ObjectHelper;

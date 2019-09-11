@@ -1,7 +1,8 @@
 package com.tpago.movil.d.ui.main.transaction.bills;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.tpago.movil.d.ui.main.PinConfirmationDialogFragment;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.tpago.movil.d.ui.main.transaction.TransactionCreationContainer;
 import com.tpago.movil.d.ui.view.widget.PrefixableTextView;
+import com.tpago.movil.dep.init.InitActivityBase;
 import com.tpago.movil.dep.main.transactions.PaymentMethodChooser;
 import com.tpago.movil.util.TaxUtil;
 import com.tpago.movil.util.TransactionType;
@@ -229,7 +231,14 @@ public class BillTransactionCreationFragment extends ChildFragment<TransactionCr
         Dialogs.builder(getContext())
                 .setTitle(R.string.error_generic_title)
                 .setMessage(message)
-                .setPositiveButton(R.string.error_positive_button_text, null)
+                .setPositiveButton(R.string.error_positive_button_text, (dialog, which) -> {
+                    if (message.contains(getString(R.string.session_expired))) {
+                        Intent intent = InitActivityBase.getLaunchIntent(getContext());
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        this.startActivity(intent);
+                        getActivity().finish();
+                    }
+                })
                 .show();
     }
 

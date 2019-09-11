@@ -1,7 +1,7 @@
 package com.tpago.movil.app.ui.main.transaction.paypal;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.tpago.movil.app.ui.activity.toolbar.ActivityToolbar;
 import com.tpago.movil.app.ui.activity.toolbar.FragmentToolbarRetained;

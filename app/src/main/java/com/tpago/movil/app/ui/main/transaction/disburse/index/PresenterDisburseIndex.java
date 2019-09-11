@@ -18,79 +18,83 @@ import io.reactivex.schedulers.Schedulers;
  */
 final class PresenterDisburseIndex extends Presenter<PresentationDisburseIndex> {
 
-  static Builder builder() {
-    return new Builder();
-  }
+    static Builder builder() {
+        return new Builder();
+    }
 
-  private final AlertManager alertManager;
+    private final AlertManager alertManager;
 
-  private final DisburseItemsSupplier itemsSupplier;
+    private final DisburseItemsSupplier itemsSupplier;
 
-  private Disposable disposable = Disposables.disposed();
+    private Disposable disposable = Disposables.disposed();
 
-  private PresenterDisburseIndex(Builder builder) {
-    super(builder.presentation);
+    private boolean isDialogShowing;
 
-    this.alertManager = builder.alertManager;
+    private PresenterDisburseIndex(Builder builder) {
+        super(builder.presentation);
 
-    this.itemsSupplier = builder.itemsSupplier;
-  }
+        this.alertManager = builder.alertManager;
 
-  @Override
-  public void onPresentationResumed() {
-    this.disposable = this.itemsSupplier.get()
-      .subscribeOn(Schedulers.io())
-      .toSortedList(IndexItem::compareTo)
-      .observeOn(AndroidSchedulers.mainThread())
-      .subscribe((items) -> {
-        if (items.isEmpty()) {
-          this.alertManager.builder()
-            .message(R.string.thereIsNoDisbursableItemsAvailable)
-            .positiveButtonAction(this.presentation::goBack)
-            .show();
-        } else {
-          this.presentation.setItems(items);
+        this.itemsSupplier = builder.itemsSupplier;
+    }
+
+    @Override
+    public void onPresentationResumed() {
+        this.disposable = this.itemsSupplier.get()
+                .subscribeOn(Schedulers.io())
+                .toSortedList(IndexItem::compareTo)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((items) -> {
+                    if (items.isEmpty()) {
+                        if (!isDialogShowing) {
+                            isDialogShowing = true;
+                            this.alertManager.builder()
+                                    .message(R.string.thereIsNoDisbursableItemsAvailable)
+                                    .show();
+                        }
+                    } else {
+                        this.presentation.setItems(items);
+                    }
+                });
+    }
+
+    @Override
+    public void onPresentationPaused() {
+        DisposableUtil.dispose(this.disposable);
+    }
+
+    static final class Builder {
+
+        private AlertManager alertManager;
+        private DisburseItemsSupplier itemsSupplier;
+
+        private PresentationDisburseIndex presentation;
+
+        private Builder() {
         }
-      });
-  }
 
-  @Override
-  public void onPresentationPaused() {
-    DisposableUtil.dispose(this.disposable);
-  }
+        final Builder alertManager(AlertManager alertManager) {
+            this.alertManager = ObjectHelper.checkNotNull(alertManager, "alertManager");
+            return this;
+        }
 
-  static final class Builder {
+        final Builder itemsSupplier(DisburseItemsSupplier itemSupplier) {
+            this.itemsSupplier = ObjectHelper.checkNotNull(itemSupplier, "itemsSupplier");
+            return this;
+        }
 
-    private AlertManager alertManager;
-    private DisburseItemsSupplier itemsSupplier;
+        final Builder presentation(PresentationDisburseIndex presentation) {
+            this.presentation = ObjectHelper.checkNotNull(presentation, "presentation");
+            return this;
+        }
 
-    private PresentationDisburseIndex presentation;
-
-    private Builder() {
+        final PresenterDisburseIndex build() {
+            BuilderChecker.create()
+                    .addPropertyNameIfMissing("alertManager", ObjectHelper.isNull(this.alertManager))
+                    .addPropertyNameIfMissing("itemsSupplier", ObjectHelper.isNull(this.itemsSupplier))
+                    .addPropertyNameIfMissing("presentation", ObjectHelper.isNull(this.presentation))
+                    .checkNoMissingProperties();
+            return new PresenterDisburseIndex(this);
+        }
     }
-
-    final Builder alertManager(AlertManager alertManager) {
-      this.alertManager = ObjectHelper.checkNotNull(alertManager, "alertManager");
-      return this;
-    }
-
-    final Builder itemsSupplier(DisburseItemsSupplier itemSupplier) {
-      this.itemsSupplier = ObjectHelper.checkNotNull(itemSupplier, "itemsSupplier");
-      return this;
-    }
-
-    final Builder presentation(PresentationDisburseIndex presentation) {
-      this.presentation = ObjectHelper.checkNotNull(presentation, "presentation");
-      return this;
-    }
-
-    final PresenterDisburseIndex build() {
-      BuilderChecker.create()
-        .addPropertyNameIfMissing("alertManager", ObjectHelper.isNull(this.alertManager))
-        .addPropertyNameIfMissing("itemsSupplier", ObjectHelper.isNull(this.itemsSupplier))
-        .addPropertyNameIfMissing("presentation", ObjectHelper.isNull(this.presentation))
-        .checkNoMissingProperties();
-      return new PresenterDisburseIndex(this);
-    }
-  }
 }

@@ -1,7 +1,7 @@
 package com.tpago.movil.d.ui.main.products;
 
-import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
+import androidx.annotation.NonNull;
+import androidx.core.util.Pair;
 
 import com.tpago.movil.d.domain.Product;
 import com.tpago.movil.d.domain.Balance;

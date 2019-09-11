@@ -1,6 +1,6 @@
 package com.tpago.movil.app;
 
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 
 /**
  * Functional interface that transforms a given {@link StringRes string resource identifier} into a

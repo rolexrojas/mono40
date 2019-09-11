@@ -1,7 +1,7 @@
 package com.tpago.movil.session;
 
 import android.net.Uri;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
@@ -101,8 +101,8 @@ public abstract class User {
     return this.pictureSubject;
   }
 
-  final void updatePicture(Uri picture) {
-    this.picture = ObjectHelper.checkNotNull(picture, "picture");
+  public final void updatePicture(Uri picture) {
+    this.picture = picture;
     this.pictureSubject.onNext(this.picture);
 
     this.dispatchChanges();

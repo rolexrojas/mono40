@@ -6,8 +6,8 @@ import static com.tpago.movil.d.ui.main.recipient.index.category.Category.RECHAR
 import static com.tpago.movil.d.ui.main.recipient.index.category.Category.TRANSFER;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.tpago.movil.company.partner.Partner;
 import com.tpago.movil.d.domain.NonAffiliatedPhoneNumberRecipient;

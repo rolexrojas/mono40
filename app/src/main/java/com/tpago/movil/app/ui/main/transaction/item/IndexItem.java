@@ -1,8 +1,8 @@
 package com.tpago.movil.app.ui.main.transaction.item;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
 import com.tpago.movil.app.ui.item.Item;

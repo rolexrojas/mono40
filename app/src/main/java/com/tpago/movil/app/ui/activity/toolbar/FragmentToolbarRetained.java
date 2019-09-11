@@ -1,6 +1,6 @@
 package com.tpago.movil.app.ui.activity.toolbar;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import com.tpago.movil.app.di.ComponentBuilderSupplier;
 import com.tpago.movil.app.di.ComponentBuilderSupplierContainer;

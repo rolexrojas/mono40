@@ -2,8 +2,8 @@ package com.tpago.movil.app.ui.main.settings.primaryPaymentMethod;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,7 +79,7 @@ public class PrimaryPaymentMethodFragment extends FragmentBase implements Primar
         super.onStart();
         // Sets the title.
         FragmentActivityBase.get(this.getActivity())
-                .setTitle(R.string.altUnlockMethod);
+                .setTitle(R.string.primaryPaymentMethodSettingsOption);
     }
 
     @Override

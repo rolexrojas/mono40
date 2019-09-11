@@ -185,4 +185,10 @@ public interface ApiRetrofit {
 
     @GET("transfer/recipient-info")
     Single<Response<Customer>> fetchCustomer(@Query("recipient-msisdn") String phoneNumber);
+
+    @POST("secrets/tokens/customers/encrypt")
+    Single<Response<ApiSecretTokenResponse>> getQrForGustomer();
+
+    @POST("secrets/tokens/merchants/{merchant}/encrypt")
+    Single<Response<ApiSecretTokenResponse>> getQrForMerchant(@Path("merchant") String merchant, @Body ApiSecretTokenRequest request);
 }

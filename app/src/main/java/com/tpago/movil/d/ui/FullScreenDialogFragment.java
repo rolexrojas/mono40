@@ -1,9 +1,9 @@
 package com.tpago.movil.d.ui;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
-import android.support.v4.app.DialogFragment;
+import androidx.annotation.Nullable;
+import androidx.annotation.StyleRes;
+import androidx.fragment.app.DialogFragment;
 
 /**
  * TODO

@@ -15,7 +15,7 @@
     android:layout_marginStart="@dimen/space_horizontal_20"
     app:hint="@string/add_recipient.search.hint"/>
 
-  <android.support.design.widget.TabLayout
+  <com.google.android.material.tabs.TabLayout
     android:id="@+id/tab_layout"
     style="@style/Dep.AppTabLayout"
     android:layout_marginEnd="@dimen/space_horizontal_20"
@@ -23,7 +23,7 @@
 
   <include layout="@layout/d_reusable_divider"/>
 
-  <android.support.v4.view.ViewPager
+  <androidx.viewpager.widget.ViewPager
     android:id="@+id/view_pager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"/>

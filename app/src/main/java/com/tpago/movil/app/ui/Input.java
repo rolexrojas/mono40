@@ -1,8 +1,9 @@
 package com.tpago.movil.app.ui;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
+
+import androidx.appcompat.widget.AppCompatEditText;
 
 import com.tpago.movil.app.ui.util.Erratic;
 import com.tpago.movil.app.ui.util.ErraticHelper;

@@ -1,6 +1,7 @@
 package com.tpago.movil.api;
 
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;

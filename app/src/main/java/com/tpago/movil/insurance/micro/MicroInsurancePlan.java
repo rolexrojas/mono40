@@ -1,8 +1,8 @@
 package com.tpago.movil.insurance.micro;
 
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;

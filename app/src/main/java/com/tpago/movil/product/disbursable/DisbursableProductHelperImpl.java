@@ -1,6 +1,6 @@
 package com.tpago.movil.product.disbursable;
 
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 import android.util.Log;
 
 import com.tpago.movil.R;

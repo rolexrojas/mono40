@@ -1,11 +1,11 @@
 package com.tpago.movil.d.ui.view.widget;
 
-import android.support.annotation.NonNull;
-import android.support.v4.widget.SwipeRefreshLayout;
+import androidx.annotation.NonNull;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 /**
  * {@link LoadIndicator} implementation that uses a {@link
- * android.support.v4.widget.SwipeRefreshLayout}.
+ * androidx.swiperefreshlayout.widget.SwipeRefreshLayout}.
  *
  * @author hecvasro
  */

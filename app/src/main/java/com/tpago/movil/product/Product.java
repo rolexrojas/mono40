@@ -1,8 +1,8 @@
 package com.tpago.movil.product;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringDef;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
@@ -53,7 +53,7 @@ public abstract class Product implements Comparable<Product> {
   @Memoized
   public String numberSanitized() {
     String number = DigitUtil.removeNonDigits(this.number());
-    return "•••• •••• •••• " + number.substring(number.length() - 4);
+    return number.substring(number.length() - 4);
   }
 
   @SerializedName("account-alias")

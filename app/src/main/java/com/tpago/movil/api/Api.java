@@ -1,7 +1,8 @@
 package com.tpago.movil.api;
 
 import android.net.Uri;
-import android.support.annotation.IntDef;
+
+import androidx.annotation.IntDef;
 
 import com.tpago.movil.Code;
 import com.tpago.movil.Email;
@@ -215,5 +216,7 @@ public interface Api {
   Single<Result<Customer>> fetchCustomer(
           String phoneNumber
   );
+
+  Single<Result<ApiSecretTokenResponse>> getQrForCustomer();
 
 }

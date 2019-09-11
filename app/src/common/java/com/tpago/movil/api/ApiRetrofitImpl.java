@@ -184,18 +184,7 @@ public final class ApiRetrofitImpl implements Api {
         final RetrofitApiOpenSessionBody body = RetrofitApiOpenSessionBody.builder()
                 .user(signatureData.user())
                 .signedData(signedData)
-                .deviceInformationBody(DeviceInformationBody.builder()
-                        .deviceId(signatureData.deviceId())
-                        .manufacturer(Build.MANUFACTURER)
-                        .serial(Build.SERIAL)
-                        .fingerprint(Build.FINGERPRINT)
-                        .device(Build.DEVICE)
-                        .display(Build.DISPLAY)
-                        .board(Build.BOARD)
-                        .bootloader(Build.BOOTLOADER)
-                        .brand(Build.BRAND)
-                        .hardware(Build.HARDWARE)
-                        .model(Build.MODEL).build())
+                .deviceId(signatureData.deviceId())
                 .build();
         return this.api.openSession(body)
                 .map(this.resultCreator.create());
@@ -542,6 +531,12 @@ public final class ApiRetrofitImpl implements Api {
     @Override
     public Single<Result<Customer>> fetchCustomer(String phoneNumber) {
         return this.api.fetchCustomer(phoneNumber)
+                .map(resultCreator.create());
+    }
+
+    @Override
+    public Single<Result<ApiSecretTokenResponse>> getQrForCustomer() {
+        return this.api.getQrForGustomer()
                 .map(resultCreator.create());
     }
 }

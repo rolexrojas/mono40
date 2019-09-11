@@ -1,6 +1,6 @@
 package com.tpago.movil.util;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.tpago.movil.util.digit.Digit;
 import com.tpago.movil.util.digit.DigitValueCreator;

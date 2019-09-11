@@ -1,6 +1,6 @@
 package com.tpago.movil.dep.widget;
 
-import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.ViewPager;
 
 import com.tpago.movil.util.ObjectHelper;
 

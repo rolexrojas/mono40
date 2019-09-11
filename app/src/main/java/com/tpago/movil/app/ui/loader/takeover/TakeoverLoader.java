@@ -1,6 +1,6 @@
 package com.tpago.movil.app.ui.loader.takeover;
 
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 
 import com.tpago.movil.app.ui.fragment.FragmentHelper;
 import com.tpago.movil.app.ui.loader.Loader;
@@ -19,7 +19,7 @@ public final class TakeoverLoader implements Loader {
 
   private final FragmentManager fragmentManager;
 
-  private TakeoverLoader(FragmentManager fragmentManager) {
+  public TakeoverLoader(FragmentManager fragmentManager) {
     this.fragmentManager = ObjectHelper.checkNotNull(fragmentManager, "fragmentManager");
   }
 

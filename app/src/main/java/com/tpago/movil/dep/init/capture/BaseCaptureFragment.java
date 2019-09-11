@@ -1,6 +1,6 @@
 package com.tpago.movil.dep.init.capture;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import com.tpago.movil.dep.widget.Keyboard;
 import com.tpago.movil.util.ObjectHelper;

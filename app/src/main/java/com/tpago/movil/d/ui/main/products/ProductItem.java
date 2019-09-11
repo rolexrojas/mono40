@@ -1,6 +1,6 @@
 package com.tpago.movil.d.ui.main.products;
 
-import android.support.v4.util.Pair;
+import androidx.core.util.Pair;
 
 import com.google.auto.value.AutoValue;
 import com.tpago.movil.d.domain.Product;

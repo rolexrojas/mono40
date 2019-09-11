@@ -58,7 +58,7 @@
             android:layout_marginStart="@dimen/space_horizontal_20"
             android:id="@+id/freecallseparator"/>
 
-        <android.support.v4.widget.Space style="@style/VerticalDivider.Space.Normal"/>
+        <androidx.legacy.widget.Space style="@style/VerticalDivider.Space.Normal"/>
 
         <TextView
             style="@style/SettingsSectionTitle"

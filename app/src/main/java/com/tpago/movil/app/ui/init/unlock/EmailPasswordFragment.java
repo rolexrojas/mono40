@@ -1,7 +1,7 @@
 package com.tpago.movil.app.ui.init.unlock;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;

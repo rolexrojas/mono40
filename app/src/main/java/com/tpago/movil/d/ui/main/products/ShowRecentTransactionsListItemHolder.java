@@ -1,6 +1,6 @@
 package com.tpago.movil.d.ui.main.products;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 
 import com.tpago.movil.R;

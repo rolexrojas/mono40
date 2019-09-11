@@ -1,6 +1,7 @@
 package com.tpago.movil.dep.init.register;
 
 import com.tpago.movil.Code;
+import com.tpago.movil.R;
 import com.tpago.movil.api.Api;
 import com.tpago.movil.api.RetrofitApiEmailRequestVerificationCodeResponse;
 import com.tpago.movil.app.StringMapper;
@@ -32,124 +33,139 @@ import timber.log.Timber;
  */
 public final class EmailOTPRegisterFormPresenter extends Presenter<EmailOTPRegisterFormPresenter.View> {
 
-  @Inject AlertManager alertManager;
-  @Inject DeviceIdSupplier deviceIdSupplier;
-  @Inject RegisterData registerData;
-  @Inject SessionManager sessionManager;
-  @Inject StringMapper stringMapper;
-  @Inject TakeoverLoader takeoverLoader;
-  @Inject Api api;
+    @Inject
+    AlertManager alertManager;
+    @Inject
+    DeviceIdSupplier deviceIdSupplier;
+    @Inject
+    RegisterData registerData;
+    @Inject
+    SessionManager sessionManager;
+    @Inject
+    StringMapper stringMapper;
+    @Inject
+    TakeoverLoader takeoverLoader;
+    @Inject
+    Api api;
 
-  private List<Integer> oneTimePasswordDigits = new ArrayList<>();
-  private DigitValueCreator<Code> pinCreator;
-  private Disposable disposable = Disposables.disposed();
-  private boolean isOneTimePasswordValid = false;
+    private List<Integer> oneTimePasswordDigits = new ArrayList<>();
+    private DigitValueCreator<Code> pinCreator;
+    private Disposable disposable = Disposables.disposed();
+    private boolean isOneTimePasswordValid = false;
 
-  EmailOTPRegisterFormPresenter(View view, RegisterComponent component) {
-    super(view);
+    EmailOTPRegisterFormPresenter(View view, RegisterComponent component) {
+        super(view);
 
-    // Injects all annotated dependencies.
-    ObjectHelper.checkNotNull(component, "component")
-      .inject(this);
-  }
-
-  private void handleSuccess(Result result) {
-    if (result.isSuccessful()) {
-      this.registerData.setSubmitted(true);
-
-      this.view.moveToNextScreen();
-    } else {
-      this.registerData.setSubmitted(false);
-
-      final com.tpago.movil.util.FailureData failureData = result.failureData();
-      this.alertManager.builder()
-        .message(failureData.description())
-        .show();
+        // Injects all annotated dependencies.
+        ObjectHelper.checkNotNull(component, "component")
+                .inject(this);
     }
-  }
 
-  private void handleError(Throwable throwable) {
-    Timber.e(throwable, "Signing up");
-    this.registerData.setSubmitted(false);
-    this.alertManager.showAlertForGenericFailure();
-  }
+    private void handleSuccess(Result result) {
+        if (result.isSuccessful()) {
+            this.registerData.setSubmitted(true);
 
-  private void updateView() {
-    final String oneTimePassword = DigitUtil.toDigitString(this.oneTimePasswordDigits);
-    this.isOneTimePasswordValid = oneTimePassword.length() == 6;
-    if (ObjectHelper.isNotNull(this.view)) {
-      this.view.setTextInputContent(oneTimePassword);
-      if(isOneTimePasswordValid){
-        this.api.verifyEmailOneTimePasswordActivationCode(this.registerData.getPhoneNumber().value(), this.registerData.getEmail().value(), oneTimePassword)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe(this::showTakeoverLoader)
-            .doFinally(this::hideTakeoverLoader)
-            .subscribe((s) -> handleSuccess(s), this::handleError);
-      }
+            this.view.moveToNextScreen();
+        } else {
+            this.registerData.setSubmitted(false);
+
+            final com.tpago.movil.util.FailureData failureData = result.failureData();
+            this.alertManager.builder()
+                    .message(failureData.description())
+                    .show();
+        }
     }
-  }
 
-  final void onDigitButtonClicked(@Digit int digit) {
-    if (oneTimePasswordDigits.size() < 6) {
-      oneTimePasswordDigits.add(digit);
-      this.updateView();
+    private void handleError(Throwable throwable) {
+        Timber.e(throwable, "Signing up");
+        this.registerData.setSubmitted(false);
+        this.alertManager.showAlertForGenericFailure();
     }
-  }
 
-  final void onDeleteButtonClicked() {
-    if (!oneTimePasswordDigits.isEmpty()) {
-      oneTimePasswordDigits.remove(oneTimePasswordDigits.size() - 1);
-      this.updateView();
+    private void updateView() {
+        final String oneTimePassword = DigitUtil.toDigitString(this.oneTimePasswordDigits);
+        this.isOneTimePasswordValid = oneTimePassword.length() == 6;
+        if (ObjectHelper.isNotNull(this.view)) {
+            this.view.setTextInputContent(oneTimePassword);
+            if (isOneTimePasswordValid) {
+                this.api.verifyEmailOneTimePasswordActivationCode(this.registerData.getPhoneNumber().value(), this.registerData.getEmail().value(), oneTimePassword)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(this::showTakeoverLoader)
+                        .doFinally(this::hideTakeoverLoader)
+                        .subscribe((s) -> handleSuccess(s), this::handleError);
+            }
+        }
     }
-  }
 
-
-  private void handleRequest(Result<RetrofitApiEmailRequestVerificationCodeResponse> response) {
-    if (response.isSuccessful()) {
-      this.alertManager.builder()
-          .title(response.successData().title())
-          .message(response.successData().message())
-          .positiveButtonText("Ok")
-          .build()
-          .show();
+    final void onDigitButtonClicked(@Digit int digit) {
+        if (oneTimePasswordDigits.size() < 6) {
+            oneTimePasswordDigits.add(digit);
+            this.updateView();
+        }
     }
-  }
 
-  public void requestVerificationCode () {
-    this.api.requestEmailOneTimePasswordActivationCode(this.registerData.getPhoneNumber().value(), this.registerData.getEmail().value())
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe(this::showTakeoverLoader)
-        .doFinally(this::hideTakeoverLoader)
-        .subscribe((s) -> handleRequest(s), this::handleError);
-  }
+    final void onDeleteButtonClicked() {
+        if (!oneTimePasswordDigits.isEmpty()) {
+            oneTimePasswordDigits.remove(oneTimePasswordDigits.size() - 1);
+            this.updateView();
+        }
+    }
 
 
-  private void showTakeoverLoader(Disposable disposable) {
-    this.takeoverLoader.show();
-  }
+    private void handleRequest(Result<RetrofitApiEmailRequestVerificationCodeResponse> response) {
+        if (response.isSuccessful()) {
+            this.alertManager.builder()
+                    .title(response.successData().title())
+                    .message(response.successData().message())
+                    .positiveButtonText("Ok")
+                    .build()
+                    .show();
+        } else {
+            this.alertManager.builder()
+                    .title(this.stringMapper.apply(R.string.weAreSorry))
+                    .message(response.failureData().description())
+                    .positiveButtonText("Ok")
+                    .build()
+                    .show();
+        }
+    }
 
-  private void hideTakeoverLoader() {
-    this.takeoverLoader.hide();
-  }
-  @Override
-  public void onViewStarted() {
-    super.onViewStarted();
-    this.updateView();
-  }
+    public void requestVerificationCode() {
+        this.api.requestEmailOneTimePasswordActivationCode(this.registerData.getPhoneNumber().value(), this.registerData.getEmail().value())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(this::showTakeoverLoader)
+                .doFinally(this::hideTakeoverLoader)
+                .subscribe((s) -> handleRequest(s), this::handleError);
+    }
 
-  @Override
-  public void onViewStopped() {
-    DisposableUtil.dispose(this.disposable);
 
-    super.onViewStopped();
-  }
+    private void showTakeoverLoader(Disposable disposable) {
+        this.takeoverLoader.show();
+    }
 
-  interface View extends Presenter.View {
+    private void hideTakeoverLoader() {
+        this.takeoverLoader.hide();
+    }
 
-    void setTextInputContent(String content);
+    @Override
+    public void onViewStarted() {
+        super.onViewStarted();
+        this.updateView();
+    }
 
-    void moveToNextScreen();
-  }
+    @Override
+    public void onViewStopped() {
+        DisposableUtil.dispose(this.disposable);
+
+        super.onViewStopped();
+    }
+
+    interface View extends Presenter.View {
+
+        void setTextInputContent(String content);
+
+        void moveToNextScreen();
+    }
 }

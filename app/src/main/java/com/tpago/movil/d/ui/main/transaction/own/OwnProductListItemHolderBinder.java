@@ -1,7 +1,7 @@
 package com.tpago.movil.d.ui.main.transaction.own;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.squareup.picasso.Picasso;
 import com.tpago.movil.R;

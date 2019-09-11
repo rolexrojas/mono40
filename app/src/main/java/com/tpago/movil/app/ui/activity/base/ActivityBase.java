@@ -5,15 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.LayoutRes;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.tpago.movil.R;
 import com.tpago.movil.app.ui.activity.NavButtonPressEventHandler;
 import com.tpago.movil.app.ui.alert.AlertManager;
 import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
@@ -26,7 +29,10 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+import io.github.inflationx.calligraphy3.CalligraphyConfig;
+import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
+import io.github.inflationx.viewpump.ViewPump;
+import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
 /**
  * @author Hector Vasquez
@@ -53,16 +59,19 @@ public abstract class ActivityBase extends AppCompatActivity {
 
   @Override
   protected void attachBaseContext(Context newBase) {
-    final Context context = ContextBuilder.create(newBase)
-      .function(ContextWrapperLocale::wrap)
-      .function(CalligraphyContextWrapper::wrap)
-      .build();
-    super.attachBaseContext(context);
+    super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
   }
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    ViewPump.init(ViewPump.builder()
+            .addInterceptor(new CalligraphyInterceptor(
+                    new CalligraphyConfig.Builder()
+                            .setDefaultFontPath("fonts/Roboto-RobotoRegular.ttf")
+                            .setFontAttrId(R.attr.fontPath)
+                            .build()))
+            .build());
     localBroadcastManager = LocalBroadcastManager.getInstance(this);
     logoutReceiver = new LogoutReceiver();
 

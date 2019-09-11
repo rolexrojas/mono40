@@ -1,7 +1,7 @@
 package com.tpago.movil.d.ui;
 
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.tpago.movil.app.ui.activity.ActivityScope;
 import com.tpago.movil.d.ui.view.widget.FullScreenLoadIndicator;
