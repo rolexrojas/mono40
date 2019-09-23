@@ -46,6 +46,7 @@ import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
@@ -54,9 +55,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.Maybe;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import rx.SingleSubscriber;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -112,24 +117,94 @@ public class MyQrFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_qr, container, false);
         ButterKnife.bind(this, view);
-        getProfileAndQr();
+
+
+//        Completable.fromAction(new Action() {
+//            @Override
+//            public void run() throws Exception {
+//                getProfileAndQr();
+//            }
+//        }).subscribe(new Action() {
+//            @Override
+//            public void run() throws Exception {
+//                qrCodeImageView.setImageBitmap(qrBitmap);
+//
+//                User user = sessionManager.getUser();
+//
+//                Uri uri = user.picture();
+//                if (uri != null) {
+//                    Picasso.get().load(uri)
+//                            .resizeDimen(R.dimen.largeImageSizeLogo, R.dimen.largeImageSizeLogo)
+//                            .transform(new CircleTransformation())
+//                            .into(tPagoLogo);
+//                } else {
+//                    MyQrFragment.this.qrCodeImageView.setImageBitmap(MyQrFragment.this.qrBitmap);
+//                }
+//            }
+//        });
+
+
         return view;
     }
 
-    public void getProfileAndQr() {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setupProfile();
+        setupQrCode();
+    }
+
+    private void setupProfile() {
         User user = sessionManager.getUser();
         this.qrCodeProfileName.setText(user.name().toString());
         Uri uri = user.picture();
-
-        this.getQr();
-
-        Picasso.get()
-                .load(uri)
-                .resizeDimen(R.dimen.largeImageSize, R.dimen.largeImageSize)
-                .transform(new CircleTransformation())
-                .noFade()
-                .into(qrCodeProfileIcon);
+        if (uri != null) {
+            Picasso.get()
+                    .load(uri)
+                    .resizeDimen(R.dimen.largeImageSize, R.dimen.largeImageSize)
+                    .transform(new CircleTransformation())
+                    .noFade()
+                    .into(qrCodeProfileIcon);
+        } else {
+            Picasso.get()
+                    .load(R.drawable.tpago_logo_qr)
+                    .resizeDimen(R.dimen.largeImageSize, R.dimen.largeImageSize)
+                    .transform(new CircleTransformation())
+                    .into(qrCodeProfileIcon);
+        }
     }
+
+    private void setupQrCode() {
+        this.token = sessionManager.getCustomerSecretToken();
+        Single.fromCallable(() -> generateQrCode(token)).observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new SingleObserver<Bitmap>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(Bitmap bitmap) {
+                        qrCodeImageView.setImageBitmap(bitmap);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+    }
+
+    private Bitmap generateQrCode(String customerToken) {
+        Bitmap qrBitmap = QRCode.from(customerToken)
+                .withColor(0xFF9B188F, 0xFFFFFF)
+                .withErrorCorrection(ErrorCorrectionLevel.H)
+                .withSize(1024, 1024)
+                .bitmap();
+        return overlay(qrBitmap, BitmapFactory.decodeResource(getResources(), R.drawable.tpago_logo_qr));
+    }
+
 
     public void getQr() {
         this.token = sessionManager.getCustomerSecretToken();
@@ -143,9 +218,6 @@ public class MyQrFragment extends Fragment {
         User user = sessionManager.getUser();
 
         Uri uri = user.picture();
-
-        qrCodeImageView.setImageBitmap(qrBitmap);
-
         if (uri != null) {
             Picasso.get().load(uri)
                     .resizeDimen(R.dimen.largeImageSizeLogo, R.dimen.largeImageSizeLogo)
@@ -153,9 +225,7 @@ public class MyQrFragment extends Fragment {
                     .into(tPagoLogo);
         } else {
             MyQrFragment.this.qrBitmap = overlay(MyQrFragment.this.qrBitmap, BitmapFactory.decodeResource(getResources(), R.drawable.tpago_logo_qr));
-            MyQrFragment.this.qrCodeImageView.setImageBitmap(MyQrFragment.this.qrBitmap);
         }
-
     }
 
     public Bitmap overlay(Bitmap qrBitmap, Bitmap logoBitmap) {

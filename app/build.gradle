@@ -8,7 +8,7 @@ android {
         exclude 'META-INF/rxjava.properties'
     }
 
-    compileSdkVersion 29
+    compileSdkVersion 28
     buildToolsVersion '29.0.2'
 
     defaultConfig {
@@ -17,13 +17,13 @@ android {
         renderscriptTargetApi 16
         renderscriptSupportModeEnabled true
 
-        def (major, minor, patch) = [3, 0, 6]
+        def (major, minor, patch) = [3, 0, 7]
         versionName "${major}.${minor}.${patch}"
 
         versionCode((major * 10_000_000) + (minor * 100_000) + (patch * 1_000))
 
         minSdkVersion 19
-        targetSdkVersion 29
+        targetSdkVersion 28
 
         multiDexEnabled true
 
