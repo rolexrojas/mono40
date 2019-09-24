@@ -3,4 +3,73 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.tpago.movil.d.ui.qr.CameraScanner
+        android:id="@+id/camera_scanner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_weight=".5"
+            android:gravity="center_vertical|left"
+            android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/qr_flash"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="8dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:src="@drawable/flash_switch_qr"
+                android:tint="@color/white" />
+
+            <ImageView
+                android:id="@+id/qr_camera_flip"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:src="@drawable/flip_camera_qr"
+                android:tint="@color/white" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:gravity="center_vertical|right"
+            android:padding="8dp">
+
+            <LinearLayout
+                android:id="@+id/qr_import_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/import_gallery"
+                    android:textColor="@color/white"
+                    android:textSize="8dp" />
+
+                <ImageView
+                    android:id="@+id/qr_import_gallery"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:src="@drawable/qr_import_gallery"
+                    android:tint="@color/white" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>

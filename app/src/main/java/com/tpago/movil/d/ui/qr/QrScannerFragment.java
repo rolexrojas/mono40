@@ -102,6 +102,8 @@ public class QrScannerFragment extends Fragment {
     @Inject
     StringMapper stringMapper;
     private Disposable closeSessionDisposable;
+    @BindView(R.id.camera_scanner)
+    CameraScanner cameraScanner;
     FirebaseVisionBarcodeDetector visionBarcodeDetector;
     long lastRead;
     RenderScript rs;
@@ -170,42 +172,48 @@ public class QrScannerFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_qr_scanner, container, false);
-//        ButterKnife.bind(this, view);
-//        if (!PermissionHelper.areGranted(this.getContext(), REQUIRED_PERMISSIONS_CAMERA)) {
-//            PermissionHelper.requestPermissions(this, REQUEST_CODE_CAMERA, REQUIRED_PERMISSIONS_CAMERA);
-//        }
-//        cameraScanner.setLifecycleOwner(this);
-//        cameraScanner.addFrameProcessor(frame -> {
-//            if (isInProgress) {
-//                return;
-//            }
-//
-//            byte[] data = frame.getData();
-//            int rotation = frame.getRotation();
-//            long time = frame.getTime();
-//            Size size = frame.getSize();
-//            int format = frame.getFormat();
-//
-//            if (lastRead != 0 && (time - lastRead) <= 500) {
-//                return;
-//            }
-//            lastRead = time;
-//
-//
-//            FirebaseVisionImageMetadata metaData = new FirebaseVisionImageMetadata.Builder()
-//                    .setWidth(size.getWidth())
-//                    .setHeight(size.getHeight())
-//                    .setRotation(FirebaseVisionImageMetadata.ROTATION_0) // always assuming portrait
-//                    .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
-//                    .build();
-//
-//            Bitmap bitmap = rotateBitmap(arrayToBitmap(data, size.getWidth(), size.getHeight()));
-//
-//            processImage(FirebaseVisionImage.fromBitmap(bitmap));
-//            isInProgress = true;
-//        });
+        ButterKnife.bind(this, view);
+        if (!PermissionHelper.areGranted(this.getContext(), REQUIRED_PERMISSIONS_CAMERA)) {
+            PermissionHelper.requestPermissions(this, REQUEST_CODE_CAMERA, REQUIRED_PERMISSIONS_CAMERA);
+        }
         return view;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        cameraScanner.setLifecycleOwner(this);
+        cameraScanner.addFrameProcessor(frame -> {
+            if (isInProgress) {
+                return;
+            }
+
+            byte[] data = frame.getData();
+            int rotation = frame.getRotation();
+            long time = frame.getTime();
+            Size size = frame.getSize();
+            int format = frame.getFormat();
+
+            if (lastRead != 0 && (time - lastRead) <= 500) {
+                return;
+            }
+            lastRead = time;
+
+
+            FirebaseVisionImageMetadata metaData = new FirebaseVisionImageMetadata.Builder()
+                    .setWidth(size.getWidth())
+                    .setHeight(size.getHeight())
+                    .setRotation(FirebaseVisionImageMetadata.ROTATION_0) // always assuming portrait
+                    .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
+                    .build();
+
+            Bitmap bitmap = rotateBitmap(arrayToBitmap(data, size.getWidth(), size.getHeight()));
+
+            processImage(FirebaseVisionImage.fromBitmap(bitmap));
+            isInProgress = true;
+        });
+    }
+
 
     private Bitmap rotateBitmap(Bitmap bitmap) {
         Matrix matrix = new Matrix();
@@ -373,6 +381,25 @@ public class QrScannerFragment extends Fragment {
                     }
                 }
         }
+    }
+
+    @OnClick(R.id.qr_flash)
+    public void onFlashClicked() {
+        cameraScanner.toggleFlash();
+        isFlashOn = !isFlashOn;
+    }
+
+    @OnClick(R.id.qr_camera_flip)
+    public void onCameraFlipClicked() {
+        cameraScanner.toggleFacing();
+        isFrontCameraOn = !isFrontCameraOn;
+    }
+
+    @OnClick(R.id.qr_import_container)
+    public void onImportClicked() {
+        final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType(MimeType.IMAGE);
+        this.startActivityForResult(intent, REQUEST_CODE_GALLERY);
     }
 
     private void closeSession() {
