@@ -174,15 +174,17 @@ public class MyQrFragment extends Fragment {
     private void setupQrCode() {
         this.token = sessionManager.getCustomerSecretToken();
         Uri userProfilePic = sessionManager.getUser().picture();
-        Bitmap userProfileBitmap;
-        try {
-            userProfileBitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), userProfilePic);
-        } catch (IOException e) {
-            e.printStackTrace();
-            userProfileBitmap = null;
-        }
-        if (userProfileBitmap != null) {
-            userProfileBitmap = getCircledBitmap(userProfileBitmap);
+        Bitmap userProfileBitmap = null;
+        if (userProfilePic != null) {
+            try {
+                userProfileBitmap = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), userProfilePic);
+            } catch (IOException e) {
+                e.printStackTrace();
+                userProfileBitmap = null;
+            }
+            if (userProfileBitmap != null) {
+                userProfileBitmap = getCircledBitmap(userProfileBitmap);
+            }
         }
         Bitmap finalUserProfileBitmap = userProfileBitmap;
         Single.fromCallable(() -> generateQrCode(token, finalUserProfileBitmap)).observeOn(AndroidSchedulers.mainThread())

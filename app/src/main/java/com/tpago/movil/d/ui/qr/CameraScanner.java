@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.crashlytics.android.Crashlytics;
+import com.otaliastudios.cameraview.CameraLogger;
 import com.otaliastudios.cameraview.CameraView;
 import com.otaliastudios.cameraview.controls.Flash;
 import com.otaliastudios.cameraview.frame.FrameProcessor;
@@ -35,6 +37,14 @@ public class CameraScanner extends FrameLayout {
         LayoutInflater.from(getContext()).inflate(R.layout.view_camera_scanner,
                 this);
         ButterKnife.bind(this);
+        CameraLogger.registerLogger(new CameraLogger.Logger() {
+            @Override
+            public void log(@CameraLogger.LogLevel int level, String tag, String message, @Nullable Throwable throwable) {
+                // For example...
+                Crashlytics.log(message);
+            }
+        });
+
     }
 
     public void setLifecycleOwner(LifecycleOwner lifecycleOwner) {
