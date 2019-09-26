@@ -60,6 +60,8 @@ public class LogoutTimerService extends Service {
                             .subscribe();
                     Intent intent = new Intent(LOGOUT_BROADCAST);
                     localBroadcastManager.sendBroadcast(intent);
+                    timer.cancel();
+                    stopSelf();
                 } catch (Exception exception) {
 
                 }

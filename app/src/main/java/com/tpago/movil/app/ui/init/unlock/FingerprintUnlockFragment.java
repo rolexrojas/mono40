@@ -80,9 +80,7 @@ public final class FingerprintUnlockFragment extends BaseUnlockFragment {
                     @Override
                     public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
                         super.onAuthenticationError(errorCode, errString);
-                        if (errorCode == BiometricPrompt.ERROR_USER_CANCELED || errorCode == BiometricPrompt.ERROR_NEGATIVE_BUTTON) {
-                            onUserPasswordTextViewClicked();
-                        }
+                        onUserPasswordTextViewClicked();
                     }
 
                     @Override
@@ -99,6 +97,7 @@ public final class FingerprintUnlockFragment extends BaseUnlockFragment {
                                             FingerprintUnlockFragment.this::handleError);
                         } catch (Exception e) {
                             e.printStackTrace();
+                            onUserPasswordTextViewClicked();
                         }
                     }
 

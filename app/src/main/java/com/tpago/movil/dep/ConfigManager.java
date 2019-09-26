@@ -30,7 +30,7 @@ public final class ConfigManager {
     }
 
     public static TimeoutSessionOption getTimeOut(Context context) {
-        return new TimeoutSessionOption(getSharedPreferences(context).getInt(KEY_TIME_OUT, 10));
+        return new TimeoutSessionOption(getSharedPreferences(context).getInt(KEY_TIME_OUT, 2));
     }
 
     public final void addOnTimeOutChangedListener(OnTimeOutChangedListener listener) {

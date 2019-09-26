@@ -119,7 +119,7 @@ public class PurchaseFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Initializes all reusable variables.
-        final Context context = getContext();
+        final Context context = requireContext();
         // Binds all the annotated views and methods.
         unbinder = ButterKnife.bind(this, view);
         // Prepares the payment options list.

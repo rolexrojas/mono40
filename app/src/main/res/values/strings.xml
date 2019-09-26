@@ -395,7 +395,7 @@
     <string name="tutorial_tab_label_title_02">Agrega amigos</string>
     <string name="tutorial_tab_label_title_03">Abre el menú</string>
     <string name="tutorial_tab_label_title_04">Tocar y pagar</string>
-    <string name="unknown">Desconicido</string>
+    <string name="unknown">Desconocido</string>
     <string name="unlock">Desbloquear</string>
     <string name="unlock_button">@string/unlock</string>
     <string name="unlock_input_hint_password">@string/password</string>
