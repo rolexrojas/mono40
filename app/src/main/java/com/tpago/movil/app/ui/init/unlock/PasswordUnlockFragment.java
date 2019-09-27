@@ -66,7 +66,7 @@ public final class PasswordUnlockFragment extends BaseUnlockFragment {
       // Check if user should change password
       Result<User> userResult = (Result<User>) result;
       if(userResult.successData().passwordChanges()){
-        this.openChangePassword(false, true);
+        this.openChangePassword(false, false);
       }else {
         super.handleSuccess(result);
       }
