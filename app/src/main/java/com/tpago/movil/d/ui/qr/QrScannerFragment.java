@@ -176,6 +176,12 @@ public class QrScannerFragment extends Fragment {
         if (!PermissionHelper.areGranted(this.getContext(), REQUIRED_PERMISSIONS_CAMERA)) {
             PermissionHelper.requestPermissions(this, REQUEST_CODE_CAMERA, REQUIRED_PERMISSIONS_CAMERA);
         }
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         cameraScanner.setLifecycleOwner(this);
         cameraScanner.addFrameProcessor(frame -> {
             if (isInProgress) {
@@ -206,8 +212,8 @@ public class QrScannerFragment extends Fragment {
             processImage(FirebaseVisionImage.fromBitmap(bitmap));
             isInProgress = true;
         });
-        return view;
     }
+
 
     private Bitmap rotateBitmap(Bitmap bitmap) {
         Matrix matrix = new Matrix();

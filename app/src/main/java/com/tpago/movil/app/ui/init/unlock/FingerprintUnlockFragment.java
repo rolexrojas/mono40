@@ -80,9 +80,8 @@ public final class FingerprintUnlockFragment extends BaseUnlockFragment {
                     @Override
                     public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
                         super.onAuthenticationError(errorCode, errString);
-                        if (errorCode == BiometricPrompt.ERROR_USER_CANCELED || errorCode == BiometricPrompt.ERROR_NEGATIVE_BUTTON) {
-                            onUserPasswordTextViewClicked();
-                        }
+                        takeoverLoader.hide();
+                        onUserPasswordTextViewClicked();
                     }
 
                     @Override
@@ -99,6 +98,7 @@ public final class FingerprintUnlockFragment extends BaseUnlockFragment {
                                             FingerprintUnlockFragment.this::handleError);
                         } catch (Exception e) {
                             e.printStackTrace();
+                            onUserPasswordTextViewClicked();
                         }
                     }
 
@@ -108,9 +108,9 @@ public final class FingerprintUnlockFragment extends BaseUnlockFragment {
                     }
                 });
         biometricPromptInfo = new BiometricPrompt.PromptInfo.Builder()
-                .setTitle("titulo")
-                .setSubtitle("Subtitulo")
-                .setDescription("description")
+                .setTitle("Se requiere autenticación para acceder al App tPago")
+                .setSubtitle("Desbloquee la aplicación para continuar")
+                .setDescription("Toca el sensor de huellas digitales")
                 .setNegativeButtonText(getString(R.string.usePassword))
                 .build();
     }
@@ -133,6 +133,7 @@ public final class FingerprintUnlockFragment extends BaseUnlockFragment {
     @Override
     protected void handleSuccess(Result<?> result) {
         if (result.isSuccessful()) {
+            takeoverLoader.hide();
             this.fragmentReplacer.begin(InitFragment.create())
                     .commit();
             return;
@@ -157,6 +158,7 @@ public final class FingerprintUnlockFragment extends BaseUnlockFragment {
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void handleError(Throwable throwable) {
+        takeoverLoader.hide();
         if ((throwable instanceof KeyPermanentlyInvalidatedException)) {
             this.alertManager.builder()
                     .message(getString(R.string.unregisteredfingerprint))

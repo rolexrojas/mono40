@@ -26,10 +26,9 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/qr_code_profile_icon"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginBottom="8dp"
-                android:src="@drawable/avatar_monster_32" />
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginBottom="8dp" />
 
             <TextView
                 android:id="@+id/qr_code_profile_name"

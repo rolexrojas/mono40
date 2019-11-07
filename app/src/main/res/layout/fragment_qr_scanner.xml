@@ -23,12 +23,12 @@
 
             <ImageView
                 android:id="@+id/qr_flash"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="8dp"
                 android:background="?selectableItemBackgroundBorderless"
-                android:src="@drawable/flash_switch_qr"
+                android:src="@drawable/ic_flash_switch_qr"
                 android:tint="@color/white" />
 
             <ImageView
@@ -36,7 +36,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:background="?selectableItemBackgroundBorderless"
-                android:src="@drawable/flip_camera_qr"
+                android:src="@drawable/ic_camera_flip"
                 android:tint="@color/white" />
         </LinearLayout>
 
@@ -65,9 +65,9 @@
 
                 <ImageView
                     android:id="@+id/qr_import_gallery"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:src="@drawable/qr_import_gallery"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_qr_import_gallery"
                     android:tint="@color/white" />
             </LinearLayout>
         </LinearLayout>

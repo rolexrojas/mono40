@@ -261,6 +261,11 @@ public class RecipientCategoryFragment
         TextView toolbarTitle = getActivity().findViewById(R.id.toolbar_title);
         if (this.category != null && toolbarTitle != null) {
             toolbarTitle.setText(this.getString(this.category.stringId));
+            if (this.category == PAY || this.category == TRANSFER) {
+                getActivity().findViewById(R.id.qr_code_icon).setVisibility(View.VISIBLE);
+            } else {
+                getActivity().findViewById(R.id.qr_code_icon).setVisibility(View.GONE);
+            }
         }
     }
 

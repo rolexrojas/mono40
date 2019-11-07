@@ -89,31 +89,32 @@ public class CardListAdapter extends RecyclerViewBaseAdapter<Product, CardListAd
             accountContainer.setBackgroundColor(bankColor);
             accountContainer.setBorderColor(bankColor);
             containerImageBackground.setBackgroundColor(bankColor);
-            accountAlias.setText(item.getAlias());
-            accountOwnerName.setText(user.name().toString());
-            accountType.setText(ProductType.findStringId(item));
-            accountBankName.setText(item.toProduct().bank().name());
-
-            final Uri bankLogoUri = companyHelper.getLogoUri(item.toProduct().bank(), Company.LogoStyle.WHITE_36);
-            Picasso.get()
-                    .load(bankLogoUri)
-                    .noFade()
-                    .into(bankLogo);
-
 
             Context context = itemView.getContext();
-
             final Uri backgroundUri = ApiImageUriBuilder.build(context, item);
-            Picasso.get()
-                    .load(backgroundUri)
-                    .transform(new RoundedCornersTransformation(
-                            context.getResources()
-                                    .getDimensionPixelOffset(R.dimen.commerce_payment_option_border_radius_extra),
-                            0
-                    )) // TODO: Remove once images are updated on the API.
-                    .noFade()
-                    .into(containerImageBackground);
 
+            if (backgroundUri != null && !backgroundUri.toString().isEmpty()) {
+                Picasso.get()
+                        .load(backgroundUri)
+                        .transform(new RoundedCornersTransformation(
+                                context.getResources()
+                                        .getDimensionPixelOffset(R.dimen.commerce_payment_option_border_radius_extra),
+                                0
+                        ))
+                        .noFade()
+                        .into(containerImageBackground);
+            } else {
+                accountAlias.setText(item.getAlias());
+                accountOwnerName.setText(user.name().toString());
+                accountType.setText(ProductType.findStringId(item));
+                accountBankName.setText(item.toProduct().bank().name());
+
+                final Uri bankLogoUri = companyHelper.getLogoUri(item.toProduct().bank(), Company.LogoStyle.WHITE_36);
+                Picasso.get()
+                        .load(bankLogoUri)
+                        .noFade()
+                        .into(bankLogo);
+            }
 
             this.itemView.setOnClickListener(v -> this.listener.onItemClick(item));
         }

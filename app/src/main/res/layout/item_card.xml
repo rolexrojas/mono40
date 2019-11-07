@@ -29,6 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="210dp" />
     </com.github.florent37.shapeofview.shapes.RoundRectView>
+
     <ImageView
         android:id="@+id/bankLogo"
         android:layout_width="50dp"
@@ -40,11 +41,11 @@
 
     <TextView
         android:id="@+id/accountBankName"
-        style="@style/D.Label.Dark.Primary"
+        style="@style/Dep.App.Widget.CommercePaymentOption.ProductIdentifier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="14dp"
-        android:textSize="20sp"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@id/bankLogo"
         app:layout_constraintStart_toEndOf="@id/bankLogo"
         app:layout_constraintTop_toTopOf="@id/bankLogo"
@@ -52,35 +53,34 @@
 
     <TextView
         android:id="@+id/accountType"
-        style="@style/D.Label.Dark.Primary"
+        style="@style/Dep.App.Widget.CommercePaymentOption.ProductIdentifier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
         android:fontFamily="@font/gotham_rounded_light"
-        android:textSize="18sp"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="@id/bankLogo"
         app:layout_constraintTop_toBottomOf="@id/bankLogo"
         tools:text="Ahorro" />
 
     <TextView
         android:id="@+id/accountAlias"
-        style="@style/D.Label.Dark.Primary"
+        style="@style/Dep.App.Widget.CommercePaymentOptionProductNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
-        android:textSize="20sp"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="@id/bankLogo"
         app:layout_constraintTop_toBottomOf="@id/accountType"
         tools:text="S1-Sim 8472" />
 
     <TextView
         android:id="@+id/accountOwnerName"
-        style="@style/D.Label.Dark.Secondary"
+        style="@style/Dep.App.Widget.CommercePaymentOptionProductOwnerName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
-        android:fontFamily="@font/gotham_rounded_light"
-        android:textSize="20sp"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="@id/bankLogo"
         app:layout_constraintTop_toBottomOf="@id/accountAlias"
         tools:text="Jose Perez" />

@@ -68,7 +68,7 @@ public abstract class ActivityBase extends AppCompatActivity {
     ViewPump.init(ViewPump.builder()
             .addInterceptor(new CalligraphyInterceptor(
                     new CalligraphyConfig.Builder()
-                            .setDefaultFontPath("fonts/Roboto-RobotoRegular.ttf")
+                            .setDefaultFontPath("fonts/Roboto/Roboto-RobotoRegular.ttf")
                             .setFontAttrId(R.attr.fontPath)
                             .build()))
             .build());

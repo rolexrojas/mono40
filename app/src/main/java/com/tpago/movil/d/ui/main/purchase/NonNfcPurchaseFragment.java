@@ -69,7 +69,6 @@ public final class NonNfcPurchaseFragment extends ChildFragment<MainContainer> i
     private Unbinder unbinder;
     @BindView(R.id.card_list)
     RecyclerView cardListView;
-    private Disposable disposable;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

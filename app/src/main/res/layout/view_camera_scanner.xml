@@ -19,7 +19,7 @@
             android:layout_width="250dp"
             android:layout_height="250dp"
             android:layout_gravity="center_horizontal|center_vertical"
-            android:src="@drawable/focus_qr"
+            android:src="@drawable/ic_focus_qr"
             app:layout_drawOnPictureSnapshot="false"
             app:layout_drawOnPreview="true"
             app:layout_drawOnVideoSnapshot="true" />

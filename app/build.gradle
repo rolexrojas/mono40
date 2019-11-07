@@ -17,17 +17,18 @@ android {
         renderscriptTargetApi 16
         renderscriptSupportModeEnabled true
 
-        def (major, minor, patch) = [3, 0, 6]
+        def (major, minor, patch) = [3, 0, 13]
         versionName "${major}.${minor}.${patch}"
 
         versionCode((major * 10_000_000) + (minor * 100_000) + (patch * 1_000))
 
         minSdkVersion 19
-        targetSdkVersion 29
+        targetSdkVersion 28
 
         multiDexEnabled true
 
         vectorDrawables.useSupportLibrary = true
+
 
         javaCompileOptions {
 
@@ -318,7 +319,7 @@ dependencies {
 
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
 
-    implementation 'androidx.biometric:biometric:1.0.0-beta01'
+    implementation 'androidx.biometric:biometric:1.0.0-beta02'
 
 
 }

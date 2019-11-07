@@ -10,6 +10,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -34,6 +39,7 @@ import com.squareup.picasso.Target;
 import com.tpago.movil.BuildConfig;
 import com.tpago.movil.R;
 import com.tpago.movil.api.Api;
+import com.tpago.movil.app.ui.loader.takeover.TakeoverLoader;
 import com.tpago.movil.data.picasso.CircleTransformation;
 import com.tpago.movil.dep.App;
 import com.tpago.movil.session.SessionManager;
@@ -46,6 +52,7 @@ import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
@@ -54,9 +61,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.Maybe;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import rx.SingleSubscriber;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -79,32 +90,35 @@ public class MyQrFragment extends Fragment {
     BottomSheetLayout bottomSheet;
     String token = null;
     private Bitmap qrBitmap;
-    private Target tPagoLogo;
+    TakeoverLoader takeoverLoader;
+    private boolean isReady;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((App) getActivity().getApplicationContext()).component().inject(this);
-        tPagoLogo = new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                Log.d("com.tpago.mobile", "profile image loaded");
-                MyQrFragment.this.qrBitmap = overlay(MyQrFragment.this.qrBitmap, bitmap);
-                MyQrFragment.this.qrCodeImageView.setImageBitmap(MyQrFragment.this.qrBitmap);
-            }
+        takeoverLoader = TakeoverLoader.create(getChildFragmentManager());
+    }
 
-            @Override
-            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-                Log.e("com.tpago.mobile", "error loading profile image", e);
-                MyQrFragment.this.qrBitmap = overlay(MyQrFragment.this.qrBitmap, BitmapFactory.decodeResource(getResources(), R.drawable.tpago_logo_qr));
-                MyQrFragment.this.qrCodeImageView.setImageBitmap(MyQrFragment.this.qrBitmap);
-            }
+    private void showTakeOver() {
+        takeoverLoader.show();
 
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
+    }
 
+    private void dismissTakeOverLoader() {
+        takeoverLoader.hide();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (takeoverLoader != null) {
+            if (isVisibleToUser && !isReady) {
+                showTakeOver();
+            } else {
+                dismissTakeOverLoader();
             }
-        };
+        }
     }
 
     @Nullable
@@ -112,56 +126,111 @@ public class MyQrFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_qr, container, false);
         ButterKnife.bind(this, view);
-        getProfileAndQr();
         return view;
     }
 
-    public void getProfileAndQr() {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setupProfile();
+        setupQrCode();
+    }
+
+    private void setupProfile() {
         User user = sessionManager.getUser();
         this.qrCodeProfileName.setText(user.name().toString());
         Uri uri = user.picture();
-
-        this.getQr();
-
-        Picasso.get()
-                .load(uri)
-                .resizeDimen(R.dimen.largeImageSize, R.dimen.largeImageSize)
-                .transform(new CircleTransformation())
-                .noFade()
-                .into(qrCodeProfileIcon);
+        if (uri != null) {
+            Picasso.get()
+                    .load(uri)
+                    .resizeDimen(R.dimen.largeImageSize, R.dimen.largeImageSize)
+                    .transform(new CircleTransformation())
+                    .noFade()
+                    .into(qrCodeProfileIcon);
+        } else {
+            Picasso.get()
+                    .load(R.drawable.tpago_logo_qr)
+                    .resizeDimen(R.dimen.largeImageSize, R.dimen.largeImageSize)
+                    .transform(new CircleTransformation())
+                    .into(qrCodeProfileIcon);
+        }
     }
 
-    public void getQr() {
-        this.token = sessionManager.getCustomerSecretToken();
+    public static Bitmap getCircledBitmap(Bitmap bitmap) {
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
 
-        this.qrBitmap = QRCode.from(token)
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2, bitmap.getWidth() / 2, paint);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return output;
+    }
+
+    private void setupQrCode() {
+        this.token = sessionManager.getCustomerSecretToken();
+        Uri userProfilePic = sessionManager.getUser().picture();
+        Bitmap userProfileBitmap = null;
+        if (userProfilePic != null) {
+            try {
+                userProfileBitmap = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), userProfilePic);
+            } catch (IOException e) {
+                e.printStackTrace();
+                userProfileBitmap = null;
+            }
+            if (userProfileBitmap != null) {
+                userProfileBitmap = getCircledBitmap(userProfileBitmap);
+            }
+        }
+        Bitmap finalUserProfileBitmap = userProfileBitmap;
+        Single.fromCallable(() -> generateQrCode(token, finalUserProfileBitmap)).observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new SingleObserver<Bitmap>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(Bitmap bitmap) {
+                        if (bitmap != null) {
+                            qrBitmap = bitmap;
+                            qrCodeImageView.setImageBitmap(bitmap);
+                            dismissTakeOverLoader();
+                            isReady = true;
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+    }
+
+
+    private Bitmap generateQrCode(String customerToken, Bitmap userProfilePic) {
+        Bitmap qrBitmap = QRCode.from(customerToken)
                 .withColor(0xFF9B188F, 0xFFFFFF)
                 .withErrorCorrection(ErrorCorrectionLevel.H)
                 .withSize(1024, 1024)
                 .bitmap();
-
-        User user = sessionManager.getUser();
-
-        Uri uri = user.picture();
-
-        qrCodeImageView.setImageBitmap(qrBitmap);
-
-        if (uri != null) {
-            Picasso.get().load(uri)
-                    .resizeDimen(R.dimen.largeImageSizeLogo, R.dimen.largeImageSizeLogo)
-                    .transform(new CircleTransformation())
-                    .into(tPagoLogo);
+        if (userProfilePic == null) {
+            return overlay(qrBitmap, BitmapFactory.decodeResource(getResources(), R.drawable.tpago_logo_qr),
+                    400, 400);
         } else {
-            MyQrFragment.this.qrBitmap = overlay(MyQrFragment.this.qrBitmap, BitmapFactory.decodeResource(getResources(), R.drawable.tpago_logo_qr));
-            MyQrFragment.this.qrCodeImageView.setImageBitmap(MyQrFragment.this.qrBitmap);
+            return overlay(qrBitmap, userProfilePic, 150, 150);
         }
-
     }
 
-    public Bitmap overlay(Bitmap qrBitmap, Bitmap logoBitmap) {
+    public Bitmap overlay(Bitmap qrBitmap, Bitmap logoBitmap, int width, int height) {
         Bitmap bmOverlay = Bitmap.createBitmap(qrBitmap.getWidth(), qrBitmap.getHeight(), qrBitmap.getConfig());
 
-        Bitmap scaledLogo = Bitmap.createScaledBitmap(logoBitmap, 400, 400, false);
+        Bitmap scaledLogo = Bitmap.createScaledBitmap(logoBitmap, width, height, false);
         Canvas canvas = new Canvas(bmOverlay);
         canvas.drawColor(Color.WHITE);
         canvas.drawBitmap(qrBitmap, 0, 0, null);
@@ -190,7 +259,9 @@ public class MyQrFragment extends Fragment {
     }
 
     public Intent getNativeShareIntent(final Context context) {
-        String bitmapPath = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), this.qrBitmap, "tPagoQr", null);
+        String bitmapPath = MediaStore.Images.Media.insertImage(getContext().getContentResolver(),
+                qrBitmap,
+                "tPagoQr", null);
         Uri bitmapUri = Uri.parse(bitmapPath);
 
         final PackageManager pm = context.getPackageManager();
@@ -225,7 +296,8 @@ public class MyQrFragment extends Fragment {
     }
 
     private LabeledIntent getSaveToGalleryIntent(final Context context) {
-        String bitmapPath = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), this.qrBitmap, "tPagoQr", null);
+        String bitmapPath = MediaStore.Images.Media.insertImage(getContext().getContentResolver(),
+                qrBitmap, "tPagoQr", null);
         Uri bitmapUri = Uri.parse(bitmapPath);
 
         final Intent intent = new Intent(context, SaveToGalleryActivity.class);
@@ -253,7 +325,7 @@ public class MyQrFragment extends Fragment {
                             try {
                                 OutputStream os = getContext().getContentResolver().openOutputStream(uri);
                                 if (os != null) {
-                                    qrBitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
+                                    ((BitmapDrawable) qrCodeImageView.getDrawable()).getBitmap().compress(Bitmap.CompressFormat.PNG, 100, os);
                                     os.flush();
                                     os.close();
                                 }
@@ -298,7 +370,7 @@ public class MyQrFragment extends Fragment {
             try {
                 OutputStream os = c.getContentResolver().openOutputStream(uri);
                 if (os != null) {
-                    MyQrFragment.this.qrBitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
+                    ((BitmapDrawable) qrCodeImageView.getDrawable()).getBitmap().compress(Bitmap.CompressFormat.PNG, 100, os);
                     os.flush();
                     os.close();
                 }
