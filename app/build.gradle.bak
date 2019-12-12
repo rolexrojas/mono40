@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.preemptive.dasho.android'
 apply plugin: 'io.fabric'
 
 def appName = 'tPago'
@@ -331,17 +330,3 @@ configurations.all {
 
 
 apply plugin: 'com.google.gms.google-services'
-
-android { buildTypes { release { minifyEnabled true } } }
-
-dasho {
-    // debug false
-    // doxFilename "project.dox"
-    enabledBuildVariants "store"
-    excludeFromProtection "androidx|com.google|org.jetbrains|io.sweers|com.jakewharton|com.github|com.birbit|commons-codec|io.reactivex|javax|com.android|com.squareup.retrofit2|junit|io|org|com.crashlytics|com.flipboard|com.squareup|com.madgag|com.journyapps|com|:Cub3AltPanSDK-v2.0.0-devt:|de|net"
-    //See docs for details
-    // home '/Applications/PreEmptive Protection DashO 10.1.app/Contents/Java' // for more information about DashO Home see the User Guide
-    // javaOptions "-Xmx1024M", "-Xms512M" //Normally has no default values
-    // searchVersion "10"
-    verbose true
-}
