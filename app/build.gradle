@@ -106,9 +106,9 @@ android {
             buildConfigField 'String', 'API_URL', '"https://tpagonet.gcs-systems.com/api/neo/"'
         }
 
-        emulatedDevice {
-            dimension 'deviceType'
-        }
+//        emulatedDevice {
+//            dimension 'deviceType'
+//        }
 
         notEmulatedDevice {
             dimension 'deviceType'
