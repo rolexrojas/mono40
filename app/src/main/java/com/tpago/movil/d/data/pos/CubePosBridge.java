@@ -4,15 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.nfc.NfcAdapter;
 
-import com.cube.sdk.Interfaces.CubeSdkCallback;
-import com.cube.sdk.altpan.CubeSdkImpl;
-import com.cube.sdk.storage.operation.AddCardParams;
-import com.cube.sdk.storage.operation.Card;
-import com.cube.sdk.storage.operation.CubeError;
-import com.cube.sdk.storage.operation.ListCards;
-import com.cube.sdk.storage.operation.PaymentInfo;
-import com.cube.sdk.storage.operation.SelectCardParams;
 import com.tpago.movil.PhoneNumber;
+import com.tpago.movil.d.domain.pos.CubeError;
+import com.tpago.movil.d.domain.pos.PaymentInfo;
 import com.tpago.movil.d.domain.pos.PosBridge;
 import com.tpago.movil.d.domain.pos.PosResult;
 import com.tpago.movil.util.ObjectHelper;
@@ -190,7 +184,7 @@ class CubePosBridge implements PosBridge {
 //      .doOnUnsubscribe(sdk::CancelPayment);
   }
 
-  private static final class ListCardCallback implements CubeSdkCallback<ListCards, CubeError> {
+  static final class ListCardCallback implements CubeSdkCallback<ListCards, CubeError> {
 
     private static ListCardCallback create(
       String identifier,
@@ -229,12 +223,22 @@ class CubePosBridge implements PosBridge {
     }
 
     @Override
+    public void success(PaymentInfo data) {
+
+    }
+
+    @Override
+    public void success(String message) {
+
+    }
+
+    @Override
     public void failure(CubeError error) {
       this.subscriber.onError(createError());
     }
   }
 
-  private static final class AddCardCallback implements CubeSdkCallback<String, CubeError> {
+  static final class AddCardCallback implements CubeSdkCallback<String, CubeError> {
 
     private static AddCardCallback create(SingleSubscriber<? super PosResult> subscriber) {
       return new AddCardCallback(subscriber);
@@ -244,6 +248,16 @@ class CubePosBridge implements PosBridge {
 
     private AddCardCallback(SingleSubscriber<? super PosResult> subscriber) {
       this.subscriber = ObjectHelper.checkNotNull(subscriber, "subscriber");
+    }
+
+    @Override
+    public void success(ListCards data) {
+
+    }
+
+    @Override
+    public void success(PaymentInfo data) {
+
     }
 
     @Override
@@ -257,7 +271,7 @@ class CubePosBridge implements PosBridge {
     }
   }
 
-  private static final class DeleteCardCallback implements CubeSdkCallback<String, CubeError> {
+  static final class DeleteCardCallback implements CubeSdkCallback<String, CubeError> {
 
     private static DeleteCardCallback create(SingleSubscriber<? super PosResult> subscriber) {
       return new DeleteCardCallback(subscriber);
@@ -267,6 +281,16 @@ class CubePosBridge implements PosBridge {
 
     private DeleteCardCallback(SingleSubscriber<? super PosResult> subscriber) {
       this.subscriber = ObjectHelper.checkNotNull(subscriber, "subscriber");
+    }
+
+    @Override
+    public void success(ListCards data) {
+
+    }
+
+    @Override
+    public void success(PaymentInfo data) {
+
     }
 
     @Override
@@ -280,7 +304,7 @@ class CubePosBridge implements PosBridge {
     }
   }
 
-  private static final class UnregisterCallback implements CubeSdkCallback<String, CubeError> {
+  static final class UnregisterCallback implements CubeSdkCallback<String, CubeError> {
 
     private static UnregisterCallback create(CompletableSubscriber subscriber) {
       return new UnregisterCallback(subscriber);
@@ -290,6 +314,16 @@ class CubePosBridge implements PosBridge {
 
     private UnregisterCallback(CompletableSubscriber subscriber) {
       this.subscriber = ObjectHelper.checkNotNull(subscriber, "subscriber");
+    }
+
+    @Override
+    public void success(ListCards data) {
+
+    }
+
+    @Override
+    public void success(PaymentInfo data) {
+
     }
 
     @Override
@@ -304,7 +338,7 @@ class CubePosBridge implements PosBridge {
     }
   }
 
-  private static final class SelectCardCallback implements CubeSdkCallback<PaymentInfo, CubeError> {
+  static final class SelectCardCallback implements CubeSdkCallback<PaymentInfo, CubeError> {
 
     private static SelectCardCallback create(SingleSubscriber<? super PosResult> subscriber) {
       return new SelectCardCallback(subscriber);
@@ -317,8 +351,18 @@ class CubePosBridge implements PosBridge {
     }
 
     @Override
+    public void success(ListCards data) {
+
+    }
+
+    @Override
     public void success(PaymentInfo data) {
       this.subscriber.onSuccess(PosResult.create(data));
+    }
+
+    @Override
+    public void success(String message) {
+
     }
 
     @Override
