@@ -206,6 +206,7 @@ public class DepMainActivityBase
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        startService(new Intent(this, LogoutTimerService.class));
         this.unbinder = ButterKnife.bind(this);
         // Injects all the annotated dependencies.
         this.component = App.get(this)
@@ -255,10 +256,9 @@ public class DepMainActivityBase
             this.closeSession();
         } else {
             this.presenter.start();
-            startService(new Intent(this, LogoutTimerService.class));
             IntentFilter intentFilter = new IntentFilter(LogoutTimerService.LOGOUT_BROADCAST);
             localBroadcastManager.registerReceiver(logoutReceiver, intentFilter);
-            onUserInteraction();
+            localBroadcastManager.sendBroadcast(new Intent(LogoutTimerService.USER_INTERACTION_BROADCAST));
         }
     }
 
@@ -310,6 +310,7 @@ public class DepMainActivityBase
     @Override
     protected void onResume() {
         super.onResume();
+        timeOutManager.reset();
         if (RootUtil.isDeviceRooted()) {
             RootUtil.showRootErrorDialog(this, this);
         }
