@@ -35,6 +35,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 public final class SessionManager {
 
+    private static final String STORE_KEY_UUID = createStoreKey("UUID");
+
     private static String createStoreKey(String s) {
         return String.format("SessionManager.%1$s", s);
     }
@@ -266,6 +268,14 @@ public final class SessionManager {
     private void enableUnlockMethod(UnlockMethod method) {
         this.diskStore.set(STORE_KEY_UNLOCK_METHOD, method)
                 .blockingAwait();
+    }
+
+    public void saveUUID(String uuid) {
+        this.diskStore.set(STORE_KEY_UUID, uuid).blockingAwait();
+    }
+
+    public String getUUID() {
+        return this.diskStore.get(STORE_KEY_UUID, String.class).blockingGet();
     }
 
     public void saveCustomerSecretToken(String token) {

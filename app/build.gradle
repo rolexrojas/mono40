@@ -23,7 +23,7 @@ android {
         versionCode((major * 10_000_000) + (minor * 100_000) + (patch * 1_000))
 
         minSdkVersion 19
-        targetSdkVersion 28
+        targetSdkVersion 29
 
         multiDexEnabled true
 
@@ -106,9 +106,9 @@ android {
             buildConfigField 'String', 'API_URL', '"https://tpagonet.gcs-systems.com/api/neo/"'
         }
 
-        emulatedDevice {
-            dimension 'deviceType'
-        }
+//        emulatedDevice {
+//            dimension 'deviceType'
+//        }
 
         notEmulatedDevice {
             dimension 'deviceType'
@@ -212,15 +212,6 @@ repositories {
 dependencies {
     // Local dependencies
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-
-    def cubeSdkName = { version, environment -> "Cub3AltPanSDK-v${version}-${environment}" }
-    mockImplementation(name: cubeSdkName('2.0.0', 'devt'), ext: 'aar')
-    devtImplementation(name: cubeSdkName('2.0.0', 'devt'), ext: 'aar')
-    stagImplementation(name: cubeSdkName('2.0.0', 'devt'), ext: 'aar')
-    prepImplementation(name: cubeSdkName('2.0.0', 'devt'), ext: 'aar')
-    prodImplementation(name: cubeSdkName('2.0.0', 'devt'), ext: 'aar')
-
-    implementation "net.zetetic:android-database-sqlcipher:4.2.0"
 
     // Remote dependencies
     def rxJavaGroupId = 'io.reactivex.rxjava2'

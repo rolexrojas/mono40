@@ -1,9 +1,7 @@
 package com.tpago.movil.d.domain.pos;
 
-import com.cube.sdk.storage.operation.CubeError;
-import com.cube.sdk.storage.operation.PaymentInfo;
 import com.tpago.movil.d.misc.Result;
-import com.tpago.movil.util.digit.DigitUtil;
+
 
 /**
  * @author hecvasro
