@@ -36,11 +36,6 @@ public class LogoutTimerService extends IntentService {
     boolean isRunning;
     boolean shouldStop;
 
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     *
-     * @param name Used to name the worker thread, important only for debugging.
-     */
     public LogoutTimerService() {
         super("LogoutTimerService");
     }
