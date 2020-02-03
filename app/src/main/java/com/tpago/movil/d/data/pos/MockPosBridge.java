@@ -26,7 +26,7 @@ final class MockPosBridge implements PosBridge {
 
   @Override
   public boolean isAvailable() {
-    return true;
+    return false;
   }
 
   @Override

@@ -81,7 +81,7 @@ class CubePosBridge implements PosBridge {
 
   @Override
   public boolean isAvailable() {
-    return ObjectHelper.isNotNull(this.nfcAdapter);
+    return false;
   }
 
   @Override
