@@ -17,7 +17,7 @@ android {
         renderscriptTargetApi 16
         renderscriptSupportModeEnabled true
 
-        def (major, minor, patch) = [3, 2, 26]
+        def (major, minor, patch) = [2, 2, 26]
         versionName "${major}.${minor}.${patch}"
 
         versionCode((major * 10_000_000) + (minor * 100_000) + (patch * 1_000))
