@@ -18,10 +18,10 @@ android {
         renderscriptTargetApi 16
         renderscriptSupportModeEnabled true
 
-        def (major, minor, patch) = [3, 2, 26]
+        def (major, minor, patch) = [2, 7, 5]
         versionName "${major}.${minor}.${patch}"
 
-        versionCode((major * 10_000_000) + (minor * 100_000) + (patch * 1_000))
+        versionCode(((major + 2) * 10_000_000) + ((minor + 5) * 100_000) + (patch * 1_000))
 
         minSdkVersion 19
         targetSdkVersion 29

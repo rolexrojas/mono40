@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "236292085233",
+    "firebase_url": "https://tpago-7c9cd.firebaseio.com",
+    "project_id": "tpago-7c9cd",
+    "storage_bucket": "tpago-7c9cd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:236292085233:android:aa37528677b8ffe96ae050",
+        "android_client_info": {
+          "package_name": "com.tpago.movil"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "236292085233-99k6ncf8hlc9jlmst9b3pb6ksgegvokv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAq0Ii4zBd8C23jfK1RrvxA1zuyiMyOmHw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "236292085233-99k6ncf8hlc9jlmst9b3pb6ksgegvokv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "236292085233-0nrk9g6nhgn1ig9rh6vki9sggvdhrl1b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tpago.mobile.devt"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:236292085233:android:62e4ad69c351049f6ae050",
+        "android_client_info": {
+          "package_name": "com.tpago.movil.devt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "236292085233-99k6ncf8hlc9jlmst9b3pb6ksgegvokv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAq0Ii4zBd8C23jfK1RrvxA1zuyiMyOmHw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "236292085233-99k6ncf8hlc9jlmst9b3pb6ksgegvokv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "236292085233-0nrk9g6nhgn1ig9rh6vki9sggvdhrl1b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tpago.mobile.devt"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
