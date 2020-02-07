@@ -92,7 +92,13 @@ apiKey=changeMeToYourRealApiKey
 *  build secret = api secret
 
 tldr: Crea un release apuntando a development con distribución para el equipo de tpago:
-> ./gradlew app:assembleNotEmulatedDeviceDevtBeta app:crashlyticsUploadDistributionNotEmulatedDeviceDevtBeta
+> ./gradlew app:assembleNotEmulatedDeviceDevtBeta
+> fastlane beta
+
+`Nota: es necesario tener fastlane instalado
+Teniendo ruby instalado, ejecutar`
+> bundle install
+`en la carpeta de proyecto`
 
 
 `Nota: cada vez que realices un release, debes invitar al equipo de tpago o quien va a testear o no podrán descargar la nueva versión`
@@ -100,6 +106,10 @@ tldr: Crea un release apuntando a development con distribución para el equipo d
 
 Para generar los releases para que el equipo de tpago suba al Store, solo corres
 > `./gradlew app:assembleNotEmulatedDeviceProdStore`
+
+
+`Nota: Es necesario tener Dash0 (Preemptive) instalado en el equipo a compilar producción`
+[Descargar Dash0](https://gcssystemsdo-my.sharepoint.com/:f:/r/personal/jdisla_gcs-systems_com/Documents/Preentive/dashO%20-%20Android%20-Java?csf=1&e=DYDaf5)
 
 Y le mandas el apk a la persona encargada de firmar(preguntar al equipo de tpago).
 

@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.preemptive.dasho.android'
 apply plugin: 'io.fabric'
 
 def appName = 'tPago'
@@ -18,13 +17,13 @@ android {
         renderscriptTargetApi 16
         renderscriptSupportModeEnabled true
 
-        def (major, minor, patch) = [2, 7, 5]
+        def (major, minor, patch) = [3, 0, 13]
         versionName "${major}.${minor}.${patch}"
 
-        versionCode(((major + 2) * 10_000_000) + ((minor + 5) * 100_000) + (patch * 1_000))
+        versionCode((major * 10_000_000) + (minor * 100_000) + (patch * 1_000))
 
         minSdkVersion 19
-        targetSdkVersion 29
+        targetSdkVersion 28
 
         multiDexEnabled true
 
@@ -107,9 +106,9 @@ android {
             buildConfigField 'String', 'API_URL', '"https://tpagonet.gcs-systems.com/api/neo/"'
         }
 
-//        emulatedDevice {
-//            dimension 'deviceType'
-//        }
+        emulatedDevice {
+            dimension 'deviceType'
+        }
 
         notEmulatedDevice {
             dimension 'deviceType'
@@ -213,6 +212,15 @@ repositories {
 dependencies {
     // Local dependencies
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    def cubeSdkName = { version, environment -> "Cub3AltPanSDK-v${version}-${environment}" }
+    mockImplementation(name: cubeSdkName('2.0.0', 'devt'), ext: 'aar')
+    devtImplementation(name: cubeSdkName('2.0.0', 'devt'), ext: 'aar')
+    stagImplementation(name: cubeSdkName('2.0.0', 'devt'), ext: 'aar')
+    prepImplementation(name: cubeSdkName('2.0.0', 'devt'), ext: 'aar')
+    prodImplementation(name: cubeSdkName('2.0.0', 'devt'), ext: 'aar')
+
+    implementation "net.zetetic:android-database-sqlcipher:4.2.0"
 
     // Remote dependencies
     def rxJavaGroupId = 'io.reactivex.rxjava2'
@@ -322,17 +330,3 @@ configurations.all {
 
 
 apply plugin: 'com.google.gms.google-services'
-
-android { buildTypes { release { minifyEnabled true } } }
-
-dasho {
-    // debug false
-    // doxFilename "project.dox"
-    enabledBuildVariants "store"
-    excludeFromProtection "androidx|com.google|org.jetbrains|io.sweers|com.jakewharton|com.github|com.birbit|commons-codec|io.reactivex|javax|com.android|com.squareup.retrofit2|junit|io|org|com.crashlytics|com.flipboard|com.squareup|com.madgag|com.journyapps|com|:Cub3AltPanSDK-v2.0.0-devt:|de|net"
-    //See docs for details
-    // home '/Applications/PreEmptive Protection DashO 10.1.app/Contents/Java' // for more information about DashO Home see the User Guide
-    // javaOptions "-Xmx1024M", "-Xms512M" //Normally has no default values
-    // searchVersion "10"
-    verbose true
-}
