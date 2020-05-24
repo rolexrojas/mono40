@@ -14,7 +14,7 @@
       style="@style/SettingsSectionTitle"
       android:text="tPago y su uso"/>
 
-    <com.tpago.movil.app.ui.main.settings.SingleLineSettingsOption
+    <com.mono40.movil.app.ui.main.settings.SingleLineSettingsOption
       android:id="@+id/setting_option_faq"
       style="@style/SettingsOption"
       app:primaryText="Preguntas frecuentes"
@@ -25,7 +25,7 @@
       android:layout_marginEnd="@dimen/space_horizontal_20"
       android:layout_marginStart="@dimen/space_horizontal_20"/>
 
-    <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+    <com.mono40.movil.app.ui.main.settings.MultiLineSettingsOption
       android:id="@+id/setting_option_mail_customer_service"
       style="@style/SettingsOption"
       app:primaryText="Enviar correo a servicio al cliente"
@@ -37,7 +37,7 @@
       android:layout_marginEnd="@dimen/space_horizontal_20"
       android:layout_marginStart="@dimen/space_horizontal_20"/>
 
-    <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+    <com.mono40.movil.app.ui.main.settings.MultiLineSettingsOption
       android:id="@+id/setting_option_call_customer_service"
       android:clickable="true"
       style="@style/SettingsOption"

@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:236292085233:android:aa37528677b8ffe96ae050",
         "android_client_info": {
-          "package_name": "com.tpago.movil"
+          "package_name": "com.mono40.movil"
         }
       },
       "oauth_client": [
@@ -46,7 +46,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:236292085233:android:62e4ad69c351049f6ae050",
         "android_client_info": {
-          "package_name": "com.tpago.movil.devt"
+          "package_name": "com.mono40.movil.devt"
         }
       },
       "oauth_client": [

@@ -30,7 +30,7 @@
       android:layout_height="wrap_content"
       android:orientation="horizontal">
 
-      <com.tpago.movil.app.ui.Label
+      <com.mono40.movil.app.ui.Label
         style="@style/Label.Light"
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -38,7 +38,7 @@
         android:gravity="start"
         android:text="@string/disburse_product_confirm_amount"/>
 
-      <com.tpago.movil.app.ui.LabelPrefix
+      <com.mono40.movil.app.ui.LabelPrefix
         android:id="@+id/label_amount"
         style="@style/LabelMoney.Light.LightBook"
         android:layout_width="0dp"
@@ -55,7 +55,7 @@
       android:layout_height="wrap_content"
       android:orientation="horizontal">
 
-      <com.tpago.movil.app.ui.Label
+      <com.mono40.movil.app.ui.Label
         style="@style/Label.Light"
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -63,7 +63,7 @@
         android:gravity="start"
         android:text="@string/disburse_product_confirm_term"/>
 
-      <com.tpago.movil.app.ui.Label
+      <com.mono40.movil.app.ui.Label
         android:id="@+id/label_term"
         style="@style/Label.Light"
         android:layout_width="0dp"
@@ -80,7 +80,7 @@
       android:layout_height="wrap_content"
       android:orientation="horizontal">
 
-      <com.tpago.movil.app.ui.Label
+      <com.mono40.movil.app.ui.Label
         style="@style/Label.Light"
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -88,7 +88,7 @@
         android:gravity="start"
         android:text="@string/disburse_product_confirm_rate"/>
 
-      <com.tpago.movil.app.ui.LabelPrefix
+      <com.mono40.movil.app.ui.LabelPrefix
         android:id="@+id/label_rate"
         style="@style/LabelMoney.Light.LightBook"
         android:layout_width="0dp"
@@ -105,7 +105,7 @@
       android:layout_height="wrap_content"
       android:orientation="horizontal">
 
-      <com.tpago.movil.app.ui.Label
+      <com.mono40.movil.app.ui.Label
         style="@style/Label.Light"
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -113,7 +113,7 @@
         android:gravity="start"
         android:text="@string/disburse_product_confirm_insurance"/>
 
-      <com.tpago.movil.app.ui.LabelPrefix
+      <com.mono40.movil.app.ui.LabelPrefix
         android:id="@+id/label_insurance"
         style="@style/LabelMoney.Light.LightBook"
         android:layout_width="0dp"
@@ -130,7 +130,7 @@
       android:layout_height="wrap_content"
       android:orientation="horizontal">
 
-      <com.tpago.movil.app.ui.Label
+      <com.mono40.movil.app.ui.Label
         style="@style/Label.Light"
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -138,7 +138,7 @@
         android:gravity="start"
         android:text="@string/disburse_product_confirm_balance"/>
 
-      <com.tpago.movil.app.ui.LabelPrefix
+      <com.mono40.movil.app.ui.LabelPrefix
         android:id="@+id/label_balance"
         style="@style/LabelMoney.Light.LightBook"
         android:layout_width="0dp"
@@ -164,7 +164,7 @@
       android:layout_height="wrap_content"
       android:orientation="horizontal">
 
-      <com.tpago.movil.app.ui.Label
+      <com.mono40.movil.app.ui.Label
         style="@style/Label.Light"
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -172,7 +172,7 @@
         android:gravity="start"
         android:text="@string/disburse_product_confirm_fee"/>
 
-      <com.tpago.movil.app.ui.LabelPrefix
+      <com.mono40.movil.app.ui.LabelPrefix
         android:id="@+id/label_fee"
         style="@style/LabelMoney.Light.LightMedium"
         android:layout_width="0dp"
@@ -208,7 +208,7 @@
       android:drawablePadding="@dimen/space_horizontal_16"
       android:text="Acepto los términos y condiciones de este producto."/>
 
-      <com.tpago.movil.app.ui.Label
+      <com.mono40.movil.app.ui.Label
         android:id="@+id/label_terms_conditions"
         style="@style/LabelClickable.Dark.Primary"
         android:layout_width="fill_parent"

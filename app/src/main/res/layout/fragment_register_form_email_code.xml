@@ -24,18 +24,18 @@
     android:layout_marginTop="10dp"
     android:text="@string/register_form_email_code_description"/>
 
-  <com.tpago.movil.dep.widget.LabelFitterLayout
+  <com.mono40.movil.dep.widget.LabelFitterLayout
     style="@style/Widget.LabelFitterLayout"
     android:layout_marginEnd="@dimen/common_margin_horizontal_large"
     android:layout_marginStart="@dimen/common_margin_horizontal_large"
     android:layout_marginTop="16dp">
 
-    <com.tpago.movil.dep.widget.EditableLabel
+    <com.mono40.movil.dep.widget.EditableLabel
       android:id="@+id/editable_label_otp_pin"
       style="@style/Widget.EditableLabel.Dark"
       android:layout_width="match_parent"
       android:layout_height="match_parent"/>
-  </com.tpago.movil.dep.widget.LabelFitterLayout>
+  </com.mono40.movil.dep.widget.LabelFitterLayout>
 
   <TextView
     android:id="@+id/sendcodeagain"
@@ -54,7 +54,7 @@
     android:textColor="@color/white"
     android:textSize="10sp" />
 
-  <com.tpago.movil.app.ui.DNumPad
+  <com.mono40.movil.app.ui.DNumPad
     android:id="@+id/num_pad"
     style="@style/DNumPad.Dark"
     android:layout_width="match_parent"

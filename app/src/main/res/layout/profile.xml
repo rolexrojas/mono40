@@ -22,7 +22,7 @@
       style="@style/ProfileLabel"
       android:text="@string/firstName"/>
 
-    <com.tpago.movil.dep.widget.TextInput
+    <com.mono40.movil.dep.widget.TextInput
       android:id="@+id/firstNameTextInput"
       style="@style/ProfileInput"
       android:enabled="true"/>
@@ -39,7 +39,7 @@
       style="@style/ProfileLabel"
       android:text="@string/lastName"/>
 `
-    <com.tpago.movil.dep.widget.TextInput
+    <com.mono40.movil.dep.widget.TextInput
       android:id="@+id/lastNameTextInput"
       style="@style/ProfileInput"
       android:enabled="true"/>
@@ -56,7 +56,7 @@
       style="@style/ProfileLabel"
       android:text="@string/phoneNumber"/>
 
-    <com.tpago.movil.dep.widget.TextInput
+    <com.mono40.movil.dep.widget.TextInput
       android:id="@+id/phoneNumberTextInput"
       style="@style/ProfileInput"
       android:drawableEnd="@drawable/profile_input_indicator_uneditable"
@@ -74,7 +74,7 @@
       style="@style/ProfileLabel"
       android:text="@string/email"/>
 
-    <com.tpago.movil.dep.widget.TextInput
+    <com.mono40.movil.dep.widget.TextInput
       android:id="@+id/emailTextInput"
       style="@style/ProfileInput"
       android:drawableEnd="@drawable/profile_input_indicator_uneditable"
@@ -86,7 +86,7 @@
       android:layout_marginStart="@dimen/space_horizontal_20"/>
 
     <!-- Change password -->
-    <com.tpago.movil.app.ui.main.settings.SingleLineSettingsOption
+    <com.mono40.movil.app.ui.main.settings.SingleLineSettingsOption
       android:id="@+id/changeMyPasswordSettingsOption"
       style="@style/SettingsOption"
       app:primaryText="@string/changeMyPassword"/>
@@ -97,7 +97,7 @@
       android:layout_marginStart="@dimen/space_horizontal_20"/>
 
     <!-- Sign out -->
-    <com.tpago.movil.app.ui.main.settings.SingleLineSettingsOption
+    <com.mono40.movil.app.ui.main.settings.SingleLineSettingsOption
       android:id="@+id/signOutSettingsOption"
       style="@style/SettingsOption"
       app:primaryText="@string/signOut"

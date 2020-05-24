@@ -4,14 +4,13 @@
   style="@style/Container.Light.Primary"
   android:orientation="vertical">
 
-  <androidx.recyclerview.widget.RecyclerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/recycler_view"
-    style="@style/List.Vertical"
-    android:layout_width="@dimen/commerce_payment_option_width"
-    android:layout_height="match_parent"
-    android:layout_gravity="center_horizontal"
-    android:background="@color/transparent"
-    android:paddingEnd="0dp"
-    android:paddingStart="0dp"/>
+  <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/recycler_view"
+      style="@style/List.Vertical"
+      android:layout_width="@dimen/commerce_payment_option_width"
+      android:layout_height="match_parent"
+      android:layout_gravity="center_horizontal"
+      android:background="@color/transparent"
+      android:paddingStart="0dp"
+      android:paddingEnd="0dp" />
 </LinearLayout>

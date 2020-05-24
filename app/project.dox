@@ -6,80 +6,80 @@
         <checks>
             <debuggingCheck response="exit">
                 <locations>
-                    <classes name="com.tpago.movil.app.ui.Input">
+                    <classes name="com.mono40.movil.app.ui.Input">
                         <method name="init" signature=""/>
                     </classes>
-                    <classes name="com.tpago.movil.app.ui.LabelPrefix">
+                    <classes name="com.mono40.movil.app.ui.LabelPrefix">
                         <method name="&lt;init&gt;" signature="android.content.Context,android.util.AttributeSet"/>
                         <method name="setPrefix" signature="java.lang.String"/>
                         <method name="setValue" signature="java.lang.String"/>
                     </classes>
-                    <classes name="com.tpago.movil.app.ui.NumPad">
+                    <classes name="com.mono40.movil.app.ui.NumPad">
                         <method name="&lt;init&gt;" signature="android.content.Context,android.util.AttributeSet"/>
-                        <method name="addDeleteAction" signature="com.tpago.movil.util.function.Action"/>
+                        <method name="addDeleteAction" signature="com.mono40.movil.util.function.Action"/>
                     </classes>
-                    <classes name="com.tpago.movil.app.ui.activity.base.ActivityBase">
+                    <classes name="com.mono40.movil.app.ui.activity.base.ActivityBase">
                         <method name="onCreate" signature="android.os.Bundle"/>
                         <method name="onResume" signature=""/>
                         <method name="onStart" signature=""/>
                     </classes>
-                    <classes name="com.tpago.movil.app.ui.loader.takeover.ModuleLoaderTakeover">
+                    <classes name="com.mono40.movil.app.ui.loader.takeover.ModuleLoaderTakeover">
                         <method name="&lt;init&gt;" signature=""/>
                     </classes>
-                    <classes name="com.tpago.movil.app.ui.main.MainComponentBuilderModule">
+                    <classes name="com.mono40.movil.app.ui.main.MainComponentBuilderModule">
                         <method name="&lt;init&gt;" signature=""/>
                     </classes>
-                    <classes name="com.tpago.movil.dep.App">
+                    <classes name="com.mono40.movil.dep.App">
                         <method name="initDagger" signature=""/>
                     </classes>
-                    <classes name="com.tpago.movil.dep.init.capture.BankCaptureFormFragment">
+                    <classes name="com.mono40.movil.dep.init.capture.BankCaptureFormFragment">
                         <method name="&lt;init&gt;" signature=""/>
                     </classes>
-                    <classes name="com.tpago.movil.dep.init.capture.CaptureData">
-                        <method name="&lt;init&gt;" signature="com.tpago.movil.dep.init.InitData"/>
+                    <classes name="com.mono40.movil.dep.init.capture.CaptureData">
+                        <method name="&lt;init&gt;" signature="com.mono40.movil.dep.init.InitData"/>
                         <method name="getBank" signature=""/>
                     </classes>
-                    <classes name="com.tpago.movil.dep.init.intro.IntroFragment">
+                    <classes name="com.mono40.movil.dep.init.intro.IntroFragment">
                         <method name="&lt;init&gt;" signature=""/>
                         <method name="create" signature=""/>
                     </classes>
-                    <classes name="com.tpago.movil.dep.init.register.AvatarFormFragment">
+                    <classes name="com.mono40.movil.dep.init.register.AvatarFormFragment">
                         <method name="create" signature=""/>
                     </classes>
                 </locations>
             </debuggingCheck>
             <debuggingCheck response="exception">
                 <locations>
-                    <classes name="com.tpago.movil.d.ui.main.purchase.CardListAdapter">
+                    <classes name="com.mono40.movil.d.ui.main.purchase.CardListAdapter">
                         <method name="&lt;init&gt;" signature=""/>
-                        <method name="&lt;init&gt;" signature="java.util.List,com.tpago.movil.d.ui.view.RecyclerViewBaseAdapter$RecyclerAdapterCallback,com.tpago.movil.session.User,com.tpago.movil.company.CompanyHelper"/>
+                        <method name="&lt;init&gt;" signature="java.util.List,com.mono40.movil.d.ui.view.RecyclerViewBaseAdapter$RecyclerAdapterCallback,com.mono40.movil.session.User,com.mono40.movil.company.CompanyHelper"/>
                     </classes>
-                    <classes name="com.tpago.movil.d.ui.main.recipient.addition.Contact">
+                    <classes name="com.mono40.movil.d.ui.main.recipient.addition.Contact">
                         <method name="&lt;init&gt;" signature=""/>
                         <method name="builder" signature=""/>
                     </classes>
-                    <classes name="com.tpago.movil.d.ui.main.transaction.bills.BillTransactionCreationFragment">
+                    <classes name="com.mono40.movil.d.ui.main.transaction.bills.BillTransactionCreationFragment">
                         <method name="create" signature=""/>
                         <method name="onDestroy" signature=""/>
                     </classes>
-                    <classes name="com.tpago.movil.d.ui.view.RecyclerViewBaseAdapter">
+                    <classes name="com.mono40.movil.d.ui.view.RecyclerViewBaseAdapter">
                         <method name="getItemCount" signature=""/>
                     </classes>
-                    <classes name="com.tpago.movil.d.ui.view.widget.AutoResizeablePrefixableTextView">
+                    <classes name="com.mono40.movil.d.ui.view.widget.AutoResizeablePrefixableTextView">
                         <method name="adjustText" signature=""/>
                     </classes>
                 </locations>
             </debuggingCheck>
             <emulatorCheck response="exception">
                 <locations>
-                    <classes name="com.tpago.movil.app.App">
+                    <classes name="com.mono40.movil.app.App">
                         <method name="&lt;init&gt;" signature=""/>
                     </classes>
                 </locations>
             </emulatorCheck>
             <rootCheck response="exception">
                 <locations>
-                    <classes name="com.tpago.movil.app.App">
+                    <classes name="com.mono40.movil.app.App">
                         <method name="&lt;init&gt;" signature=""/>
                     </classes>
                 </locations>

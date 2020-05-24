@@ -10,7 +10,7 @@
     android:text="@string/next"
     app:layout_constraintBottom_toBottomOf="parent"/>
 
-  <com.tpago.movil.app.ui.Label
+  <com.mono40.movil.app.ui.Label
     android:id="@+id/label"
     style="@style/LabelDescription.Light"
     android:layout_width="match_parent"

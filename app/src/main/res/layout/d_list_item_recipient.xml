@@ -27,7 +27,7 @@
     android:layout_alignParentEnd="true"
     android:layout_marginStart="25dp"
     android:orientation="vertical">
-    <com.tpago.movil.d.ui.view.widget.PrefixableTextView
+    <com.mono40.movil.d.ui.view.widget.PrefixableTextView
       android:id="@+id/prefixable_text_view_total_owed"
       style="@style/D.Screen.Products.Text.Widget.Amount.Content"
       android:layout_width="wrap_content"

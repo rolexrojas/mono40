@@ -13,7 +13,7 @@
       style="@style/SettingsSectionTitle"
       android:text="@string/profile"/>
 
-    <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+    <com.mono40.movil.app.ui.main.settings.MultiLineSettingsOption
       android:id="@+id/profileSettingsOption"
       style="@style/SettingsOption"
       app:primaryText="@string/profileSettingsOption"/>
@@ -24,7 +24,7 @@
       style="@style/SettingsSectionTitle"
       android:text="@string/accounts"/>
 
-    <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+    <com.mono40.movil.app.ui.main.settings.MultiLineSettingsOption
       android:id="@+id/primaryPaymentMethodSettingsOption"
       style="@style/SettingsOption"
       app:primaryText="@string/primaryPaymentMethodSettingsOption"/>
@@ -35,7 +35,7 @@
       style="@style/SettingsSectionTitle"
       android:text="@string/security"/>
 
-    <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+    <com.mono40.movil.app.ui.main.settings.MultiLineSettingsOption
       android:id="@+id/altAuthMethodSettingsOption"
       style="@style/SettingsOption"
       app:primaryText="@string/altUnlockMethod"/>
@@ -45,7 +45,7 @@
       android:layout_marginEnd="@dimen/space_horizontal_20"
       android:layout_marginStart="@dimen/space_horizontal_20"/>
 
-    <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+    <com.mono40.movil.app.ui.main.settings.MultiLineSettingsOption
       android:id="@+id/timeoutSettingsOption"
       style="@style/SettingsOption"
       app:primaryText="@string/timeoutSettingsOption"/>
@@ -56,7 +56,7 @@
       android:layout_marginStart="@dimen/space_horizontal_20"
       android:visibility="gone"/>
 
-    <com.tpago.movil.app.ui.main.settings.ToggleableSettingsOption
+    <com.mono40.movil.app.ui.main.settings.ToggleableSettingsOption
       android:id="@+id/lockOnExitSettingsOption"
       style="@style/SettingsOption"
       android:visibility="gone"
@@ -67,7 +67,7 @@
       android:layout_marginEnd="@dimen/space_horizontal_20"
       android:layout_marginStart="@dimen/space_horizontal_20"/>
 
-    <com.tpago.movil.app.ui.main.settings.SingleLineSettingsOption
+    <com.mono40.movil.app.ui.main.settings.SingleLineSettingsOption
       android:id="@+id/pinSettingsOption"
       style="@style/SettingsOption"
       app:primaryText="@string/pinSettingsOption"/>
@@ -78,7 +78,7 @@
       style="@style/SettingsSectionTitle"
       android:text="@string/others"/>
 
-    <com.tpago.movil.app.ui.main.settings.SingleLineSettingsOption
+    <com.mono40.movil.app.ui.main.settings.SingleLineSettingsOption
       android:id="@+id/setting_option_help"
       style="@style/SettingsOption"
       app:primaryText="@string/help"/>
@@ -88,7 +88,7 @@
       android:layout_marginEnd="@dimen/space_horizontal_20"
       android:layout_marginStart="@dimen/space_horizontal_20"/>
 
-    <com.tpago.movil.app.ui.main.settings.SingleLineSettingsOption
+    <com.mono40.movil.app.ui.main.settings.SingleLineSettingsOption
       android:id="@+id/setting_option_about"
       style="@style/SettingsOption"
       app:primaryText="@string/about"/>

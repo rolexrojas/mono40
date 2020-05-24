@@ -7,7 +7,7 @@
   android:focusableInTouchMode="true"
   android:orientation="vertical">
 
-  <com.tpago.movil.d.ui.view.widget.SearchView
+  <com.mono40.movil.d.ui.view.widget.SearchView
     android:id="@+id/search_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

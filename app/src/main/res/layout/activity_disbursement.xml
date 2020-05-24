@@ -13,13 +13,13 @@
       android:layout_gravity="center_vertical"/>
   </FrameLayout>
 
-  <com.tpago.movil.dep.main.transactions.PaymentMethodChooser
+  <com.mono40.movil.dep.main.transactions.PaymentMethodChooser
     android:id="@+id/payment_method_chooser"
     style="@style/D.Transactions.Widget.PaymentMethodChooser"
     android:layout_marginEnd="32dp"
     android:layout_marginStart="32dp"/>
 
-  <com.tpago.movil.d.ui.view.widget.AutoResizeablePrefixableTextView
+  <com.mono40.movil.d.ui.view.widget.AutoResizeablePrefixableTextView
     android:id="@+id/transaction_creation.amount"
     style="@style/TransactionCreation.Widget.Amount"
     android:layout_width="match_parent"
@@ -35,7 +35,7 @@
     android:alpha="0.1"
     android:background="@color/black"/>
 
-  <com.tpago.movil.app.ui.DNumPad
+  <com.mono40.movil.app.ui.DNumPad
     android:id="@+id/transaction_creation.num_pad"
     style="@style/DNumPad.Light"
     android:layout_width="match_parent"

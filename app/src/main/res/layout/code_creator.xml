@@ -37,21 +37,21 @@
         <Space style="@style/VerticalDivider.Space.Normal" />
 
         <!-- [START] Deprecated -->
-        <com.tpago.movil.dep.widget.LabelFitterLayout
+        <com.mono40.movil.dep.widget.LabelFitterLayout
             style="@style/Widget.LabelFitterLayout"
             android:layout_marginStart="@dimen/space_horizontal_64"
             android:layout_marginEnd="@dimen/space_horizontal_64"
             app:maxTextSize="50sp">
 
-            <com.tpago.movil.dep.widget.EditableLabel
+            <com.mono40.movil.dep.widget.EditableLabel
                 android:id="@+id/valueTextView"
                 style="@style/Widget.EditableLabel.Dark"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-        </com.tpago.movil.dep.widget.LabelFitterLayout>
+        </com.mono40.movil.dep.widget.LabelFitterLayout>
         <!-- [END] Deprecated -->
 
-        <com.tpago.movil.app.ui.DNumPad
+        <com.mono40.movil.app.ui.DNumPad
             android:id="@+id/num_pad"
             style="@style/DNumPad.Dark"
             android:layout_width="match_parent"

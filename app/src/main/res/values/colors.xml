@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!-- [common] -->
-  <color name="accent">#9C188F</color>
-  <color name="accent_20">#339C188F</color>
+  <color name="accent">#1b8249</color>
+  <color name="accent_20">#66ad86</color>
   <color name="black">#000</color>
   <color name="black_10">#20000000</color>
   <color name="black_20">#33000000</color>
@@ -17,12 +17,12 @@
   <color name="erratic_dark_50">#7FF8E81C</color>
   <color name="erratic_light">#D0021B</color>
   <color name="erratic_light_50">#7FD0021B</color>
-  <color name="gradient">#33821477</color> <!-- TODO: Find a better name for this color -->
-  <color name="primary">#9C188F</color>
-  <color name="primary_05">#0D9C188F</color>
-  <color name="primary_20">#339C188F</color>
-  <color name="primary_50">#7F9C188F</color>
-  <color name="primary_dark">#6D1764</color>
+  <color name="gradient">#a6d9bd</color> <!-- TODO: Find a better name for this color -->
+  <color name="primary">#5db082</color>
+  <color name="primary_05">#a6d9bd</color>
+  <color name="primary_20">#8cc2a4</color>
+  <color name="primary_50">#1b8249</color>
+  <color name="primary_dark">#3bbf76</color>
   <color name="transparent">@android:color/transparent</color>
   <color name="white">#FFF</color>
   <color name="white_10">#20FFFFFF</color>
@@ -33,7 +33,7 @@
   <!-- [container] -->
   <!-- [container/dark] -->
   <!-- [container/dark/primary] -->
-  <color name="container_dark_primary_start">#691060</color>
+  <color name="container_dark_primary_start">#21884f</color>
   <color name="container_dark_primary_end">@color/primary</color>
   <!-- [container/light] -->
   <!-- [container/light/primary] -->
@@ -71,7 +71,7 @@
   <color name="d_app_text_widget_prefixable_text_view_content">#333333</color>
   <color name="d_app_text_widget_prefixable_text_view_prefix">#7F333333</color>
   <color name="d_app_widget_num_pad_tint">#333333</color>
-  <color name="d_background_menu">#821477</color>
+  <color name="d_background_menu">#21884f</color>
   <color name="d_black_alpha_12">#1F000000</color>
   <color name="d_button_colored_gradient_end">@color/gradient</color>
   <color name="d_button_colored_gradient_start">#0C9C188F</color>
@@ -82,7 +82,7 @@
   <color name="d_commerce_payment_indicator_background_solid">@color/container_light_tertiary</color>
   <color name="d_commerce_payment_message_text_color">#FFFFFF</color>
   <color name="d_commerce_payment_option_background">#D8D8D8</color>
-  <color name="d_commerce_payment_option_border">#809C188F</color>
+  <color name="d_commerce_payment_option_border">#84cea5</color>
   <color name="d_commerce_payment_option_product_number_default_text_shadow">#33000000</color>
   <color name="d_commerce_payment_option_shadow_border">#1A000000</color>
   <color name="d_commerce_payment_option_text_default">#333333</color>
@@ -101,7 +101,7 @@
   <color name="d_load_indicator_full_size_accent">@color/accent</color>
   <color name="d_load_indicator_full_size_background_window">@color/white_50</color>
   <color name="d_load_indicator_full_size_primary">@color/primary</color>
-  <color name="d_load_indicator_full_size_primary_dark">#AD77A8</color>
+  <color name="d_load_indicator_full_size_primary_dark">#84cea5</color>
   <color name="d_search_view_drawable">#999</color>
   <color name="d_search_view_hint">#999</color>
   <color name="d_search_view_text">@color/black</color>
@@ -160,5 +160,5 @@
   <color name="widget_text_input_dark_erratic">#F8E81C</color>
   <color name="widget_text_input_dark_erratic_alpha_50">#7FF8E81C</color>
     <color name="my_qr_background">#d8d8d8</color>
-  <color name="my_qr_selected_tab_background">#9b1890</color>
+  <color name="my_qr_selected_tab_background">#278250</color>
 </resources>

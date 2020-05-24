@@ -1,5 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <string-array name="makes_array">
+        <item value="Acura">Acura</item>
+        <item value="Alfa Romeo">Alfa Romeo</item>
+        <item value="Aston Martin">Aston Martin</item>
+        <item value="Audi">Audi</item>
+        <item value="Bentley">Bentley</item>
+        <item value="BMW">BMW</item>
+        <item value="Bugatti">Bugatti</item>
+        <item value="Buick">Buick</item>
+        <item value="BYD">BYD</item>
+        <item value="Cadillac">Cadillac</item>
+        <item value="Chevrolet">Chevrolet</item>
+        <item value="Chrysler">Chrysler</item>
+        <item value="Dodge">Dodge</item>
+        <item value="Ferrari">Ferrari</item>
+        <item value="Fiat">Fiat</item>
+        <item value="Ford">Ford</item>
+        <item value="Genesis">Genesis</item>
+        <item value="GMC">GMC</item>
+        <item value="Honda">Honda</item>
+        <item value="Hyundai">Hyundai</item>
+        <item value="Infiniti">Infiniti</item>
+        <item value="Jaguar">Jaguar</item>
+        <item value="Jeep">Jeep</item>
+        <item value="Karma">Karma</item>
+        <item value="Kia">Kia</item>
+        <item value="Lamborghini">Lamborghini</item>
+        <item value="Land Rover">Land Rover</item>
+        <item value="Lexus">Lexus</item>
+        <item value="Lincoln">Lincoln</item>
+        <item value="Lotus">Lotus</item>
+        <item value="Maserati">Maserati</item>
+        <item value="Mazda">Mazda</item>
+        <item value="Mercedes-Benz">Mercedes-Benz</item>
+        <item value="MINI">MINI</item>
+        <item value="Mitsubishi">Mitsubishi</item>
+        <item value="Nissan">Nissan</item>
+        <item value="Porsche">Porsche</item>
+        <item value="Ram">Ram</item>
+        <item value="Rolls-Royce">Rolls-Royce</item>
+        <item value="Roush Performance">Roush Performance</item>
+        <item value="Subaru">Subaru</item>
+        <item value="Tesla">Tesla</item>
+        <item value="Toyota">Toyota</item>
+        <item value="Volkswagen">Volkswagen</item>
+        <item value="Volvo">Volvo</item>
+    </string-array>
+
+    <string-array name="honda_models_array">
+    <item value="Accord">Accord</item>
+    <item value="Civic">Civic</item>
+    <item value="Clarity">Clarity</item>
+    <item value="CR-V">CR-V</item>
+    <item value="Fit">Fit</item>
+    <item value="HR-V">HR-V</item>
+    <item value="Insight">Insight</item>
+    <item value="Odyssey">Odyssey</item>
+    <item value="Passport">Passport</item>
+    <item value="Pilot">Pilot</item>
+    <item value="Ridgeline">Ridgeline</item>
+</string-array>
+    
+    <string-array name="years_array">
+        <item value="2021">2021</item>
+        <item value="2020">2020</item>
+        <item value="2019">2019</item>
+        <item value="2018">2018</item>
+        <item value="2017">2017</item>
+        <item value="2016">2016</item>
+        <item value="2015">2015</item>
+        <item value="2014">2014</item>
+        <item value="2013">2013</item>
+        <item value="2012">2012</item>
+        <item value="2011">2011</item>
+        <item value="2010">2010</item>
+        <item value="2009">2009</item>
+        <item value="2008">2008</item>
+        <item value="2007">2007</item>
+        <item value="2006">2006</item>
+        <item value="2005">2005</item>
+    </string-array>
+
+
+    <string-array name="toyota_models_array">
+        <item value="4Runner">4Runner</item>
+        <item value="86">86</item>
+        <item value="Avalon">Avalon</item>
+        <item value="C-HR">C-HR</item>
+        <item value="Camry">Camry</item>
+        <item value="Corolla">Corolla</item>
+        <item value="GR Supra">GR Supra</item>
+        <item value="Highlander">Highlander</item>
+        <item value="Land Cruiser">Land Cruiser</item>
+        <item value="Prius">Prius</item>
+        <item value="Prius Prime">Prius Prime</item>
+        <item value="RAV4">RAV4</item>
+        <item value="Sequoia">Sequoia</item>
+        <item value="Sienna">Sienna</item>
+        <item value="Tacoma">Tacoma</item>
+        <item value="Tundra">Tundra</item>
+        <item value="Yaris">Yaris</item>
+    </string-array>
+
     <string name="daily">Diario</string>
     <string name="weekly">Semanal</string>
     <string name="monthly">Mensual</string>
@@ -137,22 +241,22 @@
     <!-- [end] settings/profile/change/password -->
 
     <!-- TODO: Remove every string from this point downwards -->
-    <string name="tpagoemail">info@tpago.com</string>
-    <string name="tpagophone">18097322525</string>
-    <string name="tpagoweb">http://www.tpago.com</string>
-    <string name="tpagotwitter">https://twitter.com/TPAGO</string>
-    <string name="tpagofacebook">https://facebook.com/n/?TPAGO</string>
-    <string name="tpagoinstagram">https://www.instagram.com/tpago</string>
-    <string name="tpagosnapchat">https://www.snapchat.com/add/TPAGORD</string>
-    <string name="tpagoyoutube">https://www.youtube.com/user/tpagotv</string>
+    <string name="tpagoemail">info@mono40.com</string>
+    <string name="tpagophone">18492656223</string>
+    <string name="tpagoweb">http://www.cryptoqrApp.com</string>
+    <string name="tpagotwitter">https://twitter.com/cryptoqrApp</string>
+    <string name="tpagofacebook">https://facebook.com/n/?cryptoqrApp</string>
+    <string name="tpagoinstagram">https://www.instagram.com/cryptoqrApp</string>
+    <string name="tpagosnapchat">https://www.snapchat.com/add/cryptoqrApp</string>
+    <string name="tpagoyoutube">https://www.youtube.com/user/cryptoqrAppTv</string>
     <string name="termsconditionsasue">https://www.popularenlinea.com/Personas/Paginas/prestamos/Avance-de-Sueldo.aspx</string>
     <string name="termsconditionsxtra">https://www.popularenlinea.com/Personas/Paginas/prestamos/extracredito.aspx</string>
     <string name="popularenlineaurl">https://www.popularenlinea.com/Personas/Paginas/prestamos/default.aspx</string>
-    <string name="tpagotermconditions">http://gcs-international.com/tpagofaqs/</string>
+    <string name="tpagotermconditions">http://cryptoqrApp.com/qrAppfaqs/</string>
     <string name="about">Acerca de</string>
     <string name="account">Cuenta</string>
     <string name="action.add">Agregar</string>
-    <string name="action.pay">Pagar</string>
+    <string name="action.pay">Mantenimiento</string>
     <string name="action.recharge">Recargar</string>
     <string name="action.remove">Remover</string>
     <string name="action.save">Guardar</string>
@@ -172,7 +276,7 @@
     <string name="banks">Bancos</string>
     <string name="beneficiary">Beneficiario</string>
     <string name="bring_device_closer_to_the_terminal">Acercar celular a terminal tocar y pagar</string>
-    <string name="buy">Comprar</string>
+    <string name="buy">Leer Qr</string>
     <string name="cancel">Cancelar</string>
     <string name="unlink">Desvincular</string>
     <string name="close">Cerrar</string>
@@ -243,14 +347,14 @@
     <string name="init_phone_number_error_incorrect_number_message">Debes de ingresar un número de diez dígitos.</string>
     <string name="init_phone_number_error_incorrect_number_positive_button_text">@string/ok</string>
     <string name="init_phone_number_error_incorrect_number_title">Número incorrecto</string>
-    <string name="init_phone_number_error_not_affiliated_message">El número que ingresaste no esta afiliado a tPago. Permitenos tus datos para contactarte.</string>
+    <string name="init_phone_number_error_not_affiliated_message">El número que ingresaste no pertenece a CryptoQr. Permitenos tus datos para contactarte.</string>
     <string name="init_phone_number_error_not_affiliated_positive_button_text">@string/ok</string>
     <string name="init_phone_number_error_not_affiliated_title">Número no afiliado</string>
     <string name="init_phone_number_label_description">Ingresa el número de celular para verificar tu perfil</string>
     <string name="init_phone_number_label_title">¡Listo, empecemos!</string>
     <string name="init_otp_label_title">Confirmar código</string>
     <string name="init_otp_email_label_title">Validar código</string>
-    <string name="init_otp_label_description">tPago mandó un mensaje con código temporal a tu celular</string>
+    <string name="init_otp_label_description">CryptoQR mandó un mensaje con código temporal a tu celular</string>
     <string name="init_otp_label_sendcodeagain">MANDAR CÓDIGO DE NUEVO</string>
     <string name="instruction_content_first">¡Listo! Visita la sucursal del banco donde tienes la cuenta o tarjeta de crédito que deseas agregar.</string>
     <string name="instruction_content_second">Con tu cédula y celular en mano, solicita a un representante de servicio, que active tu cuenta o tarjeta a tPago.</string>
@@ -259,12 +363,12 @@
     <string name="instruction_index_second">2.</string>
     <string name="instruction_index_third">3.</string>
     <string name="intro_button_start">@string/start</string>
-    <string name="intro_tab_description_01">Paga, compra, recarga y transfiere rápido y seguro.</string>
-    <string name="intro_tab_description_02">Cuando estés de compras, al pagar toca tu celular y listo.</string>
-    <string name="intro_tab_description_03">Transfiere a tu amigo el serrucho del almuerzo o paga tu factura de luz al instante.</string>
-    <string name="intro_tab_title_01">¡Bienvenidos a tPago!</string>
-    <string name="intro_tab_title_02">Tocar y Pagar</string>
-    <string name="intro_tab_title_03">Pagos al instante</string>
+    <string name="intro_tab_description_01">Scannea, Lee, registra y descarga informacion de mantenimiento agilmente.</string>
+    <string name="intro_tab_description_02">Accede a la informacion de mantenimiento de un vehiculo a traves de la lectura QR</string>
+    <string name="intro_tab_description_03">Llena la plantilla de mantenimientos y genera data de mantenimiento encriptada al instante.</string>
+    <string name="intro_tab_title_01">¡Bienvenidos a App-CryptoQr!</string>
+    <string name="intro_tab_title_02">Scannear y Generar</string>
+    <string name="intro_tab_title_03">Registro de Mantenimiento al Instante</string>
     <string name="invoice">Factura</string>
     <string name="is_required">Es requerido</string>
     <string name="learn_more">Aprende más</string>
@@ -280,7 +384,7 @@
     <string name="onboarding_button_skip">@string/skip</string>
     <string name="partners">Facturadores</string>
     <string name="password">Contraseña</string>
-    <string name="pay">Pagar</string>
+    <string name="pay">Mantenimiento</string>
     <string name="pay_minimum">Pagar mínimo</string>
     <string name="pay_screen_search_hint_pay">Nombre, número, o facturador</string>
     <string name="pay_screen_search_hint_recharge">Nombre, número, o telefónica</string>
@@ -290,7 +394,7 @@
     <string name="payments.action.phone_number.transaction">%1$s a \'%2$s\'</string>
     <string name="payments.menu.option.add_recipient">Agregar destinatario</string>
     <string name="payments.menu.option.remove_recipient">Remover destinatario</string>
-    <string name="payments.title">Pagar</string>
+    <string name="payments.title">Mantenimiento</string>
     <string name="pin_confirmation">Confirma con tu PIN</string>
     <string name="preferences">Preferencias</string>
     <string name="products">Cuentas</string>
@@ -330,7 +434,7 @@
     <string name="register_form_name_error_title">¿Tienes nombre?</string>
     <string name="register_form_name_hint_first_name">@string/firstName</string>
     <string name="register_form_name_hint_last_name">@string/lastName</string>
-    <string name="register_form_name_label_description">Continuamos con crear tu perfil para tPago</string>
+    <string name="register_form_name_label_description">Continuamos con crear tu perfil para App-CryptoQr</string>
     <string name="register_form_name_label_title">¿Cómo te llamas?</string>
     <string name="register_form_password_button_move_to_next_screen">@string/next</string>
     <string name="register_form_password_error_message">La contraseña no cumple con los requisitos mínimos. Mínimo 8 caracteres, Alfanuméricos, no puede ser igual al correo electrónico.</string>
@@ -351,7 +455,7 @@
     <string name="register_summary_button_continue">@string/next</string>
     <string name="register_summary_button_later">@string/laterAsVerb</string>
     <string name="register_summary_label_description">Empecemos con mostrarte lo más básico de la nueva App.</string>
-    <string name="register_summary_label_title">¡tPago esta listo!</string>
+    <string name="register_summary_label_title">¡App-CryptoQr esta listo!</string>
     <string name="relative_time_prefix_future">En</string>
     <string name="relative_time_prefix_past">Hace</string>
     <string name="relative_time_suffix_hours">h</string>
@@ -369,7 +473,7 @@
     <string name="incorrectCredentials">Credenciales incorrectos</string>
     <string name="sign_in_input_hint_email">@string/email</string>
     <string name="sign_in_input_hint_password">@string/password</string>
-    <string name="sign_in_label_description">Iniciar sesión con usuario y contraseña de tPago</string>
+    <string name="sign_in_label_description">Iniciar sesión con usuario y contraseña de CryptoQR</string>
     <string name="sign_in_label_title">@string/welcome</string>
     <string name="skip">@string/forward</string>
     <string name="start">Comenzar</string>
@@ -432,13 +536,16 @@
     <string name="non_nfc_purchase_title">La compra en comercio ha sido habilitada.</string>
     <string name="non_nfc_purchase_subtitle">Favor de indicar su número de télefono al dependiente del comercio.</string>
     <string name="qr_scan">ESCANEAR</string>
-    <string name="qr_my_qr">MI CÓDIGO QR</string>
+    <string name="qr_my_qr">MI CÓDIGO CryptoQr</string>
     <string name="import_gallery">Importar</string>
-    <string name="qr_activity_title">Código QR</string>
+    <string name="qr_activity_title">Código CryptoQr</string>
     <string name="qr_error_own_code">Codigo propio</string>
     <string name="qr_error_own_code_message">Este codigo qr pertenece a ti</string>
     <string name="qr_error_unsupported_code">Codigo no soportado</string>
-    <string name="qr_error_unsupported_code_message">Este no es un codigo de tpago valido</string>
+    <string name="qr_error_unsupported_code_message">Este no es un codigo CryptoQr valido</string>
     <string name="delete_profile_image">Restablecer imagen de perfil</string>
     <string name="session_expired">Su sesión expiró</string>
+    <string name="milleage">Millaje</string>
+    <string name="insurance">No. Seguro</string>
+    <string name="goOn">CONTINUAR</string>
 </resources>

@@ -24,7 +24,7 @@
     android:textColor="#333"
     android:textSize="16sp"/>
 
-  <com.tpago.movil.dep.widget.TextInput
+  <com.mono40.movil.dep.widget.TextInput
     android:id="@+id/text_input"
     style="@style/Widget.TextInput.Light"
     android:layout_width="match_parent"

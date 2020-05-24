@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-      <com.tpago.movil.app.ui.Label
+      <com.mono40.movil.app.ui.Label
           style="@style/Label.Light"
           android:layout_width="0dp"
           android:layout_weight="1"
@@ -38,7 +38,7 @@
           android:gravity="start"
           android:text="@string/coverage" />
 
-      <com.tpago.movil.app.ui.LabelPrefix
+      <com.mono40.movil.app.ui.LabelPrefix
           android:id="@+id/label_coverage"
           style="@style/LabelMoney.Light.LightBook"
           android:layout_width="0dp"
@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-      <com.tpago.movil.app.ui.Label
+      <com.mono40.movil.app.ui.Label
           style="@style/Label.Light"
           android:layout_width="0dp"
           android:layout_weight="1"
@@ -63,7 +63,7 @@
           android:gravity="start"
           android:text="@string/payType" />
 
-      <com.tpago.movil.app.ui.Label
+      <com.mono40.movil.app.ui.Label
           android:id="@+id/label_term"
           style="@style/Label.Light"
           android:layout_width="0dp"
@@ -97,7 +97,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-      <com.tpago.movil.app.ui.Label
+      <com.mono40.movil.app.ui.Label
           style="@style/Label.Light.Bold"
           android:layout_width="0dp"
           android:layout_weight="1"
@@ -105,7 +105,7 @@
           android:gravity="start"
           android:text="@string/totalPayment" />
 
-      <com.tpago.movil.app.ui.LabelPrefix
+      <com.mono40.movil.app.ui.LabelPrefix
           android:id="@+id/total"
           style="@style/Label.Light.Bold.Money"
           android:layout_width="0dp"
@@ -124,7 +124,7 @@
         android:layout_marginStart="0dp" />
   </LinearLayout>
 
-  <com.tpago.movil.dep.main.transactions.PaymentMethodChooser
+  <com.mono40.movil.dep.main.transactions.PaymentMethodChooser
     android:id="@+id/payment_method_chooser"
     style="@style/D.Transactions.Widget.PaymentMethodChooser"
     android:layout_marginEnd="32dp"

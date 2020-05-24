@@ -17,18 +17,6 @@
       android:layout_height="match_parent"
       android:orientation="vertical">
 
-      <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
-
-        <ImageView
-          android:layout_width="68dp"
-          android:layout_height="34dp"
-          android:layout_gravity="center"
-          android:contentDescription="@string/logo"
-          app:srcCompat="@drawable/logo"/>
-      </FrameLayout>
-
       <TextView
         style="@style/PinConfirmationTitle"
         android:layout_width="match_parent"
@@ -47,7 +35,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="15dp"/>
 
-      <com.tpago.movil.d.ui.view.widget.PinView
+      <com.mono40.movil.d.ui.view.widget.PinView
         android:id="@+id/pin_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,7 +43,7 @@
         android:layout_marginStart="60dp"
         android:layout_marginTop="16dp"/>
 
-      <com.tpago.movil.app.ui.DNumPad
+      <com.mono40.movil.app.ui.DNumPad
         android:id="@+id/num_pad"
         style="@style/DNumPad.Dark"
         android:layout_width="match_parent"

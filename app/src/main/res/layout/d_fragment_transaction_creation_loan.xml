@@ -32,7 +32,7 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <com.tpago.movil.d.ui.view.widget.PrefixableTextView
+        <com.mono40.movil.d.ui.view.widget.PrefixableTextView
           android:id="@+id/prefixable_text_view_total_owed"
           style="@style/D.Screen.Products.Text.Widget.Amount.Content"
           android:layout_width="wrap_content"
@@ -83,7 +83,7 @@
 
     <include layout="@layout/d_reusable_divider"/>
 
-    <com.tpago.movil.dep.main.transactions.PaymentMethodChooser
+    <com.mono40.movil.dep.main.transactions.PaymentMethodChooser
       android:id="@+id/payment_method_chooser"
       style="@style/D.Transactions.Widget.PaymentMethodChooser"
       android:layout_marginEnd="32dp"
@@ -100,7 +100,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp">
 
-        <com.tpago.movil.d.ui.view.widget.PrefixableTextView
+        <com.mono40.movil.d.ui.view.widget.PrefixableTextView
           android:id="@+id/prefixable_text_view_period"
           style="@style/D.Screen.Products.Text.Widget.Amount.Content"
           fontPath="@string/font_gothamRounded_book"
@@ -133,7 +133,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="8dp">
 
-        <com.tpago.movil.d.ui.view.widget.PrefixableTextView
+        <com.mono40.movil.d.ui.view.widget.PrefixableTextView
           android:id="@+id/prefixable_text_view_total"
           style="@style/D.Screen.Products.Text.Widget.Amount.Content"
           fontPath="@string/font_gothamRounded_book"

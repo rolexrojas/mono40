@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
-    tools:context="com.tpago.movil.app.ui.main.settings.bankdetail.BankDetailFragment">
+    tools:context="com.mono40.movil.app.ui.main.settings.bankdetail.BankDetailFragment">
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -18,7 +18,7 @@
             style="@style/SettingsSectionTitle"
             android:text="Contactos"/>
 
-        <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+        <com.mono40.movil.app.ui.main.settings.MultiLineSettingsOption
             android:id="@+id/sendemail"
             android:clickable="true"
             style="@style/SettingsOption"
@@ -31,7 +31,7 @@
             android:layout_marginStart="@dimen/space_horizontal_20"
             android:id="@+id/emailseparator"/>
 
-        <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+        <com.mono40.movil.app.ui.main.settings.MultiLineSettingsOption
             android:id="@+id/domesticcall"
             android:clickable="true"
             style="@style/SettingsOption"
@@ -44,7 +44,7 @@
             android:layout_marginStart="@dimen/space_horizontal_20"
             android:id="@+id/domesticcallseparator"/>
 
-        <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+        <com.mono40.movil.app.ui.main.settings.MultiLineSettingsOption
             android:id="@+id/freecall"
             android:clickable="true"
             style="@style/SettingsOption"
@@ -64,7 +64,7 @@
             style="@style/SettingsSectionTitle"
             android:text="En Línea"/>
 
-        <com.tpago.movil.app.ui.main.settings.MultiLineSettingsOption
+        <com.mono40.movil.app.ui.main.settings.MultiLineSettingsOption
             android:id="@+id/bankurl"
             android:clickable="true"
             style="@style/SettingsOption"

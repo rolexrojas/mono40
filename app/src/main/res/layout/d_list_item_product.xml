@@ -19,7 +19,7 @@
     android:layout_marginBottom="4dp"
     android:layout_marginTop="4dp"/>
 
-  <com.tpago.movil.d.ui.view.widget.PrefixableTextView
+  <com.mono40.movil.d.ui.view.widget.PrefixableTextView
     android:id="@+id/prefixable_text_view_product_balance"
     style="@style/D.Screen.Products.Text.Widget.Amount.Content"
     android:layout_width="wrap_content"

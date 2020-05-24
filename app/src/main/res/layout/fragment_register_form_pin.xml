@@ -24,7 +24,7 @@
     android:layout_marginTop="10dp"
     android:text="@string/register_form_pin_label_description"/>
 
-  <com.tpago.movil.dep.widget.LabelFitterLayout
+  <com.mono40.movil.dep.widget.LabelFitterLayout
     android:id="@+id/label_fitter_layout"
     style="@style/Widget.LabelFitterLayout"
     android:layout_below="@+id/label_description"
@@ -33,14 +33,14 @@
     android:layout_marginTop="16dp"
     app:maxTextSize="50sp">
 
-    <com.tpago.movil.dep.widget.EditableLabel
+    <com.mono40.movil.dep.widget.EditableLabel
       android:id="@+id/editable_label_pin"
       style="@style/Widget.EditableLabel.Dark"
       android:layout_width="match_parent"
       android:layout_height="match_parent"/>
-  </com.tpago.movil.dep.widget.LabelFitterLayout>
+  </com.mono40.movil.dep.widget.LabelFitterLayout>
 
-  <com.tpago.movil.app.ui.DNumPad
+  <com.mono40.movil.app.ui.DNumPad
     android:id="@+id/num_pad"
     style="@style/DNumPad.Dark"
     android:layout_width="match_parent"

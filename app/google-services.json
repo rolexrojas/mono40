@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1075313000495",
+    "firebase_url": "https://cryptoqr-7758c.firebaseio.com",
+    "project_id": "cryptoqr-7758c",
+    "storage_bucket": "cryptoqr-7758c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1075313000495:android:424956022985af936ec6da",
+        "android_client_info": {
+          "package_name": "com.mono40.cryptoqr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1075313000495-7oaa5eqhdmqjfe811uk805bncod6vahg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_9xQ5mG7pOr3Tj1URWAYlbA-bH77narA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1075313000495-7oaa5eqhdmqjfe811uk805bncod6vahg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

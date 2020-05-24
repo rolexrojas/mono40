@@ -12,7 +12,7 @@ android {
     buildToolsVersion '29.0.2'
 
     defaultConfig {
-        applicationId 'com.tpago.movil'
+        applicationId 'com.mono40.movil'
 
         renderscriptTargetApi 16
         renderscriptSupportModeEnabled true
@@ -68,7 +68,7 @@ android {
             resValue 'string', 'app_name', "${appName}-${flavorName}"
 
             buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'true'
-            buildConfigField 'String', 'API_URL', '"https://tpagonet-dev.gcs-systems.com/api/neo/"'
+            buildConfigField 'String', 'API_URL', '"https://localhost:8091/api/cryptoqr/"'
         }
 
         stag {
@@ -81,7 +81,7 @@ android {
             resValue 'string', 'app_name', "${appName}-${flavorName}"
 
             buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'true'
-            buildConfigField 'String', 'API_URL', '"https://tpagonet-dev.gcs-systems.com/api/neo/"'
+            buildConfigField 'String', 'API_URL', '"https://localhost:8091/api/cryptoqr/"'
         }
 
         prep {
@@ -94,7 +94,7 @@ android {
             resValue 'string', 'app_name', "${appName}-${flavorName}"
 
             buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'true'
-            buildConfigField 'String', 'API_URL', '"https://tpagonet-dev.gcs-systems.com/api/neo/"'
+            buildConfigField 'String', 'API_URL', '"https://localhost:8091/api/cryptoqr/"'
         }
 
         prod {
@@ -103,7 +103,7 @@ android {
             resValue 'string', 'app_name', appName
 
             buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'true'
-            buildConfigField 'String', 'API_URL', '"https://tpagonet.gcs-systems.com/api/neo/"'
+            buildConfigField 'String', 'API_URL', '"https://localhost:8091/api/cryptoqr/"'
         }
 
         emulatedDevice {

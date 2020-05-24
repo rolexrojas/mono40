@@ -23,7 +23,7 @@
     android:layout_marginTop="10dp"
     android:text="@string/register_form_email_label_description"/>
 
-  <com.tpago.movil.dep.widget.TextInput
+  <com.mono40.movil.dep.widget.TextInput
     android:id="@+id/text_input"
     style="@style/D.Widget.TextInput.Dark"
     android:layout_width="match_parent"
@@ -37,7 +37,7 @@
     android:maxLines="1"
     android:nextFocusDown="@+id/text_input_last_name"/>
 
-  <com.tpago.movil.dep.widget.TextInput
+  <com.mono40.movil.dep.widget.TextInput
     android:id="@+id/text_input_confirmation"
     style="@style/D.Widget.TextInput.Dark"
     android:layout_width="match_parent"

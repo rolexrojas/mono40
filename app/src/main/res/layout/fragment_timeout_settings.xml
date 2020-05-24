@@ -28,7 +28,7 @@
           android:layout_height="match_parent"
           android:background="@color/white"/>
 
-      <!--<com.tpago.movil.app.ui.main.settings.SelectableSettingsOption-->
+      <!--<com.mono40.movil.app.ui.main.settings.SelectableSettingsOption-->
         <!--android:id="@+id/fingerprintOption"-->
         <!--style="@style/SettingsOption"-->
         <!--app:primaryText="@string/fingerprint"/>-->
@@ -39,7 +39,7 @@
         <!--android:layout_marginEnd="@dimen/space_horizontal_20"-->
         <!--style="@style/VerticalDivider.Line"/>-->
 
-      <!--<com.tpago.movil.app.ui.main.settings.SelectableSettingsOption-->
+      <!--<com.mono40.movil.app.ui.main.settings.SelectableSettingsOption-->
         <!--android:id="@+id/codeOption"-->
         <!--style="@style/SettingsOption"-->
         <!--app:primaryText="@string/code"/>-->
@@ -49,7 +49,7 @@
         <!--android:layout_marginEnd="@dimen/space_horizontal_20"-->
         <!--style="@style/VerticalDivider.Line"/>-->
 
-      <!--<com.tpago.movil.app.ui.main.settings.SelectableSettingsOption-->
+      <!--<com.mono40.movil.app.ui.main.settings.SelectableSettingsOption-->
         <!--android:id="@+id/noneOption"-->
         <!--style="@style/SettingsOption"-->
         <!--app:primaryText="@string/noneUsePassword"/>-->
