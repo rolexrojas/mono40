@@ -1,11 +1,13 @@
 package com.mono40.movil.api;
 
+import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.mono40.movil.R;
 import com.mono40.movil.app.ui.activity.base.ActivityBase;
+import com.mono40.movil.d.ui.main.recipient.index.category.RecipientCategoryFragment;
 import com.mono40.movil.dep.widget.TextInput;
 
 import butterknife.BindView;
@@ -73,6 +75,21 @@ public class SecondActivity extends ActivityBase {
 
 
     public void finishCheck(View view) {
-        Toast.makeText(this, "Terminar todo el check", Toast.LENGTH_SHORT).show();
+        Bundle extras = this.getIntent().getExtras();
+
+        String insurance = extras.getString(RecipientCategoryFragment.EXTRA_INSURANCE, "DEFAULT INSURANCE");
+        String millage = extras.getString(RecipientCategoryFragment.EXTRA_MILLAGE, "DEFAULT MILLGAGE");
+        String year = extras.getString(RecipientCategoryFragment.EXTRA_YEAR, "DEFAULT YEAR");
+        String model = extras.getString(RecipientCategoryFragment.EXTRA_MODEL, "DEFAULT MODEL");
+        String make = extras.getString(RecipientCategoryFragment.EXTRA_MAKE, "DEFAULT MAKE");
+
+        String message = "Finish " +
+                " insurance=" + insurance +
+                " millage=" + millage +
+                " year=" + year +
+                " model=" + model +
+                " make=" + make;
+
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }

@@ -178,6 +178,12 @@ public class RecipientCategoryFragment
     private Disposable closeSessionDisposable;
     TakeoverLoaderDialogFragment takeoverLoader;
 
+    public static String EXTRA_INSURANCE = "EXTRA_INSURANCE";
+    public static String EXTRA_MILLAGE = "EXTRA_MILLAGE";
+    public static String EXTRA_YEAR = "EXTRA_YEAR";
+    public static String EXTRA_MODEL = "EXTRA_MODEL";
+    public static String EXTRA_MAKE = "EXTRA_MAKE";
+
     @OnClick(R.id.buttonKontinue)
     void onButtonKontinueClicked() {
         if(!inputTextSeguro.getText().toString().isEmpty() && !inputTextMillaje.getText().toString().isEmpty()){
@@ -188,6 +194,13 @@ public class RecipientCategoryFragment
             UiUtil.setEnabled(this.buttonContinue, true);
 
             Intent intent = new Intent(this.getActivity(), SecondActivity.class);
+
+            intent.putExtra(EXTRA_INSURANCE, inputTextSeguro.getText().toString());
+            intent.putExtra(EXTRA_MILLAGE, inputTextMillaje.getText().toString());
+            intent.putExtra(EXTRA_YEAR, spinnerYear.getSelectedItem().toString());
+            intent.putExtra(EXTRA_MODEL, spinnerModel.getSelectedItem().toString());
+            intent.putExtra(EXTRA_MAKE, spinnerMake.getSelectedItem().toString());
+
             this.getActivity().startActivity(intent);
         }
     }
