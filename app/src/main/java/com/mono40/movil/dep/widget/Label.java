@@ -1,0 +1,23 @@
+package com.mono40.movil.dep.widget;
+
+import android.content.Context;
+import androidx.appcompat.widget.AppCompatTextView;
+import android.util.AttributeSet;
+
+/**
+ * @author hecvasro
+ */
+@Deprecated
+public class Label extends AppCompatTextView {
+  public Label(Context context) {
+    super(context);
+  }
+
+  public Label(Context context, AttributeSet attrs) {
+    super(context, attrs);
+  }
+
+  public Label(Context context, AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+  }
+}
