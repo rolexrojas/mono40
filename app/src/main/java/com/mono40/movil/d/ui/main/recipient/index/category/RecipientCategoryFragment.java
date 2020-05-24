@@ -34,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mono40.movil.R;
+import com.mono40.movil.api.SecondActivity;
 import com.mono40.movil.app.ui.Input;
 import com.mono40.movil.app.ui.Label;
 import com.mono40.movil.app.ui.activity.toolbar.ActivityToolbar;
@@ -141,14 +142,6 @@ public class RecipientCategoryFragment
     @BindView(R.id.spinnerYear)
     Spinner spinnerYear;
 
-    @BindView(R.id.search_view)
-    SearchView searchView;
-
-    @BindView(R.id.swipe_refresh_layout)
-    SwipeRefreshLayout swipeRefreshLayout;
-    //@BindView(R.id.recycler_view)
-   // RecyclerView recyclerView;
-
     @BindView(R.id.textInputMillaje)
     TextInput inputTextMillaje;
 
@@ -188,8 +181,14 @@ public class RecipientCategoryFragment
     @OnClick(R.id.buttonKontinue)
     void onButtonKontinueClicked() {
         if(!inputTextSeguro.getText().toString().isEmpty() && !inputTextMillaje.getText().toString().isEmpty()){
-            System.out.println("seguro y millaje no estan vacios");
+
+            Toast.makeText(this.getActivity(), "Seguro y millaje no estan vacios", Toast.LENGTH_SHORT)
+                .show();
+
             UiUtil.setEnabled(this.buttonContinue, true);
+
+            Intent intent = new Intent(this.getActivity(), SecondActivity.class);
+            this.getActivity().startActivity(intent);
         }
     }
 
@@ -281,6 +280,9 @@ public class RecipientCategoryFragment
         spinnerMake.setAdapter(adapter);
         spinnerMake.setOnItemSelectedListener(this);
 
+        spinnerModel.setOnItemSelectedListener(this);
+        spinnerYear.setOnItemSelectedListener(this);
+
         inputTextMillaje.setVisibility(View.INVISIBLE);
         inputTextSeguro.setVisibility(View.INVISIBLE);
         labelInsurance.setVisibility(View.INVISIBLE);
@@ -297,14 +299,17 @@ public class RecipientCategoryFragment
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        System.out.println("ADAPTER VIEW PARENT SPINNER NAME => " + parent.toString());
+        Log.i("LOG", "MAKE=" + (parent == this.spinnerMake));
+        Log.i("LOG", "MODEL=" + (parent == this.spinnerModel));
+        Log.i("LOG", "YEAR=" + (parent == this.spinnerYear));
+
+        String message = "MAKE=" + (parent == this.spinnerMake) + " MODEL=" + (parent == this.spinnerModel) + " YEAR=" + (parent == this.spinnerYear);
+
+        Toast.makeText(this.getActivity(), message, Toast.LENGTH_SHORT)
+                .show();
+
         if(this.spinnerMake == parent) {
-            System.out.println("SPINNER MAKE BLOCK");
             parent.getItemAtPosition(position);
-            System.out.println("ADAPTER VIEW  => " + parent.toString());
-            System.out.println("VIEW  => " + view.toString());
-            System.out.println("ID  => " + id);
-            System.out.println("PARENT ITEM AT POSITION => " + parent.getItemAtPosition(position).toString());
 
             if (parent.getItemAtPosition(position).toString().equalsIgnoreCase(this.HONDA)) {
 
@@ -480,12 +485,11 @@ public class RecipientCategoryFragment
     @NonNull
     @Override
     public Observable<String> onQueryChanged() {
-        return searchView.onQueryChanged();
+        return Observable.just("");
     }
 
     @Override
     public void clearQuery() {
-        searchView.clear();
     }
 
     @Override
@@ -496,10 +500,10 @@ public class RecipientCategoryFragment
             }
             currentLoadIndicator = fullScreenLoadIndicator;
         } else {
-            if (ObjectHelper.isNull(loadIndicator)) {
-                loadIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
-            }
-            currentLoadIndicator = loadIndicator;
+//            if (ObjectHelper.isNull(loadIndicator)) {
+//                loadIndicator = new SwipeRefreshLayoutRefreshIndicator(swipeRefreshLayout);
+//            }
+//            currentLoadIndicator = loadIndicator;
         }
         currentLoadIndicator.show();
     }
