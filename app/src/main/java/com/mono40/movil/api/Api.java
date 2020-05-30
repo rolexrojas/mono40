@@ -222,6 +222,6 @@ public interface Api {
 
   Single<Result<ApiSecretTokenResponse>> getQrForCustomer();
 
-  Single<Response<ApiSecretTokenResponse>> getEncryptedMaintenance(String insuranceNo, String model, String make, String year, String miles, Maintenance maintenance);
+  Single<Result<ApiSecretTokenResponse>> getEncryptedMaintenance(String insuranceNo, String model, String make, String year, String miles, Maintenance maintenance);
 
 }
