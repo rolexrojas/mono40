@@ -1,9 +1,12 @@
 package com.mono40.movil.d.domain.api;
 
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 
 import com.mono40.movil.PhoneNumber;
+import com.mono40.movil.ServiceInformation.Maintenance;
 import com.mono40.movil.company.bank.Bank;
 import com.mono40.movil.company.partner.Partner;
 import com.mono40.movil.d.data.api.CustomerSecretKey;
@@ -22,6 +25,7 @@ import com.mono40.movil.d.domain.ProductRecipient;
 import com.mono40.movil.d.domain.Recipient;
 import com.mono40.movil.d.domain.Transaction;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -32,12 +36,14 @@ import rx.Observable;
  * @deprecated Use {@link com.mono40.movil.api.Api} instead.
  */
 @Deprecated
-public interface DepApiBridge {
+public interface DepApiBridge extends Serializable {
 
     @NonNull
     Observable<ApiResult<InitialData>> initialLoad();
 
     Observable<ApiResult<CustomerSecretTokenResponse>> fetchCustomerSecretToken();
+
+    Observable<ApiResult<CustomerSecretTokenResponse>> getEncryptedMaintenance(String insuranceNo, String model, String make, String year, String miles, Maintenance mant);
 
     Observable<ApiResult<CustomerSecretKey>> fetchCustomerSecretKey();
 

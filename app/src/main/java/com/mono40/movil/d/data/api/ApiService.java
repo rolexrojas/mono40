@@ -1,5 +1,6 @@
 package com.mono40.movil.d.data.api;
 
+import com.mono40.movil.ServiceInformation.Maintenance;
 import com.mono40.movil.d.domain.AccountBalance;
 import com.mono40.movil.d.domain.BillBalance;
 import com.mono40.movil.d.domain.CreditCardBalance;
@@ -19,6 +20,7 @@ import java.util.Map;
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -118,5 +120,8 @@ public interface ApiService {
 
     @GET("secrets")
     Observable<Response<CustomerSecretKey>> fetchCustomerSecretKey();
+
+    @POST("serviceReport/Maintenance/encrypt")
+    Observable<Response<CustomerSecretTokenResponse>> getEncryptedMaintenance(@Header("insuranceNo") String insuranceNo, @Header("model") String model, @Header("make") String make, @Header("year") String year, @Header("miles") String miles, @Body Maintenance body);
 
 }

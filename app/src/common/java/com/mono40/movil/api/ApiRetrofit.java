@@ -3,6 +3,8 @@ package com.mono40.movil.api;
 import android.os.Build;
 
 import com.mono40.movil.BuildConfig;
+import com.mono40.movil.ServiceInformation.Maintenance;
+import com.mono40.movil.d.data.api.BillResponseBody;
 import com.mono40.movil.d.data.api.ChangePasswordBody;
 import com.mono40.movil.d.data.api.ChangePinBody;
 import com.mono40.movil.d.data.api.ChangePinResponseBody;
@@ -23,6 +25,7 @@ import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import okhttp3.MultipartBody;
+import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -191,4 +194,7 @@ public interface ApiRetrofit {
 
     @POST("secrets/tokens/merchants/{merchant}/encrypt")
     Single<Response<ApiSecretTokenResponse>> getQrForMerchant(@Path("merchant") String merchant, @Body ApiSecretTokenRequest request);
+
+    @POST("serviceReport/Maintenance/encrypt")
+    Single<Response<ApiSecretTokenResponse>> getEncryptedMaintenance(@Header("insuranceNo") String insuranceNo, @Header("model") String model, @Header("make") String make, @Header("year") String year, @Header("miles") String miles, @Body Maintenance body);
 }

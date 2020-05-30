@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 
 import com.mono40.movil.PhoneNumber;
+import com.mono40.movil.ServiceInformation.Maintenance;
 import com.mono40.movil.company.bank.Bank;
 import com.mono40.movil.company.partner.Partner;
 import com.mono40.movil.d.domain.AccountRecipient;
@@ -114,6 +115,19 @@ final class RetrofitApiBridge implements DepApiBridge {
 
     public Observable<ApiResult<CustomerSecretTokenResponse>> fetchCustomerSecretToken() {
         return this.apiService.fetchCustomerSecretToken()
+                .compose(this.transformToApiResult());
+    }
+
+    @Override
+    public Observable<ApiResult<CustomerSecretTokenResponse>> getEncryptedMaintenance(
+            String insurance,
+            String model,
+            String make,
+            String year,
+            String miles,
+            Maintenance maintenance
+    ) {
+        return this.apiService.getEncryptedMaintenance(insurance, model, make, year, miles, maintenance)
                 .compose(this.transformToApiResult());
     }
 

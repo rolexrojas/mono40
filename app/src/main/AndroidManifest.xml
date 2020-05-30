@@ -117,7 +117,7 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".api.SecondActivity"
+            android:name=".d.ui.main.recipient.index.category.SecondActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
 

@@ -7,6 +7,7 @@ import androidx.annotation.IntDef;
 import com.mono40.movil.Code;
 import com.mono40.movil.Email;
 import com.mono40.movil.Name;
+import com.mono40.movil.ServiceInformation.Maintenance;
 import com.mono40.movil.company.bank.Bank;
 import com.mono40.movil.d.data.api.ChangePinResponseBody;
 import com.mono40.movil.d.domain.Customer;
@@ -34,6 +35,8 @@ import java.util.List;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * @author hecvasro
@@ -218,5 +221,7 @@ public interface Api {
   );
 
   Single<Result<ApiSecretTokenResponse>> getQrForCustomer();
+
+  Single<Response<ApiSecretTokenResponse>> getEncryptedMaintenance(String insuranceNo, String model, String make, String year, String miles, Maintenance maintenance);
 
 }

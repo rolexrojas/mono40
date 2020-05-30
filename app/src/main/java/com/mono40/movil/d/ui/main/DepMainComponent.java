@@ -9,6 +9,7 @@ import com.mono40.movil.app.ui.main.settings.help.FragmentHelp;
 import com.mono40.movil.company.CompanyHelper;
 import com.mono40.movil.company.partner.PartnerStore;
 import com.mono40.movil.d.ui.DepActivityBase;
+import com.mono40.movil.d.ui.main.recipient.index.category.SecondActivity;
 import com.mono40.movil.dep.User;
 import com.mono40.movil.app.ui.main.settings.profile.ProfileComponent;
 import com.mono40.movil.app.ui.main.settings.profile.ProfileModule;

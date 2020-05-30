@@ -69,7 +69,7 @@ android {
             resValue 'string', 'app_name', "${appName}-${flavorName}"
 
             buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'true'
-            buildConfigField 'String', 'API_URL', '"http://53ba9e6c.ngrok.io/api/cryptoqr/"'
+            buildConfigField 'String', 'API_URL', '"http://954e02a1ca05.ngrok.io/api/cryptoqr/"'
         }
 
         stag {
@@ -82,7 +82,7 @@ android {
             resValue 'string', 'app_name', "${appName}-${flavorName}"
 
             buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'true'
-            buildConfigField 'String', 'API_URL', '"http://172.20.67.113:8091/api/cryptoqr/"'
+            buildConfigField 'String', 'API_URL', '"http://954e02a1ca05.ngrok.io/api/cryptoqr/"'
         }
 
         prep {
@@ -95,7 +95,7 @@ android {
             resValue 'string', 'app_name', "${appName}-${flavorName}"
 
             buildConfigField 'boolean', 'MODE_CRASH_REPORTING', 'true'
-            buildConfigField 'String', 'API_URL', '"http://172.20.67.113:8091/api/cryptoqr/"'
+            buildConfigField 'String', 'API_URL', '"http://954e02a1ca05.ngrok.io/api/cryptoqr/"'
         }
 
         prod {

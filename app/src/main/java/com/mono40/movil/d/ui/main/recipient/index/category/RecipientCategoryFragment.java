@@ -6,18 +6,14 @@ import static com.mono40.movil.d.ui.main.recipient.index.category.Category.TRANS
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.util.Pair;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,15 +24,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mono40.movil.R;
-import com.mono40.movil.api.SecondActivity;
-import com.mono40.movil.app.ui.Input;
-import com.mono40.movil.app.ui.Label;
+import com.mono40.movil.ServiceInformation.Maintenance;
 import com.mono40.movil.app.ui.activity.toolbar.ActivityToolbar;
 import com.mono40.movil.app.ui.alert.AlertManager;
 import com.mono40.movil.app.ui.loader.takeover.TakeoverLoaderDialogFragment;
@@ -51,6 +44,7 @@ import com.mono40.movil.d.domain.UserRecipient;
 import com.mono40.movil.d.data.StringHelper;
 import com.mono40.movil.d.data.util.BinderFactory;
 import com.mono40.movil.d.domain.Recipient;
+import com.mono40.movil.d.domain.api.DepApiBridge;
 import com.mono40.movil.d.ui.DepActivityBase;
 import com.mono40.movil.d.ui.Dialogs;
 import com.mono40.movil.d.ui.main.DepMainActivityBase;
@@ -69,18 +63,14 @@ import com.mono40.movil.d.ui.main.recipient.index.category.selectcarrier.Carrier
 import com.mono40.movil.d.ui.main.transaction.TransactionCategory;
 import com.mono40.movil.d.ui.main.transaction.TransactionCreationActivityBase;
 import com.mono40.movil.d.ui.main.transaction.own.OwnTransactionCreationActivity;
-import com.mono40.movil.d.ui.view.Views;
 import com.mono40.movil.d.ui.view.widget.FullScreenLoadIndicator;
 import com.mono40.movil.d.ui.view.widget.LoadIndicator;
 import com.mono40.movil.d.ui.ChildFragment;
-import com.mono40.movil.d.ui.view.widget.SearchView;
-import com.mono40.movil.d.ui.view.widget.SwipeRefreshLayoutRefreshIndicator;
 import com.mono40.movil.app.StringMapper;
 import com.mono40.movil.dep.init.InitActivityBase;
 import com.mono40.movil.paypal.PayPalAccount;
 import com.mono40.movil.util.ObjectHelper;
 import com.mono40.movil.util.UiUtil;
-import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import javax.inject.Inject;
 
@@ -88,13 +78,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import butterknife.internal.Utils;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import com.mono40.movil.dep.widget.TextInput;
+
+import java.io.Serializable;
 
 /**
  * {@link RecipientCategoryScreen Screen} implementation that uses a {@link ChildFragment fragment}
@@ -175,6 +166,8 @@ public class RecipientCategoryFragment
     AlertManager alertManager;
     @Inject
     ProductManager productManager;
+
+
     private Disposable closeSessionDisposable;
     TakeoverLoaderDialogFragment takeoverLoader;
 
@@ -191,9 +184,16 @@ public class RecipientCategoryFragment
             Toast.makeText(this.getActivity(), "Seguro y millaje no estan vacios", Toast.LENGTH_SHORT)
                 .show();
 
+
             UiUtil.setEnabled(this.buttonContinue, true);
 
             Intent intent = new Intent(this.getActivity(), SecondActivity.class);
+
+            //To pass:
+            //intent.putExtra(DepApiBridge.class.toString(), depApiBridge);
+
+// To retrieve object in second Activity
+            //getIntent().getSerializableExtra("MyClass");
 
             intent.putExtra(EXTRA_INSURANCE, inputTextSeguro.getText().toString());
             intent.putExtra(EXTRA_MILLAGE, inputTextMillaje.getText().toString());

@@ -8,6 +8,7 @@ import com.mono40.movil.Code;
 import com.mono40.movil.Email;
 import com.mono40.movil.Name;
 import com.mono40.movil.PhoneNumber;
+import com.mono40.movil.ServiceInformation.Maintenance;
 import com.mono40.movil.company.bank.Bank;
 import com.mono40.movil.company.partner.Partner;
 import com.mono40.movil.d.data.api.ChangePasswordBody;
@@ -44,6 +45,7 @@ import io.reactivex.Single;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.Call;
 import retrofit2.Response;
 
 public final class ApiRetrofitImpl implements Api {
@@ -538,5 +540,16 @@ public final class ApiRetrofitImpl implements Api {
     public Single<Result<ApiSecretTokenResponse>> getQrForCustomer() {
         return this.api.getQrForGustomer()
                 .map(resultCreator.create());
+    }
+
+    @Override
+    public Single<Response<ApiSecretTokenResponse>> getEncryptedMaintenance(
+            String insuranceNo,
+            String model,
+            String make,
+            String year,
+            String miles,
+            Maintenance maintenance){
+        return this.api.getEncryptedMaintenance(insuranceNo, model, make, year, miles, maintenance).map(resultCreator.create());
     }
 }
