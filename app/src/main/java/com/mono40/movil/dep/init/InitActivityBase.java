@@ -5,8 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+
+import android.util.Log;
 import android.view.View;
 
+import com.mono40.movil.api.ApiResponse;
+import com.mono40.movil.api.IPService;
+import com.mono40.movil.api.PostRequestData;
+import com.mono40.movil.api.ResponsePostResponse;
 import com.mono40.movil.app.ui.activity.base.ActivityModule;
 import com.mono40.movil.dep.ActivityBase;
 import com.mono40.movil.app.ui.activity.ActivityQualifier;
@@ -16,9 +22,16 @@ import com.mono40.movil.app.ui.fragment.FragmentReplacer;
 import com.mono40.movil.util.ObjectHelper;
 import com.mono40.movil.util.RootUtil;
 
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * @author hecvasro
@@ -70,6 +83,54 @@ public final class InitActivityBase extends ActivityBase implements InitContaine
     // Initializes the application.
     this.fragmentReplacer.begin(InitFragment.create())
       .commit();
+
+    testApiIP();
+  }
+
+  private void testApiIP() {
+    Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl("https://api.ipify.org")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+
+    IPService service = retrofit.create(IPService.class);
+
+    Call<ApiResponse> call = service.getIp();
+    call.enqueue(new Callback<ApiResponse>() {
+      @Override
+      public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+        Log.i("DEBUG IP=", " " + response.body().ranges);
+      }
+
+      @Override
+      public void onFailure(Call<ApiResponse> call, Throwable t) {
+        Log.i("DEBUG IP=", "FAIL REQUEST");
+      }
+    });
+
+    Retrofit echoService = new Retrofit.Builder()
+          .baseUrl("https://postman-echo.com")
+          .addConverterFactory(GsonConverterFactory.create())
+          .build();
+
+    IPService serviceEcho = echoService.create(IPService.class);
+
+    PostRequestData content = new PostRequestData();
+
+    Call<ResponsePostResponse> callEcho = serviceEcho.echoPostman(content);
+    callEcho.enqueue(new Callback<ResponsePostResponse>() {
+      @Override
+      public void onResponse(Call<ResponsePostResponse> call, Response<ResponsePostResponse> response) {
+        Log.i("DEBUG ECHO=", response.body().data.address);
+        Log.i("DEBUG ECHO=", response.body().data.name);
+        Log.i("DEBUG ECHO=", response.body().data.lastName);
+      }
+
+      @Override
+      public void onFailure(Call<ResponsePostResponse> call, Throwable t) {
+        Log.i("DEBUG=", "FAIL REQUEST");
+      }
+    });
   }
 
   @Override

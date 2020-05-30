@@ -1,6 +1,7 @@
 package com.mono40.movil.d.ui.main.recipient.index.category;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.Toast;
@@ -10,8 +11,10 @@ import com.mono40.movil.BuildConfig;
 import com.mono40.movil.R;
 import com.mono40.movil.ServiceInformation.Maintenance;
 import com.mono40.movil.api.ApiModuleFlavored;
+import com.mono40.movil.api.ApiResponse;
 import com.mono40.movil.api.ApiRetrofit;
 import com.mono40.movil.api.ApiSecretTokenResponse;
+import com.mono40.movil.api.IPService;
 import com.mono40.movil.app.ui.activity.base.ActivityBase;
 import com.mono40.movil.d.data.api.CustomerSecretTokenResponse;
 import com.mono40.movil.d.domain.api.ApiResult;
@@ -20,12 +23,15 @@ import com.mono40.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.mono40.movil.d.ui.main.transaction.products.LoanTransactionCreationPresenter;
 import com.mono40.movil.util.ObjectHelper;
 
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -154,6 +160,27 @@ public class SecondActivity extends ActivityBase{
         Single<Response<ApiSecretTokenResponse>> encryptedMaintenance = api.getEncryptedMaintenance(insurance, model, make, year, millage, maintenance);
          Toast.makeText(this, encryptedMaintenance.toString(), Toast.LENGTH_LONG).show();
 
+    }
+
+    private void testApiIP() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.ipify.org")
+                .build();
+
+        IPService service = retrofit.create(IPService.class);
+
+        Call<ApiResponse> call = service.getIp();
+        call.enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                Log.i("DEBUG=", response.body().toString());
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Log.i("DEBUG=", "FAIL REQUEST");
+            }
+        });
     }
 
     private void handleCustomerSecretResult() {
