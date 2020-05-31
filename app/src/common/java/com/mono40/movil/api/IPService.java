@@ -1,10 +1,14 @@
 package com.mono40.movil.api;
 
+import com.mono40.movil.ServiceInformation.Maintenance;
+
 import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
 public interface IPService {
@@ -13,4 +17,10 @@ public interface IPService {
 
     @POST("/post")
     Call<ResponsePostResponse> echoPostman(@Body PostRequestData content);
+
+    @Headers({
+            "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZXhwIjoxNTkwOTY4NTU1fQ.dEh_5TmrmmeVA8Z0rSaRTJaNnXQd-EI84rJxon1-tMk"
+    })
+    @POST("serviceReport/maintenance/encrypt")
+    Call<CodeForQRImage> getEncryptedMaintenance(@Header("insuranceNo") String insuranceNo, @Header("model") String model, @Header("make") String make, @Header("year") String year, @Header("miles") String miles, @Body Maintenance body);
 }

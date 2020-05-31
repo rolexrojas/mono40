@@ -4,6 +4,7 @@ import com.mono40.movil.api.ApiModule;
 import com.mono40.movil.app.ui.alert.AlertManager;
 import com.mono40.movil.company.CompanyModule;
 import com.mono40.movil.d.ui.main.purchase.PurchaseModule;
+import com.mono40.movil.d.ui.main.recipient.index.category.SecondActivity;
 import com.mono40.movil.d.ui.qr.MyQrFragment;
 import com.mono40.movil.d.ui.qr.QrScannerFragment;
 import com.mono40.movil.data.DataModule;

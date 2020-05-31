@@ -195,6 +195,4 @@ public interface ApiRetrofit {
     @POST("secrets/tokens/merchants/{merchant}/encrypt")
     Single<Response<ApiSecretTokenResponse>> getQrForMerchant(@Path("merchant") String merchant, @Body ApiSecretTokenRequest request);
 
-    @POST("serviceReport/Maintenance/encrypt")
-    Single<Response<ApiSecretTokenResponse>> getEncryptedMaintenance(@Header("insuranceNo") String insuranceNo, @Header("model") String model, @Header("make") String make, @Header("year") String year, @Header("miles") String miles, @Body Maintenance body);
 }

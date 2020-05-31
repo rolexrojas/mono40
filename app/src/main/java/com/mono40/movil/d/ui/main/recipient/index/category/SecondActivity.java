@@ -1,5 +1,6 @@
 package com.mono40.movil.d.ui.main.recipient.index.category;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -7,31 +8,47 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mono40.movil.BuildConfig;
 import com.mono40.movil.R;
 import com.mono40.movil.ServiceInformation.Maintenance;
+import com.mono40.movil.api.ApiBanks;
 import com.mono40.movil.api.ApiModuleFlavored;
 import com.mono40.movil.api.ApiResponse;
 import com.mono40.movil.api.ApiRetrofit;
+import com.mono40.movil.api.ApiRetrofitImpl;
 import com.mono40.movil.api.ApiSecretTokenResponse;
+import com.mono40.movil.api.CodeForQRImage;
+import com.mono40.movil.api.EmptyMapperResult;
 import com.mono40.movil.api.IPService;
+import com.mono40.movil.api.MapperFailureData;
+import com.mono40.movil.api.MapperResult;
 import com.mono40.movil.app.ui.activity.base.ActivityBase;
 import com.mono40.movil.d.data.api.CustomerSecretTokenResponse;
+import com.mono40.movil.d.domain.api.ApiError;
 import com.mono40.movil.d.domain.api.ApiResult;
 import com.mono40.movil.d.domain.api.DepApiBridge;
 import com.mono40.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.mono40.movil.d.ui.main.transaction.products.LoanTransactionCreationPresenter;
+import com.mono40.movil.d.ui.qr.MyQrFragment;
+import com.mono40.movil.session.SessionManager;
+import com.mono40.movil.util.FailureData;
 import com.mono40.movil.util.ObjectHelper;
 
+import java.lang.annotation.Annotation;
 import java.util.Map;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import dagger.Component;
 import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
+import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -93,6 +110,8 @@ public class SecondActivity extends ActivityBase{
     @BindView(R.id.radioButton18)
     RadioButton breakRadiobutton;
 
+    @Inject
+    public SessionManager sessionManager;
 
    /* private final DepApiBridge depApiBridge;
     private final Context context;
@@ -112,13 +131,32 @@ public class SecondActivity extends ActivityBase{
 
 
     public void finishCheck(View view) {
+
+       // GsonBuilder builder = new GsonBuilder();
+        //builder.registerTypeAdapter(CodeForQRImage.class, new CodeForQRImage());
+        //Gson gson = builder.create();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BuildConfig.API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
 
-        final ApiRetrofit api = retrofit.create(ApiRetrofit.class);
+
+
+        final IPService api = retrofit.create(IPService.class);
+     /*   final Converter<ResponseBody, FailureData> apiFailureDataConverter = retrofit
+                .responseBodyConverter(FailureData.class, new Annotation[0]);
+        final MapperFailureData retrofitApiFailureDataMapper
+                = MapperFailureData.create(apiFailureDataConverter);
+        final MapperResult.Creator retrofitApiResultMapperCreator = MapperResult
+                .creator(retrofitApiFailureDataMapper);
+        final EmptyMapperResult.Creator retrofitApiResultEmptyMapperCreator = EmptyMapperResult
+                .creator(retrofitApiFailureDataMapper); */
+
+        // ApiRetrofitImpl.create(api, retrofitApiResultMapperCreator, retrofitApiResultEmptyMapperCreator,
+              //  getBaseContext());
+
+
 
         Bundle extras = this.getIntent().getExtras();
 
@@ -157,8 +195,26 @@ public class SecondActivity extends ActivityBase{
         maintenance.setParkingBreakCheck(false);
 
         //Single<Result<ApiSecretTokenResponse>> encryptedMaintenance =
-        Single<Response<ApiSecretTokenResponse>> encryptedMaintenance = api.getEncryptedMaintenance(insurance, model, make, year, millage, maintenance);
-         Toast.makeText(this, encryptedMaintenance.toString(), Toast.LENGTH_LONG).show();
+      //  Single<Response<ApiSecretTokenResponse>> encryptedMaintenance = api.getEncryptedMaintenance(insurance, model, make, year, millage, maintenance);
+        // Toast.makeText(this, encryptedMaintenance.toString(), Toast.LENGTH_LONG).show();
+        Call<CodeForQRImage> encryptedMaintenance = api.getEncryptedMaintenance(insurance, model, make, year, millage, maintenance);
+        encryptedMaintenance.enqueue(new Callback<CodeForQRImage>() {
+            @Override
+            public void onResponse(Call<CodeForQRImage> call, Response<CodeForQRImage> response) {
+                Log.i("DEBUG=", response.body().getToken());
+
+                if(sessionManager !=null) {
+                    sessionManager.saveCustomerSecretToken(response.body().getToken());
+                }else{
+                    Log.i("DEBUG=", "SESSION MANAGER IS NULL");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CodeForQRImage> call, Throwable t) {
+                Log.i("DEBUG=", "FAIL REQUEST");
+            }
+        });
 
     }
 
@@ -174,6 +230,8 @@ public class SecondActivity extends ActivityBase{
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 Log.i("DEBUG=", response.body().toString());
+
+
             }
 
             @Override

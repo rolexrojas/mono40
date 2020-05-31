@@ -45,6 +45,7 @@ import io.reactivex.Single;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.Call;
 import retrofit2.Response;
 
 public final class ApiRetrofitImpl implements Api {
@@ -541,14 +542,4 @@ public final class ApiRetrofitImpl implements Api {
                 .map(resultCreator.create());
     }
 
-    @Override
-    public Single<Result<ApiSecretTokenResponse>> getEncryptedMaintenance(
-            String insuranceNo,
-            String model,
-            String make,
-            String year,
-            String miles,
-            Maintenance maintenance){
-        return this.api.getEncryptedMaintenance(insuranceNo, model, make, year, miles, maintenance).map(resultCreator.create());
-    }
 }
