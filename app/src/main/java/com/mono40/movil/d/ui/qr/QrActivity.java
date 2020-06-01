@@ -19,8 +19,13 @@ import android.view.View;
 
 import com.mono40.movil.R;
 import com.mono40.movil.d.ui.main.DepMainActivityBase;
+import com.mono40.movil.d.ui.main.recipient.index.category.RecipientCategoryFragment;
+import com.mono40.movil.d.ui.main.recipient.index.category.SecondActivity;
 import com.mono40.movil.dep.init.InitActivityBase;
+import com.mono40.movil.session.SessionManager;
 import com.mono40.movil.util.LogoutTimerService;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,9 +45,17 @@ public class QrActivity extends AppCompatActivity {
     private LocalBroadcastManager localBroadcastManager;
     private LogoutReceiver logoutReceiver;
 
+    private String token;
+
+    @Inject
+    SessionManager sessionManager;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Bundle extras = this.getIntent().getExtras();
+        token = extras.getString(SecondActivity.QR_CODE_INFORMATION, "sampleValue");
         setContentView(R.layout.activity_qr);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
@@ -54,9 +67,9 @@ public class QrActivity extends AppCompatActivity {
             @Override
             public Fragment getItem(int position) {
                 if (position == 0) {
-                    return new QrScannerFragment();
+                    return new MyQrFragment(token);
                 } else {
-                    return new MyQrFragment();
+                    return new QrScannerFragment();
                 }
             }
 
@@ -86,6 +99,7 @@ public class QrActivity extends AppCompatActivity {
             }
         });
 
+
         myQrTab.setOnClickListener(new DebouncingOnClickListener() {
             @Override
             public void doClick(View v) {
@@ -99,6 +113,10 @@ public class QrActivity extends AppCompatActivity {
                 viewPager.setCurrentItem(0);
             }
         });
+
+        qrScanTab.setVisibility(View.GONE);
+
+        myQrTab.setVisibility(View.GONE);
 
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
         logoutReceiver = new QrActivity.LogoutReceiver();

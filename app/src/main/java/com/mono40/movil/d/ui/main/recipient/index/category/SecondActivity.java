@@ -28,9 +28,12 @@ import com.mono40.movil.d.data.api.CustomerSecretTokenResponse;
 import com.mono40.movil.d.domain.api.ApiError;
 import com.mono40.movil.d.domain.api.ApiResult;
 import com.mono40.movil.d.domain.api.DepApiBridge;
+import com.mono40.movil.d.ui.ChildFragment;
+import com.mono40.movil.d.ui.main.MainContainer;
 import com.mono40.movil.d.ui.main.transaction.TransactionCreationComponent;
 import com.mono40.movil.d.ui.main.transaction.products.LoanTransactionCreationPresenter;
 import com.mono40.movil.d.ui.qr.MyQrFragment;
+import com.mono40.movil.d.ui.qr.QrActivity;
 import com.mono40.movil.session.SessionManager;
 import com.mono40.movil.util.FailureData;
 import com.mono40.movil.util.ObjectHelper;
@@ -112,6 +115,10 @@ public class SecondActivity extends ActivityBase{
 
     @Inject
     public SessionManager sessionManager;
+
+    public static String QR_CODE_INFORMATION = "QR_CODE_INFORMATION";
+
+    private static final int REQUEST_CODE_TRANSACTION_CREATION = 1;
 
    /* private final DepApiBridge depApiBridge;
     private final Context context;
@@ -201,12 +208,17 @@ public class SecondActivity extends ActivityBase{
         encryptedMaintenance.enqueue(new Callback<CodeForQRImage>() {
             @Override
             public void onResponse(Call<CodeForQRImage> call, Response<CodeForQRImage> response) {
-                Log.i("DEBUG=", response.body().getToken());
+              //  Log.i("DEBUG=", response.body().getToken());
 
-                if(sessionManager !=null) {
+               /* if(sessionManager !=null) {
                     sessionManager.saveCustomerSecretToken(response.body().getToken());
                 }else{
                     Log.i("DEBUG=", "SESSION MANAGER IS NULL");
+                }*/
+                if(response.body() != null) {
+                    DisplayQrResult(view, response.body().getToken());
+                }else{
+                    Log.i("DEBUG=", "No se pudo retornar objeto");
                 }
             }
 
@@ -217,6 +229,16 @@ public class SecondActivity extends ActivityBase{
         });
 
     }
+
+    private void DisplayQrResult(View view, String responseQr){
+        view.setEnabled(false);
+
+        Intent intent = new Intent(this, QrActivity.class);
+        intent.putExtra(QR_CODE_INFORMATION, responseQr);
+        startActivityForResult(intent, 0);
+    }
+
+
 
     private void testApiIP() {
         Retrofit retrofit = new Retrofit.Builder()

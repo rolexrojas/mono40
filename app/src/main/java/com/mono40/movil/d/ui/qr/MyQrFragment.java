@@ -88,14 +88,25 @@ public class MyQrFragment extends Fragment {
     TextView qrCodeProfileName;
     @BindView(R.id.bottomsheet)
     BottomSheetLayout bottomSheet;
-    String token = null;
+
     private Bitmap qrBitmap;
     TakeoverLoader takeoverLoader;
     private boolean isReady;
+    private String tokenW;
+
+    public MyQrFragment(){}
+
+    public MyQrFragment(String token){
+        tokenW = token;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
+
         ((App) getActivity().getApplicationContext()).component().inject(this);
         takeoverLoader = TakeoverLoader.create(getChildFragmentManager());
     }
@@ -132,6 +143,7 @@ public class MyQrFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         setupProfile();
         setupQrCode();
     }
@@ -172,7 +184,8 @@ public class MyQrFragment extends Fragment {
     }
 
     private void setupQrCode() {
-        this.token = sessionManager.getCustomerSecretToken();
+
+       // this.token = sessionManager.getCustomerSecretToken();
         Uri userProfilePic = sessionManager.getUser().picture();
         Bitmap userProfileBitmap = null;
         if (userProfilePic != null) {
@@ -187,7 +200,7 @@ public class MyQrFragment extends Fragment {
             }
         }
         Bitmap finalUserProfileBitmap = userProfileBitmap;
-        Single.fromCallable(() -> generateQrCode(token, finalUserProfileBitmap)).observeOn(AndroidSchedulers.mainThread())
+        Single.fromCallable(() -> generateQrCode(tokenW, finalUserProfileBitmap)).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new SingleObserver<Bitmap>() {
                     @Override
