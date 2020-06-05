@@ -44,7 +44,7 @@ public class QrActivity extends AppCompatActivity {
     Toolbar toolbar;
     private LocalBroadcastManager localBroadcastManager;
     private LogoutReceiver logoutReceiver;
-
+    private int defaultPosition;
     private String token;
 
     @Inject
@@ -56,6 +56,7 @@ public class QrActivity extends AppCompatActivity {
 
         Bundle extras = this.getIntent().getExtras();
         token = extras.getString(SecondActivity.QR_CODE_INFORMATION, "sampleValue");
+        defaultPosition = Integer.parseInt(extras.getString(DepMainActivityBase.QR_SCANNER_WINDOW, "0"));
         setContentView(R.layout.activity_qr);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
@@ -66,7 +67,7 @@ public class QrActivity extends AppCompatActivity {
         viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                if (position == 0) {
+                if (position == defaultPosition) {
                     return new MyQrFragment(token);
                 } else {
                     return new QrScannerFragment();

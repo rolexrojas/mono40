@@ -84,7 +84,7 @@ public final class InitActivityBase extends ActivityBase implements InitContaine
     this.fragmentReplacer.begin(InitFragment.create())
       .commit();
 
-    testApiIP();
+    //testApiIP();
   }
 
   private void testApiIP() {

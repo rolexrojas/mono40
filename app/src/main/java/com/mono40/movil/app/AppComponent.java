@@ -7,6 +7,7 @@ import com.mono40.movil.d.ui.main.purchase.PurchaseModule;
 import com.mono40.movil.d.ui.main.recipient.index.category.SecondActivity;
 import com.mono40.movil.d.ui.qr.MyQrFragment;
 import com.mono40.movil.d.ui.qr.QrScannerFragment;
+import com.mono40.movil.d.ui.qr.ScannedQrFragment;
 import com.mono40.movil.data.DataModule;
 import com.mono40.movil.gson.GsonModule;
 import com.mono40.movil.insurance.micro.MicroInsuranceModule;
@@ -57,4 +58,6 @@ public interface AppComponent extends com.mono40.movil.dep.AppComponent {
     void inject(MyQrFragment fragment);
 
     void inject(QrScannerFragment fragment);
+
+    void inject(ScannedQrFragment fragment);
 }

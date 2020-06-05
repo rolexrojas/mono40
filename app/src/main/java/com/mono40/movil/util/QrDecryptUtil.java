@@ -33,14 +33,26 @@ public class QrDecryptUtil {
 
 
     public static QrJWT decryptData(String data, String key) throws DecoderException, NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {
-        Log.d("com.tpago.mobile", "decryptData - " + data + " | " + key);
+        Log.d("com.cryptoqr.mobile", "decryptData - " + data + " | " + key);
         byte[] decodedKey = Base64.decode(key, 0);
         SecretKey llave = new SecretKeySpec(decodedKey, "AES");
         byte[] bytesDataEncriptada = Base64.decode(data, 0);
         byte[] bytesDesencriptados = decrypt(llave, bytesDataEncriptada);
         String jwtStr = Base64.encodeToString(bytesDesencriptados, 0);
-        Log.d("com.tpago.mobile", "jwtStr=" + jwtStr);
+        Log.d("com.cryptoqr.mobile", "jwtStr=" + jwtStr);
         return decodeJwt(jwtStr);
+    }
+
+    public static QrJwtMnt decryptQrData(String data, String key) throws DecoderException, NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {
+        Log.d("com.cryptoqr.mobile", "decryptData - " + data + " | " + key);
+        byte[] decodedKey = Base64.decode(key, 0);
+        SecretKey llave = new SecretKeySpec(decodedKey, "AES");
+        byte[] bytesDataEncriptada = Base64.decode(data, 0);
+        byte[] bytesDesencriptados = decrypt(llave, bytesDataEncriptada);
+        String jwtStr = Base64.encodeToString(bytesDesencriptados, 0);
+        Log.d("com.cryptoqr.mobile", "jwtStr=" + jwtStr);
+
+        return decodeQrJwt(jwtStr);
     }
 
     private static byte[] decrypt(SecretKey secretKey, byte[] encryptedData)
@@ -89,12 +101,25 @@ public class QrDecryptUtil {
         String[] split_string = ByteString.decodeBase64(jwtToken.replaceAll("\n", "")).string(Charset.forName("utf-8")).split("\\.");
         String base64EncodedBody = split_string[1];
 
-        Log.d("com.tpago.mobile", "JWT Token encoded = " + base64EncodedBody);
+        Log.d("com.cryptoqr.mobile", "JWT Token encoded = " + base64EncodedBody);
 
         String body = ByteString.decodeBase64(base64EncodedBody).string(Charset.forName("utf-8"));
 
-        Log.d("com.tpago.mobile", "JWT Token = " + base64EncodedBody);
+        Log.d("com.cryptoqr.mobile", "JWT Token = " + base64EncodedBody);
         Gson gson = new Gson();
         return gson.fromJson(gson.fromJson(body, QrJWT.class).getSub(), QrJWT.class);
+    }
+
+    public static QrJwtMnt decodeQrJwt(String jwtToken) {
+
+        String body = ByteString.decodeBase64(jwtToken.replaceAll("\n", "")).string(Charset.forName("utf-8"));
+       // String base64EncodedBody = split_string;
+        //Log.d("com.cryptoqr.mobile", "JWT Token encoded = " + split_string);
+
+       // String body = ByteString.decodeBase64(split_string).string(Charset.forName("utf-8"));
+        //String body = ByteString.decodeBase64(base64EncodedBody).string(Charset.forName("utf-8"));
+       Log.d("com.cryptoqr.mobile", "JWT body = " + body);
+        Gson gson = new Gson();
+        return gson.fromJson(body, QrJwtMnt.class);
     }
 }

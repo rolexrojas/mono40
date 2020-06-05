@@ -86,7 +86,7 @@ public final class TransactionSummaryDialogFragment extends DialogFragment {
         } else {
             builder.setPositiveButton(R.string.action_save, (dialog, which) -> {
                 if (ObjectHelper.isNotNull(listener)) {
-                    Log.d("com.tpago.mobile", "TransactionSummaryDialogFragment = " + recipient.getId());
+                    Log.d("com.cryptoqr.mobile", "TransactionSummaryDialogFragment = " + recipient.getId());
                     final EditText editText = getDialog().findViewById(R.id.edit_text);
                     listener.onSaveButtonClicked(
                             recipient,

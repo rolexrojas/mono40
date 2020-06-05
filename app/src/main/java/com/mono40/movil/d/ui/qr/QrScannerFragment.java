@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.renderscript.RenderScript;
 
 import android.util.Log;
@@ -31,6 +32,16 @@ import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetectorOption
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
 
+import com.mono40.movil.ServiceInformation.CarServiceInformation;
+import com.mono40.movil.ServiceInformation.Maintenance;
+import com.mono40.movil.app.ui.activity.toolbar.ActivityToolbar;
+import com.mono40.movil.app.ui.main.transaction.paypal.PayPalTransactionArgument;
+import com.mono40.movil.d.ui.main.purchase.PurchaseFragment;
+import com.mono40.movil.d.ui.main.recipient.index.category.Category;
+import com.mono40.movil.d.ui.main.recipient.index.category.RecipientCategoryFragment;
+import com.mono40.movil.d.ui.main.recipient.index.category.SecondActivity;
+import com.mono40.movil.paypal.PayPalAccount;
+import com.mono40.movil.util.QrJwtMnt;
 import com.otaliastudios.cameraview.size.Size;
 import com.mono40.movil.PhoneNumber;
 import com.mono40.movil.R;
@@ -104,6 +115,8 @@ public class QrScannerFragment extends Fragment {
     private Disposable closeSessionDisposable;
     @BindView(R.id.camera_scanner)
     CameraScanner cameraScanner;
+
+
     FirebaseVisionBarcodeDetector visionBarcodeDetector;
     long lastRead;
     RenderScript rs;
@@ -164,7 +177,7 @@ public class QrScannerFragment extends Fragment {
         yuvImage.compressToJpeg(new Rect(0, 0, width, height), 100, byteArrayOutputStream);
         byte[] array = byteArrayOutputStream.toByteArray();
         Bitmap bitmap = BitmapFactory.decodeByteArray(array, 0, array.length);
-        Log.d("com.tpago.mobile", "Testing bitmap");
+        Log.d("com.cryptoqr.mobile", "Testing bitmap");
         return bitmap;
     }
 
@@ -253,28 +266,32 @@ public class QrScannerFragment extends Fragment {
     }
 
     private void decipherQrCode(String data) {
-        Log.d("com.tpago.mobile", "qrCodeData = " + data);
+        Log.d("com.cryptoqr.mobile", "qrCodeData = " + data);
         String qrType = null;
         String encryptedMessage = null;
         QrJWT decryptedMessage = null;
+        QrJwtMnt decryptedMessageQr = null;
         try {
             qrType = data.split("data=")[0].replace("type=", "").replace(";", "");
+            Log.d("com.cryptoqr.mobile", "qrType = " + qrType);
             encryptedMessage = data.split("data=")[1];
-            Log.d("com.tpago.mobile", "encripted Message = " + sessionManager.getCustomerSecretKey());
-            Log.d("com.tpago.mobile", "encripted key = " + sessionManager.getCustomerSecretKey());
-            decryptedMessage = QrDecryptUtil.decryptData(encryptedMessage, sessionManager.getCustomerSecretKey());
+            Log.d("com.cryptoqr.mobile", "encripted Message = " + encryptedMessage);
+            Log.d("com.cryptoqr.mobile", "encripted key = " + sessionManager.getCustomerSecretKey());
+            decryptedMessageQr = QrDecryptUtil.decryptQrData(encryptedMessage, sessionManager.getCustomerSecretKey());
+            Log.d("com.cryptoqr.mobile", "decrpited = " + decryptedMessageQr.getSub());
+            Log.d("com.cryptoqr.mobile", "decrpited = " + decryptedMessageQr.getIss());
         } catch (Exception e) {
-            Log.e("com.tpago.mobile", "error decoding qr", e);
+            Log.e("com.cryptoqr.mobile", "error decoding qr", e);
             showErrorMessage(R.string.qr_error_unsupported_code, R.string.qr_error_unsupported_code_message);
             return;
         }
-        if (qrType == null || decryptedMessage == null) {
+        if (qrType == null || decryptedMessageQr == null) {
             showErrorMessage(R.string.qr_error_unsupported_code, R.string.qr_error_unsupported_code_message);
             return;
         }
         switch (qrType) {
-            case "TPN":
-                if (decryptedMessage.getMerchantDescription() == null) {
+            case "TPNa":
+                if (decryptedMessage.getSub() == null) {
                     this.dismissTakeOverLoader();
                     showErrorMessage(R.string.qr_error_unsupported_code, R.string.qr_error_unsupported_code_message);
                     return;
@@ -282,7 +299,7 @@ public class QrScannerFragment extends Fragment {
                 this.startTransaction(new MerchantRecipient(decryptedMessage.getMerchantDescription(), decryptedMessage.getSub()),
                         TransactionCategory.PAY);
                 break;
-            case "TRF-IN":
+            case "TRF-INa":
                 if (decryptedMessage.getSub() == null) {
                     this.dismissTakeOverLoader();
                     showErrorMessage(R.string.qr_error_unsupported_code, R.string.qr_error_unsupported_code_message);
@@ -304,6 +321,22 @@ public class QrScannerFragment extends Fragment {
                     showErrorMessage(R.string.qr_error_own_code, R.string.qr_error_own_code_message);
                 }
                 break;
+            case "MNT-OUT":
+                Log.d("message mnt", "inside mnt-out");
+                if (decryptedMessageQr.getSub() == null && decryptedMessageQr.getIss() == null) {
+                    this.dismissTakeOverLoader();
+                    showErrorMessage(R.string.qr_error_unsupported_code, R.string.qr_error_unsupported_code_message);
+                    return;
+                }
+
+                 //ScannedQrFragment.create(decryptedMessageQr.carServiceInformation, decryptedMessageQr.maintenance);
+                startQrResume(decryptedMessageQr);
+                /**
+                 * Here will Start activity to display the non-editable carServiceInformation screen (RecipientCategoryFragment.Java)
+                 * */
+                //this.startTransaction(new SecondActivity(decryptedMessageQr.getMerchantDescription(), decryptedMessage.getSub()),
+                     //   TransactionCategory.PAY);
+                break;
             default:
                 this.dismissTakeOverLoader();
                 showErrorMessage(R.string.qr_error_unsupported_code, R.string.qr_error_unsupported_code_message);
@@ -311,6 +344,31 @@ public class QrScannerFragment extends Fragment {
         }
 
     }
+
+
+    public void startQrResume(QrJwtMnt decrypted) {
+        CarServiceInformation carServiceInformationFromIss = decrypted.getCarServiceInformationFromIss();
+
+        if(carServiceInformationFromIss.getInsuranceNo() == null){
+            Log.d("mnt", "NULL CAR SERVICE");
+        }
+        Log.d("mnt", carServiceInformationFromIss.getMiles());
+        Log.d("mnt", carServiceInformationFromIss.getMake());
+        Maintenance maintenance = decrypted.getMaintenanceFromSub();
+
+        if(maintenance == null){
+            Log.d("mnt", "NULL MAINTENANCE");
+        }
+        Log.d("mnt", String.valueOf(maintenance.isOilChange()));
+
+        Fragment frag = new ScannedQrFragment(decrypted.getCarServiceInformationFromIss(), decrypted.getMaintenanceFromSub());
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.camera_scanner, frag);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.addToBackStack(null);
+        ft.commit();
+    }
+
 
     private void handleStartTransactionError(Throwable throwable) {
         dismissTakeOverLoader();
@@ -409,7 +467,7 @@ public class QrScannerFragment extends Fragment {
                 .doOnSubscribe((d) -> this.showTakeOver())
                 .doFinally(this::dismissTakeOverLoader)
                 .subscribe(this::handleCloseSession, (Consumer<Throwable>) throwable -> {
-                    Log.d("com.tpago.mobile", throwable.getMessage(), throwable);
+                    Log.d("com.cryptoqr.mobile", throwable.getMessage(), throwable);
                 });
     }
 
@@ -428,7 +486,7 @@ public class QrScannerFragment extends Fragment {
         switch (requestCode) {
             case REQUEST_CODE_GALLERY:
                 if (resultCode == Activity.RESULT_OK) {
-                    Log.d("com.tpago.mobile", "image data = " + data.getData());
+                    Log.d("com.cryptoqr.mobile", "image data = " + data.getData());
                     try {
                         this.scanSingleImage(data.getData());
                     } catch (IOException e) {
@@ -441,7 +499,7 @@ public class QrScannerFragment extends Fragment {
     private void processImage(FirebaseVisionImage image) {
         visionBarcodeDetector.detectInImage(image)
                 .addOnSuccessListener(firebaseVisionBarcodes -> {
-                    Log.d("com.tpago.mobile", "FirebaseVisionBarcodes = " + firebaseVisionBarcodes.size());
+                    Log.d("com.cryptoqr.mobile", "FirebaseVisionBarcodes = " + firebaseVisionBarcodes.size());
                     if (!firebaseVisionBarcodes.isEmpty()) {
                         isInProgress = true;
                         QrScannerFragment.this.onBarCodeResult(firebaseVisionBarcodes.get(0).getRawValue());

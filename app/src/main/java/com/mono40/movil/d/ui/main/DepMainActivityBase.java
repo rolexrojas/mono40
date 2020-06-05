@@ -55,6 +55,7 @@ import com.mono40.movil.d.ui.main.transaction.TransactionCreationActivityBase;
 import com.mono40.movil.d.ui.main.transaction.TransactionResult;
 import com.mono40.movil.d.ui.main.transaction.own.OwnTransactionCreationActivity;
 import com.mono40.movil.d.ui.qr.QrActivity;
+import com.mono40.movil.d.ui.qr.QrScannerFragment;
 import com.mono40.movil.d.ui.view.widget.SlidingPaneLayout;
 import com.mono40.movil.dep.App;
 import com.mono40.movil.dep.TimeOutManager;
@@ -99,7 +100,7 @@ public class DepMainActivityBase
     private static final int REQUEST_CODE_OWN_TRANSACTION_CREATION = 3;
     private static final int REQUEST_CODE_TRANSACTION = 42;
     private Pair<Integer, Pair<Recipient, String>> requestResult;
-
+    public static final String QR_SCANNER_WINDOW = "QR_SCANNER_WINDOW";
 
     @NonNull
     public static Intent getLaunchIntent(Context context) {
@@ -366,7 +367,8 @@ public class DepMainActivityBase
                 if (false) {
                     this.setChildFragment(PurchaseFragment.newInstance());
                 } else {
-                    this.setChildFragment(NonNfcPurchaseFragment.create());
+                    //this.setChildFragment(NonNfcPurchaseFragment.create());
+                    LaunchQrReader(view);
                 }
                 qrCodeIcon.setVisibility(View.VISIBLE);
                 break;
@@ -477,6 +479,13 @@ public class DepMainActivityBase
 
     }
 
+    private void LaunchQrReader(View view){
+        view.setEnabled(false);
+        Intent intent = new Intent(this, QrActivity.class);
+        intent.putExtra(QR_SCANNER_WINDOW, "1");
+        startActivityForResult(intent, REQUEST_CODE_TRANSACTION_CREATION);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -496,7 +505,7 @@ public class DepMainActivityBase
                     view.setId(R.id.main_menuItem_pay);
                 }
                 onMenuItemButtonClicked(view);
-                Log.d("com.tpago.mobile", "QR_CODE_RECIPIENT = " + result.getTransactionId());
+                Log.d("com.cryptoqr.mobile", "QR_CODE_RECIPIENT = " + result.getTransactionId());
                 if (ObjectHelper.isNotNull(result)) {
                     requestResult = Pair.create(requestCode, TransactionCreationActivityBase.deserializeResult(
                             data));
@@ -510,11 +519,11 @@ public class DepMainActivityBase
                 }
             }
         } else if (requestCode == REQUEST_CODE_TRANSACTION) {
-            Log.d("com.tpago.mobile", "resultCode = " + (resultCode == Activity.RESULT_OK));
+            Log.d("com.cryptoqr.mobile", "resultCode = " + (resultCode == Activity.RESULT_OK));
             if (data != null && data.getExtras() != null) {
-                Log.d("com.tpago.mobile", "resultData = " + data.getExtras().toString());
+                Log.d("com.cryptoqr.mobile", "resultData = " + data.getExtras().toString());
                 for (String key : data.getExtras().keySet()) {
-                    Log.d("com.tpago.mobile", key + " is a key in the bundle = " + data.getExtras().getString(key));
+                    Log.d("com.cryptoqr.mobile", key + " is a key in the bundle = " + data.getExtras().getString(key));
                 }
             }
             if (resultCode == Activity.RESULT_OK && data != null) {

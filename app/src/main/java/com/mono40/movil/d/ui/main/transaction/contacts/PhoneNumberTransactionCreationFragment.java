@@ -457,7 +457,7 @@ public class PhoneNumberTransactionCreationFragment
                 .doOnSubscribe((d) -> this.showTakeOver())
                 .doFinally(this::dismissTakeOverLoader)
                 .subscribe(this::handleCloseSession, (io.reactivex.functions.Consumer<Throwable>) throwable -> {
-                    Log.d("com.tpago.mobile", throwable.getMessage(), throwable);
+                    Log.d("com.cryptoqr.mobile", throwable.getMessage(), throwable);
                 });
     }
 

@@ -363,7 +363,7 @@ public class CreditCardTransactionCreationFragment
                 .doOnSubscribe((d) -> this.showTakeOver())
                 .doFinally(this::dismissTakeOverLoader)
                 .subscribe(this::handleCloseSession, (Consumer<Throwable>) throwable -> {
-                    Log.d("com.tpago.mobile", throwable.getMessage(), throwable);
+                    Log.d("com.cryptoqr.mobile", throwable.getMessage(), throwable);
                 });
     }
 

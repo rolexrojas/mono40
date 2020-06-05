@@ -57,7 +57,7 @@ public class SaveToGalleryActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("com.tpago.mobile", "OnActivityResult = ResultCode" + resultCode);
+        Log.d("com.cryptoqr.mobile", "OnActivityResult = ResultCode" + resultCode);
         if (resultCode != RESULT_OK) {
             finish();
             return;
@@ -65,7 +65,7 @@ public class SaveToGalleryActivity extends AppCompatActivity {
 
         switch (requestCode) {
             case FILE_EXPORT_REQUEST_CODE:
-                Log.d("com.tpago.mobile", "OnActivityResult = " + data);
+                Log.d("com.cryptoqr.mobile", "OnActivityResult = " + data);
                 if (data != null) {
                     Uri uri = data.getData();
                     if (uri != null) {

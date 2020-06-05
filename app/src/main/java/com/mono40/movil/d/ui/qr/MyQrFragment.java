@@ -324,13 +324,13 @@ public class MyQrFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("com.tpago.mobile", "OnActivityResult = ResultCode" + resultCode);
+        Log.d("com.cryptoqr.mobile", "OnActivityResult = ResultCode" + resultCode);
         if (resultCode != RESULT_OK)
             return;
 
         switch (requestCode) {
             case FILE_EXPORT_REQUEST_CODE:
-                Log.d("com.tpago.mobile", "OnActivityResult = " + data);
+                Log.d("com.cryptoqr.mobile", "OnActivityResult = " + data);
                 if (data != null) {
                     Uri uri = data.getData();
                     if (uri != null) {
@@ -388,7 +388,7 @@ public class MyQrFragment extends Fragment {
                     os.close();
                 }
             } catch (IOException e) {
-                Log.d("com.tpago.mobile", e.getMessage(), e);
+                Log.d("com.cryptoqr.mobile", e.getMessage(), e);
             }
             return success;
         }

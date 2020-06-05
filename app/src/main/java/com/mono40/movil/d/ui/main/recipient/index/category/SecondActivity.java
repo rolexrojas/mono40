@@ -139,31 +139,12 @@ public class SecondActivity extends ActivityBase{
 
     public void finishCheck(View view) {
 
-       // GsonBuilder builder = new GsonBuilder();
-        //builder.registerTypeAdapter(CodeForQRImage.class, new CodeForQRImage());
-        //Gson gson = builder.create();
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BuildConfig.API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-
-
         final IPService api = retrofit.create(IPService.class);
-     /*   final Converter<ResponseBody, FailureData> apiFailureDataConverter = retrofit
-                .responseBodyConverter(FailureData.class, new Annotation[0]);
-        final MapperFailureData retrofitApiFailureDataMapper
-                = MapperFailureData.create(apiFailureDataConverter);
-        final MapperResult.Creator retrofitApiResultMapperCreator = MapperResult
-                .creator(retrofitApiFailureDataMapper);
-        final EmptyMapperResult.Creator retrofitApiResultEmptyMapperCreator = EmptyMapperResult
-                .creator(retrofitApiFailureDataMapper); */
-
-        // ApiRetrofitImpl.create(api, retrofitApiResultMapperCreator, retrofitApiResultEmptyMapperCreator,
-              //  getBaseContext());
-
-
 
         Bundle extras = this.getIntent().getExtras();
 
@@ -183,38 +164,29 @@ public class SecondActivity extends ActivityBase{
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 
         Maintenance maintenance = new Maintenance();
-        maintenance.setOilChange(true);
-        maintenance.setOilFilterChange(true);
-        maintenance.setTransmissionFluidChange(true);
-        maintenance.setSteeringFluidChange(true);
-        maintenance.setCoolantFluidChange(true);
-        maintenance.setWipeWaterCheck(true);
-        maintenance.setBatteryWaterChange(true);
-        maintenance.setRadiatorHosesCheck(true);
-        maintenance.setHeaterHosesCheck(false);
-        maintenance.setAirCondHosesCheck(false);
-        maintenance.setAirFilterChange(false);
-        maintenance.setTirePressureCheck(false);
-        maintenance.setTireWearCheck(true);
-        maintenance.setWipersCheck(true);
-        maintenance.setHeadLampAlignmentCheck(false);
-        maintenance.setSeatBeltCheck(false);
-        maintenance.setParkingBreakCheck(false);
+        maintenance.setOilChange(oilChangeRadiobutton.isChecked());
+        maintenance.setOilFilterChange(oilFilterChangeRadiobutton.isChecked());
+        maintenance.setTransmissionFluidChange(transmissionFluidRadiobutton.isChecked());
+        maintenance.setSteeringFluidChange(oilHydraulicRadiobutton.isChecked());
+        maintenance.setCoolantFluidChange(oilAirConditionRadiobutton.isChecked());
+        maintenance.setWipeWaterCheck(waterWiperRadiobutton.isChecked());
+        maintenance.setBatteryWaterChange(batteryWaterRadiobutton.isChecked());
+        maintenance.setRadiatorHosesCheck(radiatorHosesRadiobutton.isChecked());
+        maintenance.setHeaterHosesCheck(warmerHosesRadioButton.isChecked());
+        maintenance.setAirCondHosesCheck(airConditionerHoseRadioButton.isChecked());
+        maintenance.setAirFilterChange(airConditionerFilterRadioButton.isChecked());
+        maintenance.setTirePressureCheck(tireAirPressureRadioButton.isChecked());
+        maintenance.setTireWearCheck(tiresUseMillageRadiobutton.isChecked());
+        maintenance.setWipersCheck(wiperWindsShieldRadiobutton.isChecked());
+        maintenance.setHeadLampAlignmentCheck(frontLightsRadiobutton.isChecked());
+        maintenance.setSeatBeltCheck(seatBeltRadiobutton.isChecked());
+        maintenance.setParkingBreakCheck(breakRadiobutton.isChecked());
+        maintenance.setBrakeFluidChange(brakeOilRadioButton.isChecked());
 
-        //Single<Result<ApiSecretTokenResponse>> encryptedMaintenance =
-      //  Single<Response<ApiSecretTokenResponse>> encryptedMaintenance = api.getEncryptedMaintenance(insurance, model, make, year, millage, maintenance);
-        // Toast.makeText(this, encryptedMaintenance.toString(), Toast.LENGTH_LONG).show();
         Call<CodeForQRImage> encryptedMaintenance = api.getEncryptedMaintenance(insurance, model, make, year, millage, maintenance);
         encryptedMaintenance.enqueue(new Callback<CodeForQRImage>() {
             @Override
             public void onResponse(Call<CodeForQRImage> call, Response<CodeForQRImage> response) {
-              //  Log.i("DEBUG=", response.body().getToken());
-
-               /* if(sessionManager !=null) {
-                    sessionManager.saveCustomerSecretToken(response.body().getToken());
-                }else{
-                    Log.i("DEBUG=", "SESSION MANAGER IS NULL");
-                }*/
                 if(response.body() != null) {
                     DisplayQrResult(view, response.body().getToken());
                 }else{

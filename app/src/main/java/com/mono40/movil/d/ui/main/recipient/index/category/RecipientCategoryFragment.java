@@ -189,12 +189,6 @@ public class RecipientCategoryFragment
 
             Intent intent = new Intent(this.getActivity(), SecondActivity.class);
 
-            //To pass:
-            //intent.putExtra(DepApiBridge.class.toString(), depApiBridge);
-
-// To retrieve object in second Activity
-            //getIntent().getSerializableExtra("MyClass");
-
             intent.putExtra(EXTRA_INSURANCE, inputTextSeguro.getText().toString());
             intent.putExtra(EXTRA_MILLAGE, inputTextMillaje.getText().toString());
             intent.putExtra(EXTRA_YEAR, spinnerYear.getSelectedItem().toString());
@@ -772,7 +766,7 @@ public class RecipientCategoryFragment
                 .doOnSubscribe((d) -> this.showTakeOver())
                 .doFinally(this::dismissTakeOverLoader)
                 .subscribe(this::handleCloseSession, (Consumer<Throwable>) throwable -> {
-                    Log.d("com.tpago.mobile", throwable.getMessage(), throwable);
+                    Log.d("com.cryptoqr.mobile", throwable.getMessage(), throwable);
                 });
     }
 
