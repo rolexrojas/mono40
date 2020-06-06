@@ -1,6 +1,12 @@
 package com.mono40.movil.ServiceInformation;
 
-public class Maintenance {
+import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.RequiresApi;
+
+public class Maintenance implements Parcelable {
     private Long id;
     private boolean oilChange;
     private boolean oilFilterChange;
@@ -171,5 +177,34 @@ public class Maintenance {
 
     public void setParkingBreakCheck(boolean parkingBreakCheck) {
         this.parkingBreakCheck = parkingBreakCheck;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(oilChange);
+        dest.writeBoolean(oilFilterChange);
+        dest.writeBoolean(transmissionFluidChange);
+        dest.writeBoolean(brakeFluidChange);
+        dest.writeBoolean(steeringFluidChange);
+        dest.writeBoolean(coolantFluidChange);
+        dest.writeBoolean(wipeWaterCheck);
+        dest.writeBoolean(batteryWaterChange);
+        dest.writeBoolean(radiatorHosesCheck);
+        dest.writeBoolean(heaterHosesCheck);
+        dest.writeBoolean(airCondHosesCheck);
+        dest.writeBoolean(airFilterChange);
+        dest.writeBoolean(tirePressureCheck);
+        dest.writeBoolean(tireWearCheck);
+        dest.writeBoolean(wipersCheck);
+        dest.writeBoolean(headLampAlignmentCheck);
+        dest.writeBoolean(seatBeltCheck);
+        dest.writeBoolean(parkingBreakCheck);
+
     }
 }

@@ -12,7 +12,7 @@
         android:text="Modelo"
         android:textAlignment="textStart"
         app:layout_constraintBottom_toTopOf="@+id/label6"
-        app:layout_constraintEnd_toStartOf="@+id/textInput3"
+        app:layout_constraintEnd_toStartOf="@+id/txtModelo"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/label5" />
@@ -24,7 +24,7 @@
         android:text="Año"
         android:textAlignment="textStart"
         app:layout_constraintBottom_toTopOf="@+id/label7"
-        app:layout_constraintEnd_toStartOf="@+id/textInput3"
+        app:layout_constraintEnd_toStartOf="@+id/txtModelo"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/label3" />
@@ -36,7 +36,7 @@
         android:text="Millaje"
         android:textAlignment="textStart"
         app:layout_constraintBottom_toTopOf="@+id/scrollView2"
-        app:layout_constraintEnd_toStartOf="@+id/textInput4"
+        app:layout_constraintEnd_toStartOf="@+id/txtAno"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/label6" />
@@ -48,7 +48,7 @@
         android:text="Marca"
         android:textAlignment="textStart"
         app:layout_constraintBottom_toTopOf="@+id/label3"
-        app:layout_constraintEnd_toStartOf="@+id/textInput2"
+        app:layout_constraintEnd_toStartOf="@+id/txtMarca"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/label4" />
@@ -60,60 +60,60 @@
         android:text="@string/insurance"
         android:textAlignment="viewStart"
         app:layout_constraintBottom_toTopOf="@+id/label5"
-        app:layout_constraintEnd_toStartOf="@+id/textInput"
+        app:layout_constraintEnd_toStartOf="@+id/txtSeguro"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.mono40.movil.dep.widget.TextInput
-        android:id="@+id/textInput"
+        android:id="@+id/txtSeguro"
         android:layout_width="196dp"
         android:layout_height="31dp"
-        app:layout_constraintBottom_toTopOf="@+id/textInput2"
+        app:layout_constraintBottom_toTopOf="@+id/txtMarca"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/label4"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.mono40.movil.dep.widget.TextInput
-        android:id="@+id/textInput2"
+        android:id="@+id/txtMarca"
         android:layout_width="196dp"
         android:layout_height="31dp"
-        app:layout_constraintBottom_toTopOf="@+id/textInput3"
+        app:layout_constraintBottom_toTopOf="@+id/txtModelo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/label5"
-        app:layout_constraintTop_toBottomOf="@+id/textInput" />
+        app:layout_constraintTop_toBottomOf="@+id/txtSeguro" />
 
     <com.mono40.movil.dep.widget.TextInput
-        android:id="@+id/textInput3"
+        android:id="@+id/txtModelo"
         android:layout_width="196dp"
         android:layout_height="31dp"
-        app:layout_constraintBottom_toTopOf="@+id/textInput4"
+        app:layout_constraintBottom_toTopOf="@+id/txtAno"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/label3"
-        app:layout_constraintTop_toBottomOf="@+id/textInput2" />
+        app:layout_constraintTop_toBottomOf="@+id/txtMarca" />
 
     <com.mono40.movil.dep.widget.TextInput
-        android:id="@+id/textInput4"
+        android:id="@+id/txtAno"
         android:layout_width="196dp"
         android:layout_height="31dp"
-        app:layout_constraintBottom_toTopOf="@+id/textInput5"
+        app:layout_constraintBottom_toTopOf="@+id/txtMillaje"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/label6"
-        app:layout_constraintTop_toBottomOf="@+id/textInput3" />
+        app:layout_constraintTop_toBottomOf="@+id/txtModelo" />
 
     <com.mono40.movil.dep.widget.TextInput
-        android:id="@+id/textInput5"
+        android:id="@+id/txtMillaje"
         android:layout_width="196dp"
         android:layout_height="31dp"
         app:layout_constraintBottom_toTopOf="@+id/scrollView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/label7"
-        app:layout_constraintTop_toBottomOf="@+id/textInput4" />
+        app:layout_constraintTop_toBottomOf="@+id/txtAno" />
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -123,7 +123,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInput5">
+        app:layout_constraintTop_toBottomOf="@+id/txtMillaje">
 
         <LinearLayout
             android:layout_width="match_parent"

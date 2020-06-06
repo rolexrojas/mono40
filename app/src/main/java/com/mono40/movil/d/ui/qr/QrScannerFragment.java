@@ -11,6 +11,7 @@ import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
@@ -330,6 +331,11 @@ public class QrScannerFragment extends Fragment {
                 }
 
                  //ScannedQrFragment.create(decryptedMessageQr.carServiceInformation, decryptedMessageQr.maintenance);
+                try {
+                    visionBarcodeDetector.close();
+                }catch (Exception e){
+                    Log.d("Closing Vision Loader", e.toString());
+                }
                 startQrResume(decryptedMessageQr);
                 /**
                  * Here will Start activity to display the non-editable carServiceInformation screen (RecipientCategoryFragment.Java)
@@ -347,22 +353,23 @@ public class QrScannerFragment extends Fragment {
 
 
     public void startQrResume(QrJwtMnt decrypted) {
-        CarServiceInformation carServiceInformationFromIss = decrypted.getCarServiceInformationFromIss();
+        final CarServiceInformation carServiceInformationFromIss = decrypted.getCarServiceInformationFromIss();
+        final Maintenance maintenance = decrypted.getMaintenanceFromSub();
+        Fragment frag = new ScannedQrFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("insurance", carServiceInformationFromIss.getInsuranceNo());
+        bundle.putString("make", carServiceInformationFromIss.getMake());
+        bundle.putString("model", carServiceInformationFromIss.getModel());
+        bundle.putString("miles", carServiceInformationFromIss.getMiles());
+        bundle.putString("year", carServiceInformationFromIss.getYear());
+        bundle.putParcelable("maintenance", maintenance);
+        frag.setArguments(bundle);
+        /*getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.camera_scanner, frag, "scanned_qr_fragment")
+                .addToBackStack(null)
+                .commit(); */
 
-        if(carServiceInformationFromIss.getInsuranceNo() == null){
-            Log.d("mnt", "NULL CAR SERVICE");
-        }
-        Log.d("mnt", carServiceInformationFromIss.getMiles());
-        Log.d("mnt", carServiceInformationFromIss.getMake());
-        Maintenance maintenance = decrypted.getMaintenanceFromSub();
-
-        if(maintenance == null){
-            Log.d("mnt", "NULL MAINTENANCE");
-        }
-        Log.d("mnt", String.valueOf(maintenance.isOilChange()));
-
-        Fragment frag = new ScannedQrFragment(decrypted.getCarServiceInformationFromIss(), decrypted.getMaintenanceFromSub());
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+       FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.camera_scanner, frag);
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.addToBackStack(null);

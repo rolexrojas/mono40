@@ -1,11 +1,13 @@
 package com.mono40.movil.d.ui.qr;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
@@ -18,6 +20,7 @@ import com.mono40.movil.ServiceInformation.Maintenance;
 import com.mono40.movil.app.ui.Label;
 import com.mono40.movil.app.ui.main.transaction.disburse.index.FragmentDisburseIndex;
 import com.mono40.movil.app.ui.permission.PermissionHelper;
+import com.mono40.movil.d.ui.main.recipient.addition.NonAffiliatedPhoneNumberRecipientAdditionActivityBase;
 import com.mono40.movil.d.ui.main.recipient.index.category.Category;
 import com.mono40.movil.d.ui.main.recipient.index.category.RecipientCategoryFragment;
 import com.mono40.movil.dep.App;
@@ -41,19 +44,19 @@ public class ScannedQrFragment extends Fragment {
     @BindView(R.id.label7)
     com.mono40.movil.dep.widget.Label millaje;
 
-    @BindView(R.id.text_input)
+    @BindView(R.id.txtSeguro)
     TextInput seguroTextInput;
 
-    @BindView(R.id.textInput2)
+    @BindView(R.id.txtMarca)
     TextInput marcaTextInput;
 
-    @BindView(R.id.textInput3)
+    @BindView(R.id.txtModelo)
     TextInput modeloTextInput;
 
-    @BindView(R.id.textInput4)
+    @BindView(R.id.txtAno)
     TextInput anoTextInput;
 
-    @BindView(R.id.textInput5)
+    @BindView(R.id.txtMillaje)
     TextInput millajeTextInput;
 
     @BindView(R.id.qradioButton)
@@ -115,33 +118,41 @@ public class ScannedQrFragment extends Fragment {
     private Maintenance maintenance;
     private CarServiceInformation carServiceInformation;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
-    @LayoutRes
-    protected int layoutResId() {
-        return R.layout.scanned_qr_fragment;
-    }
-
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.scanned_qr_fragment, container, false);
         ButterKnife.bind(this, view);
-        return view;
+        super.onActivityCreated(savedInstanceState);
+        Bundle bundle = getArguments();
+        String insurance = bundle.getString("insurance");
+        String make = bundle.getString("make");
+        String model = bundle.getString("model");
+        String miles = bundle.getString("miles");
+        String year = bundle.getString("year");
+        Maintenance maintenance = bundle.getParcelable("maintenance");
+
+        Log.d("com.cryptoqr.mobile", "Parcelable = " + String.valueOf(maintenance.isOilChange()));
+        seguroTextInput.setText(insurance);
+        marcaTextInput.setText(make);
+        modeloTextInput.setText(model);
+        anoTextInput.setText(year);
+        millajeTextInput.setText(miles);
+
+        setScreeFromMaintenance(maintenance);
+            return view;
     }
 
-    public ScannedQrFragment(CarServiceInformation carServiceInformation, Maintenance maintenance){
-        this.maintenance = maintenance;
-        this.carServiceInformation = carServiceInformation;
-          setScreeFromMaintenance(maintenance);
-        setScreenCarServiceInformation(carServiceInformation);
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
     }
 
     public void setScreeFromMaintenance(Maintenance maintenance){
-        Log.d("com.cryptoqr.mobile", "MantemintimentoScanned = " + String.valueOf(maintenance.isOilChange()));
         oilChangeRadiobutton.setChecked(maintenance.isOilChange());
         oilFilterChangeRadiobutton.setChecked(maintenance.isOilFilterChange());
         transmissionFluidRadiobutton.setChecked(maintenance.isTransmissionFluidChange());
@@ -164,12 +175,6 @@ public class ScannedQrFragment extends Fragment {
 
     }
 
-    public void setScreenCarServiceInformation(CarServiceInformation carServiceInformation){
-        seguroTextInput.setText(carServiceInformation.getInsuranceNo());
-        marcaTextInput.setText(carServiceInformation.getMake());
-        modeloTextInput.setText(carServiceInformation.getModel());
-        anoTextInput.setText(carServiceInformation.getYear());
-        millajeTextInput.setText(carServiceInformation.getMiles());
-    }
+
 
 }
